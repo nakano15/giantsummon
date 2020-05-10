@@ -5,6 +5,6 @@ homepage = https://forums.terraria.org/index.php?threads/terraguardians-terraria
 hideCode = true
 hideResources = true
 includeSource = false
-buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, ModCompatibilityDLLs\*
+buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, ModCompatibilityDLLs\*, TerraGuardian Sprites\*
 includePDB = true
 weakReferences = NExperience@1.3.4.2
