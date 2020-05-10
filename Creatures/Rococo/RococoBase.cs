@@ -1,0 +1,356 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Terraria;
+using Microsoft.Xna.Framework;
+
+namespace giantsummon.Creatures
+{
+    public class RococoBase : GuardianBase
+    {
+        /// <summary>
+        /// -Playful.
+        /// -Innocent.
+        /// -Extremelly friendly.
+        /// -Fears Blood Moons.
+        /// -Want to be Blue's friend.
+        /// -Good friend of Sardine and Alex.
+        /// </summary>
+
+        public RococoBase()
+        {
+            Name = "Rococo"; //Has red eyes
+            Description = "He's a good definition of a big kid, very playful and innocent.\nLoves playing kids games, like Hide and Seek.";
+            Size = GuardianSize.Large;
+            Width = 28;
+            Height = 82;
+            DuckingHeight = 52;
+            SpriteWidth = 96;
+            SpriteHeight = 96;
+            Age = 15;
+            Male = true;
+            InitialMHP = 200; //1000
+            LifeCrystalHPBonus = 40;
+            LifeFruitHPBonus = 10;
+            Accuracy = 0.15f;
+            Mass = 0.5f;
+            MaxSpeed = 5.2f;
+            Acceleration = 0.18f;
+            SlowDown = 0.47f;
+            MaxJumpHeight = 15;
+            JumpSpeed = 7.08f;
+            CanDuck = true;
+            ReverseMount = false;
+            DrinksBeverage = false;
+            SetTerraGuardian();
+            HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
+            DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
+            CallUnlockLevel = 0;
+
+            PopularityContestsWon = 2;
+            ContestSecondPlace = 2;
+            ContestThirdPlace = 0;
+
+            AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
+            AddInitialItem(Terraria.ID.ItemID.Mushroom, 3);
+
+            //Animation Frames
+            StandingFrame = 0;
+            WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            PlayerMountedArmAnimation = JumpFrame = 9;
+            HeavySwingFrames = new int[] { 10, 11, 12 };
+            ItemUseFrames = new int[] { 16, 17, 18, 19 };
+            DuckingFrame = 20;
+            DuckingSwingFrames = new int[] { 21, 22, 12 };
+            SittingFrame = 23;
+            DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 16, 17, 21, 22 });
+            ThroneSittingFrame = 24;
+            BedSleepingFrame = 25;
+            SleepingOffset.X = 16;
+            ReviveFrame = 26;
+            DownedFrame = 27;
+            //PetrifiedFrame = 28;
+
+            SpecificBodyFrontFramePositions = true;
+            BodyFrontFrameSwap.Add(23, 0);
+
+            //Left Hand
+            LeftHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(17 * 2, 31 * 2);
+            LeftHandPoints.AddFramePoint2x(10, 6, 9);
+            LeftHandPoints.AddFramePoint2x(11, 32, 9);
+            LeftHandPoints.AddFramePoint2x(12, 43, 38);
+
+            LeftHandPoints.AddFramePoint2x(16, 8, 6);
+            LeftHandPoints.AddFramePoint2x(17, 34, 7);
+            LeftHandPoints.AddFramePoint2x(18, 39, 19);
+            LeftHandPoints.AddFramePoint2x(19, 34, 31);
+
+            LeftHandPoints.AddFramePoint2x(21, 33, 16);
+            LeftHandPoints.AddFramePoint2x(22, 43, 27);
+            //Right Hand
+            RightHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(31 * 2, 31 * 2);
+            RightHandPoints.AddFramePoint2x(10, 10, 9);
+            RightHandPoints.AddFramePoint2x(11, 34, 9);
+            RightHandPoints.AddFramePoint2x(12, 45, 38);
+
+            RightHandPoints.AddFramePoint2x(16, 11, 6);
+            RightHandPoints.AddFramePoint2x(17, 36, 7);
+            RightHandPoints.AddFramePoint2x(18, 41, 19);
+            RightHandPoints.AddFramePoint2x(19, 37, 31);
+
+            RightHandPoints.AddFramePoint2x(21, 36, 16);
+            RightHandPoints.AddFramePoint2x(22, 45, 27);
+            //Mount Position
+            MountShoulderPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(18 * 2, 14 * 2);
+            MountShoulderPoints.AddFramePoint2x(11, 22, 20);
+            MountShoulderPoints.AddFramePoint2x(12, 30, 27);
+            MountShoulderPoints.AddFramePoint2x(20, 30, 27);
+            MountShoulderPoints.AddFramePoint2x(21, 30, 27);
+            MountShoulderPoints.AddFramePoint2x(22, 30, 27);
+
+            MountShoulderPoints.AddFramePoint2x(24, 16, 20);
+            MountShoulderPoints.AddFramePoint2x(25, 25, 28);
+
+            //Left Arm Positions
+            LeftArmOffSet.DefaultCoordinate = new Microsoft.Xna.Framework.Point(18 * 2, 15 * 2);
+            //LeftArmOffSet.AddFramePoint2x(11, 21, 21);
+            //LeftArmOffSet.AddFramePoint2x(12, 32, 30);
+            //LeftArmOffSet.AddFramePoint2x(19, 32, 30);
+
+            //Right Arm Positions
+            RightArmOffSet.DefaultCoordinate = new Microsoft.Xna.Framework.Point(28 * 2, 15 * 2);
+            //RightArmOffSet.AddFramePoint2x(11, 30, 21);
+            //RightArmOffSet.AddFramePoint2x(12, 38, 32);
+            //RightArmOffSet.AddFramePoint2x(19, 32, 30);
+
+            //Sitting Position
+            SittingPoint = new Point(23 * 2, 37 * 2); //21, 37
+
+            //Head Vanity Position
+            HeadVanityPosition.DefaultCoordinate2x = new Point(24, 13);
+            HeadVanityPosition.AddFramePoint2x(11, 27, 16);
+            HeadVanityPosition.AddFramePoint2x(12, 36, 26);
+            HeadVanityPosition.AddFramePoint2x(20, 36, 26);
+            HeadVanityPosition.AddFramePoint2x(21, 36, 26);
+            HeadVanityPosition.AddFramePoint2x(22, 36, 26);
+
+            HeadVanityPosition.AddFramePoint2x(24, 24, 16);
+            HeadVanityPosition.AddFramePoint2x(25, 26, 48 - 6);
+
+            //Wing Position
+            WingPosition.DefaultCoordinate2x = new Point(20, 23);
+        }
+
+        public override string MountUnlockMessage
+        {
+            get
+            {
+                return "*[name] says that he can let you ride on his shoulder, If your feet are tired.*";
+            }
+        }
+
+        public override string ControlUnlockMessage
+        {
+            get
+            {
+                return "*[name] says that entrusts his life to you.*";
+            }
+        }
+
+        public override string FriendLevelMessage
+        {
+            get
+            {
+                return "*[name] says that you have been a good friend to him.*";
+            }
+        }
+
+        public override string BestFriendLevelMessage
+        {
+            get
+            {
+                return "*[name] says that you're the best friend he ever had.*";
+            }
+        }
+
+        public override string BFFLevelMessage
+        {
+            get
+            {
+                return "*[name] says that you're like the only family he has.*";
+            }
+        }
+
+        public override string BuddyForLifeLevelMessage
+        {
+            get
+            {
+                return "*[name] is glad of having met you.*";
+            }
+        }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            switch (Main.rand.Next(4))
+            {
+                case 0:
+                    return "\"At first, the creature got surprised after seeing me, then starts laughing out of happiness.\"";
+                case 1:
+                    return "\"That creature waves at you while smiling, It must be friendly, I guess?\"";
+                case 2:
+                    return "\"For some reason, that creature got happy after seeing you, maybe It wasn't expecting another human in this world?";
+                default:
+                    return "\"What sort of creature is that? Is it dangerous? No, It doesn't looks like it.\"";
+            }
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.NextDouble() < 0.5)
+                return "*[name] says that doesn't need anything right now..*";
+            return "*[name] told me that wants nothing right now.*";
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.NextDouble() < 0.5)
+                return "*[name] is asking me to do something for him.*";
+            return "*[name] is looking at me with a funny face while telling me that he wants something to be done, like as If he didn't wanted to ask for help.*";
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.NextDouble() < 0.5)
+                return "*[name] was so happy that started laughing out loud.*";
+            return "*[name] is so impressed that you did what he asked, that even gave you a hug.*";
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            bool MerchantInTheWorld = NPC.AnyNPCs(Terraria.ID.NPCID.Merchant), SteampunkerInTheWorld = NPC.AnyNPCs(Terraria.ID.NPCID.Steampunker);
+            List<string> Mes = new List<string>();
+            if (!Main.bloodMoon)
+                Mes.Add("*[name] is happy for seeing you.*");
+            if (Main.dayTime)
+            {
+                if (!Main.eclipse)
+                {
+                    Mes.Add("*[name] asks you what's up.*");
+                }
+                else
+                {
+                    Mes.Add("*[name] seems to be watching some classic horror movie on the tv... No, wait, that's a window.*");
+                }
+            }
+            else
+            {
+                if (!Main.bloodMoon)
+                {
+                    if (MerchantInTheWorld)
+                        Mes.Add("*As soon as [name] started talking, you hastily asked him to stop, because of the bad trash breath that comes from his mouth.*");
+                    Mes.Add("*[name] is sleeping while awake.*");
+                    Mes.Add("*[name] is trying hard to keep It's eyes opened.*");
+                }
+                else
+                {
+                    Mes.Add("*[name] looks scared, maybe he hates blood moons.*");
+                    Mes.Add("*[name] is trembling in terror..*");
+                }
+            }
+            if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
+            {
+                Mes.Add("*[name] seems to be enjoying the party.*");
+            }
+            if (SteampunkerInTheWorld)
+                Mes.Add("*[name] is talking something about a jetpack joyride?*");
+            if (NpcMod.HasGuardianNPC(1))
+            {
+                Mes.Add("*[name] seems to be crying, and with a purple left eye, I guess his dialogue with [gn:1] went wrong.*");
+                Mes.Add("*[name] seems to be crying, and with his right cheek having a huge red paw marking, I wonder what he were talking about with [gn:1].*");
+            }
+            if (NpcMod.HasGuardianNPC(3))
+            {
+                Mes.Add("*[name] seems to have gotten kicked in his behind. Maybe he annoyed [gn:3]?*");
+            }
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 2) && PlayerMod.PlayerHasGuardian(player, 1))
+            {
+                Mes.Add("*[gn:2] is telling [name] that he's lucky that [gn:1] doesn't plays her terrible games with him. But [name] insists that he wanted to play.*");
+            }
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 1))
+            {
+                Mes.Add("*[name] asked [gn:1] why she doesn't plays with him, she told him that she can't even bear seeing him.*");
+            }
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 3) && PlayerMod.PlayerHasGuardian(player, 1))
+            {
+                Mes.Add("*[name] asked [gn:3] why he doesn't plays with him, he told him that It's because he makes [gn:1] upset.*");
+            }
+            if (PlayerMod.PlayerHasGuardian(player, 5))
+            {
+                Mes.Add("*[name] says that loves playing with [gn:5], but wonders why he always find him on hide and seek.*");
+                Mes.Add("*[name] says that bringing [gn:5] made the town very livelly.*");
+            }
+            if (NpcMod.HasGuardianNPC(8))
+            {
+                Mes.Add("*[name] said that [gn:8] looks familiar, have they met before?*");
+            }
+            if (NpcMod.HasGuardianNPC(Vladimir))
+            {
+                Mes.Add("*[name] hugs you. It feels a bit weird. He never hugged you without a reason.*");
+            }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Add("*[name] is telling me to plug my nose.*");
+                Mes.Add("*[name] is asking if there is no other moment to chat.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            if (Main.raining)
+                Mes.Add("*[name] seems to have caught flu, that wouldn't have happened if he had a place to live. Bad Terrarian.*");
+            if (!Main.dayTime)
+            {
+                Mes.Add("*[name] looks afraid of the dark, I should give him somewhere to live.*");
+                Mes.Add("*[name] seems cold, give him some place to get out of the cold.*");
+            }
+            Mes.Add("*[name] would like to live close to other Terrarians. Build a house for him.*");
+            Mes.Add("*[name] is lonely and afraid of the dangers around, I could build him a house.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*[name] showed you a rare insect he found, he seems very happy about that.*");
+            Mes.Add("*[name] is asking you when is going to happen another party.*");
+            Mes.Add("*[name] seems to want a new toy, but what could I give him?*");
+            Mes.Add("*[name] wants to explore the dungeon sometime.*");
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
+                Mes.Add("*[name] is asing me if [nn:" + Terraria.ID.NPCID.Merchant + "] has put his trash can outside.*");
+            if (!PlayerMod.PlayerHasGuardianSummoned(player, 0))
+                Mes.Add("*[name] seems to want to go on an adventure with you.*");
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 0))
+            {
+                Mes.Add("*[name] is enjoying travelling with me.*");
+                Mes.Add("*[name] seems to killing insects with gasoline, I wonder where he acquired that.*");
+                if (guardian.Wet || guardian.HasBuff(Terraria.ID.BuffID.Wet))
+                    Mes.Add("*[name] is soaked and cold.*");
+            }
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 1))
+                Mes.Add("*[name] looks surprised at [gn:1], and suddenly forgets what he was going to talk about.*");
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 2))
+                Mes.Add("*[name] is asking if you could let him play with [gn:2].*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            if (!PlayerMod.HasGuardianBeenGifted(player, 0) && Main.rand.NextDouble() < 0.5)
+                return "*[name] is curious about what you will give him as gift.*";
+            return "*[name] is asking why you aren't dancing, It's party time.*";
+        }
+    }
+}

@@ -1,0 +1,380 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Terraria;
+using Microsoft.Xna.Framework;
+
+namespace giantsummon.Creatures
+{
+    public class SardineBase : GuardianBase
+    {
+        /// <summary>
+        /// -Cheerful and Friendly.
+        /// -Warrior. Literally.
+        /// -Adventurer.
+        /// -Bree's Husband.
+        /// -Bullied by Blue and Zacks.
+        /// </summary>
+
+        public SardineBase()
+        {
+            Name = "Sardine";
+            Description = "He's an adventurer that has visited many worlds,\nearns his life as a bounty hunter. But actually forgot\nwhich world his house is at.";
+            Size = GuardianSize.Small;
+            Width = 14;
+            Height = 38;
+            SpriteWidth = 72;
+            SpriteHeight = 56;
+            FramesInRows = 21;
+            //DuckingHeight = 54;
+            Age = 6;
+            Male = true;
+            InitialMHP = 80; //320
+            LifeCrystalHPBonus = 12;
+            LifeFruitHPBonus = 3;
+            Accuracy = 0.52f;
+            Mass = 0.33f;
+            MaxSpeed = 4.82f;
+            Acceleration = 0.15f;
+            SlowDown = 0.5f;
+            MaxJumpHeight = 12;
+            JumpSpeed = 9.76f;
+            CanDuck = false;
+            ReverseMount = true;
+            SetTerraGuardian();
+            DodgeRate = 40;
+            HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit51);
+            DeadSound = new SoundData(Terraria.ID.SoundID.NPCDeath54);
+
+            PopularityContestsWon = 0;
+            ContestSecondPlace = 1;
+            ContestThirdPlace = 1;
+
+            AddInitialItem(Terraria.ID.ItemID.SilverBroadsword, 1);
+            AddInitialItem(Terraria.ID.ItemID.Shuriken, 250);
+            AddInitialItem(Terraria.ID.ItemID.HealingPotion, 10);
+
+            //Animation Frames
+            StandingFrame = 0;
+            WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            PlayerMountedArmAnimation = JumpFrame = 9;
+            HeavySwingFrames = new int[] { 10, 11, 12 };
+            ItemUseFrames = new int[] { 10, 13, 14, 15 };
+            SittingFrame = 16;
+            ChairSittingFrame = 17;
+            DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12, 13, 14, 15, 16 });
+            ThroneSittingFrame = 18;
+            BedSleepingFrame = 19;
+
+            SleepingOffset.X = -2;
+
+            SpecificBodyFrontFramePositions = true;
+            BodyFrontFrameSwap.Add(16, 0);
+
+            //Left Hand
+            LeftHandPoints.AddFramePoint2x(10, 10, 12);
+            LeftHandPoints.AddFramePoint2x(11, 27, 14);
+            LeftHandPoints.AddFramePoint2x(12, 31, 26);
+
+            LeftHandPoints.AddFramePoint2x(13, 22, 12);
+            LeftHandPoints.AddFramePoint2x(14, 24, 18);
+            LeftHandPoints.AddFramePoint2x(15, 21, 23);
+
+            //Right Hand
+            RightHandPoints.AddFramePoint2x(10, 12, 12);
+            RightHandPoints.AddFramePoint2x(11, 29, 14);
+            RightHandPoints.AddFramePoint2x(12, 33, 26);
+
+            RightHandPoints.AddFramePoint2x(13, 24, 12);
+            RightHandPoints.AddFramePoint2x(14, 26, 18);
+            RightHandPoints.AddFramePoint2x(15, 23, 23);
+
+            //Mount
+            MountShoulderPoints.DefaultCoordinate = new Point(16 * 2, 25 * 2);
+            SittingPoint = new Point(16 * 2, 25 * 2);
+
+            //Head Vanity Position
+            HeadVanityPosition.DefaultCoordinate2x = new Point(16, 13);
+            HeadVanityPosition.AddFramePoint2x(11, 22, 16);
+            HeadVanityPosition.AddFramePoint2x(12, 28, 24);
+
+            HeadVanityPosition.AddFramePoint2x(18, 16, 13 - 7);
+
+            //Wing Position
+            WingPosition.DefaultCoordinate2x = new Point(16, 19);
+        }
+
+        public override string CallUnlockMessage
+        {
+            get
+            {
+                return "I will get rusty If I stay locked into my house. Take me on your adventures too, I like loot too!";
+            }
+        }
+
+        public override string MountUnlockMessage
+        {
+            get
+            {
+                return "Hey pal, my feet are kind of sore, would you mind If I ride on your back? Don't worry, I can still fight meanwhile.";
+            }
+        }
+
+        public override string ControlUnlockMessage
+        {
+            get
+            {
+                return "If you need someone fast for some dangerous thing, don't think twice about sending me there.";
+            }
+        }
+
+        public override string FriendLevelMessage
+        {
+            get
+            {
+               return "Hey, let's find some monsters to kill, friend!";
+            }
+        }
+
+        public override string BestFriendLevelMessage
+        {
+            get
+            {
+                return "If I even manage to find something cool, I will give it to you.";
+            }
+        }
+
+        public override string BFFLevelMessage
+        {
+            get
+            {
+                return "There are so many things to find in this world. With you leading the way, I guess we will end up rich!";
+            }
+        }
+
+        public override string BuddyForLifeLevelMessage
+        {
+            get
+            {
+                return "There is nobody I would go adventuring with other than you. You are a great partner!";
+            }
+        }
+
+        public override void Attributes(TerraGuardian g)
+        {
+            g.MeleeSpeed += 0.15f;
+        }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.NextDouble() < 0.5)
+                return "Hey! I nearly killed that King Slime. Oh well, nevermind...";
+            return "Tarararan-Taran! Meet the worlds biggest smallest bounty hunter ever! Me!";
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            if (Main.dayTime)
+            {
+                Mes.Add("Why female humans keep wanting to try scratching the back of my head?");
+                Mes.Add("This place surelly is livelly, but I'd rather go out and beat some creatures.");
+            }
+            else
+            {
+                Mes.Add("I'm so sleepy, do you know of any window I could be at?");
+                Mes.Add("Looks like a perfect moment to explore, even more with my night eyes.");
+            }
+            if (Main.bloodMoon)
+            {
+                Mes.Add("Do you know what time it is? It's fun time! Let's go outside and beat some ugly creatures!");
+            }
+            if (Main.raining)
+            {
+                Mes.Add("I hate this weather, but at least gives me good reason to stay at home.");
+            }
+            if (Main.eclipse)
+            {
+                Mes.Add("Where did those weird creatures came from?");
+            }
+            if (NpcMod.HasGuardianNPC(1))
+            {
+                Mes.Add("Do you have some spare medicine? [gn:1] seems to be wanting to play with me again...");
+                Mes.Add("I have tried to outrun [gn:1] so I don't play that stupid game, but she's faster than me on 4 legs.");
+                Mes.Add("If you see [gn:1], say that you didn't see me. I'm tired of playing \"Cat and the Wolf\" with her, I didn't even knew that game existed, and my body is still wounded because of her teeth from the last game.");
+            }
+            if (NpcMod.HasGuardianNPC(3))
+            {
+                Mes.Add("I really don't want to play with [gn:3], I could even run away from him, but everytime I do so, he pulls me back with... Whatever is that thing! It's smelly and yuck!");
+                Mes.Add("I really hate when [gn:3] plays his game with me, everytime he acts like as if was devouring my brain I feel like my heart was going to jump out of my mouth.");
+                Mes.Add("Eugh, [gn:3] \"played\" a game with me, and now I'm not only bitten on many places, but also with smelly sticky stuffs around. Wait, will I turn into a Zombie because of that?! Should I begin panicking?");
+                Mes.Add("I want to remove all that stinky stuff i've got from being bullied by [gn:3] from my fur, but I don't even know what is that, so I can't really lick it away. Maybe I should... *Gulp* Take a bath? With water?");
+            }
+            if (NpcMod.HasGuardianNPC(1) && NpcMod.HasGuardianNPC(3))
+            {
+                Mes.Add("You want to know what is worse than a wolf playing \"Cat and Wolf\" with you? Two wolves!!! And one is a Zombie!!");
+                Mes.Add("First she invented that \"Cat and Wolf\" game, now that creepy [gn:3] invented the \"The Walking Guardian\" game. Why does they love bullying me? Is that a wolf thing?");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Mechanic) && NPC.AnyNPCs(Terraria.ID.NPCID.GoblinTinkerer))
+            {
+                Mes.Add("Everytime I chat with [nn:" + Terraria.ID.NPCID.Mechanic + "], she is always in good mood and happy. On other hand, [nn:" + Terraria.ID.NPCID.GoblinTinkerer + "] stares at me with a killer face. Maybe I should start sharpening my knife, meow?");
+            }
+            if(PlayerMod.PlayerHasGuardianSummoned(player, 0))
+                Mes.Add("Hey [gn:0], want to play some \"Hide and Seek\"? Don't take me wrong, I like games, depending on them...");
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 1))
+            {
+                Mes.Add("Hello, I- Waaaaaah!!! *He ran away, as fast as he could.*");
+                Mes.Add("No! Go away! I don't want to play with you, I don't even want to see you, I.. I... Have some important things to do, I mean... Somewhere veeeeeeery far away from you!");
+            }
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 3))
+            {
+                Mes.Add("Yikes! Go away! Your \"game\" spooks me out so hard.");
+                Mes.Add("No way, not again. *He ran away*");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
+                Mes.Add("I really feel bad about [nn:" + Terraria.ID.NPCID.Angler + "], he'll never know my trick for catching more than one fish. Neither you will do.");
+            if (NPC.downedBoss1)
+                Mes.Add("So, you have defeated the Eye of Cthulhu, right? Psh, Easy. Do you ever wanted to know who killed Cthulhu? Well, It was me. Hey, what are you laughing at?");
+            if (NPC.downedBoss3)
+                Mes.Add("My next bounty is set to the Skeletron, at the Dungeon Entrance. Let's go face him!");
+            if (!GuardianBountyQuest.SardineTalkedToAboutBountyQuests)
+            {
+                Mes.Add("Hey, do you have a minute? I want to discuss with you about my newest bounty hunting service.");
+            }
+            else
+            {
+                if (GuardianBountyQuest.SignID == -1)
+                    Mes.Add("I need a sign in my house to be able to place my bounties in it. I only need one, no more than that. If It's an Announcement Box, will be even better.");
+            }
+            if (NpcMod.HasGuardianNPC(5))
+            {
+                Mes.Add("Playing with [gn:5] is really fun. But he has a little problem to know what \"enough\" is.");
+                Mes.Add("One of the best things that ever happened was when you brought [gn:5] here, at least playing with him doesn't hurts or cause wounds... Most of the time.");
+            }
+            if (NpcMod.HasGuardianNPC(7))
+            {
+                Mes.Add("I really love [gn:7], but she keeps controlling me. She could at least give me more freedom, It's not like as if I would run or something.");
+                Mes.Add("[gn:7] was the most lovely and cheerful person I've ever met, but for some reason, she started to get grumpy after we married. What happened?");
+                Mes.Add("Even though [gn:7] tries to hog all my attention to her, I still love her.");
+                Mes.Add("I wonder, does [gn:7] carrying that bag all day wont do bad for her back?");
+                if (NpcMod.HasGuardianNPC(1))
+                    Mes.Add("Woah, you should have seen [gn:7] fighting with [gn:1] earlier. That remembered me of the day we met.");
+                if (NpcMod.HasGuardianNPC(3))
+                    Mes.Add("Ever since [gn:7] saw [gn:3] playing that stupid hateful game with me, she has been asking frequently If I'm fine, and If I wont... Turn? What is that supposed to mean?");
+            }
+            if (NpcMod.HasGuardianNPC(8))
+            {
+                Mes.Add("I love having [gn:8] around, but she asks me to do too many things. It's a bit tiring. Refuse? Are you nuts? Did you look at her?!");
+                Mes.Add("I have a favor to ask of you. If you see me staring at [gn:8] with a goof face, slap my face.");
+                if (NpcMod.HasGuardianNPC(7))
+                {
+                    Mes.Add("[gn:7] keeps asking me if there is something happening between me and [gn:8]. No matter how many times I say no, she still remains furious.");
+                }
+            }
+            if (NpcMod.HasGuardianNPC(Domino))
+            {
+                Mes.Add("Lies! I'm not buying catnip! Where did you brought that idea from?");
+            }
+            if (NpcMod.HasGuardianNPC(Vladimir))
+            {
+                Mes.Add("Hey dude, you know that guy, [gn:"+Sardine+"]? He's really helping me with some personal matters. If you feel troubled, have a talk with him.");
+            }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Add("Do you humans always visits bathrooms when others are using it?");
+                Mes.Add("I'm trying to concentrate here, If you excuse me.");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.NextDouble() < 0.5)
+                return "I don't really need anything right now. All that I want is to beat some monsters.";
+            return "Hum, nothing right now. Later, maybe?";
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.NextDouble() < 0.5)
+                return "I feel weird for asking this but... I need your help with a particular something...";
+            return "I'm not really a fan of asking for help, but I really need help for this.";
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.NextDouble() < 0.5)
+                return "You're the best, did you knew? Of course you knew!";
+            return "I knew you would be able to help me with my little request. Here a token of my affection.";
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.raining && Main.rand.NextDouble() < 0.5)
+                return "Please, give me a house, very please! I'm soaked and cold out here!";
+            switch (Main.rand.Next(3))
+            {
+                case 0:
+                    return "So, you have a place with several humans walking around like complete goofs? May I move in, too?";
+                case 1:
+                    return "Hey, I'm kind of far from my home, could you give me some place to live meanwhile?";
+                case 2:
+                    return "You may ask for my help anytime you want, but I'd like to have some place to stay until then.";
+            }
+            return base.HomelessMessage(player, guardian);
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("Hey, are you interessed into going on a treasure hunting? Haha, I was just wanting to start a chat, If I had an idea of hidden treasure, I'd already have got it.");
+            Mes.Add("Say, how many worlds have you visited? Can you count it on your toes? Because I have visited too many worlds.");
+            Mes.Add("What is the point of an Angel Statue? Not even rigging them with wire does anything.");
+            Mes.Add("I know a cool world we could visit, maybe one day I'll bring you there.");
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 2))
+            {
+                Mes.Add("Do you think that we will bump on my house during our travels? Beside I don't really remember how it looked like...");
+            }
+            else
+            {
+                Mes.Add("I'm starting to get rusty from all this standing around, let's go on an adventure!");
+                Mes.Add("Uh, I'm a little short on coins right now, let's go farm for some?");
+            }
+            if (!Main.dayTime)
+            {
+                Mes.Add("I'm getting soooooo sleepy... Oh! I'm awake. I'm awake.");
+            }
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 0))
+                Mes.Add("Hey [gn:0], want to play some Dodgeball?");
+            if (PlayerMod.PlayerHasGuardianSummoned(player, 1))
+                Mes.Add("What? No! No Way! Go away! I don't want to play some more of that painful game.");
+            if (NpcMod.HasGuardianNPC(1))
+            {
+                Mes.Add("May not look like it, but [gn:1] has very sharp teeth, don't ask how I found out that... Ouch...");
+                Mes.Add("Sometimes I think that [gn:1] uses that \"game\" of her just to bully me.");
+            }
+            if (NpcMod.HasGuardianNPC(3))
+            {
+                Mes.Add("I have to say, from all the things that could haunt me in my life, [gn:3] had to happen? He's even my neighbor!!");
+                Mes.Add("I don't really think that [gn:3] is a bad guy, but I really hate playing that game of his. Even If I deny he plays it with me. I just can't run away, since he pulls me back using his... Whatever is that thing.");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.GoblinTinkerer))
+            {
+                Mes.Add("[nn:" + Terraria.ID.NPCID.GoblinTinkerer + "] isn't that plumberer, but looks with that exact same death stare when he sees me.");
+            }
+            if (NpcMod.HasGuardianNPC(0))
+            {
+                Mes.Add("[gn:0] may be stupid and childish, but I really like talking to him.");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            if (!PlayerMod.HasGuardianBeenGifted(player, 2) && Main.rand.NextDouble() < 0.5)
+                return "When will be the moment I'll be getting my gifts?";
+            return "You guys prepared this party for me? Wow! You guys are awesome!";
+        }
+    }
+}

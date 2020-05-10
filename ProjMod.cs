@@ -1,0 +1,233 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Terraria;
+using Terraria.ModLoader;
+
+namespace giantsummon
+{
+    public class ProjMod : GlobalProjectile
+    {
+        public static Dictionary<int, TerraGuardian> GuardianProj = new Dictionary<int, TerraGuardian>();
+        public static int ProjParent = -1;
+        public static PlayerDataBackup backup, drawBackup;
+        public static bool BackupUsed = false, drawBackupUsed = false;
+
+        public static void CheckForInactiveProjectiles()
+        {
+            int[] Keys = GuardianProj.Keys.ToArray();
+            foreach (int k in Keys)
+            {
+                if (!Main.projectile[k].active)
+                    GuardianProj.Remove(k);
+            }
+        }
+
+        public override void SetDefaults(Projectile projectile)
+        {
+            switch (projectile.type)
+            {
+                case Terraria.ID.ProjectileID.BoneJavelin:
+                case Terraria.ID.ProjectileID.JavelinFriendly:
+                    projectile.melee = false;
+                    projectile.thrown = true;
+                    break;
+            }
+        }
+
+        public override bool PreAI(Projectile projectile)
+        {
+            ProjParent = projectile.whoAmI;
+            if (IsGuardianProjectile(projectile.whoAmI))
+            {
+                TerraGuardian g = GuardianProj[projectile.whoAmI];
+                backup = new PlayerDataBackup(Main.player[projectile.owner], g);
+                BackupUsed = true;
+                if (projectile.minionSlots > 0)
+                {
+                    projectile.timeLeft = 2;
+                    //Main.player[projectile.owner].numMinions--;
+                    g.NumMinions++;
+                }
+            }
+            else
+            {
+                if (Main.player[projectile.owner].GetModPlayer<PlayerMod>().Guardian.Active)
+                {
+                    TerraGuardian g = Main.player[projectile.owner].GetModPlayer<PlayerMod>().Guardian;
+                    //Main.player[projectile.owner].numMinions += g.MaxMinions;
+                    //Main.player[projectile.owner].maxMinions += g.MaxMinions;
+                }
+            }
+            return base.PreAI(projectile);
+        }
+        
+        public override GlobalProjectile NewInstance(Projectile projectile)
+        {
+            if (ProjParent > -1 && IsGuardianProjectile(ProjParent))
+            {
+                GuardianProj[ProjParent].SetProjectileOwnership(projectile.whoAmI);
+                if (Main.projectile[ProjParent].minion)
+                    projectile.minion = true;
+            }
+            return base.NewInstance(projectile);
+        }
+        
+        public override void PostAI(Projectile projectile)
+        {
+            ProjParent = -1;
+            TryRestoringPlayerStatus(projectile);
+            if (!projectile.hostile || projectile.damage == 0)
+                return;
+            for (int p = 0; p < 255; p++)
+            {
+                if (Main.player[p].active)
+                {
+                    PlayerMod player = Main.player[p].GetModPlayer<PlayerMod>();
+                    foreach (TerraGuardian guardian in player.GetAllGuardianFollowers)
+                    {
+                        if (guardian.Active && !guardian.Downed && projectile.getRect().Intersects(guardian.HitBox))
+                        {
+                            if (guardian.Base.GuardianWhenAttackedProjectile(guardian, projectile.damage, false, projectile))
+                            {
+                                int DamageDealt = guardian.Hurt(projectile.damage, projectile.Center.X < guardian.CenterPosition.X ? 1 : -1, false, false, " was slain by a " + projectile.Name + ".");
+                                if (DamageDealt > 0)
+                                {
+                                    TrySimulatingProjectileDamageOnGuardian(projectile, guardian);
+                                    if (projectile.penetrate > 0)
+                                    {
+                                        projectile.penetrate--;
+                                        if (projectile.penetrate == 0)
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void TryRestoringPlayerStatus(Projectile projectile)
+        {
+            if (BackupUsed)
+            {
+                backup.RestorePlayerStatus();
+                BackupUsed = false;
+            }
+        }
+
+        public override void OnHitNPC(Projectile projectile, NPC target, int damage, float knockback, bool crit)
+        {
+            if (IsGuardianProjectile(projectile.whoAmI))
+            {
+                TerraGuardian g = GuardianProj[projectile.whoAmI];
+                if (damage > 0 && target.lifeMax > 5 && projectile.friendly && !projectile.hostile && projectile.aiStyle != 59)
+                {
+                    if (target.canGhostHeal)
+                    {
+                        if (g.HasFlag(GuardianFlags.SpectreHealSetEffect) && !g.HasFlag(GuardianFlags.MoonLeech))
+                        {
+                            projectile.ghostHeal(damage, target.Center);
+                        }
+                        if (g.HasFlag(GuardianFlags.SpectreSplashSetEffect))
+                        {
+                            projectile.ghostHurt(damage, target.Center);
+                        }
+                        if (g.HasFlag(GuardianFlags.NebulaSetEffect) && !g.HasCooldown(GuardianCooldownManager.CooldownType.NebulaCD) && Main.rand.Next(3) == 0)
+                        {
+                            g.AddCooldown(GuardianCooldownManager.CooldownType.NebulaCD, 30);
+                            int Type = Utils.SelectRandom<int>(Main.rand, new int[3] { 3453, 3454, 3455 });
+                            int number = Item.NewItem((int)target.position.X, (int)target.position.Y, target.width, target.height, Type, 1, false, 0, false, false);
+                            Main.item[number].velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
+                            Main.item[number].velocity.X = (float)Main.rand.Next(10, 31) * 0.2f * (float)projectile.direction;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void TrySimulatingProjectileDamageOnGuardian(Projectile p, TerraGuardian g)
+        {
+            Player dummy = Main.player[255];
+            try
+            {
+                if (p.owner > -1 && Main.player[p.owner].hostile)
+                {
+                    p.StatusPvP(255);
+                }
+                else
+                {
+                    p.StatusPlayer(255);
+                }
+            }
+            catch
+            {
+
+            }
+            for (int b = 0; b < dummy.buffType.Length; b++)
+            {
+                if (dummy.buffType[b] > 0)
+                {
+                    g.AddBuff(dummy.buffType[b], dummy.buffTime[b]);
+                }
+                dummy.buffType[b] = 0;
+                dummy.buffTime[b] = 0;
+            }
+        }
+
+        public override bool PreKill(Projectile projectile, int timeLeft)
+        {
+            return base.PreKill(projectile, timeLeft);
+        }
+
+        public static bool IsGuardianProjectile(int ProjPos)
+        {
+            return GuardianProj.ContainsKey(ProjPos);
+        }
+
+        public override void Kill(Projectile projectile, int timeLeft)
+        {
+            if (GuardianProj.ContainsKey(projectile.whoAmI))
+                GuardianProj.Remove(projectile.whoAmI);
+            TryRestoringPlayerStatus(projectile);
+            if (projectile.aiStyle == 52 && projectile.owner == Main.myPlayer && !Main.player[projectile.owner].moonLeech)
+            {
+                int HealthValue = (int)projectile.ai[1];
+                Main.player[projectile.owner].GetModPlayer<PlayerMod>().ShareHealthReplenishWithGuardians(HealthValue);
+            }
+            if (Main.netMode < 2 && projectile.type == 676)
+            {
+                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                {
+                    if (g.Active && !g.Downed && (g.CenterPosition - projectile.Center).Length() < 300)
+                    {
+                        g.AddBuff(197, 900);
+                    }
+                }
+            }
+        }
+
+        public override bool PreDraw(Projectile projectile, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Microsoft.Xna.Framework.Color lightColor)
+        {
+            drawBackupUsed = false;
+            if (IsGuardianProjectile(projectile.whoAmI))
+            {
+                TerraGuardian tg = GuardianProj[projectile.whoAmI];
+                drawBackup = new PlayerDataBackup(Main.player[projectile.owner], tg);
+                drawBackupUsed = true;
+            }
+            return true;
+        }
+
+        public override void PostDraw(Projectile projectile, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Microsoft.Xna.Framework.Color lightColor)
+        {
+            if (drawBackupUsed)
+            {
+                drawBackup.RestorePlayerStatus();
+                drawBackupUsed = false;
+            }
+        }
+    }
+}

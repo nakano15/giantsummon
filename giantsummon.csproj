@@ -1,0 +1,413 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A72C2442-C839-41CE-91F9-D846727BF7B8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>giantsummon</RootNamespace>
+    <AssemblyName>giantsummon</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="NExperience.XNA, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ModCompatibilityDLLs\NExperience.XNA.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="tModLoader, Version=1.3.5.1, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Steam\SteamApps\common\Terraria\tModLoader.exe</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlexRecruitScripts.cs" />
+    <Compile Include="BuffData.cs" />
+    <Compile Include="Buffs\Obstruction.cs" />
+    <Compile Include="Buffs\FirstAidCooldown.cs" />
+    <Compile Include="Buffs\GuardianModBuff.cs" />
+    <Compile Include="Buffs\Hug.cs" />
+    <Compile Include="Buffs\LightFatigue.cs" />
+    <Compile Include="Buffs\LightWound.cs" />
+    <Compile Include="Buffs\Love.cs" />
+    <Compile Include="Buffs\Protecting.cs" />
+    <Compile Include="Buffs\Sleeping.cs" />
+    <Compile Include="Buffs\VeryFatigued.cs" />
+    <Compile Include="Buffs\VeryWounded.cs" />
+    <Compile Include="Buffs\WellBeing.cs" />
+    <Compile Include="Compatibility\GuardianIdentity.cs" />
+    <Compile Include="Compatibility\NExperienceCompatibility.cs" />
+    <Compile Include="ConfigMod.cs" />
+    <Compile Include="Creatures\Alex\AlexBase.cs" />
+    <Compile Include="Creatures\Malisha\MalishaBase.cs" />
+    <Compile Include="Creatures\Terrarian\TerrarianBase.cs" />
+    <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
+    <Compile Include="Creatures\Blue\BlueBase.cs" />
+    <Compile Include="Creatures\Bree\BreeBase.cs" />
+    <Compile Include="Creatures\Brutus\BrutusBase.cs" />
+    <Compile Include="Creatures\Domino\DominoBase.cs" />
+    <Compile Include="Creatures\Leopold\LeopoldBase.cs" />
+    <Compile Include="Creatures\Mabel\MabelBase.cs" />
+    <Compile Include="Creatures\Nemesis\NemesisBase.cs" />
+    <Compile Include="Creatures\Rococo\RococoBase.cs" />
+    <Compile Include="Creatures\Sardine\SardineBase.cs" />
+    <Compile Include="Creatures\Zacks\ZacksBase.cs" />
+    <Compile Include="DialogueChain.cs" />
+    <Compile Include="DialogueSystem.cs" />
+    <Compile Include="ExternalCompatibilityScripts.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GuardianArmorAndSetEffects.cs" />
+    <Compile Include="GuardianBaseContainer.cs" />
+    <Compile Include="GuardianBountyQuest.cs" />
+    <Compile Include="GuardianManagement.cs" />
+    <Compile Include="GuardianNPC\List\AlexNPC.cs" />
+    <Compile Include="GuardianNPC\List\BrutusNPC.cs" />
+    <Compile Include="GuardianNPC\List\BreeNPC.cs" />
+    <Compile Include="GuardianNPC\List\LeopoldNPC.cs" />
+    <Compile Include="GuardianNPC\List\DominoNPC.cs" />
+    <Compile Include="GuardianNPC\List\MabelNPC.cs" />
+    <Compile Include="GuardianNPC\List\NemesisGuardian.cs" />
+    <Compile Include="GuardianNPC\List\VladimirNPC.cs" />
+    <Compile Include="GuardianNPC\List\ZacksNPC.cs" />
+    <Compile Include="GuardianNPC\List\SardineNPC.cs" />
+    <Compile Include="GuardianOrderHudNew.cs" />
+    <Compile Include="GuardianSchedule.cs" />
+    <Compile Include="GuardianSkills.cs" />
+    <Compile Include="Items\Accessories\FirstSymbol.cs" />
+    <Compile Include="Items\Accessories\GoldenShowerPapyrus.cs" />
+    <Compile Include="Items\Accessories\PackLeaderNecklace.cs" />
+    <Compile Include="Items\Cannon\CannonItem.cs" />
+    <Compile Include="Items\Cannon\CannonShell.cs" />
+    <Compile Include="Items\Cannon\IronCannon.cs" />
+    <Compile Include="Items\Consumable\EtherFruit.cs" />
+    <Compile Include="Items\Consumable\EtherHeart.cs" />
+    <Compile Include="Items\Consumable\FirstAidKit.cs" />
+    <Compile Include="Items\Consumable\SkillResetPotion.cs" />
+    <Compile Include="Items\Consumable\RenameCard.cs" />
+    <Compile Include="Items\Misc\BirthdayPresent.cs" />
+    <Compile Include="Items\Shields\LifeShield.cs" />
+    <Compile Include="Items\Shields\DiamondShield.cs" />
+    <Compile Include="ModGuardianData.cs" />
+    <Compile Include="ModTargetting.cs" />
+    <Compile Include="NetMod.cs" />
+    <Compile Include="Npcs\AlexNPC.cs" />
+    <Compile Include="Npcs\BreeNPC.cs" />
+    <Compile Include="Npcs\BrutusNPC.cs" />
+    <Compile Include="Npcs\DominoNPC.cs" />
+    <Compile Include="Npcs\GuardianActorNPC.cs" />
+    <Compile Include="Npcs\LeopoldNPC.cs" />
+    <Compile Include="Npcs\MabelNPC.cs" />
+    <Compile Include="Npcs\RococoNPC.cs" />
+    <Compile Include="Npcs\VladimirNPC.cs" />
+    <Compile Include="Npcs\ZombieGuardian.cs" />
+    <Compile Include="PathFinder.cs" />
+    <Compile Include="PlayerDataBackup.cs" />
+    <Compile Include="PlayerItems\StaffOfRenew.cs" />
+    <Compile Include="Projectiles\BloodVomit.cs" />
+    <Compile Include="Projectiles\ZombieFart.cs" />
+    <Compile Include="RenameGuardianCommand.cs" />
+    <Compile Include="MainMod.cs" />
+    <Compile Include="GuardianActions.cs" />
+    <Compile Include="GuardianAnimationPoints.cs" />
+    <Compile Include="GuardianBase.cs" />
+    <Compile Include="GuardianCooldownManager.cs" />
+    <Compile Include="GuardianData.cs" />
+    <Compile Include="GuardianNPC\BeforeDiscovering\Blue_Bonfire.cs" />
+    <Compile Include="GuardianNPC\GuardianNPCPrefab.cs" />
+    <Compile Include="GuardianNPC\List\BlueNPC.cs" />
+    <Compile Include="GuardianNPC\List\RococoNPC.cs" />
+    <Compile Include="GuardianOrderHud.cs" />
+    <Compile Include="GuardianPlayerAccessoryEffects.cs" />
+    <Compile Include="GuardianRequests.cs" />
+    <Compile Include="GuardianSelectionInterface.cs" />
+    <Compile Include="GuardianSprites.cs" />
+    <Compile Include="GuardianFlags.cs" />
+    <Compile Include="ItemMod.cs" />
+    <Compile Include="Items\Accessories\BunnyFoot.cs" />
+    <Compile Include="Items\Accessories\ProvocationBadge.cs" />
+    <Compile Include="Items\Accessories\HermesSandals.cs" />
+    <Compile Include="Items\Accessories\SummonerLeash.cs" />
+    <Compile Include="Items\Accessories\MagicLeash.cs" />
+    <Compile Include="Items\Accessories\RangedLeash.cs" />
+    <Compile Include="Items\Accessories\MeleeLeash.cs" />
+    <Compile Include="Items\Consumable\GuardianGreatHealingPotion.cs" />
+    <Compile Include="Items\Consumable\GuardianHealingPotion.cs" />
+    <Compile Include="Items\Consumable\LesserGuardianPotion.cs" />
+    <Compile Include="Items\OffHand\GiantLantern.cs" />
+    <Compile Include="Items\Shields\IronBuckler.cs" />
+    <Compile Include="Items\Equipments\HugeHellPants.cs" />
+    <Compile Include="Items\Equipments\HugeHellArmor.cs" />
+    <Compile Include="Items\Equipments\HugeHellmet.cs" />
+    <Compile Include="Items\Equipments\HugeButcherPants.cs" />
+    <Compile Include="Items\Equipments\HugeDemonPants.cs" />
+    <Compile Include="Items\Equipments\HugeIronLegGuards.cs" />
+    <Compile Include="Items\Equipments\HugeButcherShirt.cs" />
+    <Compile Include="Items\Equipments\HugeDemonCoat.cs" />
+    <Compile Include="Items\Equipments\HugeIronBreastplate.cs" />
+    <Compile Include="Items\Equipments\HugeIronHelmet.cs" />
+    <Compile Include="Items\Equipments\HugeDemonCowl.cs" />
+    <Compile Include="Items\Equipments\HugeButchererMask.cs" />
+    <Compile Include="Items\Equipments\WoodenPants.cs" />
+    <Compile Include="Items\Equipments\WoodenArmor.cs" />
+    <Compile Include="Items\GuardianItemPrefab.cs" />
+    <Compile Include="Items\Equipments\WoodHat.cs" />
+    <Compile Include="Items\Weapons\BladeOfLight.cs" />
+    <Compile Include="Items\Weapons\ChlorophyteCrescentAxe.cs" />
+    <Compile Include="Items\Weapons\ReallyHeavyChaingun.cs" />
+    <Compile Include="Items\Weapons\FleshCarver.cs" />
+    <Compile Include="Items\Weapons\RottenBoomer.cs" />
+    <Compile Include="Items\Weapons\ScreamingSalamander.cs" />
+    <Compile Include="Items\Weapons\TheStinger.cs" />
+    <Compile Include="Items\Weapons\Flamberge.cs" />
+    <Compile Include="Items\Weapons\MeatMasher.cs" />
+    <Compile Include="Items\Weapons\DaylightBane.cs" />
+    <Compile Include="Items\Weapons\JungleStar.cs" />
+    <Compile Include="Items\Weapons\WoodenGreathammer.cs" />
+    <Compile Include="Items\Weapons\MahoganyCompositeBow.cs" />
+    <Compile Include="Items\Weapons\WoodenCrossbow.cs" />
+    <Compile Include="Items\Weapons\TwoHandedSword.cs" />
+    <Compile Include="Items\Weapons\UprootedTree.cs" />
+    <Compile Include="NpcMod.cs" />
+    <Compile Include="PlayerMod.cs" />
+    <Compile Include="ProjMod.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SavePlayerDefsCommand.cs" />
+    <Compile Include="SoundData.cs" />
+    <Compile Include="TerraGuardian.cs" />
+    <Compile Include="TriggerHandler.cs" />
+    <Compile Include="UtilityMethods.cs" />
+    <Compile Include="WorldMod.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Buffs\FirstAidCooldown.png" />
+    <Content Include="Buffs\GuardianModBuff.png" />
+    <Content Include="Buffs\Hug.png" />
+    <Content Include="Buffs\LightFatigue.png" />
+    <Content Include="Buffs\LightWound.png" />
+    <Content Include="Buffs\Love.png" />
+    <Content Include="Buffs\Obstruction.png" />
+    <Content Include="Buffs\Protecting.png" />
+    <Content Include="Buffs\Sleeping.png" />
+    <Content Include="Buffs\VeryFatigued.png" />
+    <Content Include="Buffs\VeryWounded.png" />
+    <Content Include="Buffs\WellBeing.png" />
+    <Content Include="ChangeLog.txt" />
+    <Content Include="Creatures\Alex\right_arm_front.png" />
+    <Content Include="Creatures\Malisha\body.png" />
+    <Content Include="Creatures\Malisha\head.png" />
+    <Content Include="Creatures\Malisha\left_arm.png" />
+    <Content Include="Creatures\Malisha\right_arm.png" />
+    <Content Include="Creatures\Malisha\tails.png" />
+    <Content Include="Creatures\Vladimir\body.png" />
+    <Content Include="Creatures\Vladimir\body_front.png" />
+    <Content Include="Creatures\Vladimir\head.png" />
+    <Content Include="Creatures\Vladimir\left_arm.png" />
+    <Content Include="Creatures\Vladimir\right_arm.png" />
+    <Content Include="Creatures\Vladimir\right_arm_front.png" />
+    <Content Include="Creatures\Blue\body_front.png" />
+    <Content Include="Creatures\Blue\head.png" />
+    <Content Include="Creatures\Blue\body.png" />
+    <Content Include="Creatures\Alex\body.png" />
+    <Content Include="Creatures\Alex\body_front.png" />
+    <Content Include="Creatures\Alex\head.png" />
+    <Content Include="Creatures\Alex\left_arm.png" />
+    <Content Include="Creatures\Alex\right_arm.png" />
+    <Content Include="Creatures\Blue\right_arm_front.png" />
+    <Content Include="Creatures\Bree\body.png" />
+    <Content Include="Creatures\Bree\body_front.png" />
+    <Content Include="Creatures\Bree\head.png" />
+    <Content Include="Creatures\Bree\left_arm.png" />
+    <Content Include="Creatures\Bree\right_arm.png" />
+    <Content Include="Creatures\Brutus\body.png" />
+    <Content Include="Creatures\Brutus\body_front.png" />
+    <Content Include="Creatures\Brutus\head.png" />
+    <Content Include="Creatures\Brutus\left_arm.png" />
+    <Content Include="Creatures\Brutus\right_arm.png" />
+    <Content Include="Creatures\Domino\body.png" />
+    <Content Include="Creatures\Domino\body_front.png" />
+    <Content Include="Creatures\Domino\head.png" />
+    <Content Include="Creatures\Leopold\body.png" />
+    <Content Include="Creatures\Leopold\body_front.png" />
+    <Content Include="Creatures\Leopold\head.png" />
+    <Content Include="Creatures\Leopold\left_arm.png" />
+    <Content Include="Creatures\Leopold\right_arm.png" />
+    <Content Include="GuardianNPC\List\Domino_Head.png" />
+    <Content Include="Creatures\Domino\left_arm.png" />
+    <Content Include="Creatures\Domino\right_arm.png" />
+    <Content Include="Creatures\LosangleOfUnnown.png" />
+    <Content Include="Creatures\Mabel\body.png" />
+    <Content Include="Creatures\Mabel\body_front.png" />
+    <Content Include="Creatures\Mabel\head.png" />
+    <Content Include="Creatures\Mabel\left_arm.png" />
+    <Content Include="Creatures\Mabel\right_arm.png" />
+    <Content Include="Creatures\Sardine\body_front.png" />
+    <Content Include="Guardian idea from shizam131.txt" />
+    <Content Include="GuardianNPC\List\Brutus_Head.png" />
+    <Content Include="Creatures\Rococo\body_front.png" />
+    <Content Include="Creatures\Rococo\head.png" />
+    <Content Include="Creatures\Sardine\body.png" />
+    <Content Include="Creatures\Sardine\head.png" />
+    <Content Include="Creatures\Sardine\left_arm.png" />
+    <Content Include="Creatures\Sardine\right_arm.png" />
+    <Content Include="Creatures\Nemesis\body.png" />
+    <Content Include="Creatures\Nemesis\head.png" />
+    <Content Include="Creatures\Nemesis\left_arm.png" />
+    <Content Include="Creatures\Nemesis\right_arm.png" />
+    <Content Include="Creatures\Zacks\body.png" />
+    <Content Include="Creatures\Zacks\body_front.png" />
+    <Content Include="Creatures\Zacks\head.png" />
+    <Content Include="Creatures\Zacks\left_arm.png" />
+    <Content Include="Creatures\Zacks\right_arm.png" />
+    <Content Include="Extra\TrappedCat.png" />
+    <Content Include="GuardianNPC\BeforeDiscovering\Blue_Bonfire.png" />
+    <Content Include="GuardianNPC\List\Blue_Head.png" />
+    <Content Include="Creatures\Blue\left_arm.png" />
+    <Content Include="Creatures\Blue\right_arm.png" />
+    <Content Include="Creatures\Rococo\body.png" />
+    <Content Include="Creatures\Rococo\left_arm.png" />
+    <Content Include="Creatures\Rococo\right_arm.png" />
+    <Content Include="GuardianNPC\List\Alex_Head.png" />
+    <Content Include="GuardianNPC\List\Bree_Head.png" />
+    <Content Include="GuardianNPC\List\Vladimir_Head.png" />
+    <Content Include="GuardianNPC\List\Leopold_Head.png" />
+    <Content Include="GuardianNPC\List\Mabel_Head.png" />
+    <Content Include="GuardianNPC\List\Nemesis_Head.png" />
+    <Content Include="GuardianNPC\List\Sardine_Head.png" />
+    <Content Include="GuardianNPC\List\Rococo_Head.png" />
+    <Content Include="GuardianNPC\BlankNPC.png" />
+    <Content Include="GuardianNPC\List\Zacks_Head.png" />
+    <Content Include="Ideas\Equipments.txt" />
+    <Content Include="Interface\Crown.png" />
+    <Content Include="Interface\EditButton.png" />
+    <Content Include="Interface\Emotions.png" />
+    <Content Include="Interface\FriendshipHeart.png" />
+    <Content Include="Interface\GuardianInfoIcons.png" />
+    <Content Include="Interface\GuardianMouse.png" />
+    <Content Include="Interface\GuardianStatusIcon.png" />
+    <Content Include="Interface\HideButton.png" />
+    <Content Include="Interface\ReportButton.png" />
+    <Content Include="Interface\TacticsBar.png" />
+    <Content Include="Interface\GuardianEquipButtons.png" />
+    <Content Include="Interface\GuardianHealthBar.png" />
+    <Content Include="Interface\TacticsIcons.png" />
+    <Content Include="Items\Accessories\BunnyFoot.png" />
+    <Content Include="Items\Accessories\FirstSymbol.png" />
+    <Content Include="Items\Accessories\GoldenShowerPapyrus.png" />
+    <Content Include="Items\Accessories\HermesSandals.png" />
+    <Content Include="Items\Accessories\MagicLeash.png" />
+    <Content Include="Items\Accessories\MeleeLeash.png" />
+    <Content Include="Items\Accessories\PackLeaderNecklace.png" />
+    <Content Include="Items\Accessories\ProvocationBadge.png" />
+    <Content Include="Items\Accessories\RangedLeash.png" />
+    <Content Include="Items\Accessories\SummonerLeash.png" />
+    <Content Include="Items\Cannon\CannonShell.png" />
+    <Content Include="Items\Cannon\CannonItem.png" />
+    <Content Include="Items\Cannon\IronCannon.png" />
+    <Content Include="Items\Consumable\EtherFruit.png" />
+    <Content Include="Items\Consumable\EtherHeart.png" />
+    <Content Include="Items\Consumable\FirstAidKit.png" />
+    <Content Include="Items\Consumable\GuardianGreatHealingPotion.png" />
+    <Content Include="Items\Consumable\GuardianHealingPotion.png" />
+    <Content Include="Items\Consumable\LesserGuardianPotion.png" />
+    <Content Include="Items\Consumable\RenameCard.png" />
+    <Content Include="Items\Consumable\SkillResetPotion.png" />
+    <Content Include="Items\Misc\BirthdayPresent.png" />
+    <Content Include="Items\Shields\DiamondShield.png" />
+    <Content Include="Items\Shields\LifeShield.png" />
+    <Content Include="Items\Weapons\ReallyHeavyChaingun.png" />
+    <Content Include="Items\Equipments\HugeButchererMask.png" />
+    <Content Include="Items\Equipments\HugeButcherPants.png" />
+    <Content Include="Items\Equipments\HugeButcherShirt.png" />
+    <Content Include="Items\Equipments\HugeDemonCoat.png" />
+    <Content Include="Items\Equipments\HugeDemonCowl.png" />
+    <Content Include="Items\Equipments\HugeDemonPants.png" />
+    <Content Include="Items\Equipments\HugeHellArmor.png" />
+    <Content Include="Items\Equipments\HugeHellmet.png" />
+    <Content Include="Items\Equipments\HugeHellPants.png" />
+    <Content Include="Items\Equipments\HugeIronBreastplate.png" />
+    <Content Include="Items\Equipments\HugeIronHelmet.png" />
+    <Content Include="Items\Equipments\HugeIronLegGuards.png" />
+    <Content Include="Items\OffHand\GiantLantern.png" />
+    <Content Include="Items\Shields\IronBuckler.png" />
+    <Content Include="Items\Weapons\BladeOfLight.png" />
+    <Content Include="Items\Weapons\ChlorophyteCrescentAxe.png" />
+    <Content Include="Items\Weapons\FleshCarver.png" />
+    <Content Include="Items\Weapons\RottenBoomer.png" />
+    <Content Include="Items\Weapons\ScreamingSalamander.png" />
+    <Content Include="Items\Weapons\TheStinger.png" />
+    <Content Include="Items\Equipments\WoodenArmor.png" />
+    <Content Include="Items\Equipments\WoodenPants.png" />
+    <Content Include="Items\Equipments\WoodHat.png" />
+    <Content Include="Items\GuardianItemPrefab.png" />
+    <Content Include="Items\Weapons\DaylightBane.png" />
+    <Content Include="Items\Weapons\Flamberge.png" />
+    <Content Include="Items\Weapons\JungleStar.png" />
+    <Content Include="Items\Weapons\MahoganyCompositeBow.png" />
+    <Content Include="Items\Weapons\MeatMasher.png" />
+    <Content Include="Items\Weapons\TwoHandedSword.png" />
+    <Content Include="Items\Weapons\UprootedTree.png" />
+    <Content Include="Items\Weapons\WoodenCrossbow.png" />
+    <Content Include="Items\Weapons\WoodenGreathammer.png" />
+    <Content Include="ModCompatibilityDLLs\NExperience.XNA.dll" />
+    <Content Include="Notes.txt" />
+    <Content Include="Npcs\AlexNPC.png" />
+    <Content Include="Npcs\BreeNPC.png" />
+    <Content Include="Npcs\BrutusNPC.png" />
+    <Content Include="Npcs\ZombieGuardian.png" />
+    <Content Include="PlayerItems\StaffOfRenew.png" />
+    <Content Include="Projectiles\BloodVomit.png" />
+    <Content Include="Projectiles\ZombieFart.png" />
+    <Content Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

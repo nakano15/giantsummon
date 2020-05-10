@@ -1,0 +1,89 @@
+﻿using System;
+using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
+using Terraria.ModLoader.Config.UI;
+
+namespace giantsummon
+{
+    //Client side Config
+    [Label("Client Settings")]
+    public class ConfigMod : ModConfig
+    {
+        public override ConfigScope Mode
+        {
+            get { return ConfigScope.ClientSide; }
+        }
+
+        [Label("Second player control port.")]
+        [Tooltip("Change in case the second player is unable to control the guardian.")]
+        public PlayerIndex Control2P { get { return MainMod.controlPort; } set { MainMod.controlPort = value; } }
+
+        [Label("Allow guardians to idle easier when near town npcs?")]
+        [Tooltip("Guardians will take less longer to start their Idle AI when you are stopped in a place with town npcs nearby.")]
+        [DefaultValue(true)]
+        public bool GuardiansIdleEasierOnTowns { get { return MainMod.GuardiansIdleEasierOnTowns; } set { MainMod.GuardiansIdleEasierOnTowns = value; } }
+
+        [Label("Use Guardian Necessities System.")]
+        [Tooltip("To allow rotativity, you can turn this on. Guardians can get injured, tired or more as they travel with you. When they get a bad status, you need to send them home to recover from that bad status.")]
+        [DefaultValue(true)]
+        public bool NecessitiesSystem { get { return MainMod.UsingGuardianNecessitiesSystem; } set { MainMod.UsingGuardianNecessitiesSystem = value; } }
+
+        [Label("Warn about sellable inventory slots filled.")]
+        [Tooltip("Turning this on, will only tell the number of inventory slots left, based on the second row and ahead of the guardian inventory.")]
+        public bool WarnSaleableInventorySlotsInstad { get { return MainMod.WarnAboutSaleableInventorySlotsLeft; } set { MainMod.WarnAboutSaleableInventorySlotsLeft = value; } }
+         
+        [Label("Use new order system.")]
+        [Tooltip("Turns on the new order system. You just have to press the order button to call It, and navigate by pressing the dpad number keys. When off, uses the old system, where you hold down the key, then moves to the option.")]
+        [DefaultValue(true)]
+        public bool UseNewOrderSystem { get { return MainMod.TestNewOrderHud; } set { MainMod.TestNewOrderHud = value; } }
+    }
+    [Label("Server Settings")]
+    public class ServerConfigMod : ModConfig
+    {
+        public override ConfigScope Mode
+        {
+            get { return ConfigScope.ServerSide; }
+        }
+
+        [Label("Test multiplayer sync?")]
+        [Tooltip("There is no guarantee that it will work, but at least can debug it.")]
+        public bool TestMpSync { get { return MainMod.NetplaySync; } set { MainMod.NetplaySync = value; } }
+
+        [Label("Increase all monsters health based on number of guardians following?")]
+        [Tooltip("Only available on singleplayer. Having more than 1 guardian following you, increases monsters health by 5% per guardian.")]
+        public bool MobHealthBoost { get { return MainMod.MobHealthBoost; } set { MainMod.MobHealthBoost = value; } }
+
+        /*[Label("Test new guardians combat AI?")]
+        [Tooltip("Changes the combat behavior AI to the new AI.")]
+        public bool TestNewCombatAI { get { return MainMod.TestNewCombatAI; } set { MainMod.TestNewCombatAI = value; } }*/
+
+        [Label("Add stronger version of monsters based on guardians and their health?")]
+        [Tooltip("Makes so monsters can spawn with buffed status, depending on the number of guardians you have summoned, and also their max health.\nDisabling this makes so +3 max monster spawn is added for each guardian.")]
+        [DefaultValue(true)]
+        public bool UseRaidMonsterBuffing { get { return MainMod.UseNewMonsterModifiersSystem; } set { MainMod.UseNewMonsterModifiersSystem = value; } }
+
+        [Label("Shared Maximum Life and Mana?")]
+        [Tooltip("If turned on, your guardians will get the life and mana bonus value based on your characters. Nothing stops you from increasing their personal status cap.")]
+        public bool SharedStatus { get { return MainMod.SharedCrystalValues; } set { MainMod.SharedCrystalValues = value; } }
+
+        [Label("Use Skills System?")]
+        [Tooltip("If turned on, guardians skills will increase during their travels with you, depending on what they do during that. Those skills gives boost to the guardian status based on the level.")]
+        [DefaultValue(true)]
+        public bool UseSkillsSystem { get { return MainMod.UseSkillsSystem; } set { MainMod.UseSkillsSystem = value; } }
+
+        [Label("Guardians has Player Health and Mana status.")]
+        [Tooltip("Forces guardians to have the health and mana values like the player would.")]
+        public bool HealthAndManaPlayerStandards { get { return MainMod.SetGuardiansHealthAndManaToPlayerStandards; } set { MainMod.SetGuardiansHealthAndManaToPlayerStandards = value; } }
+
+        public override void OnChanged()
+        {
+            MainMod.ForceUpdateGuardiansStatus = true;
+        }
+    }
+}
