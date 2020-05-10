@@ -1,0 +1,52 @@
+Lost Pig pieces:
+
+Anger piece-
+Possible Recruitment process:
+-The first piece you will find
+-Will be spoted after you beat the eye of cathulu
+-Will confront the player and challenge them to a fight 
+-will be recruitable after defeating it
+Abilites/skills-
+-Rage: has a percent chance to use a empowered attack that boost attack damage by 50%
+
+Sadness piece-
+Possible Recuitment process:
+Can be found somewhere underground in a corner crying
+Abilities/skills:
+-Will refuse to help the player in battles
+- crys tears that can make enemies confused?/ or make it give some type of debuff
+
+Happy piece-
+Possible Recuitment process:
+-Is recruitable once Hallow is present in the world
+- Will appear in the hollow biome in hardmode
+Abilities/skills:
+-Will be happy to aid you in battling
+- gives happy buff
+
+Fear piece-
+Possible Recuitment process:
+-Can be found in dugeon after defeating skeletron
+- Will be fearful and run away from player, player will need to catch it
+-after catching it he can be recruited
+Abilities/skills:
+-Will have a set chance to run away instead of fight in battle
+- when it does fight it will have animations that would suggest it doesnt want to fight
+
+Blank Transformation-
+Possible recruitment process:
+-Will be formed once all pig pieces have been recruited
+Abilites/Skills:
+Blank/Bland/Empty beam- a beam of energy that does %max health
+ true damage
+-mount ability allows player to float with it
+-empty buff- this guardian cannot recive debuffs
+Special item-
+nameless crystal- will transform bland gaurdian into a emotional being again and will give it more powers
+Emotional State Moves-
+Feel Sorry- enemies become sad and lose 20 defense
+Maddness- Guardian boost players attack damage by a percent
+JoyFul- gives player greater chance to get more coins
+Fearless- Gives player immunity to debuffs for 10 seconds
+Emotional travisty- Super beam that does true damage
+Baconado- You already know what this does
