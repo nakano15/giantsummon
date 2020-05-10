@@ -3,6 +3,8 @@ Confusing, isn't? This is the source of TerraGuardians mod.
 
 If you don't know what TerraGuardians mod is, It is a companion mod for Terraria. It allows you to have custom companion, unlike Terrarian characters, aswell as Terrarian looking like companions. Since the mod is made by me (Nakano15), that means not only that is in the mod.
 
+The TerraGuardians themselves are human-animal mixed creatures with different appearances and status. Due to the fact that they come in varied sizes, colors and styles, that means I'm not bound into making them Terrarian like.
+
 # Source Map
 
 Buffs = This is where the custom mod buffs are sent.
