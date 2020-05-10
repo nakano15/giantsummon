@@ -26,7 +26,7 @@ namespace giantsummon.Creatures
             Height = 38;
             SpriteWidth = 72;
             SpriteHeight = 56;
-            FramesInRows = 21;
+            FramesInRows = 25;
             //DuckingHeight = 54;
             Age = 6;
             Male = true;
@@ -66,6 +66,9 @@ namespace giantsummon.Creatures
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12, 13, 14, 15, 16 });
             ThroneSittingFrame = 18;
             BedSleepingFrame = 19;
+            DownedFrame = 20;
+            ReviveFrame = 21;
+            PetrifiedFrame = 22;
 
             SleepingOffset.X = -2;
 

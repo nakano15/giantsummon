@@ -78,6 +78,9 @@ namespace giantsummon.Creatures
             ThroneSittingFrame = 27;
             BedSleepingFrame = 28;
             SleepingOffset.X = 16;
+            DownedFrame = 32;
+            ReviveFrame = 33;
+            PetrifiedFrame = 34;
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(24, 0);

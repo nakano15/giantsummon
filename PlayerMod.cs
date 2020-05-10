@@ -1567,7 +1567,7 @@ namespace giantsummon
 
         public override void OnRespawn(Player player)
         {
-            KnockedOut = false;
+            KnockedOut = KnockedOutCold = false;
             player.fullRotation = 0;
             FriendlyDuelDefeat = false;
         }

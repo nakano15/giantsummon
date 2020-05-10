@@ -10,6 +10,14 @@ namespace giantsummon.Creatures
 {
     public class LeopoldBase : GuardianBase
     {
+        /// <summary>
+        /// -Coward
+        /// -Knows of many things
+        /// -Brags about knowing many things
+        /// -Female Terrarians keep touching his tail.
+        /// -Spends most of his day reading books.
+        /// -Rarelly leaves house, unless for a research.
+        /// </summary>
         public LeopoldBase()
         {
             Name = "Leopold";

@@ -4803,7 +4803,7 @@ namespace giantsummon
                 {
                     if (Main.player[p].active && Main.player[p].Distance(CenterPosition) < 1024f)
                     {
-                        if (!Main.player[p].dead && !IsPlayerHostile(Main.player[p]) && Main.player[p].potionDelay <= 0)
+                        if (!Main.player[p].dead && !IsPlayerHostile(Main.player[p]) && Main.player[p].potionDelay <= 0 && !Main.player[p].GetModPlayer<PlayerMod>().KnockedOut)
                         {
                             float HealthValue = (float)Main.player[p].statLife / Main.player[p].statLifeMax2;
                             if (HealthValue < LowestHealth)

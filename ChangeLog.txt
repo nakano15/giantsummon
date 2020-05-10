@@ -1,1 +1,2 @@
-﻿
+﻿Has gained petrified frame: Rococo, Blue, Sardine, Zacks, Alex and Brutus.
+Your companions will no longer use buff potions when you tell them to use hp and mana status increase items.

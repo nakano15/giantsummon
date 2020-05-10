@@ -424,6 +424,7 @@ namespace giantsummon
 
         public static bool DrawDownedInterface()
         {
+            //Add a script for when the player is controlling a guardian, instead.
             const int BarWidth = 360, BarHeight = 14;
             float BarSize = (float)Main.player[Main.myPlayer].statLife / Main.player[Main.myPlayer].statLifeMax2;
             if (BarSize > 1f)

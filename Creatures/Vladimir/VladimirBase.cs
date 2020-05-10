@@ -10,19 +10,12 @@ namespace giantsummon.Creatures
     public class VladimirBase : GuardianBase
     {
         /// <summary>
-        /// When the player is mounted on the guardian:
-        ///     Gains a buff that gives:
-        ///         Hug buff.
-        ///         Increased health regeneration.
-        ///         Great damage reduction.
-        ///         Health regeneration increases greatly when he's stopped.
-        ///     
-        /// When guardian is sharing the player mount:
-        ///     Gains a buff that gives:
-        ///         Buff related to having his paws in front of the player vision.
-        ///         Greatly lowers the player visibility.
-        ///         Makes the player literally intangible, guardian takes all attacks.
-        ///         Player can't attack.
+        /// -Very friendly when not in a bloodmoon.
+        /// -Turns extremelly aggressive during bloodmoons.
+        /// -Loves giving hugs.
+        /// -Listens to confessions of people he hugs.
+        /// -Had a brother that is younger than him, who he gave hugs to.
+        /// -Came from a family of warriors. Choose to be friendly, instead.
         /// </summary>
 
         public VladimirBase()
