@@ -1,9 +1,0 @@
-Have a pig guardian, which you have to find all 4 of It's personalities, before 
-they can be fused into the guardian itself.
-
-Each personality carries a characteristic from the final guardian, and is small sized.
-The final guardian is a large size.
-
-The fusion of the 4 guardians should be optional.
-
-//Remember to thank Shizam131 for that.
