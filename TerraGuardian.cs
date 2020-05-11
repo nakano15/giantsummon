@@ -16,6 +16,7 @@ namespace giantsummon
         public List<PathFinder.Breadcrumbs> Paths = new List<PathFinder.Breadcrumbs>();
         public int WhoAmID = 0;
         public static int IDStack = 0;
+        public static bool ForceKill = false;
         public byte AssistSlot = 0;
         public int SavedPosX = -1, SavedPosY = -1; //Redo the path finding if moving to it was interrupted by any way.
         public bool PathingInterrupted = false;
@@ -1464,6 +1465,8 @@ namespace giantsummon
                 return;
             }
             MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
+            if (HP < 0)
+                HP = 0;
             if (HasFlag(GuardianFlags.Petrified))
             {
                 Rotation = 0;
@@ -2400,6 +2403,11 @@ namespace giantsummon
             if (BeingPulledByPlayer && OwnerPos > -1)
             {
                 Player p = Main.player[OwnerPos];
+                if (!p.gross && WofFacing)
+                {
+                    BeingPulledByPlayer = false;
+                    return false;
+                }
                 Vector2 ResultingPosition = p.Center;
                 Vector2 MovementDirection = (ResultingPosition - CenterPosition);
                 float Distance = MovementDirection.Length();
@@ -2518,7 +2526,8 @@ namespace giantsummon
                     else
                     {
                         Vector2 ResultingPosition = wof.Center;
-                        ResultingPosition.X += wof.direction * 200;
+                        if(!KnockedOut)
+                            ResultingPosition.X += wof.direction * 200;
                         float Speed = 11f;
                         Vector2 MovementDirection = (ResultingPosition - CenterPosition);
                         Distance = MovementDirection.Length();
@@ -2527,8 +2536,15 @@ namespace giantsummon
                         Position += Velocity;
                         if (Distance < Speed)
                         {
-                            WofTongued = false;
-                            GotByWofTongue = false;
+                            if (KnockedOut)
+                            {
+                                DoForceKill(" was eaten by the Wall of Flesh.");
+                            }
+                            else
+                            {
+                                WofTongued = false;
+                                GotByWofTongue = false;
+                            }
                         }
                     }
                 }
@@ -4842,7 +4858,6 @@ namespace giantsummon
 
         public bool NewIdleBehavior()
         {
-            bool DayNightTransition = Main.time == 0;
             if (OwnerPos > -1 && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || TargetID != -1 || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
                 return false;
@@ -4866,6 +4881,7 @@ namespace giantsummon
                     {
                         if (MoveIndoors)
                         {
+                            bool JustTurnedToNight = !Main.dayTime && Main.time == 0;
                             //if (DayNightTransition && !Main.dayTime && UsingFurniture)
                             //    LeaveFurniture();
                             int HouseX = Main.npc[NpcPosition].homeTileX * 16,
@@ -6020,7 +6036,7 @@ namespace giantsummon
 
         public bool CheckForPlayerAFK()
         {
-            if (OwnerPos == -1 || Is2PControlled || PlayerControl || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320)) return false;
+            if (OwnerPos == -1 || Is2PControlled || PlayerControl || KnockedOut || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320)) return false;
             Player owner = Main.player[OwnerPos];
             bool NoInput = !owner.controlLeft && !owner.controlRight && !owner.controlJump && !owner.controlDown && owner.itemAnimation <= 0,
                 IsAfkAbuse = (NoInput && TargetID > 0 && owner.townNPCs == 0);
@@ -6425,7 +6441,7 @@ namespace giantsummon
 
         public void DoTrigger(TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
         {
-            if (!Base.WhenTriggerActivates(trigger, Value, Value2, Value3, Value4, Value5))
+            if (!Base.WhenTriggerActivates(this, trigger, Value, Value2, Value3, Value4, Value5))
                 return;
 
         }
@@ -6519,9 +6535,19 @@ namespace giantsummon
             UpdateStatus = true;
         }
 
+        public void DoForceKill(string DeathMessage = "")
+        {
+            ForceKill = true;
+            Knockout(DeathMessage);
+        }
+
         public void Knockout(string DeathText = "")
         {
-            if (MainMod.UseNewDownedSystem && !KnockedOut && (HP + MHP / 2 > 0 || MainMod.CharacterDoesntDiesAfterDownedDefeat))
+            if (ForceKill)
+            {
+                ForceKill = false;
+            }
+            else if (MainMod.UseNewDownedSystem && !KnockedOut && (HP + MHP / 2 > 0 || MainMod.CharacterDoesntDiesAfterDownedDefeat))
             {
                 EnterDownedState();
                 return;
@@ -12516,7 +12542,7 @@ namespace giantsummon
 
         public void TeleportToGuardedPosition()
         {
-            if (GuardingPosition.HasValue)
+            if (GuardingPosition.HasValue && !WofFacing)
             {
                 Position = new Vector2(GuardingPosition.Value.X * 16, GuardingPosition.Value.Y * 16);
                 Velocity = Vector2.Zero;
@@ -12532,6 +12558,10 @@ namespace giantsummon
         {
             if (!force && (PlayerMounted || PlayerControl || SittingOnPlayerMount))
                 return;
+            if (!Main.player[OwnerPos].gross && WofFacing)
+            {
+                return;
+            }
             BeingPulledByPlayer = false;
             if(Data.SitOnTheMount && Main.player[OwnerPos].mount.Active && !PlayerMounted && !PlayerControl)
                 DoSitOnPlayerMount(true);
@@ -13119,7 +13149,7 @@ namespace giantsummon
             {
                 HeadSlot = 44;
             }
-            if (BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame)
+            if (BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame)
                 HeadSlot = 0;
             TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             Vector2 NewPosition = Position - Main.screenPosition;
@@ -13981,7 +14011,8 @@ namespace giantsummon
 
         public void DrawWings(SpriteEffects seffects, Color c)
         {
-            if (Ducking || BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || WingType < 1 || !Main.wingsLoaded[WingType]) return;
+            if (Ducking || BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame
+                || BodyAnimationFrame == Base.ReviveFrame || BodyAnimationFrame == Base.PetrifiedFrame || WingType < 1 || !Main.wingsLoaded[WingType]) return;
             Vector2 WingCenter = Vector2.Zero;//CenterPosition - Main.screenPosition;
             WingCenter.X = Position.X - Main.screenPosition.X;
             WingCenter.Y = Position.Y - Main.screenPosition.Y;
@@ -14283,7 +14314,8 @@ namespace giantsummon
             Wait,
             Wander,
             UseNearbyFurniture,
-            TryGoingSleep
+            TryGoingSleep,
+            GoHome
         }
     }
 

@@ -250,6 +250,8 @@ namespace giantsummon
                 {
                     case ActionIDs.ReviveSomeone:
                         {
+                            if (guardian.furniturex > -1)
+                                guardian.LeaveFurniture(false);
                             const byte IReviveTime = 0;
                             Vector2 TargetPosition = Vector2.Zero;
                             int TargetWidth = 0, TargetHeight = 0;
@@ -466,13 +468,24 @@ namespace giantsummon
                                             {
                                                 player.Spawn();
                                                 guardian.Spawn();
+                                                PlayerMod pm = player.GetModPlayer<PlayerMod>();
                                                 /*guardian.Spawn();
                                                 guardian.Position.X = player.SpawnX * 16;
                                                 guardian.Position.Y = player.SpawnY * 16;
                                                 player.position.X = player.SpawnX * 16 + 8 - player.width * 0.5f;
                                                 player.position.Y = player.SpawnY * 16 - player.height;*/
-                                                guardian.Position.X = player.position.X + player.width * 0.5f;
-                                                guardian.Position.Y = player.position.Y + player.height;
+                                                Vector2 PlayerBottom = new Vector2(player.position.X + player.width * 0.5f, player.position.Y + player.height);
+                                                guardian.Position = PlayerBottom;
+                                                guardian.FallStart = (int)guardian.Position.Y / 16;
+                                                foreach (TerraGuardian mg in pm.GetAllGuardianFollowers)
+                                                {
+                                                    if (mg.Active && (mg.PlayerMounted || mg.PlayerControl))
+                                                    {
+                                                        mg.Spawn();
+                                                        mg.Position = PlayerBottom;
+                                                        mg.FallStart = (int)mg.Position.Y / 16;
+                                                    }
+                                                }
                                             }
                                         }
                                         HoldingPlayer = true;

@@ -1,2 +1,5 @@
 ﻿Has gained petrified frame: Rococo, Blue, Sardine, Zacks, Alex and Brutus.
 Your companions will no longer use buff potions when you tell them to use hp and mana status increase items.
+Asking a guardian to teleport with you to the town, will now take the companion you're controlling, and mounted on with you.
+You can no longer pull guardians to your position when they are with the terrified debuff, and you aren't facing the wall of flesh.
+Fixed Zacks head and his hair being split by lines when he's sitting on a throne.

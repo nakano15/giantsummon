@@ -85,14 +85,7 @@
     <Compile Include="Creatures\Sardine\SardineBase.cs" />
     <Compile Include="Creatures\Zacks\ZacksBase.cs" />
     <Compile Include="DialogueChain.cs" />
-    <Compile Include="DialogueSystem.cs" />
     <Compile Include="ExternalCompatibilityScripts.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="GuardianArmorAndSetEffects.cs" />
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
@@ -278,7 +271,6 @@
     <Content Include="Creatures\Mabel\left_arm.png" />
     <Content Include="Creatures\Mabel\right_arm.png" />
     <Content Include="Creatures\Sardine\body_front.png" />
-    <Content Include="Guardian idea from shizam131.txt" />
     <Content Include="GuardianNPC\List\Brutus_Head.png" />
     <Content Include="Creatures\Rococo\body_front.png" />
     <Content Include="Creatures\Rococo\head.png" />
@@ -395,11 +387,6 @@
     <Content Include="Projectiles\BloodVomit.png" />
     <Content Include="Projectiles\ZombieFart.png" />
     <Content Include="todo.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

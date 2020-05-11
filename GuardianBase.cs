@@ -268,7 +268,7 @@ namespace giantsummon
             return true;
         }
 
-        public virtual bool WhenTriggerActivates(TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public virtual bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
         {
             return true;
         }
@@ -311,6 +311,21 @@ namespace giantsummon
         public virtual string BirthdayMessage(Player player, TerraGuardian guardian)
         {
             return "*[name] invites you to party.*";
+        }
+
+        /// <summary>
+        /// Depending on what calls it, make use of the correct thing.
+        /// Is player tells if the target is a player or not.
+        /// 
+        /// If It's a player, use RevivePlayer if you want to add conditionals if the player is revived.
+        /// </summary>
+        /// <param name="IsPlayer"></param>
+        /// <param name="RevivePlayer"></param>
+        /// <param name="ReviveGuardian"></param>
+        /// <returns></returns>
+        public virtual string ReviveMessage(bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            return "*[name] says to not worry, you'll be well soon.*";
         }
 
         public virtual void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)

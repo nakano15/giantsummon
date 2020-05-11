@@ -86,6 +86,9 @@ namespace giantsummon.Creatures
             //DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12, 16, 17, 18, 19 });
             ThroneSittingFrame = 16;
             BedSleepingFrame = 17;
+            ReviveFrame = 18;
+            DownedFrame = 19;
+            PetrifiedFrame = 20;
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(14, 0);

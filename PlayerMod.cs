@@ -11,6 +11,7 @@ namespace giantsummon
 {
     public class PlayerMod : ModPlayer
     {
+        public static bool ForceKill = false;
         public Dictionary<int, GuardianData> MyGuardians = new Dictionary<int, GuardianData>();
         public TerraGuardian Guardian = new TerraGuardian();
         public TerraGuardian[] AssistGuardians = new TerraGuardian[MainMod.MaxExtraGuardianFollowers];
@@ -528,7 +529,10 @@ namespace giantsummon
             if (KnockedOutCold)
             {
                 if (player.potionDelayTime < 5)
-                    player.potionDelayTime = 5;
+                {
+                    player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
+                    //player.potionDelayTime = 5;
+                }
             }
             if (MountedOnGuardian)
             {
@@ -563,6 +567,19 @@ namespace giantsummon
                 else
                 {
                     player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " blacked out."), 1, 0, false);
+                }
+            }
+            if (player.tongued && Main.wof >= 0)
+            {
+                Vector2 WofCenter = Main.npc[Main.wof].Center;
+                Vector2 MoveDirection = (WofCenter - player.Center);
+                float Distance = MoveDirection.Length();
+                MoveDirection.Normalize();
+                MoveDirection *= 11f;
+                player.position.X += MoveDirection.X;
+                if (Distance < 11f * 2)
+                {
+                    DoForceKill(player.name + " was eaten by the Wall of Flesh.");
                 }
             }
         }
@@ -717,9 +734,19 @@ namespace giantsummon
             return player.dead || player.GetModPlayer<PlayerMod>().KnockedOutCold;
         }
 
+        public void DoForceKill(string DeathMessage = "")
+        {
+            ForceKill = true;
+            player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(DeathMessage), 1, 1, false);
+        }
+
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref Terraria.DataStructures.PlayerDeathReason damageSource)
         {
-            if (MainMod.UseNewDownedSystem && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.CharacterDoesntDiesAfterDownedDefeat))
+            if (ForceKill)
+            {
+                ForceKill = false;
+            }
+            else if (MainMod.UseNewDownedSystem && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.CharacterDoesntDiesAfterDownedDefeat))
             {
                 EnterDownedState();
                 TriggerHandler.FirePlayerDownedTrigger(player.Center, player, (int)damage, pvp);

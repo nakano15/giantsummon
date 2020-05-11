@@ -9,6 +9,7 @@ namespace giantsummon.Creatures
 {
     public class AlexBase : GuardianBase
     {
+        public const int HealingLickAction = 0;
         /// <summary>
         /// -Very playful.
         /// -Blames himself for his old partner's demise.
@@ -163,26 +164,6 @@ namespace giantsummon.Creatures
             }
         }
 
-        /*public override void GuardianActionUpdateAnimation(TerraGuardian guardian, GuardianActions action, ref bool UsingLeftArm, ref bool UsingRightArm)
-        {
-            UsingRightArm = true;
-            if (guardian.SelectedOffhand > -1)
-            {
-                if (guardian.BodyAnimationFrame == SittingFrame || guardian.BodyAnimationFrame == ChairSittingFrame)
-                {
-                    guardian.RightArmAnimationFrame = 2;
-                }
-                else
-                {
-                    guardian.RightArmAnimationFrame = 1;
-                }
-            }
-            else
-            {
-                guardian.RightArmAnimationFrame = 0;
-            }
-        }*/
-
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
         {
             if (AnimationID == 2)
@@ -206,6 +187,178 @@ namespace giantsummon.Creatures
                 {
                     Frame = 0;
                 }
+            }
+        }
+
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        {
+            /*if (!guardian.DoAction.InUse)
+            {
+                if (trigger == TriggerTypes.PlayerHurt)
+                {
+                    GuardianActions action = guardian.StartNewGuardianAction(HealingLickAction);
+                    action.Players.Add(Main.player[Value]);
+                }
+                if (trigger == TriggerTypes.GuardianHurt)
+                {
+                    GuardianActions action = guardian.StartNewGuardianAction(HealingLickAction);
+                    action.Guardians.Add(MainMod.ActiveGuardians[Value]);
+                }
+            }*/
+            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+        }
+
+        public override void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)
+        {
+            switch (action.ID)
+            {
+                case HealingLickAction:
+                    {
+                        action.AvoidItemUsage = true;
+                        switch (action.Step)
+                        {
+                            case 0: //Reach Target
+                                Vector2 TargetPosition = Vector2.Zero;
+                                int TargetWidth = 0, TargetHeight = 0;
+                                action.IgnoreCombat = true;
+                                if (action.Players.Count > 0)
+                                {
+                                    TargetPosition = action.Players[0].position;
+                                    TargetWidth = action.Players[0].width;
+                                    TargetHeight = action.Players[0].height;
+                                }
+                                else if (action.Guardians.Count > 0)
+                                {
+                                    TargetPosition = action.Guardians[0].TopLeftPosition;
+                                    TargetWidth = action.Guardians[0].Width;
+                                    TargetHeight = action.Guardians[0].Height;
+                                }
+                                else
+                                {
+                                    action.InUse = false;
+                                    return;
+                                }
+                                if (guardian.HitBox.Intersects(new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight)))
+                                {
+                                    action.ChangeStep();
+                                }
+                                else
+                                {
+                                    guardian.MoveLeft = guardian.MoveRight = false;
+                                    if (TargetPosition.X + TargetWidth * 0.5f - guardian.CenterPosition.X < 0)
+                                    {
+                                        guardian.MoveLeft = true;
+                                    }
+                                    else
+                                    {
+                                        guardian.MoveRight = true;
+                                    }
+                                    if (action.Time >= 5 * 60)
+                                    {
+                                        action.InUse = false;
+                                        guardian.DisplayEmotion(TerraGuardian.Emotions.Sad);
+                                    }
+                                }
+                                break;
+
+                            case 1:
+                                {
+                                    guardian.MoveLeft = guardian.MoveRight = false;
+                                    action.NoAggro = action.AvoidItemUsage = action.Immune = true;
+                                    Vector2 EffectPosition = new Vector2(22 * guardian.Scale * guardian.Direction,0) + guardian.Position;
+                                    bool AnimationTrigger = action.Time == 120 + 8 * 2 || action.Time == 120 + 8 * 5 + 8 * 2 || action.Time == 120 + 8 * 10 + 8 * 2;
+                                    bool RestoreCharacters = false;
+                                    if (action.Time >= 120 + 8 * 15)
+                                    {
+                                        RestoreCharacters = true;
+                                        action.InUse = false;
+                                    }
+                                    if (action.Players.Count > 0)
+                                    {
+                                        Player p = action.Players[0];
+                                        if (AnimationTrigger)
+                                        {
+                                            int HealthRestored = (int)(p.statLifeMax2 * 0.1f);
+                                            p.statLife += HealthRestored;
+                                            p.HealEffect(HealthRestored);
+                                        }
+                                        if (RestoreCharacters)
+                                        {
+                                            p.position = guardian.Position;
+                                            p.position.X -= p.width * 0.5f;
+                                            p.position.Y -= p.height;
+                                            p.fullRotation = 0;
+                                        }
+                                        else
+                                        {
+                                            p.Center = EffectPosition;
+                                            p.direction = -guardian.Direction;
+                                            p.fullRotation = 1.570796326794897f * guardian.Direction;
+                                            if (p.immuneTime < 5)
+                                                p.immuneTime = 5;
+                                        }
+                                    }
+                                    else if (action.Guardians.Count > 0)
+                                    {
+                                        TerraGuardian g = action.Guardians[0];
+                                        if (AnimationTrigger)
+                                        {
+                                            g.RestoreHP((int)(g.MHP * 0.1f));
+                                        }
+                                        if (RestoreCharacters)
+                                        {
+                                            g.Position = guardian.Position;
+                                            g.Rotation = 0;
+                                        }
+                                        else
+                                        {
+                                            g.Position = EffectPosition;
+                                            g.Position.Y += g.Height * 0.5f;
+                                            g.Direction = -g.Direction;
+                                            g.Rotation = 1.570796326794897f * guardian.Direction;
+                                            if (g.ImmuneTime < 5)
+                                                g.ImmuneTime = 5;
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        public override void GuardianActionUpdateAnimation(TerraGuardian guardian, GuardianActions action, ref bool UsingLeftArm, ref bool UsingRightArm)
+        {
+            switch (action.ID)
+            {
+                case HealingLickAction:
+                    {
+                        switch (action.Step)
+                        {
+                            case 0:
+                                break;
+                            case 1:
+                                if (action.Time < 120)
+                                {
+                                    int Animation = (action.Time / 5) % 4;
+                                    if (Animation == 3)
+                                        Animation = 1;
+                                    guardian.BodyAnimationFrame = 19 + Animation;
+                                    guardian.LeftArmAnimationFrame = guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame;
+                                    UsingLeftArm = UsingRightArm = true;
+                                }
+                                else
+                                {
+                                    int Animation = (action.Time / 8) % 5;
+                                    guardian.BodyAnimationFrame = 24 + Animation;
+                                    guardian.LeftArmAnimationFrame = guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame;
+                                    UsingLeftArm = UsingRightArm = true;
+                                }
+                                break;
+                        }
+                    }
+                    break;
             }
         }
 

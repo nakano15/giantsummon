@@ -69,6 +69,8 @@ namespace giantsummon.Creatures
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 16, 17, 21, 22 });
             ThroneSittingFrame = 15;
             BedSleepingFrame = 16;
+            ReviveFrame = 20;
+            DownedFrame = 21;
 
             SittingPoint = new Point(14 * 2, 23 * 2);
 

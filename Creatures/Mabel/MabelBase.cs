@@ -68,6 +68,8 @@ namespace giantsummon.Creatures
             ThroneSittingFrame = 21;
             BedSleepingFrame = 22;
             SleepingOffset.X = 16;
+            ReviveFrame = 23;
+            DownedFrame = 24;
 
             //Mounted Position
             MountShoulderPoints.DefaultCoordinate2x = new Point(19, 14);
