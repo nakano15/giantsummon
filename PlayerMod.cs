@@ -562,7 +562,7 @@ namespace giantsummon
             {
                 if (MainMod.CharacterDoesntDiesAfterDownedDefeat)
                 {
-                    if (player.statLife < 0) player.statLife = 0;
+                    if (player.statLife < 0 && !player.dead) player.statLife = 0;
                 }
                 else
                 {
@@ -737,6 +737,7 @@ namespace giantsummon
         public void DoForceKill(string DeathMessage = "")
         {
             ForceKill = true;
+            player.statLife = 0;
             player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(DeathMessage), 1, 1, false);
         }
 
@@ -745,6 +746,7 @@ namespace giantsummon
             if (ForceKill)
             {
                 ForceKill = false;
+                player.statLife = 0;
             }
             else if (MainMod.UseNewDownedSystem && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.CharacterDoesntDiesAfterDownedDefeat))
             {
@@ -752,7 +754,7 @@ namespace giantsummon
                 TriggerHandler.FirePlayerDownedTrigger(player.Center, player, (int)damage, pvp);
                 return false;
             }
-            else if (MainMod.CharacterDoesntDiesAfterDownedDefeat && KnockedOut && !player.controlHook)
+            else if (MainMod.CharacterDoesntDiesAfterDownedDefeat && KnockedOut)
             {
                 KnockedOutCold = true;
                 player.statLife = 0;
@@ -1037,7 +1039,8 @@ namespace giantsummon
             {
                 if (KnockedOutCold && player.controlHook)
                 {
-                    player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " couldn't get help to revive."), 0, 0, false);
+                    DoForceKill(player.name + " couldn't get help to revived.");
+                    //player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " couldn't get help to revive."), 0, 0, false);
                     player.fullRotation = 0;
                 }
                 player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.controlHook = player.controlJump = player.controlMount =

@@ -12,7 +12,7 @@ namespace giantsummon.Npcs
 {
     public class ZombieGuardian : ModNPC
     {
-        private GuardianBase Base = GuardianBase.GetGuardianBase(3);
+        private GuardianBase Base { get { return GuardianBase.GetGuardianBase(3); } }
         private int JumpHeightValue = 0;
         private byte TileStuckTimer = 0;
         private float LastX = 0;
@@ -113,6 +113,7 @@ namespace giantsummon.Npcs
                     npc.defense = 36;
                     break;
             }
+            npc.knockBackResist = 0.33f;
             npc.defDamage = npc.damage;
             npc.defDefense = npc.defense;
             npc.friendly = false;
@@ -164,7 +165,25 @@ namespace giantsummon.Npcs
                 bool MoveRight = npc.direction == 1;
                 if (AiValue == 0 && AiState != 100 && AiState != 4)
                 {
-                    Target = ModTargetting.GetClosestTarget(npc.Center);
+                    //Target = ModTargetting.GetClosestTarget(npc.Center);
+                    float HPPercentage = 1f;
+                    foreach (ModTargetting mt in ModTargetting.GetClosestTargets(npc.Center, 368f, true))
+                    {
+                        float LifeValue = 1f;
+                        if (mt.IsKnockedOut)
+                            LifeValue = 0;
+                        else
+                            LifeValue = (float)mt.Life / mt.MaxLife;
+                        if (LifeValue < HPPercentage)
+                        {
+                            HPPercentage = LifeValue;
+                            Target = mt;
+                        }
+                    }
+                    if (Target.IsKnockedOut && AiState != 99)
+                    {
+                        AiState = 8;
+                    }
                 }
                 if (Target.IsActive && !Target.IsDefeated)
                 {
@@ -535,6 +554,52 @@ namespace giantsummon.Npcs
                                     AiValue = 0;
                                 }
                                 AiValue++;
+                            }
+                        }
+                        break;
+
+                    case 8: //Devour defeated character
+                        {
+                            if (Target.IsKnockedOut && !Target.IsDefeated)
+                            {
+                                npc.damage = npc.defDamage = 0;
+                                npc.knockBackResist = 0;
+                                if (!npc.getRect().Intersects(Target.GetCollision))
+                                {
+                                    MoveForward = true;
+                                    AiValue = 0;
+                                }
+                                else
+                                {
+                                    if (npc.velocity.X == 0)
+                                    {
+                                        if (HasZacks)
+                                        {
+                                            npc.dontTakeDamage = true;
+                                            if (Target.TargettingPlayer)
+                                                Target.Character.GetModPlayer<PlayerMod>().ReviveBoost += 3;
+                                            else
+                                                Target.Guardian.ReviveBoost += 3;
+                                            AiValue++;
+                                        }
+                                        else
+                                        {
+                                            AiValue++;
+                                            if (AiValue >= (!Main.expertMode ? 10 : 5) * 60)
+                                            {
+                                                Target.ForceKill(" was devoured by Zombie Guardian.");
+                                                npc.life += (int)(npc.lifeMax * 0.2f);
+                                                AiValue = 0;
+                                                AiState = 1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                AiValue = 0;
+                                AiState = 1;
                             }
                         }
                         break;
@@ -981,6 +1046,8 @@ namespace giantsummon.Npcs
         public override void FindFrame(int frameHeight)
         {
             int FrameY = npc.frame.Y;
+            npc.frame.Width = Base.SpriteWidth;
+            npc.frame.Height = Base.SpriteHeight;
             if (npc.velocity.Y != 0)
             {
                 FrameY = Base.JumpFrame;
@@ -1056,6 +1123,14 @@ namespace giantsummon.Npcs
                         LeftHandFrame = RightHandFrame = (byte)Frame;
                     }
                     break;
+                case 8:
+                    {
+                        if (npc.velocity.X == 0)
+                        {
+                            FrameY = LeftHandFrame = RightHandFrame = (byte)Base.ReviveFrame;
+                        }
+                    }
+                    break;
                 case 100:
                     if (AiValue < 5 || (AiValue >= 120 + 25 && AiValue < 120 + 30))
                     {
@@ -1067,6 +1142,7 @@ namespace giantsummon.Npcs
                     }
                     break;
             }
+            npc.frame.Y = 0;
             npc.frame.X = FrameY;
             if (npc.frame.X >= Base.FramesInRows)
             {

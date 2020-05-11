@@ -236,6 +236,24 @@ namespace giantsummon
                 return Guardian.Active;
             }
         }
+        public bool IsKnockedOut
+        {
+            get
+            {
+                if (TargettingPlayer)
+                    return Character.GetModPlayer<PlayerMod>().KnockedOut;
+                return Guardian.KnockedOut;
+            }
+        }
+        public bool IsKnockedOutCold
+        {
+            get
+            {
+                if (TargettingPlayer)
+                    return Character.GetModPlayer<PlayerMod>().KnockedOutCold;
+                return Guardian.KnockedOutCold;
+            }
+        }
         public bool IsDefeated
         {
             get
@@ -254,9 +272,71 @@ namespace giantsummon
 
         public double Hurt(int Damage, int HitDirection, string HurtMessage = " was slain.")
         {
-            if(TargettingPlayer)
+            if (TargettingPlayer)
                 return Character.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Character.name + HurtMessage), Damage, HitDirection);
             return Guardian.Hurt(Damage, HitDirection, false, false, HurtMessage);
+        }
+
+        public void ForceKill(string DeathMessage = " was slain.")
+        {
+            if (TargettingPlayer)
+            {
+                Character.GetModPlayer<PlayerMod>().DoForceKill(Character.name + DeathMessage);
+                NpcMod.PlayerDeadStatusBackup[Character.whoAmI] = true;
+            }
+            else
+            {
+                Guardian.DoForceKill(DeathMessage);
+            }
+        }
+
+        public static ModTargetting[] GetClosestTargets(Vector2 CallerCenter, float Range = 368f, bool CountKOdOnes = false)
+        {
+            List<ModTargetting> targets = new List<ModTargetting>();
+            float MaxDistance = Range;
+            for (int p = 0; p < 255; p++)
+            {
+                if (Main.player[p].active)
+                {
+                    if (!Main.player[p].dead && !Main.player[p].ghost && !Main.player[p].GetModPlayer<PlayerMod>().ControllingGuardian && (CountKOdOnes || Main.player[p].GetModPlayer<PlayerMod>().KnockedOut))
+                    {
+                        if (Math.Abs(CallerCenter.X - Main.player[p].Center.X) < NPC.sWidth * 2 && Math.Abs(CallerCenter.Y - Main.player[p].Center.Y) < NPC.sHeight * 2)
+                        {
+                            float Distance = (CallerCenter - Main.player[p].Center).Length() - Main.player[p].aggro;
+                            if (MaxDistance == -1 || Distance < MaxDistance)
+                            {
+                                ModTargetting mt = new ModTargetting();
+                                mt.TargettingPlayer = true;
+                                mt.TargetPosition = p;
+                                mt.AssistSlot = 0;
+                                targets.Add(mt);
+                            }
+                        }
+                    }
+                    byte slot = 0;
+                    foreach (TerraGuardian guardian in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                    {
+                        if (guardian.Active && !guardian.Downed && (CountKOdOnes || !guardian.KnockedOut))
+                        {
+                            Vector2 GuardianCenter = guardian.CenterPosition;
+                            if (Math.Abs(CallerCenter.X - GuardianCenter.X) < NPC.sWidth * 2 && Math.Abs(CallerCenter.Y - GuardianCenter.Y) < NPC.sHeight * 2)
+                            {
+                                float Distance = (CallerCenter - GuardianCenter).Length() - guardian.Aggro;
+                                if (MaxDistance == -1 || Distance < MaxDistance)
+                                {
+                                    ModTargetting mt = new ModTargetting();
+                                    mt.TargettingPlayer = false;
+                                    mt.TargetPosition = p;
+                                    mt.AssistSlot = slot;
+                                    targets.Add(mt);
+                                }
+                            }
+                        }
+                        slot++;
+                    }
+                }
+            }
+            return targets.ToArray();
         }
 
         public static ModTargetting GetClosestTarget(Vector2 CallerCenter)

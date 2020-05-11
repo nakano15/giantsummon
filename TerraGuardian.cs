@@ -6489,7 +6489,7 @@ namespace giantsummon
                 MP = MMP;
                 if (HasCooldown(GuardianCooldownManager.CooldownType.HealingPotionCooldown))
                     RemoveCooldown(GuardianCooldownManager.CooldownType.HealingPotionCooldown);
-                KnockedOut = false;
+                KnockedOut = KnockedOutCold = false;
             }
             Wet = LavaWet = HoneyWet = false;
             Downed = false;
@@ -6559,6 +6559,8 @@ namespace giantsummon
                 HealthRegenTime = HealthRegenStack = 0;
                 return;
             }
+            if (HP > 0)
+                HP = 0;
             Downed = true;
             WakeupTime = 60 * 10;
             if (DeathText == "")
