@@ -1037,6 +1037,8 @@ namespace giantsummon
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Accessories.ProvocationBadge>());
             }
+            if (npc.type == Terraria.ID.NPCID.WallofFlesh)
+                MainMod.LastWof = false;
             bool SomeGuardianHurt = false, SomeGuardianNeedMana = false;
             for (int p = 0; p < 255; p++)
             {

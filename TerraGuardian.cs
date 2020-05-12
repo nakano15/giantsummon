@@ -2511,13 +2511,14 @@ namespace giantsummon
                 }
                 if (WofFood)
                 {
-                    if (Main.wof > -1)
+                    Position = Main.npc[Main.wof].Center;
+                    Position.Y -= Height * 0.5f;
+                    Velocity = Vector2.Zero;
+                    KnockedOut = KnockedOutCold = true;
+                    HP = 0;
+                    if (wof.position.X < 608 || wof.position.X > (Main.maxTilesX - 38) * 16)
                     {
-                        Position = Main.npc[Main.wof].Center;
-                        Position.Y -= Height * 0.5f;
-                        Velocity = Vector2.Zero;
-                        KnockedOut = KnockedOutCold = true;
-                        HP = 0;
+                        DoForceKill(" couldn't be saved from Wall of Flesh in time...");
                     }
                 }
                 else

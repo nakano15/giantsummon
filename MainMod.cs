@@ -49,7 +49,7 @@ namespace giantsummon
         public static Mod NExperienceMod, KalciphozMod;
         public static bool TestForceGuardianOnFront = false;
         public static Main MainHook { get { return Main.instance; } }
-        public static int LastWof = -1;
+        public static bool LastWof = false;
         public static int LastTrashItemID = 0;
         public static int NemesisFadeEffect = -NemesisFadeCooldown;
         public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
@@ -314,22 +314,12 @@ namespace giantsummon
                     db.RestorePlayerStatus();
                 }
             }
-            if (LastWof > -1 && Main.wof == -1)
+            if (LastWof && Main.wof == -1)
             {
                 for (int p = 0; p < 255; p++)
                 {
                     if (Main.player[p].active)
                     {
-                        foreach (TerraGuardian tg in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
-                        {
-                            if (tg.Active && tg.WofFood)
-                            {
-                                if (Main.npc[LastWof].position.X <= 608 || Main.npc[LastWof].position.X >= (Main.maxTilesX - 38) * 16)
-                                {
-                                    tg.DoForceKill(" couldn't be saved from Wall of Flesh in time...");
-                                }
-                            }
-                        }
                         foreach (GuardianData gd in Main.player[p].GetModPlayer<PlayerMod>().GetGuardians())
                         {
                             gd.WofFood = false;
@@ -337,7 +327,6 @@ namespace giantsummon
                     }
                 }
             }
-            LastWof = Main.wof;
             AlexRecruitScripts.AlexNPCPosition = -1;
             Npcs.BrutusNPC.TrySpawningBrutus();
             Npcs.MabelNPC.TrySpawningMabel();
@@ -354,6 +343,7 @@ namespace giantsummon
             if (CarpetAnimationTime >= 6)
                 CarpetAnimationTime -= 6;
             ForceUpdateGuardiansStatus = false;
+            LastWof = Main.wof > -1;
         }
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
