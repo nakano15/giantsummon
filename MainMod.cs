@@ -32,9 +32,9 @@ namespace giantsummon
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1946985";
         //End contest related
         public static int GuardianInventoryMenuSubTab = 0;
-        public const int ModVersion = 57, LastModVersion = 56;
+        public const int ModVersion = 58, LastModVersion = 56;
         public const int MaxExtraGuardianFollowers = 4;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
             SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, UseNewDownedSystem = true;
         public static bool CharacterDoesntDiesAfterDownedDefeat = true;
@@ -49,6 +49,7 @@ namespace giantsummon
         public static Mod NExperienceMod, KalciphozMod;
         public static bool TestForceGuardianOnFront = false;
         public static Main MainHook { get { return Main.instance; } }
+        public static int LastWof = -1;
         public static int LastTrashItemID = 0;
         public static int NemesisFadeEffect = -NemesisFadeCooldown;
         public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
@@ -313,6 +314,30 @@ namespace giantsummon
                     db.RestorePlayerStatus();
                 }
             }
+            if (LastWof > -1 && Main.wof == -1)
+            {
+                for (int p = 0; p < 255; p++)
+                {
+                    if (Main.player[p].active)
+                    {
+                        foreach (TerraGuardian tg in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                        {
+                            if (tg.Active && tg.WofFood)
+                            {
+                                if (Main.npc[LastWof].position.X <= 608 || Main.npc[LastWof].position.X >= (Main.maxTilesX - 38) * 16)
+                                {
+                                    tg.DoForceKill(" couldn't be saved from Wall of Flesh in time...");
+                                }
+                            }
+                        }
+                        foreach (GuardianData gd in Main.player[p].GetModPlayer<PlayerMod>().GetGuardians())
+                        {
+                            gd.WofFood = false;
+                        }
+                    }
+                }
+            }
+            LastWof = Main.wof;
             AlexRecruitScripts.AlexNPCPosition = -1;
             Npcs.BrutusNPC.TrySpawningBrutus();
             Npcs.MabelNPC.TrySpawningMabel();
@@ -670,7 +695,7 @@ namespace giantsummon
                 HealthbarPosition.X += XSum;
                 Vector2 HealthTextPosition = HealthbarPosition;
                 HealthbarPosition.Y += Utils.DrawBorderString(Main.spriteBatch, HealthText, HealthbarPosition, Color.White, 1f).Y;
-                bool Downed = Guardian.KnockedOut && !Guardian.Downed;
+                bool Downed = Guardian.KnockedOut || Guardian.Downed;
                 Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition, new Rectangle(Downed ? 122 * 4 : 0, 0, 122, 16), Color.White);
                 float MaxHealthBarScale = 1f;
                 if (Guardian.HP < Guardian.MHP) MaxHealthBarScale = (float)Guardian.HP / Guardian.MHP;

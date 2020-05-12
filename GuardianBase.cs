@@ -323,7 +323,7 @@ namespace giantsummon
         /// <param name="RevivePlayer"></param>
         /// <param name="ReviveGuardian"></param>
         /// <returns></returns>
-        public virtual string ReviveMessage(bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        public virtual string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
         {
             return "*[name] says to not worry, you'll be well soon.*";
         }

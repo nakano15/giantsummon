@@ -79,6 +79,8 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(15, 29, 8);
             LeftHandPoints.AddFramePoint2x(16, 42, 16);
 
+            LeftHandPoints.AddFramePoint2x(20, 43, 40);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(10, 18, 5);
             RightHandPoints.AddFramePoint2x(11, 34, 10);
@@ -92,6 +94,8 @@ namespace giantsummon.Creatures
             //Head Vanity Pos
             HeadVanityPosition.DefaultCoordinate2x = new Point(22, 12);
             HeadVanityPosition.AddFramePoint2x(14, 34, 18);
+
+            HeadVanityPosition.AddFramePoint2x(20, 34, 18);
         }
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)

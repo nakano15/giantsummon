@@ -442,7 +442,10 @@ namespace giantsummon
         private bool closeDoor = false;
         private bool CollisionX = false, CollisionY = false;
         public bool Downed = false;
-        public bool KnockedOut = false, KnockedOutCold = false, FriendlyDuelDefeat = false;
+        public bool KnockedOut { get { return Data.KnockedOut; } set { Data.KnockedOut = value; } }
+        public bool KnockedOutCold { get { return Data.KnockedOutCold; } set { Data.KnockedOutCold = value; } }
+        public bool WofFood { get { return Data.WofFood; } set { Data.WofFood = value; } }
+        public bool FriendlyDuelDefeat = false;
         public byte ReviveBoost = 0;
         public int WakeupTime = 0;
         public float KnockdownRotation = 0f;
@@ -470,7 +473,7 @@ namespace giantsummon
         public byte ManaCrystals { get { if (MainMod.SharedCrystalValues && OwnerPos > -1) return Main.player[OwnerPos].GetModPlayer<PlayerMod>().ManaCrystalsUsed; return Data.ManaCrystals; } set { Data.ManaCrystals = value; } }
         public const int MaxLifeCrystals = 15, MaxLifeFruit = 20; //-
         public bool UpdateStatus = true, UpdateWeapons = true;
-        public int HealthRegenStack = 0, HealthRegenTime = 0, ManaRegenTime = 0, ManaRegenBonus = 0;
+        public int HealthRegenPower = 0, HealthRegenTime = 0, ManaRegenTime = 0, ManaRegenBonus = 0;
         public int MaxRegenDelay { get { return (int)(((1f - (float)MP / MMP) * 60 * 4 + 45) * 0.7f); } }
         public Point AimDirection = Point.Zero;
         public int StuckTimer = 0;
@@ -1475,7 +1478,11 @@ namespace giantsummon
             {
                 if (Velocity.Y == 0)
                 {
-                    if (Base.DownedFrame > -1 || Base.DuckingFrame > -1)
+                    if (Base.IsTerrarian)
+                    {
+                        Rotation = -1.570796326794897f * Direction;
+                    }
+                    else if (Base.DownedFrame > -1 || Base.DuckingFrame > -1)
                         Rotation = 0;
                     else
                         Rotation += 1.570796326794897f * Direction;
@@ -1550,6 +1557,10 @@ namespace giantsummon
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
                 DisplayEmotion(Emotions.Sleepy);
+            }
+            if (KnockedOutCold && !KnockedOut)
+            {
+                KnockedOutCold = false;
             }
             if (KnockedOut)
             {
@@ -2498,52 +2509,69 @@ namespace giantsummon
                 {
                     WofFacing = true;
                 }
-                if (WofFacing)
+                if (WofFood)
                 {
-                    if (TopLeftPosition.Y < (Main.maxTilesY - 200) * 16)
+                    if (Main.wof > -1)
                     {
-                        WofTongued = true;
+                        Position = Main.npc[Main.wof].Center;
+                        Position.Y -= Height * 0.5f;
+                        Velocity = Vector2.Zero;
+                        KnockedOut = KnockedOutCold = true;
+                        HP = 0;
                     }
-                    if ((wof.direction < 0 && CenterPosition.X > wof.Center.X + 40) ||
-                        (wof.direction > 0 && CenterPosition.X < wof.Center.X - 40))
-                        WofTongued = true;
                 }
-                if (WofTongued)
+                else
                 {
-                    WofTongued = true;
-                    GotByWofTongue = true;
-                    Action = false;
-                    float difx = wof.Center.X - CenterPosition.X, dify = wof.Center.Y - CenterPosition.Y;
-                    float Distance = (wof.Center - CenterPosition).Length();
-                    if (Distance > 3000)
+                    if (WofFacing)
                     {
-                        Knockout(" has tried to escape.");
-                    }
-                    else if (wof.position.X < 608 || wof.position.X > (Main.maxTilesX - 38) * 16)
-                    {
-                        Knockout(" didn't liked the tour.");
-                    }
-                    else
-                    {
-                        Vector2 ResultingPosition = wof.Center;
-                        if(!KnockedOut)
-                            ResultingPosition.X += wof.direction * 200;
-                        float Speed = 11f;
-                        Vector2 MovementDirection = (ResultingPosition - CenterPosition);
-                        Distance = MovementDirection.Length();
-                        MovementDirection.Normalize();
-                        Velocity = MovementDirection * Speed;
-                        Position += Velocity;
-                        if (Distance < Speed)
+                        if (TopLeftPosition.Y < (Main.maxTilesY - 200) * 16)
                         {
-                            if (KnockedOut)
+                            WofTongued = true;
+                        }
+                        if ((wof.direction < 0 && CenterPosition.X > wof.Center.X + 40) ||
+                            (wof.direction > 0 && CenterPosition.X < wof.Center.X - 40))
+                            WofTongued = true;
+                    }
+                    if (WofTongued)
+                    {
+                        WofTongued = true;
+                        GotByWofTongue = true;
+                        Action = false;
+                        float difx = wof.Center.X - CenterPosition.X, dify = wof.Center.Y - CenterPosition.Y;
+                        float Distance = (wof.Center - CenterPosition).Length();
+                        if (Distance > 3000)
+                        {
+                            Knockout(" has tried to escape.");
+                        }
+                        else if (wof.position.X < 608 || wof.position.X > (Main.maxTilesX - 38) * 16)
+                        {
+                            Knockout(" didn't liked the tour.");
+                        }
+                        else
+                        {
+                            Vector2 ResultingPosition = wof.Center;
+                            if (!KnockedOut)
+                                ResultingPosition.X += wof.direction * 200;
+                            float Speed = 11f;
+                            Vector2 MovementDirection = (ResultingPosition - CenterPosition);
+                            Distance = MovementDirection.Length();
+                            MovementDirection.Normalize();
+                            Velocity = MovementDirection * Speed;
+                            Position += Velocity;
+                            if (Distance < Speed)
                             {
-                                DoForceKill(" was eaten by the Wall of Flesh.");
-                            }
-                            else
-                            {
-                                WofTongued = false;
-                                GotByWofTongue = false;
+                                if (KnockedOut)
+                                {
+                                    Main.PlaySound(Terraria.ID.SoundID.NPCDeath13, ResultingPosition);
+                                    Main.NewText(Name + " were eaten by the Wall of Flesh.", Color.Red);
+                                    //DoForceKill(" was eaten by the Wall of Flesh.");
+                                    WofFood = true;
+                                }
+                                else
+                                {
+                                    WofTongued = false;
+                                    GotByWofTongue = false;
+                                }
                             }
                         }
                     }
@@ -2551,7 +2579,7 @@ namespace giantsummon
             }
             else
             {
-                WofTongued = WofFacing = false;
+                WofTongued = WofFacing = WofFood = false;
             }
             return GotByWofTongue;
         }
@@ -5036,14 +5064,14 @@ namespace giantsummon
                         case IdleActions.UseNearbyFurniture:
                             {
                                 LeaveFurniture();
-                                ChangeIdleAction(IdleActions.Wait, 50 + Main.rand.Next(200));
+                                ChangeIdleAction(IdleActions.Wait, 600 + Main.rand.Next(400));
                             }
                             break;
                         case IdleActions.Wait:
                             {
                                 if (Main.rand.Next(3) == 0)
                                 {
-                                    ChangeIdleAction(IdleActions.UseNearbyFurniture, 1000 + Main.rand.Next(500));
+                                    ChangeIdleAction(IdleActions.UseNearbyFurniture, 1200 + Main.rand.Next(1600));
                                 }
                                 else if (Main.rand.Next(2) == 0)
                                     ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
@@ -6176,71 +6204,65 @@ namespace giantsummon
         {
             if (KnockedOutCold && ReviveBoost == 0)
             {
-                HealthRegenStack = HealthRegenTime = 0;
+                HealthRegenPower = HealthRegenTime = 0;
                 return;
             }
-            bool AfflictedByDebuff = false;
             if (HasFlag(GuardianFlags.Poisoned))
             {
-                HealthRegenStack -= 4;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 4;
             }
             if (HasFlag(GuardianFlags.Venom))
             {
-                HealthRegenStack -= 12;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 12;
             }
             if (HasFlag(GuardianFlags.OnFire))
             {
-                HealthRegenStack -= 8;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 8;
             }
             if (HasFlag(GuardianFlags.FrostBurn))
             {
-                HealthRegenStack -= 12;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 12;
             }
             if (HasFlag(GuardianFlags.OnCursedFire))
             {
-                HealthRegenStack -= 12;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 12;
             }
             if (HasFlag(GuardianFlags.Burned))
             {
-                HealthRegenStack -= 60;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 60;
             }
             if (HasFlag(GuardianFlags.Suffocating))
             {
-                HealthRegenStack -= 40;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 40;
             }
             if (HasFlag(GuardianFlags.Electrified))
             {
-                HealthRegenStack -= 8;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 8;
                 if (MoveLeft || MoveRight)
-                    HealthRegenStack -= 32;
+                    HealthRegenPower -= 32;
             }
             if (WofTongued && Main.expertMode)
             {
-                HealthRegenStack -= 100;
-                AfflictedByDebuff = true;
+                HealthRegenPower -= 100;
             }
-            if (HoneyWet && HealthRegenStack < 0)
+            if (HoneyWet && HealthRegenPower < 0)
             {
-                HealthRegenStack += 4;
-                if (HealthRegenStack > 0)
-                    HealthRegenStack = 0;
+                HealthRegenPower += 4;
+                if (HealthRegenPower > 0)
+                    HealthRegenPower = 0;
             }
-            if (AfflictedByDebuff)
+            /*if (AfflictedByDebuff)
             {
                 HealthRegenTime = 0;
-                if (HealthRegenStack > 0)
-                    HealthRegenStack = 0;
-            }
+                if (HealthRegenPower > 0)
+                    HealthRegenPower = 0;
+            }*/
             HealthRegenTime++;
-            HealthRegenTime += ReviveBoost;
+            if (HasFlag(GuardianFlags.Bleeding))
+            {
+                HealthRegenTime = 0;
+            }
+            HealthRegenPower += ReviveBoost;
             ReviveBoost = 0;
             float HealthRegenValue = 0;
             if (HealthRegenTime >= 3000)
@@ -6262,13 +6284,13 @@ namespace giantsummon
                 HealthRegenTime++;
                 HealthRegenValue *= 1.5f;
             }
-            HealthRegenStack += (int)HealthRegenValue;
+            HealthRegenPower += (int)HealthRegenValue;
             if (HasFlag(GuardianFlags.PalladiumSetEffect))
                 HealthRegenTime += 6;
             if (HasFlag(GuardianFlags.Honey))
             {
                 HealthRegenTime += 2;
-                HealthRegenStack += 2;
+                HealthRegenPower += 2;
             }
             if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Hug>()))
             {
@@ -6279,22 +6301,22 @@ namespace giantsummon
                 HealthRegenTime += 10;
             }
             if (HasFlag(GuardianFlags.LifeRegenPotion))
-                HealthRegenStack += 4;
+                HealthRegenPower += 4;
             if (HasFlag(GuardianFlags.Werewolf))
-                HealthRegenStack++;
+                HealthRegenPower++;
             if (HasFlag(GuardianFlags.ImprovedHealthRegeneration))
-                HealthRegenStack++;
+                HealthRegenPower++;
             if (HasFlag(GuardianFlags.SunBuff) || HasFlag(GuardianFlags.MoonBuff))
-                HealthRegenStack += 2;
+                HealthRegenPower += 2;
             if (HasBuff(151))
-                HealthRegenStack += 2;
+                HealthRegenPower += 2;
             if (HasFlag(GuardianFlags.DryadWard))
             {
-                HealthRegenStack += 6;
+                HealthRegenPower += 6;
             }
-            while (HealthRegenStack >= 120)
+            while (HealthRegenPower >= 120)
             {
-                HealthRegenStack -= 120;
+                HealthRegenPower -= 120;
                 if (HP < MHP)
                 {
                     int HPRestore = (int)HealthHealMult;//(int)(Base.InitialMHP / 100);
@@ -6322,27 +6344,27 @@ namespace giantsummon
                 int HealthDamage = 0;
                 if (!WofTongued || !Main.expertMode)
                 {
-                    while (HealthRegenStack <= -120)
+                    while (HealthRegenPower <= -120)
                     {
-                        if (HealthRegenStack <= -480)
+                        if (HealthRegenPower <= -480)
                         {
                             HealthDamage = 4;
-                            HealthRegenStack += 480;
+                            HealthRegenPower += 480;
                         }
-                        else if (HealthRegenStack <= -360)
+                        else if (HealthRegenPower <= -360)
                         {
                             HealthDamage = 3;
-                            HealthRegenStack += 360;
+                            HealthRegenPower += 360;
                         }
-                        else if (HealthRegenStack <= -240)
+                        else if (HealthRegenPower <= -240)
                         {
                             HealthDamage = 2;
-                            HealthRegenStack += 240;
+                            HealthRegenPower += 240;
                         }
-                        else if (HealthRegenStack <= -120)
+                        else if (HealthRegenPower <= -120)
                         {
                             HealthDamage = 1;
-                            HealthRegenStack += 120;
+                            HealthRegenPower += 120;
                         }
                     }
                 }
@@ -6367,9 +6389,9 @@ namespace giantsummon
             }
             else
             {
-                while (HealthRegenStack <= -600)
+                while (HealthRegenPower <= -600)
                 {
-                    HealthRegenStack += 600;
+                    HealthRegenPower += 600;
                     int Damage = (int)(5 * HealthHealMult);
                     if (Damage < 1) Damage = 1;
                     HP -= Damage;
@@ -6449,7 +6471,7 @@ namespace giantsummon
         public void ResetHealthRegen()
         {
             HealthRegenTime = 0;
-            HealthRegenStack = 0;
+            HealthRegenPower = 0;
         }
 
         public void Spawn()
@@ -6526,8 +6548,9 @@ namespace giantsummon
 
         public void ExitDownedState()
         {
+            WofFood = false;
             KnockedOut = KnockedOutCold = false;
-            HealthRegenStack = HealthRegenTime = 0;
+            HealthRegenPower = HealthRegenTime = 0;
             HP = MHP / 2 + ReviveBoost * 10;
             Rotation = 0f;
             CombatText.NewText(HitBox, Color.Green, "Revived!", true);
@@ -6556,9 +6579,10 @@ namespace giantsummon
             {
                 KnockedOutCold = true;
                 if (HP < 0) HP = 0;
-                HealthRegenTime = HealthRegenStack = 0;
+                HealthRegenTime = HealthRegenPower = 0;
                 return;
             }
+            WofFood = false;
             if (HP > 0)
                 HP = 0;
             Downed = true;
@@ -11658,9 +11682,20 @@ namespace giantsummon
             if (OwnerPos == -1)
                 return;
             Player Owner = Main.player[OwnerPos];
-            if (MountedOnPlayer && Owner.GetModPlayer<PlayerMod>().KnockedOut)
+            if (Owner.GetModPlayer<PlayerMod>().KnockedOut)
             {
-                Owner.GetModPlayer<PlayerMod>().ReviveBoost++;
+                if (SittingOnPlayerMount)
+                {
+                    DoSitOnPlayerMount(false);
+                }
+                else if (MountedOnPlayer)
+                {
+                    ToggleMount(true);
+                }
+                else if (PlayerMounted)
+                {
+                    Owner.GetModPlayer<PlayerMod>().ReviveBoost += 2;
+                }
             }
             if (MountedOnPlayer && Owner.GetModPlayer<PlayerMod>().ControllingGuardian)
             {
@@ -13081,10 +13116,12 @@ namespace giantsummon
 
         public void DrawDataCreation(bool IgnoreLighting = false)
         {
-            if (DoAction.InUse && DoAction.Invisibility)
-                return;
             DrawBehind.Clear();
             DrawFront.Clear();
+            if (DoAction.InUse && DoAction.Invisibility)
+                return;
+            if (WofFood)
+                return;
             DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && Base.ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount;
             DrawRightBodyPartsInFrontOfPlayer = false;
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);

@@ -99,6 +99,8 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(12, 21, 23);
             LeftHandPoints.AddFramePoint2x(13, 19, 26);
 
+            LeftHandPoints.AddFramePoint2x(13, 19, 29);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(10, 14, 14);
             RightHandPoints.AddFramePoint2x(11, 21, 17);
@@ -110,8 +112,10 @@ namespace giantsummon.Creatures
             MountShoulderPoints.DefaultCoordinate = SittingPoint;
 
             //Headgear Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(16, 13 + 7);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(16, 20);
             HeadVanityPosition.AddFramePoint2x(16, 14, 13);
+
+            HeadVanityPosition.AddFramePoint2x(18, 16, 22);
         }
 
         public override string CallUnlockMessage

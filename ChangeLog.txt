@@ -3,3 +3,5 @@ Your companions will no longer use buff potions when you tell them to use hp and
 Asking a guardian to teleport with you to the town, will now take the companion you're controlling, and mounted on with you.
 You can no longer pull guardians to your position when they are with the terrified debuff, and you aren't facing the wall of flesh.
 Fixed Zacks head and his hair being split by lines when he's sitting on a throne.
+Fixed part of the disasterful health regen script.
+Companions will now use furnitures for longer.

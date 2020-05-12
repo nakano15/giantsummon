@@ -582,6 +582,12 @@ namespace giantsummon
                     DoForceKill(player.name + " was eaten by the Wall of Flesh.");
                 }
             }
+            if (!player.dead && KnockedOut && player.gross && Main.wof > -1)
+            {
+                float Distance = (Main.npc[Main.wof].Center - player.Center).Length();
+                if (Distance >= 3000)
+                    ForceKill = true;
+            }
         }
 
         public override void FrameEffects()
@@ -1660,7 +1666,7 @@ namespace giantsummon
                 if (!g.Active)
                     continue;
                 g.DrawDataCreation();
-                int BackStack = 0;
+                int BackStack = 0, FurnitureStack = 0;
                 if (g.PlayerControl)
                 {
                     Front.InsertRange(0, TerraGuardian.DrawFront);
@@ -1673,17 +1679,23 @@ namespace giantsummon
                 }
                 else
                 {
-                    if (g.ChargeAhead)
-                    {
-                        //Front.AddRange(TerraGuardian.DrawBehind);
-                        //Front.AddRange(TerraGuardian.DrawFront);
-                        Back.InsertRange(BackStack, TerraGuardian.DrawFront);
-                        Back.InsertRange(BackStack, TerraGuardian.DrawBehind);
-                    }
-                    else
+                    if (g.UsingFurniture)
                     {
                         Back.InsertRange(0, TerraGuardian.DrawFront);
                         Back.InsertRange(0, TerraGuardian.DrawBehind);
+                        FurnitureStack += TerraGuardian.DrawFront.Count + TerraGuardian.DrawBehind.Count - 1;
+                    }
+                    else if (g.ChargeAhead)
+                    {
+                        //Front.AddRange(TerraGuardian.DrawBehind);
+                        //Front.AddRange(TerraGuardian.DrawFront);
+                        Back.InsertRange(BackStack + FurnitureStack, TerraGuardian.DrawFront);
+                        Back.InsertRange(BackStack + FurnitureStack, TerraGuardian.DrawBehind);
+                    }
+                    else
+                    {
+                        Back.InsertRange(FurnitureStack, TerraGuardian.DrawFront);
+                        Back.InsertRange(FurnitureStack, TerraGuardian.DrawBehind);
                         BackStack += TerraGuardian.DrawBehind.Count + TerraGuardian.DrawFront.Count - 1;
                     }
                 }

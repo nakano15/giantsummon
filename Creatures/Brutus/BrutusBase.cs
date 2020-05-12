@@ -105,6 +105,8 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(21, 39, 20);
             LeftHandPoints.AddFramePoint2x(22, 39, 37);
 
+            LeftHandPoints.AddFramePoint2x(26, 43, 48);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(0, 34, 35, 1.570796326794897f, true);
             RightHandPoints.AddFramePoint2x(1, 39, 29, 0.7853981633974483f, true);
@@ -153,7 +155,7 @@ namespace giantsummon.Creatures
             WingPosition.AddFramePoint2x(22, 25, 44);
 
             //Headgear Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(25 + 1, 15);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(26, 15);
             HeadVanityPosition.AddFramePoint2x(16, 16 + 1, 16);
             HeadVanityPosition.AddFramePoint2x(17, 32 + 1, 17);
             HeadVanityPosition.AddFramePoint2x(18, 41 + 1, 28);
@@ -164,6 +166,8 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(22, 25 + 1, 22);
 
             HeadVanityPosition.AddFramePoint2x(24, 26, 23);
+
+            HeadVanityPosition.AddFramePoint2x(26, 41, 30);
         }
 
         public override string MountUnlockMessage

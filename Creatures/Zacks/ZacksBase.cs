@@ -89,6 +89,8 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(16, 39, 17);
             LeftHandPoints.AddFramePoint2x(17, 35, 30);
 
+            LeftHandPoints.AddFramePoint2x(22, 39, 44);
+
             //Right Hand
             RightHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(31 * 2, 31 * 2);
             RightHandPoints.AddFramePoint2x(11, 16, 6);
@@ -109,11 +111,13 @@ namespace giantsummon.Creatures
             SittingPoint = new Point(22 * 2, 36 * 2);
 
             //Armor Head Points
-            HeadVanityPosition.DefaultCoordinate2x = new Point(23 - 2, 8 + 2);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(21, 10);
             HeadVanityPosition.AddFramePoint2x(12, 30 - 2, 14 + 2);
             HeadVanityPosition.AddFramePoint2x(13, 33 - 2, 21 + 2);
 
             HeadVanityPosition.AddFramePoint2x(20, 21 + 1, 8);
+
+            HeadVanityPosition.AddFramePoint2x(22, 35, 39);
 
             //Wing
             WingPosition.DefaultCoordinate2x = new Point(22, 21);
@@ -438,6 +442,29 @@ namespace giantsummon.Creatures
             if (!PlayerMod.HasGuardianBeenGifted(player, 3) && Main.rand.Next(2) == 0)
                 return "*[name] is saying that he's so excited wanting to know what you will give him as a gift, that he could... Oops, he couldn't hold any longer.*";
             return "*[name] is asking if in his current state, growing older is a good thing.*";
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Messages = new List<string>();
+            Messages.Add("*Hang on buddy.*");
+            if (IsPlayer)
+            {
+
+            }
+            else
+            {
+                if (ReviveGuardian.ModID == Guardian.ModID)
+                {
+                    switch (ReviveGuardian.ID)
+                    {
+                        case GuardianBase.Mabel:
+                            Messages.Add("*Hmmmm... Venison...*");
+                            break;
+                    }
+                }
+            }
+            return Messages[Main.rand.Next(Messages.Count)];
         }
     }
 }

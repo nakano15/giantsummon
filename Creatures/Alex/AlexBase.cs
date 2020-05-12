@@ -97,6 +97,15 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(16, 29 + 6, 27 + 1);
             LeftHandPoints.AddFramePoint2x(17, 22 + 6, 36 + 1);
 
+            LeftHandPoints.AddFramePoint2x(19, 38, 47);
+            LeftHandPoints.AddFramePoint2x(20, 38, 47);
+            LeftHandPoints.AddFramePoint2x(21, 38, 47);
+            LeftHandPoints.AddFramePoint2x(24, 38, 47);
+            LeftHandPoints.AddFramePoint2x(25, 38, 47);
+            LeftHandPoints.AddFramePoint2x(26, 38, 47);
+            LeftHandPoints.AddFramePoint2x(27, 38, 47);
+            LeftHandPoints.AddFramePoint2x(28, 38, 47);
+
             //Mouth Item Position
             RightHandPoints.DefaultCoordinate2x = new Point(43, 29);
             RightHandPoints.AddFramePoint2x(2, 31, 24);
@@ -114,6 +123,16 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(17, 21 + 6, 17 + 1);
             HeadVanityPosition.AddFramePoint2x(18, 21 + 6, 17 + 1);
             HeadVanityPosition.AddFramePoint2x(22, 23, 17);
+
+            HeadVanityPosition.AddFramePoint2x(19, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(20, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(21, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(19, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(24, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(25, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(26, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(27, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(28, -1000, -1000);
         }
 
         public override string MountUnlockMessage

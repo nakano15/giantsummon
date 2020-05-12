@@ -108,6 +108,8 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(23, 32, 58);
             LeftHandPoints.AddFramePoint2x(25, 23, 72);
 
+            LeftHandPoints.AddFramePoint2x(27, 52, 71);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(13, 35, 14);
             RightHandPoints.AddFramePoint2x(14, 48, 26);
@@ -131,6 +133,8 @@ namespace giantsummon.Creatures
 
             HeadVanityPosition.AddFramePoint2x(23, -1000, -1000);
             HeadVanityPosition.AddFramePoint2x(25, -1000, -1000);
+
+            HeadVanityPosition.AddFramePoint2x(27, 50, 47);
 
             //Wing Position
             WingPosition.AddFramePoint(23, -1000, -1000);

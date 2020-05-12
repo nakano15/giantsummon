@@ -43,6 +43,8 @@ namespace giantsummon
         public GuardianRequests request = new GuardianRequests();
         public int HP = 800, MHP = 800;
         public int MP = 20, MMP = 20;
+        public bool KnockedOut = false, KnockedOutCold = false;
+        public bool WofFood = false;
         public float HealthHealMult = 1f, ManaHealMult = 1f;
         public int MaxLifeCrystalHealth { get { return Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals; } }
         public int MaxLifeFruitHealth { get { return Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals + Base.LifeFruitHPBonus * TerraGuardian.MaxLifeFruit; } }
@@ -433,6 +435,8 @@ namespace giantsummon
             tag.Add("FoodStacker_" + UniqueID, FoodStacker);
             tag.Add("DrinkStacker_" + UniqueID, DrinkStacker);
             tag.Add("HealthPercentage_" + UniqueID, HP <= 0 ? 0 : (HP == MHP ? 1f : (float)HP / MHP));
+            tag.Add("IsKnockedOut_" + UniqueID, KnockedOut);
+            tag.Add("IsKnockedOutCold_" + UniqueID, KnockedOutCold);
             tag.Add("LifeCrystals_" + UniqueID, LifeCrystalHealth);
             tag.Add("LifeFruits_" + UniqueID, LifeFruitHealth);
             tag.Add("IsMale_" + UniqueID, Male);
@@ -545,6 +549,11 @@ namespace giantsummon
                     else
                         HP = (int)(MHP * HealthPercentage);
                 }
+            }
+            if (ModVersion >= 58)
+            {
+                KnockedOut = tag.GetBool("IsKnockedOut_" + UniqueID);
+                KnockedOutCold = tag.GetBool("IsKnockedOutCold_" + UniqueID);
             }
             LifeCrystalHealth = (ModVersion < 42 ? (byte)tag.GetInt("LifeCrystals_" + UniqueID) : tag.GetByte("LifeCrystals_" + UniqueID));
             LifeFruitHealth = (ModVersion < 42 ? (byte)tag.GetInt("LifeFruits_" + UniqueID) : tag.GetByte("LifeFruits_" + UniqueID));
