@@ -540,5 +540,23 @@ namespace giantsummon.Creatures
                 return "Woof! Woof! What you brought me? Is it edible? Is it a new toy?";
             return "A party? Just for me? I must be the luckiest dog ever!";
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
+            {
+                Mes.Add("No!! I wont lose you too!");
+                Mes.Add("Hang on buddy, I'll lick your wounds, please don't die!");
+                Mes.Add("Don't die too! You are the only things for me in the world right now! I can't lose you like "+AlexRecruitScripts.AlexOldPartner+"!");
+            }
+            else
+            {
+                Mes.Add("I'll help you!");
+                Mes.Add("I can take care of your wounds.");
+                Mes.Add("When you wake up, I will be here, buddy.");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

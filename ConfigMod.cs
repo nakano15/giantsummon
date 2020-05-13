@@ -86,4 +86,28 @@ namespace giantsummon
             MainMod.ForceUpdateGuardiansStatus = true;
         }
     }
+    [Label("Knockout System Settings")]
+    public class ReviveSystemConfigMod : ModConfig
+    {
+        public override ConfigScope Mode
+        {
+            get { return ConfigScope.ServerSide; }
+        }
+
+        [Label("Player can get Knocked Out upon defeat?")]
+        [Tooltip("Makes your character enter a dying state when hp drops to 0. You wont be able to do anything in this state, and will be hurt by foes and debuffs, but can be revived by nearby allies.")]
+        public bool PlayerKO { get { return MainMod.PlayersGetKnockedOutUponDefeat; } set { MainMod.PlayersGetKnockedOutUponDefeat = value; } }
+
+        [Label("Player can't die when health drops to 0 on Knocked Out state?")]
+        [Tooltip("Controls if the player will either die when health reaches 0 on Knocked Out state, or will enter a Knocked Out Cold state. In Knocked Out Cold state, your character health wont restore naturally without the help of others. You can force your death by pressing Grappling Hook key, in case there is no way of reviving. Some kinds of defeats causes death anyway, like dying to lava.")]
+        public bool PlayerCanDie { get { return MainMod.PlayersDontDiesAfterDownedDefeat; } set { MainMod.PlayersDontDiesAfterDownedDefeat = value; } }
+
+        [Label("Companions can get Knocked Out upon defeat?")]
+        [Tooltip("Makes so companions enter a dying state when hp drops to 0. They wont be able to do anything in this state, and will be hurt by foes and debuffs, but can be revived by nearby allies, includding you.")]
+        public bool GuardianKO { get { return MainMod.GuardiansGetKnockedOutUponDefeat; } set { MainMod.GuardiansGetKnockedOutUponDefeat = value; } }
+
+        [Label("Companions can't die when health drops to 0 on Knocked Out state?")]
+        [Tooltip("Controls if the companions will either die when health reaches 0 on Knocked Out state, or will enter a Knocked Out Cold state. In Knocked Out Cold state, the companions health wont be restored naturally without the help of others. There is no other way of reviving them, without the help of others. Some kinds of defeats causes death anyway, like dying to lava.")]
+        public bool GuardianCanDie { get { return MainMod.GuardiansDontDiesAfterDownedDefeat; } set { MainMod.GuardiansDontDiesAfterDownedDefeat = value; } }
+    }
 }

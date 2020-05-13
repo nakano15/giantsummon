@@ -353,5 +353,23 @@ namespace giantsummon.Creatures
                 return "You've got a gift for me? Well, let me see what is inside it.";
             return "Is It okay If I wish to return home with my husband?";
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID && ReviveGuardian.ID == GuardianBase.Sardine)
+            {
+                Mes.Add("Wait! Come on! Wake up! Don't leave me again!");
+                Mes.Add("Please, don't die! It took me a year to find you again! Your son is even waiting for you at home!");
+                Mes.Add("Open your eyes! Look at me! Please!");
+            }
+            else
+            {
+                Mes.Add("You're safe... I'm here with you...");
+                Mes.Add("Here, this will make you feel better.");
+                Mes.Add("Shh... You'll be fine. Just rest.");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

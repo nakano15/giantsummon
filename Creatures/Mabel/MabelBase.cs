@@ -430,5 +430,23 @@ namespace giantsummon.Creatures
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
+            {
+                Mes.Add("*Wake up! You still need to see me winning the contest!*");
+                Mes.Add("*Come on, wake up! There's a lot for you to see!*");
+                Mes.Add("(Crying)");
+            }
+            else
+            {
+                Mes.Add("*Hey, I've been practicing hard for the contest to lose someone who could watch me on it. Wake up!*");
+                Mes.Add("*I'll take care of those wounds you have. Don't worry.*");
+                Mes.Add("*You people have been so nice to me, It's time for me to retribute that.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

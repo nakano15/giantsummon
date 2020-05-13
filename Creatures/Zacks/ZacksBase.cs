@@ -446,25 +446,48 @@ namespace giantsummon.Creatures
 
         public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
         {
-            List<string> Messages = new List<string>();
-            Messages.Add("*Hang on buddy.*");
-            if (IsPlayer)
+            List<string> Mes = new List<string>();
+            bool IsBlue = !IsPlayer && ReviveGuardian.ModID == Guardian.ModID && ReviveGuardian.ID == GuardianBase.Blue;
+            if (!IsBlue)
             {
-
+                Mes.Add("*You look tasty when knocked out...*");
+                Mes.Add("*Do you mind if I take a little bite...*");
+                Mes.Add("*Don't worry buddy, you'll wake up soon.*");
+                Mes.Add("*The quality of your blood is good.*");
             }
-            else
+            if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID)
             {
-                if (ReviveGuardian.ModID == Guardian.ModID)
+                switch (ReviveGuardian.ID)
                 {
-                    switch (ReviveGuardian.ID)
-                    {
-                        case GuardianBase.Mabel:
-                            Messages.Add("*Hmmmm... Venison...*");
-                            break;
-                    }
+                    case GuardianBase.Mabel:
+                        Mes.Add("*Hmmmm... Venison...*");
+                        Mes.Add("*I'd like to take a bite but... I'm already with someone else...*");
+                        Mes.Add("*You're making me a bit uncomfortable.*");
+                        break;
+                    case GuardianBase.Blue:
+                        Mes.Add("*How did this happened?!*");
+                        Mes.Add("*"+ReviveGuardian.Name+"! "+ReviveGuardian.Name+"! Wake up! Talk to me!*");
+                        Mes.Add("*I wont let you die "+ReviveGuardian.Name+"! I promisse you!*");
+                        break;
+                    case GuardianBase.Sardine:
+                        Mes.Add("*"+ReviveGuardian.Name+", I'll eat you if you don't wake up. ... It's not fun when you're knocked out.*");
+                        Mes.Add("*It's really odd to see you not being scared or running away... Please wake up soon...*");
+                        Mes.Add("*Maybe If I pretend to be biting him will make him wake up faster?*");
+                        break;
+                    case GuardianBase.Alex:
+                        Mes.Add("*I wont let you die too. You already had one grief.*");
+                        Mes.Add("*Hang on buddy, your old owner can wait.*");
+                        Mes.Add("*If I could have played with him while he was awake...*");
+                        break;
+                    case GuardianBase.Leopold:
+                        Mes.Add("*I wonder the surprise he will have when he wakes up.*");
+                        Mes.Add("*Maybe I should avoid healing him from behind, I don't want to receive an easter egg or something.*");
+                        Mes.Add("*You're sleeping so peacefully... Wait until you wake up. Hehe....*");
+                        Mes.Add("*I'll try showing my teeth right directly in front of his face. This should be fun when he wakes up.*");
+                        break;
                 }
             }
-            return Messages[Main.rand.Next(Messages.Count)];
+            return Mes[Main.rand.Next(Mes.Count)];
         }
     }
 }

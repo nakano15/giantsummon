@@ -450,5 +450,42 @@ namespace giantsummon.Creatures
                 }
             }
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            bool GotMessage = false;
+            if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID)
+            {
+                GotMessage = true;
+                switch (ReviveGuardian.ID)
+                {
+                    default:
+                        GotMessage = false;
+                        break;
+                    case GuardianBase.Zacks:
+                        {
+                            Mes.Add("*No! I've nearly lost you once! Don't do that again!*");
+                            Mes.Add("*I don't even know If It's working, please stand up!*");
+                            Mes.Add("*I can't be left without you again, please!*");
+                        }
+                        break;
+                    case GuardianBase.Sardine:
+                        {
+                            Mes.Add("*It's not fun when you're knocked out.*");
+                            Mes.Add("*If you don't wake up, I'll bite you! He's still knocked out cold.*");
+                            Mes.Add("*Alright, I promisse not to chase and bite you if you wake up. Please, wake up!*");
+                        }
+                        break;
+                }
+            }
+            if (!GotMessage)
+            {
+                Mes.Add("*Don't worry, you'll be fine in a moment.*");
+                Mes.Add("*Here, hold my hand. Now stand up!*");
+                Mes.Add("*I'm here with you, rest while I help you.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

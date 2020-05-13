@@ -330,5 +330,33 @@ namespace giantsummon.Creatures
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I know some healing magic, this will help you.*");
+            Mes.Add("*Your breath is weak, I should take care of that.*");
+            Mes.Add("*I hope I don't need to open you up to try fixing a problem.*");
+            if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID)
+            {
+                if (ReviveGuardian.ID == GuardianBase.Blue)
+                {
+                    Mes.Add("*I should help her carefully away, I don't want to be stuck in her arms for hours again.*");
+                }
+                if (ReviveGuardian.ID == GuardianBase.Vladimir)
+                {
+                    Mes.Add("*There is still a lot you can help me with.*");
+                }
+                if (ReviveGuardian.ID == GuardianBase.Zacks)
+                {
+                    Mes.Add("*Come on "+Guardian.Name+", control your intestine. You need to help him, no time for... Leaf, please.*");
+                }
+                if (ReviveGuardian.ID == GuardianBase.Mabel)
+                {
+                    Mes.Add("*Oh no... My nose... Someone has a leaf I could use?*");
+                }
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

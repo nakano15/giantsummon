@@ -744,11 +744,11 @@ namespace giantsummon
                         {
                             Ids[0] = NPCID.Antlion;
                         }
-                        if (Main.rand.Next(3) == 0)
+                        /*if (Main.rand.Next(3) == 0)
                         {
                             Ids[0] = NPCID.GiantWormHead;
                             RareMob = true;
-                        }
+                        }*/
                         if (Main.rand.Next(3) == 0 && player.statDefense >= 5)
                         {
                             Ids[0] = NPCID.GoblinScout;
@@ -756,10 +756,10 @@ namespace giantsummon
                         }
                         if (Main.hardMode)
                         {
-                            if (Main.rand.Next(3) == 0)
+                            /*if (Main.rand.Next(3) == 0)
                             {
                                 Ids[0] = NPCID.DiggerHead;
-                            }
+                            }*/
                             if (Main.rand.Next(3) == 0)
                             {
                                 RareMob = false;

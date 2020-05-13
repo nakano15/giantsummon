@@ -462,7 +462,6 @@ namespace giantsummon
                 {
                     InvalidGuardian = true;
                 }
-                //Load other mod guardian.
             }
             else
             {

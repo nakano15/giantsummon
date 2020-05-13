@@ -383,5 +383,58 @@ namespace giantsummon.Creatures
                 return "When will be the moment I'll be getting my gifts?";
             return "You guys prepared this party for me? Wow! You guys are awesome!";
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer)
+            {
+                Mes.Add("It wont result into a good story laying down on the ground.");
+                Mes.Add("Come on, we have more adventures to make!");
+                Mes.Add("You'll be okay, your adventure isn't over.");
+            }
+            else
+            {
+                bool GotAMessage = false;
+                if (ReviveGuardian.ModID == Guardian.ModID)
+                {
+                    GotAMessage = true;
+                    switch (ReviveGuardian.ID)
+                    {
+                        default:
+                            GotAMessage = false;
+                            break;
+                        case GuardianBase.Blue:
+                            {
+                                Mes.Add("I think I will regret this...");
+                                Mes.Add("I wonder, helping her right now, will make her stop bullying me?");
+                                Mes.Add("Look at those teeth... Wait, better I look somewhere else, I may lose motivation.");
+                            }
+                            break;
+                        case GuardianBase.Zacks:
+                            {
+                                Mes.Add("How am I supposed to heal him? His entire body has problems.");
+                                Mes.Add("I'm having flashbacks... Don't think about them...");
+                                Mes.Add("My heart is racing whenever I get near him. It's scary.");
+                            }
+                            break;
+                        case GuardianBase.Bree:
+                            {
+                                Mes.Add(ReviveGuardian.Name + " wake up! Please wake up!");
+                                Mes.Add("I never wanted to place you in danger, don't make me feel guilty now.");
+                                Mes.Add("Please open your eyes! Say something! Insult me! Anything! " + ReviveGuardian.Name + "!!");
+                            }
+                            break;
+                    }
+                }
+                if (!GotAMessage)
+                {
+                    Mes.Add("Don't worry, I'll help you!");
+                    Mes.Add("You'll be 100% soon.");
+                    Mes.Add("I'll take care of those wounds, no worries.");
+                }
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

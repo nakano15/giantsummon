@@ -252,7 +252,7 @@ namespace giantsummon
                         {
                             if (guardian.furniturex > -1)
                                 guardian.LeaveFurniture(false);
-                            const byte IReviveTime = 0;
+                            const byte IReviveTime = 0, ITalkTime = 1;
                             Vector2 TargetPosition = Vector2.Zero;
                             int TargetWidth = 0, TargetHeight = 0;
                             bool TryReaching = false;
@@ -350,6 +350,18 @@ namespace giantsummon
                                             Guardians[0].ReviveBoost += ReviveBoost;
                                         guardian.StuckTimer = 0;
                                         guardian.OffHandAction = false;
+                                        int TalkTime = GetIntegerValue(ITalkTime);
+                                        if (TalkTime == 0)
+                                        {
+                                            Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
+                                                guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
+                                            TalkTime = 600 + Main.rand.Next(10) * 50;
+                                        }
+                                        else
+                                        {
+                                            TalkTime--;
+                                        }
+                                        SetIntegerValue(ITalkTime, TalkTime);
                                     }
                                 }
                                 else

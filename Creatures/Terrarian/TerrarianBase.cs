@@ -13,16 +13,7 @@ namespace giantsummon.Creatures
             Description = ".";
             Age = 16;
             Male = false;
-            InitialMHP = 100; //500
-            LifeCrystalHPBonus = 20;
-            LifeFruitHPBonus = 10;
-            Accuracy = 0.32f;
-            Mass = 0.3f;
-            MaxSpeed = 3f;
-            Acceleration = 0.08f;
-            SlowDown = 0.2f;
-            MaxJumpHeight = 15;
-            JumpSpeed = 5.01f;
+            Accuracy = 0.27f;
             DrinksBeverage = false;
             CanChangeGender = false;
             SetTerrarian();
@@ -45,6 +36,41 @@ namespace giantsummon.Creatures
 
             AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 10);
+        }
+
+        public override string GreetMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            return base.GreetMessage(player, guardian);
+        }
+
+        public override string NormalMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            return base.NormalMessage(player, guardian);
+        }
+
+        public override string TalkMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            return base.TalkMessage(player, guardian);
+        }
+
+        public override string NoRequestMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            return base.NoRequestMessage(player, guardian);
+        }
+
+        public override string HasRequestMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            return base.HasRequestMessage(player, guardian);
+        }
+
+        public override string CompletedRequestMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            return base.CompletedRequestMessage(player, guardian);
+        }
+
+        public override string BirthdayMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            return base.BirthdayMessage(player, guardian);
         }
     }
 }

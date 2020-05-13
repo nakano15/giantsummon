@@ -229,5 +229,23 @@ namespace giantsummon.Creatures
                 return "You want to give me something? Ok, I will open it then.";
             return "It doesn't matter how old I am, I nearly don't exist.";
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
+            {
+                Mes.Add("I wont copy that, seems shameful.");
+                Mes.Add("Are you supposed to stay lying down on the floor?");
+                Mes.Add("Those wounds will be taken care of.");
+            }
+            else
+            {
+                Mes.Add("You will be back soon.");
+                Mes.Add("I'll take care of this.");
+                Mes.Add("You look exausted.");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

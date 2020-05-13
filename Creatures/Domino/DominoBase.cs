@@ -329,5 +329,26 @@ namespace giantsummon.Creatures
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID && ReviveGuardian.ID == GuardianBase.Brutus)
+            {
+                Mes.Add("*I still have to torment your life some more, so don't make this too easy for yourself.*");
+                Mes.Add("*Now that's a state I never expect to see you. Hahaha.*");
+                Mes.Add("*Need a hand? Hah, that was good.*");
+            }
+            else if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
+            {
+                Mes.Add("*My chances of doing my trades in this world may die If you die. So please wake up.*");
+                Mes.Add("*I'm only doing this to protect my business.*");
+                Mes.Add("*I guess this is the moment I have to do an investiment.*");
+            }
+            Mes.Add("*Sigh...*");
+            Mes.Add("*Do you plan on lying down for long?*");
+            Mes.Add("*Here, I wont charge for this though. Just wake up and let's go.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

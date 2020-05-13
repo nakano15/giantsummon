@@ -415,5 +415,61 @@ namespace giantsummon.Creatures
             Mes.Add("*This is the best! Like... Really the best!! You guys are the best!!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
+            {
+                Mes.Add("*Boss, I wont accept a refund if you die.*");
+                Mes.Add("*It will be bad to my career of bodyguard if you die.*");
+                Mes.Add("*Come on Boss, I still have to share a few drinks with you.*");
+            }
+            Mes.Add("*It's just a flesh wound, you'll be fine.*");
+            Mes.Add("*Nothing will hurt you as long as I'm here.*");
+            Mes.Add("*I really hate monopolization of my services, I can protect you too.*");
+            Mes.Add("*Not on my shift, buddy.*");
+            Mes.Add("*You wont let a simple bleeding take you down, right?*");
+            if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID)
+            {
+                switch (ReviveGuardian.ID)
+                {
+                    case GuardianBase.Alex:
+                        Mes.Add("*You already lost "+AlexRecruitScripts.AlexOldPartner+", you don't want to lose us too, right?*");
+                        break;
+                    case GuardianBase.Blue:
+                        Mes.Add("*You still have someone you need to stay with. I can't bear to give him bad news.*");
+                        break;
+                    case GuardianBase.Bree:
+                        Mes.Add("*Your husband is a warrior, right? Be a warrior too, and get over this.*");
+                        break;
+                    case GuardianBase.Domino:
+                        Mes.Add("*I still need evidences to arrest you, I wont let you escape me so easily.*");
+                        break;
+                    case GuardianBase.Leopold:
+                        Mes.Add("*You still have your researches to do, It's not the end yet.*");
+                        break;
+                    case GuardianBase.Mabel:
+                        Mes.Add("*You have a contest to win, you should be practicing, not lying down on the floor.*");
+                        break;
+                    case GuardianBase.Nemesis:
+                        Mes.Add("*You wont get a personality while lying down on the floor. Get up!*");
+                        break;
+                    case GuardianBase.Rococo:
+                        Mes.Add("*The Terrarian wont be happy to see you die. You don't want to disappoint It, right?*");
+                        break;
+                    case GuardianBase.Sardine:
+                        Mes.Add("*You promissed your wife that you'd bring her treasures. Why are you lying down on the floor?*");
+                        break;
+                    case GuardianBase.Vladimir:
+                        Mes.Add("*You still have a lot of people to help in your... Weird ways. What would your brother think of If finds out that his older brother died?*");
+                        break;
+                    case GuardianBase.Zacks:
+                        Mes.Add("*You have tricked death once, I wont try to find out If you can trick it twice. There is someone who wants to see you safe and sound.*");
+                        break;
+                }
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

@@ -34,10 +34,13 @@ namespace giantsummon
         public static int GuardianInventoryMenuSubTab = 0;
         public const int ModVersion = 58, LastModVersion = 56;
         public const int MaxExtraGuardianFollowers = 4;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
+        //Downed system configs
+        public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false,
+            GuardiansGetKnockedOutUponDefeat = false, GuardiansDontDiesAfterDownedDefeat = false;
+        //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
-            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, UseNewDownedSystem = true;
-        public static bool CharacterDoesntDiesAfterDownedDefeat = true;
+            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true;
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
         public const bool IndividualSkillLeveling = false;

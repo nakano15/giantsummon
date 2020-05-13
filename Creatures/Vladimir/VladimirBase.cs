@@ -323,14 +323,6 @@ namespace giantsummon.Creatures
                             }
                             else
                             {
-                                if (player.dead)
-                                {
-                                    if (player.ghost)
-                                    {
-                                        player.ghost = false;
-                                        player.Spawn();
-                                    }
-                                }
                                 if (player.mount.Active)
                                     player.mount.Dismount(player);
                                 PlayerMod pm = player.GetModPlayer<PlayerMod>();
@@ -344,6 +336,10 @@ namespace giantsummon.Creatures
                                     if (pm.Guardian.ItemAnimationTime == 0 && !pm.Guardian.MoveLeft && !pm.Guardian.MoveRight)
                                         pm.Guardian.FaceDirection((guardian.Direction * (FaceBear ? -1 : 1)) == -1);
                                     pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                                    if (pm.Guardian.KnockedOut)
+                                    {
+                                        pm.Guardian.ReviveBoost += 3;
+                                    }
                                     if (!Main.bloodMoon)
                                     {
                                         pm.Guardian.ImmuneTime = 3;
@@ -358,6 +354,8 @@ namespace giantsummon.Creatures
                                     if (player.itemAnimation == 0 && !player.controlLeft && !player.controlRight)
                                         player.ChangeDir(guardian.Direction * (FaceBear ? -1 : 1));
                                     player.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                                    if (pm.KnockedOut)
+                                        pm.ReviveBoost += 3;
                                     if (!Main.bloodMoon)
                                     {
                                         player.immuneTime = 3;
@@ -372,12 +370,14 @@ namespace giantsummon.Creatures
                                         bool Defeated = false, Hurt = false;
                                         if (pm.ControllingGuardian)
                                         {
+                                            pm.Guardian.FriendlyDuelDefeat = true;
                                             Hurt = 0 != pm.Guardian.Hurt((int)(pm.Guardian.MHP * 0.22f), guardian.Direction, false, true, " were crushed by " + guardian.Name + "'s arms.");
                                             if (pm.Guardian.Downed)
                                                 Defeated = true;
                                         }
                                         else
                                         {
+                                            player.GetModPlayer<PlayerMod>().FriendlyDuelDefeat = true;
                                             Hurt = 0 != player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " were crushed by " + guardian.Name + "'s arms."), (int)(player.statLifeMax2 * 0.22f), guardian.Direction);
                                             if (player.dead)
                                                 Defeated = true;
@@ -985,6 +985,43 @@ namespace giantsummon.Creatures
             if (!PlayerMod.HasGuardianBeenGifted(player, guardian.ID, guardian.ModID))
             {
                 Mes.Add("*Do you have something for me? I'm curious.*");
+            }
+            return Mes[Terraria.Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I could try hugging you while on the ground, but I fear about crushing you with my weight.*");
+            Mes.Add("*Let me help you again.*");
+            Mes.Add("*I've been able to stop your bleeding.*");
+            if (IsPlayer)
+            {
+                Mes.Add("*You're cold. I'll solve that.*");
+            }
+            else if(ReviveGuardian.ModID == Guardian.ModID)
+            {
+                switch (ReviveGuardian.ID)
+                {
+                    case GuardianBase.Brutus:
+                        Mes.Add("*Why you don't let me hug you?*");
+                        break;
+                    case GuardianBase.Leopold:
+                        Mes.Add("*It's weird seeing you quiet.*");
+                        break;
+                    case GuardianBase.Mabel:
+                        Mes.Add("*This.. is.. no.. time... for..... fear...!*");
+                        break;
+                    case GuardianBase.Rococo:
+                        Mes.Add("*I'm here to help you, buddy!*");
+                        break;
+                    case GuardianBase.Sardine:
+                        Mes.Add("*You seem to be sleeping.*");
+                        break;
+                    case GuardianBase.Zacks:
+                        Mes.Add("*Okay, which hole should I make the blood stop coming from?*");
+                        break;
+                }
             }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }

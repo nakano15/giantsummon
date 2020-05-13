@@ -356,5 +356,26 @@ namespace giantsummon.Creatures
                 return "*[name] is curious about what you will give him as gift.*";
             return "*[name] is asking why you aren't dancing, It's party time.*";
         }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
+            {
+                Mes.Add("*" + Guardian.Name + " is telling you to hold on.*");
+                Mes.Add("*" + Guardian.Name + " tells you to not try moving.*");
+                Mes.Add("*" + Guardian.Name + " tells you to rest while he heals the wounds.*");
+                Mes.Add("*" + Guardian.Name + " told you to rest a bit.*");
+                Mes.Add("*" + Guardian.Name + " is very focused into helping you.*");
+                Mes.Add("*" + Guardian.Name + " holds you tight.*");
+            }
+            else
+            {
+                Mes.Add("*" + Guardian.Name + " is trying to calm down the knocked out person.*");
+                Mes.Add("*" + Guardian.Name + " is tending the wounds.*");
+                Mes.Add("*" + Guardian.Name + " is attempting to stop the bleeding.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
     }
 }

@@ -1467,6 +1467,18 @@ namespace giantsummon
                 ExitDownedState();
                 return;
             }
+            else if(HP <= 0)
+            {
+                if (MainMod.GuardiansDontDiesAfterDownedDefeat)
+                {
+                    if (HP < 0 && !Downed)
+                        HP = 0;
+                }
+                else
+                {
+                    DoForceKill(" blacked out.");
+                }
+            }
             MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
             if (HP < 0)
                 HP = 0;
@@ -1492,6 +1504,7 @@ namespace giantsummon
                     Rotation += Velocity.X * 0.05f;
                 }
             }
+
             //ReviveBoost += (int)TownNpcs;
             for (int p = 0; p < 255; p++)
             {
@@ -2542,7 +2555,7 @@ namespace giantsummon
                         float Distance = (wof.Center - CenterPosition).Length();
                         if (Distance > 3000)
                         {
-                            Knockout(" has tried to escape.");
+                            DoForceKill(" has tried to escape.");
                         }
                         else if (wof.position.X < 608 || wof.position.X > (Main.maxTilesX - 38) * 16)
                         {
@@ -2551,20 +2564,28 @@ namespace giantsummon
                         else
                         {
                             Vector2 ResultingPosition = wof.Center;
-                            if (!KnockedOut)
-                                ResultingPosition.X += wof.direction * 200;
+                            //if (!KnockedOut)
+                            ResultingPosition.X += wof.direction * 200;
                             float Speed = 11f;
                             Vector2 MovementDirection = (ResultingPosition - CenterPosition);
                             Distance = MovementDirection.Length();
                             MovementDirection.Normalize();
                             Velocity = MovementDirection * Speed;
                             Position += Velocity;
+                            if (KnockedOut)
+                            {
+                                ResultingPosition = wof.Center;
+                                MovementDirection = (ResultingPosition - CenterPosition);
+                                Distance = MovementDirection.Length();
+                                MovementDirection.Normalize();
+                                Position.X += MovementDirection.X * Speed;
+                            }
                             if (Distance < Speed)
                             {
                                 if (KnockedOut)
                                 {
                                     Main.PlaySound(Terraria.ID.SoundID.NPCDeath13, ResultingPosition);
-                                    Main.NewText(Name + " were eaten by the Wall of Flesh.", Color.Red);
+                                    Main.NewText(Name + " was eaten by the Wall of Flesh.", Color.Red);
                                     //DoForceKill(" was eaten by the Wall of Flesh.");
                                     WofFood = true;
                                 }
@@ -6189,8 +6210,12 @@ namespace giantsummon
             if (PlayerMounted && !Base.ReverseMount && !GuardianHasControlWhenMounted)
             {
                 Player owner = Main.player[OwnerPos];
-                if (!owner.stoned && !owner.frozen && !owner.webbed)
+                if (!owner.stoned && !owner.frozen && !owner.webbed && !owner.GetModPlayer<PlayerMod>().KnockedOut)
                 {
+                    if (UsingFurniture && (owner.controlLeft || owner.controlRight || owner.controlJump))
+                    {
+                        LeaveFurniture();
+                    }
                     MoveUp = owner.controlUp;
                     MoveDown = owner.controlDown;
                     MoveLeft = owner.controlLeft;
@@ -6545,6 +6570,8 @@ namespace giantsummon
             TriggerHandler.FireGuardianDownedTrigger(this.CenterPosition, this, 0, false);
             UpdateStatus = true;
             DoAction.InUse = false;
+            if(OwnerPos == Main.myPlayer)
+                Main.NewText(Name + " has been knocked out.", Color.OrangeRed);
         }
 
         public void ExitDownedState()
@@ -6571,12 +6598,13 @@ namespace giantsummon
             {
                 ForceKill = false;
             }
-            else if (MainMod.UseNewDownedSystem && !KnockedOut && (HP + MHP / 2 > 0 || MainMod.CharacterDoesntDiesAfterDownedDefeat))
+            else if (FriendlyDuelDefeat || (MainMod.GuardiansGetKnockedOutUponDefeat && !KnockedOut && (HP + MHP / 2 > 0 || MainMod.GuardiansDontDiesAfterDownedDefeat)))
             {
+                FriendlyDuelDefeat = false;
                 EnterDownedState();
                 return;
             }
-            else if (MainMod.CharacterDoesntDiesAfterDownedDefeat && KnockedOut)
+            else if (MainMod.GuardiansDontDiesAfterDownedDefeat && KnockedOut)
             {
                 KnockedOutCold = true;
                 if (HP < 0) HP = 0;
@@ -8366,6 +8394,7 @@ namespace giantsummon
             {
                 TriggerHandler.FireGuardianHurtTrigger(CenterPosition, this, FinalDamage, Critical, false);
             }
+            FriendlyDuelDefeat = false;
             return FinalDamage;
         }
 

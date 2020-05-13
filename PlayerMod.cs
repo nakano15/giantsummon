@@ -522,6 +522,7 @@ namespace giantsummon
             {
                 UpdateKnockOut();
             }
+            FriendlyDuelDefeat = false;
         }
 
         public void UpdateKnockOut()
@@ -533,6 +534,18 @@ namespace giantsummon
                     player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
                     //player.potionDelayTime = 5;
                 }
+            }
+            if (player.grapCount > 0)
+            {
+                for (int i = 0; i < player.grapCount; i++)
+                {
+                    if (player.grappling[i] > -1)
+                    {
+                        Main.projectile[player.grappling[i]].active = false;
+                        player.grappling[i] = 0;
+                    }
+                }
+                player.grapCount = 0;
             }
             if (MountedOnGuardian)
             {
@@ -560,7 +573,7 @@ namespace giantsummon
             }
             else if (player.statLife <= 0)
             {
-                if (MainMod.CharacterDoesntDiesAfterDownedDefeat)
+                if (MainMod.PlayersDontDiesAfterDownedDefeat)
                 {
                     if (player.statLife < 0 && !player.dead) player.statLife = 0;
                 }
@@ -576,10 +589,18 @@ namespace giantsummon
                 float Distance = MoveDirection.Length();
                 MoveDirection.Normalize();
                 MoveDirection *= 11f;
-                player.position.X += MoveDirection.X;
+                player.position += MoveDirection;
                 if (Distance < 11f * 2)
                 {
+                    foreach (TerraGuardian tg in GetAllGuardianFollowers)
+                    {
+                        if (tg.WofFood)
+                        {
+                            tg.DoForceKill(" died with " + player.name + ".");
+                        }
+                    }
                     DoForceKill(player.name + " was eaten by the Wall of Flesh.");
+                    player.immuneAlpha = 255;
                 }
             }
             if (!player.dead && KnockedOut && player.gross && Main.wof > -1)
@@ -626,6 +647,8 @@ namespace giantsummon
         public override void Hurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
         {
             if (damage > 0 && player.statLife > 0) TriggerHandler.FirePlayerHurtTrigger(player.Center, player, (int)damage, crit, pvp);
+            if (player.statLife > 0)
+                FriendlyDuelDefeat = false;
         }
 
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
@@ -754,13 +777,14 @@ namespace giantsummon
                 ForceKill = false;
                 player.statLife = 0;
             }
-            else if (MainMod.UseNewDownedSystem && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.CharacterDoesntDiesAfterDownedDefeat))
+            else if (FriendlyDuelDefeat || (MainMod.PlayersGetKnockedOutUponDefeat && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.PlayersDontDiesAfterDownedDefeat)))
             {
+                FriendlyDuelDefeat = false;
                 EnterDownedState();
                 TriggerHandler.FirePlayerDownedTrigger(player.Center, player, (int)damage, pvp);
                 return false;
             }
-            else if (MainMod.CharacterDoesntDiesAfterDownedDefeat && KnockedOut)
+            else if (MainMod.PlayersDontDiesAfterDownedDefeat && KnockedOut)
             {
                 KnockedOutCold = true;
                 player.statLife = 0;
@@ -858,18 +882,11 @@ namespace giantsummon
                             player.mount.Dismount(player);
                         player.velocity = Microsoft.Xna.Framework.Vector2.Zero;
                         player.velocity.Y = 0;
-                        //player.gravDir = Guardian.GravityDirection;
                         player.position = guardian.GetGuardianShoulderPosition;
                         player.position.X -= player.width * 0.5f;
                         player.position.Y -= (player.height * 0.5f) + 8; //Bugs out when gravity is reverse
-                        //if (player.gravDir < 0)
-                        //    player.position.Y -= player.height;
                         player.itemLocation += guardian.Velocity;
-                        //player.position.X = Guardian.Position.X - (player.width * 0.5f + player.width * 0.5f * Guardian.Direction);
-                        //player.position.Y = Guardian.Position.Y - Guardian.Height - (player.height * 0.2f);
                         player.fallStart = player.fallStart2 = (int)player.position.Y / 16;
-                        //player.velocity = Guardian.Velocity;
-                        //player.position -= Guardian.Velocity;
                         if (player.itemAnimation == 0 && player.direction != guardian.Direction)
                             player.direction = guardian.Direction;
                         if (player.stealth > 0 && guardian.Velocity.X * guardian.Direction > 0.1f)
@@ -1797,14 +1814,17 @@ namespace giantsummon
                         if (g.Base.BodyFrontFrameSwap.ContainsKey(g.BodyAnimationFrame))
                         {
                             dd = new Terraria.DataStructures.DrawData(g.Base.sprites.BodyFrontSprite, DrawPosition, g.GetAnimationFrameRectangle(g.Base.BodyFrontFrameSwap[g.BodyAnimationFrame]), color, g.Rotation, origin, g.Scale, (g.LookingLeft ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
+                            dd.ignorePlayerRotation = true;
                             Main.playerDrawData.Add(dd);
                         }
                         if (g.Base.RightArmFrontFrameSwap.ContainsKey(g.RightArmAnimationFrame))
                         {
                             dd = new Terraria.DataStructures.DrawData(g.Base.sprites.RightArmFrontSprite, DrawPosition, g.GetAnimationFrameRectangle(g.Base.RightArmFrontFrameSwap[g.RightArmAnimationFrame]), color, g.Rotation, origin, g.Scale, (g.LookingLeft ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
+                            dd.ignorePlayerRotation = true;
                             Main.playerDrawData.Add(dd);
                         }
                         dd = new Terraria.DataStructures.DrawData(g.Base.sprites.LeftArmSprite, DrawPosition, g.GetAnimationFrameRectangle(g.LeftArmAnimationFrame), color, g.Rotation, origin, g.Scale, (g.LookingLeft ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
+                        dd.ignorePlayerRotation = true;
                         Main.playerDrawData.Add(dd);
                     }
                 });
@@ -1820,7 +1840,12 @@ namespace giantsummon
                     {
                         Color color = Lighting.GetColor((int)g.npc.Center.X / 16, (int)g.npc.Center.Y / 16);
                         Terraria.DataStructures.DrawData[] dds = g.GetDrawDatas(color, true);
-                        Main.playerDrawData.AddRange(dds);
+                        for (int x = 0; x < dds.Length; x++)
+                        {
+                            Terraria.DataStructures.DrawData dd = dds[x];
+                            dd.ignorePlayerRotation = true;
+                            Main.playerDrawData.Add(dd);
+                        }
                     }
                 });
                 layers.Add(l);
