@@ -17,7 +17,7 @@ Extra = Only has Sardine's sprite for when inside the King Slime.
 
 GuardianNPC = This is where the npc definition of the guardians are placed. Their head sprite is necessary to see them in the world map.
 
-Ideas = A neglected folder.
+Ideas = A folder containing ideas for the mods, be either from me, or fans.
 
 Interface = Interface element sprites.
 
