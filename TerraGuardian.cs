@@ -6118,10 +6118,6 @@ namespace giantsummon
                 {
                     DisplayEmotion(Emotions.Sleepy);
                 }
-                /*if (AfkCounter >= 180 * 60 && !IsAfkAbuse) //Idle
-                {
-
-                }*/
                 if (CreatureAllowsAFK)
                 {
                     bool PlayerInCriticalHealth = AfkCounter >= 60 * 60 && owner.statLife <= owner.statLifeMax2 * 0.5f;

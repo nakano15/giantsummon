@@ -48,7 +48,7 @@ namespace giantsummon.Creatures
             WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             JumpFrame = 9;
             //HeavySwingFrames = new int[] { 10, 11, 12 };
-            //ItemUseFrames = new int[] { 16, 17, 18, 19 };
+            ItemUseFrames = new int[] { 10, 11, 12, 13 };
             //DuckingFrame = 20;
             //DuckingSwingFrames = new int[] { 21, 22, 12 };
             //SittingFrame = 23;
@@ -60,6 +60,18 @@ namespace giantsummon.Creatures
             //SpecificBodyFrontFramePositions = true;
             //BodyFrontFrameSwap.Add(23, 0);
 
+            //Left Arm
+            LeftHandPoints.AddFramePoint2x(10, 13, 2);
+            LeftHandPoints.AddFramePoint2x(11, 33, 10);
+            LeftHandPoints.AddFramePoint2x(12, 35, 18);
+            LeftHandPoints.AddFramePoint2x(13, 31, 27);
+
+            //Right Arm
+            RightHandPoints.AddFramePoint2x(10, 15, 2);
+            RightHandPoints.AddFramePoint2x(11, 35, 10);
+            RightHandPoints.AddFramePoint2x(12, 37, 18);
+            RightHandPoints.AddFramePoint2x(13, 33, 27);
+
             //MountedPosition
             MountShoulderPoints.DefaultCoordinate2x = new Point(16, 31);
             MountShoulderPoints.AddFramePoint2x(1, 17, 31);
@@ -68,6 +80,9 @@ namespace giantsummon.Creatures
             MountShoulderPoints.AddFramePoint2x(5, 15, 31);
             MountShoulderPoints.AddFramePoint2x(6, 14, 30);
             MountShoulderPoints.AddFramePoint2x(7, 15, 31);
+
+            //Hat Position
+            HeadVanityPosition.DefaultCoordinate2x = new Point(22, 10);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)

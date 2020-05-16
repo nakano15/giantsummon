@@ -1,17 +1,1 @@
-﻿Has gained petrified frame: Rococo, Blue, Sardine, Zacks, Alex and Brutus.
-Your companions will no longer use buff potions when you tell them to use hp and mana status increase items.
-Asking a guardian to teleport with you to the town, will now take the companion you're controlling, and mounted on with you.
-You can no longer pull guardians to your position when they are with the terrified debuff, and you aren't facing the wall of flesh.
-Fixed Zacks head and his hair being split by lines when he's sitting on a throne.
-Fixed part of the disasterful health regen script.
-Companions will now use furnitures for longer.
-New Knock Out system is in.
-	With the knockout system, you can add an alternative to death, by making the characters enter knocked out state when defeated.
-		When in Knocked out state, the character wont be able to act, and nearby allies can try reviving It when there is no threat nearby.
-		Both the player and companions can make use of this system.
-		You can revive others by passing the mouse over their body, and holding the item use button.
-	The system is fully configureable, there is a new mod setting specially for this system.
-	You can also set If the character dies when health reaches 0 while knocked out, of If It will enter Knocked Out cold state.
-		In some cases, the character will end up dying when health reaches 0. For example, when the character dies for being hurt by lava.
-Trying to move your guardian when It is using furniture, and you are mounted on it, will make it leave the furniture.
-Companions will no longer ask you to hunt for Giant Worms and Diggers.
+﻿Rococo and Sardine gained readjustment on some animations. Most notable, the upper-left frame of the item use animation.

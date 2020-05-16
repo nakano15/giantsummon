@@ -80,20 +80,22 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(11, 27, 14);
             LeftHandPoints.AddFramePoint2x(12, 31, 26);
 
-            LeftHandPoints.AddFramePoint2x(13, 22, 12);
-            LeftHandPoints.AddFramePoint2x(14, 24, 18);
-            LeftHandPoints.AddFramePoint2x(15, 21, 23);
+            LeftHandPoints.AddFramePoint2x(13, 12, 9);
+            LeftHandPoints.AddFramePoint2x(14, 23, 12);
+            LeftHandPoints.AddFramePoint2x(15, 24, 18);
+            LeftHandPoints.AddFramePoint2x(16, 21, 23);
 
-            LeftHandPoints.AddFramePoint2x(21, 21, 23);
+            LeftHandPoints.AddFramePoint2x(22, 21, 23);
 
             //Right Hand
             RightHandPoints.AddFramePoint2x(10, 12, 12);
             RightHandPoints.AddFramePoint2x(11, 29, 14);
             RightHandPoints.AddFramePoint2x(12, 33, 26);
 
-            RightHandPoints.AddFramePoint2x(13, 24, 12);
-            RightHandPoints.AddFramePoint2x(14, 26, 18);
-            RightHandPoints.AddFramePoint2x(15, 23, 23);
+            RightHandPoints.AddFramePoint2x(13, 14, 9);
+            RightHandPoints.AddFramePoint2x(14, 25, 12);
+            RightHandPoints.AddFramePoint2x(15, 26, 18);
+            RightHandPoints.AddFramePoint2x(16, 23, 23);
 
             //Mount
             MountShoulderPoints.DefaultCoordinate = new Point(16 * 2, 25 * 2);
@@ -104,9 +106,9 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(11, 22, 16);
             HeadVanityPosition.AddFramePoint2x(12, 28, 24);
 
-            HeadVanityPosition.AddFramePoint2x(18, 16, 13 - 7);
+            HeadVanityPosition.AddFramePoint2x(19, 16, 13 - 7);
 
-            HeadVanityPosition.AddFramePoint2x(21, 16, 15);
+            HeadVanityPosition.AddFramePoint2x(22, 16, 15);
 
             //Wing Position
             WingPosition.DefaultCoordinate2x = new Point(16, 19);
