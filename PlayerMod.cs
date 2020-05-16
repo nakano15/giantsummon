@@ -525,6 +525,61 @@ namespace giantsummon
             FriendlyDuelDefeat = false;
         }
 
+        public void UpdateReviveSystem()
+        {
+            bool Reviving = player.controlUseItem && player.itemAnimation == 0;
+            int SelectedOne = -1;
+            bool SelectedIsGuardian = false;
+            const float ReviveMaxDistance = 38f;
+            float MouseX = Main.mouseX + Main.screenPosition.X, MouseY = Main.mouseY + Main.screenPosition.Y;
+            for (int p = 0; p < 255; p++)
+            {
+                if (p != player.whoAmI && Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut &&
+                    MouseX >= Main.player[p].position.X && MouseX < Main.player[p].position.X + Main.player[p].width &&
+                    MouseY >= Main.player[p].position.Y + Main.player[p].height * 0.5f && MouseY < Main.player[p].position.Y + Main.player[p].height && 
+                    (player.Center - Main.player[p].Center).Length() < ReviveMaxDistance)
+                {
+                    SelectedOne = p;
+                    SelectedIsGuardian = false;
+                    break;
+                }
+            }
+            if (SelectedOne == -1)
+            {
+                foreach (int key in MainMod.ActiveGuardians.Keys)
+                {
+                    TerraGuardian g = MainMod.ActiveGuardians[key];
+                    if (g.Active && !g.Downed && g.KnockedOut && !g.IsPlayerHostile(player) &&
+                        MouseX >= g.Position.X - g.Width * 0.5f && MouseX < g.Position.X + g.Width * 0.5f &&
+                        MouseY >= g.Position.Y - g.Height * 0.5f && MouseY < g.Position.Y && 
+                        (g.Position - player.Center).Length() < ReviveMaxDistance + g.Width * 0.5f)
+                    {
+                        SelectedOne = key;
+                        SelectedIsGuardian = true;
+                        break;
+                    }
+                }
+            }
+            if (SelectedOne > -1)
+            {
+                if (Reviving)
+                {
+                    if (SelectedIsGuardian)
+                    {
+                        MainMod.ActiveGuardians[SelectedOne].ReviveBoost += 3;
+                    }
+                    else
+                    {
+                        Main.player[SelectedOne].GetModPlayer<PlayerMod>().ReviveBoost += 3;
+                    }
+                }
+                MainMod.ToReviveID = SelectedOne;
+                MainMod.ToReviveIsGuardian = SelectedIsGuardian;
+                player.mouseInterface = true;
+                player.controlUseItem = false;
+            }
+        }
+
         public void UpdateKnockOut()
         {
             if (KnockedOutCold)
@@ -533,6 +588,14 @@ namespace giantsummon
                 {
                     player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
                     //player.potionDelayTime = 5;
+                }
+                if (player.breath <= 0)
+                {
+                    DoForceKill(" didn't had more air.");
+                }
+                else if (player.lavaWet && !player.lavaImmune)
+                {
+                    DoForceKill(" has turned into ash.");
                 }
             }
             if (player.grapCount > 0)
@@ -625,6 +688,10 @@ namespace giantsummon
 
         public override void PreUpdate()
         {
+            if (player.whoAmI == Main.myPlayer)
+            {
+                MainMod.ToReviveID = -1;
+            }
 
         }
 
@@ -1058,6 +1125,8 @@ namespace giantsummon
 
         public override void SetControls()
         {
+            if (player.whoAmI == Main.myPlayer && !player.dead && !KnockedOut)
+                UpdateReviveSystem();
             if (player.whoAmI == Main.myPlayer && KnockedOut)
             {
                 if (KnockedOutCold && player.controlHook)

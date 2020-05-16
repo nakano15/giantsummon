@@ -34,7 +34,7 @@ namespace giantsummon
         public static int GuardianInventoryMenuSubTab = 0;
         public const int ModVersion = 58, LastModVersion = 56;
         public const int MaxExtraGuardianFollowers = 4;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false,
             GuardiansGetKnockedOutUponDefeat = false, GuardiansDontDiesAfterDownedDefeat = false;
@@ -101,6 +101,9 @@ namespace giantsummon
         public static float CarpetAnimationTime = 0;
         public static Vector2 FocusCameraPosition = Vector2.Zero;
         public static byte DButtonPress = 255;
+        public static int ToReviveID = -1;
+        public static bool ToReviveIsGuardian = false;
+        public static int ReviveTalkDelay = 0;
 
         public static void AddActiveGuardian(TerraGuardian Guardian)
         {
@@ -347,6 +350,8 @@ namespace giantsummon
                 CarpetAnimationTime -= 6;
             ForceUpdateGuardiansStatus = false;
             LastWof = Main.wof > -1;
+            if (ReviveTalkDelay > 0)
+                ReviveTalkDelay--;
         }
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
@@ -885,6 +890,21 @@ namespace giantsummon
             if (GuardianManagement.Active)
                 return true;
             string MouseOverText = "";
+            if (ToReviveID > -1)
+            {
+                bool IsReviving = Main.player[Main.myPlayer].controlUseItem && Main.player[Main.myPlayer].itemAnimation == 0;
+                if (ToReviveIsGuardian)
+                {
+                    if (ActiveGuardians.ContainsKey(ToReviveID))
+                    {
+                        MouseOverText = (IsReviving ? "Reviving " : "Revive ") + ActiveGuardians[ToReviveID].ReferenceName;
+                    }
+                }
+                else
+                {
+                    MouseOverText = (IsReviving ? "Reviving " : "Revive ") + Main.player[ToReviveID].name;
+                }
+            }
             const int InventoryMenuButtons = 8;
             PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
             TerraGuardian Guardian = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian;

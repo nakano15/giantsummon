@@ -404,7 +404,7 @@ namespace giantsummon
         private float gfxOffY = 0f;
         public int GravityDirection = 1;
         public bool Wet = false, LavaWet = false, HoneyWet = false;
-        public bool LavaImmunity = false, NoGravity = false;
+        public bool NoGravity = false;
         public bool Falling = false;
         public float Mass = 0.5f, MaxSpeed = 4.5f, Acceleration = 0.1f, SlowDown = 0.3f, MoveSpeed = 1f; //Mass = Gravity Strength
         public const float WalkMaxSpeed = 1f,
@@ -1504,16 +1504,32 @@ namespace giantsummon
                     Rotation += Velocity.X * 0.05f;
                 }
             }
-
-            //ReviveBoost += (int)TownNpcs;
-            for (int p = 0; p < 255; p++)
+            if (ReviveBoost > 0)
+            {
+                if (ReviveBoost + TownNpcs > 255)
+                    ReviveBoost = 255;
+                else
+                    ReviveBoost += (byte)TownNpcs;
+            }
+            if (KnockedOutCold)
+            {
+                if (Breath <= 0)
+                {
+                    DoForceKill(" didn't had more air.");
+                }
+                if (LavaWet && !HasFlag(GuardianFlags.LavaImmunity))
+                {
+                    DoForceKill(" turned into ash.");
+                }
+            }
+            /*for (int p = 0; p < 255; p++)
             {
                 if (Main.player[p].active && !Main.player[p].dead && Main.player[p].velocity.X == 0 && Main.player[p].velocity.Y == 0 && !IsPlayerHostile(Main.player[p]) && 
                     !Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && Main.player[p].getRect().Intersects(HitBox))
                 {
                     ReviveBoost += 2;
                 }
-            }
+            }*/
         }
 
         public void Update(Player Owner = null)
@@ -3997,9 +4013,9 @@ namespace giantsummon
             }
         }
 
-        public void CheckIfSomeoneNeedsRevive()
+        public void CheckIfSomeoneNeedsRevive(bool MountedEdition = false)
         {
-            if (PlayerMounted || SittingOnPlayerMount)
+            if (!MountedEdition && (PlayerMounted || SittingOnPlayerMount))
                 return;
             if (!DoAction.InUse && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
@@ -4018,7 +4034,7 @@ namespace giantsummon
                 bool IsGuardian = false;
                 for (int p = 0; p < 255; p++)
                 {
-                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && !IsPlayerHostile(Main.player[p]) && InPerceptionRange(Main.player[p].Center))
+                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && !IsPlayerHostile(Main.player[p]) && (!MountedEdition && InPerceptionRange(Main.player[p].Center) || Main.player[p].getRect().Intersects(HitBox)))
                     {
                         byte ReviveBoost = Main.player[p].GetModPlayer<PlayerMod>().ReviveBoost;
                         if (ReviveBoost < LowestReviveBoost)
@@ -4032,7 +4048,7 @@ namespace giantsummon
                 foreach (int key in MainMod.ActiveGuardians.Keys) //Later
                 {
                     TerraGuardian g = MainMod.ActiveGuardians[key];
-                    if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && InPerceptionRange(g.CenterPosition))
+                    if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && (!MountedEdition && InPerceptionRange(g.CenterPosition) || g.HitBox.Intersects(HitBox)))
                     {
                         byte ReviveBoost = g.ReviveBoost;
                         if (ReviveBoost < LowestReviveBoost)
@@ -4061,7 +4077,7 @@ namespace giantsummon
         {
             if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos != Main.myPlayer)
                 return;
-            if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified)) return;
+            if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified) || KnockedOut) return;
             if (!Is2PControlled)
             {
                 LookForThreats();
@@ -6086,7 +6102,7 @@ namespace giantsummon
 
         public bool CheckForPlayerAFK()
         {
-            if (OwnerPos == -1 || Is2PControlled || PlayerControl || KnockedOut || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320)) return false;
+            if (OwnerPos == -1 || Is2PControlled || PlayerControl || Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut || KnockedOut || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320)) return false;
             Player owner = Main.player[OwnerPos];
             bool NoInput = !owner.controlLeft && !owner.controlRight && !owner.controlJump && !owner.controlDown && owner.itemAnimation <= 0,
                 IsAfkAbuse = (NoInput && TargetID > 0 && owner.townNPCs == 0);
@@ -6222,6 +6238,10 @@ namespace giantsummon
                     MoveRight = owner.controlRight;
                     Jump = owner.controlJump;
                     owner.controlJump = false;
+                }
+                if (!DoAction.InUse && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown) && MoveDown)
+                {
+                    CheckIfSomeoneNeedsRevive(true);
                 }
             }
         }
@@ -12494,16 +12514,13 @@ namespace giantsummon
             }
             if (LavaWet && !Tolerance && !HasFlag(GuardianFlags.LavaImmunity) && !HasCooldown(GuardianCooldownManager.CooldownType.LavaHurt))
             {
-                if (!LavaImmunity) //Do lava damage
+                if (HasFlag(GuardianFlags.LavaTolerance))
                 {
-                    if (HasFlag(GuardianFlags.LavaTolerance))
-                    {
-                        AddBuff(24, 210);
-                    }
-                    else
-                    {
-                        AddBuff(24, 420);
-                    }
+                    AddBuff(24, 210);
+                }
+                else
+                {
+                    AddBuff(24, 420);
                 }
                 int Damage = 80;
                 if (HasFlag(GuardianFlags.LavaDamageReduction))

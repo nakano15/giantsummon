@@ -252,6 +252,11 @@ namespace giantsummon
                         {
                             if (guardian.furniturex > -1)
                                 guardian.LeaveFurniture(false);
+                            if (guardian.PlayerMounted && !guardian.MoveDown)
+                            {
+                                InUse = false;
+                                return;
+                            }
                             const byte IReviveTime = 0, ITalkTime = 1;
                             Vector2 TargetPosition = Vector2.Zero;
                             int TargetWidth = 0, TargetHeight = 0;
@@ -353,9 +358,13 @@ namespace giantsummon
                                         int TalkTime = GetIntegerValue(ITalkTime);
                                         if (TalkTime == 0)
                                         {
-                                            Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
-                                                guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
-                                            TalkTime = 600 + Main.rand.Next(10) * 50;
+                                            if (MainMod.ReviveTalkDelay <= 0)
+                                            {
+                                                Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
+                                                    guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
+                                                TalkTime = 300 + Main.rand.Next(10) * 50;
+                                                MainMod.ReviveTalkDelay = 600 + Main.rand.Next(10) * 50;
+                                            }
                                         }
                                         else
                                         {

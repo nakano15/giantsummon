@@ -9,6 +9,7 @@ New Knock Out system is in.
 	With the knockout system, you can add an alternative to death, by making the characters enter knocked out state when defeated.
 		When in Knocked out state, the character wont be able to act, and nearby allies can try reviving It when there is no threat nearby.
 		Both the player and companions can make use of this system.
+		You can revive others by passing the mouse over their body, and holding the item use button.
 	The system is fully configureable, there is a new mod setting specially for this system.
 	You can also set If the character dies when health reaches 0 while knocked out, of If It will enter Knocked Out cold state.
 		In some cases, the character will end up dying when health reaches 0. For example, when the character dies for being hurt by lava.
