@@ -582,6 +582,8 @@ namespace giantsummon
 
         public void UpdateKnockOut()
         {
+            if (player.dead)
+                return;
             if (KnockedOutCold)
             {
                 if (player.potionDelayTime < 5)

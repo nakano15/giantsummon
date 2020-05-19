@@ -441,7 +441,7 @@ namespace giantsummon.Creatures
                         Mes.Add("*You still have someone you need to stay with. I can't bear to give him bad news.*");
                         break;
                     case GuardianBase.Bree:
-                        Mes.Add("*Your husband is a warrior, right? Be a warrior too, and get over this.*");
+                        Mes.Add("*Your husband promissed to bring you treasures from his adventures, right? How would he react if his most precious treasure died?*");
                         break;
                     case GuardianBase.Domino:
                         Mes.Add("*I still need evidences to arrest you, I wont let you escape me so easily.*");

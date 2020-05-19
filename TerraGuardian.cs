@@ -1462,6 +1462,8 @@ namespace giantsummon
 
         public void UpdateKnockoutState()
         {
+            if (Downed)
+                return;
             if (HP >= MHP)
             {
                 ExitDownedState();
@@ -6598,6 +6600,8 @@ namespace giantsummon
             HP = MHP / 2 + ReviveBoost * 10;
             Rotation = 0f;
             CombatText.NewText(HitBox, Color.Green, "Revived!", true);
+            if (OwnerPos == Main.myPlayer)
+                Main.NewText(Name + " woke up!", Color.Green);
             ImmuneTime = (HasFlag(GuardianFlags.ImprovedImmuneTime) ? 120 : 60) * 3;
             UpdateStatus = true;
         }

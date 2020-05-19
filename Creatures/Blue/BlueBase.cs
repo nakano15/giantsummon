@@ -473,7 +473,7 @@ namespace giantsummon.Creatures
                     case GuardianBase.Sardine:
                         {
                             Mes.Add("*It's not fun when you're knocked out.*");
-                            Mes.Add("*If you don't wake up, I'll bite you! He's still knocked out cold.*");
+                            Mes.Add("*If you don't wake up, I'll bite you! ... He's still knocked out cold.*");
                             Mes.Add("*Alright, I promisse not to chase and bite you if you wake up. Please, wake up!*");
                         }
                         break;

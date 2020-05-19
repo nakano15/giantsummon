@@ -335,7 +335,7 @@ namespace giantsummon.Creatures
         {
             List<string> Mes = new List<string>();
             Mes.Add("*I know some healing magic, this will help you.*");
-            Mes.Add("*Your breath is weak, I should take care of that.*");
+            Mes.Add("*I've read several medicine books. Don't worry, I know what I'm doing.*");
             Mes.Add("*I hope I don't need to open you up to try fixing a problem.*");
             if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID)
             {
