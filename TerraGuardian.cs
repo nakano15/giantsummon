@@ -1829,7 +1829,7 @@ namespace giantsummon
 
         public void DrawMount(Vector2 Position, Color DrawColor, SpriteEffects seffects)
         {
-            Player dummy = Main.player[255];
+            /*Player dummy = Main.player[255];
             Vector2 NewPosition = Position + Main.screenPosition;//Position + Main.screenPosition;
             //NewPosition.X -= this.Width * 0.5f;// +mount.XOffset * Direction;
             //NewPosition.Y -= Height; //mount.PlayerOffsetHitbox * 2 - It's his fault!
@@ -1858,7 +1858,7 @@ namespace giantsummon
                     AddDrawData(dd, true);
                 }
                 dummy.height = heightbkp;
-            }
+            }*/
         }
 
         public void UpdateMount()
@@ -12972,12 +12972,12 @@ namespace giantsummon
             return VanityID;
         }
 
-        public void AddDrawData(Terraria.DataStructures.DrawData dd, bool InFrontOfPlayer)
+        public void AddDrawData(GuardianDrawData dd, bool InFrontOfPlayer)
         {
-            if (dd.texture == null)
+            if (dd.Texture == null)
                 return;
             if (!MountedOnPlayer || Downed)
-                dd.ignorePlayerRotation = true;
+                dd.IgnorePlayerRotation = true;
             if (InFrontOfPlayer)
             {
                 DrawFront.Add(dd);
@@ -12986,35 +12986,21 @@ namespace giantsummon
             {
                 DrawBehind.Add(dd);
             }
-            return;
-            if (OwnerPos == -1)
-                dd.Draw(Main.spriteBatch);
-            else if (PlayerControl)
+        }
+
+        public void InsertDrawData(GuardianDrawData dd, int Position, bool InFrontOfPlayer)
+        {
+            if (dd.Texture == null)
+                return;
+            if (!MountedOnPlayer || Downed)
+                dd.IgnorePlayerRotation = true;
+            if (InFrontOfPlayer)
             {
-                Main.playerDrawData.Add(dd);
-            }
-            else if (InFrontOfPlayer || MainMod.TestForceGuardianOnFront)
-            {
-                if (LastDrawFrame > -1)
-                {
-                    if (LastDrawFrame <= FirstDrawFrame)
-                        FirstDrawFrame++;
-                    Main.playerDrawData.Insert(LastDrawFrame++, dd);
-                }
-                else
-                {
-                    Main.playerDrawData.Add(dd);
-                }
+                DrawFront.Insert(Position, dd);
             }
             else
             {
-                if (LastDrawFrame > -1)
-                {
-                    if (LastDrawFrame <= FirstDrawFrame)
-                        FirstDrawFrame++;
-                    LastDrawFrame++;
-                }
-                Main.playerDrawData.Insert(DrawIndexStacker++, dd);
+                DrawBehind.Insert(Position, dd);
             }
         }
 
@@ -13072,10 +13058,32 @@ namespace giantsummon
 
         public static int DrawIndexStacker = 0, FirstDrawFrame = -1, LastDrawFrame = -1;
         public static bool DrawLeftBodyPartsInFrontOfPlayer = false, DrawRightBodyPartsInFrontOfPlayer = false;
-        public static List<Terraria.DataStructures.DrawData> DrawBehind = new List<Terraria.DataStructures.DrawData>(), 
-            DrawFront = new List<Terraria.DataStructures.DrawData>();
+        public static List<GuardianDrawData> DrawBehind = new List<GuardianDrawData>(),
+            DrawFront = new List<GuardianDrawData>();
         public static int HeadSlot, ArmorSlot, LegSlot, FaceSlot = 0, FrontSlot = 0, BackSlot = 0;
         public static bool HeadVanityIsAcc = false;
+
+        public static List<Terraria.DataStructures.DrawData> GetDrawFrontData
+        {
+            get
+            {
+                List<Terraria.DataStructures.DrawData> list = new List<Terraria.DataStructures.DrawData>();
+                foreach (GuardianDrawData gdd in DrawFront)
+                    list.Add(gdd.GetDrawData());
+                return list;
+            }
+        }
+
+        public static List<Terraria.DataStructures.DrawData> GetDrawBehindData
+        {
+            get
+            {
+                List<Terraria.DataStructures.DrawData> list = new List<Terraria.DataStructures.DrawData>();
+                foreach (GuardianDrawData gdd in DrawBehind)
+                    list.Add(gdd.GetDrawData());
+                return list;
+            }
+        }
 
         public Rectangle GetAnimationFrameRectangle(int FrameID)
         {
@@ -13090,20 +13098,12 @@ namespace giantsummon
             return rect;
         }
 
-        public void DrawEyes(Vector2 NewPosition, Rectangle rect, Vector2 Origin, float Scale, float Rotation, SpriteEffects seffect, int Shader, bool DrawInFrontOfPlayer = false)
-        {
-            Rectangle otherrect = new Rectangle(0, BodyAnimationFrame * rect.Height, rect.Width, rect.Height);
-            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(Main.playerTextures[0, Terraria.ID.PlayerTextureID.Eyes], NewPosition, otherrect, Color.Red, Rotation, Origin, Scale, seffect, 0);
-            dd.shader = Shader;
-            AddDrawData(dd, DrawInFrontOfPlayer);
-        }
-
         public void Draw(bool IgnoreLighting = false)
         {
             DrawDataCreation(IgnoreLighting);
-            foreach (Terraria.DataStructures.DrawData dd in DrawBehind)
+            foreach (GuardianDrawData dd in DrawBehind)
                 dd.Draw(Main.spriteBatch);
-            foreach (Terraria.DataStructures.DrawData dd in DrawFront)
+            foreach (GuardianDrawData dd in DrawFront)
                 dd.Draw(Main.spriteBatch);
         }
 
@@ -13200,7 +13200,7 @@ namespace giantsummon
             if (DrawInvalidGuardian)
             {
                 SpriteEffects errorDir = LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                Terraria.DataStructures.DrawData errordd = new Terraria.DataStructures.DrawData(MainMod.LosangleOfUnnown, Position - Main.screenPosition, null, Color.White, 0f, new Vector2(0, 48), 1f, SpriteEffects.None, 0);
+                GuardianDrawData errordd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, MainMod.LosangleOfUnnown, Position - Main.screenPosition, null, Color.White, 0f, new Vector2(0, 48), 1f, SpriteEffects.None);
                 DrawItem(Position, errorDir, true);
                 AddDrawData(errordd, false);
                 DrawItem(Position, errorDir, false);
@@ -13341,11 +13341,11 @@ namespace giantsummon
                         HasCarpet = true;
                     }
                 }
-                Terraria.DataStructures.DrawData accd;
+                GuardianDrawData accd;
                 if (HasCarpet)
                 {
                     Vector2 CarpetPivot = new Vector2(32, 10);
-                    accd = new Terraria.DataStructures.DrawData(Main.flyingCarpetTexture, NewPosition, new Rectangle(0, (int)(MainMod.CarpetAnimationTime) * 20, 64, 20), c, 0f, CarpetPivot, Scale, seffect, 0);
+                    accd = new GuardianDrawData(GuardianDrawData.TextureType.PreDrawEffect, Main.flyingCarpetTexture, NewPosition, new Rectangle(0, (int)(MainMod.CarpetAnimationTime) * 20, 64, 20), c, 0f, CarpetPivot, Scale, seffect);
                     AddDrawData(accd, false);
                 }
             }
@@ -13353,7 +13353,7 @@ namespace giantsummon
             c *= Alpha;
             DrawWings(seffect, armorColor);
             Base.GuardianPreDrawScript(this, NewPosition, c, armorColor, Rotation, Origin, Scale, seffect);
-            Terraria.DataStructures.DrawData dd;
+            GuardianDrawData dd;
             if (Base.IsTerraGuardian)
             {
                 DrawTerraGuardianData(NewPosition, c, armorColor, Origin, seffect, Shader);
@@ -13370,7 +13370,7 @@ namespace giantsummon
                     HigherSize = Height;
                 float ThisScale = (HigherSize / 38) * Scale;
                 if (ThisScale < 1f) ThisScale = 1f;
-                dd = new Terraria.DataStructures.DrawData(Main.frozenTexture, Position - Main.screenPosition, null, Color.White * 0.5f, 0f, new Vector2(26, 52), ThisScale, SpriteEffects.None, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PosDrawEffect, Main.frozenTexture, Position - Main.screenPosition, null, Color.White * 0.5f, 0f, new Vector2(26, 52), ThisScale, SpriteEffects.None);
                 AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
             }
             if (HasFlag(GuardianFlags.Webbed))
@@ -13380,7 +13380,7 @@ namespace giantsummon
                     HigherSize = Height;
                 float ThisScale = (HigherSize / 64) * Scale;
                 if (ThisScale < 1f) ThisScale = 1f;
-                dd = new Terraria.DataStructures.DrawData(Main.extraTexture[32], CenterPosition - Main.screenPosition, null, Color.White, 0f, new Vector2(39, 38), ThisScale, SpriteEffects.None, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PosDrawEffect, Main.extraTexture[32], CenterPosition - Main.screenPosition, null, Color.White, 0f, new Vector2(39, 38), ThisScale, SpriteEffects.None);
                 AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
             }
             if (HasFlag(GuardianFlags.Electrified))
@@ -13393,7 +13393,7 @@ namespace giantsummon
                     Frame %= 7;
                     if (Frame > 1 && Frame < 5)
                     {
-                        dd = new Terraria.DataStructures.DrawData(ElectricityTexture, CenterPosition - Main.screenPosition, new Rectangle(0, Frame * FrameHeight, ElectricityTexture.Width, FrameHeight), Color.White, 0f, new Vector2(ElectricityTexture.Width * 0.5f, FrameHeight * 0.5f), Scale, SpriteEffects.None, 0);
+                        dd = new GuardianDrawData(GuardianDrawData.TextureType.PosDrawEffect, ElectricityTexture, CenterPosition - Main.screenPosition, new Rectangle(0, Frame * FrameHeight, ElectricityTexture.Width, FrameHeight), Color.White, 0f, new Vector2(ElectricityTexture.Width * 0.5f, FrameHeight * 0.5f), Scale, SpriteEffects.None);
                         AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
                     }
                 }
@@ -13404,7 +13404,7 @@ namespace giantsummon
                 Vector2 EffectPosition = Position;
                 EffectPosition.Y -= Height + 16 + ConfusionTexture.Height;
                 EffectPosition.X -= ConfusionTexture.Width * 0.5f;
-                dd = new Terraria.DataStructures.DrawData(ConfusionTexture, EffectPosition - Main.screenPosition, Color.White);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PosDrawEffect, ConfusionTexture, EffectPosition - Main.screenPosition, Color.White);
                 AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
             }
             DoAction.Draw(this);
@@ -13452,15 +13452,15 @@ namespace giantsummon
         public void DrawTerraGuardianData(Vector2 NewPosition, Color c, Color armorColor, Vector2 Origin, SpriteEffects seffect, int Shader)
         {
             Rectangle rect = GetAnimationFrameRectangle(RightArmAnimationFrame);
-            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(Base.sprites.RightArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0);
-            dd.shader = Shader;
+            GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, Base.sprites.RightArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
+            dd.Shader = Shader;
             AddDrawData(dd, false);
             //dd.Draw(Main.spriteBatch);
             //Main.spriteBatch.Draw(Base.sprites.RightArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0f);
             DrawItem(NewPosition, seffect, true);
             rect = GetAnimationFrameRectangle(BodyAnimationFrame);
-            dd = new Terraria.DataStructures.DrawData(Base.sprites.BodySprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0);
-            dd.shader = Shader;
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, Base.sprites.BodySprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
+            dd.Shader = Shader;
             AddDrawData(dd, false);
             try
             {
@@ -13483,7 +13483,7 @@ namespace giantsummon
                         //if (GravityDirection < 0)
                         //    HelmetOrigin.Y = FrameHeight;
                         HelmetPosition += NewPosition;
-                        dd = new Terraria.DataStructures.DrawData(HeadgearTexture, HelmetPosition, new Rectangle(0, 0, FrameWidth, FrameHeight), armorColor, Rotation, HelmetOrigin, HelmetScale, seffect, 0);
+                        dd = new GuardianDrawData(GuardianDrawData.TextureType.TGHeadAccessory, HeadgearTexture, HelmetPosition, new Rectangle(0, 0, FrameWidth, FrameHeight), armorColor, Rotation, HelmetOrigin, HelmetScale, seffect);
                         //dd.shader = Shader;
                         AddDrawData(dd, false);
                     }
@@ -13506,8 +13506,8 @@ namespace giantsummon
                 }
                 if (rect.X != -1)
                 {
-                    dd = new Terraria.DataStructures.DrawData(Base.sprites.BodyFrontSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0);
-                    dd.shader = Shader;
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, Base.sprites.BodyFrontSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
+                    dd.Shader = Shader;
                     AddDrawData(dd, true);
                 }
             }
@@ -13525,16 +13525,16 @@ namespace giantsummon
                 if (Frame >= 0)
                 {
                     rect = GetAnimationFrameRectangle(Frame);
-                    dd = new Terraria.DataStructures.DrawData(Base.sprites.RightArmFrontSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0);
-                    dd.shader = Shader;
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, Base.sprites.RightArmFrontSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
+                    dd.Shader = Shader;
                     AddDrawData(dd, DrawRightBodyPartsInFrontOfPlayer);
                     DrawItem(NewPosition, seffect, true);
                 }
             }
             rect = GetAnimationFrameRectangle(LeftArmAnimationFrame);
             DrawItem(NewPosition, seffect, false);
-            dd = new Terraria.DataStructures.DrawData(Base.sprites.LeftArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0);
-            dd.shader = Shader;
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, Base.sprites.LeftArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
+            dd.Shader = Shader;
             AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
         }
 
@@ -13543,7 +13543,7 @@ namespace giantsummon
             if (!Base.IsTerrarian)
                 return;
             SpriteEffects seffect = SpriteEffects.None;
-            Terraria.DataStructures.DrawData dd;
+            GuardianDrawData dd;
             Rectangle headrect = new Rectangle(0, 0, 40, 56);
             Color HairColor = Base.TerrarianInfo.HairColor,
                 EyesColor = Base.TerrarianInfo.EyeColor,
@@ -13564,32 +13564,32 @@ namespace giantsummon
             if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28)
                 DrawNormalHair = true; 
             bool HideLegs = LegSlot == 143 || LegSlot == 106 || LegSlot == 140;
-            dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, headrect, SkinColor, Rotation, Origin, Scale, seffect, 0);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, headrect, SkinColor, Rotation, Origin, Scale, seffect);
             dd.Draw(Main.spriteBatch);
-            dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, Rotation, Origin, Scale, seffect, 0);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, Rotation, Origin, Scale, seffect);
             dd.Draw(Main.spriteBatch);
-            dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, headrect, EyesWhiteColor, Rotation, Origin, Scale, seffect, 0);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, headrect, EyesWhiteColor, Rotation, Origin, Scale, seffect);
             dd.Draw(Main.spriteBatch);
             if (Base.TerrarianInfo.HairStyle >= 0 && Main.hairLoaded[Base.TerrarianInfo.HairStyle])
             {
                 if (DrawNormalHair)
                 {
-                    dd = new Terraria.DataStructures.DrawData(Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, Rotation, Origin, Scale, seffect, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, Rotation, Origin, Scale, seffect);
                     dd.Draw(Main.spriteBatch);
                 }
                 else if (DrawAltHair)
                 {
-                    dd = new Terraria.DataStructures.DrawData(Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, Rotation, Origin, Scale, seffect, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, Rotation, Origin, Scale, seffect);
                     dd.Draw(Main.spriteBatch);
                 }
             }
             if (HeadSlot > 0 && Main.armorHeadLoaded[HeadSlot])
             {
-                dd = new Terraria.DataStructures.DrawData(Main.armorHeadTexture[HeadSlot], Position, headrect, ArmorColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], Position, headrect, ArmorColor, Rotation, Origin, Scale, seffect);
                 dd.Draw(Main.spriteBatch);
                 if (Base.Effect == GuardianBase.GuardianEffect.Wraith && HeadSlot == 38)
                 {
-                    dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, Rotation, Origin, Scale, seffect, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, Rotation, Origin, Scale, seffect);
                     dd.Draw(Main.spriteBatch);
                 }
             }
@@ -13663,64 +13663,64 @@ namespace giantsummon
             DrawWofExtras();
             if (mount.Active)
                 DrawMount(Position, ArmorColoring, seffect);
-            Terraria.DataStructures.DrawData dd;
+            GuardianDrawData dd;
             if (!HideLegs)
             {
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.LegSkin], Position, legrect, SkinColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlLegSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.LegSkin], Position, legrect, SkinColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, SittingOnPlayerMount);
             }
-            dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.TorsoSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect, 0);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodySkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.TorsoSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);
             if (LegSlot > 0)
             {
-                dd = new Terraria.DataStructures.DrawData(Main.armorLegTexture[LegSlot], Position, legrect, armorColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorLegs, Main.armorLegTexture[LegSlot], Position, legrect, armorColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, SittingOnPlayerMount);
             }
             else
             {
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Pants], Position, legrect, PantsColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultPants, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Pants], Position, legrect, PantsColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, SittingOnPlayerMount);
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], Position, legrect, ShoesColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShoes, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], Position, legrect, ShoesColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, SittingOnPlayerMount);
             }
             if (ArmorSlot > 0)
             {
-                dd = new Terraria.DataStructures.DrawData((Male ? Main.armorBodyTexture[ArmorSlot] : Main.femaleBodyTexture[ArmorSlot]), Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorBody, (Male ? Main.armorBodyTexture[ArmorSlot] : Main.femaleBodyTexture[ArmorSlot]), Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, false);
             }
             else
             {
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Undershirt], Position, bodyrect, UndershirtColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultUndershirt, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Undershirt], Position, bodyrect, UndershirtColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, false);
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shirt], Position, bodyrect, ShirtColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShirt, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shirt], Position, bodyrect, ShirtColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, false);
             }
-            dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect, 0);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);
-            dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, bodyrect, EyesColor, Rotation, Origin, Scale, seffect, 0);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, bodyrect, EyesColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);
-            dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, bodyrect, EyesWhiteColor, Rotation, Origin, Scale, seffect, 0);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, bodyrect, EyesWhiteColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);
             if (Base.TerrarianInfo.HairStyle >= 0)
             {
                 if (DrawNormalHair)
                 {
-                    dd = new Terraria.DataStructures.DrawData(Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, hairrect, HairColor, Rotation, Origin, Scale, seffect, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, hairrect, HairColor, Rotation, Origin, Scale, seffect);
                     AddDrawData(dd, false);
                 }
                 else if (DrawAltHair)
                 {
-                    dd = new Terraria.DataStructures.DrawData(Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, hairrect, HairColor, Rotation, Origin, Scale, seffect, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, hairrect, HairColor, Rotation, Origin, Scale, seffect);
                     AddDrawData(dd, false);
                 }
             }
             if (HeadSlot > 0)
             {
-                dd = new Terraria.DataStructures.DrawData(Main.armorHeadTexture[HeadSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, false);
                 if (Base.Effect == GuardianBase.GuardianEffect.Wraith && HeadSlot == 38)
                 {
-                    dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, bodyrect, EyesColor, Rotation, Origin, Scale, seffect, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, bodyrect, EyesColor, Rotation, Origin, Scale, seffect);
                     AddDrawData(dd, false);
                 }
             }
@@ -13728,18 +13728,18 @@ namespace giantsummon
             DrawItem(Position, seffect, false);
             if (ArmorSlot > 0)
             {
-                dd = new Terraria.DataStructures.DrawData(Main.armorArmTexture[ArmorSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorArm, Main.armorArmTexture[ArmorSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, LeftArmInFront);
             }
             else
             {
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodyArmSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, LeftArmInFront);
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmUndershirt], Position, bodyrect, UndershirtColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultUndershirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmUndershirt], Position, bodyrect, UndershirtColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, LeftArmInFront);
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmShirt], Position, bodyrect, ShirtColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmShirt], Position, bodyrect, ShirtColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, LeftArmInFront);
-                dd = new Terraria.DataStructures.DrawData(Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmHand], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHand, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmHand], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, LeftArmInFront);
             }
         }
@@ -14132,7 +14132,7 @@ namespace giantsummon
                 WingSize = 0.5f;
             int WingHeight = (int)(wing.Height * 0.25f);
             Vector2 WingOrigin = new Vector2(wing.Width * 0.5f, WingHeight * 0.5f);
-            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(wing, WingCenter, new Rectangle(0, WingHeight * WingFrame, wing.Width, WingHeight), c, Rotation, WingOrigin, WingSize * Scale, seffects, 0);
+            GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.Wings, wing, WingCenter, new Rectangle(0, WingHeight * WingFrame, wing.Width, WingHeight), c, Rotation, WingOrigin, WingSize * Scale, seffects);
             AddDrawData(dd, false);
         }
 
@@ -14162,7 +14162,7 @@ namespace giantsummon
                         ChainDirection.X = PlayerCenter.X - MyCenter.X;
                         ChainDirection.Y = PlayerCenter.Y - MyCenter.Y;
                         Color color = Lighting.GetColor((int)MyCenter.X / 16, (int)MyCenter.Y / 16);
-                        Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(Main.chainTexture, MyCenter - Main.screenPosition, null, color, Rotation, new Vector2(Main.chainTexture.Width, Main.chainTexture.Height) * 0.5f, 1f, SpriteEffects.None, 0);
+                        GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.PreDrawEffect, Main.chainTexture, MyCenter - Main.screenPosition, null, color, Rotation, new Vector2(Main.chainTexture.Width, Main.chainTexture.Height) * 0.5f, 1f, SpriteEffects.None);
                         AddDrawData(dd, true);
                     }
                 }
@@ -14176,6 +14176,8 @@ namespace giantsummon
                 NPC wof = Main.npc[Main.wof];
                 Vector2 WofCenter = wof.Center;
                 Vector2 MyCenter = CenterPosition;
+                if (Downed)
+                    MyCenter.Y += Height * 0.666f;
                 Vector2 ChainDirection = WofCenter - MyCenter;
                 float Rotation = (float)Math.Atan2(ChainDirection.Y, ChainDirection.X) - 1.57f;
                 bool CreateNewChain = true;
@@ -14196,7 +14198,7 @@ namespace giantsummon
                         ChainDirection.X = WofCenter.X - MyCenter.X;
                         ChainDirection.Y = WofCenter.Y - MyCenter.Y;
                         Color color = Lighting.GetColor((int)MyCenter.X / 16, (int)MyCenter.Y / 16);
-                        Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(Main.chain12Texture, MyCenter - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width, Main.chain12Texture.Height) * 0.5f, 1f, SpriteEffects.None, 0);
+                        GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.PreDrawEffect, Main.chain12Texture, MyCenter - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width, Main.chain12Texture.Height) * 0.5f, 1f, SpriteEffects.None);
                         AddDrawData(dd, false);
                     }
                 }
@@ -14211,7 +14213,7 @@ namespace giantsummon
                 return;
             if ((int)ItemUseType < 0)
                 return;
-            Terraria.DataStructures.DrawData dd;
+            GuardianDrawData dd;
             bool drawOnFront = (!RightArm && DrawLeftBodyPartsInFrontOfPlayer) || (RightArm && DrawRightBodyPartsInFrontOfPlayer);
             Vector2 ItemPosition = Position;
             ItemPosition.X += ItemPositionX;
@@ -14303,20 +14305,20 @@ namespace giantsummon
                                     ItemOrigin.X = Item.width - ItemOrigin.X;
                                 if (sfx.HasFlag(SpriteEffects.FlipVertically))
                                     ItemOrigin.Y = Item.height - ItemOrigin.Y;*/
-                                dd = new Terraria.DataStructures.DrawData(Main.itemTexture[Item.type], ItemPosition, null, c, NewRotation, ItemOrigin, ItemScale, sfx, 0);
+                                dd = new GuardianDrawData(GuardianDrawData.TextureType.MainHandItem, Main.itemTexture[Item.type], ItemPosition, null, c, NewRotation, ItemOrigin, ItemScale, sfx);
                                 AddDrawData(dd, drawOnFront);
                             }
                             else if (ItemUseType == ItemUseTypes.ItemDrink2h)
                             {
                                 Vector2 ItemOrigin = GetItemOrigin(Item);
-                                dd = new Terraria.DataStructures.DrawData(Main.itemTexture[Item.type], ItemPosition, null, c, ItemRotation, ItemOrigin, ItemScale, SpriteEffects.None, 0);
+                                dd = new GuardianDrawData(GuardianDrawData.TextureType.MainHandItem, Main.itemTexture[Item.type], ItemPosition, null, c, ItemRotation, ItemOrigin, ItemScale, SpriteEffects.None);
                                 AddDrawData(dd, drawOnFront);
                             }
                             else if (ItemUseType == ItemUseTypes.OverHeadItemUse)
                             {
                                 Texture2D Texture = Main.itemTexture[Item.type];
                                 Vector2 ItemOrigin = new Vector2(Texture.Width * 0.5f, Texture.Height * 0.5f);
-                                dd = new Terraria.DataStructures.DrawData(Main.itemTexture[Item.type], ItemPosition, null, c, ItemRotation, ItemOrigin, ItemScale, SpriteEffects.None, 0);
+                                dd = new GuardianDrawData(GuardianDrawData.TextureType.MainHandItem, Main.itemTexture[Item.type], ItemPosition, null, c, ItemRotation, ItemOrigin, ItemScale, SpriteEffects.None);
                                 AddDrawData(dd, drawOnFront);
                             }
                         }
@@ -14343,7 +14345,7 @@ namespace giantsummon
                     ItemOrigin.Y = Item.height - ItemOrigin.Y;*/
                 drawOnFront = HeldOffHand == HeldHand.Left && DrawLeftBodyPartsInFrontOfPlayer;
                 Vector2 OffhandPosition = new Vector2(OffHandPositionX, OffHandPositionY) + Position;
-                dd = new Terraria.DataStructures.DrawData(Main.itemTexture[Item.type], OffhandPosition, null, c, OffhandRotation, ItemOrigin, Scale * Item.scale, sfx, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.OffHandItem, Main.itemTexture[Item.type], OffhandPosition, null, c, OffhandRotation, ItemOrigin, Scale * Item.scale, sfx);
                 AddDrawData(dd, drawOnFront);
             }
             if (HeldProj > -1 && CorrectHand) //Has problems drawing...

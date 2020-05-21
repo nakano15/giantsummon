@@ -47,9 +47,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="tModLoader, Version=1.3.5.1, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Steam\SteamApps\common\Terraria\tModLoader.exe</HintPath>
+    <Reference Include="tModLoader">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Steam\steamapps\common\tModLoader\tModLoader.exe</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +88,7 @@
     <Compile Include="GuardianArmorAndSetEffects.cs" />
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
+    <Compile Include="GuardianDrawData.cs" />
     <Compile Include="GuardianManagement.cs" />
     <Compile Include="GuardianNPC\List\AlexNPC.cs" />
     <Compile Include="GuardianNPC\List\BrutusNPC.cs" />

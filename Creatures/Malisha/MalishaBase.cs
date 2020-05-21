@@ -100,19 +100,19 @@ namespace giantsummon.Creatures
             }
             if (!guardian.PlayerMounted)
             {
-                Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect, 0);
+                GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, false);
                 rect.Y += rect.Height * 2;
-                dd = new Terraria.DataStructures.DrawData(TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, false);
             }
             else
             {
                 rect.Y += rect.Height;
-                Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect, 0);
+                GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, false);
                 rect.Y += rect.Height * 2;
-                dd = new Terraria.DataStructures.DrawData(TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, false);
             }
         }
@@ -126,7 +126,7 @@ namespace giantsummon.Creatures
                 if (TailTexture == null)
                     return;
                 rect.Y += rect.Height * 4;
-                Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect, 0);
+                GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, true);
             }
         }

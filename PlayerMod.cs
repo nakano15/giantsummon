@@ -532,12 +532,25 @@ namespace giantsummon
             bool SelectedIsGuardian = false;
             const float ReviveMaxDistance = 38f;
             float MouseX = Main.mouseX + Main.screenPosition.X, MouseY = Main.mouseY + Main.screenPosition.Y;
+            Rectangle rect = player.getRect();
+            if (MountedOnGuardian)
+            {
+                foreach (TerraGuardian tg in GetAllGuardianFollowers)
+                {
+                    if (tg.Active && tg.PlayerMounted && !tg.Base.ReverseMount)
+                        rect = tg.HitBox;
+                }
+            }
+            else if (ControllingGuardian)
+            {
+                rect = Guardian.HitBox;
+            }
             for (int p = 0; p < 255; p++)
             {
                 if (p != player.whoAmI && Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut &&
                     MouseX >= Main.player[p].position.X && MouseX < Main.player[p].position.X + Main.player[p].width &&
                     MouseY >= Main.player[p].position.Y + Main.player[p].height * 0.5f && MouseY < Main.player[p].position.Y + Main.player[p].height && 
-                    (player.Center - Main.player[p].Center).Length() < ReviveMaxDistance)
+                    rect.Intersects(Main.player[p].getRect()))
                 {
                     SelectedOne = p;
                     SelectedIsGuardian = false;
@@ -552,7 +565,7 @@ namespace giantsummon
                     if (g.Active && !g.Downed && g.KnockedOut && !g.IsPlayerHostile(player) &&
                         MouseX >= g.Position.X - g.Width * 0.5f && MouseX < g.Position.X + g.Width * 0.5f &&
                         MouseY >= g.Position.Y - g.Height * 0.5f && MouseY < g.Position.Y && 
-                        (g.Position - player.Center).Length() < ReviveMaxDistance + g.Width * 0.5f)
+                        rect.Intersects(g.HitBox))
                     {
                         SelectedOne = key;
                         SelectedIsGuardian = true;
@@ -1757,33 +1770,33 @@ namespace giantsummon
                 int BackStack = 0, FurnitureStack = 0;
                 if (g.PlayerControl)
                 {
-                    Front.InsertRange(0, TerraGuardian.DrawFront);
-                    Front.InsertRange(0, TerraGuardian.DrawBehind);
+                    Front.InsertRange(0, TerraGuardian.GetDrawFrontData);
+                    Front.InsertRange(0, TerraGuardian.GetDrawBehindData);
                 }
                 else if (g.PlayerMounted || g.SittingOnPlayerMount)
                 {
-                    Back.AddRange(TerraGuardian.DrawBehind);
-                    Front.AddRange(TerraGuardian.DrawFront);
+                    Back.AddRange(TerraGuardian.GetDrawBehindData);
+                    Front.AddRange(TerraGuardian.GetDrawFrontData);
                 }
                 else
                 {
                     if (g.UsingFurniture)
                     {
-                        Back.InsertRange(0, TerraGuardian.DrawFront);
-                        Back.InsertRange(0, TerraGuardian.DrawBehind);
+                        Back.InsertRange(0, TerraGuardian.GetDrawFrontData);
+                        Back.InsertRange(0, TerraGuardian.GetDrawBehindData);
                         FurnitureStack += TerraGuardian.DrawFront.Count + TerraGuardian.DrawBehind.Count - 1;
                     }
                     else if (g.ChargeAhead)
                     {
                         //Front.AddRange(TerraGuardian.DrawBehind);
                         //Front.AddRange(TerraGuardian.DrawFront);
-                        Back.InsertRange(BackStack + FurnitureStack, TerraGuardian.DrawFront);
-                        Back.InsertRange(BackStack + FurnitureStack, TerraGuardian.DrawBehind);
+                        Back.InsertRange(BackStack + FurnitureStack, TerraGuardian.GetDrawFrontData);
+                        Back.InsertRange(BackStack + FurnitureStack, TerraGuardian.GetDrawBehindData);
                     }
                     else
                     {
-                        Back.InsertRange(FurnitureStack, TerraGuardian.DrawFront);
-                        Back.InsertRange(FurnitureStack, TerraGuardian.DrawBehind);
+                        Back.InsertRange(FurnitureStack, TerraGuardian.GetDrawFrontData);
+                        Back.InsertRange(FurnitureStack, TerraGuardian.GetDrawBehindData);
                         BackStack += TerraGuardian.DrawBehind.Count + TerraGuardian.DrawFront.Count - 1;
                     }
                 }

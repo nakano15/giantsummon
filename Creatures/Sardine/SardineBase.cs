@@ -61,14 +61,14 @@ namespace giantsummon.Creatures
             PlayerMountedArmAnimation = JumpFrame = 9;
             HeavySwingFrames = new int[] { 10, 11, 12 };
             ItemUseFrames = new int[] { 10, 13, 14, 15 };
-            SittingFrame = 16;
-            ChairSittingFrame = 17;
+            SittingFrame = 17;
+            ChairSittingFrame = 18;
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12, 13, 14, 15, 16 });
-            ThroneSittingFrame = 18;
-            BedSleepingFrame = 19;
-            DownedFrame = 20;
-            ReviveFrame = 21;
-            PetrifiedFrame = 22;
+            ThroneSittingFrame = 19;
+            BedSleepingFrame = 20;
+            DownedFrame = 21;
+            ReviveFrame = 22;
+            PetrifiedFrame = 23;
 
             SleepingOffset.X = -2;
 

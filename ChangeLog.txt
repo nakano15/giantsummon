@@ -1,5 +1,8 @@
-﻿Rococo and Sardine gained readjustment on some animations. Most notable, the upper-left frame of the item use animation.
-The game will no longer spam messages saying that the guardian was knocked out cold, when they die with the new knock out system.
-You will now know when guardians wakes up from knockout.
-Fixed Domino's arms when reviving someone.
-Readjusted some revive messages from Blue and Leopold.
+﻿Pack Leader now only works with TerraGuardians.
+Changed how drawing companions works.
+Did a few revamps on Bree sprites.
+Guardians will now stop reviving someone when they are repelling some enemy.
+Fixed Sardine's animations.
+To revive someone, now you need to stay inside the hitbox of the one who's defeated, then hold the left mouse button.
+The mod will no longer give absurd amounts of coins based on enemy rank defeated.
+Guardians will now try reviving anyone when being pushed by the wind.

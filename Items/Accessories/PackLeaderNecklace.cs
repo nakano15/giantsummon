@@ -9,7 +9,7 @@ namespace giantsummon.Items.Accessories
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Said to give titan powers to whoever uses it. But only TerraGuardians can use It.\nIt's not possible to have multiple guardians when having one using this.\n\"The head shown in the necklace, is it of an existing guardian?\"");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("Said to give titan powers to whoever uses it.\nBut only has effect on TerraGuardians.\nIt's not possible to have multiple guardians when having one using this.\n\"The head shown in the necklace, is it of an existing guardian?\"");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults()
@@ -21,6 +21,8 @@ namespace giantsummon.Items.Accessories
 			item.rare = Terraria.ID.ItemRarityID.Orange;              //The rarity of the weapon, from -1 to 13
             ItemStatusScript = (delegate(TerraGuardian Guardian)
             {
+                if (!Guardian.Base.IsTerraGuardian)
+                    return;
                 Guardian.ScaleMult *= 3;
                 Guardian.MHP *= 3;
                 Guardian.MeleeDamageMultiplier += Guardian.MeleeDamageMultiplier * 0.3f;

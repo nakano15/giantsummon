@@ -257,6 +257,8 @@ namespace giantsummon
                                 InUse = false;
                                 return;
                             }
+                            if (guardian.ItemAnimationTime > 0)
+                                return;
                             const byte IReviveTime = 0, ITalkTime = 1;
                             Vector2 TargetPosition = Vector2.Zero;
                             int TargetWidth = 0, TargetHeight = 0;
@@ -1875,7 +1877,7 @@ namespace giantsummon
             {
                 case ActionIDs.ReviveSomeone:
                     {
-                        if (guardian.Base.DuckingFrame == -1)
+                        if (guardian.Base.DuckingFrame == -1 || guardian.ItemAnimationTime > 0)
                             return;
                         Vector2 TargetPosition = Vector2.Zero;
                         int TargetWidth = 0, TargetHeight = 0;
@@ -1892,8 +1894,10 @@ namespace giantsummon
                             TargetWidth = Guardians[0].Width;
                             TargetHeight = Guardians[0].Height;
                         }
+                        //What to do if the target is above dangerous tiles, like Spikes? How will they rescue that character?
                         if (new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))
                         {
+                            bool IsStopped = guardian.Velocity.X == 0 || guardian.HasFlag(GuardianFlags.WindPushed);
                             if (guardian.Velocity.X == 0)
                             {
                                 if (guardian.BodyAnimationFrame == guardian.Base.StandingFrame)
