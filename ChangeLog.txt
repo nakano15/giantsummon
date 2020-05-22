@@ -6,3 +6,9 @@ Fixed Sardine's animations.
 To revive someone, now you need to stay inside the hitbox of the one who's defeated, then hold the left mouse button.
 The mod will no longer give absurd amounts of coins based on enemy rank defeated.
 Guardians will now try reviving anyone when being pushed by the wind.
+Possibly some fixes to companion loot annoyance.
+Readjusted Mabel's sitting position by a pixel.
+You can no longer change leadership while controlling a guardian.
+	Trust me, better like that. You don't want to end up breaking the matrix, right?
+Reduced the chance of the same guardian repeating their dialogues when reviving someone.
+Guardians will now forget what they were attacking when either teleporting, respawning, or leaving downed state.

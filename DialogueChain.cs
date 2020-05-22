@@ -21,9 +21,21 @@ namespace giantsummon
             Dialogues.Add(dialogue);
         }
 
+        public void AddDialogue(string mes, string ans1, string ans2)
+        {
+            Dialogue dialogue = new Dialogue(mes, ans1, ans2);
+            Dialogues.Add(dialogue);
+        }
+
         public void AddDialogue(string mes, string mes2, string ans1, string ans2, bool leftisanswer)
         {
             Dialogue dialogue = new Dialogue(mes, mes2, ans1, ans2, leftisanswer);
+            Dialogues.Add(dialogue);
+        }
+
+        public void AddDialogue(string mes, string mes2, string ans1, string ans2)
+        {
+            Dialogue dialogue = new Dialogue(mes, mes2, ans1, ans2);
             Dialogues.Add(dialogue);
         }
 
@@ -33,7 +45,7 @@ namespace giantsummon
             {
                 if (MixedAnswer)
                     Left = !Left;
-                if (CurrentDialogue.LeftIsCorrectAnswer == Left)
+                if (CurrentDialogue.SelectionMatter && CurrentDialogue.LeftIsCorrectAnswer == Left)
                 {
                     Points++;
                 }
@@ -43,11 +55,33 @@ namespace giantsummon
             }
         }
 
+        public string GetQuestion()
+        {
+            if (!LastAnswerWasLeft && CurrentDialogue.MessageAnswer2 != null)
+                return CurrentDialogue.MessageAnswer2;
+            return CurrentDialogue.Message;
+        }
+
+        public void GetAnswers(out string Answer1, out string Answer2)
+        {
+            if (!MixedAnswer)
+            {
+                Answer1 = CurrentDialogue.AnswerOne;
+                Answer2 = CurrentDialogue.AnswerTwo;
+            }
+            else
+            {
+                Answer1 = CurrentDialogue.AnswerTwo;
+                Answer2 = CurrentDialogue.AnswerOne;
+            }
+        }
+
         public struct Dialogue
         {
             public string Message, MessageAnswer2;
             public string AnswerOne, AnswerTwo;
             public bool LeftIsCorrectAnswer;
+            public bool SelectionMatter;
 
             public Dialogue(string mes, string ans1, string ans2, bool leftisanswer)
             {
@@ -56,6 +90,7 @@ namespace giantsummon
                 AnswerOne = ans1;
                 AnswerTwo = ans2;
                 LeftIsCorrectAnswer = leftisanswer;
+                SelectionMatter = true;
             }
 
             public Dialogue(string mes, string mes2, string ans1, string ans2, bool leftisanswer)
@@ -65,6 +100,27 @@ namespace giantsummon
                 AnswerOne = ans1;
                 AnswerTwo = ans2;
                 LeftIsCorrectAnswer = leftisanswer;
+                SelectionMatter = true;
+            }
+
+            public Dialogue(string mes, string ans1, string ans2)
+            {
+                Message = mes;
+                MessageAnswer2 = null;
+                AnswerOne = ans1;
+                AnswerTwo = ans2;
+                LeftIsCorrectAnswer = false;
+                SelectionMatter = false;
+            }
+
+            public Dialogue(string mes, string mes2, string ans1, string ans2)
+            {
+                Message = mes;
+                MessageAnswer2 = mes2;
+                AnswerOne = ans1;
+                AnswerTwo = ans2;
+                LeftIsCorrectAnswer = false;
+                SelectionMatter = false;
             }
         }
     }

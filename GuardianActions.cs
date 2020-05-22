@@ -286,25 +286,6 @@ namespace giantsummon
                                     return;
                                 }
                             }
-                            /*float LeftX = guardian.Position.X, RightX = guardian.Position.X;
-                            {
-                                int Frame = guardian.Base.StandingFrame;
-                                if (guardian.Base.ReviveFrame > -1)
-                                {
-                                    Frame = guardian.Base.ReviveFrame;
-                                }
-                                else if(guardian.Base.DuckingFrame > -1)
-                                {
-                                    Frame = guardian.Base.ReviveFrame;
-                                }
-                                int posx, posy;
-                                guardian.GetLeftHandPosition(Frame, out posx, out posy);
-                                if (posx > -1)
-                                {
-                                    LeftX -= posx;
-                                    RightX += posx;
-                                }
-                            }*/
                             bool RepelingEnemies = false;
                             guardian.MoveLeft = guardian.MoveRight = false;
                             if (guardian.TargetID > -1)
@@ -321,28 +302,6 @@ namespace giantsummon
                             }
                             if (!RepelingEnemies)
                             {
-                                /*if (((LeftX >= TargetPosition.X && LeftX < TargetPosition.X + TargetWidth) ||
-                                    (RightX >= TargetPosition.X && RightX < TargetPosition.X + TargetWidth)) &&
-                                    (TargetPosition.Y + TargetHeight >= guardian.Position.Y || TargetPosition.Y < guardian.Position.Y - guardian.Height))
-                                {
-                                    if (guardian.Velocity.X == 0)
-                                    {
-                                        guardian.FaceDirection(TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0);
-                                        byte ReviveBoost = 1;
-                                        if (guardian.TargetID == -1)
-                                            ReviveBoost += 2;
-                                        if (IsPlayer)
-                                            Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
-                                        else
-                                            Guardians[0].ReviveBoost += ReviveBoost;
-                                        guardian.StuckTimer = 0;
-                                        guardian.OffHandAction = false;
-                                    }
-                                }
-                                else
-                                {
-                                    TryReaching = true;
-                                }*/
                                 if (new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))//(MainMod.RectangleIntersects(guardian.TopLeftPosition, guardian.Width, guardian.Height, TargetPosition, TargetWidth, TargetHeight))
                                 {
                                     if (guardian.Velocity.X == 0)
@@ -364,7 +323,7 @@ namespace giantsummon
                                             {
                                                 Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
                                                     guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
-                                                TalkTime = 300 + Main.rand.Next(10) * 50;
+                                                TalkTime = (600 + Main.rand.Next(10) * 50) * 2;
                                                 MainMod.ReviveTalkDelay = 600 + Main.rand.Next(10) * 50;
                                             }
                                         }
@@ -388,38 +347,18 @@ namespace giantsummon
                             if (TryReaching)
                             {
                                 int ResTime = GetIntegerValue(IReviveTime);
-                                /*if (false)
+                                if (ResTime >= 5 * 60)
                                 {
-                                    bool LeftIsNearer = Math.Abs(LeftX - TargetPosition.X) < Math.Abs(RightX - TargetPosition.X + TargetWidth);
-                                    if (ResTime >= 5 * 60)
-                                    {
-                                        guardian.Position.X = (LeftIsNearer ? LeftX : RightX) + Main.rand.Next(TargetWidth);
-                                        guardian.Position.Y = TargetPosition.Y + TargetHeight - 1;
-                                    }
-                                    else if (LeftIsNearer)
-                                    {
-                                        guardian.MoveLeft = true;
-                                    }
-                                    else
-                                    {
-                                        guardian.MoveRight = true;
-                                    }
+                                    guardian.Position.X = TargetPosition.X + Main.rand.Next(TargetWidth);
+                                    guardian.Position.Y = TargetPosition.Y + TargetHeight - 1;
                                 }
-                                else*/
+                                else if (TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0)
                                 {
-                                    if (ResTime >= 5 * 60)
-                                    {
-                                        guardian.Position.X = TargetPosition.X + Main.rand.Next(TargetWidth);
-                                        guardian.Position.Y = TargetPosition.Y + TargetHeight - 1;
-                                    }
-                                    else if (TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0)
-                                    {
-                                        guardian.MoveLeft = true;
-                                    }
-                                    else
-                                    {
-                                        guardian.MoveRight = true;
-                                    }
+                                    guardian.MoveLeft = true;
+                                }
+                                else
+                                {
+                                    guardian.MoveRight = true;
                                 }
                                 SetIntegerValue(IReviveTime, ResTime + 1);
                             }

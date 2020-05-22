@@ -204,7 +204,7 @@ namespace giantsummon
                                     AddOption(Option.OptionType.PlayerControl,
                                         (SelectedGuardian == 255 && Guardians.Any(x => x.Active && x.HasFlag(GuardianFlags.PlayerControl))) ||
                                         (SelectedGuardian < 255 && Guardians[SelectedGuardian].Active && Guardians[SelectedGuardian].HasFlag(GuardianFlags.PlayerControl)));
-                                    AddOption(Option.OptionType.SetLeader, SelectedGuardian != 0 && SelectedGuardian != 255);
+                                    AddOption(Option.OptionType.SetLeader, SelectedGuardian != 0 && SelectedGuardian != 255 && !player.ControllingGuardian);
                                 }
                                 break;
                             case Option.OptionType.PullGuardians:

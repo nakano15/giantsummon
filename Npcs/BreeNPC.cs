@@ -452,9 +452,7 @@ namespace giantsummon.Npcs
             }
             else if (!dialogues.Finished)
             {
-                if (dialogues.LastAnswerWasLeft && dialogues.CurrentDialogue.MessageAnswer2 != null)
-                    return dialogues.CurrentDialogue.MessageAnswer2;
-                return dialogues.CurrentDialogue.Message;
+                return dialogues.GetQuestion();
             }
             else
             {
@@ -474,16 +472,7 @@ namespace giantsummon.Npcs
             }
             else if (!dialogues.Finished)
             {
-                if (!dialogues.MixedAnswer)
-                {
-                    button = dialogues.CurrentDialogue.AnswerOne;
-                    button2 = dialogues.CurrentDialogue.AnswerTwo;
-                }
-                else
-                {
-                    button = dialogues.CurrentDialogue.AnswerTwo;
-                    button2 = dialogues.CurrentDialogue.AnswerOne;
-                }
+                dialogues.GetAnswers(out button, out button2);
             }
             else
             {
@@ -545,10 +534,7 @@ namespace giantsummon.Npcs
                 }
                 else
                 {
-                    if (!dialogues.LastAnswerWasLeft && dialogues.CurrentDialogue.MessageAnswer2 != null)
-                        Main.npcChatText = dialogues.CurrentDialogue.MessageAnswer2;
-                    else
-                        Main.npcChatText = dialogues.CurrentDialogue.Message;
+                    Main.npcChatText = dialogues.GetQuestion();
                 }
             }
             else if (dialogues.Finished)

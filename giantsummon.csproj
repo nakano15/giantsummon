@@ -71,7 +71,7 @@
     <Compile Include="ConfigMod.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
-    <Compile Include="Creatures\Terrarian\TerrarianBase.cs" />
+    <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />
     <Compile Include="Creatures\Bree\BreeBase.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="ModTargetting.cs" />
     <Compile Include="NetMod.cs" />
     <Compile Include="Npcs\AlexNPC.cs" />
+    <Compile Include="Npcs\BlueNPC.cs" />
     <Compile Include="Npcs\BreeNPC.cs" />
     <Compile Include="Npcs\BrutusNPC.cs" />
     <Compile Include="Npcs\DominoNPC.cs" />

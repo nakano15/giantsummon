@@ -268,6 +268,10 @@ namespace giantsummon.Npcs
             RightArmAnimationFrame = Frame;
         }
 
+        public virtual DrawData? DrawItem(Color drawColor)
+        {
+            return null;
+        }
 
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
@@ -361,8 +365,13 @@ namespace giantsummon.Npcs
             {
                 dd = new DrawData(Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
                 dds.Add(dd);
-                dd = new DrawData(Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0 );
+                dd = new DrawData(Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
                 dds.Add(dd);
+            }
+            {
+                DrawData? dd2 = DrawItem(drawColor);
+                if (dd2.HasValue)
+                    dds.Add(dd2.Value);
             }
             if (bodyfrontrect.X > -1)
             {

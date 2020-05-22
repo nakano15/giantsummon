@@ -510,7 +510,7 @@ namespace giantsummon
                         gb = new MalishaBase();
                         break;
                     case 13:
-                        gb = new TerrarianBase();
+                        gb = new MichelleBase();
                         break;
                 }
             }

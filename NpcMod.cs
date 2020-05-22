@@ -108,15 +108,15 @@ namespace giantsummon
                 switch (mobType)
                 {
                     case MobTypes.Veteran:
-                        return 1.1f;
-                    case MobTypes.Elite:
                         return 1.2f;
-                    case MobTypes.Champion:
+                    case MobTypes.Elite:
                         return 1.4f;
-                    case MobTypes.Legendary:
+                    case MobTypes.Champion:
                         return 1.8f;
+                    case MobTypes.Legendary:
+                        return 2.6f;
                     case MobTypes.Epic:
-                        return 3.6f;
+                        return 4.2f;
                 }
                 return 1f;
             }
@@ -447,6 +447,45 @@ namespace giantsummon
             if (ModID == "")
                 ModID = MainMod.mod.Name;
             return GetGuardianNPC(GuardianID, ModID) > -1;
+        }
+
+        public static int GetTerraGuardianNPCCount()
+        {
+            int Count = 0;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Base.IsTerraGuardian)
+                {
+                    Count++;
+                }
+            }
+            return Count;
+        }
+
+        public static int GetTerrarianNPCCount()
+        {
+            int Count = 0;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Base.IsTerrarian)
+                {
+                    Count++;
+                }
+            }
+            return Count;
+        }
+
+        public static int GetCompanionNPCCount()
+        {
+            int Count = 0;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab)
+                {
+                    Count++;
+                }
+            }
+            return Count;
         }
 
         public static string GetGuardianNPCName(int GuardianID, Mod mod)

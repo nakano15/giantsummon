@@ -74,7 +74,7 @@ namespace giantsummon.Creatures
             //Mounted Position
             MountShoulderPoints.DefaultCoordinate2x = new Point(19, 14);
             MountShoulderPoints.AddFramePoint2x(17, 19, 20);
-            SittingPoint = new Point(24 * 2, 35 * 2);
+            SittingPoint = new Point(24 * 2, 37 * 2);
 
             //Left Arm
             LeftHandPoints.AddFramePoint2x(10, 12, 4);
@@ -307,7 +307,7 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(3))
             {
                 Mes.Add("*I should be scared by the fact a Zombie is living in your town. But I wont judge your decision. I'll just say that It's fine. \"Sips coffee\"*");
-                Mes.Add("*Everytime I talk with [gn:3], he keeps looking around, like as if were checking of there isn't someone around.*");
+                Mes.Add("*Everytime I talk with [gn:3], he keeps looking around, like as if were checking if there isn't someone around.*");
                 if(NpcMod.HasGuardianNPC(1))
                     Mes.Add("*So... [gn:3] is [gn:1]'s boyfriend? No. I wont ask.*");
             }
@@ -323,7 +323,7 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(6))
             {
-                Mes.Add("*I think I am very lucky. [gn:6] personally came to me, saying that If I want a bodyguard, he's disponible all the time.*");
+                Mes.Add("*I think I am very lucky. [gn:6] personally came to me, saying that If I want a bodyguard, he's disponible anytime.*");
                 Mes.Add("*It's quite weird that sometimes when I talk with [gn:6], he makes some puns with meat. What is that supposed to mean?*");
                 Mes.Add("*Sometimes I see [gn:6] watching me from afar. He probably cares about my safety.*");
             }

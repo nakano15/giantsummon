@@ -5851,11 +5851,6 @@ namespace giantsummon
                         }
                         if (GetItem)
                         {
-                            if (OwnerPos != -1 && false)
-                            {
-                                Main.item[i].modItem.OnPickup(Main.player[OwnerPos]);
-                            }
-                            Main.PlaySound(7, Center);
                             if (Main.item[i].type == 0 || Main.item[i].stack == 0)
                                 Main.item[i].active = false;
                             if (SeekingItem == i)
@@ -5960,9 +5955,10 @@ namespace giantsummon
             return -1;
         }
 
-        public void MoveItemToInventory(Item item, bool DropItemWhenInventoryIsFull = false)
+        public bool MoveItemToInventory(Item item, bool DropItemWhenInventoryIsFull = false)
         {
             //Just move items to the inventory, how hard it can be?
+            bool GotItem = false;
             int LastEmptySlotCount = 0;
             for (int i = (MainMod.WarnAboutSaleableInventorySlotsLeft ? 10 : 0); i < 50; i++)
             {
@@ -5971,11 +5967,10 @@ namespace giantsummon
                     LastEmptySlotCount++;
                 }
             }
-
             int EmptyInventorySlots = 0, FirstEmptySlot = -1;
             for (int i = 0; i < 50; i++)
             {
-                if (Inventory[i].type == item.type)
+                if (Inventory[i].type > 0 && Inventory[i].type == item.type)
                 {
                     bool IsCoin = item.type >= Terraria.ID.ItemID.CopperCoin && item.type <= Terraria.ID.ItemID.GoldCoin;
                     int StackToReduce = Inventory[i].maxStack - Inventory[i].stack;
@@ -5998,9 +5993,9 @@ namespace giantsummon
                     }
                     if (item.stack == 0)
                     {
+                        GotItem = true;
                         item.SetDefaults(0);
                         item.active = false;
-                        return;
                     }
                 }
                 if (Inventory[i].type == 0)
@@ -6023,6 +6018,7 @@ namespace giantsummon
                     item.SetDefaults(0);
                     item.active = false;
                     EmptyInventorySlots--;
+                    GotItem = true;
                 }
                 else if (DropItemWhenInventoryIsFull)
                 {
@@ -6048,14 +6044,17 @@ namespace giantsummon
             {
                 if (EmptyInventorySlots == 0)
                 {
-                    Main.NewText(Name + "'s inventory is full.", Color.Red);
+                    if(LastEmptySlotCount > 0)
+                        Main.NewText(Name + "'s inventory is full.", Color.Red);
                 }
                 else if (EmptyInventorySlots <= 5 && EmptyInventorySlots < LastEmptySlotCount)
                 {
                     Main.NewText(Name + " has " + EmptyInventorySlots + " empty inventory slots left.", Color.Yellow);
                 }
             }
-            return;
+            if (GotItem)
+                Main.PlaySound(7, CenterPosition);
+            return GotItem;
         }
 
         public bool CanFitInInventory(Item i)
@@ -6546,6 +6545,7 @@ namespace giantsummon
                     this.Position.Y = Main.spawnTileY * 16;
                 }
             }
+            TargetID = -1;
             AimDirection = CenterPosition.ToPoint();
             Breath = BreathMax;
             BreathCooldown = 0;
@@ -6594,6 +6594,7 @@ namespace giantsummon
 
         public void ExitDownedState()
         {
+            TargetID = -1;
             WofFood = false;
             KnockedOut = KnockedOutCold = false;
             HealthRegenPower = HealthRegenTime = 0;
