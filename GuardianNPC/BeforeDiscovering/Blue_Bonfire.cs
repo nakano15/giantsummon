@@ -72,5 +72,11 @@ namespace giantsummon.GuardianNPC.BeforeDiscovering
             Main.NewText("You startled her.", 255, 0, 0);
             return "";
         }
+		
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            bool MaySpawn = !NpcMod.HasMetGuardian(1) && !NpcMod.HasGuardianNPC(1) && GuardianNPC.List.WolfGuardian.SpawnRequirement && !NPC.AnyNPCs(npc.type);
+            return (MaySpawn ? 1 : 0f);
+        }
     }
 }
