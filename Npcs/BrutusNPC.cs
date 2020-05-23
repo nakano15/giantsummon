@@ -109,12 +109,10 @@ namespace giantsummon.Npcs
         {
             if (NpcMod.HasMetGuardian(6, ""))
                 return;
-            if (Main.fastForwardTime || !Main.dayTime || Main.time >= 27000 || Main.time % 60 > 0)
+            if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || Main.time >= 27000 || Main.time % 60 > 0)
             {
                 return;
             }
-            if (Main.eclipse || !Main.dayTime)
-                return;
             if (Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0)
                 return;
             int SpawnChance = (int)(27000 / Main.dayRate) * 4;

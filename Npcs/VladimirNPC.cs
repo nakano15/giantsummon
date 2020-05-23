@@ -391,6 +391,7 @@ namespace giantsummon.Npcs
             {
                 npc.TargetClosest();
             }
+            if (HuggingPlayer > -1) DrawInFrontOfPlayers.Add(HuggingPlayer);
             base.AI();
         }
 

@@ -54,6 +54,8 @@
   <ItemGroup>
     <Compile Include="AlexRecruitScripts.cs" />
     <Compile Include="BuffData.cs" />
+    <Compile Include="Buffs\HeavyInjury.cs" />
+    <Compile Include="Buffs\Injury.cs" />
     <Compile Include="Buffs\Obstruction.cs" />
     <Compile Include="Buffs\FirstAidCooldown.cs" />
     <Compile Include="Buffs\GuardianModBuff.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="GuardianNPC\List\VladimirNPC.cs" />
     <Compile Include="GuardianNPC\List\ZacksNPC.cs" />
     <Compile Include="GuardianNPC\List\SardineNPC.cs" />
+    <Compile Include="GuardianNPC\Terrarians\MichelleNPC.cs" />
     <Compile Include="GuardianOrderHudNew.cs" />
     <Compile Include="GuardianSchedule.cs" />
     <Compile Include="GuardianSkills.cs" />
@@ -212,7 +215,9 @@
   <ItemGroup>
     <Content Include="Buffs\FirstAidCooldown.png" />
     <Content Include="Buffs\GuardianModBuff.png" />
+    <Content Include="Buffs\HeavyInjury.png" />
     <Content Include="Buffs\Hug.png" />
+    <Content Include="Buffs\Injury.png" />
     <Content Include="Buffs\LightFatigue.png" />
     <Content Include="Buffs\LightWound.png" />
     <Content Include="Buffs\Love.png" />
@@ -306,6 +311,7 @@
     <Content Include="GuardianNPC\List\Rococo_Head.png" />
     <Content Include="GuardianNPC\BlankNPC.png" />
     <Content Include="GuardianNPC\List\Zacks_Head.png" />
+    <Content Include="GuardianNPC\Terrarians\Michelle_Head.png" />
     <Content Include="Ideas\Equipments.txt" />
     <Content Include="Interface\Crown.png" />
     <Content Include="Interface\EditButton.png" />

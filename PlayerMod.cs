@@ -233,9 +233,7 @@ namespace giantsummon
             }
             if (KnockedOut)
             {
-                if (MountedOnGuardian)
-                    ReviveBoost++;
-                player.lifeRegen += ReviveBoost;
+                player.lifeRegen += ReviveBoost * 3;
                 if (ReviveBoost == 0 && KnockedOutCold)
                 {
                     player.lifeRegenTime = 0;
@@ -530,7 +528,6 @@ namespace giantsummon
             bool Reviving = player.controlUseItem && player.itemAnimation == 0;
             int SelectedOne = -1;
             bool SelectedIsGuardian = false;
-            const float ReviveMaxDistance = 38f;
             float MouseX = Main.mouseX + Main.screenPosition.X, MouseY = Main.mouseY + Main.screenPosition.Y;
             Rectangle rect = player.getRect();
             if (MountedOnGuardian)
@@ -562,7 +559,7 @@ namespace giantsummon
                 foreach (int key in MainMod.ActiveGuardians.Keys)
                 {
                     TerraGuardian g = MainMod.ActiveGuardians[key];
-                    if (g.Active && !g.Downed && g.KnockedOut && !g.IsPlayerHostile(player) &&
+                    if (!g.Downed && g.KnockedOut && !g.IsPlayerHostile(player) &&
                         MouseX >= g.Position.X - g.Width * 0.5f && MouseX < g.Position.X + g.Width * 0.5f &&
                         MouseY >= g.Position.Y - g.Height * 0.5f && MouseY < g.Position.Y && 
                         rect.Intersects(g.HitBox))
@@ -575,6 +572,7 @@ namespace giantsummon
             }
             if (SelectedOne > -1)
             {
+                MainMod.IsReviving = Reviving;
                 if (Reviving)
                 {
                     if (SelectedIsGuardian)
@@ -599,11 +597,6 @@ namespace giantsummon
                 return;
             if (KnockedOutCold)
             {
-                if (player.potionDelayTime < 5)
-                {
-                    player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
-                    //player.potionDelayTime = 5;
-                }
                 if (player.breath <= 0)
                 {
                     DoForceKill(" didn't had more air.");
@@ -611,6 +604,14 @@ namespace giantsummon
                 else if (player.lavaWet && !player.lavaImmune)
                 {
                     DoForceKill(" has turned into ash.");
+                }
+            }
+            if (KnockedOut)
+            {
+                if (player.potionDelayTime < 5)
+                {
+                    player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
+                    player.potionDelayTime = 5;
                 }
             }
             if (player.grapCount > 0)
@@ -834,7 +835,23 @@ namespace giantsummon
         {
             KnockedOut = KnockedOutCold = false;
             player.fullRotation = player.headRotation = 0f;
-            player.statLife = player.statLifeMax2 / 2 + ReviveBoost * 10;
+            float HealthRestoreValue = 1f;
+            if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
+            {
+                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
+                HealthRestoreValue = 0.5f;
+            }
+            else if (player.HasBuff(ModContent.BuffType<Buffs.Injury>()))
+            {
+                player.DelBuff(player.FindBuffIndex(ModContent.BuffType<Buffs.Injury>()));
+                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 45 * 60);
+                HealthRestoreValue = 0.75f;
+            }
+            else
+            {
+                player.AddBuff(ModContent.BuffType<Buffs.Injury>(), 30 * 60);
+            }
+            player.statLife = (int)((player.statLifeMax2 / 2 + ReviveBoost * 10) * HealthRestoreValue);
             CombatText.NewText(player.getRect(), Color.Cyan, "Revived!", true);
             player.immuneTime = (player.longInvince ? 120 : 60) * 3;
             player.immune = true;
@@ -1304,6 +1321,7 @@ namespace giantsummon
             Terraria.ModLoader.IO.TagCompound tag = new Terraria.ModLoader.IO.TagCompound();
             tag.Add("ModVersion", MainMod.ModVersion);
             tag.Add("TutorialStep", GuardianIntroDone);
+            tag.Add("KnockedOut", KnockedOut);
             int[] Keys = MyGuardians.Keys.ToArray();
             tag.Add("GuardianUIDs", Keys);
             foreach (int g in Keys)
@@ -1351,6 +1369,8 @@ namespace giantsummon
             }
             else
                 GuardianIntroDone = true;
+            if (ModVersion >= 59)
+                KnockedOut = tag.GetBool("KnockedOut");
             Guardian = new TerraGuardian();
             MyGuardians = new Dictionary<int, GuardianData>();
             //Guardian.Load(tag);
@@ -1914,7 +1934,7 @@ namespace giantsummon
                 });
                 layers.Add(l);
             }
-            if (NPC.AnyNPCs(ModContent.NPCType<Npcs.VladimirNPC>()))
+            /*if (NPC.AnyNPCs(ModContent.NPCType<Npcs.VladimirNPC>()))
             {
                 l = new PlayerLayer(mod.Name, "Vladimir Recruit Npc Front Body Parts", delegate(PlayerDrawInfo pdi)
                 {
@@ -1933,7 +1953,26 @@ namespace giantsummon
                     }
                 });
                 layers.Add(l);
-            }
+            }*/
+            l = new PlayerLayer(mod.Name, "Guardian NPCs Front Body Parts", delegate(PlayerDrawInfo pdi)
+            {
+                for (int n = 0; n < 200; n++)
+                {
+                    if (Main.npc[n].active && Main.npc[n].modNPC is Npcs.GuardianActorNPC && ((Npcs.GuardianActorNPC)Main.npc[n].modNPC).DrawInFrontOfPlayers.Contains(player.whoAmI))
+                    {
+                        Npcs.GuardianActorNPC ganpc = ((Npcs.GuardianActorNPC)Main.npc[n].modNPC);
+                        Color color = Lighting.GetColor((int)ganpc.npc.Center.X / 16, (int)ganpc.npc.Center.Y / 16);
+                        Terraria.DataStructures.DrawData[] dds = ganpc.GetDrawDatas(color, true);
+                        for (int x = 0; x < dds.Length; x++)
+                        {
+                            Terraria.DataStructures.DrawData dd = dds[x];
+                            dd.ignorePlayerRotation = true;
+                            Main.playerDrawData.Add(dd);
+                        }
+                    }
+                }
+            });
+            layers.Add(l);
         }
     }
 }

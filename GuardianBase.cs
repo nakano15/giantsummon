@@ -97,7 +97,8 @@ namespace giantsummon
             Domino = 9,
             Leopold = 10,
             Vladimir = 11,
-            Malisha = 12;
+            Malisha = 12,
+            Michelle = 13;
 
         public void SetTerraGuardian()
         {
@@ -126,6 +127,7 @@ namespace giantsummon
             DeadSound = new SoundData(Terraria.ID.SoundID.PlayerKilled);
 
             MountUnlockLevel = 255;
+            ControlUnlockLevel = 255;
 
             //Animation Frames
             StandingFrame = 0;

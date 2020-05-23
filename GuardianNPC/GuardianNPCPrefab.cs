@@ -199,6 +199,7 @@ namespace giantsummon.GuardianNPC
                         TeleportFrame = false;
                     }
                     bool WasDefeatedBefore = Guardian.Downed;
+                    Guardian.Active = npc.active;
                     Guardian.Update();
                     npc.position = Guardian.TopLeftPosition;
                     npc.velocity = Guardian.Velocity;

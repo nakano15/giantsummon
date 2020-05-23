@@ -165,12 +165,10 @@ namespace giantsummon
                                 {
                                     AddOptionHolder();
                                     AddOption(Option.OptionType.Follow);
+                                    AddOption(Option.OptionType.WaitHere);
                                     AddOption(Option.OptionType.GuardHere);
                                     AddOption(Option.OptionType.GoAheadBehind);
                                     AddOption(Option.OptionType.AvoidCombat);
-                                    AddOption(Option.OptionType.FreeControl, 
-                                        (SelectedGuardian == 255 && Guardians.Any(x => x.Active && x.PlayerMounted && x.HasFlag(GuardianFlags.StopMindingAfk))) ||
-                                        (SelectedGuardian != 255 && Guardians[SelectedGuardian].PlayerMounted && Guardians[SelectedGuardian].HasFlag(GuardianFlags.StopMindingAfk)));
                                 }
                                 break;
                             case Option.OptionType.Action:
@@ -181,6 +179,9 @@ namespace giantsummon
                                     AddOption(Option.OptionType.UseFurniture);
                                     AddOption(Option.OptionType.LiftMe);
                                     AddOption(Option.OptionType.LaunchMe, player.player.wings > 0);
+                                    AddOption(Option.OptionType.FreeControl,
+                                        (SelectedGuardian == 255 && Guardians.Any(x => x.Active && x.PlayerMounted && x.HasFlag(GuardianFlags.StopMindingAfk))) ||
+                                        (SelectedGuardian != 255 && Guardians[SelectedGuardian].PlayerMounted && Guardians[SelectedGuardian].HasFlag(GuardianFlags.StopMindingAfk)));
                                 }
                                 break;
                             case Option.OptionType.Item:
@@ -237,6 +238,21 @@ namespace giantsummon
                         Close();
                     }
                     break;
+                case Option.OptionType.WaitHere:
+                    {
+                        TerraGuardian[] guardians = player.GetAllGuardianFollowers;
+                        Point GuardPosition = new Point((int)player.player.Center.X / 16, (int)(player.player.position.Y + player.player.height - 1) / 16);
+                        for (int g = 0; g < guardians.Length; g++)
+                        {
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerMounted)
+                            {
+                                guardians[g].GuardingPosition = GuardPosition;
+                                guardians[g].IsGuardingPlace = false;
+                            }
+                        }
+                        Close();
+                    }
+                    break;
                 case Option.OptionType.GuardHere:
                     {
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
@@ -246,6 +262,7 @@ namespace giantsummon
                             if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerMounted)
                             {
                                 guardians[g].GuardingPosition = GuardPosition;
+                                guardians[g].IsGuardingPlace = true;
                             }
                         }
                         Close();
@@ -541,8 +558,10 @@ namespace giantsummon
 
                 case Option.OptionType.Follow:
                     return "Follow Me";
-                case Option.OptionType.GuardHere:
+                case Option.OptionType.WaitHere:
                     return "Wait Here";
+                case Option.OptionType.GuardHere:
+                    return "Guard Here";
                 case Option.OptionType.GoAheadBehind:
                     if (SelectedGuardian != 255)
                     {
@@ -674,6 +693,7 @@ namespace giantsummon
 
                 //Order
                 Follow,
+                WaitHere,
                 GuardHere,
                 GoAheadBehind,
                 AvoidCombat,

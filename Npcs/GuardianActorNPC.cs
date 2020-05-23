@@ -34,6 +34,7 @@ namespace giantsummon.Npcs
         }
         private byte IdleBehaviorType = 0;
         private int IdleBehaviorTime = 0;
+        public List<int> DrawInFrontOfPlayers = new List<int>();
 
         public GuardianActorNPC(int ID, string ModID, string Alias = "")
         {
@@ -71,6 +72,12 @@ namespace giantsummon.Npcs
         public override bool CheckActive()
         {
             return false;
+        }
+
+        public override bool PreAI()
+        {
+            DrawInFrontOfPlayers.Clear();
+            return base.PreAI();
         }
 
         public override void AI()

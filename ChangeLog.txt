@@ -12,3 +12,29 @@ You can no longer change leadership while controlling a guardian.
 	Trust me, better like that. You don't want to end up breaking the matrix, right?
 Reduced the chance of the same guardian repeating their dialogues when reviving someone.
 Guardians will now forget what they were attacking when either teleporting, respawning, or leaving downed state.
+Boosted revive speed.
+	Even though there is a boost, the revive time will be slower on expert mode, compared to normal.
+Fixed a bug where you would gain 4 revive bonus when your character is knocked out, while mounted on guardian.
+Added a change to the revive system, the character will be injured after revive.
+	The injury buffs have two levels:
+		Injury: Reduces maximum health by 5%, Reduces defense by 5. Health value regained after revive reduced by 25%.
+		Heavy Injury: Reduces maximum health by 10%, Reduces defense by 10. Health value  regained after revive reduced by 50%.
+		The health value upon revive is of MHP / 2 + ReviveCount * 10. ReviveCount is increased based on number of allies reviving someone. An extra count is given if TerraGuardians aren't targetting any monster.
+		The Injury debuff is acquired once a character leaves knocked out state. Heavy Injury debuff is acquired if someone is revived while with the Injury debuff.
+	Each debuff can be healed by the Nurse.
+Companions will now look for downed allies more far away when in a town.
+The mod interfaces will no longer be hidden when your character is knocked out.
+	Now you have better information to know if is there someone able to revive you nearby.
+Added a new order for telling a companion to wait some place. Companions using It will no longer be restricted to an area near where they are waiting, but will try returning to the place they were set to wait, when there's no foes nearby.
+Did the following change to the new order hud.
+	The command for allowing the guardian to control It's movement when player is mounted was moved to Action session.
+		Companions will try staying in the place you designated like as If you have used Wait Here order, so their movement isn't limited.
+	Added the Guard Here order to Order session.
+Companions will no longer priorize looting items over defending themselves from monsters.
+Fixed a bug where town npc companions couldn't be revived. Somehow.
+Companions will no longer be shown lying down when they are in the air due to a hit, while knocked out.
+You will now better know when someone is being revived by your character.
+Changed when the Revive bar will be drawn on the guardian, from when drawing the guardian sprites, to when drawing interface.
+Guardians will now be displayed differently when trying to revive a player that is mounted on a guardian.
+You can no longer control Terrarian type companions.
+Michelle arrives.

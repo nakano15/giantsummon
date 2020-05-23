@@ -117,6 +117,7 @@ namespace giantsummon
         public List<int> BuffImmunity = new List<int>();
         private bool FreezeItemUseAnimation = false;
         public Point? GuardingPosition = null;
+        public bool IsGuardingPlace = false;
         public List<GuardianCooldownManager> Cooldowns { get { return Data.Cooldowns; } set { Data.Cooldowns = value; } }
         public List<GuardianCooldownManager.CooldownType> CooldownException = new List<GuardianCooldownManager.CooldownType>();
         public List<GuardianSkills> SkillList { get { return Data.SkillList; } }
@@ -920,10 +921,10 @@ namespace giantsummon
             WhoAmID = IDStack++;
         }
 
-        public bool InPerceptionRange(Vector2 Position)
+        public bool InPerceptionRange(Vector2 Position, float DistanceBonus = 1f)
         {
-            return Position.X >= this.Position.X - 368f && Position.X < this.Position.X + 368f &&
-                Position.Y >= this.Position.Y - Height * 0.5f - 240f && Position.Y < this.Position.Y - Height * 0.5f + 240f;
+            return Position.X >= this.Position.X - 368f * DistanceBonus && Position.X < this.Position.X + 368f * DistanceBonus &&
+                Position.Y >= this.Position.Y - Height * 0.5f - 240f * DistanceBonus && Position.Y < this.Position.Y - Height * 0.5f + 240f * DistanceBonus;
         }
 
         public Vector2 AnimationPositionValueTranslator(Vector2 Pos)
@@ -1427,7 +1428,7 @@ namespace giantsummon
         public void CountNearbyNpcs()
         {
             TownNpcs = 0;
-            if (OwnerPos > -1)
+            if (true || OwnerPos > -1)
             {
                 Vector2 MyCenter = CenterPosition;
                 for (int n = 0; n < 200; n++)
@@ -1451,6 +1452,7 @@ namespace giantsummon
                 if (TurnOn)
                 {
                     GuardingPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
+                    IsGuardingPlace = false;
                 }
                 else
                 {
@@ -4034,9 +4036,10 @@ namespace giantsummon
                 int Priority = -1;
                 byte LowestReviveBoost = 255;
                 bool IsGuardian = false;
+                float PerceptionRange = 1f + TownNpcs * 0.1f;
                 for (int p = 0; p < 255; p++)
                 {
-                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && !IsPlayerHostile(Main.player[p]) && (!MountedEdition && InPerceptionRange(Main.player[p].Center) || Main.player[p].getRect().Intersects(HitBox)))
+                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && !IsPlayerHostile(Main.player[p]) && (!MountedEdition && InPerceptionRange(Main.player[p].Center, PerceptionRange) || Main.player[p].getRect().Intersects(HitBox)))
                     {
                         byte ReviveBoost = Main.player[p].GetModPlayer<PlayerMod>().ReviveBoost;
                         if (ReviveBoost < LowestReviveBoost)
@@ -4050,7 +4053,7 @@ namespace giantsummon
                 foreach (int key in MainMod.ActiveGuardians.Keys) //Later
                 {
                     TerraGuardian g = MainMod.ActiveGuardians[key];
-                    if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && (!MountedEdition && InPerceptionRange(g.CenterPosition) || g.HitBox.Intersects(HitBox)))
+                    if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && (!MountedEdition && InPerceptionRange(g.CenterPosition, PerceptionRange) || g.HitBox.Intersects(HitBox)))
                     {
                         byte ReviveBoost = g.ReviveBoost;
                         if (ReviveBoost < LowestReviveBoost)
@@ -5925,7 +5928,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (ChaseItems && SeekingItem > -1)
+            if (ChaseItems && SeekingItem > -1 && TargetID == -1)
             {
                 MoveLeft = MoveRight = false;
                 if (Math.Abs(Main.item[SeekingItem].Center.X - Center.X) >= Width)
@@ -6305,7 +6308,7 @@ namespace giantsummon
             {
                 HealthRegenTime = 0;
             }
-            HealthRegenPower += ReviveBoost;
+            HealthRegenPower += ReviveBoost * (Main.expertMode ? 2 : 3);
             ReviveBoost = 0;
             float HealthRegenValue = 0;
             if (HealthRegenTime >= 3000)
@@ -6598,7 +6601,23 @@ namespace giantsummon
             WofFood = false;
             KnockedOut = KnockedOutCold = false;
             HealthRegenPower = HealthRegenTime = 0;
-            HP = MHP / 2 + ReviveBoost * 10;
+            float HealthRegenValue = 1;
+            if (HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
+            {
+                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
+                HealthRegenValue = 0.5f;
+            }
+            else if (HasBuff(ModContent.BuffType<Buffs.Injury>()))
+            {
+                RemoveBuff(ModContent.BuffType<Buffs.Injury>());
+                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 45 * 60);
+                HealthRegenValue = 0.75f;
+            }
+            else
+            {
+                AddBuff(ModContent.BuffType<Buffs.Injury>(), 30 * 60);
+            }
+            HP = (int)((MHP / 2 + ReviveBoost * 10) * HealthRegenValue);
             Rotation = 0f;
             CombatText.NewText(HitBox, Color.Green, "Revived!", true);
             if (OwnerPos == Main.myPlayer)
@@ -6994,7 +7013,7 @@ namespace giantsummon
             }
         }
 
-        public void ToggleWait()
+        public void ToggleWait(bool Guarding = false)
         {
             bool OwnerIsPlayer = OwnerPos > -1 && OwnerPos == Main.myPlayer;
             if (GuardingPosition.HasValue)
@@ -7013,6 +7032,7 @@ namespace giantsummon
                 {
                     GuardingPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
                 }
+                IsGuardingPlace = Guarding;
             }
         }
 		
@@ -7890,7 +7910,7 @@ namespace giantsummon
             if (!GuardingPosition.HasValue) return;
             Vector2 PositionDifference = new Vector2(GuardingPosition.Value.X * 16, GuardingPosition.Value.Y * 16 - Height * 0.5f);
             PositionDifference -= CenterPosition;
-            if (Math.Abs(PositionDifference.X) >= 160f)
+            if (Math.Abs(PositionDifference.X) >= 200f && IsGuardingPlace)
             {
                 if (PositionDifference.X < 0)
                 {
@@ -7898,7 +7918,7 @@ namespace giantsummon
                     {
                         MoveRight = false;
                     }
-                    if (Math.Abs(PositionDifference.X) >= 200)
+                    if (Math.Abs(PositionDifference.X) >= 240)
                         MoveLeft = true;
                 }
                 if (PositionDifference.X > 0)
@@ -7907,7 +7927,7 @@ namespace giantsummon
                     {
                         MoveLeft = false;
                     }
-                    if (Math.Abs(PositionDifference.X) >= 200)
+                    if (Math.Abs(PositionDifference.X) >= 240)
                         MoveRight = true;
                 }
             }
@@ -11092,7 +11112,7 @@ namespace giantsummon
                 return;
             }
             if (HasFlag(GuardianFlags.Frozen)) return;
-            if (KnockedOut && !Downed)
+            if (KnockedOut && !Downed && (Velocity.Y == 0 || WofTongued))
             {
                 if (Base.DownedFrame > -1)
                 {
@@ -11635,7 +11655,10 @@ namespace giantsummon
                     UsingLeftArmAnimation = true;
                 }
             }
-            DoAction.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
+            if (!FreezeItemUseAnimation)
+            {
+                DoAction.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
+            }
             Base.GuardianAnimationOverride(this, 0, ref BodyAnimationFrame);
             Base.GuardianAnimationScript(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
             if (!UsingLeftArmAnimation)
@@ -13409,17 +13432,6 @@ namespace giantsummon
                 AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
             }
             DoAction.Draw(this);
-            if (KnockedOut)
-            {
-                Vector2 BarPosition = Position - Main.screenPosition;
-                BarPosition.Y += 22f;
-                BarPosition.X -= 144 * 0.5f;
-                Main.spriteBatch.Draw(MainMod.GuardianHealthBar, BarPosition, new Rectangle(122 * 4, 0, 122, 16), Color.White);
-                BarPosition.X += 22;
-                BarPosition.Y += 4;
-                int BarWidth = (int)((float)HP / MHP * 98);
-                Main.spriteBatch.Draw(MainMod.GuardianHealthBar, BarPosition, new Rectangle(122 * 4 + 22, 16 + 4, BarWidth, 8), Color.White);
-            }
             //DrawBuffWheel(); //Will live forever in our memory... Said nobody.
             /*Rectangle DisplayPosition = WeaponCollision;
             DisplayPosition.X -= (int)Main.screenPosition.X;
@@ -13447,6 +13459,21 @@ namespace giantsummon
                         break;
                 }
                 Utils.DrawBorderString(Main.spriteBatch, s, Pos, Color.White);
+            }
+        }
+
+        public void DrawReviveBar()
+        {
+            if (KnockedOut)
+            {
+                Vector2 BarPosition = Position - Main.screenPosition;
+                BarPosition.Y += 22f;
+                BarPosition.X -= 144 * 0.5f;
+                Main.spriteBatch.Draw(MainMod.GuardianHealthBar, BarPosition, new Rectangle(122 * 4, 0, 122, 16), Color.White);
+                BarPosition.X += 22;
+                BarPosition.Y += 4;
+                int BarWidth = (int)((float)HP / MHP * 98);
+                Main.spriteBatch.Draw(MainMod.GuardianHealthBar, BarPosition, new Rectangle(122 * 4 + 22, 16 + 4, BarWidth, 8), Color.White);
             }
         }
 

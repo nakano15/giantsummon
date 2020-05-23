@@ -32,7 +32,7 @@ namespace giantsummon
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1946985";
         //End contest related
         public static int GuardianInventoryMenuSubTab = 0;
-        public const int ModVersion = 58, LastModVersion = 56;
+        public const int ModVersion = 59, LastModVersion = 56;
         public const int MaxExtraGuardianFollowers = 4;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -56,7 +56,6 @@ namespace giantsummon
         public static int LastTrashItemID = 0;
         public static int NemesisFadeEffect = -NemesisFadeCooldown;
         public const int NemesisFadeCooldown = 15 * 60, NemesisFadingTime = 3 * 60;
-        public static bool PauseGameWhenUsingOrders = false;
         public static readonly int[] HolyTileIDs = new int[] { 109, 110, 113, 117, 116, 164, 403, 402 },
             JungleTileIDs = new int[] { 60, 61, 62, 74, 226 },
             SnowTileIDs = new int[] { 147, 148, 161, 162, 164, 163, 200 },
@@ -102,7 +101,7 @@ namespace giantsummon
         public static Vector2 FocusCameraPosition = Vector2.Zero;
         public static byte DButtonPress = 255;
         public static int ToReviveID = -1;
-        public static bool ToReviveIsGuardian = false;
+        public static bool ToReviveIsGuardian = false, IsReviving = false;
         public static int ReviveTalkDelay = 0;
 
         public static void AddActiveGuardian(TerraGuardian Guardian)
@@ -270,10 +269,6 @@ namespace giantsummon
 
         public override void PreUpdateEntities()
         {
-            /*if (Main.netMode == 0 && PauseGameWhenUsingOrders && GuardianOrderHud.OrderSelection)
-            {
-                Main.gamePaused = true;
-            }*/
             ActiveGuardians = TempActiveGuardians;
             TempActiveGuardians = new Dictionary<int, TerraGuardian>();
         }
@@ -336,6 +331,7 @@ namespace giantsummon
             AlexRecruitScripts.AlexNPCPosition = -1;
             Npcs.BrutusNPC.TrySpawningBrutus();
             Npcs.MabelNPC.TrySpawningMabel();
+            GuardianNPC.Terrarians.MichelleGuardian.TrySpawningMichelle();
         }
 
         public override void PostUpdateEverything()
@@ -377,10 +373,10 @@ namespace giantsummon
                     Main.playerInventory = false;
                 Terraria.UI.LegacyGameInterfaceLayer downedInterface = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
                 layers.Insert(0, downedInterface);
-                if (!Main.player[Main.myPlayer].dead)
+                /*if (!Main.player[Main.myPlayer].dead)
                 {
                     return;
-                }
+                }*/
             }
             int MouseSlotPosition = -1, InventorySlotPosition = -1, ResourceBarPosition = -1, PlayerChatPos = -1;
             bool RemoveInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
@@ -570,6 +566,7 @@ namespace giantsummon
                     if (Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab)
                     {
                         GuardianNPC.GuardianNPCPrefab npc = ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC);
+                        npc.Guardian.DrawReviveBar();
                         npc.Guardian.DrawSocialMessages();
                     }
                     if (Main.npc[n].modNPC is Npcs.GuardianActorNPC)
@@ -586,7 +583,10 @@ namespace giantsummon
                     foreach (TerraGuardian g in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                     {
                         if (g.Active)
+                        {
+                            g.DrawReviveBar();
                             g.DrawSocialMessages();
+                        }
                     }
                 }
             }
@@ -892,7 +892,6 @@ namespace giantsummon
             string MouseOverText = "";
             if (ToReviveID > -1)
             {
-                bool IsReviving = Main.player[Main.myPlayer].controlUseItem && Main.player[Main.myPlayer].itemAnimation == 0;
                 if (ToReviveIsGuardian)
                 {
                     if (ActiveGuardians.ContainsKey(ToReviveID))

@@ -46,6 +46,19 @@ namespace giantsummon.Npcs
 
         public override string GetChat()
         {
+            if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Blue))
+            {
+                if (AiStage == 0)
+                {
+                    npc.velocity.Y -= Base.JumpSpeed;
+                    AiStage = -1;
+                }
+                else
+                {
+                    return "*She says that as said before, she's here If you need.*";
+                }
+                return "*After she jumped due to the scare, she asked you If It's some kind of payback. Then said to forget, and told you that she will be here if you need her.*";
+            }
             if (AiStage == 0)
             {
                 npc.velocity.Y -= Base.JumpSpeed;
@@ -60,12 +73,36 @@ namespace giantsummon.Npcs
             {
                 return "*She says that she'll leave soon. First she needs to eat a snack.*";
             }
+            if (AiStage == 4)
+            {
+                return "*She's asking If she may stay in the world. She also said that If you want to recover from the scare for a while, she doesn't mind.*";
+            }
+            if (AiStage == 3)
+            {
+                return "*She told you that you don't need to worry, because she's leaving soon.*";
+            }
             return "*I think this shouldn't happen.*";
         }
 
         public override void SetChatButtons(ref string button, ref string button2)
         {
-            if (!dialogue.Finished)
+            if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Blue))
+            {
+                button = "Alright";
+                button2 = "";
+                return;
+            }
+            if (AiStage == 4)
+            {
+                button = "You may stay.";
+                button2 = "No, go away!";
+            }
+            else if (AiStage == 3)
+            {
+                button = "";
+                button2 = "";
+            }
+            else if (!dialogue.Finished)
             {
                 dialogue.GetAnswers(out button, out button2);
             }
@@ -85,7 +122,26 @@ namespace giantsummon.Npcs
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
-            if (!dialogue.Finished)
+            if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Blue))
+            {
+                RecruitmentScripts();
+                return;
+            }
+            if (AiStage == 4)
+            {
+                if (firstButton)
+                {
+                    RecruitmentScripts();
+                    Main.npcChatText = "*She jumped out of joy as you gave the answer. She also said that her name is Blue, and that whenever you need, you just need to call her.*";
+                    ((GuardianNPC.GuardianNPCPrefab)npc.modNPC).Guardian.Velocity.Y -= ((GuardianNPC.GuardianNPCPrefab)npc.modNPC).Guardian.Base.JumpSpeed;
+                }
+                else
+                {
+                    Main.npcChatText = "*She looked saddened at you after you gave the answer. She says will prepare to leave soon.*";
+                    AiStage = 3;
+                }
+            }
+            else if (!dialogue.Finished)
             {
                 dialogue.MarkAnswer(firstButton);
                 if (dialogue.Finished)
@@ -133,7 +189,11 @@ namespace giantsummon.Npcs
             {
                 LeftArmAnimationFrame = RightArmAnimationFrame = Base.ItemUseFrames[2];
             }
-            if (AiStage >= 5 && AiStage < 5 + 8 && npc.ai[2] == 3)
+            if ((AiStage == 5 + 5 || AiStage == 5 + 6) && npc.ai[2] == 3)
+            {
+                LeftArmAnimationFrame = RightArmAnimationFrame = Base.ItemUseFrames[1];
+            }
+            else if (AiStage >= 5 && AiStage < 5 + 8 && npc.ai[2] == 3)
             {
                 LeftArmAnimationFrame = RightArmAnimationFrame = Base.ItemUseFrames[2];
             }
@@ -157,7 +217,7 @@ namespace giantsummon.Npcs
                     }
                 }
             }
-            else if (AiStage > 5)
+            else if (AiStage >= 5)
             {
                 int DialogueStep = AiStage - 5;
                 npc.TargetClosest();
@@ -171,7 +231,7 @@ namespace giantsummon.Npcs
                     npc.ai[2] = 3;
                     AiValue = 0;
                     AiStage = 5;
-                    Main.NewText("The wolf captured you.");
+                    Main.NewText("The wolf caught you.");
                 }
                 AiValue++;
                 if (TerrarianHasBeenCaught)
@@ -180,6 +240,8 @@ namespace giantsummon.Npcs
                     {
                         AiValue -= DialogueTime;
                         AiStage++;
+                        DialogueStep++;
+                        bool PlayerHasBlue = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Blue);
                         switch (DialogueStep)
                         {
                             case 1:
@@ -202,54 +264,88 @@ namespace giantsummon.Npcs
                                 Main.NewText("The wolf starts laughing.");
                                 break;
                             case 7:
-                                SayMessage("*It is saying that you should have seen the look on your face.*");
+                                if (!PlayerHasBlue)
+                                {
+                                    SayMessage("*It is saying that you should have seen the look on your face.*");
+                                }
+                                else
+                                {
+                                    SayMessage("*She says that can't believe you fell for it again.*");
+                                }
                                 break;
                             case 8:
-                                SayMessage("*She apologized for the scare, then said that came to your world looking for someone.*");
+                                if (!PlayerHasBlue)
+                                {
+                                    SayMessage("*She apologizes for the scare, then said that came to your world looking for someone.*");
+                                }
+                                else
+                                {
+                                    SayMessage("*She apologizes for the scare, but that she was feeling really bored.*");
+                                }
                                 break;
                             case 9:
-                                SayMessage("*She says that liked talking with you, and asks if can move to your world.*");
+                                if (!PlayerHasBlue)
+                                {
+                                    SayMessage("*She says that liked talking with you, and asks if can move to your world.*");
+                                }
+                                else
+                                {
+                                    SayMessage("*She says that she will be here If you need her.*");
+                                }
                                 break;
                             case 10:
-                                SayMessage("*If you aren't recovering from the scare, yet.*");
-                                dialogue.DialogueChainStep = 3;
-                                npc.ai[2] = 0;
-                                AiStage = 1;
-                                AiValue = 0;
+                                if (!PlayerHasBlue)
+                                {
+                                    SayMessage("*If you aren't recovering from the scare, yet.*");
+                                    dialogue.DialogueChainStep = 3;
+                                    npc.ai[2] = 0;
+                                    AiStage = 4;
+                                    AiValue = 0;
+                                }
+                                else
+                                {
+                                    RecruitmentScripts();
+                                }
                                 break;
                         }
-                        if (DialogueStep < 8)
-                        {
-                            Vector2 Position = npc.Center;
-                            Point point = Base.GetBetweenHandsPosition(Base.ItemUseFrames[2]);
-                            if (npc.direction < 0)
-                                point.X = Base.SpriteWidth - point.X;
-                            point.X -= (int)(Base.SpriteWidth * 0.5f);
-                            point.Y -= Base.SpriteHeight;
-                            Position.X += point.X;
-                            Position.Y += point.Y;
-                            Main.player[Main.myPlayer].Center = Position;
-                            Main.player[Main.myPlayer].direction = -npc.direction;
-                        }
+                    }
+                    if (DialogueStep < 8)
+                    {
+                        Vector2 Position = npc.Center;
+                        int HandFrame = 2;
+                        if (DialogueStep == 5 || DialogueStep == 6)
+                            HandFrame = 1;
+                        Point point = Base.GetBetweenHandsPosition(Base.ItemUseFrames[HandFrame]);
+                        if (npc.direction < 0)
+                            point.X = Base.SpriteWidth - point.X;
+                        point.X -= (int)(Base.SpriteWidth * 0.5f);
+                        point.Y -= Base.SpriteHeight;
+                        Position.X += point.X - Main.player[Main.myPlayer].width * 0.5f;
+                        Position.Y += point.Y + Main.player[Main.myPlayer].height * 0.5f;
+                        Main.player[Main.myPlayer].position = Position;
+                        Main.player[Main.myPlayer].direction = -npc.direction;
+                        Main.player[Main.myPlayer].immuneTime = 180;
+                        Main.player[Main.myPlayer].immuneNoBlink = true;
+                        DrawInFrontOfPlayers.Add(Main.myPlayer);
                     }
                 }
                 else if (PlayerIsNear)
                 {
-                    if (!LastPlayerNear)
+                    if (!LastPlayerNear && DialogueStep > 0)
                     {
                         AiStage = 5;
                         AiValue = 0;
                         npc.ai[2] = 1;
                         Main.NewText("*The wolf tells you to come closer.*");
                     }
-                    if (AiValue >= DialogueTime)
+                    if (AiValue >= DialogueTime && DialogueStep > 0)
                     {
                         AiValue -= DialogueTime;
                         AiStage++;
-                        switch (DialogueStep)
+                        switch (DialogueStep++)
                         {
                             case 1:
-                                Main.NewText("*The wolf tells you to come a some more closer.*");
+                                Main.NewText("*The wolf tells you to come a little more closer.*");
                                 break;
                             case 2:
                                 Main.NewText("*The wolf says to not stop.*");
@@ -259,18 +355,18 @@ namespace giantsummon.Npcs
                 }
                 else if (PlayerIsAway)
                 {
-                    if (!LastPlayerAway)
+                    if (!LastPlayerAway && DialogueStep > 0)
                     {
                         AiStage = 5;
                         AiValue = 0;
                         npc.ai[2] = 2;
                         Main.NewText("*The wolf asks you where are you going.*");
                     }
-                    if (AiValue >= DialogueTime)
+                    if (AiValue >= DialogueTime && DialogueStep > 0)
                     {
                         AiValue -= DialogueTime;
                         AiStage++;
-                        switch (DialogueStep)
+                        switch (++DialogueStep)
                         {
                             case 1:
                                 Main.NewText("*The wolf seems sad.*");
@@ -285,7 +381,7 @@ namespace giantsummon.Npcs
                 }
                 else
                 {
-                    if (LastPlayerNear || LastPlayerAway)
+                    if ((LastPlayerNear || LastPlayerAway) && DialogueStep > 0)
                     {
                         AiStage = 5;
                         AiValue = 0;
@@ -296,14 +392,14 @@ namespace giantsummon.Npcs
                         }
                         if (LastPlayerNear)
                         {
-                            SayMessage("*The wolf tells you to not go away. To come closer.*");
+                            SayMessage("*The wolf tells you to not go away. To come closer instead.*");
                         }
                     }
                     if (AiValue >= DialogueTime)
                     {
                         AiStage++;
                         AiValue -= DialogueTime;
-                        switch (AiStage)
+                        switch (++DialogueStep)
                         {
                             case 1:
                                 SayMessage("*The wolf is calling you.*");

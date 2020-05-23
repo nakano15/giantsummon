@@ -309,7 +309,7 @@ namespace giantsummon
                                         guardian.FaceDirection(TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0);
                                         byte ReviveBoost = 1;
                                         if (guardian.TargetID == -1)
-                                            ReviveBoost += 2;
+                                            ReviveBoost += 1;
                                         if (IsPlayer)
                                             Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
                                         else
@@ -1816,41 +1816,53 @@ namespace giantsummon
             {
                 case ActionIDs.ReviveSomeone:
                     {
-                        if (guardian.Base.DuckingFrame == -1 || guardian.ItemAnimationTime > 0)
+                        if ((guardian.Base.DuckingFrame == -1 && guardian.Base.ReviveFrame == -1) || guardian.ItemAnimationTime > 0)
                             return;
                         Vector2 TargetPosition = Vector2.Zero;
                         int TargetWidth = 0, TargetHeight = 0;
                         bool IsPlayer = Players.Count > 0;
+                        bool IsMounted = false;
                         if (Players.Count > 0)
                         {
                             TargetPosition = Players[0].position;
                             TargetWidth = Players[0].width;
                             TargetHeight = Players[0].height;
+                            if (Players[0].GetModPlayer<PlayerMod>().MountedOnGuardian)
+                                IsMounted = true;
                         }
                         if (Guardians.Count > 0)
                         {
                             TargetPosition = Guardians[0].TopLeftPosition;
                             TargetWidth = Guardians[0].Width;
                             TargetHeight = Guardians[0].Height;
+                            if (Guardians[0].OwnerPos > -1 && Guardians[0].PlayerControl && Main.player[Guardians[0].OwnerPos].GetModPlayer<PlayerMod>().MountedOnGuardian)
+                                IsMounted = true;
                         }
                         //What to do if the target is above dangerous tiles, like Spikes? How will they rescue that character?
                         if (new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))
                         {
                             bool IsStopped = guardian.Velocity.X == 0 || guardian.HasFlag(GuardianFlags.WindPushed);
-                            if (guardian.Velocity.X == 0)
+                            if (guardian.Velocity.X == 0 || guardian.HasFlag(GuardianFlags.WindPushed))
                             {
                                 if (guardian.BodyAnimationFrame == guardian.Base.StandingFrame)
                                 {
                                     int Animation = guardian.Base.StandingFrame;
                                     int ArmAnimation = -1;
-                                    if (guardian.Base.ReviveFrame > -1)
+                                    if (IsMounted)
                                     {
-                                        Animation = guardian.Base.ReviveFrame;
+                                        ArmAnimation = guardian.Base.ItemUseFrames[2];
                                     }
-                                    else if (guardian.Base.DuckingFrame > -1)
+                                    else
                                     {
-                                        Animation = guardian.Base.DuckingFrame;
-                                        ArmAnimation = guardian.Base.DuckingSwingFrames[2];
+                                        if (guardian.Base.ReviveFrame > -1)
+                                        {
+                                            Animation = guardian.Base.ReviveFrame;
+                                        }
+                                        else if (guardian.Base.DuckingFrame > -1)
+                                        {
+                                            Animation = guardian.Base.DuckingFrame;
+                                            ArmAnimation = guardian.Base.DuckingSwingFrames[2];
+                                        }
                                     }
                                     if (ArmAnimation == -1)
                                         ArmAnimation = Animation;
