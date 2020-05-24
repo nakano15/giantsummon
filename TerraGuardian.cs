@@ -6859,11 +6859,14 @@ namespace giantsummon
             {
                 if (this.Inventory[i].type > 0 && this.Inventory[i].potion && this.Inventory[i].healLife > 0)// && giantsummon.IsGuardianItem(this.Inventory[i]))
                 {
-                    int RestoreResult = Math.Abs((int)(this.Inventory[i].healLife * HealthHealMult) - ToHealValue);
-                    if (RestoreResult < LastHealingDifference)
+                    if (!(this.Inventory[i].modItem is Items.GuardianItemPrefab) || ((Items.GuardianItemPrefab)this.Inventory[i].modItem).GuardianCanUse(this))
                     {
-                        LastHealingDifference = RestoreResult;
-                        PotionPosition = i;
+                        int RestoreResult = Math.Abs((int)(this.Inventory[i].healLife * HealthHealMult) - ToHealValue);
+                        if (RestoreResult < LastHealingDifference)
+                        {
+                            LastHealingDifference = RestoreResult;
+                            PotionPosition = i;
+                        }
                     }
                 }
             }
@@ -9888,23 +9891,32 @@ namespace giantsummon
                         {
                             AddBuff(item.buffType, item.buffTime);
                         }
-                        if (item.type == Terraria.ID.ItemID.LifeCrystal || item.type == ModContent.ItemType<Items.Consumable.EtherHeart>())
+                        if ((item.type == ModContent.ItemType<Items.Consumable.EtherHeart>() || item.type == ModContent.ItemType<Items.Consumable.EtherFruit>()) &&
+                            !Base.IsTerraGuardian)
                         {
-                            if (LifeCrystalHealth < MaxLifeCrystals)
-                            {
-                                LifeCrystalHealth++;
-                                UpdateStatus = true;
-                            }
-                            else Failed = true;
+                            Failed = true;
+                            Main.NewText("This companion can't use this item.");
                         }
-                        if (item.type == Terraria.ID.ItemID.LifeFruit || item.type == ModContent.ItemType<Items.Consumable.EtherFruit>())
+                        else
                         {
-                            if (LifeCrystalHealth == MaxLifeCrystals && LifeFruitHealth < MaxLifeFruit)
+                            if (item.type == Terraria.ID.ItemID.LifeCrystal || item.type == ModContent.ItemType<Items.Consumable.EtherHeart>())
                             {
-                                LifeFruitHealth++;
-                                UpdateStatus = true;
+                                if (LifeCrystalHealth < MaxLifeCrystals)
+                                {
+                                    LifeCrystalHealth++;
+                                    UpdateStatus = true;
+                                }
+                                else Failed = true;
                             }
-                            else Failed = true;
+                            if (item.type == Terraria.ID.ItemID.LifeFruit || item.type == ModContent.ItemType<Items.Consumable.EtherFruit>())
+                            {
+                                if (LifeCrystalHealth == MaxLifeCrystals && LifeFruitHealth < MaxLifeFruit)
+                                {
+                                    LifeFruitHealth++;
+                                    UpdateStatus = true;
+                                }
+                                else Failed = true;
+                            }
                         }
                         if (item.type == Terraria.ID.ItemID.ManaCrystal)
                         {
@@ -12617,13 +12629,13 @@ namespace giantsummon
             }
             for (int i = 0; i < 50; i++)
             {
-                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeCrystal || this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherHeart>()) && this.LifeCrystalHealth < MaxLifeCrystals)
+                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeCrystal || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherHeart>() && Base.IsTerraGuardian)) && this.LifeCrystalHealth < MaxLifeCrystals)
                 {
                     this.SelectedItem = i;
                     this.Action = true;
                     break;
                 }
-                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeFruit || this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherFruit>()) && this.LifeCrystalHealth == MaxLifeCrystals && this.LifeFruitHealth < MaxLifeFruit)
+                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeFruit || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherFruit>() && Base.IsTerraGuardian)) && this.LifeCrystalHealth == MaxLifeCrystals && this.LifeFruitHealth < MaxLifeFruit)
                 {
                     this.SelectedItem = i;
                     this.Action = true;
@@ -13267,6 +13279,10 @@ namespace giantsummon
             if (Base.IsTerrarian)
                 NewPosition.Y += 2;
             Vector2 Origin = new Vector2(SpriteWidth * 0.5f, SpriteHeight);
+            if (KnockedOut && Base.IsTerrarian && Velocity.Y == 0)
+            {
+                Origin.Y *= 0.5f;
+            }
             if (GravityDirection < 0)
             {
                 Origin.Y = 0;

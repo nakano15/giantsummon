@@ -32,7 +32,7 @@ namespace giantsummon
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1946985";
         //End contest related
         public static int GuardianInventoryMenuSubTab = 0;
-        public const int ModVersion = 59, LastModVersion = 56;
+        public const int ModVersion = 60, LastModVersion = 56;
         public const int MaxExtraGuardianFollowers = 4;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -1157,6 +1157,11 @@ namespace giantsummon
                                                 {
                                                     ItemSlot.LeftClick(Guardian.Inventory, 0, i);
                                                     Guardian.ItemPlacedInInventory(i);
+                                                    if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialVanityIntroduction)
+                                                    {
+                                                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialVanityIntroduction = true;
+                                                        Main.NewText("You can make the companion wear some vanity items by placing it on one of the 10 inventory slots. They will use it If they are able to, so get ready to experiement.");
+                                                    }
                                                 }
                                             }
                                             else
@@ -1291,6 +1296,12 @@ namespace giantsummon
                             ManagingGuardianEquipments = true;
                             SlotStartPosition.X += 96;
                             string[] InfosToDraw = new string[]{
+                            "Melee Damage: " + Math.Round(Guardian.MeleeDamageMultiplier * 100, 2) + "%",
+                            "Ranged Damage: " + Math.Round(Guardian.RangedDamageMultiplier * 100, 2) + "%",
+                            "Magic Damage: " + Math.Round(Guardian.MagicDamageMultiplier * 100, 2) + "%",
+                            "Summon Damage: " + Math.Round(Guardian.SummonDamageMultiplier * 100, 2) + "%",
+                            "Attack Time: " + Math.Round(Guardian.MeleeSpeed * 100, 2) + "%",
+                            "Walk Speed: " + Math.Round(Guardian.MoveSpeed * 100, 2) + "%",
                             "Defense: " + Guardian.Defense,
                             "Defense Rate: " + Math.Round(Guardian.DefenseRate * 100, 2) + "%",
                             "Dodge Rate: " + Math.Round(Guardian.DodgeRate, 2) + "%",

@@ -17,6 +17,11 @@ namespace giantsummon.Items.Consumable
             guardian.Data.ResetSkillsProgress();
         }
 
+        public override bool GuardianCanUse(TerraGuardian guardian)
+        {
+            return true;
+        }
+
 		public override void SetDefaults()
         {
             item.UseSound = SoundID.Item3;

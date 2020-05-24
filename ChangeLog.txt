@@ -38,3 +38,7 @@ Changed when the Revive bar will be drawn on the guardian, from when drawing the
 Guardians will now be displayed differently when trying to revive a player that is mounted on a guardian.
 You can no longer control Terrarian type companions.
 Michelle arrives.
+You can check more infos about the companions on their equipment infos.
+Only TerraGuardians can use Ether Heart, Ether Fruits and Guardian Potions now.
+Added some more tutorials.
+	Tutorial for Orders, Requests and Vanity items.

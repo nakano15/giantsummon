@@ -12,6 +12,11 @@ namespace giantsummon.Items.Consumable
 			//Tooltip.SetDefault("Restores 400 Life.");  //The (English) text shown below your weapon's name
 		}
 
+        public override bool GuardianCanUse(TerraGuardian guardian)
+        {
+            return guardian.Base.IsTerraGuardian;
+        }
+
 		public override void SetDefaults()
         {
             item.UseSound = SoundID.Item3;

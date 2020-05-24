@@ -12,6 +12,11 @@ namespace giantsummon.Items.Consumable
 			//Tooltip.SetDefault("Restores 1200 Life.");
 		}
 
+        public override bool GuardianCanUse(TerraGuardian guardian)
+        {
+            return guardian.Base.IsTerraGuardian;
+        }
+
 		public override void SetDefaults()
         {
             item.UseSound = SoundID.Item3;

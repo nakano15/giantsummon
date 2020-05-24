@@ -126,7 +126,14 @@ namespace giantsummon
                             }
                             RequestTimer = Main.rand.Next(MinRequestTimer, MaxRequestTimer + 1) * 60;
                             if (player.whoAmI == Main.myPlayer)
+                            {
                                 Main.NewText(data.Name + " seems to have a new request for you.");
+                                if (!player.GetModPlayer<PlayerMod>().TutorialRequestIntroduction)
+                                {
+                                    player.GetModPlayer<PlayerMod>().TutorialRequestIntroduction = true;
+                                    Main.NewText("Someone gave you a request. Helping them will reward with friendship experience, and also with some interesting rewards.");
+                                }
+                            }
                         }
                         else
                         {

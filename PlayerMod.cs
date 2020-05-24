@@ -95,7 +95,6 @@ namespace giantsummon
             }
         }
         public byte TitanGuardian = 255;
-        public bool GuardianIntroDone = false;
         public bool HasFirstSymbol = false;
         public byte MountSitOrder = 0, FollowBackOrder = 0, FollowFrontOrder = 0;
         public int MaxExtraGuardiansAllowed
@@ -131,6 +130,11 @@ namespace giantsummon
             }
         }
         public byte ReviveBoost = 0;
+        public BitsByte TutorialFlags = new BitsByte();
+        public bool TutorialCompanionIntroduction { get { return TutorialFlags[0]; } set { TutorialFlags[0] = value; } }
+        public bool TutorialOrderIntroduction { get { return TutorialFlags[1]; } set { TutorialFlags[1] = value; } }
+        public bool TutorialVanityIntroduction { get { return TutorialFlags[2]; } set { TutorialFlags[2] = value; } }
+        public bool TutorialRequestIntroduction { get { return TutorialFlags[3]; } set { TutorialFlags[3] = value; } }
 
         public static bool PlayerControllingGuardian(Player player)
         {
@@ -903,18 +907,15 @@ namespace giantsummon
 
         public void UpdateGuardian()
         {
-            foreach (GuardianData g in MyGuardians.Values)
+            if (player.whoAmI == Main.myPlayer)
             {
-                g.request.UpdateRequest(this.player, GetAllGuardianFollowers, g);
-                g.UpdateData(this.player);
+                foreach (GuardianData g in MyGuardians.Values)
+                {
+                    g.request.UpdateRequest(this.player, GetAllGuardianFollowers, g);
+                    g.UpdateData(this.player);
+                }
             }
-            bool IsFirstGuardian = true;
             byte AssistSlot = 0;
-            /*for (int i = 0; i < MainMod.MaxExtraGuardianFollowers; i++)
-            {
-                if (SelectedAssistGuardians[i] > -1 && !AssistGuardians[i].Active)
-                    SelectedAssistGuardians[i] = -1;
-            }*/
             bool MagicMirrorTrigger = (player.inventory[player.selectedItem].type == 50 || player.inventory[player.selectedItem].type == 3124 || player.inventory[player.selectedItem].type == 3199) && player.itemAnimation > 0 && player.itemTime == player.inventory[player.selectedItem].useTime / 2;
             bool FoundFirstTitanGuardian = false;
             MountSitOrder = FollowFrontOrder = FollowBackOrder = 0;
@@ -922,7 +923,6 @@ namespace giantsummon
             {
                 if (!guardian.Active)
                 {
-                    IsFirstGuardian = false;
                     AssistSlot++;
                     continue;
                 }
@@ -1009,7 +1009,6 @@ namespace giantsummon
                             player.mount.Dismount(player);
                     }
                 }
-                IsFirstGuardian = false;
                 AssistSlot++;
             }
             if (!FoundFirstTitanGuardian)
@@ -1320,7 +1319,7 @@ namespace giantsummon
         {
             Terraria.ModLoader.IO.TagCompound tag = new Terraria.ModLoader.IO.TagCompound();
             tag.Add("ModVersion", MainMod.ModVersion);
-            tag.Add("TutorialStep", GuardianIntroDone);
+            tag.Add("TutorialStep", (byte)TutorialFlags);
             tag.Add("KnockedOut", KnockedOut);
             int[] Keys = MyGuardians.Keys.ToArray();
             tag.Add("GuardianUIDs", Keys);
@@ -1360,15 +1359,19 @@ namespace giantsummon
             {
                 if (ModVersion <= 42)
                 {
-                    GuardianIntroDone = tag.GetInt("TutorialStep") > 0;
+                    TutorialCompanionIntroduction = tag.GetInt("TutorialStep") > 0;
+                }
+                else if (ModVersion <= 59)
+                {
+                    TutorialCompanionIntroduction = tag.GetBool("TutorialStep");
                 }
                 else
                 {
-                    GuardianIntroDone = tag.GetBool("TutorialStep");
+                    TutorialFlags = tag.GetByte("TutorialStep");
                 }
             }
             else
-                GuardianIntroDone = true;
+                TutorialCompanionIntroduction = true;
             if (ModVersion >= 59)
                 KnockedOut = tag.GetBool("KnockedOut");
             Guardian = new TerraGuardian();
@@ -1506,7 +1509,18 @@ namespace giantsummon
                     this.Guardian = guardian;
                 else
                     AssistGuardians[AssistSlot - 1] = guardian;
-                //Main.NewText("Calling on " + AssistSlot + ": " + (AssistSlot == 0 ? SelectedGuardian : SelectedAssistGuardians[AssistSlot - 1]) + " -> " + guardian.Name);
+                if (player.whoAmI == Main.myPlayer && !TutorialOrderIntroduction)
+                {
+                    TutorialOrderIntroduction = true;
+                    string OrderKeys = "";
+                    foreach (string key in MainMod.orderCallButton.GetAssignedKeys())
+                    {
+                        if (OrderKeys != "")
+                            OrderKeys += "+";
+                        OrderKeys += key;
+                    }
+                    Main.NewText("You can give it orders by pressing '" + OrderKeys + "' key, and navigating with the number buttons. You can undo an order step by pressing '" + OrderKeys + "' again. You can also change order call key on the input settings.");
+                }
                 if (MainMod.NetplaySync && Main.netMode == 1 && player.whoAmI == Main.myPlayer && AssistSlot == 0)
                 {
                     for (byte p = 0; p < 255; p++)
@@ -1627,10 +1641,10 @@ namespace giantsummon
                     MyGuardians[SpawnID].Male = Main.rand.Next(2) == 0;
                 if (FirstGuardian)
                 {
-                    if (player.whoAmI == Main.myPlayer && !GuardianIntroDone)
+                    if (player.whoAmI == Main.myPlayer && !TutorialCompanionIntroduction)
                     {
                         Main.NewText("Looks like you've got yourself a TerraGuardian. You can call him by going in your inventory, on the lower part, and clicking the bulldog face.");
-                        GuardianIntroDone = true;
+                        TutorialCompanionIntroduction = true;
                     }
                 }
             }
