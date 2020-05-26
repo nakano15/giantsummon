@@ -65,15 +65,15 @@ namespace giantsummon
                 switch (mobType)
                 {
                     case MobTypes.Veteran:
-                        return 10;
+                        return 5;
                     case MobTypes.Elite:
-                        return 15;
+                        return 10;
                     case MobTypes.Champion:
-                        return 20;
+                        return 15;
                     case MobTypes.Legendary:
-                        return 30;
+                        return 20;
                     case MobTypes.Epic:
-                        return 40;
+                        return 30;
                 }
                 return 0;
             }
@@ -90,11 +90,11 @@ namespace giantsummon
                     case MobTypes.Elite:
                         return 8f;
                     case MobTypes.Champion:
-                        return 16f;
+                        return 12f;
                     case MobTypes.Legendary:
-                        return 32f;
+                        return 16f;
                     case MobTypes.Epic:
-                        return 64f;
+                        return 20f;
                 }
                 return 1f;
 
@@ -116,7 +116,7 @@ namespace giantsummon
                     case MobTypes.Legendary:
                         return 2.6f;
                     case MobTypes.Epic:
-                        return 4.2f;
+                        return 3.2f;
                 }
                 return 1f;
             }
@@ -725,29 +725,33 @@ namespace giantsummon
             switch (npc.type)
             {
                 case Terraria.ID.NPCID.Guide:
-                    if (HasGuardianNPC(0) && Main.rand.Next(2) == 0)
+                    if (HasGuardianNPC(0))
                         PossibleMessages.Add("Have you seen " + GetGuardianNPCName(0) + "? I think he just stole my Guide book to prank on me.");
-                    if (HasGuardianNPC(2) && Main.rand.Next(2) == 0)
+                    if (HasGuardianNPC(2))
                         PossibleMessages.Add(GetGuardianNPCName(2) + " comes frequently to me, asking if there is any tough creature he can take down.");
-                    if (HasGuardianNPC(5) && Main.rand.Next(2) == 0)
+                    if (HasGuardianNPC(5))
                     {
                         if (Main.rand.Next(2) == 0)
                             PossibleMessages.Add("You want to know about " + AlexRecruitScripts.AlexOldPartner + "? Sorry, I don't know that person.");
                         else
                             PossibleMessages.Add(GetGuardianNPCName(5) + " has been a positive addition to the town. But I wonder who cleans up his mess.");
                     }
-                    if (HasGuardianNPC(8) && Main.rand.NextDouble() < 0.5)
+                    if (HasGuardianNPC(8))
                     {
                         PossibleMessages.Add("I keep dismissing " + GetGuardianNPCName(8) + ", she distracts me.");
                     }
-                    if (HasGuardianNPC(GuardianBase.Vladimir) && Main.rand.NextDouble() < 0.5)
+                    if (HasGuardianNPC(GuardianBase.Vladimir))
                     {
                         PossibleMessages.Add("I've been hearing good things about " + GetGuardianNPCName(GuardianBase.Vladimir) + ", It seems like he's been helping several people with their problems.");
+                    }
+                    if (HasGuardianNPC(GuardianBase.Michelle))
+                    {
+                        PossibleMessages.Add("Since you've found " + GetGuardianNPCName(GuardianBase.Michelle) + ", I wonder If there are other people going to join your travels.");
                     }
                     break;
                 case Terraria.ID.NPCID.Nurse:
                     {
-                        PossibleMessages.Add("I can heal try healing your guardians too, but I will charge more for that.");
+                        PossibleMessages.Add("I can heal try healing your companions too, but I will charge more for that.");
                         if (HasGuardianNPC(GuardianBase.Vladimir) && HasGuardianNPC(GuardianBase.Blue) && NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer))
                         {
                             PossibleMessages.Add("I've got some good tips of things I could do on my date with " + NPC.firstNPCName(Terraria.ID.NPCID.ArmsDealer) + " from " + GetGuardianNPC(1) + ". She said that her boyfriend fell for her after she did that, so what could go wrong?! The only weird thing is the method she used.");
@@ -775,6 +779,10 @@ namespace giantsummon
                     {
                         PossibleMessages.Add("Ack!! You scared me! Can you tell me what is wrong with "+NPC.firstNPCName(Terraria.ID.NPCID.Nurse)+"? We were going on a date, until she pounced on me on the table and tried to bite my arm! I ran as fast as I could after that!");
                     }
+                    if (HasGuardianNPC(GuardianBase.Michelle))
+                    {
+                        PossibleMessages.Add(GetGuardianNPCName(GuardianBase.Michelle) + " came here earlier looking for a gun. I asked If she wanted a pistol or a machinegun. She said that wanted a rocket launcher.");
+                    }
                     break;
                 case Terraria.ID.NPCID.Truffle:
                     if (HasGuardianNPC(1))
@@ -785,13 +793,10 @@ namespace giantsummon
                         PossibleMessages.Add("A long time ago I've met " + GetGuardianNPCName(5) + " and " + AlexRecruitScripts.AlexOldPartner + ". They were exploring the caverns when they found the town I lived. People was overjoyed when they discovered that they didn't went there to eat them.");
                     break;
                 case Terraria.ID.NPCID.Stylist:
-                    if (Main.rand.NextDouble() >= 0.5)
-                    {
-                        if (HasGuardianNPC(1))
-                            PossibleMessages.Add("If you want me to do your hair, you will have to wait a day or two for my arms to rest, because " + GetGuardianNPCName(1) + " wanted me to do her hair, but do you know how much hair she has?");
-                        if (HasGuardianNPC(7))
-                            PossibleMessages.Add("I feel pitty of " + GetGuardianNPCName(7) + ", she asks me to do her hair, but she nearly has any, so I pretend that I'm doing something.");
-                    }
+                    if (HasGuardianNPC(1))
+                        PossibleMessages.Add("If you want me to do your hair, you will have to wait a day or two for my arms to rest, because " + GetGuardianNPCName(1) + " wanted me to do her hair, but do you know how much hair she has?");
+                    if (HasGuardianNPC(7))
+                        PossibleMessages.Add("I feel pitty of " + GetGuardianNPCName(7) + ", she asks me to do her hair, but she nearly has any, so I pretend that I'm doing something.");
                     break;
                 case Terraria.ID.NPCID.Mechanic:
                     if (HasGuardianNPC(0))
@@ -805,6 +810,10 @@ namespace giantsummon
                     {
                         PossibleMessages.Add("(She's humming. Something must have brightened her day.)");
                         PossibleMessages.Add("I love having "+GetGuardianNPCName(11) + " around, he always gives me a happiness boost. I want to be his friend forever.");
+                    }
+                    if (HasGuardianNPC(GuardianBase.Michelle))
+                    {
+                        PossibleMessages.Add("I think " + GetGuardianNPCName(GuardianBase.Michelle) + " must have some kind of trigger. She can't see any kind of switch, she wants to flip them.");
                     }
                     break;
                 case Terraria.ID.NPCID.GoblinTinkerer:
@@ -829,7 +838,7 @@ namespace giantsummon
                     if (HasGuardianNPC(1))
                         PossibleMessages.Add(GetGuardianNPCName(1) + " seems to have some interest in poisons, just watch out if she gives you a drink. Who knows?");
                     if (HasGuardianNPC(8))
-                        PossibleMessages.Add("Red paint? I didn't painted my mask red... Oh... Uh...");
+                        PossibleMessages.Add("Red paint? I didn't painted my mask red... Uh oh... Forget what you saw.");
                     break;
                 case Terraria.ID.NPCID.DD2Bartender:
                     PossibleMessages.Add("Bringing a TerraGuardian to the defense of the crystal is a bit of a cheat, but It is very helpful when defending it alone.");
@@ -837,6 +846,10 @@ namespace giantsummon
                         PossibleMessages.Add(GetGuardianNPCName(6) + " is my best client, he always drinks about 10~15 mugs of Ale before returning to his post. He still looks fine afterwards, I guess.");
                     if (HasGuardianNPC(9))
                         PossibleMessages.Add("I always have to watch over " + GetGuardianNPCName(9) + ", because he doesn't knows when to stop drinking.");
+                    if (HasGuardianNPC(GuardianBase.Michelle))
+                    {
+                        PossibleMessages.Add(GetGuardianNPCName(GuardianBase.Michelle) + " got angry when I asked her age when she asked for a drink.");
+                    }
                     break;
                 case Terraria.ID.NPCID.Merchant:
                     if (HasGuardianNPC(0))
@@ -852,6 +865,10 @@ namespace giantsummon
                         PossibleMessages.Add("What " + GetGuardianNPCName(7) + " expects of my store? My products have quality and I get them in high stack.");
                     if (HasGuardianNPC(GuardianBase.Vladimir))
                         PossibleMessages.Add("What are you saying?! I never complained to anyone about my sales!");
+                    if (HasGuardianNPC(GuardianBase.Michelle))
+                    {
+                        PossibleMessages.Add("Everytime " + GetGuardianNPCName(GuardianBase.Michelle) + " returns from her travels, she buys several stacks of potions. I think she's not very good at adventuring.");
+                    }
                     break;
                 case Terraria.ID.NPCID.TravellingMerchant:
                     if (HasGuardianNPC(7) && Main.rand.Next(2) == 0)
@@ -1020,6 +1037,10 @@ namespace giantsummon
                                 break;
                         }
                     }
+                    if (HasGuardianNPC(GuardianBase.Michelle))
+                    {
+                        PossibleMessages.Add("If you don't watch out, " + GetGuardianNPCName(GuardianBase.Michelle) + " may take your place as my minion. She's probably waiting for that Sextant.");
+                    }
                     break;
                 case Terraria.ID.NPCID.TaxCollector:
                     if (HasGuardianNPC(0))
@@ -1040,14 +1061,18 @@ namespace giantsummon
                         PossibleMessages.Add("What is the problem with your Ether Realm tenants? That psichotic white cat you found tried hit me with a rolling pin when I tried to collect her rent. She even chased me about 50 meters while swinging that thing!");
                     if (HasGuardianNPC(8))
                     {
-                        PossibleMessages.Add("Ah? Nothing, nothing! Uh... Don't tell anyone that you saw me leaving " + GetGuardianNPCName(8) + "'s room, and DARE YOU to comment about the blood in my nose!");
+                        PossibleMessages.Add("Ah? Nothing, nothing! Uh... Don't tell anyone that you saw me leaving " + GetGuardianNPCName(8) + "'s room, and DARE YOU to comment about the blood coming from my nose!");
                     }
                     if (HasGuardianNPC(9))
                         PossibleMessages.Add("Where were you?! " + GetGuardianNPCName(9) + " nearly sent me back to hell just because I wanted to collect his rent!");
                     if (HasGuardianNPC(10))
-                        PossibleMessages.Add("You're saying you didn't have seen me in a long time? Of course! That crazy bunny " + GetGuardianNPCName(9) + " turned me into a frog! All I did was use my methods of asking for rent!");
+                        PossibleMessages.Add("You're saying you didn't have seen me in a long time? Of course! That crazy bunny " + GetGuardianNPCName(10) + " turned me into a frog! All I did was use my methods of asking for rent!");
                     if (HasGuardianNPC(11))
-                        PossibleMessages.Add("Do you want to talk? Just stay away from me! I need as little physical contact as possible. I tried collecting " + GetGuardianNPCName(9) + "'s rent earlier, and I ended up being hugged for several hours. I nearly wet my pants because of that.");
+                        PossibleMessages.Add("Do you want to talk? Just stay away from me! I need as little physical contact as possible. I tried collecting " + GetGuardianNPCName(11) + "'s rent earlier, and I ended up being hugged for several hours. I nearly wet my pants because of that.");
+                    if (HasGuardianNPC(GuardianBase.Michelle))
+                    {
+                        PossibleMessages.Add("That girl is the devil! " + GetGuardianNPCName(GuardianBase.Michelle) + " nearly dropped me into a lava pit because I tried to collect her rent!");
+                    }
                     break;
                 case Terraria.ID.NPCID.PartyGirl:
                     if (HasGuardianNPC(6) && Main.rand.Next(2) == 0)

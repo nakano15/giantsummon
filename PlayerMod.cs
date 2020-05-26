@@ -101,7 +101,7 @@ namespace giantsummon
         {
             get
             {
-                int Count = MyGuardians.Count;
+                int Count = FriendshipLevel;
                 int Allowance = 0;
                 if (Count >= 2)
                     Allowance++;
@@ -110,6 +110,8 @@ namespace giantsummon
                 if (Count >= 8)
                     Allowance++;
                 if (Count >= 10)
+                    Allowance++;
+                if (Count >= 14)
                     Allowance++;
                 if (Allowance > MainMod.MaxExtraGuardianFollowers)
                     Allowance = MainMod.MaxExtraGuardianFollowers;
@@ -135,6 +137,31 @@ namespace giantsummon
         public bool TutorialOrderIntroduction { get { return TutorialFlags[1]; } set { TutorialFlags[1] = value; } }
         public bool TutorialVanityIntroduction { get { return TutorialFlags[2]; } set { TutorialFlags[2] = value; } }
         public bool TutorialRequestIntroduction { get { return TutorialFlags[3]; } set { TutorialFlags[3] = value; } }
+        public bool TutorialKnockOutIntroduction { get { return TutorialFlags[4]; } set { TutorialFlags[4] = value; } }
+        public byte FriendshipLevel = 1, FriendshipExp = 0;
+        public byte FriendshipMaxExp { get { return (byte)(3 + FriendshipLevel / 5); } }
+        public int LastFriendshipCount = -1;
+
+        public void RecalculateFriendshipLevel()
+        {
+            FriendshipLevel = 1;
+            FriendshipExp = 0;
+            int ExpSum = 0;
+            foreach (GuardianData gd in MyGuardians.Values)
+            {
+                ExpSum += gd.FriendshipLevel;
+            }
+            LastFriendshipCount = ExpSum;
+            while (ExpSum > FriendshipMaxExp && FriendshipLevel < 255)
+            {
+                ExpSum -= FriendshipMaxExp;
+                FriendshipLevel++;
+            }
+            if (FriendshipLevel < 255)
+            {
+                FriendshipExp = (byte)ExpSum;
+            }
+        }
 
         public static bool PlayerControllingGuardian(Player player)
         {
@@ -833,6 +860,22 @@ namespace giantsummon
             if (player.mount.Active)
                 player.mount.Dismount(player);
             player.pulley = false;
+            if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialKnockOutIntroduction)
+            {
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    Main.NewText("You got knocked out! You will need to get the help of companions or other players to be revived. You wont be able to do anything while in this state.");
+                    if (MainMod.PlayersDontDiesAfterDownedDefeat)
+                        Main.NewText("You can still be hurt while in this state, but when health reaches 0, you will enter knocked out cold state. You wont be attacked by anything anymore, but health stops regenerating without the help of companions. If they are unable to revive you, you can force your own death by pressing '" + Main.cHook + "' key.");
+                    else
+                        Main.NewText("You can still be hurt while in this state, but your aggro is lower. If your character health reaches 0, your character dies.");
+                }
+                else
+                {
+                    Main.NewText("Someone got knocked out! Companions that aren't attacking enemies can help revive the one knocked out if they are in range. You can resurrect too, by standing on the position and holding the left mouse button on the character.");
+                }
+                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialKnockOutIntroduction = true;
+            }
         }
 
         public void LeaveDownedState()
@@ -905,14 +948,41 @@ namespace giantsummon
             }
         }
 
+        public void FriendshipLevelNotification()
+        {
+            Main.NewText("You reached Friendship Rank " + FriendshipLevel + ".");
+            if (FriendshipLevel == 2 || FriendshipLevel == 5 || FriendshipLevel == 8 || FriendshipLevel == 10 || FriendshipLevel == 14)
+            {
+                Main.NewText("You can now have " + (MaxExtraGuardiansAllowed + 1) + " companions following you.");
+            }
+        }
+
         public void UpdateGuardian()
         {
             if (player.whoAmI == Main.myPlayer)
             {
+                int NewFriendshipCount = 0;
                 foreach (GuardianData g in MyGuardians.Values)
                 {
                     g.request.UpdateRequest(this.player, GetAllGuardianFollowers, g);
                     g.UpdateData(this.player);
+                    NewFriendshipCount += g.FriendshipLevel;
+                }
+                if (NewFriendshipCount != LastFriendshipCount)
+                {
+                    if (LastFriendshipCount == -1)
+                    {
+                        RecalculateFriendshipLevel();
+                    }
+                    else
+                    {
+                        byte LastFriendshipLevel = FriendshipLevel;
+                        RecalculateFriendshipLevel();
+                        if (FriendshipLevel > LastFriendshipLevel)
+                        {
+                            FriendshipLevelNotification();
+                        }
+                    }
                 }
             }
             byte AssistSlot = 0;
@@ -1442,6 +1512,7 @@ namespace giantsummon
                 int DaysCounter = (int)(new DateTime(2020, 05, 19) - DateTime.Now).TotalDays;
                 Main.NewText("With Terraria 1.4 just " + DaysCounter + " days away, Vladimir is being given away until then.");
             }
+            RecalculateFriendshipLevel();
         }
 
         public bool CallGuardian(int GuardianID, string GuardianModID = "")

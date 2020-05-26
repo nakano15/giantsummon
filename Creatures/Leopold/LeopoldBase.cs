@@ -275,6 +275,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*Looks like I'll have troubles sleeping this night...*");
                 }
             }
+            if (NpcMod.HasGuardianNPC(Michelle))
+            {
+                Mes.Add("*I discovered a way of dealing with [gn:" + Michelle + "], I just need to talk about my researches.*");
+                Mes.Add("*That girl [gn:"+Michelle+"] surelly is curious. I wonder, what's wrong with her?*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

@@ -348,6 +348,11 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*I don't understand. I was talking about some things related to the Miss Contest to [gn:"+Vladimir+"], until he suddenly dropped me on the floor and said that had to go to the toilet urgently. My behind is still hurting from the fall. Ouch~.*");
             }
+            if (NpcMod.HasGuardianNPC(Michelle))
+            {
+                Mes.Add("*Did you knew that [gn:" + Michelle + "] will try joining the Miss North Pole contest? I'm so happy, I never wondered I would have a rival. Wait... Is that good or bad?*");
+                Mes.Add("*I'm so glad to have met [gn:"+Michelle+"]. She's a great person to have around.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

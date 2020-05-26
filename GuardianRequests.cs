@@ -175,14 +175,8 @@ namespace giantsummon
             }
             if (Points >= 500 && Main.rand.Next(3) == 0)
             {
-                int Stack = Main.rand.Next(1, 4);
-                Stack -= (int)((Stack - 1) * 0.5);
-                if (Stack * 500 > Points)
-                {
-                    Stack = Points / 500;
-                }
-                AddItemReward(ModContent.ItemType<Items.Consumable.EtherHeart>(), Stack);
-                Points -= Stack;
+                AddItemReward(ModContent.ItemType<Items.Consumable.EtherHeart>(), 1);
+                Points -= 500;
             }
             if (Points >= 750 && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
             {

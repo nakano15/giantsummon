@@ -188,7 +188,7 @@ namespace giantsummon.Creatures
                 if (NpcMod.HasGuardianNPC(GuardianBase.Mabel))
                 {
                     Mes.Add("Why the male people of your town keeps drooling at [gn:" + GuardianBase.Mabel + "]?");
-                    Mes.Add("Miss Reindeer contest? Maybe [gn:" + GuardianBase.Mabel + "] could help me get in It too? It sounds fun!");
+                    Mes.Add("Miss North Pole contest? Maybe [gn:" + GuardianBase.Mabel + "] could help me get in It too? It sounds fun!");
                 }
                 if (NpcMod.HasGuardianNPC(GuardianBase.Domino))
                 {
@@ -280,6 +280,32 @@ namespace giantsummon.Creatures
             if (!PlayerMod.HasGuardianBeenGifted(player, guardian.ID, guardian.ModID))
             {
                 Mes.Add("You prepared a surprise for me? What is it? What is it?");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer)
+            {
+                Mes.Add("Come on! You can't be a hero by lying down.");
+                Mes.Add("I think that's not the worst beating you can get.");
+                Mes.Add("You're not doing that on purpose, right?");
+            }
+            else
+            {
+                if (ReviveGuardian.Base.IsTerraGuardian)
+                {
+                    Mes.Add("*Petting intensifies*");
+                    Mes.Add("Sooooooo cuuuuute!!");
+                    Mes.Add("Awww... You're even cuter when knocked out.");
+                }
+                else
+                {
+                    Mes.Add("Are you fine? I'll try helping you.");
+                    Mes.Add("Here, I'll try doing something about those wounds.");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

@@ -60,7 +60,7 @@ namespace giantsummon.Creatures
             WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             PlayerMountedArmAnimation = JumpFrame = 9;
             HeavySwingFrames = new int[] { 10, 11, 12 };
-            ItemUseFrames = new int[] { 10, 13, 14, 15 };
+            ItemUseFrames = new int[] { 13, 14, 15, 16 };
             SittingFrame = 17;
             ChairSittingFrame = 18;
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12, 13, 14, 15, 16 });
@@ -287,7 +287,11 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Vladimir))
             {
-                Mes.Add("Hey dude, you know that guy, [gn:"+Sardine+"]? He's really helping me with some personal matters. If you feel troubled, have a talk with him.");
+                Mes.Add("Hey, you know that guy, [gn:"+Vladimir+"]? He's really helping me with some personal matters. If you feel troubled, have a talk with him.");
+            }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Michelle))
+            {
+                Mes.Add("Whenever I tell stories about my adventures, [gn:" + GuardianBase.Michelle + "] listen attentiously to every details of it. I think I got a fan.");
             }
             if (guardian.IsUsingToilet)
             {

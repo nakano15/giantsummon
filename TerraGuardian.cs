@@ -6591,8 +6591,23 @@ namespace giantsummon
             TriggerHandler.FireGuardianDownedTrigger(this.CenterPosition, this, 0, false);
             UpdateStatus = true;
             DoAction.InUse = false;
-            if(OwnerPos == Main.myPlayer)
+            if (OwnerPos == Main.myPlayer)
+            {
                 Main.NewText(Name + " has been knocked out.", Color.OrangeRed);
+                if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialKnockOutIntroduction)
+                {
+                    Main.NewText("Someone got knocked out! Companions that aren't attacking enemies can help revive the one knocked out if they are in range. You can resurrect too, by standing on the position and holding the left mouse button on the character.");
+                    if (MainMod.GuardiansDontDiesAfterDownedDefeat)
+                    {
+                        Main.NewText("They can still be hurt in this state. If their health reaches 0 while in this state, they enter a Knocked Out cold state, where they can't be hurt, and there is no natural health regeneration. They can still be revived.");
+                    }
+                    else
+                    {
+                        Main.NewText("They can still be hurt in this state. If their health reaches 0 while in this state, they dies.");
+                    }
+                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialKnockOutIntroduction = true;
+                }
+            }
         }
 
         public void ExitDownedState()
@@ -12790,6 +12805,10 @@ namespace giantsummon
                         Main.PlaySound(19, (int)Position.X, (int)Position.Y, 1, 1f, 0.0f);
                     }
                 }
+                if (!LavaWet && Main.expertMode && ZoneSnow)
+                {
+                    AddBuff(Terraria.ID.BuffID.Chilled, 5 * 60);
+                }
                 Wet = true;
             }
             if (HoneyWet)
@@ -13279,10 +13298,6 @@ namespace giantsummon
             if (Base.IsTerrarian)
                 NewPosition.Y += 2;
             Vector2 Origin = new Vector2(SpriteWidth * 0.5f, SpriteHeight);
-            if (KnockedOut && Base.IsTerrarian && Velocity.Y == 0)
-            {
-                Origin.Y *= 0.5f;
-            }
             if (GravityDirection < 0)
             {
                 Origin.Y = 0;
@@ -13608,32 +13623,32 @@ namespace giantsummon
             if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28)
                 DrawNormalHair = true; 
             bool HideLegs = LegSlot == 143 || LegSlot == 106 || LegSlot == 140;
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, headrect, SkinColor, Rotation, Origin, Scale, seffect);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, headrect, SkinColor, 0f, Origin, Scale, seffect);
             dd.Draw(Main.spriteBatch);
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, Rotation, Origin, Scale, seffect);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect);
             dd.Draw(Main.spriteBatch);
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, headrect, EyesWhiteColor, Rotation, Origin, Scale, seffect);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, headrect, EyesWhiteColor, 0f, Origin, Scale, seffect);
             dd.Draw(Main.spriteBatch);
             if (Base.TerrarianInfo.HairStyle >= 0 && Main.hairLoaded[Base.TerrarianInfo.HairStyle])
             {
                 if (DrawNormalHair)
                 {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, Rotation, Origin, Scale, seffect);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, 0f, Origin, Scale, seffect);
                     dd.Draw(Main.spriteBatch);
                 }
                 else if (DrawAltHair)
                 {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, Rotation, Origin, Scale, seffect);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, 0f, Origin, Scale, seffect);
                     dd.Draw(Main.spriteBatch);
                 }
             }
             if (HeadSlot > 0 && Main.armorHeadLoaded[HeadSlot])
             {
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], Position, headrect, ArmorColor, Rotation, Origin, Scale, seffect);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], Position, headrect, ArmorColor, 0f, Origin, Scale, seffect);
                 dd.Draw(Main.spriteBatch);
                 if (Base.Effect == GuardianBase.GuardianEffect.Wraith && HeadSlot == 38)
                 {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, Rotation, Origin, Scale, seffect);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect);
                     dd.Draw(Main.spriteBatch);
                 }
             }
@@ -13649,6 +13664,12 @@ namespace giantsummon
             bool LeftArmInFront = SittingOnPlayerMount;
             int SkinVariant = Base.TerrarianInfo.GetSkinVariant(Male);
             Vector2 Origin = new Vector2(20, 56);
+            if (KnockedOut && !Downed)
+            {
+                Origin.Y *= 0.5f;
+                Position.Y -= 20;
+            }
+
             Color HairColor = Base.TerrarianInfo.HairColor,
                 EyesColor = Base.TerrarianInfo.EyeColor,
                 EyesWhiteColor = Color.White,

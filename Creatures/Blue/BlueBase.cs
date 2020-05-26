@@ -330,6 +330,11 @@ namespace giantsummon.Creatures
                 if(!NpcMod.HasGuardianNPC(Zacks))
                     Mes.Add("*[name] asks If you have seen [gn:"+Vladimir+"], after removing a tear from her face. She seems to need to speak with him.*");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Michelle))
+            {
+                Mes.Add("*[name] says that hates when [gn:" + GuardianBase.Michelle + "] pets her hair.*");
+                Mes.Add("*[name] is saying taht needs some space, but [gn:" + GuardianBase.Michelle + "] doesn't get it.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is saying that you're making her embarrassed.*");

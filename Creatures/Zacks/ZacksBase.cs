@@ -367,6 +367,11 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*I went earlier to ask [gn:"+Vladimir+"] why [gn:"+Blue+"] visits him so much... I didn't knew how much pain I cause to her... And how much joy I brought to her once I returned to her side...*");
             }
+            if (NpcMod.HasGuardianNPC(Michelle))
+            {
+                Mes.Add("*Why [gn:" + Michelle + "] doesn't talk with me?*");
+                Mes.Add("*I think [gn:" + Michelle + "] seems to be a cool person, but she always ignores me...*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");

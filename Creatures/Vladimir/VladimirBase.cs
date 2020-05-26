@@ -723,6 +723,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*For a sage, [gn:" + Leopold + "] has a hundred one troubles.*");
                 Mes.Add("*Generally when [gn:" + Leopold + "] comes, he keeps debating himself his theories. When I wake up, he's already gone. I've never seen him angry at me for doing that.*");
             }
+            if (NpcMod.HasGuardianNPC(Michelle))
+            {
+                Mes.Add("*I like hugging [gn:" + Michelle + "], she's one of the few persons that wants a hug for no actual reason.*");
+                Mes.Add("*Sometimes I sing a lullaby at night for [gn:"+Michelle+"].*");
+            }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
             {

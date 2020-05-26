@@ -343,6 +343,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*Yo, tell [gn:"+Vladimir+"] to keep his paws off me. I can't be seen being hugged by other people, that can put my career down the drain.*");
                 Mes.Add("*Can I tell you something? I also have my own troubles that I want to confess, but I can't show any sign of weakness, or else people around will start doubting that I can protect them.*");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Michelle))
+            {
+                Mes.Add("*If you call me giant kitty, I will punch your stomach.*");
+                Mes.Add("*Don't listen to what [gn:"+GuardianBase.Michelle+"] says about me, I'm as tough as a rock.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");

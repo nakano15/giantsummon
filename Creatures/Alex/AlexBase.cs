@@ -478,6 +478,10 @@ namespace giantsummon.Creatures
                 Mes.Add("Have been talking with [gn:"+Vladimir+"] and... No... Forget it... Nevermind what I was saying.");
                 Mes.Add("That [gn:" + Vladimir + "] is a real buddy, he accompany me when I go visit " + AlexRecruitScripts.AlexOldPartner + "'s Tombstone. I don't feel alone when doing that anymore.");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Michelle))
+            {
+                Mes.Add("I've got a new friend, and the name is [gn:" + GuardianBase.Michelle + "]. What? I'm your buddy too.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("I'm trying hard to aim at the hole.");

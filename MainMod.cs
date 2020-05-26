@@ -32,8 +32,8 @@ namespace giantsummon
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1946985";
         //End contest related
         public static int GuardianInventoryMenuSubTab = 0;
-        public const int ModVersion = 60, LastModVersion = 56;
-        public const int MaxExtraGuardianFollowers = 4;
+        public const int ModVersion = 60, LastModVersion = 60;
+        public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false,

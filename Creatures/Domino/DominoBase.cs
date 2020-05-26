@@ -245,6 +245,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*What?! I never got hugged by [gn:" + Vladimir + "], I don't know why he would say that.*");
                 Mes.Add("*I feel like I've lost some weight on my shoulder. Maybe I could try smiling? No.*");
             }
+            if (NpcMod.HasGuardianNPC(Michelle))
+            {
+                Mes.Add("*Between you and [gn:" + Michelle + "] around, I preffer you. At least you don't bother me all the time.*");
+            }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
             {
                 Mes.Add("*[nn:" + Terraria.ID.NPCID.TravellingMerchant + "] has a variety of low quality goods to offer.*");

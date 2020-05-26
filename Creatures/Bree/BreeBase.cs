@@ -118,6 +118,34 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(18, 16, 22);
         }
 
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture("bagless_body", "body_no_bag");
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
+        {
+            switch (guardian.Data.SkinID //Todo - Add some way of activating skins.
+            {
+                case 1:
+                    foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
+                    {
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
+                        {
+                            gdd.Texture = sprites.GetExtraTexture("bagless_body");
+                        }
+                    }
+                    foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
+                    {
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
+                        {
+                            gdd.Texture = sprites.GetExtraTexture("bagless_body");
+                        }
+                    }
+                    break;
+            }
+        }
+
         public override string CallUnlockMessage
         {
             get
@@ -284,6 +312,11 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("I know that [gn:2] spends way too much time with [gn:8], I hope that cat doesn't plan to cheat on me.");
                 }
+            }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Michelle))
+            {
+                Mes.Add("If you want to make me feel annoyed, just leave me 5 minutes with [gn:" + GuardianBase.Michelle + "] in the same room.");
+                Mes.Add("I hate [gn:" + GuardianBase.Michelle + "], she just don't stop talking!");
             }
             if (guardian.IsUsingToilet)
             {

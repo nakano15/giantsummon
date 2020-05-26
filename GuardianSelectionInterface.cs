@@ -38,7 +38,7 @@ namespace giantsummon
             if (Width < 640) Width = 640;
             if (Height < 480) Height = 480;
             InterfacePosition.X = (Main.screenWidth - Width) * 0.5f;
-            InterfacePosition.Y = (Main.screenHeight - Height) * 0.5f;
+            InterfacePosition.Y = (Main.screenHeight - Height + 36) * 0.5f;
             ScrollY = 0;
             for (int k = 0; k < GuardianList.Length; k++)
             {
@@ -69,6 +69,27 @@ namespace giantsummon
             return GuardiansLivingHere.ToArray();
         }
 
+        public static void DrawLevelInfoInterface(PlayerMod player)
+        {
+            Rectangle BarPosition = new Rectangle((int)InterfacePosition.X - 2, (int)InterfacePosition.Y - 8 - 36, Width + 4, 8+36);
+            Main.spriteBatch.Draw(Main.blackTileTexture, BarPosition, Color.Black);
+            BarPosition.X += 2;
+            BarPosition.Y += 2 + 36;
+            BarPosition.Width -= 4;
+            BarPosition.Height -= 4 + 36;
+            Main.spriteBatch.Draw(Main.blackTileTexture, BarPosition, Color.Gray);
+            BarPosition.Width = (int)(BarPosition.Width * ((float)player.FriendshipExp / player.FriendshipMaxExp));
+            Main.spriteBatch.Draw(Main.blackTileTexture, BarPosition, Color.Yellow);
+            float BarFillWidth = 1f / player.FriendshipMaxExp * Width;
+            for (int i = 1; i < player.FriendshipMaxExp; i++)
+            {
+                BarPosition.X = (int)(InterfacePosition.X + BarFillWidth * i);
+                Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(BarPosition.X, BarPosition.Y, 2, BarPosition.Height), Color.Black);
+            }
+            Vector2 TextPosition = new Vector2(InterfacePosition.X + Width * 0.5f, InterfacePosition.Y - 4);
+            Utils.DrawBorderString(Main.spriteBatch, "Friendship Rank: " + player.FriendshipLevel, TextPosition, Color.White, 1.2f, 0.5f, 1);
+        }
+
         public static void DrawInterface()
         {
             if (Main.playerInventory)
@@ -76,7 +97,8 @@ namespace giantsummon
             if (!IsActive) return;
             string MouseText = "";
             float ScaleX = (float)Width / 640, ScaleY = (float)Height / 480;
-            PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>(); 
+            DrawLevelInfoInterface(player);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)InterfacePosition.X - 2, (int)InterfacePosition.Y - 2, Width + 4, Height + 4), Color.Black);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)InterfacePosition.X, (int)InterfacePosition.Y, Width, Height), Color.DarkBlue);
             Vector2 ElementPosition = InterfacePosition;
