@@ -1510,10 +1510,25 @@ namespace giantsummon
             }
             if (ReviveBoost > 0)
             {
+                if (Breath < BreathMax - 1)
+                {
+                    BreathCooldown += 1 + ReviveBoost / 2;
+                }
                 if (ReviveBoost + TownNpcs > 255)
                     ReviveBoost = 255;
                 else
                     ReviveBoost += (byte)TownNpcs;
+            }
+            foreach (BuffData buff in Buffs)
+            {
+                if (buff.ID == ModContent.BuffType<giantsummon.Buffs.Injury>() || buff.ID == ModContent.BuffType<giantsummon.Buffs.HeavyInjury>())
+                {
+                    buff.Time++;
+                }
+                else if (ReviveBoost > 0 && buff.ID != Terraria.ID.BuffID.PotionSickness && Main.debuff[buff.ID])
+                {
+                    buff.Time -= ReviveBoost;
+                }
             }
             if (KnockedOutCold)
             {
@@ -4156,6 +4171,7 @@ namespace giantsummon
                     Math.Abs(CenterPosition.Y - Main.player[OwnerPos].Center.Y) > (Main.screenHeight + Height) * 0.5f)
                     IncreaseStuckTimer();
                 //if (PlayerMounted) ToggleMount();
+                CheckIfSomeoneNeedsRevive(true);
                 if (PlayerControl) TogglePlayerControl();
                 if (GuardingPosition.HasValue) ToggleWait();
             }
@@ -13224,7 +13240,7 @@ namespace giantsummon
                 return;
             if (WofFood)
                 return;
-            DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && Base.ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount;
+            DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && Base.ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount || (AssistSlot == 0 && LeftArmAnimationFrame == Base.ReviveFrame);
             DrawRightBodyPartsInFrontOfPlayer = false;
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);
             hitTileData.DrawFreshAnimations(Main.spriteBatch);

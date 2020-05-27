@@ -240,6 +240,7 @@ namespace giantsummon
                 InUse = false;
                 return;
             }
+            guardian.StuckTimer = 0;
             if (IsGuardianSpecificAction)
             {
                 guardian.Base.GuardianActionUpdate(guardian, this);
@@ -252,10 +253,13 @@ namespace giantsummon
                         {
                             if (guardian.furniturex > -1)
                                 guardian.LeaveFurniture(false);
-                            if (guardian.PlayerMounted && !guardian.MoveDown)
+                            if (guardian.PlayerMounted || guardian.Is2PControlled)
                             {
-                                InUse = false;
-                                return;
+                                if (!guardian.MoveDown)
+                                {
+                                    InUse = false;
+                                    return;
+                                }
                             }
                             if (guardian.ItemAnimationTime > 0)
                                 return;

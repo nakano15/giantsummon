@@ -418,7 +418,18 @@ namespace giantsummon.Npcs
             }
             else
             {
-                Frame = AlexGuardianBase.StandingFrame;
+                if (npc.ai[AI_TYPE] == 2 && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID) && npc.ai[AI_TIMER] < 12 * 30)
+                {
+                    npc.frameCounter++;
+                    Frame = ((int)npc.frameCounter / 5) % 4;
+                    if (Frame == 3)
+                        Frame = 2;
+                    Frame += 19;
+                }
+                else
+                {
+                    Frame = AlexGuardianBase.StandingFrame;
+                }
             }
             if (Frame >= AlexGuardianBase.FramesInRows)
             {

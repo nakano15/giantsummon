@@ -75,7 +75,7 @@ namespace giantsummon.Creatures
         {
             get
             {
-                return Name + " has logged out.";
+                return " has logged out.";
             }
         }
 
@@ -83,7 +83,7 @@ namespace giantsummon.Creatures
         {
             get
             {
-                return Name + "'s things were already packed.";
+                return "'s things were already packed.";
             }
         }
 

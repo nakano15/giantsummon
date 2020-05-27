@@ -78,7 +78,7 @@ namespace giantsummon
             BarPosition.Width -= 4;
             BarPosition.Height -= 4 + 36;
             Main.spriteBatch.Draw(Main.blackTileTexture, BarPosition, Color.Gray);
-            BarPosition.Width = (int)(BarPosition.Width * ((float)player.FriendshipExp / player.FriendshipMaxExp));
+            BarPosition.Width = (int)(BarPosition.Width * ((float)(player.FriendshipExp + 1) / player.FriendshipMaxExp));
             Main.spriteBatch.Draw(Main.blackTileTexture, BarPosition, Color.Yellow);
             float BarFillWidth = 1f / player.FriendshipMaxExp * Width;
             for (int i = 1; i < player.FriendshipMaxExp; i++)

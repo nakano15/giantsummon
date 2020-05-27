@@ -125,7 +125,7 @@ namespace giantsummon.Creatures
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
         {
-            switch (guardian.Data.SkinID //Todo - Add some way of activating skins.
+            switch (guardian.Data.SkinID) //Todo - Add some way of activating skins.
             {
                 case 1:
                     foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)

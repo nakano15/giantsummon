@@ -138,6 +138,7 @@ namespace giantsummon
         public bool TutorialVanityIntroduction { get { return TutorialFlags[2]; } set { TutorialFlags[2] = value; } }
         public bool TutorialRequestIntroduction { get { return TutorialFlags[3]; } set { TutorialFlags[3] = value; } }
         public bool TutorialKnockOutIntroduction { get { return TutorialFlags[4]; } set { TutorialFlags[4] = value; } }
+        public bool TutorialStatusIncreaseItemIntroduction { get { return TutorialFlags[5]; } set { TutorialFlags[5] = value; } }
         public byte FriendshipLevel = 1, FriendshipExp = 0;
         public byte FriendshipMaxExp { get { return (byte)(3 + FriendshipLevel / 5); } }
         public int LastFriendshipCount = -1;
@@ -152,7 +153,7 @@ namespace giantsummon
                 ExpSum += gd.FriendshipLevel;
             }
             LastFriendshipCount = ExpSum;
-            while (ExpSum > FriendshipMaxExp && FriendshipLevel < 255)
+            while (ExpSum >= FriendshipMaxExp && FriendshipLevel < 255)
             {
                 ExpSum -= FriendshipMaxExp;
                 FriendshipLevel++;
@@ -273,12 +274,19 @@ namespace giantsummon
                 }
                 for (int b = 0; b < player.buffType.Length; b++)
                 {
-                    if (player.buffType[b] > 0 && player.buffTime[b] > 0 && player.buffType[b] != Terraria.ID.BuffID.PotionSickness && Main.debuff[player.buffType[b]])
+                    if (player.buffType[b] > 0 && player.buffTime[b] > 0)
                     {
-                        player.buffTime[b] -= ReviveBoost;
-                        if (player.buffTime[b] <= 0)
+                        if (player.buffType[b] == ModContent.BuffType<Buffs.Injury>() || player.buffType[b] == ModContent.BuffType<Buffs.HeavyInjury>())
                         {
-                            player.buffTime[b] = player.buffType[b] = 0;
+                            player.buffTime[b]++;
+                        }
+                        else if (ReviveBoost > 0 && player.buffType[b] != Terraria.ID.BuffID.PotionSickness && Main.debuff[player.buffType[b]])
+                        {
+                            player.buffTime[b] -= ReviveBoost;
+                            if (player.buffTime[b] <= 0)
+                            {
+                                player.buffTime[b] = player.buffType[b] = 0;
+                            }
                         }
                     }
                 }
@@ -643,6 +651,15 @@ namespace giantsummon
                 {
                     player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
                     player.potionDelayTime = 5;
+                }
+                if (ReviveBoost > 0 && player.breath < player.breathMax - 1)
+                {
+                    player.breathCD += 1 + (ReviveBoost / 2);
+                    if (player.breathCD > 5)
+                    {
+                        player.breathCD -= 5;
+                        player.breath++;
+                    }
                 }
             }
             if (player.grapCount > 0)

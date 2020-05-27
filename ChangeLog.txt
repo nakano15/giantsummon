@@ -1,3 +1,11 @@
-﻿Fixed Sardine's Item animation frames.
-Dialogue fixes. Oops.
-Added dialogues mentioning Michelle.
+﻿Fixed a bug where the friendship rank exp bar must pass the maximum exp to level up your friendship rank.
+Michelle's name will no longer appear duplicated when she leaves the world.
+Companions will no longer try teleporting to your position when executing actions.
+Your character will no longer recover from Injury and Heavy Injury while being revived by companions.
+Companions will now recover from debuffs when being revived, like happens to the player.
+When being revived while drowning, characters will now recover breath too.
+	Try not to think about CPR.
+Added a tutorial message for status increase items.
+Changed the vanity items tutorial message to only appear when messing with one of the first 10 inventory slots of the companions.
+Inverted Right Thumbstick controls.
+Companions controlled by a second player can now revive, by simply holding down key on the body of someone.

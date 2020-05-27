@@ -566,8 +566,11 @@ namespace giantsummon
                     if (Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab)
                     {
                         GuardianNPC.GuardianNPCPrefab npc = ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC);
-                        npc.Guardian.DrawReviveBar();
-                        npc.Guardian.DrawSocialMessages();
+                        if (!PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], npc.GuardianID, npc.GuardianModID))
+                        {
+                            npc.Guardian.DrawReviveBar();
+                            npc.Guardian.DrawSocialMessages();
+                        }
                     }
                     if (Main.npc[n].modNPC is Npcs.GuardianActorNPC)
                     {
@@ -1157,10 +1160,17 @@ namespace giantsummon
                                                 {
                                                     ItemSlot.LeftClick(Guardian.Inventory, 0, i);
                                                     Guardian.ItemPlacedInInventory(i);
-                                                    if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialVanityIntroduction)
+                                                    if (i < 10 && !Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialVanityIntroduction)
                                                     {
                                                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialVanityIntroduction = true;
                                                         Main.NewText("You can make the companion wear some vanity items by placing it on one of the 10 inventory slots. They will use it If they are able to, so get ready to experiement.");
+                                                    }
+                                                    if ((LastItemID == Terraria.ID.ItemID.LifeCrystal || LastItemID == Terraria.ID.ItemID.LifeFruit || LastItemID == Terraria.ID.ItemID.ManaCrystal ||
+                                                        LastItemID == ModContent.ItemType<Items.Consumable.EtherHeart>() || LastItemID == ModContent.ItemType<Items.Consumable.EtherFruit>()) && 
+                                                        !Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialStatusIncreaseItemIntroduction)
+                                                    {
+                                                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialStatusIncreaseItemIntroduction = true;
+                                                        Main.NewText("You gave a status increase item to your companion, but they wont use it unless you tell them to. Give them the order to use the item so they know It's okay to use it.");
                                                     }
                                                 }
                                             }
@@ -1716,7 +1726,7 @@ namespace giantsummon
                 if (SlotChange >= 10) SlotChange -= 10;
                 Guardian.SelectedItem = SlotChange;
                 Guardian.Jump = CheckForButtonPress(Buttons.B);
-                Vector2 AimDirection = Guardian.CenterPosition + gamePadState.ThumbSticks.Right * 128f;
+                Vector2 AimDirection = Guardian.CenterPosition + gamePadState.ThumbSticks.Right * -128f;
                 Guardian.AimDirection = AimDirection.ToPoint();
             }
             oldGamePadState = gamePadState;
