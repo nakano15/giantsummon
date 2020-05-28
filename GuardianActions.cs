@@ -325,8 +325,11 @@ namespace giantsummon
                                         {
                                             if (MainMod.ReviveTalkDelay <= 0)
                                             {
-                                                Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
-                                                    guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
+                                                if (MainMod.CompanionsSpeaksWhileReviving)
+                                                {
+                                                    Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
+                                                        guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
+                                                }
                                                 TalkTime = (600 + Main.rand.Next(10) * 50) * 2;
                                                 MainMod.ReviveTalkDelay = 600 + Main.rand.Next(10) * 50;
                                             }

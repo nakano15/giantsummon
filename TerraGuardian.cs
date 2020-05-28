@@ -5269,6 +5269,24 @@ namespace giantsummon
             }
             if (PlayerMounted && GuardianHasControlWhenMounted)
                 return false;
+            if (TargetID == -1 && Velocity.X == 0 && !MoveLeft && !MoveRight && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            {
+                foreach (int key in MainMod.ActiveGuardians.Keys)
+                {
+                    if (key != this.WhoAmID)
+                    {
+                        TerraGuardian g = MainMod.ActiveGuardians[key];
+                        if (g.OwnerPos == -1 && g.Velocity.X == 0 && g.Velocity.Y == 0 && g.HitBox.Intersects(HitBox))
+                        {
+                            if (LookingLeft)
+                                MoveLeft = true;
+                            else
+                                MoveRight = true;
+                            break;
+                        }
+                    }
+                }
+            }
             return true;
         }
 

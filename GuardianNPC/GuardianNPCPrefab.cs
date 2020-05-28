@@ -193,7 +193,7 @@ namespace giantsummon.GuardianNPC
                     if (TeleportFrame)
                     {
                         Guardian.Position.X = npc.position.X + npc.width * 0.5f;
-                        Guardian.Position.Y = npc.position.Y + npc.height - 1;
+                        Guardian.Position.Y = npc.position.Y + npc.height - (Guardian.Height - npc.height) - 1;
                         Guardian.SetFallStart();
                         Guardian.AddCooldown(GuardianCooldownManager.CooldownType.WaitTime, 200 + Main.rand.Next(200));
                         TeleportFrame = false;
@@ -201,7 +201,8 @@ namespace giantsummon.GuardianNPC
                     bool WasDefeatedBefore = Guardian.Downed;
                     Guardian.Active = npc.active;
                     Guardian.Update();
-                    npc.position = Guardian.TopLeftPosition;
+                    npc.position.X = Guardian.Position.X - npc.width * 0.5f;
+                    npc.position.Y = Guardian.Position.Y - npc.height;
                     npc.velocity = Guardian.Velocity;
                     npc.width = Guardian.Width;
                     npc.height = Guardian.Height;

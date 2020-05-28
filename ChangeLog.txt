@@ -1,6 +1,7 @@
 ﻿Fixed a bug where the friendship rank exp bar must pass the maximum exp to level up your friendship rank.
 Michelle's name will no longer appear duplicated when she leaves the world.
 Companions will no longer try teleporting to your position when executing actions.
+	No more underground diving while having a companion lift your character.
 Your character will no longer recover from Injury and Heavy Injury while being revived by companions.
 Companions will now recover from debuffs when being revived, like happens to the player.
 When being revived while drowning, characters will now recover breath too.
@@ -9,3 +10,10 @@ Added a tutorial message for status increase items.
 Changed the vanity items tutorial message to only appear when messing with one of the first 10 inventory slots of the companions.
 Inverted Right Thumbstick controls.
 Companions controlled by a second player can now revive, by simply holding down key on the body of someone.
+Companions not in the team will avoid staying on the same position as other companion.
+Town npc companions are no longer partially moles.
+Changed how the rank exp bar is drawn.
+	I really want It to look like It's filling :3
+	Please don't hate me or feel mocked by It, It didn't increased progress towards the next level.
+Added an option to disable the companions chatting while reviving someone.
+You can no longer try opening nothing's Inventory on the Guardian Selection Interface.

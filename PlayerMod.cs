@@ -1254,8 +1254,9 @@ namespace giantsummon
                     player.fullRotation = 0;
                 }
                 player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.controlHook = player.controlJump = player.controlMount =
-                    player.controlQuickHeal = player.controlQuickMana = player.controlSmart = player.controlThrow = player.controlUseItem = player.controlInv =
+                    player.controlQuickMana = player.controlSmart = player.controlThrow = player.controlUseItem = player.controlInv =
                     player.controlUseTile = false;
+                player.releaseQuickHeal = player.releaseQuickMana = false;
             }
             if (player.whoAmI == Main.myPlayer && MainMod.TestNewOrderHud)
             {

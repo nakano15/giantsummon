@@ -109,5 +109,10 @@ namespace giantsummon
         [Label("Companions can't die when health drops to 0 on Knocked Out state?")]
         [Tooltip("Controls if the companions will either die when health reaches 0 on Knocked Out state, or will enter a Knocked Out Cold state. In Knocked Out Cold state, the companions health wont be restored naturally without the help of others. There is no other way of reviving them, without the help of others. Some kinds of defeats causes death anyway, like dying to lava.")]
         public bool GuardianCanDie { get { return MainMod.GuardiansDontDiesAfterDownedDefeat; } set { MainMod.GuardiansDontDiesAfterDownedDefeat = value; } }
+
+        [Label("Companions speaks while reviving someone?")]
+        [Tooltip("Makes the companion stop talking to the ones they are trying to revive.")]
+        [DefaultValue(true)]
+        public bool GuardianCanReviveChatter { get { return MainMod.CompanionsSpeaksWhileReviving; } set { MainMod.CompanionsSpeaksWhileReviving = value; } }
     }
 }
