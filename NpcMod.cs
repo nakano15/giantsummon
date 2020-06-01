@@ -1114,31 +1114,15 @@ namespace giantsummon
                     {
                         if (!d.request.Active)
                             continue;
-                        bool CountObjective = false;
-                        if (d.request.RequiresGuardianActive)
-                        {
-                            foreach (TerraGuardian guardian in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
-                            {
-                                if (guardian.Active && d.request.CountObjective(guardian, d))
-                                {
-                                    CountObjective = true;
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            CountObjective = true;
-                        }
-                        if (CountObjective)
+                        if (!d.request.RequiresGuardianActive(d) || Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && x.ID == d.ID && x.ModID == d.ModID))
                         {
                             if (npc.realLife > -1)
                             {
-                                d.request.OnMobKill(Main.npc[npc.realLife].type);
+                                d.request.OnMobKill(d, Main.npc[npc.realLife]);
                             }
                             else
                             {
-                                d.request.OnMobKill(npc.type);
+                                d.request.OnMobKill(d, npc);
                             }
                         }
                     }

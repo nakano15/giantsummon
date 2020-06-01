@@ -103,6 +103,7 @@ namespace giantsummon
         public static int ToReviveID = -1;
         public static bool ToReviveIsGuardian = false, IsReviving = false;
         public static int ReviveTalkDelay = 0;
+        public static int LastEventWave = 0;
 
         public static void AddActiveGuardian(TerraGuardian Guardian)
         {
@@ -348,6 +349,7 @@ namespace giantsummon
             LastWof = Main.wof > -1;
             if (ReviveTalkDelay > 0)
                 ReviveTalkDelay--;
+            LastEventWave = Main.invasionProgressWave;
         }
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
@@ -1401,25 +1403,6 @@ namespace giantsummon
                                         }
                                         SlotStartPosition.Y += 26;
                                         b = false;
-                                        AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Reset Request Timer", ref b);
-                                        if (b)
-                                        {
-                                            GuardianData[] gds = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetGuardians();
-                                            foreach (GuardianData gd in gds)
-                                            {
-                                                if (gd.request.Active)
-                                                {
-                                                    gd.request.Active = false;
-                                                    gd.request.SetNewRequestTimer();
-                                                }
-                                                else
-                                                {
-                                                    gd.request.GenerateRequest(Main.player[Main.myPlayer], gd);
-                                                }
-                                            }
-                                        }
-                                        SlotStartPosition.Y += 26;
-                                        b = false;
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Set guardian to item selling level ", ref b);
                                         if (b)
                                         {
@@ -1507,7 +1490,7 @@ namespace giantsummon
                         List<GuardianData> RequestCount = new List<GuardianData>();
                         foreach (GuardianData d in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().MyGuardians.Values)
                         {
-                            if (d.request.Active)
+                            if (d.request.requestState == RequestData.RequestState.RequestActive)
                             {
                                 if (d.ID == Guardian.ID)
                                     RequestCount.Insert(0, d);
@@ -1519,7 +1502,7 @@ namespace giantsummon
                         bool HasUnsummonedGuardianRequest = false;
                         foreach (GuardianData d in RequestCount)
                         {
-                            if (d.request.Active)
+                            if (true)
                             {
                                 if (!HasRequest)
                                 {
@@ -1534,36 +1517,42 @@ namespace giantsummon
                                 //Utils.DrawBorderString(Main.spriteBatch, d.Name + "'s Request", SlotStartPosition, Color.White);
                                 //SlotStartPosition.X -= 24f;
                                 //SlotStartPosition.Y += 28f;
-                                SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, d.request.GetRequestInformation(d), SlotStartPosition, Color.White).Y;
-                                Utils.DrawBorderString(Main.spriteBatch, "Duration: " + d.request.GetRequestDuration, SlotStartPosition, Color.White);
-                                SlotStartPosition.Y += 28f;
-                                if (Guardian.Active && Guardian.ID == d.ID)
+                                string[] RequestDesc = d.request.GetRequestText(Main.player[Main.myPlayer], d);
+                                foreach (string s in RequestDesc)
                                 {
-                                    if (Main.mouseX >= SlotStartPosition.X && Main.mouseX < SlotStartPosition.X + 58 &&
-                                        Main.mouseY >= SlotStartPosition.Y && Main.mouseY < SlotStartPosition.Y + 22)
-                                    {
-                                        Main.player[Main.myPlayer].mouseInterface = true;
-                                        MouseOverText = "Click to report the quest current progress on the summoned guardian.";
-                                        if (Main.mouseLeft && Main.mouseLeftRelease)
-                                        {
-                                            TerraGuardian[] guardians = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers;
-                                            TerraGuardian pickedguardian = Guardian;
-                                            foreach (TerraGuardian guardian in guardians)
-                                            {
-                                                if (guardian.Active && guardian.ID == d.ID && guardian.ModID == d.ModID)
-                                                {
-                                                    pickedguardian = guardian;
-                                                    break;
-                                                }
-                                            }
-                                            d.ReportRequest(pickedguardian);
-                                        }
-                                    }
-                                    Main.spriteBatch.Draw(ReportButtonTexture, SlotStartPosition, Color.White);
-                                    SlotStartPosition.Y += 22f;
+                                    SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, Color.White).Y;
                                 }
-                                else
+                                if (d.request.requestState == RequestData.RequestState.RequestActive)
                                 {
+                                    SlotStartPosition.Y += 28f;
+                                    if (Guardian.Active && Guardian.ID == d.ID)
+                                    {
+                                        if (Main.mouseX >= SlotStartPosition.X && Main.mouseX < SlotStartPosition.X + 58 &&
+                                            Main.mouseY >= SlotStartPosition.Y && Main.mouseY < SlotStartPosition.Y + 22)
+                                        {
+                                            Main.player[Main.myPlayer].mouseInterface = true;
+                                            MouseOverText = "Click to report the quest current progress on the summoned guardian.";
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            {
+                                                TerraGuardian[] guardians = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers;
+                                                TerraGuardian pickedguardian = Guardian;
+                                                foreach (TerraGuardian guardian in guardians)
+                                                {
+                                                    if (guardian.Active && guardian.ID == d.ID && guardian.ModID == d.ModID)
+                                                    {
+                                                        pickedguardian = guardian;
+                                                        break;
+                                                    }
+                                                }
+                                                d.ReportRequest(pickedguardian);
+                                            }
+                                        }
+                                        Main.spriteBatch.Draw(ReportButtonTexture, SlotStartPosition, Color.White);
+                                        SlotStartPosition.Y += 22f;
+                                    }
+                                    else
+                                    {
+                                    }
                                 }
                                 SlotStartPosition.Y += 8f;
                             }

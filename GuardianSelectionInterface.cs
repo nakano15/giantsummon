@@ -450,6 +450,8 @@ namespace giantsummon
                     ExtraInfoList.Add("Friend Grade: " + DisplayGuardian.FriendshipGradeText);
                     if (MainMod.UsingGuardianNecessitiesSystem)
                         ExtraInfoList.Add("Status: " + DisplayGuardian.Data.GetNecessityStatus);
+                    if (DisplayGuardian.Data.request.requestState == RequestData.RequestState.HasRequestReady)
+                        ExtraInfoList.Add("Has a request for you.");
                     ExtraInfoList.Add(BirthdayTime);
                     ExtraInfoList.Add("Mod: " + ModName);
                     //
@@ -473,7 +475,7 @@ namespace giantsummon
                 int ButtonRegionWidth = (int)(InterfacePosition.X + Width - ElementPosition.X - 8);
                 byte SummonSlot = player.GetEmptyGuardianSlot();
                 ElementPosition.X += ButtonRegionWidth * 0.25f;
-                if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian && (DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive) || PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], DisplayGuardian.ID, DisplayGuardian.ModID)) && (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(GuardianList[Selected])) && ((SummonSlot < 255 && player.GetSummonedGuardianCount < player.MaxExtraGuardiansAllowed + 1) || player.GetGuardianSlot(GuardianList[Selected]) < 255))
+                if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian && (DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive(DisplayGuardian.Data)) || PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], DisplayGuardian.ID, DisplayGuardian.ModID)) && (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(GuardianList[Selected])) && ((SummonSlot < 255 && player.GetSummonedGuardianCount < player.MaxExtraGuardiansAllowed + 1) || player.GetGuardianSlot(GuardianList[Selected]) < 255))
                 {
                     string ButtonText = "Call";
                     bool IsCallButton = player.GetGuardianSlot(GuardianList[Selected]) == 255;

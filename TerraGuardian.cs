@@ -519,7 +519,7 @@ namespace giantsummon
         public Emotions CurrentEmotion = Emotions.Neutral;
         public float EmotionDisplayTime = 0f;
         public const float MaxEmotionDisplaytime = 3f;
-        public GuardianRequests request { get { return Data.request; } set { Data.request = value; } }
+        public RequestData request { get { return Data.request; } set { Data.request = value; } }
         public const byte MaxFriendshipLevel = 100;
         public const int MaxHealingPotionCooldown = 60 * 60;
         public int FallStart = 0;
@@ -6814,7 +6814,7 @@ namespace giantsummon
                     tag.Add("Equipment_" + e, this.Equipments[e]);
                 }
             }
-            request.Save(tag, null);
+            //request.Save(tag, null);
         }
 
         public void Load(Terraria.ModLoader.IO.TagCompound tag)
@@ -6889,8 +6889,8 @@ namespace giantsummon
                 if (e < Equipments.Length)
                     Equipments[e] = j;
             }
-            if (ModVersion >= 8)
-                request.Load(tag, ModVersion, null);
+            //if (ModVersion >= 8)
+            //    request.Load(tag, ModVersion, null);
             UpdateStatus = true;
             ResetHealthRegen();
         }

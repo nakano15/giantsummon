@@ -33,7 +33,7 @@ namespace giantsummon.GuardianNPC.List
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
-            if (!firstButton)
+            if (!firstButton && !CheckingRequest)
                 shop = true;
             base.OnChatButtonClicked(firstButton, ref shop);
         }
@@ -41,7 +41,8 @@ namespace giantsummon.GuardianNPC.List
         public override void SetChatButtons(ref string button, ref string button2)
         {
             base.SetChatButtons(ref button, ref button2);
-            button2 = "Shop";
+            if(!CheckingRequest)
+                button2 = "Shop";
         }
 
         public override void SetupShop(Chest shop, ref int nextSlot)

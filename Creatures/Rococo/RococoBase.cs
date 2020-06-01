@@ -144,6 +144,72 @@ namespace giantsummon.Creatures
 
             //Wing Position
             WingPosition.DefaultCoordinate2x = new Point(20, 23);
+
+            RequestList();
+            RewardList();
+        }
+
+        public void RequestList()
+        {
+            AddNewRequest("Deglobulation", 200,
+                "*[name] told you that It is unsafe to live around with so many Slimes jumping around. He asks you to kill a number of them.*",
+                "*[name] thanks you, and tells that has something for you when you finish the task.*", 
+                "*[name] seems saddened after you refused the request, then said he will try doing that later.*",
+                "*[name] is happy for seeing the lands safer.*",
+                "*[name] tells you that there are still some Slimes that needs to be killed.*");
+            AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 3);
+            //
+            AddNewRequest("Give him some candy!", 150,
+                "*[name] is asking you to get something sweet for him to eat. After he asked for that, only one thing comes on your mind: Gel.*",
+                "*[name] is happy, and says that can't wait to see what you will bring him.*",
+                "*[name] is looking at you with a disappointed look. Is he going to cry?*",
+                "*[name] is surprised at what you brought him. He seems extremelly happy while eating the Gels.*",
+                "*[name] wonder what you will bring to him.*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.Gel, 10);
+            //
+            AddNewRequest("Sea of Bunnies", 50,
+                "*[name] is asking you if you could get him a Bunny.*",
+                "*[name] seems happy, he told you that will be waiting for it.*",
+                "*[name] looks very sad now.*",
+                "*[name] is very happy with the bunny he brought. He said that was looking for something to play with, and you just brought.*",
+                "*[name] says that It wont be hard for you to find Bunnies, but that you will need a Bug Net to get them.*");
+            AddRequestRequirement(GetBugNetRequirement);
+            AddItemCollectionObjective(Terraria.ID.ItemID.Bunny, 1, 0);
+            //
+            AddNewRequest("Dead Walker", 225, 
+                "*[name] says that these lands are dangerous at night because of the Zombie. He asks you to kill a number of them.*",
+                "*[name] tells you to becareful, because he doesn't want you to turn into one too.*",
+                "*[name] doesn't seems to blame you for rejecting, since he wouldn't want to do that, either.*",
+                "*[name] says that It seems a lot better to sleep now.*", 
+                "*[name] says that Zombies attacks during the night, but will hardly attack a place with many people around.*");
+            AddHuntObjective(Terraria.ID.NPCID.Zombie, 7);
+            //
+            AddNewRequest("I see with my giant eye.", 245,
+                "*[name] is telling you about one of the dangers of the night, the Demon Eyes. He's asking you to take out a number of them.*",
+                "*[name] tells you to becareful on that.*",
+                "*[name] looks at you with a face, looking like he knew you would deny.*",
+                "*[name] is happy, and says that you were really cool when fighting the Demon Eyes.*",
+                "*[name] tells you that Demon Eyes floats around during the night. He also told you that they will rarelly attack places with many people around.*");
+            AddHuntObjective(Terraria.ID.NPCID.DemonEye, 5, 0.02f);
+            //
+            AddNewRequest("That's so many Ravens.", 280,
+                "*[name] tells you of the Ravens that are appearing during the night in this season. He says that they look really scary, and asks you to get rid of them.*",
+                "*[name] is telling you to becareful when looking for them, since you can barelly see them in the dark.*",
+                "*[name] says that he will try locking himself in his room during the night. Just for safety.*",
+                "*[name] says that Ravens are very creepy creatures.*",
+                "*[name] tells you that Ravens appears during the night.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return Main.halloween;
+            });
+            AddHuntObjective(Terraria.ID.NPCID.Raven, 5, 0.2f);
+        }
+
+        public void RewardList()
+        {
+            AddReward(Terraria.ID.ItemID.SlimeStaff, 1, 1000, 0.001f);
+            AddReward(Terraria.ID.ItemID.Daybloom, 2, 35, 0.6f, 3);
+            AddReward(Terraria.ID.ItemID.BowlofSoup, 3, 40, 0.55f, 2);
         }
 
         public override string MountUnlockMessage
@@ -289,7 +355,7 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*[name] asked [gn:3] why he doesn't plays with him, he told him that It's because he makes [gn:1] upset.*");
             }
-            if (PlayerMod.PlayerHasGuardian(player, 5))
+            if (NpcMod.HasGuardianNPC(5))
             {
                 Mes.Add("*[name] says that loves playing with [gn:5], but wonders why he always find him on hide and seek.*");
                 Mes.Add("*[name] says that bringing [gn:5] made the town very livelly.*");

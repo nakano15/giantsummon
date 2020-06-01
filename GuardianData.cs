@@ -41,7 +41,7 @@ namespace giantsummon
         public const byte MaxLifeCrystals = 15, MaxLifeFruit = 20, MaxManaCrystals = 9;
         public byte FriendshipLevel = 0, FriendshipProgression = 0;
         public int LastTotalSkillLevel = 0;
-        public GuardianRequests request = new GuardianRequests();
+        public RequestData request = new RequestData();
         public int HP = 800, MHP = 800;
         public int MP = 20, MMP = 20;
         public bool KnockedOut = false, KnockedOutCold = false;
@@ -165,6 +165,289 @@ namespace giantsummon
             }
             ModData.Add(mod.Name, T);
         }*/
+        
+        private Reward[] GetCommonAndBaseRewards(Player player)
+        {
+            List<Reward> RewardsToGet = new List<Reward>();
+            RewardsToGet.AddRange(Base.RewardsList);
+            {
+                Reward rwd = new Reward();
+                rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherHeart>();
+                rwd.RewardScore = 500;
+                rwd.InitialStack = 1;
+                rwd.RewardChance = 0.333f;
+                RewardsToGet.Add(rwd);
+                //
+                rwd = new Reward();
+                rwd.ItemID = Terraria.ID.ItemID.LifeCrystal;
+                rwd.RewardScore = 1000;
+                rwd.InitialStack = 1;
+                rwd.RewardChance = 0.2f;
+                RewardsToGet.Add(rwd);
+                //
+                if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
+                {
+                    rwd = new Reward();
+                    rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherFruit>();
+                    rwd.RewardScore = 750;
+                    rwd.InitialStack = 1;
+                    rwd.MaxExtraStack = 2;
+                    rwd.RewardChance = 0.333f;
+                    RewardsToGet.Add(rwd);
+                }
+                //
+                rwd = new Reward();
+                rwd.ItemID = ModContent.ItemType<Items.Consumable.SkillResetPotion>();
+                rwd.RewardScore = 2000;
+                rwd.InitialStack = 1;
+                rwd.RewardChance = 0.0667f;
+                RewardsToGet.Add(rwd);
+            }
+            int HighestPickValue = 0, HighestAxeValue = 0, HighestFishingPowerValue = 0, HighestBaitValue = 0;
+            int BaitPosition = -1;
+            for (int i = 0; i < 50; i++)
+            {
+                if (this.Inventory[i].pick > HighestPickValue)
+                {
+                    HighestPickValue = this.Inventory[i].pick;
+                }
+                if (this.Inventory[i].axe > HighestAxeValue)
+                {
+                    HighestAxeValue = this.Inventory[i].axe;
+                }
+                if (this.Inventory[i].fishingPole > HighestFishingPowerValue)
+                {
+                    HighestFishingPowerValue = this.Inventory[i].fishingPole;
+                }
+                if (this.Inventory[i].bait > HighestBaitValue)
+                {
+                    HighestBaitValue = this.Inventory[i].bait;
+                    BaitPosition = i;
+                }
+            }
+            if (HighestPickValue > 0)
+            {
+                float PickPower = 0.5f + (float)HighestPickValue / 256;
+                Reward rwd;
+                if (Main.hardMode && HighestPickValue >= 100)
+                {
+                    if (HighestPickValue >= 100)
+                    {
+                        rwd = new Reward();
+                        rwd.ItemID = (WorldGen.oreTier1 == 107 ? 364 : 1104);
+                        rwd.RewardScore = 250;
+                        rwd.InitialStack = (int)(40 * PickPower);
+                        rwd.RewardChance = 0.45f * PickPower;
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (HighestPickValue >= 110)
+                    {
+                        rwd = new Reward();
+                        rwd.ItemID = (WorldGen.oreTier2 == 108 ? 365 : 1105);
+                        rwd.RewardScore = 325;
+                        rwd.InitialStack = (int)(50 * PickPower);
+                        rwd.RewardChance = 0.35f * PickPower;
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (HighestPickValue >= 150)
+                    {
+                        rwd = new Reward();
+                        rwd.ItemID = (WorldGen.oreTier3 == 111 ? 366 : 1106);
+                        rwd.RewardScore = 400;
+                        rwd.InitialStack = (int)(60 * PickPower);
+                        rwd.RewardChance = 0.20f * PickPower;
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (HighestPickValue >= 200 && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
+                    {
+                        rwd = new Reward();
+                        rwd.ItemID = Terraria.ID.ItemID.ChlorophyteOre;
+                        rwd.RewardScore = 500;
+                        rwd.InitialStack = (int)(50 * PickPower);
+                        rwd.RewardChance = 0.35f * PickPower;
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (NPC.downedMoonlord)
+                    {
+                        rwd = new Reward();
+                        rwd.ItemID = Terraria.ID.ItemID.LunarOre;
+                        rwd.RewardScore = 650;
+                        rwd.InitialStack = (int)(80 * PickPower);
+                        rwd.RewardChance = 0.7f * PickPower;
+                        RewardsToGet.Add(rwd);
+                    }
+                }
+                else
+                {
+                    if (HighestPickValue >= 50)
+                    {
+                        if (HighestPickValue >= 50)
+                        {
+                            rwd = new Reward();
+                            rwd.ItemID = (WorldGen.crimson ? Terraria.ID.ItemID.CrimtaneOre : Terraria.ID.ItemID.DemoniteOre);
+                            rwd.RewardScore = 300;
+                            rwd.InitialStack = (int)(20 * PickPower);
+                            rwd.RewardChance = 0.6f * PickPower;
+                            RewardsToGet.Add(rwd);
+                            if (WorldGen.shadowOrbSmashed && NPC.downedBoss2)
+                            {
+                                rwd = new Reward();
+                                rwd.ItemID = Terraria.ID.ItemID.Meteorite;
+                                rwd.RewardScore = 200;
+                                rwd.InitialStack = (int)(40 * PickPower);
+                                rwd.RewardChance = 0.5f * PickPower;
+                                RewardsToGet.Add(rwd);
+                            }
+                        }
+                        if (HighestPickValue >= 65)
+                        {
+                            rwd = new Reward();
+                            rwd.ItemID = Terraria.ID.ItemID.Hellstone;
+                            rwd.RewardScore = 350;
+                            rwd.InitialStack = (int)(30 * PickPower);
+                            rwd.RewardChance = 0.55f * PickPower;
+                            RewardsToGet.Add(rwd);
+                            rwd = new Reward();
+                            rwd.ItemID = Terraria.ID.ItemID.Obsidian;
+                            rwd.RewardScore = 250;
+                            rwd.InitialStack = (int)(30 * PickPower);
+                            rwd.RewardChance = 0.55f * PickPower;
+                            RewardsToGet.Add(rwd);
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+            }
+            if (HighestFishingPowerValue > 0)
+            {
+                if (HighestBaitValue > 0)
+                {
+                    float FishingPower = (float)(HighestFishingPowerValue + HighestBaitValue) / 256 + 0.5f;
+                    Reward rwd = new Reward();
+                    if (player.ZoneSnow)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.AtlanticCod;
+                    }
+                    else if (player.ZoneUnderworldHeight)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.Obsidifish;
+                    }
+                    else if (player.ZoneBeach)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.Tuna;
+                    }
+                    else if (player.ZoneSkyHeight)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.Damselfish;
+                    }
+                    else if (player.ZoneDirtLayerHeight)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.ArmoredCavefish;
+                    }
+                    else if (player.ZoneHoly)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.PrincessFish;
+                    }
+                    else if (player.ZoneCrimson)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.CrimsonTigerfish;
+                    }
+                    else if (player.ZoneCorrupt)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.Ebonkoi;
+                    }
+                    else
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.Bass;
+                    }
+                    rwd.RewardScore = 100;
+                    rwd.InitialStack = 2;
+                    rwd.MaxExtraStack = 3;
+                    rwd.RewardChance = 0.66f * (FishingPower);
+                    RewardsToGet.Add(rwd);
+                    rwd = new Reward();
+                    rwd.ItemID = Terraria.ID.ItemID.WoodenCrate;
+                    rwd.RewardScore = 250;
+                    rwd.InitialStack = 1;
+                    rwd.MaxExtraStack = 2;
+                    rwd.RewardChance = 0.3f * (FishingPower);
+                    RewardsToGet.Add(rwd);
+                    rwd.ItemID = Terraria.ID.ItemID.IronCrate;
+                    rwd.RewardScore = 400;
+                    rwd.InitialStack = 1;
+                    rwd.MaxExtraStack = 2;
+                    rwd.RewardChance = 0.02f * (FishingPower);
+                    RewardsToGet.Add(rwd);
+                    rwd.ItemID = Terraria.ID.ItemID.GoldenCrate;
+                    rwd.RewardScore = 750;
+                    rwd.InitialStack = 1;
+                    rwd.MaxExtraStack = 2;
+                    rwd.RewardChance = 0.01f * (FishingPower);
+                    RewardsToGet.Add(rwd);
+                    if (player.ZoneCorrupt)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.CorruptFishingCrate;
+                        rwd.RewardScore = 1000;
+                        rwd.InitialStack = 1;
+                        rwd.MaxExtraStack = 2;
+                        rwd.RewardChance = 0.01f * (FishingPower);
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (player.ZoneHoly)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.HallowedFishingCrate;
+                        rwd.RewardScore = 1000;
+                        rwd.InitialStack = 1;
+                        rwd.MaxExtraStack = 2;
+                        rwd.RewardChance = 0.01f * (FishingPower);
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (player.ZoneCrimson)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.CrimsonFishingCrate;
+                        rwd.RewardScore = 1000;
+                        rwd.InitialStack = 1;
+                        rwd.MaxExtraStack = 2;
+                        rwd.RewardChance = 0.01f * (FishingPower);
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (player.ZoneJungle)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.JungleFishingCrate;
+                        rwd.RewardScore = 1000;
+                        rwd.InitialStack = 1;
+                        rwd.MaxExtraStack = 2;
+                        rwd.RewardChance = 0.01f * (FishingPower);
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (player.ZoneDungeon)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.DungeonFishingCrate;
+                        rwd.RewardScore = 1000;
+                        rwd.InitialStack = 1;
+                        rwd.MaxExtraStack = 2;
+                        rwd.RewardChance = 0.01f * (FishingPower);
+                        RewardsToGet.Add(rwd);
+                    }
+                    if (player.ZoneSkyHeight)
+                    {
+                        rwd.ItemID = Terraria.ID.ItemID.FloatingIslandFishingCrate;
+                        rwd.RewardScore = 1000;
+                        rwd.InitialStack = 1;
+                        rwd.MaxExtraStack = 2;
+                        rwd.RewardChance = 0.01f * (FishingPower);
+                        RewardsToGet.Add(rwd);
+                    }
+                    Inventory[BaitPosition].stack -= Main.rand.Next(3);
+                    if (Inventory[BaitPosition].stack <= 0)
+                        Inventory[BaitPosition].SetDefaults(0, true);
+                }
+            }
+            return RewardsToGet.ToArray();
+        }
 
         public void AddInjury(byte Value)
         {
@@ -344,11 +627,90 @@ namespace giantsummon
         {
             if (request.Active)
             {
-                if (request.CompleteRequest(Main.player[guardian.OwnerPos], guardian, this))
+                if (request.CompleteRequest(guardian, this, Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>()))
                 {
-                    IncreaseFriendshipProgress(FriendshipLevel == 0 ? (byte)1 : request.FriendshipReward);
+                    //IncreaseFriendshipProgress(FriendshipLevel == 0 ? (byte)1 : request.FriendshipReward);
                 }
             }
+        }
+
+        public Item[] GetRewards(int Score, Player player)
+        {
+            List<Reward> RewardsToGet = new List<Reward>();
+            RewardsToGet.AddRange(GetCommonAndBaseRewards(player));
+            RewardsToGet = RewardsToGet.OrderByDescending(x => x.RewardScore).ToList();
+            List<Item> Rewards = new List<Item>();
+            foreach (Reward rwd in RewardsToGet)
+            {
+                if (Score >= rwd.RewardScore && Main.rand.NextDouble() < rwd.RewardChance)
+                {
+                    int ItemID = rwd.ItemID;
+                    int Stack = rwd.InitialStack;
+                    int ScoreDeduction = rwd.RewardScore;
+                    if (rwd.MaxExtraStack > 0)
+                    {
+                        int ExtraStackCount = Main.rand.Next(rwd.MaxExtraStack + 1);
+                        int MaxPoints = Score / rwd.RewardScore;
+                        if (ExtraStackCount > MaxPoints)
+                            ExtraStackCount = MaxPoints;
+                        ScoreDeduction = ScoreDeduction * ExtraStackCount;
+                        Stack += ExtraStackCount;
+                    }
+                    Score -= ScoreDeduction;
+                    Item i = new Item();
+                    i.SetDefaults(ItemID);
+                    i.stack = Stack;
+                    Rewards.Add(i);
+                }
+            }
+            if (Score > 0)
+            {
+                int c = Score, s = 0, g = 0, p = 0;
+                if (c >= 100)
+                {
+                    s += c / 100;
+                    c -= s * 100;
+                }
+                if (s >= 100)
+                {
+                    g += s / 100;
+                    s -= g * 100;
+                }
+                if (g >= 100)
+                {
+                    p += g / 100;
+                    g -= p * 100;
+                }
+                if (p > 0)
+                {
+                    Item i = new Item();
+                    i.SetDefaults(Terraria.ID.ItemID.PlatinumCoin, true);
+                    i.stack = p;
+                    Rewards.Add(i);
+                }
+                if (g > 0)
+                {
+                    Item i = new Item();
+                    i.SetDefaults(Terraria.ID.ItemID.GoldCoin, true);
+                    i.stack = g;
+                    Rewards.Add(i);
+                }
+                if (s > 0)
+                {
+                    Item i = new Item();
+                    i.SetDefaults(Terraria.ID.ItemID.SilverCoin, true);
+                    i.stack = s;
+                    Rewards.Add(i);
+                }
+                if (c > 0)
+                {
+                    Item i = new Item();
+                    i.SetDefaults(Terraria.ID.ItemID.CopperCoin, true);
+                    i.stack = c;
+                    Rewards.Add(i);
+                }
+            }
+            return Rewards.ToArray();
         }
 
         public void IncreaseFriendshipProgress(byte Value)
@@ -501,7 +863,7 @@ namespace giantsummon
             tag.Add("BodyDye_" + UniqueID, BodyDye.type);
             tag.Add("FatigueCount_" + UniqueID, (byte)Fatigue);
             tag.Add("InjuryCount_" + UniqueID, (byte)Injury);
-            request.Save(tag, UniqueID);
+            //request.Save(tag, UniqueID);
             tag.Add("ExistenceTime_" + UniqueID, LifeTime.TotalSeconds);
         }
 
@@ -699,8 +1061,8 @@ namespace giantsummon
                 Fatigue = (sbyte)tag.GetByte("FatigueCount_" + UniqueID);
                 Injury = (sbyte)tag.GetByte("InjuryCount_" + UniqueID);
             }
-            if (ModVersion >= 8)
-                request.Load(tag, ModVersion, UniqueID);
+            //if (ModVersion >= 8)
+            //    request.Load(tag, ModVersion, UniqueID);
             if (ModVersion >= 15)
                 LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
         }

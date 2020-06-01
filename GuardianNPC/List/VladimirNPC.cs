@@ -33,13 +33,16 @@ namespace giantsummon.GuardianNPC.List
         public override void SetChatButtons(ref string button, ref string button2)
         {
             base.SetChatButtons(ref button, ref button2);
-            if (Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction)
+            if (!CheckingRequest)
             {
-                button2 = "Enough";
-            }
-            else
-            {
-                button2 = "Be Hugged";
+                if (Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction)
+                {
+                    button2 = "Enough";
+                }
+                else
+                {
+                    button2 = "Be Hugged";
+                }
             }
         }
 
@@ -51,7 +54,11 @@ namespace giantsummon.GuardianNPC.List
             }
             else
             {
-                if (Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction)
+                if (CheckingRequest)
+                {
+                    base.OnChatButtonClicked(firstButton, ref shop);
+                }
+                else if (Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction)
                 {
                     Guardian.DoAction.InUse = false;
 

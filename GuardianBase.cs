@@ -35,6 +35,8 @@ namespace giantsummon
         public GuardianEffect Effect = GuardianEffect.None;
         private CompanionType companionType = CompanionType.TerraGuardian;
         public TerrarianCompanionInfos TerrarianInfo = null;
+        public List<RequestBase> RequestDB = new List<RequestBase>();
+        public List<Reward> RewardsList = new List<Reward>();
 
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;
@@ -182,6 +184,87 @@ namespace giantsummon
 
         public bool IsTerraGuardian { get { return companionType == CompanionType.TerraGuardian; } }
         public bool IsTerrarian { get { return companionType == CompanionType.Terrarian; } }
+
+        public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string RequestInfo = "")
+        {
+            RequestBase rb = new RequestBase(Name, RequestScore, BriefText, AcceptText, DenyText, CompleteInfo, RequestInfo);
+            RequestDB.Add(rb);
+        }
+
+        public void AddRequestRequirement(RequestBase.RequestRequirementDel requirement)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].Requirement = requirement;
+            }
+        }
+
+        public void AddHuntObjective(int MobID, int Stack, float StackPerFriendshipLevel = 0.333f)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddHuntObjective(MobID, Stack, StackPerFriendshipLevel);
+            }
+        }
+
+        public void AddItemCollectionObjective(int ItemID, int Stack, float StackPerFriendshipLevel = 0.333f)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddItemCollectionRequest(ItemID, Stack, StackPerFriendshipLevel);
+            }
+        }
+
+        public void AddExploreObjective(float InitialDistance, float ExtraDistancePerFriendshipLevel = 100f)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddExploreRequest(InitialDistance, ExtraDistancePerFriendshipLevel);
+            }
+        }
+
+        public void AddEventKillParticipation(int EventID, int Kills, float ExtraKills = 0f) //TODO - Change this event participation, to add a new objective specific for killing event monsters.
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddEventParticipationRequest(EventID, Kills, ExtraKills);
+            }
+        }
+
+        public void AddEventParticipationObjective(int EventID, int Waves, float ExtraWaves = 0f)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddEventParticipationRequest(EventID, Waves, ExtraWaves);
+            }
+        }
+
+        public void AddCompanionRequirement()
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddRequesterRequirement();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ItemID"></param>
+        /// <param name="Stack"></param>
+        /// <param name="ItemScore">Score value necessary for this item to be in the loot pool.</param>
+        /// <param name="Chance">From 0 to 1. Chance of the item being picked if the score is higher or equal to this item score.</param>
+        /// <param name="MaxExtraStack">Becareful with this, the extra stack deduces from the score based on the rng of extra stack got.</param>
+        public void AddReward(int ItemID, int Stack, int ItemScore, float Chance = 1f, int MaxExtraStack = 0)
+        {
+            Reward rwd = new Reward();
+            rwd.ItemID = ItemID;
+            rwd.InitialStack = Stack;
+            rwd.RewardScore = ItemScore;
+            rwd.RewardChance = Chance;
+            rwd.MaxExtraStack = MaxExtraStack;
+            RewardsList.Add(rwd);
+        }
 
         public int GetBodyFrontSprite(int Default)
         {
@@ -581,6 +664,24 @@ namespace giantsummon
             foreach (string key in keys)
             {
                 GuardianList[key].UpdateContainers();
+            }
+        }
+
+        public RequestBase.RequestRequirementDel GetBugNetRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (player.inventory[i].type == Terraria.ID.ItemID.BugNet || player.inventory[i].type == Terraria.ID.ItemID.GoldenBugNet)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
             }
         }
 

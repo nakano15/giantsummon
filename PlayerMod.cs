@@ -142,6 +142,12 @@ namespace giantsummon
         public byte FriendshipLevel = 1, FriendshipExp = 0;
         public byte FriendshipMaxExp { get { return (byte)(3 + FriendshipLevel / 5); } }
         public int LastFriendshipCount = -1;
+        public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
+
+        public static int GetPlayerAcceptedRequestCount(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().GetAcceptedRequestCount;
+        }
 
         public void RecalculateFriendshipLevel()
         {
@@ -981,7 +987,7 @@ namespace giantsummon
                 int NewFriendshipCount = 0;
                 foreach (GuardianData g in MyGuardians.Values)
                 {
-                    g.request.UpdateRequest(this.player, GetAllGuardianFollowers, g);
+                    g.request.UpdateRequest(g, this);
                     g.UpdateData(this.player);
                     NewFriendshipCount += g.FriendshipLevel;
                 }
@@ -1812,8 +1818,8 @@ namespace giantsummon
                 if (e < d.Equipments.Length)
                     d.Equipments[e] = j;
             }
-            if (ModVersion >= 8)
-                d.request.Load(tag, ModVersion, null);
+            //if (ModVersion >= 8)
+            //    d.request.Load(tag, ModVersion, null);
             MyGuardians.Add(0, d);
             for (int c = 0; c < Main.PlayerList.Count; c++)
             {

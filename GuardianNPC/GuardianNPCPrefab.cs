@@ -168,6 +168,10 @@ namespace giantsummon.GuardianNPC
             }
             if (Guardian != null)
             {
+                if (CheckingRequest && Main.player[Main.myPlayer].talkNPC != npc.whoAmI)
+                {
+                    CheckingRequest = false;
+                }
                 if (PlayerHasThisGuardianMetAndInvoked)
                 {
                     if (!npc.homeless)
@@ -264,6 +268,8 @@ namespace giantsummon.GuardianNPC
             return GiveGift;
         }
 
+        public bool CheckingRequest = false;
+
         public override void SetChatButtons(ref string button, ref string button2)
         {
             button = "Check Request"; //Request button
@@ -271,8 +277,32 @@ namespace giantsummon.GuardianNPC
             {
                 button = "I have a gift for you.";
             }
-            else if (Guardian.request.Active && Guardian.request.type == GuardianRequests.RequestType.Talk)
-                button = "Talk";
+            else if (Guardian.request.requestState == RequestData.RequestState.HasRequestReady)
+            {
+                if (CheckingRequest)
+                {
+                    button = "Accept";
+                    button2 = "Deny";
+                }
+                else
+                {
+                    if (Guardian.request.IsTalkQuest)
+                    {
+                        button = "You wanted to talk to me?";
+                    }
+                    else
+                    {
+                        button = "Need Something?";
+                    }
+                }
+            }
+            else if (Guardian.request.requestState == RequestData.RequestState.RequestActive)
+            {
+                if (Guardian.request.RequestCompleted)
+                {
+                    button = "Report Request";
+                }
+            }
         }
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
@@ -281,9 +311,9 @@ namespace giantsummon.GuardianNPC
                 return;
             Player player = Main.player[Main.myPlayer];
             PlayerMod modPlayer = player.GetModPlayer<PlayerMod>();
+            GuardianData data = modPlayer.GetGuardian(GuardianID, GuardianModID);
             if (firstButton)
             {
-                GuardianData data = modPlayer.GetGuardian(GuardianID, GuardianModID);
                 if (MayGiveBirthdayGift())
                 {
                     int GiftSlot = -1, EmptyGuardianSlot = -1;
@@ -308,26 +338,84 @@ namespace giantsummon.GuardianNPC
                     }
                     else
                     {
-                        Main.npcChatText = "*Something went wrong... Either the guardian has no inventory space free, or you don't have a gift.*";
+                        Main.npcChatText = "(Something went wrong... Either the guardian has no inventory space free, or you don't have a gift.)";
                     }
-                }
-                else if (!data.request.Active)
-                {
-                    Main.npcChatText = MessageParser(Guardian.Base.NoRequestMessage(player, Guardian), Guardian);
                 }
                 else
                 {
-                    if (data.request.CompleteRequest(Main.player[Main.myPlayer], Guardian, data))
+                    switch (data.request.requestState)
                     {
-                        data.IncreaseFriendshipProgress((byte)(data.FriendshipLevel == 0 ? 1 : data.request.FriendshipReward));
-                        if(data.request.type != GuardianRequests.RequestType.Talk)
-                            Main.npcChatText = MessageParser(Guardian.Base.CompletedRequestMessage(player, Guardian), Guardian);
-                        Guardian.LastFriendshipLevel = 255;
+                        case RequestData.RequestState.Cooldown:
+                            Main.npcChatText = MessageParser(data.Base.NoRequestMessage(Main.player[Main.myPlayer], Guardian), Guardian);
+                            break;
+                        case RequestData.RequestState.HasRequestReady:
+                            {
+                                if (!CheckingRequest)
+                                {
+                                    CheckingRequest = true;
+                                    Main.npcChatText = data.request.GetRequestBrief(data);
+                                    if (Main.npcChatText == "")
+                                        Main.npcChatText = data.Base.HasRequestMessage(player, Guardian);
+                                    Main.npcChatText = MessageParser(Main.npcChatText, Guardian);
+                                    
+                                }
+                                else
+                                {
+                                    CheckingRequest = false;
+                                    if (PlayerMod.GetPlayerAcceptedRequestCount(player) >= RequestData.MaxRequestCount)
+                                    {
+                                        Main.npcChatText = "(You have too many requests active.)";
+                                    }
+                                    else
+                                    {
+                                        data.request.UponAccepting();
+                                        string Mes = data.request.GetRequestAccept(data);
+                                        if (Mes == "")
+                                            Mes = "(You accepted the request.)";
+                                        Main.npcChatText = MessageParser(Mes, Guardian);
+                                    }
+                                }
+                            }
+                            break;
+                        case RequestData.RequestState.RequestActive:
+                            {
+                                string Mes = data.request.GetRequestInfo(data);
+                                if (data.request.IsTalkQuest && data.request.CompleteRequest(Guardian, data, player.GetModPlayer<PlayerMod>()))
+                                {
+
+                                }
+                                else if (data.request.RequestCompleted && data.request.CompleteRequest(Guardian, data, player.GetModPlayer<PlayerMod>()))
+                                {
+                                    Mes = data.request.GetRequestComplete(data);
+                                    if (Mes == "")
+                                        Mes = data.Base.CompletedRequestMessage(player, Guardian);
+                                    Main.npcChatText = MessageParser(Mes, Guardian);
+                                }
+                                else
+                                {
+                                    if (Mes == "")
+                                    {
+                                        Mes = "(It gave you a list of things you need to do.)";
+                                    }
+                                    Mes += "\n---------------------";
+                                    foreach (string s in data.request.GetRequestText(player, data))
+                                    {
+                                        Mes += "\n" + s;
+                                    }
+                                    Main.npcChatText = MessageParser(Mes, Guardian);
+                                }
+                            }
+                            break;
                     }
-                    else
-                    {
-                        Main.npcChatText = MessageParser(Guardian.Base.HasRequestMessage(player, Guardian), Guardian) + "\n\n" + data.request.GetRequestInformation(data) + "\nEnds in " + data.request.GetRequestDuration;
-                    }
+                }
+            }
+            else
+            {
+                if (data.request.requestState == RequestData.RequestState.HasRequestReady && CheckingRequest)
+                {
+                    CheckingRequest = false;
+                    data.request.UponRejecting();
+                    Main.npcChatText = MessageParser(data.request.GetRequestDeny(data), Guardian);
                 }
             }
         }
