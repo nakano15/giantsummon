@@ -49,7 +49,7 @@ namespace giantsummon.Creatures
             CallUnlockLevel = 0;
 
             PopularityContestsWon = 2;
-            ContestSecondPlace = 2;
+            ContestSecondPlace = 3;
             ContestThirdPlace = 0;
 
             AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
@@ -165,13 +165,13 @@ namespace giantsummon.Creatures
                 "*[name] is looking at you with a disappointed look. Is he going to cry?*",
                 "*[name] is surprised at what you brought him. He seems extremelly happy while eating the Gels.*",
                 "*[name] wonder what you will bring to him.*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.Gel, 10);
+            AddItemCollectionObjective(Terraria.ID.ItemID.Gel, 10, 0.02f);
             //
             AddNewRequest("Sea of Bunnies", 50,
                 "*[name] is asking you if you could get him a Bunny.*",
                 "*[name] seems happy, he told you that will be waiting for it.*",
                 "*[name] looks very sad now.*",
-                "*[name] is very happy with the bunny he brought. He said that was looking for something to play with, and you just brought.*",
+                "*[name] is very happy with the bunny you brought. He said that was looking for something to play with, and you just brought.*",
                 "*[name] says that It wont be hard for you to find Bunnies, but that you will need a Bug Net to get them.*");
             AddRequestRequirement(GetBugNetRequirement);
             AddItemCollectionObjective(Terraria.ID.ItemID.Bunny, 1, 0);

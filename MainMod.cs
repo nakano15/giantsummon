@@ -26,13 +26,13 @@ namespace giantsummon
         public static byte SelectedGuardian = 0;
         public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true;
         //Contest related
-        public const string VoteLink = "https://forms.gle/CQpXjU2HrSvuFwXg9";
+        public const string VoteLink = "https://forms.gle/w8tDTpEXSZvKE4WH8";
         public static bool HasPlayerAwareOfContestMonthChange = false;
-        public const int LastContestModVersion = 56;
-        public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1946985";
+        public const int LastContestModVersion = 60;
+        public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1982670";
         //End contest related
         public static int GuardianInventoryMenuSubTab = 0;
-        public const int ModVersion = 60, LastModVersion = 60;
+        public const int ModVersion = 61, LastModVersion = 60;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -1502,21 +1502,21 @@ namespace giantsummon
                         bool HasUnsummonedGuardianRequest = false;
                         foreach (GuardianData d in RequestCount)
                         {
-                            if (true)
+                            if (!HasRequest)
                             {
-                                if (!HasRequest)
-                                {
-                                    Utils.DrawBorderString(Main.spriteBatch, "Guardian Requests", SlotStartPosition, Color.White);
-                                    SlotStartPosition.Y += 36;
-                                    //SlotStartPosition.X -= 24;
-                                    HasRequest = true;
-                                }
-                                if (Guardian.Active == false || d.ID != Guardian.ID) HasUnsummonedGuardianRequest = true;
-                                //Guardian.DrawFriendshipHeart(SlotStartPosition, d.FriendshipLevel, d.FriendshipProgression);
-                                //SlotStartPosition.X += 24f;
-                                //Utils.DrawBorderString(Main.spriteBatch, d.Name + "'s Request", SlotStartPosition, Color.White);
-                                //SlotStartPosition.X -= 24f;
-                                //SlotStartPosition.Y += 28f;
+                                Utils.DrawBorderString(Main.spriteBatch, "Guardian Requests", SlotStartPosition, Color.White);
+                                SlotStartPosition.Y += 36;
+                                //SlotStartPosition.X -= 24;
+                                HasRequest = true;
+                            }
+                            if (Guardian.Active == false || d.ID != Guardian.ID) HasUnsummonedGuardianRequest = true;
+                            //Guardian.DrawFriendshipHeart(SlotStartPosition, d.FriendshipLevel, d.FriendshipProgression);
+                            //SlotStartPosition.X += 24f;
+                            //Utils.DrawBorderString(Main.spriteBatch, d.Name + "'s Request", SlotStartPosition, Color.White);
+                            //SlotStartPosition.X -= 24f;
+                            //SlotStartPosition.Y += 28f;
+                            try
+                            {
                                 string[] RequestDesc = d.request.GetRequestText(Main.player[Main.myPlayer], d);
                                 foreach (string s in RequestDesc)
                                 {
@@ -1554,8 +1554,12 @@ namespace giantsummon
                                     {
                                     }
                                 }
-                                SlotStartPosition.Y += 8f;
                             }
+                            catch
+                            {
+
+                            }
+                            SlotStartPosition.Y += 8f;
                         }
                         if (HasUnsummonedGuardianRequest)
                         {

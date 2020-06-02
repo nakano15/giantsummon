@@ -80,14 +80,66 @@ namespace giantsummon
             requestState = RequestState.Cooldown;
         }
 
-        public void Save()
+        public void Save(Terraria.ModLoader.IO.TagCompound tag, int UniqueID)
         {
-
+            string IDText = "_"+UniqueID;
+            tag.Add("RequestID" + IDText, RequestID);
+            tag.Add("RequestTime" + IDText, Time);
+            tag.Add("RequestState" + IDText, (byte)requestState);
+            tag.Add("RequestIsTalk" + IDText, IsTalkQuest);
+            tag.Add("RequestIntegers" + IDText, IntegerVars.Count);
+            byte Counter = 0;
+            foreach (int Key in IntegerVars.Keys)
+            {
+                tag.Add("RequestIntegerKey" + Counter + IDText, Key);
+                tag.Add("RequestIntegerValue" + Counter + IDText, IntegerVars[Key]);
+                Counter++;
+            }
+            tag.Add("RequestFloats" + IDText, FloatVars.Count);
+            Counter = 0;
+            foreach (int Key in FloatVars.Keys)
+            {
+                tag.Add("RequestIntegerKey" + Counter + IDText, Key);
+                tag.Add("RequestIntegerValue" + Counter + IDText, FloatVars[Key]);
+                Counter++;
+            }
         }
 
-        public void Load()
+        public void Load(Terraria.ModLoader.IO.TagCompound tag, int ModVersion, int UniqueID, GuardianData gd)
         {
-
+            string IDText = "_" + UniqueID;
+            RequestID = tag.GetInt("RequestID" + IDText);
+            IsTalkQuest = tag.GetBool("RequestIsTalk" + IDText);
+            RequestState requestState = (RequestState)tag.GetByte("RequestState" + IDText);
+            if (requestState >= RequestState.HasRequestReady)
+            {
+                if (IsTalkQuest)
+                {
+                    CreateTalkRequest();
+                }
+                else
+                {
+                    ChangeRequest(gd, RequestID);
+                }
+            }
+            this.requestState = requestState;
+            Time = tag.GetInt("RequestTime" + IDText);
+            int MaxKeys = tag.GetInt("RequestIntegers" + IDText);
+            IntegerVars.Clear();
+            for (int k = 0; k < MaxKeys; k++)
+            {
+                int Key = tag.GetInt("RequestIntegerKey" + k + IDText);
+                int Value = tag.GetInt("RequestIntegerValue" + k + IDText);
+                IntegerVars.Add(Key, Value);
+            }
+            MaxKeys = tag.GetInt("RequestFloats" + IDText);
+            FloatVars.Clear();
+            for (int k = 0; k < MaxKeys; k++)
+            {
+                int Key = tag.GetInt("RequestIntegerKey" + k + IDText);
+                float Value = tag.GetFloat("RequestIntegerValue" + k + IDText);
+                FloatVars.Add(Key, Value);
+            }
         }
 
         public void UpdateRequest(GuardianData gd, PlayerMod player)
@@ -103,25 +155,23 @@ namespace giantsummon
                             if (player.player.whoAmI == Main.myPlayer)
                             {
                                 List<int> Requests = new List<int>();
-                                for (int req = 0; req < gd.Base.RequestDB.Count; req++ )
+                                for (int req = 0; req < gd.Base.RequestDB.Count; req++)
                                 {
                                     if (gd.Base.RequestDB[req].Requirement(player.player))
                                     {
                                         Requests.Add(req);
                                     }
                                 }
-                                if (Requests.Count > 0 && (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID) || NpcMod.HasGuardianNPC(gd.ID, gd.ModID)))
+                                bool HasCompanionSummonedOrInTheWorld = (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID) || NpcMod.HasGuardianNPC(gd.ID, gd.ModID));
+                                if (Main.rand.NextDouble() < 0.333f && HasCompanionSummonedOrInTheWorld)
                                 {
-                                    if (Main.rand.NextDouble() < 0.333f)
-                                    {
-                                        CreateTalkRequest();
-                                    }
-                                    else
-                                    {
-                                        ChangeRequest(gd, Requests[Main.rand.Next(Requests.Count)]);
-                                    }
+                                    CreateTalkRequest();
+                                    Main.NewText(gd.Name + " wants to speak with you.");
+                                }
+                                else if (Requests.Count > 0 && HasCompanionSummonedOrInTheWorld)
+                                {
+                                    ChangeRequest(gd, Requests[Main.rand.Next(Requests.Count)]);
                                     Main.NewText(gd.Name + " has a request for you.");
-                                    requestState = RequestState.HasRequestReady;
                                 }
                                 else
                                 {
@@ -255,9 +305,9 @@ namespace giantsummon
 
         public bool CompleteRequest(TerraGuardian guardian, GuardianData gd, PlayerMod player)
         {
-            if (RequestCompleted)
+            if (RequestCompleted || IsTalkQuest)
             {
-                int RewardScore = gd.Base.RequestDB[RequestID].RequestScore;
+                int RewardScore = (IsTalkQuest ? 500 : gd.Base.RequestDB[RequestID].RequestScore);
                 if (IsTalkQuest)
                 {
                     if (guardian.ID == gd.ID && guardian.ModID == gd.ModID)
@@ -333,6 +383,7 @@ namespace giantsummon
                     Item ni = Main.item[Item.NewItem(player.player.getRect(), i.type, i.stack)];
                     ni.owner = player.player.whoAmI;
                 }
+                RequestCompleted = false;
                 gd.IncreaseFriendshipProgress(1);
                 requestState = RequestState.Cooldown;
                 Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
@@ -366,11 +417,6 @@ namespace giantsummon
             return gd.Base.RequestDB[RequestID].RequestInfoText;
         }
 
-        public string GetRequestDescription(GuardianData gd)
-        {
-            return gd.Base.RequestDB[RequestID].Description;
-        }
-
         public string[] GetRequestText(Player player, GuardianData gd)
         {
             List<string> QuestObjectives = new List<string>();
@@ -389,11 +435,11 @@ namespace giantsummon
                         bool HasPendingObjective = false;
                         if (IsTalkQuest)
                         {
-                            QuestObjectives.Add(" " + gd.Name + " wants to talk to you.");
+                            QuestObjectives.Add("" + gd.Name + " wants to talk to you.");
                         }
                         else
                         {
-                            for (int o = 0; o < gd.Base.RequestDB.Count; o++)
+                            for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
                             {
                                 switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)
                                 {
@@ -403,7 +449,7 @@ namespace giantsummon
                                             if (GetIntegerValue(o) > 0)
                                             {
                                                 HasPendingObjective = true;
-                                                QuestObjectives.Add(" Hunt " + GetIntegerValue(0) + " " + Lang.GetNPCName(req.NpcID) + ".");
+                                                QuestObjectives.Add(" Hunt " + GetIntegerValue(o) + " " + Lang.GetNPCName(req.NpcID) + ".");
                                             }
                                         }
                                         break;
@@ -413,7 +459,7 @@ namespace giantsummon
                                             if (GetIntegerValue(o) > 0)
                                             {
                                                 HasPendingObjective = true;
-                                                QuestObjectives.Add(" Collect " + GetIntegerValue(0) + " " + Lang.GetItemName(req.ItemID) + ".");
+                                                QuestObjectives.Add(" Collect " + GetIntegerValue(o) + " " + Lang.GetItemName(req.ItemID) + ".");
                                             }
 
                                         }
@@ -461,11 +507,11 @@ namespace giantsummon
                                                 }
                                                 if (req.EventID == (int)EventList.FrostMoon || req.EventID == (int)EventList.PumpkinMoon || req.EventID == (int)EventList.DD2Event)
                                                 {
-                                                    QuestObjectives.Add(" Survive " + GetIntegerValue(0) + " waves in the " + EventName + " event.");
+                                                    QuestObjectives.Add(" Survive " + GetIntegerValue(o) + " waves in the " + EventName + " event.");
                                                 }
                                                 else
                                                 {
-                                                    QuestObjectives.Add(" Defeat " + GetIntegerValue(0) + " foes in the " + EventName + " event.");
+                                                    QuestObjectives.Add(" Defeat " + GetIntegerValue(o) + " foes in the " + EventName + " event.");
                                                 }
                                             }
                                         }
@@ -477,16 +523,16 @@ namespace giantsummon
                                         break;
                                 }
                             }
-                        }
-                        if (HasPendingObjective)
-                        {
-                            QuestObjectives.Insert(0, "Help " + gd.Name + " by:");
-                            QuestObjectives.Insert(0, "[" + gd.Base.RequestDB[RequestID].Name + "]");
-                        }
-                        else
-                        {
-                            QuestObjectives.Add("[" + gd.Base.RequestDB[RequestID].Name + "]");
-                            QuestObjectives.Add(" Report success to " + gd.Name + ".");
+                            if (HasPendingObjective)
+                            {
+                                QuestObjectives.Insert(0, "Help " + gd.Name + " by:");
+                                QuestObjectives.Insert(0, "[" + gd.Base.RequestDB[RequestID].Name + "]");
+                            }
+                            else
+                            {
+                                QuestObjectives.Add("[" + gd.Base.RequestDB[RequestID].Name + "]");
+                                QuestObjectives.Add(" Report success to " + gd.Name + ".");
+                            }
                         }
                         break;
                     }
@@ -543,6 +589,7 @@ namespace giantsummon
             FloatVars.Clear();
             RequestID = 0;
             IsTalkQuest = true;
+            requestState = RequestState.HasRequestReady;
         }
 
         public void ChangeRequest(GuardianData gd, int ID)
@@ -551,6 +598,7 @@ namespace giantsummon
             FloatVars.Clear();
             RequestID = ID;
             IsTalkQuest = false;
+            requestState = RequestState.HasRequestReady;
             for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
             {
                 switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)

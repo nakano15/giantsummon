@@ -863,6 +863,7 @@ namespace giantsummon
             tag.Add("BodyDye_" + UniqueID, BodyDye.type);
             tag.Add("FatigueCount_" + UniqueID, (byte)Fatigue);
             tag.Add("InjuryCount_" + UniqueID, (byte)Injury);
+            request.Save(tag, UniqueID);
             //request.Save(tag, UniqueID);
             tag.Add("ExistenceTime_" + UniqueID, LifeTime.TotalSeconds);
         }
@@ -1060,6 +1061,10 @@ namespace giantsummon
             {
                 Fatigue = (sbyte)tag.GetByte("FatigueCount_" + UniqueID);
                 Injury = (sbyte)tag.GetByte("InjuryCount_" + UniqueID);
+            }
+            if (ModVersion >= 61)
+            {
+                request.Load(tag, ModVersion, UniqueID, this);
             }
             //if (ModVersion >= 8)
             //    request.Load(tag, ModVersion, UniqueID);

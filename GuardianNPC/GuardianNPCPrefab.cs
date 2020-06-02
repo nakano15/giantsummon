@@ -350,14 +350,18 @@ namespace giantsummon.GuardianNPC
                             break;
                         case RequestData.RequestState.HasRequestReady:
                             {
-                                if (!CheckingRequest)
+                                if (data.request.IsTalkQuest)
+                                {
+                                    data.request.CompleteRequest(Guardian, data, player.GetModPlayer<PlayerMod>());
+                                }
+                                else if (!CheckingRequest)
                                 {
                                     CheckingRequest = true;
                                     Main.npcChatText = data.request.GetRequestBrief(data);
                                     if (Main.npcChatText == "")
                                         Main.npcChatText = data.Base.HasRequestMessage(player, Guardian);
                                     Main.npcChatText = MessageParser(Main.npcChatText, Guardian);
-                                    
+
                                 }
                                 else
                                 {

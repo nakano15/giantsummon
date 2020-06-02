@@ -54,7 +54,7 @@ namespace giantsummon.Creatures
             DeadSound = new SoundData(Terraria.ID.SoundID.NPCDeath1);
             CallUnlockLevel = 0;
 
-            PopularityContestsWon = 2;
+            PopularityContestsWon = 3;
             ContestSecondPlace = 1;
             ContestThirdPlace = 1;
 
