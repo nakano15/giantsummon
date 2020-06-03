@@ -19,6 +19,7 @@ namespace giantsummon
         public static bool VoteButtonClickedOnce = false;
         public static string Age, Time, Name, BirthdayTime, ModName;
         public static int ScrollY = 0;
+        public static bool HasRequestRequiringIt = false;
 
         public static int Selected = -1, LastSelected = -1, HoveredButton = -1;
         public static int[] GuardianList = new int[0];
@@ -32,6 +33,7 @@ namespace giantsummon
             DisplayGuardian.LookingLeft = true;
             Selected = -1;
             LastSelected = -1;
+            HasRequestRequiringIt = false;
             GuardianList = GetGuardianList(player);//player.MyGuardians.Keys.ToArray();
             Width = (int)(Main.screenWidth * 0.5f);
             Height = (int)(Main.screenHeight * 0.5f);
@@ -46,7 +48,10 @@ namespace giantsummon
                     Selected = k;
             }
             if (Selected > -1)
+            {
                 DisplayGuardian.Data = player.MyGuardians[GuardianList[Selected]];
+                HasRequestRequiringIt = RequestData.PlayerHasRequestRequiringCompanion(player.player, DisplayGuardian.Data);
+            }
         }
 
         public static int[] GetGuardianList(PlayerMod player)
@@ -137,6 +142,7 @@ namespace giantsummon
                         {
                             Selected = index;
                             DisplayGuardian.Data = g; //player.MyGuardians[GuardianList[index]];
+                            HasRequestRequiringIt = RequestData.PlayerHasRequestRequiringCompanion(Main.player[Main.myPlayer], g);
                         }
                         else
                         {

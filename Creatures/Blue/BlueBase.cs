@@ -142,6 +142,126 @@ namespace giantsummon.Creatures
 
             //Wing
             WingPosition.DefaultCoordinate2x = new Point(22, 21);
+
+            GetQuests();
+            GetRewards();
+        }
+
+        public void GetQuests()
+        {
+            AddNewRequest("Revenge", 280,
+                "*She says that everytime she thinks of zombies It makes her very angry, because of what happened to [gn:" + GuardianBase.Zacks + "]. She is asking you if you would mind going get some revenge on them with her.*",
+                "*She tells that the hunt begins.*",
+                "*She seems very furious after you rejected.*",
+                "*She says that doesn't feel like having avenged [gn:" + GuardianBase.Zacks + "], but at least that made her feel a bit better.*",
+                "*She says that you wont find Zombies until the night comes. And tells you not to forget of her.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return PlayerMod.PlayerHasGuardian(player, GuardianBase.Zacks);
+            });
+            AddHuntObjective(Terraria.ID.NPCID.Zombie, 10, 0.333f);
+            //
+            AddNewRequest("Slime Bane",185,
+                "*She says that the slimes are gross creatures, and asks you to eliminate a number of them.*",
+                "*She tells you not to let them touch you.*",
+                "*She asks If you hate them too.*",
+                "*She seems relieved of knowing that you took care of the Slimes.*",
+                "*She tells you that Slimes appears in many places, but most frequently at Forest during the day.*");
+            AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 5, 0.2f);
+            //
+            AddNewRequest("Privacy, please.", 210,
+                "*She says that dislikes hunting in the night in your world, because there are Demon Eyes peeking at her. She finds that quite disturbing, and want you to black out a number of them.*",
+                "*She tells you to not let their stare intimidate you, while you hunt them.*",
+                "*She asks If you are also bothered by their stare, then suggested to spend the rest of the night locked at home to avoid them.*",
+                "*She thanks you for taking care of her request, then said that she feels less spied at the moment, and that now looks safe to use the bathroom.*",
+                "*She tells you that Demon Eyes appears during the night. She told you to becareful because they swarm their target, but they also can be easily repelled with a hard hitting weapon.*");
+            AddHuntObjective(Terraria.ID.NPCID.DemonEye, 5, 0.3f);
+            //
+            AddNewRequest("Bunny",70,
+                "*She is asking if you could get her a Bunny. She didn't gave you a reason as to why she wants one.*",
+                "*She says that will wait until you bring one to her.*",
+                "*She says that doesn't mind, that It was a stupid request anyway.*",
+                "*After you brought the Bunny, she seems to be trying to hide that she's happy, gave you the reward, then left. The way she walks... Is she happy?*",
+                "*She tells you that Bunnies can be found in the forest. You can find them easily on safe places.*");
+            AddRequestRequirement(GetBugNetRequirement);
+            AddItemCollectionObjective(Terraria.ID.ItemID.Bunny, 1, 0);
+            //
+            AddNewRequest("Loot the Snipers.", 295,
+                "*She is telling you that is running out of Stingers for her potions, and wants you to bring some more for her.*",
+                "*She thanks you, and tells that you can get Stingers from Hornets, at the Underground Jungle.*",
+                "*She looks at you with a disappointment look, and tells that she really needed to do some exercises, and possibly some acrobatics too.*",
+                "*She looks overjoyed after you brought the Stingers to her, then thanked you deeply for that.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return NPC.downedBoss2 || NPC.downedBoss3;
+            });
+            AddItemCollectionObjective(Terraria.ID.ItemID.Stinger, 8, 0.2f);
+            //
+            AddNewRequest("Price of Immunity", 650,
+                "*She tells you of stories about an accessory that gives immunity to poisoning. She tells you that want It, then asks If you would be able to find It for her.*",
+                "*She said that creatures that can inflict poison are the ones you should look for, meaning you should look for It in the Underground Jungle.*",
+                "*She doesn't seems to blame you for rejecting, since the item is extremelly rare.*",
+                "*When you brought the item, she couldn't believe at first, and had to touch It to find out that It's real. Then she got extremelly overjoyed for you bringing It to her.*",
+                "*She told you that the Underground Jungle is the place you should go to look for those Items.*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.Bezoar, 1, 0);
+            AddRequestRequirement(delegate(Player player)
+            {
+                return NPC.downedBoss2 || NPC.downedBoss3;
+            });
+            //
+            AddNewRequest("Under the Moonlight", 340,
+                "*She is telling you that a Full Moon is coming, and that It's her favorite time to hunt. She says that It is because Werewolves comes out, and she likes to hunt them down. She asks If you want to join her in the hunt.*",
+                "*She tells you that by having her by your side, the Werewolves will be unable to hurt you.*",
+                "*She looks disappointed, then said that will then try to hunt alone.*",
+                "*She liked the result of the hunt, but you start to freak out a bit after watching her having Werewolf blood all over her fur.*",
+                "*She tells you that Werewolves appears during Full Moon nights, and tells you to beware not to miss it. She also told you to call her when you go hunt in It.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode && (Main.moonPhase == 7 || (Main.moonPhase == 0 && Main.dayTime));
+            });
+            AddHuntObjective(Terraria.ID.NPCID.Werewolf, 9, 0.15f);
+            AddRequesterSummonedRequirement();
+            //
+            AddNewRequest("An attempt of cheering up.", 300,
+                "*She tells you that ever since [gn:"+GuardianBase.Zacks+"] was found, he has been very depressed about his state. She thinks you can help him cheer up by taking him on an adventure.*",
+                "*She thanks you, and tells you to take care of him while you two travel.*",
+                "*She asked If you still didn't got over the moment he attacked her and you...*",
+                "*She thanks you for that, and tells you that she will be busy for a few moment, listening to the story of his adventure.*",
+                "*She told you that [gn:"+GuardianBase.Zacks+"] may like taking part in combat during your adventure.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return PlayerMod.PlayerHasGuardian(player, GuardianBase.Zacks);
+            });
+            AddCompanionRequirement(GuardianBase.Zacks);
+            AddExploreObjective(1200, 50, false);
+            //
+            AddNewRequest("Hornet Hunt", 270,
+                "*She seems in pain, she tells you that got stung in the behind by a Moss Hornet. Now she wants revenge, and asks for your help.*",
+                "*She told to not let any of them alive.*",
+                "*She asked if you could at least help remove the stings from her behind.*",
+                "*She feels avenged, but said should take a little rest because of all the hornet stings she got hit by during the revenge.*",
+                "*She told you that Moss Hornets appears on the Underground Jungle, If you two are going to hunt them, look for them there.*");
+            AddRequestRequirement(delegate(Player p)
+            {
+                return Main.hardMode;
+            });
+            //
+            AddNewRequest("The couple and the candle holder.", 320,
+                "*She says that wants to spend some time with [gn:"+GuardianBase.Zacks+"], but has no idea of what to do meanwhile, then she thought: What If they accompany you on your adventure?*",
+                "*She told you to call [gn:"+GuardianBase.Zacks+"], and to try not to make things awkward during the adventure.*",
+                "*She asked If you rejected because the plan is weird.*",
+                "*She said that both [gn:"+GuardianBase.Zacks+"] and her enjoyed the time together, and thanked you for that.*",
+                "*She said that It would be perfect to do something extremelly dangerous, and with things to hunt in the way. She also told not to forget about [gn:" + GuardianBase.Zacks + "] and her.*");
+            AddExploreObjective(1500, 100, true);
+            AddCompanionRequirement(GuardianBase.Zacks);
+        }
+
+        public void GetRewards()
+        {
+            AddReward(Terraria.ID.ItemID.FlaskofPoison, 3, 100, 0.66f, 2);
+            AddReward(Terraria.ID.ItemID.NaturesGift, 1, 1200, 0.05f);
+            AddReward(Terraria.ID.ItemID.CookedMarshmallow, 2, 60, 0.7f, 4);
+            AddReward(Terraria.ID.ItemID.NeonTetra, 3, 120, 0.2f, 2);
         }
 
         public override string MountUnlockMessage

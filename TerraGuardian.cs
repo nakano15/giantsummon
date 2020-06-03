@@ -944,9 +944,13 @@ namespace giantsummon
             EmotionDisplayTime = MaxEmotionDisplaytime;
         }
 
-        public void SaySomething(string Message)
+        public void SaySomething(string Message, bool ChatDisplay = false)
         {
             this.ChatMessage = Message;
+            if (ChatDisplay)
+            {
+                Main.NewText(Name + ": " + Message);
+            }
             MessageTime = Main.chatLength / 2;
         }
 

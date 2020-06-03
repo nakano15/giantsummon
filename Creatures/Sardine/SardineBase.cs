@@ -112,6 +112,19 @@ namespace giantsummon.Creatures
 
             //Wing Position
             WingPosition.DefaultCoordinate2x = new Point(16, 19);
+
+            GetRequests();
+            GetRewards();
+        }
+
+        public void GetRequests()
+        {
+            //Add a request to kill the King Slime.
+        }
+
+        public void GetRewards()
+        {
+
         }
 
         public override string CallUnlockMessage

@@ -185,9 +185,9 @@ namespace giantsummon
         public bool IsTerraGuardian { get { return companionType == CompanionType.TerraGuardian; } }
         public bool IsTerrarian { get { return companionType == CompanionType.Terrarian; } }
 
-        public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string RequestInfo = "")
+        public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string RequestActiveTalkText = "")
         {
-            RequestBase rb = new RequestBase(Name, RequestScore, BriefText, AcceptText, DenyText, CompleteInfo, RequestInfo);
+            RequestBase rb = new RequestBase(Name, RequestScore, BriefText, AcceptText, DenyText, CompleteInfo, RequestActiveTalkText);
             RequestDB.Add(rb);
         }
 
@@ -215,11 +215,11 @@ namespace giantsummon
             }
         }
 
-        public void AddExploreObjective(float InitialDistance, float ExtraDistancePerFriendshipLevel = 100f)
+        public void AddExploreObjective(float InitialDistance = 1000f, float ExtraDistancePerFriendshipLevel = 100f, bool RequiresRequesterSummoned = true)
         {
             if (RequestDB.Count > 0)
             {
-                RequestDB[RequestDB.Count - 1].AddExploreRequest(InitialDistance, ExtraDistancePerFriendshipLevel);
+                RequestDB[RequestDB.Count - 1].AddExploreRequest(InitialDistance, ExtraDistancePerFriendshipLevel, RequiresRequesterSummoned);
             }
         }
 
@@ -227,7 +227,7 @@ namespace giantsummon
         {
             if (RequestDB.Count > 0)
             {
-                RequestDB[RequestDB.Count - 1].AddEventParticipationRequest(EventID, Kills, ExtraKills);
+                RequestDB[RequestDB.Count - 1].AddEventKillsRequest(EventID, Kills, ExtraKills);
             }
         }
 
@@ -239,11 +239,46 @@ namespace giantsummon
             }
         }
 
-        public void AddCompanionRequirement()
+        public void AddRequesterSummonedRequirement()
         {
             if (RequestDB.Count > 0)
             {
                 RequestDB[RequestDB.Count - 1].AddRequesterRequirement();
+            }
+        }
+
+        public void AddCompanionRequirement(int ID, string ModID = "")
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddCompanionRequirement(ID, ModID);
+            }
+        }
+
+        public void AddKillBossRequest(int BossID, int GemLevelBonus = 0)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddKillBossRequest(BossID, GemLevelBonus);
+            }
+        }
+
+        /// <summary>
+        /// Don't forget to after setting up this request, use AddObjectDroppingMonsters() to setup the monsters and drop rate for the items.
+        /// </summary>
+        public void AddObjectCollectionRequest(string ObjectName, int ObjectCount, float ExtraObjectCountPerFriendshipLevel = 0.333f)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddObjectCollectionRequest(ObjectName, ObjectCount, ExtraObjectCountPerFriendshipLevel);
+            }
+        }
+
+        public void AddObjectDroppingMonster(int MonsterID, float Rate)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddObjectDroppingMonster(MonsterID, Rate);
             }
         }
 
@@ -676,6 +711,24 @@ namespace giantsummon
                     for (int i = 0; i < 50; i++)
                     {
                         if (player.inventory[i].type == Terraria.ID.ItemID.BugNet || player.inventory[i].type == Terraria.ID.ItemID.GoldenBugNet)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+            }
+        }
+
+        public RequestBase.RequestRequirementDel GetFishingRodRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (player.inventory[i].type > 0 && player.inventory[i].fishingPole > -1)
                         {
                             return true;
                         }

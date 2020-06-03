@@ -24,6 +24,8 @@ namespace giantsummon
         public static GuardianItemSlotButtons SelectedGuardianInventorySlot = GuardianItemSlotButtons.Nothing;
         public static SoundData FemaleHitSound = new SoundData(Terraria.ID.SoundID.FemaleHit);
         public static byte SelectedGuardian = 0;
+        public static int GuardianInventoryMenuSubTab = 0;
+        public static bool CheckingQuestBrief = false;
         public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true;
         //Contest related
         public const string VoteLink = "https://forms.gle/w8tDTpEXSZvKE4WH8";
@@ -31,7 +33,6 @@ namespace giantsummon
         public const int LastContestModVersion = 60;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1982670";
         //End contest related
-        public static int GuardianInventoryMenuSubTab = 0;
         public const int ModVersion = 61, LastModVersion = 60;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
@@ -959,7 +960,10 @@ namespace giantsummon
                             MouseOverText = guardian.Name;
                             Main.player[Main.myPlayer].mouseInterface = true;
                             if (Main.mouseLeft && Main.mouseLeftRelease)
+                            {
                                 SelectedGuardian = g;
+                                CheckingQuestBrief = false;
+                            }
                         }
                         if (g != SelectedGuardian)
                         {
@@ -976,7 +980,7 @@ namespace giantsummon
                             Main.spriteBatch.Draw(texture, ThisPosition, null, Color.White, 0f, Vector2.Zero, ScaleMod, SpriteEffects.None, 0f);
                             SelectionPosition.X += 32;
                         }
-                        else if(guardian.Base.IsTerrarian)
+                        else if (guardian.Base.IsTerrarian)
                         {
                             SelectionPosition.X += 32;
                             ThisPosition.X += 16;
@@ -987,6 +991,11 @@ namespace giantsummon
                         }
                     }
                 }
+            }
+            else
+            {
+                if (CheckingQuestBrief)
+                    CheckingQuestBrief = false;
             }
             List<GuardianItemSlotButtons> Buttons = new List<GuardianItemSlotButtons>();
             Buttons.Add(GuardianItemSlotButtons.GuardianSelection);
@@ -1492,10 +1501,21 @@ namespace giantsummon
                         {
                             if (d.request.requestState == RequestData.RequestState.RequestActive)
                             {
-                                if (d.ID == Guardian.ID)
+                                if (d.ID == Guardian.ID && d.ModID == Guardian.ModID)
                                     RequestCount.Insert(0, d);
                                 else
                                     RequestCount.Add(d);
+                            }
+                            else if (d.request.requestState == RequestData.RequestState.HasRequestReady)
+                            {
+                                if (d.ID == Guardian.ID && d.ModID == Guardian.ModID)
+                                {
+                                    RequestCount.Insert(0, d);
+                                }
+                                else if(PlayerMod.HasGuardianSummoned(player.player, d.ID, d.ModID))
+                                {
+                                    RequestCount.Add(d);
+                                }
                             }
                         }
                         bool HasRequest = false;
@@ -1515,49 +1535,131 @@ namespace giantsummon
                             //Utils.DrawBorderString(Main.spriteBatch, d.Name + "'s Request", SlotStartPosition, Color.White);
                             //SlotStartPosition.X -= 24f;
                             //SlotStartPosition.Y += 28f;
-                            try
+                            string[] RequestDesc = d.request.GetRequestText(Main.player[Main.myPlayer], d);
+                            foreach (string s in RequestDesc)
                             {
-                                string[] RequestDesc = d.request.GetRequestText(Main.player[Main.myPlayer], d);
-                                foreach (string s in RequestDesc)
+                                SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, Color.White).Y;
+                            }
+                            if (Guardian.Active && Guardian.ID == d.ID && Guardian.ModID == d.ModID)
+                            {
+                                if (d.request.IsTalkQuest && d.request.requestState >= RequestData.RequestState.HasRequestReady)
                                 {
-                                    SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, Color.White).Y;
-                                }
-                                if (d.request.requestState == RequestData.RequestState.RequestActive)
-                                {
-                                    SlotStartPosition.Y += 28f;
-                                    if (Guardian.Active && Guardian.ID == d.ID)
+                                    Vector2 ButtonPosition = SlotStartPosition;
+                                    ButtonPosition.X += 48f;
+                                    Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, "Talk", ButtonPosition, Color.White, 1f, 0.5f);
+                                    if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
+                                        Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
                                     {
-                                        if (Main.mouseX >= SlotStartPosition.X && Main.mouseX < SlotStartPosition.X + 58 &&
-                                            Main.mouseY >= SlotStartPosition.Y && Main.mouseY < SlotStartPosition.Y + 22)
+                                        player.player.mouseInterface = true;
+                                        Utils.DrawBorderString(Main.spriteBatch, "Talk", ButtonPosition, Color.Yellow, 1f, 0.5f);
+                                        if (Main.mouseLeft && Main.mouseLeftRelease)
                                         {
-                                            Main.player[Main.myPlayer].mouseInterface = true;
-                                            MouseOverText = "Click to report the quest current progress on the summoned guardian.";
+                                            d.request.CompleteRequest(Guardian, d, player);
+                                        }
+                                    }
+                                    SlotStartPosition.Y += 28f;
+                                }
+                                else if (d.request.requestState == RequestData.RequestState.HasRequestReady)
+                                {
+                                    if (!CheckingQuestBrief)
+                                    {
+                                        Vector2 ButtonPosition = SlotStartPosition;
+                                        ButtonPosition.X += 48f;
+                                        string ButtonText = "Check Request";
+                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
+                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
+                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                        {
+                                            player.player.mouseInterface = true;
+                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
-                                                TerraGuardian[] guardians = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers;
-                                                TerraGuardian pickedguardian = Guardian;
-                                                foreach (TerraGuardian guardian in guardians)
-                                                {
-                                                    if (guardian.Active && guardian.ID == d.ID && guardian.ModID == d.ModID)
-                                                    {
-                                                        pickedguardian = guardian;
-                                                        break;
-                                                    }
-                                                }
-                                                d.ReportRequest(pickedguardian);
+                                                CheckingQuestBrief = true;
+                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestBrief(d), Guardian), true);
+                                                //Companion says request text.
                                             }
                                         }
-                                        Main.spriteBatch.Draw(ReportButtonTexture, SlotStartPosition, Color.White);
-                                        SlotStartPosition.Y += 22f;
                                     }
                                     else
                                     {
-                                    }
-                                }
-                            }
-                            catch
-                            {
+                                        Vector2 ButtonPosition = SlotStartPosition;
+                                        ButtonPosition.X += 48f;
 
+                                        ButtonPosition.X -= 5;
+                                        string ButtonText = "Accept";
+                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 1f);
+                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X && Main.mouseX < ButtonPosition.X &&
+                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                        {
+                                            player.player.mouseInterface = true;
+                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 1);
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            {
+                                                CheckingQuestBrief = false;
+                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestAccept(d), Guardian), true);
+                                                d.request.UponAccepting();
+                                            }
+                                        }
+
+                                        ButtonPosition.X += 10;
+                                        ButtonText = "Reject";
+                                        ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 0, 0);
+                                        if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
+                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                        {
+                                            player.player.mouseInterface = true;
+                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            {
+                                                CheckingQuestBrief = false;
+                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestDeny(d), Guardian), true);
+                                                d.request.UponRejecting();
+                                            }
+                                        }
+                                    }
+                                    SlotStartPosition.Y += 28f;
+                                }
+                                else if (d.request.requestState == RequestData.RequestState.RequestActive)
+                                {
+                                    if (d.request.RequestCompleted)
+                                    {
+                                        Vector2 ButtonPosition = SlotStartPosition;
+                                        ButtonPosition.X += 48f;
+                                        string ButtonText = "Report";
+                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
+                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
+                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                        {
+                                            player.player.mouseInterface = true;
+                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            {
+                                                CheckingQuestBrief = false;
+                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestComplete(d), Guardian), true);
+                                                d.request.CompleteRequest(Guardian, d, player);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Vector2 ButtonPosition = SlotStartPosition;
+                                        ButtonPosition.X += 48f;
+                                        string ButtonText = "Ask for Clues";
+                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
+                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
+                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                        {
+                                            player.player.mouseInterface = true;
+                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            {
+                                                CheckingQuestBrief = false;
+                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestInfo(d), Guardian), true);
+                                            }
+                                        }                                        
+                                    }
+                                    SlotStartPosition.Y += 28f;
+                                }
                             }
                             SlotStartPosition.Y += 8f;
                         }

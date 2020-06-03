@@ -1110,19 +1110,22 @@ namespace giantsummon
                 {
                     SomeGuardianHurt = Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && !x.Downed && x.HP < x.MHP);
                     SomeGuardianNeedMana = Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && !x.Downed && x.MP < x.MMP);
-                    foreach (GuardianData d in Main.player[p].GetModPlayer<PlayerMod>().GetGuardians())
+                    if (p == Main.myPlayer)
                     {
-                        if (!d.request.Active)
-                            continue;
-                        if (!d.request.RequiresGuardianActive(d) || Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && x.ID == d.ID && x.ModID == d.ModID))
+                        foreach (GuardianData d in Main.player[p].GetModPlayer<PlayerMod>().GetGuardians())
                         {
-                            if (npc.realLife > -1)
+                            if (!d.request.Active)
+                                continue;
+                            if (d.request.CountObjective(d, Main.player[p]))
                             {
-                                d.request.OnMobKill(d, Main.npc[npc.realLife]);
-                            }
-                            else
-                            {
-                                d.request.OnMobKill(d, npc);
+                                if (npc.realLife > -1)
+                                {
+                                    d.request.OnMobKill(d, Main.npc[npc.realLife]);
+                                }
+                                else
+                                {
+                                    d.request.OnMobKill(d, npc);
+                                }
                             }
                         }
                     }

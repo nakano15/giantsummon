@@ -26,8 +26,38 @@ namespace giantsummon
         {
             foreach (RequestBase.RequestObjective o in d.Base.RequestDB[RequestID].Objectives)
             {
-                if (o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester)
+                if ((o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore && ((RequestBase.ExploreRequest)o).RequiresGuardianActive) || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester)
                     return true;
+            }
+            return false;
+        }
+
+        public static bool PlayerHasRequestRequiringCompanion(Player p, GuardianData d)
+        {
+            if (!d.request.IsTalkQuest && d.request.requestState == RequestState.RequestActive)
+            {
+                if (d.Base.RequestDB[d.request.RequestID].Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester))
+                    return true;
+                foreach (RequestBase.ExploreRequest rb in d.Base.RequestDB[d.request.RequestID].Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore))
+                {
+                    if (rb.RequiresGuardianActive)
+                        return true;
+                }
+            }
+            PlayerMod pm = p.GetModPlayer<PlayerMod>();
+            foreach (int r in pm.MyGuardians.Keys)
+            {
+                GuardianData gd = pm.MyGuardians[r];
+                if (!gd.request.IsTalkQuest && gd.request.requestState == RequestState.RequestActive)
+                {
+                    foreach (RequestBase.CompanionRequirementRequest rb in gd.Base.RequestDB[gd.request.RequestID].Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement))
+                    {
+                        if (rb.CompanionID == d.ID && rb.CompanionModID == d.ModID)
+                        {
+                            return true;
+                        }
+                    }
+                }
             }
             return false;
         }
@@ -142,6 +172,24 @@ namespace giantsummon
             }
         }
 
+        public bool CountObjective(GuardianData gd, Player player)
+        {
+            bool Count = !RequiresGuardianActive(gd) || PlayerMod.HasGuardianSummoned(player, gd.ID, gd.ModID);
+            if (Count)
+            {
+                RequestBase.CompanionRequirementRequest[] objs = (RequestBase.CompanionRequirementRequest[])gd.Base.RequestDB[RequestID].Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement).ToArray();
+                foreach (RequestBase.CompanionRequirementRequest obj in objs)
+                {
+                    if (!PlayerMod.HasGuardianSummoned(player, obj.CompanionID, obj.CompanionModID))
+                    {
+                        Count = false;
+                        break;
+                    }
+                }
+            }
+            return Count;
+        }
+
         public void UpdateRequest(GuardianData gd, PlayerMod player)
         {
             switch (requestState)
@@ -157,7 +205,7 @@ namespace giantsummon
                                 List<int> Requests = new List<int>();
                                 for (int req = 0; req < gd.Base.RequestDB.Count; req++)
                                 {
-                                    if (gd.Base.RequestDB[req].Requirement(player.player))
+                                    if (gd.Base.RequestDB[req].IsRequestDoable(player.player, gd))
                                     {
                                         Requests.Add(req);
                                     }
@@ -208,15 +256,29 @@ namespace giantsummon
                             }
                             else
                             {
+                                bool CanCountObjective = CountObjective(gd, player.player);
                                 int ObjectivesCompleted = 0, ObjectiveCount = 0;
                                 for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
                                 {
                                     ObjectiveCount++;
                                     switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)
                                     {
+                                        default:
+                                            {
+                                                ObjectivesCompleted++;
+                                            }
+                                            break;
+                                        case RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement:
+                                            {
+                                                RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                if (player.GetAllGuardianFollowers.Any(x => x.Active && x.ID == req.CompanionID && x.ModID == req.CompanionModID))
+                                                {
+                                                    ObjectivesCompleted++;
+                                                }
+                                            }
+                                            break;
                                         case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
                                             {
-                                                RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)gd.Base.RequestDB[RequestID].Objectives[o];
                                                 if (GetIntegerValue(o) <= 0)
                                                 {
                                                     ObjectivesCompleted++;
@@ -227,7 +289,7 @@ namespace giantsummon
                                             {
                                                 RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)gd.Base.RequestDB[RequestID].Objectives[o];
                                                 int ItemStack = 0;
-                                                for (int i = 0; i < 50; i++)
+                                                for (int i = 0; i < 58; i++)
                                                 {
                                                     if (player.player.inventory[i].type == req.ItemID)
                                                     {
@@ -267,22 +329,31 @@ namespace giantsummon
                                             break;
                                         case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
                                             {
-                                                if (GetIntegerValue(0) > 0)
+                                                if (GetIntegerValue(o) > 0)
                                                 {
                                                     RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
-                                                    if (Main.invasionType == req.EventID && Main.invasionProgressWave != MainMod.LastEventWave && MainMod.LastEventWave > 0)
+                                                    if (CanCountObjective && Main.invasionType == req.EventID && Main.invasionProgressWave != MainMod.LastEventWave && MainMod.LastEventWave > 0)
                                                     {
                                                         switch ((EventList)req.EventID)
                                                         {
                                                             case EventList.PumpkinMoon:
                                                             case EventList.FrostMoon:
                                                             case EventList.DD2Event:
-                                                                SetIntegerValue(0, GetIntegerValue(0) - 1);
+                                                                SetIntegerValue(0, GetIntegerValue(o) - 1);
                                                                 break;
                                                         }
                                                     }
                                                 }
                                                 else
+                                                {
+                                                    ObjectivesCompleted++;
+                                                }
+                                            }
+                                            break;
+                                        case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
+                                        case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
+                                            {
+                                                if (GetIntegerValue(o) <= 0)
                                                 {
                                                     ObjectivesCompleted++;
                                                 }
@@ -307,18 +378,19 @@ namespace giantsummon
         {
             if (RequestCompleted || IsTalkQuest)
             {
-                int RewardScore = (IsTalkQuest ? 500 : gd.Base.RequestDB[RequestID].RequestScore);
+                int RewardScore = (IsTalkQuest ? 500 : gd.Base.RequestDB[RequestID].RequestScore + 200);
                 if (IsTalkQuest)
                 {
                     if (guardian.ID == gd.ID && guardian.ModID == gd.ModID)
                     {
                         if (player.player.talkNPC > -1)
                         {
-                            Main.npcChatText = gd.Base.TalkMessage(player.player, guardian);
+                            Main.npcChatText = GuardianNPC.GuardianNPCPrefab.MessageParser(gd.Base.TalkMessage(player.player, guardian), guardian);
                         }
                         else
                         {
-                            Main.NewText(guardian.Name + ": " + gd.Base.TalkMessage(player.player, guardian));
+                            guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(gd.Base.TalkMessage(player.player, guardian), guardian), true);
+                            //Main.NewText(guardian.Name + ": " + GuardianNPC.GuardianNPCPrefab.MessageParser(gd.Base.TalkMessage(player.player, guardian), guardian));
                         }
                     }
                     else
@@ -344,7 +416,7 @@ namespace giantsummon
                                     int ItemID = req.ItemID;
                                     int Stack = GetIntegerValue(o);
                                     Player p = player.player;
-                                    for (int i = 49; i >= 0; i--)
+                                    for (int i = 57; i >= 0; i--)
                                     {
                                         if (p.inventory[i].type == ItemID)
                                         {
@@ -373,6 +445,41 @@ namespace giantsummon
                                     RewardScore += (int)((req.InitialDistance + req.StackIncreasePerFriendshipLevel * gd.FriendshipLevel) * 8);
                                 }
                                 break;
+                            case RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement:
+                                {
+                                    RewardScore += 200;
+                                }
+                                break;
+                            case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
+                                {
+                                    RequestBase.EventKillRequest req = ((RequestBase.EventKillRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RewardScore += (int)(req.InitialKills + req.ExtraKillsPerFriendshipLevel * gd.FriendshipLevel) * 10;
+                                }
+                                break;
+                            case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
+                                {
+                                    RequestBase.EventParticipationRequest req = ((RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RewardScore += (int)(req.EventWaves + req.ExtraWavesPerFriendshipLevel * gd.FriendshipLevel) * 80;
+                                }
+                                break;
+                            case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
+                                {
+                                    RequestBase.ObjectCollectionRequest req = ((RequestBase.ObjectCollectionRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    int ScoreStack = (int)(req.ObjectCount + req.ObjectExtraCountPerFriendshipLevel * gd.FriendshipLevel) * 30;
+                                    float Rates = 0, Total = 0;
+                                    foreach (RequestBase.ObjectCollectionRequest.DropRateFromMonsters rate in req.DropFromMobs)
+                                    {
+                                        Rates += rate.DropRate;
+                                        Total += 1;
+                                    }
+                                    ScoreStack = (int)(ScoreStack * (1f - (Rates / Total) + 0.5f) * 10);
+                                }
+                                break;
+                            case RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester:
+                                {
+                                    RewardScore += 200;
+                                }
+                                break;
                         }
                     }
                 }
@@ -387,6 +494,14 @@ namespace giantsummon
                 gd.IncreaseFriendshipProgress(1);
                 requestState = RequestState.Cooldown;
                 Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+                foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
+                {
+                    if (tg.Active && tg.FriendshipLevel < tg.Base.CallUnlockLevel && !PlayerHasRequestRequiringCompanion(player.player, tg.Data))
+                    {
+                        Main.NewText(tg.Name + " was dismissed");
+                        player.DismissGuardian(tg.AssistSlot);
+                    }
+                }
                 return true;
             }
             return false;
@@ -427,7 +542,14 @@ namespace giantsummon
                     QuestObjectives.Add(gd.Name + " has no requests right now.");
                     break;
                 case RequestState.HasRequestReady:
-                    QuestObjectives.Add(gd.Name + " has something for you.");
+                    if (IsTalkQuest)
+                    {
+                        QuestObjectives.Add(gd.Name + " want to talk to you.");
+                    }
+                    else
+                    {
+                        QuestObjectives.Add(gd.Name + " has something for you.");
+                    }
                     break;
                 case RequestState.RequestActive:
                     {
@@ -445,9 +567,9 @@ namespace giantsummon
                                 {
                                     case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
                                         {
-                                            RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)gd.Base.RequestDB[RequestID].Objectives[o];
                                             if (GetIntegerValue(o) > 0)
                                             {
+                                                RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)gd.Base.RequestDB[RequestID].Objectives[o];
                                                 HasPendingObjective = true;
                                                 QuestObjectives.Add(" Hunt " + GetIntegerValue(o) + " " + Lang.GetNPCName(req.NpcID) + ".");
                                             }
@@ -455,9 +577,9 @@ namespace giantsummon
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.CollectItem:
                                         {
-                                            RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)gd.Base.RequestDB[RequestID].Objectives[o];
                                             if (GetIntegerValue(o) > 0)
                                             {
+                                                RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)gd.Base.RequestDB[RequestID].Objectives[o];
                                                 HasPendingObjective = true;
                                                 QuestObjectives.Add(" Collect " + GetIntegerValue(o) + " " + Lang.GetItemName(req.ItemID) + ".");
                                             }
@@ -466,52 +588,35 @@ namespace giantsummon
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.Explore:
                                         {
-                                            RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)gd.Base.RequestDB[RequestID].Objectives[o];
                                             if (GetFloatValue(o) > 0)
                                             {
+                                                RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)gd.Base.RequestDB[RequestID].Objectives[o];
                                                 HasPendingObjective = true;
-                                                QuestObjectives.Add(" Travel with " + gd.Name + ".");
+                                                if (req.RequiresGuardianActive)
+                                                {
+                                                    QuestObjectives.Add(" Travel with " + gd.Name + ".");
+                                                }
+                                                else
+                                                {
+                                                    QuestObjectives.Add(" Explore the world.");
+                                                }
                                             }
                                         }
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
                                         {
-                                            RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
-                                            if (GetIntegerValue(0) > 0)
+                                            if (GetIntegerValue(o) > 0)
                                             {
+                                                RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
                                                 HasPendingObjective = true;
-                                                string EventName = "";
-                                                switch ((EventList)req.EventID)
-                                                {
-                                                    case EventList.GoblinArmy:
-                                                        EventName = "Goblin Army";
-                                                        break;
-                                                    case EventList.PirateArmy:
-                                                        EventName = "Pirate Invasion";
-                                                        break;
-                                                    case EventList.MartianArmy:
-                                                        EventName = "Martian Madness";
-                                                        break;
-                                                    case EventList.FrostArmy:
-                                                        EventName = "Frost Legion";
-                                                        break;
-                                                    case EventList.PumpkinMoon:
-                                                        EventName = "Pumpkin Moon";
-                                                        break;
-                                                    case EventList.FrostMoon:
-                                                        EventName = "Frost Moon";
-                                                        break;
-                                                    case EventList.DD2Event:
-                                                        EventName = "Old One's Army";
-                                                        break;
-                                                }
+                                                string EventName = GetEventName(req.EventID);
                                                 if (req.EventID == (int)EventList.FrostMoon || req.EventID == (int)EventList.PumpkinMoon || req.EventID == (int)EventList.DD2Event)
                                                 {
                                                     QuestObjectives.Add(" Survive " + GetIntegerValue(o) + " waves in the " + EventName + " event.");
                                                 }
                                                 else
                                                 {
-                                                    QuestObjectives.Add(" Defeat " + GetIntegerValue(o) + " foes in the " + EventName + " event.");
+                                                    QuestObjectives.Add(" Face " + EventName + " " + GetIntegerValue(o) + " times.");
                                                 }
                                             }
                                         }
@@ -519,6 +624,83 @@ namespace giantsummon
                                     case RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester:
                                         {
                                             QuestObjectives.Add(" Requires " + gd.Name + " in the group.");
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
+                                        {
+                                            if (GetIntegerValue(o) > 0)
+                                            {
+                                                RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                HasPendingObjective = true;
+                                                string EventName = GetEventName(req.EventID);
+                                                QuestObjectives.Add(" Defeat " + GetIntegerValue(o) + " foes in the " + EventName + " event.");
+                                            }
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
+                                        {
+                                            if (GetIntegerValue(o) > 0)
+                                            {
+                                                RequestBase.ObjectCollectionRequest req = (RequestBase.ObjectCollectionRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                HasPendingObjective = true;
+                                                QuestObjectives.Add(" Collect " + GetIntegerValue(o) + " " + req.ObjectName + " from:");
+                                                if (req.DropFromMobs.Count == 0)
+                                                    QuestObjectives.Add("  Anything.");
+                                                else
+                                                {
+                                                    foreach (RequestBase.ObjectCollectionRequest.DropRateFromMonsters rate in req.DropFromMobs)
+                                                    {
+                                                        QuestObjectives.Add("  " + Lang.GetNPCName(rate.MobID) + " (" + Math.Round(rate.DropRate * 100, 2) + "%)");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement:
+                                        {
+                                            RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                            if (!PlayerMod.PlayerHasGuardian(player, req.CompanionID, req.CompanionModID))
+                                            {
+                                                QuestObjectives.Add("  You don't know " + GuardianBase.GetGuardianBase(req.CompanionID, req.CompanionModID).Name + " yet.");
+                                            }
+                                            else
+                                            {
+                                                GuardianData data = PlayerMod.GetPlayerGuardian(player, req.CompanionID, req.CompanionModID);
+                                                if (PlayerMod.HasGuardianSummoned(player, req.CompanionID, req.CompanionModID))
+                                                {
+                                                    QuestObjectives.Add("  " + data.Name + " is in your team.");
+                                                }
+                                                else
+                                                {
+                                                    QuestObjectives.Add("  Need " + data.Name + " in the team.");
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
+                                        {
+                                            if (GetIntegerValue(o) == 0)
+                                            {
+                                                RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                string BossName = "";
+                                                if (req.BossID == Terraria.ID.NPCID.Spazmatism || req.BossID == Terraria.ID.NPCID.Retinazer)
+                                                {
+                                                    BossName = "The Twins";
+                                                }
+                                                else if (req.BossID == Terraria.ID.NPCID.EaterofWorldsBody || req.BossID == Terraria.ID.NPCID.EaterofWorldsHead || req.BossID == Terraria.ID.NPCID.EaterofWorldsTail)
+                                                {
+                                                    BossName = "Eater of Worlds";
+                                                }
+                                                else if (req.BossID == Terraria.ID.NPCID.TheDestroyer || req.BossID == Terraria.ID.NPCID.TheDestroyerBody || req.BossID == Terraria.ID.NPCID.TheDestroyerTail)
+                                                {
+                                                    BossName = "The Destroyer";
+                                                }
+                                                else
+                                                {
+                                                    BossName = Lang.GetNPCName(req.BossID).Value;
+                                                }
+                                                QuestObjectives.Add("  Defeat " + BossName + ".");
+                                            }
                                         }
                                         break;
                                 }
@@ -583,6 +765,110 @@ namespace giantsummon
             return QuestObjectives.ToArray();
         }
 
+        public bool TrySpawningBoss(int PlayerID, int ID, int DifficultyBonus = 0)
+        {
+            bool Success = false;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && (Main.npc[n].boss || Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsHead))
+                {
+                    return false;
+                }
+            }
+            if(ID == Terraria.ID.NPCID.EaterofWorldsBody || ID== Terraria.ID.NPCID.EaterofWorldsTail)
+                ID = Terraria.ID.NPCID.EaterofWorldsHead;
+            if(ID == Terraria.ID.NPCID.TheDestroyerBody || ID == Terraria.ID.NPCID.TheDestroyerTail)
+                ID = Terraria.ID.NPCID.TheDestroyer;
+            if (ID == Terraria.ID.NPCID.EyeofCthulhu || ID == Terraria.ID.NPCID.SkeletronHead || ID == Terraria.ID.NPCID.Spazmatism || ID == Terraria.ID.NPCID.Retinazer ||
+                ID == Terraria.ID.NPCID.TheDestroyer)
+            {
+                if (!Main.dayTime && Main.time < 2.5f * 3600)
+                {
+                    NPC.SpawnOnPlayer(PlayerID, ID);
+                    if (ID == Terraria.ID.NPCID.Spazmatism)
+                        NPC.SpawnOnPlayer(PlayerID, Terraria.ID.NPCID.Retinazer);
+                    else if (ID == Terraria.ID.NPCID.Retinazer)
+                        NPC.SpawnOnPlayer(PlayerID, Terraria.ID.NPCID.Spazmatism);
+                    Success = true;
+                }
+            }
+            else if (ID == Terraria.ID.NPCID.EaterofWorldsHead && Main.player[PlayerID].ZoneCorrupt)
+            {
+                NPC.SpawnOnPlayer(PlayerID, ID);
+                Success = true;
+            }
+            else if (ID == Terraria.ID.NPCID.BrainofCthulhu && Main.player[PlayerID].ZoneCrimson)
+            {
+                NPC.SpawnOnPlayer(PlayerID, ID);
+                Success = true;
+            }
+            else if (ID == Terraria.ID.NPCID.WallofFlesh && Main.player[PlayerID].ZoneUnderworldHeight)
+            {
+                NPC.SpawnOnPlayer(PlayerID, ID);
+                Success = true;
+            }
+            else if (ID == Terraria.ID.NPCID.KingSlime)
+            {
+                NPC.SpawnOnPlayer(PlayerID, ID);
+                Success = true;
+            }
+            else if (ID == Terraria.ID.NPCID.QueenBee && Main.player[PlayerID].ZoneJungle)
+            {
+                NPC.SpawnOnPlayer(PlayerID, ID);
+                Success = true;
+            }
+            if (Success)
+            {
+                for (int n = 0; n < 200; n++)
+                {
+                    if (!Main.npc[n].active)
+                        continue;
+                    if (Main.npc[n].type == ID || (ID == Terraria.ID.NPCID.Spazmatism && Main.npc[n].type == Terraria.ID.NPCID.Retinazer) ||
+                        (ID == Terraria.ID.NPCID.Retinazer && Main.npc[n].type == Terraria.ID.NPCID.Spazmatism) || 
+                        (Main.npc[n].type >= Terraria.ID.NPCID.EaterofWorldsHead && Main.npc[n].type <= Terraria.ID.NPCID.EaterofWorldsTail && ID == Terraria.ID.NPCID.EaterofWorldsHead))
+                    {
+                        int Difficulty = (int)Main.npc[n].GetGlobalNPC<NpcMod>().mobType + DifficultyBonus;
+                        if (Difficulty >= Enum.GetValues(typeof(MobTypes)).Length)
+                        {
+                            Difficulty = Enum.GetValues(typeof(MobTypes)).Length - 1;
+                        }
+                        Main.npc[n].GetGlobalNPC<NpcMod>().mobType = (MobTypes)Difficulty;
+                    }
+                }
+            }
+            return Success;
+        }
+
+        public string GetEventName(int ID)
+        {
+            string EventName = "";
+            switch ((EventList)ID)
+            {
+                case EventList.GoblinArmy:
+                    EventName = "Goblin Army";
+                    break;
+                case EventList.PirateArmy:
+                    EventName = "Pirate Invasion";
+                    break;
+                case EventList.MartianArmy:
+                    EventName = "Martian Madness";
+                    break;
+                case EventList.FrostArmy:
+                    EventName = "Frost Legion";
+                    break;
+                case EventList.PumpkinMoon:
+                    EventName = "Pumpkin Moon";
+                    break;
+                case EventList.FrostMoon:
+                    EventName = "Frost Moon";
+                    break;
+                case EventList.DD2Event:
+                    EventName = "Old One's Army";
+                    break;
+            }
+            return EventName;
+        }
+
         public void CreateTalkRequest()
         {
             IntegerVars.Clear();
@@ -619,6 +905,24 @@ namespace giantsummon
                         {
                             RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)gd.Base.RequestDB[RequestID].Objectives[o];
                             SetFloatValue(o, req.InitialDistance + req.StackIncreasePerFriendshipLevel * gd.FriendshipLevel);
+                        }
+                        break;
+                    case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
+                        {
+                            RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            SetIntegerValue(o, req.EventWaves + (int)(req.ExtraWavesPerFriendshipLevel * gd.FriendshipLevel));
+                        }
+                        break;
+                    case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
+                        {
+                            RequestBase.EventKillRequest req = (RequestBase.EventKillRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            SetIntegerValue(o, req.InitialKills + (int)(req.ExtraKillsPerFriendshipLevel * gd.FriendshipLevel));
+                        }
+                        break;
+                    case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
+                        {
+                            RequestBase.ObjectCollectionRequest req = (RequestBase.ObjectCollectionRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            SetIntegerValue(o, req.ObjectCount + (int)(req.ObjectExtraCountPerFriendshipLevel * gd.FriendshipLevel));
                         }
                         break;
                 }
@@ -707,7 +1011,7 @@ namespace giantsummon
                             }
                         }
                         break;
-                    case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
+                    case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
                         {
                             if (GetIntegerValue(o) > 0)
                             {
@@ -765,6 +1069,88 @@ namespace giantsummon
                                             case 144:
                                             case 143:
                                             case 145:
+                                                EventMobKilled = true;
+                                                break;
+                                        }
+                                        break;
+                                    case EventList.DD2Event:
+                                        switch (MobID)
+                                        {
+                                            case Terraria.ID.NPCID.DD2GoblinT1:
+                                            case Terraria.ID.NPCID.DD2GoblinT2:
+                                            case Terraria.ID.NPCID.DD2GoblinT3:
+                                            case Terraria.ID.NPCID.DD2GoblinBomberT1:
+                                            case Terraria.ID.NPCID.DD2GoblinBomberT2:
+                                            case Terraria.ID.NPCID.DD2GoblinBomberT3:
+                                            case Terraria.ID.NPCID.DD2Betsy:
+                                            case Terraria.ID.NPCID.DD2DarkMageT1:
+                                            case Terraria.ID.NPCID.DD2DarkMageT3:
+                                            case Terraria.ID.NPCID.DD2DrakinT2:
+                                            case Terraria.ID.NPCID.DD2DrakinT3:
+                                            case Terraria.ID.NPCID.DD2JavelinstT1:
+                                            case Terraria.ID.NPCID.DD2JavelinstT2:
+                                            case Terraria.ID.NPCID.DD2JavelinstT3:
+                                            case Terraria.ID.NPCID.DD2KoboldFlyerT2:
+                                            case Terraria.ID.NPCID.DD2KoboldFlyerT3:
+                                            case Terraria.ID.NPCID.DD2KoboldWalkerT2:
+                                            case Terraria.ID.NPCID.DD2KoboldWalkerT3:
+                                            case Terraria.ID.NPCID.DD2LightningBugT3:
+                                            case Terraria.ID.NPCID.DD2OgreT2:
+                                            case Terraria.ID.NPCID.DD2OgreT3:
+                                            case Terraria.ID.NPCID.DD2SkeletonT1:
+                                            case Terraria.ID.NPCID.DD2SkeletonT3:
+                                            case Terraria.ID.NPCID.DD2WitherBeastT2:
+                                            case Terraria.ID.NPCID.DD2WitherBeastT3:
+                                            case Terraria.ID.NPCID.DD2WyvernT1:
+                                            case Terraria.ID.NPCID.DD2WyvernT2:
+                                            case Terraria.ID.NPCID.DD2WyvernT3:
+                                                EventMobKilled = true;
+                                                break;
+                                        }
+                                        break;
+
+                                    case EventList.PumpkinMoon:
+                                        switch (MobID)
+                                        {
+                                            case Terraria.ID.NPCID.Scarecrow1:
+                                            case Terraria.ID.NPCID.Scarecrow2:
+                                            case Terraria.ID.NPCID.Scarecrow3:
+                                            case Terraria.ID.NPCID.Scarecrow4:
+                                            case Terraria.ID.NPCID.Scarecrow5:
+                                            case Terraria.ID.NPCID.Scarecrow6:
+                                            case Terraria.ID.NPCID.Scarecrow7:
+                                            case Terraria.ID.NPCID.Scarecrow8:
+                                            case Terraria.ID.NPCID.Scarecrow9:
+                                            case Terraria.ID.NPCID.Scarecrow10:
+                                            case Terraria.ID.NPCID.Splinterling:
+                                            case Terraria.ID.NPCID.Hellhound:
+                                            case Terraria.ID.NPCID.Poltergeist:
+                                            case Terraria.ID.NPCID.HeadlessHorseman:
+                                            case Terraria.ID.NPCID.MourningWood:
+                                            case Terraria.ID.NPCID.Pumpking:
+                                                EventMobKilled = true;
+                                                break;
+                                        }
+                                        break;
+
+                                    case EventList.FrostMoon:
+                                        switch (MobID)
+                                        {
+                                            case Terraria.ID.NPCID.PresentMimic:
+                                            case Terraria.ID.NPCID.Flocko:
+                                            case Terraria.ID.NPCID.GingerbreadMan:
+                                            case Terraria.ID.NPCID.ZombieElf:
+                                            case Terraria.ID.NPCID.ZombieElfBeard:
+                                            case Terraria.ID.NPCID.ZombieElfGirl:
+                                            case Terraria.ID.NPCID.ElfArcher:
+                                            case Terraria.ID.NPCID.Nutcracker:
+                                            case Terraria.ID.NPCID.NutcrackerSpinning:
+                                            case Terraria.ID.NPCID.Yeti:
+                                            case Terraria.ID.NPCID.ElfCopter:
+                                            case Terraria.ID.NPCID.Krampus:
+                                            case Terraria.ID.NPCID.Everscream:
+                                            case Terraria.ID.NPCID.SantaNK1:
+                                            case Terraria.ID.NPCID.IceQueen:
                                                 EventMobKilled = true;
                                                 break;
                                         }

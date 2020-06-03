@@ -203,6 +203,40 @@ namespace giantsummon.Creatures
                 return Main.halloween;
             });
             AddHuntObjective(Terraria.ID.NPCID.Raven, 5, 0.2f);
+            //
+            AddNewRequest("Werewolf? Where? Wolf?", 360,
+                "*[name] is telling you about creepy wolves wandering around in full moon night. He said that tried to befriend one once, and got hurt by It, and then was attacked by more of them. He's asking you to do something about them.*",
+                "*[name] tells you to be very mean to them. And also to becareful because they jump on who they are attacking.*",
+                "*[name] says that It is fine. He also told you to becareful when wandering outside during full moon nights. He doesn't want you to be attacked by them too.*",
+                "*[name] looks very happy after hearing about your success.*",
+                "*[name] says that those wolves creatures appears during Full Moon nights. He told you to beware not to miss It.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode && (Main.moonPhase == 7 || (Main.moonPhase == 0 && Main.dayTime));
+            });
+            AddHuntObjective(Terraria.ID.NPCID.Werewolf, 3, 0.1f);
+            //
+            AddNewRequest("Hollow Armors", 320,
+                "*[name] is telling you about creepy armors that walks during the night. He said that It will be dangerous to have them around, and asks you to make a number of them stop moving.*",
+                "*[name] tells you to beware when facing them, since they don't take much recoil from attacks.*",
+                "*[name] says that even him doesn't want to try fighting them either, saying that he's better staying at home, than out there fighting those things.*",
+                "*[name] is happy for seeing you return safe from that.*",
+                "*[name] says that those walking armors appears during the night. Tells you to becareful because they are resistant to knockback.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode;
+            });
+            AddHuntObjective(Terraria.ID.NPCID.PossessedArmor, 4, 0.2f);
+            //
+            AddNewRequest("Adventure Call", 200,
+                "*[name] is saying that he wants to go on an adventure. He asks if he can accompany you on yours.*",
+                "*[name] got happy after you accepted, then started to get several things he says that may be useful in the travel.*",
+                "*[name] says that feels bored at the moment.*",
+                "*[name] says that liked the adventure, and that doesn't mind to continue exploring the world with you.*", 
+                "*[name] is asking when you'll take him on your adventures.*");
+            AddExploreObjective();
+            //
+
         }
 
         public void RewardList()
