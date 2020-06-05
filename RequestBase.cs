@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Terraria;
 
 namespace giantsummon
 {
     public class RequestBase
     {
+        public static RequestBase[] CommonRequests = new RequestBase[0];
         public string Name = "";
         public string BriefText = "", AcceptText = "", DenyText = "", CompleteText = "", RequestInfoText = "";
         public List<RequestObjective> Objectives = new List<RequestObjective>();
@@ -14,7 +16,7 @@ namespace giantsummon
         public RequestRequirementDel Requirement = delegate(Terraria.Player player) { return true; };
         public int RequestScore = 500;
 
-        public RequestBase(string Name, int RequestScore, string BriefText, string AcceptText, string DenyText, string CompleteText, string RequestInfoText)
+        public RequestBase(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteText = "", string RequestInfoText = "")
         {
             this.Name = Name;
             this.RequestScore = RequestScore;
@@ -23,6 +25,11 @@ namespace giantsummon
             this.DenyText = DenyText;
             this.CompleteText = CompleteText;
             this.RequestInfoText = RequestInfoText;
+        }
+
+        public void AddRequestRequirement(RequestRequirementDel req)
+        {
+            this.Requirement = req;
         }
 
         public bool IsRequestDoable(Terraria.Player player, GuardianData gd)
@@ -265,6 +272,97 @@ namespace giantsummon
                 ObjectCollection,
                 CompanionRequirement,
                 KillBoss
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetBugNetRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (player.inventory[i].type == Terraria.ID.ItemID.BugNet || player.inventory[i].type == Terraria.ID.ItemID.GoldenBugNet)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetFishingRodRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (player.inventory[i].type > 0 && player.inventory[i].fishingPole > 0)
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetNightRequestRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return player.statDefense >= 2;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetCorruptionRequestRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return !WorldGen.crimson && (player.statDefense >= 4 || NPC.downedBoss2);
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetCrimsonRequestRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return WorldGen.crimson && (player.statDefense >= 4 || NPC.downedBoss2);
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetDungeonRequestRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return NPC.downedBoss3;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetHardmodeRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return Main.hardMode;
+                };
             }
         }
     }

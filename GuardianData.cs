@@ -202,6 +202,46 @@ namespace giantsummon
                 rwd.InitialStack = 1;
                 rwd.RewardChance = 0.0667f;
                 RewardsToGet.Add(rwd);
+                //
+                rwd = new Reward();
+                rwd.ItemID = Terraria.ID.ItemID.WoodenCrate;
+                rwd.RewardScore = 250;
+                rwd.InitialStack = 1;
+                rwd.MaxExtraStack = 2;
+                rwd.RewardChance = 0.0625f;
+                RewardsToGet.Add(rwd);
+                //
+                rwd = new Reward();
+                rwd.ItemID = Terraria.ID.ItemID.IronCrate;
+                rwd.RewardScore = 250;
+                rwd.InitialStack = 1;
+                rwd.MaxExtraStack = 2;
+                rwd.RewardChance = 0.0390625f;
+                RewardsToGet.Add(rwd);
+                //
+                rwd = new Reward();
+                rwd.ItemID = Terraria.ID.ItemID.GoldenCrate;
+                rwd.RewardScore = 250;
+                rwd.InitialStack = 1;
+                rwd.MaxExtraStack = 2;
+                rwd.RewardChance = 0.009765625f;
+                RewardsToGet.Add(rwd);
+                //
+                rwd = new Reward();
+                rwd.ItemID = Terraria.ID.ItemID.CookedFish;
+                rwd.RewardScore = 150;
+                rwd.InitialStack = 1;
+                rwd.MaxExtraStack = 2;
+                rwd.RewardChance = 0.125f;
+                RewardsToGet.Add(rwd);
+                //
+                rwd = new Reward();
+                rwd.ItemID = Terraria.ID.ItemID.BowlofSoup;
+                rwd.RewardScore = 125;
+                rwd.InitialStack = 1;
+                rwd.MaxExtraStack = 2;
+                rwd.RewardChance = 0.125f;
+                RewardsToGet.Add(rwd);
             }
             int HighestPickValue = 0, HighestAxeValue = 0, HighestFishingPowerValue = 0, HighestBaitValue = 0;
             int BaitPosition = -1;

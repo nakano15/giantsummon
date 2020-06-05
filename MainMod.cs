@@ -33,7 +33,7 @@ namespace giantsummon
         public const int LastContestModVersion = 60;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1982670";
         //End contest related
-        public const int ModVersion = 61, LastModVersion = 60;
+        public const int ModVersion = 62, LastModVersion = 60;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -1575,13 +1575,22 @@ namespace giantsummon
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
                                                 CheckingQuestBrief = true;
-                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestBrief(d), Guardian), true);
+                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestBrief(d, Guardian), Guardian), true);
                                                 //Companion says request text.
                                             }
                                         }
                                     }
                                     else
                                     {
+                                        if (d.request.IsCommonRequest)
+                                        {
+                                            SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, d.Name + " asks you to:", SlotStartPosition, Color.White).Y;
+                                            foreach (string t in d.request.GetRequestText(player.player, d, true))
+                                            {
+                                                SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, t, SlotStartPosition, Color.White).Y;
+                                            }
+                                            SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, "Will you do this request?", SlotStartPosition, Color.White).Y;
+                                        }
                                         Vector2 ButtonPosition = SlotStartPosition;
                                         ButtonPosition.X += 48f;
 
@@ -1595,15 +1604,22 @@ namespace giantsummon
                                             Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 1);
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
-                                                CheckingQuestBrief = false;
-                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestAccept(d), Guardian), true);
-                                                d.request.UponAccepting();
+                                                if (PlayerMod.GetPlayerAcceptedRequestCount(player.player) >= RequestData.MaxRequestCount)
+                                                {
+                                                    Main.NewText("You have too many requests active.");
+                                                }
+                                                else
+                                                {
+                                                    CheckingQuestBrief = false;
+                                                    Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestAccept(d), Guardian), true);
+                                                    d.request.UponAccepting();
+                                                }
                                             }
                                         }
 
                                         ButtonPosition.X += 10;
                                         ButtonText = "Reject";
-                                        ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 0, 0);
+                                        ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1);
                                         if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
                                             Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
                                         {
@@ -1635,7 +1651,7 @@ namespace giantsummon
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
                                                 CheckingQuestBrief = false;
-                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestComplete(d), Guardian), true);
+                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestComplete(d, Guardian), Guardian), true);
                                                 d.request.CompleteRequest(Guardian, d, player);
                                             }
                                         }
@@ -1656,7 +1672,31 @@ namespace giantsummon
                                                 CheckingQuestBrief = false;
                                                 Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestInfo(d), Guardian), true);
                                             }
-                                        }                                        
+                                        }
+                                        for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
+                                        {
+                                            if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss)
+                                            {
+                                                SlotStartPosition.Y += 26f;
+                                                RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
+                                                ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
+                                                ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
+                                                if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
+                                                    Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                                {
+                                                    player.player.mouseInterface = true;
+                                                    Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
+                                                    if (Main.mouseLeft && Main.mouseLeftRelease)
+                                                    {
+                                                        CheckingQuestBrief = false;
+                                                        if (!d.request.TrySpawningBoss(player.player.whoAmI, req.BossID, req.DifficultyBonus))
+                                                        {
+                                                            Main.NewText("Failed. Did you tried calling It when It can appear?");
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
                                     SlotStartPosition.Y += 28f;
                                 }
@@ -1860,6 +1900,7 @@ namespace giantsummon
             }
             InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
             InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
+            CommonRequestsDB.PopulateCommonRequestsDB();
             try
             {
                 NExperienceMod = ModLoader.GetMod("NExperience");

@@ -422,8 +422,8 @@ namespace giantsummon.Npcs
                 {
                     npc.frameCounter++;
                     Frame = ((int)npc.frameCounter / 5) % 4;
-                    if (Frame == 3)
-                        Frame = 2;
+                    if (Frame == 2)
+                        Frame = 1;
                     Frame += 19;
                 }
                 else

@@ -702,42 +702,6 @@ namespace giantsummon
             }
         }
 
-        public RequestBase.RequestRequirementDel GetBugNetRequirement
-        {
-            get
-            {
-                return delegate(Player player)
-                {
-                    for (int i = 0; i < 50; i++)
-                    {
-                        if (player.inventory[i].type == Terraria.ID.ItemID.BugNet || player.inventory[i].type == Terraria.ID.ItemID.GoldenBugNet)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                };
-            }
-        }
-
-        public RequestBase.RequestRequirementDel GetFishingRodRequirement
-        {
-            get
-            {
-                return delegate(Player player)
-                {
-                    for (int i = 0; i < 50; i++)
-                    {
-                        if (player.inventory[i].type > 0 && player.inventory[i].fishingPole > -1)
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                };
-            }
-        }
-
         public class TerrarianCompanionInfos
         {
             public Color HairColor, SkinColor, EyeColor, ShirtColor, UnderShirtColor, PantsColor, ShoeColor;

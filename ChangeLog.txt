@@ -1,1 +1,3 @@
 ﻿Rococo will no longer mention Alex when he's not in the world.
+You can no longer use potions when knocked out.
+A number of dialogue fixes.

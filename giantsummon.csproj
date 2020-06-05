@@ -68,6 +68,7 @@
     <Compile Include="Buffs\VeryFatigued.cs" />
     <Compile Include="Buffs\VeryWounded.cs" />
     <Compile Include="Buffs\WellBeing.cs" />
+    <Compile Include="CommonRequestsDB.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
     <Compile Include="ConfigMod.cs" />

@@ -357,9 +357,16 @@ namespace giantsummon.GuardianNPC
                                 else if (!CheckingRequest)
                                 {
                                     CheckingRequest = true;
-                                    Main.npcChatText = data.request.GetRequestBrief(data);
+                                    Main.npcChatText = data.request.GetRequestBrief(data, Guardian);
                                     if (Main.npcChatText == "")
                                         Main.npcChatText = data.Base.HasRequestMessage(player, Guardian);
+                                    if (data.request.IsCommonRequest)
+                                    {
+                                        foreach (string s in data.request.GetRequestText(Main.player[Main.myPlayer], data, true))
+                                        {
+                                            Main.npcChatText += "\n" + s;
+                                        }
+                                    }
                                     Main.npcChatText = MessageParser(Main.npcChatText, Guardian);
 
                                 }
@@ -390,7 +397,7 @@ namespace giantsummon.GuardianNPC
                                 }
                                 else if (data.request.RequestCompleted && data.request.CompleteRequest(Guardian, data, player.GetModPlayer<PlayerMod>()))
                                 {
-                                    Mes = data.request.GetRequestComplete(data);
+                                    Mes = data.request.GetRequestComplete(data, Guardian);
                                     if (Mes == "")
                                         Mes = data.Base.CompletedRequestMessage(player, Guardian);
                                     Main.npcChatText = MessageParser(Mes, Guardian);

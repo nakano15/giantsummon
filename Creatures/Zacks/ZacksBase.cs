@@ -238,6 +238,10 @@ namespace giantsummon.Creatures
                 if (BlueInTheWorld)
                 {
                     Mes.Add("*[name] said to not worry about your and your citizens safety, since he has an agreement with [gn:1] that he would not devour anyone in her presence.*");
+                    if (player.head == 17)
+                    {
+                        Mes.Add("*[name] tells you to beware when using that hood. He says that you can end up being hugged by a known bunny lover.*");
+                    }
                 }
                 else
                 {
@@ -406,7 +410,8 @@ namespace giantsummon.Creatures
             Mes.Add("*[name] seems to be worried, trying to keep up with me, as if I was going to leave him behind.*");
             Mes.Add("*You asked [name] why zombies comes out from the floor, he answers that he doesn't knows, since he was never buried.*");
             Mes.Add("*[name] is asking you if will eventually find the Terrarian that left him to the zombies.*");
-            Mes.Add("*I asked [name] what he uses to make his lasso. He told me that used his intestine for that. After knowing that, not only I got striked by an instant regret, but also that shouldn't tell this to [gn:2].*");
+            if(PlayerMod.PlayerHasGuardian(player, GuardianBase.Sardine))
+                Mes.Add("*I asked [name] what he uses to make his lasso. He told me that used his intestine for that. After knowing that, not only I got striked by an instant regret, but also think that shouldn't tell this to [gn:2].*");
             if (PlayerMod.HasGuardianSummoned(player, 3) && PlayerMod.GetPlayerSummonedGuardian(player, 3).Wet)
             {
                 Mes.Add("*[name] is saying that there's water even where you wouldn't believe. And he preffers not to give details.*");

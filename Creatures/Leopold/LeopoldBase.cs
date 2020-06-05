@@ -240,7 +240,7 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Blue))
             {
-                Mes.Add("*I keep avoiding crossing [gn:" + GuardianBase.Blue + "]'s path, because everytime she sees me, I pass the next 1~2 hours trying to get off her hug.*");
+                Mes.Add("*I keep avoiding crossing [gn:" + GuardianBase.Blue + "]'s path, because everytime she sees me, I pass the next 1~2 hours trying to get off her arms.*");
                 Mes.Add("*What is [gn:" + GuardianBase.Blue + "]'s problem? Whenever she sees a bunny she wants to hug it.*");
                 Mes.Add("*You wont believe me, but [gn:" + GuardianBase.Blue + "] has really strong arms. I have to struggle for hours to be free from them.*");
             }
@@ -270,10 +270,10 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(GuardianBase.Mabel))
             {
                 Mes.Add("*I get reactionless when [gn:" + GuardianBase.Mabel + "] is nearby.*");
-                if (!Main.dayTime && !Main.bloodMoon)
-                {
-                    Mes.Add("*Looks like I'll have troubles sleeping this night...*");
-                }
+            }
+            if (!Main.dayTime && !Main.bloodMoon)
+            {
+                Mes.Add("*Looks like I'll have troubles sleeping this night...*");
             }
             if (NpcMod.HasGuardianNPC(Michelle))
             {

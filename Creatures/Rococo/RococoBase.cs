@@ -173,7 +173,7 @@ namespace giantsummon.Creatures
                 "*[name] looks very sad now.*",
                 "*[name] is very happy with the bunny you brought. He said that was looking for something to play with, and you just brought.*",
                 "*[name] says that It wont be hard for you to find Bunnies, but that you will need a Bug Net to get them.*");
-            AddRequestRequirement(GetBugNetRequirement);
+            AddRequestRequirement(RequestBase.GetBugNetRequirement);
             AddItemCollectionObjective(Terraria.ID.ItemID.Bunny, 1, 0);
             //
             AddNewRequest("Dead Walker", 225, 

@@ -120,6 +120,20 @@ namespace giantsummon.Creatures
         public void GetRequests()
         {
             //Add a request to kill the King Slime.
+            AddNewRequest("Bash the King!", 410, 
+                "I didn't liked the result of my last fight against the King Slime, and I think there's still Gel inside my ears. I wonder If we could try doing the fight again, but this time doing it right. What do you think?",
+                "Amazing! Just tell me when you're ready, and I will call It.",
+                "What? I can't hear you! Must be the Gel. Did you deny?",
+                "That is how It is done! And It was really good to face It from outside, too.",
+                "Just tell me when you want me to call It. Let's prepare ourselves first before trying.");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return NPC.downedSlimeKing;
+            });
+            AddKillBossRequest(Terraria.ID.NPCID.KingSlime, 1);
+            //
+            //AddNewRequest("", 200,
+            //    "");
         }
 
         public void GetRewards()

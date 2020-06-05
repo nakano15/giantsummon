@@ -389,18 +389,6 @@ namespace giantsummon
         {
         }
 
-        public static int GetPlayerActiveRequests(Player player)
-        {
-            PlayerMod p = player.GetModPlayer<PlayerMod>();
-            int Requests = 0;
-            foreach (int g in p.MyGuardians.Keys)
-            {
-                if (p.MyGuardians[g].request.Active)
-                    Requests++;
-            }
-            return Requests;
-        }
-
         public static TerraGuardian GetPlayerSummonedGuardian(Player player, int ID, Mod mod)
         {
             return GetPlayerSummonedGuardian(player, ID, mod.Name);

@@ -19,12 +19,26 @@ namespace giantsummon
         public bool RequestCompleted = false;
         public Dictionary<int, int> IntegerVars = new Dictionary<int, int>();
         public Dictionary<int, float> FloatVars = new Dictionary<int, float>();
-        public bool IsTalkQuest = false;
-        public const int MaxRequestCount = 3; //It's hard to focus when you have several requests active, even more since they have a time limit.
+        public bool IsTalkQuest = false, IsCommonRequest = false;
+        public const int MaxRequestCount = 3, RequestsUntilSpecialRequest = 3; //It's hard to focus when you have several requests active, even more since they have a time limit.
+        public int RequestCompleteCombo = 0;
+        public List<int> RequestsCompletedIDs = new List<int>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gd">Must be the companion having this request.</param>
+        /// <returns></returns>
+        public RequestBase GetRequestBase(GuardianData gd)
+        {
+            if (IsCommonRequest)
+                return RequestBase.CommonRequests[RequestID];
+            return gd.Base.RequestDB[RequestID];
+        }
 
         public bool RequiresGuardianActive(GuardianData d)
         {
-            foreach (RequestBase.RequestObjective o in d.Base.RequestDB[RequestID].Objectives)
+            foreach (RequestBase.RequestObjective o in GetRequestBase(d).Objectives)
             {
                 if ((o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore && ((RequestBase.ExploreRequest)o).RequiresGuardianActive) || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester)
                     return true;
@@ -36,11 +50,12 @@ namespace giantsummon
         {
             if (!d.request.IsTalkQuest && d.request.requestState == RequestState.RequestActive)
             {
-                if (d.Base.RequestDB[d.request.RequestID].Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester))
+                RequestBase rb = d.request.GetRequestBase(d);
+                if (rb.Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester))
                     return true;
-                foreach (RequestBase.ExploreRequest rb in d.Base.RequestDB[d.request.RequestID].Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore))
+                foreach (RequestBase.ExploreRequest rbxp in rb.Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore))
                 {
-                    if (rb.RequiresGuardianActive)
+                    if (rbxp.RequiresGuardianActive)
                         return true;
                 }
             }
@@ -50,9 +65,10 @@ namespace giantsummon
                 GuardianData gd = pm.MyGuardians[r];
                 if (!gd.request.IsTalkQuest && gd.request.requestState == RequestState.RequestActive)
                 {
-                    foreach (RequestBase.CompanionRequirementRequest rb in gd.Base.RequestDB[gd.request.RequestID].Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement))
+                    RequestBase rb = gd.request.GetRequestBase(gd);
+                    foreach (RequestBase.CompanionRequirementRequest rbcomp in rb.Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement))
                     {
-                        if (rb.CompanionID == d.ID && rb.CompanionModID == d.ModID)
+                        if (rbcomp.CompanionID == d.ID && rbcomp.CompanionModID == d.ModID)
                         {
                             return true;
                         }
@@ -117,6 +133,7 @@ namespace giantsummon
             tag.Add("RequestTime" + IDText, Time);
             tag.Add("RequestState" + IDText, (byte)requestState);
             tag.Add("RequestIsTalk" + IDText, IsTalkQuest);
+            tag.Add("RequestIsCommon" + IDText, IsCommonRequest);
             tag.Add("RequestIntegers" + IDText, IntegerVars.Count);
             byte Counter = 0;
             foreach (int Key in IntegerVars.Keys)
@@ -133,6 +150,12 @@ namespace giantsummon
                 tag.Add("RequestIntegerValue" + Counter + IDText, FloatVars[Key]);
                 Counter++;
             }
+            tag.Add("RequestsCompletedCount" + IDText, RequestCompleteCombo);
+            tag.Add("RequestsSpecialCompletedIDCount" + IDText, RequestsCompletedIDs.Count);
+            for (int i = 0; i < RequestsCompletedIDs.Count; i++)
+            {
+                tag.Add("RequestsCompleteID_"+i + IDText, RequestsCompletedIDs[i]);
+            }
         }
 
         public void Load(Terraria.ModLoader.IO.TagCompound tag, int ModVersion, int UniqueID, GuardianData gd)
@@ -140,6 +163,10 @@ namespace giantsummon
             string IDText = "_" + UniqueID;
             RequestID = tag.GetInt("RequestID" + IDText);
             IsTalkQuest = tag.GetBool("RequestIsTalk" + IDText);
+            if (ModVersion >= 62)
+            {
+                IsCommonRequest = tag.GetBool("RequestIsCommon" + IDText);
+            }
             RequestState requestState = (RequestState)tag.GetByte("RequestState" + IDText);
             if (requestState >= RequestState.HasRequestReady)
             {
@@ -149,7 +176,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    ChangeRequest(gd, RequestID);
+                    ChangeRequest(gd, RequestID, IsCommonRequest);
                 }
             }
             this.requestState = requestState;
@@ -170,6 +197,16 @@ namespace giantsummon
                 float Value = tag.GetFloat("RequestIntegerValue" + k + IDText);
                 FloatVars.Add(Key, Value);
             }
+            if (ModVersion >= 62)
+            {
+                RequestCompleteCombo = tag.GetInt("RequestsCompletedCount" + IDText);
+                MaxKeys = tag.GetInt("RequestsSpecialCompletedIDCount" + IDText);
+                RequestsCompletedIDs.Clear();
+                for (int i = 0; i < MaxKeys; i++)
+                {
+                    RequestsCompletedIDs.Add(tag.GetInt("RequestsCompleteID_" + i + IDText));
+                }
+            }
         }
 
         public bool CountObjective(GuardianData gd, Player player)
@@ -177,10 +214,12 @@ namespace giantsummon
             bool Count = !RequiresGuardianActive(gd) || PlayerMod.HasGuardianSummoned(player, gd.ID, gd.ModID);
             if (Count)
             {
-                RequestBase.CompanionRequirementRequest[] objs = (RequestBase.CompanionRequirementRequest[])gd.Base.RequestDB[RequestID].Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement).ToArray();
-                foreach (RequestBase.CompanionRequirementRequest obj in objs)
+                RequestBase rb = GetRequestBase(gd);
+                RequestBase.RequestObjective[] objs = rb.Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement).ToArray();
+                foreach (RequestBase.RequestObjective obj in objs)
                 {
-                    if (!PlayerMod.HasGuardianSummoned(player, obj.CompanionID, obj.CompanionModID))
+                    RequestBase.CompanionRequirementRequest comp = (RequestBase.CompanionRequirementRequest)obj;
+                    if (!PlayerMod.HasGuardianSummoned(player, comp.CompanionID, comp.CompanionModID))
                     {
                         Count = false;
                         break;
@@ -203,27 +242,49 @@ namespace giantsummon
                             if (player.player.whoAmI == Main.myPlayer)
                             {
                                 List<int> Requests = new List<int>();
-                                for (int req = 0; req < gd.Base.RequestDB.Count; req++)
+                                bool MakeCommonRequest = RequestCompleteCombo < RequestsUntilSpecialRequest;
+                                if (MakeCommonRequest)
                                 {
-                                    if (gd.Base.RequestDB[req].IsRequestDoable(player.player, gd))
+                                    for (int req = 0; req < RequestBase.CommonRequests.Length; req++)
                                     {
-                                        Requests.Add(req);
+                                        if (RequestBase.CommonRequests[req].IsRequestDoable(player.player, gd))
+                                        {
+                                            Requests.Add(req);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int req = 0; req < gd.Base.RequestDB.Count; req++)
+                                    {
+                                        if (gd.Base.RequestDB[req].IsRequestDoable(player.player, gd))
+                                        {
+                                            Requests.Add(req);
+                                        }
                                     }
                                 }
                                 bool HasCompanionSummonedOrInTheWorld = (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID) || NpcMod.HasGuardianNPC(gd.ID, gd.ModID));
-                                if (Main.rand.NextDouble() < 0.333f && HasCompanionSummonedOrInTheWorld)
+                                bool GotRequest = false;
+                                if ((gd.FriendshipLevel == 0 || Main.rand.NextDouble() < 0.333f) && HasCompanionSummonedOrInTheWorld)
                                 {
                                     CreateTalkRequest();
                                     Main.NewText(gd.Name + " wants to speak with you.");
+                                    GotRequest = true;
                                 }
                                 else if (Requests.Count > 0 && HasCompanionSummonedOrInTheWorld)
                                 {
-                                    ChangeRequest(gd, Requests[Main.rand.Next(Requests.Count)]);
+                                    ChangeRequest(gd, Requests[Main.rand.Next(Requests.Count)], MakeCommonRequest);
                                     Main.NewText(gd.Name + " has a request for you.");
+                                    GotRequest = true;
                                 }
                                 else
                                 {
                                     Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+                                }
+                                if (GotRequest && !player.TutorialRequestIntroduction)
+                                {
+                                    player.TutorialRequestIntroduction = true;
+                                    Main.NewText("Someone gave you a request. Helping them will reward with friendship experience, and also with some interesting rewards.");
                                 }
                             }
                         }
@@ -258,10 +319,11 @@ namespace giantsummon
                             {
                                 bool CanCountObjective = CountObjective(gd, player.player);
                                 int ObjectivesCompleted = 0, ObjectiveCount = 0;
-                                for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
+                                RequestBase rb = GetRequestBase(gd);
+                                for (int o = 0; o < rb.Objectives.Count; o++)
                                 {
                                     ObjectiveCount++;
-                                    switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)
+                                    switch (rb.Objectives[o].objectiveType)
                                     {
                                         default:
                                             {
@@ -270,7 +332,7 @@ namespace giantsummon
                                             break;
                                         case RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement:
                                             {
-                                                RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)rb.Objectives[o];
                                                 if (player.GetAllGuardianFollowers.Any(x => x.Active && x.ID == req.CompanionID && x.ModID == req.CompanionModID))
                                                 {
                                                     ObjectivesCompleted++;
@@ -287,7 +349,7 @@ namespace giantsummon
                                             break;
                                         case RequestBase.RequestObjective.ObjectiveTypes.CollectItem:
                                             {
-                                                RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)rb.Objectives[o];
                                                 int ItemStack = 0;
                                                 for (int i = 0; i < 58; i++)
                                                 {
@@ -304,7 +366,7 @@ namespace giantsummon
                                             break;
                                         case RequestBase.RequestObjective.ObjectiveTypes.Explore:
                                             {
-                                                RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)rb.Objectives[o];
                                                 float DistanceStack = GetFloatValue(o);
                                                 if (DistanceStack <= 0)
                                                 {
@@ -331,7 +393,7 @@ namespace giantsummon
                                             {
                                                 if (GetIntegerValue(o) > 0)
                                                 {
-                                                    RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                    RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)rb.Objectives[o];
                                                     if (CanCountObjective && Main.invasionType == req.EventID && Main.invasionProgressWave != MainMod.LastEventWave && MainMod.LastEventWave > 0)
                                                     {
                                                         switch ((EventList)req.EventID)
@@ -378,7 +440,7 @@ namespace giantsummon
         {
             if (RequestCompleted || IsTalkQuest)
             {
-                int RewardScore = (IsTalkQuest ? 500 : gd.Base.RequestDB[RequestID].RequestScore + 200);
+                int RewardScore = (IsTalkQuest ? 500 : GetRequestBase(gd).RequestScore + 200);
                 if (IsTalkQuest)
                 {
                     if (guardian.ID == gd.ID && guardian.ModID == gd.ModID)
@@ -400,19 +462,20 @@ namespace giantsummon
                 }
                 else
                 {
-                    for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
+                    RequestBase rb = GetRequestBase(gd);
+                    for (int o = 0; o < rb.Objectives.Count; o++)
                     {
-                        switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)
+                        switch (rb.Objectives[o].objectiveType)
                         {
                             case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
                                 {
-                                    RequestBase.HuntRequestObjective req = ((RequestBase.HuntRequestObjective)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RequestBase.HuntRequestObjective req = ((RequestBase.HuntRequestObjective)rb.Objectives[o]);
                                     RewardScore += (int)(req.Stack + req.StackIncreasePerFriendshipLevel * gd.FriendshipLevel) * 50;
                                 }
                                 break;
                             case RequestBase.RequestObjective.ObjectiveTypes.CollectItem:
                                 {
-                                    RequestBase.CollectItemRequest req = ((RequestBase.CollectItemRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RequestBase.CollectItemRequest req = ((RequestBase.CollectItemRequest)rb.Objectives[o]);
                                     int ItemID = req.ItemID;
                                     int Stack = GetIntegerValue(o);
                                     Player p = player.player;
@@ -441,7 +504,7 @@ namespace giantsummon
                                 break;
                             case RequestBase.RequestObjective.ObjectiveTypes.Explore:
                                 {
-                                    RequestBase.ExploreRequest req = ((RequestBase.ExploreRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RequestBase.ExploreRequest req = ((RequestBase.ExploreRequest)rb.Objectives[o]);
                                     RewardScore += (int)((req.InitialDistance + req.StackIncreasePerFriendshipLevel * gd.FriendshipLevel) * 8);
                                 }
                                 break;
@@ -452,19 +515,19 @@ namespace giantsummon
                                 break;
                             case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
                                 {
-                                    RequestBase.EventKillRequest req = ((RequestBase.EventKillRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RequestBase.EventKillRequest req = ((RequestBase.EventKillRequest)rb.Objectives[o]);
                                     RewardScore += (int)(req.InitialKills + req.ExtraKillsPerFriendshipLevel * gd.FriendshipLevel) * 10;
                                 }
                                 break;
                             case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
                                 {
-                                    RequestBase.EventParticipationRequest req = ((RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RequestBase.EventParticipationRequest req = ((RequestBase.EventParticipationRequest)rb.Objectives[o]);
                                     RewardScore += (int)(req.EventWaves + req.ExtraWavesPerFriendshipLevel * gd.FriendshipLevel) * 80;
                                 }
                                 break;
                             case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
                                 {
-                                    RequestBase.ObjectCollectionRequest req = ((RequestBase.ObjectCollectionRequest)gd.Base.RequestDB[RequestID].Objectives[o]);
+                                    RequestBase.ObjectCollectionRequest req = ((RequestBase.ObjectCollectionRequest)rb.Objectives[o]);
                                     int ScoreStack = (int)(req.ObjectCount + req.ObjectExtraCountPerFriendshipLevel * gd.FriendshipLevel) * 30;
                                     float Rates = 0, Total = 0;
                                     foreach (RequestBase.ObjectCollectionRequest.DropRateFromMonsters rate in req.DropFromMobs)
@@ -478,6 +541,13 @@ namespace giantsummon
                             case RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester:
                                 {
                                     RewardScore += 200;
+                                }
+                                break;
+                            case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
+                                {
+                                    RewardScore += 600;
+                                    RequestBase.KillBossRequest req = ((RequestBase.KillBossRequest)rb.Objectives[o]);
+                                    RewardScore += req.DifficultyBonus * req.DifficultyBonus * 30;
                                 }
                                 break;
                         }
@@ -502,41 +572,63 @@ namespace giantsummon
                         player.DismissGuardian(tg.AssistSlot);
                     }
                 }
+                if (!IsCommonRequest && !IsTalkQuest)
+                    RequestCompleteCombo = 0;
+                else
+                    RequestCompleteCombo++;
+                if (!IsCommonRequest && !IsTalkQuest && RequestsCompletedIDs.Contains(RequestID))
+                {
+                    RequestsCompletedIDs.Add(RequestID);
+                }
                 return true;
             }
             return false;
         }
 
-        public string GetRequestBrief(GuardianData gd)
+        public string GetRequestBrief(GuardianData gd, TerraGuardian giver)
         {
-            return gd.Base.RequestDB[RequestID].BriefText;
+            if (IsCommonRequest)
+            {
+                string Text = gd.Base.HasRequestMessage(Main.player[Main.myPlayer], giver);
+                return Text;
+            }
+            return GetRequestBase(gd).BriefText;
         }
 
         public string GetRequestAccept(GuardianData gd)
         {
-            return gd.Base.RequestDB[RequestID].AcceptText;
+            if (IsCommonRequest)
+                return "(You have accepted the request.)";
+            return GetRequestBase(gd).AcceptText;
         }
 
         public string GetRequestDeny(GuardianData gd)
         {
-            return gd.Base.RequestDB[RequestID].DenyText;
+            if (IsCommonRequest)
+                return "(Request rejected.)";
+            return GetRequestBase(gd).DenyText;
         }
 
-        public string GetRequestComplete(GuardianData gd)
+        public string GetRequestComplete(GuardianData gd, TerraGuardian giver)
         {
-            return gd.Base.RequestDB[RequestID].CompleteText;
+            if (IsCommonRequest)
+                return gd.Base.CompletedRequestMessage(Main.player[Main.myPlayer], giver);
+            return GetRequestBase(gd).CompleteText;
         }
 
         public string GetRequestInfo(GuardianData gd)
         {
-            return gd.Base.RequestDB[RequestID].RequestInfoText;
+            return GetRequestBase(gd).RequestInfoText;
         }
 
-        public string[] GetRequestText(Player player, GuardianData gd)
+        public string[] GetRequestText(Player player, GuardianData gd, bool ForceShowObjective = false)
         {
             List<string> QuestObjectives = new List<string>();
             bool ShowDuration = false;
-            switch (requestState)
+            RequestState reqstate = requestState;
+            if (ForceShowObjective)
+                reqstate = RequestState.RequestActive;
+            switch (reqstate)
             {
                 case RequestState.Cooldown:
                     QuestObjectives.Add(gd.Name + " has no requests right now.");
@@ -561,15 +653,16 @@ namespace giantsummon
                         }
                         else
                         {
-                            for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
+                            RequestBase rb = GetRequestBase(gd);
+                            for (int o = 0; o < rb.Objectives.Count; o++)
                             {
-                                switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)
+                                switch (rb.Objectives[o].objectiveType)
                                 {
                                     case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
                                         {
                                             if (GetIntegerValue(o) > 0)
                                             {
-                                                RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)rb.Objectives[o];
                                                 HasPendingObjective = true;
                                                 QuestObjectives.Add(" Hunt " + GetIntegerValue(o) + " " + Lang.GetNPCName(req.NpcID) + ".");
                                             }
@@ -579,7 +672,7 @@ namespace giantsummon
                                         {
                                             if (GetIntegerValue(o) > 0)
                                             {
-                                                RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)rb.Objectives[o];
                                                 HasPendingObjective = true;
                                                 QuestObjectives.Add(" Collect " + GetIntegerValue(o) + " " + Lang.GetItemName(req.ItemID) + ".");
                                             }
@@ -590,7 +683,7 @@ namespace giantsummon
                                         {
                                             if (GetFloatValue(o) > 0)
                                             {
-                                                RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)rb.Objectives[o];
                                                 HasPendingObjective = true;
                                                 if (req.RequiresGuardianActive)
                                                 {
@@ -607,7 +700,7 @@ namespace giantsummon
                                         {
                                             if (GetIntegerValue(o) > 0)
                                             {
-                                                RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)rb.Objectives[o];
                                                 HasPendingObjective = true;
                                                 string EventName = GetEventName(req.EventID);
                                                 if (req.EventID == (int)EventList.FrostMoon || req.EventID == (int)EventList.PumpkinMoon || req.EventID == (int)EventList.DD2Event)
@@ -630,7 +723,7 @@ namespace giantsummon
                                         {
                                             if (GetIntegerValue(o) > 0)
                                             {
-                                                RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)rb.Objectives[o];
                                                 HasPendingObjective = true;
                                                 string EventName = GetEventName(req.EventID);
                                                 QuestObjectives.Add(" Defeat " + GetIntegerValue(o) + " foes in the " + EventName + " event.");
@@ -641,7 +734,7 @@ namespace giantsummon
                                         {
                                             if (GetIntegerValue(o) > 0)
                                             {
-                                                RequestBase.ObjectCollectionRequest req = (RequestBase.ObjectCollectionRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.ObjectCollectionRequest req = (RequestBase.ObjectCollectionRequest)rb.Objectives[o];
                                                 HasPendingObjective = true;
                                                 QuestObjectives.Add(" Collect " + GetIntegerValue(o) + " " + req.ObjectName + " from:");
                                                 if (req.DropFromMobs.Count == 0)
@@ -658,7 +751,7 @@ namespace giantsummon
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement:
                                         {
-                                            RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                            RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)rb.Objectives[o];
                                             if (!PlayerMod.PlayerHasGuardian(player, req.CompanionID, req.CompanionModID))
                                             {
                                                 QuestObjectives.Add("  You don't know " + GuardianBase.GetGuardianBase(req.CompanionID, req.CompanionModID).Name + " yet.");
@@ -681,7 +774,7 @@ namespace giantsummon
                                         {
                                             if (GetIntegerValue(o) == 0)
                                             {
-                                                RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                                                RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)rb.Objectives[o];
                                                 string BossName = "";
                                                 if (req.BossID == Terraria.ID.NPCID.Spazmatism || req.BossID == Terraria.ID.NPCID.Retinazer)
                                                 {
@@ -705,21 +798,24 @@ namespace giantsummon
                                         break;
                                 }
                             }
-                            if (HasPendingObjective)
+                            if (!ForceShowObjective)
                             {
-                                QuestObjectives.Insert(0, "Help " + gd.Name + " by:");
-                                QuestObjectives.Insert(0, "[" + gd.Base.RequestDB[RequestID].Name + "]");
-                            }
-                            else
-                            {
-                                QuestObjectives.Add("[" + gd.Base.RequestDB[RequestID].Name + "]");
-                                QuestObjectives.Add(" Report success to " + gd.Name + ".");
+                                if (HasPendingObjective)
+                                {
+                                    QuestObjectives.Insert(0, "Help " + gd.Name + " by:");
+                                    if (!IsCommonRequest) QuestObjectives.Insert(0, "[" + rb.Name + "]");
+                                }
+                                else
+                                {
+                                    if (!IsCommonRequest) QuestObjectives.Add("[" + rb.Name + "]");
+                                    QuestObjectives.Add(" Report success to " + gd.Name + ".");
+                                }
                             }
                         }
                         break;
                     }
             }
-            if (ShowDuration)
+            if (ShowDuration && !ForceShowObjective)
             {
                 int Seconds = Time / 60, Minutes = 0, Hours = 0, Days = 0;
                 if (Seconds >= 60)
@@ -875,74 +971,77 @@ namespace giantsummon
             FloatVars.Clear();
             RequestID = 0;
             IsTalkQuest = true;
+            IsCommonRequest = false;
             requestState = RequestState.HasRequestReady;
         }
 
-        public void ChangeRequest(GuardianData gd, int ID)
+        public void ChangeRequest(GuardianData gd, int ID, bool CommonRequest = false)
         {
             IntegerVars.Clear();
             FloatVars.Clear();
             RequestID = ID;
             IsTalkQuest = false;
             requestState = RequestState.HasRequestReady;
-            for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
+            this.IsCommonRequest = CommonRequest;
+            RequestBase rb = GetRequestBase(gd);
+            for (int o = 0; o < rb.Objectives.Count; o++)
             {
-                switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)
+                switch (rb.Objectives[o].objectiveType)
                 {
                     case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
                         {
-                            RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)gd.Base.RequestDB[RequestID].Objectives[o];
+                            RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)rb.Objectives[o];
                             SetIntegerValue(o, (int)(req.Stack + req.StackIncreasePerFriendshipLevel * gd.FriendshipLevel));
                         }
                         break;
                     case RequestBase.RequestObjective.ObjectiveTypes.CollectItem:
                         {
-                            RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)rb.Objectives[o];
                             SetIntegerValue(o, (int)(req.ItemStack + req.StackIncreasePerFriendshipLevel * gd.FriendshipLevel));
                         }
                         break;
                     case RequestBase.RequestObjective.ObjectiveTypes.Explore:
                         {
-                            RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)rb.Objectives[o];
                             SetFloatValue(o, req.InitialDistance + req.StackIncreasePerFriendshipLevel * gd.FriendshipLevel);
                         }
                         break;
                     case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
                         {
-                            RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)rb.Objectives[o];
                             SetIntegerValue(o, req.EventWaves + (int)(req.ExtraWavesPerFriendshipLevel * gd.FriendshipLevel));
                         }
                         break;
                     case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
                         {
-                            RequestBase.EventKillRequest req = (RequestBase.EventKillRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            RequestBase.EventKillRequest req = (RequestBase.EventKillRequest)rb.Objectives[o];
                             SetIntegerValue(o, req.InitialKills + (int)(req.ExtraKillsPerFriendshipLevel * gd.FriendshipLevel));
                         }
                         break;
                     case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
                         {
-                            RequestBase.ObjectCollectionRequest req = (RequestBase.ObjectCollectionRequest)gd.Base.RequestDB[RequestID].Objectives[o];
+                            RequestBase.ObjectCollectionRequest req = (RequestBase.ObjectCollectionRequest)rb.Objectives[o];
                             SetIntegerValue(o, req.ObjectCount + (int)(req.ObjectExtraCountPerFriendshipLevel * gd.FriendshipLevel));
                         }
                         break;
                 }
             }
-
         }
 
         public void OnMobKill(GuardianData gd, NPC npc)
         {
             if (requestState != RequestState.RequestActive) return;
-            for (int o = 0; o < gd.Base.RequestDB[RequestID].Objectives.Count; o++)
+            RequestBase rb = GetRequestBase(gd);
+            for (int o = 0; o < rb.Objectives.Count; o++)
             {
-                switch (gd.Base.RequestDB[RequestID].Objectives[o].objectiveType)
+                switch (rb.Objectives[o].objectiveType)
                 {
                     case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
                         {
                             int Stack = GetIntegerValue(o);
                             if (Stack > 0)
                             {
-                                int MobID = ((RequestBase.HuntRequestObjective)gd.Base.RequestDB[RequestID].Objectives[o]).NpcID;
+                                int MobID = ((RequestBase.HuntRequestObjective)rb.Objectives[o]).NpcID;
                                 int m = npc.type;
                                 bool IsQuestMob = false;
                                 if (m == NPCID.EaterofWorldsHead)
@@ -1015,7 +1114,7 @@ namespace giantsummon
                         {
                             if (GetIntegerValue(o) > 0)
                             {
-                                int EventID = ((RequestBase.EventParticipationRequest)gd.Base.RequestDB[RequestID].Objectives[o]).EventID;
+                                int EventID = ((RequestBase.EventParticipationRequest)rb.Objectives[o]).EventID;
                                 int MobID = npc.type;
                                 bool EventMobKilled = false;
                                 switch ((EventList)EventID)

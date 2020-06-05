@@ -183,7 +183,7 @@ namespace giantsummon.Creatures
                 "*She says that doesn't mind, that It was a stupid request anyway.*",
                 "*After you brought the Bunny, she seems to be trying to hide that she's happy, gave you the reward, then left. The way she walks... Is she happy?*",
                 "*She tells you that Bunnies can be found in the forest. You can find them easily on safe places.*");
-            AddRequestRequirement(GetBugNetRequirement);
+            AddRequestRequirement(RequestBase.GetBugNetRequirement);
             AddItemCollectionObjective(Terraria.ID.ItemID.Bunny, 1, 0);
             //
             AddNewRequest("Loot the Snipers.", 295,
@@ -356,6 +356,10 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*[name] is looking at me with a question mark face, while wondering what you want.*");
                 Mes.Add("*[name] looks to me while smiling.*");
+                if (player.head == 17)
+                {
+                    Mes.Add("*[name] says that you look cute with that hood.*");
+                }
             }
             else
             {
