@@ -1821,6 +1821,13 @@ namespace giantsummon
 
         public override void OnRespawn(Player player)
         {
+            foreach (TerraGuardian tg in GetAllGuardianFollowers)
+            {
+                if (tg.KnockedOut)
+                {
+                    tg.TeleportToPlayer();
+                }
+            }
             KnockedOut = KnockedOutCold = false;
             player.fullRotation = 0;
             FriendlyDuelDefeat = false;
@@ -1889,6 +1896,11 @@ namespace giantsummon
                 {
                     Front.InsertRange(0, TerraGuardian.GetDrawFrontData);
                     Front.InsertRange(0, TerraGuardian.GetDrawBehindData);
+                }
+                else if (g.KnockedOut)
+                {
+                    Back.InsertRange(0, TerraGuardian.GetDrawFrontData);
+                    Back.InsertRange(0, TerraGuardian.GetDrawBehindData);
                 }
                 else if (g.PlayerMounted || g.SittingOnPlayerMount)
                 {

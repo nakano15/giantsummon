@@ -243,6 +243,33 @@ namespace giantsummon
                             {
                                 List<int> Requests = new List<int>();
                                 bool MakeCommonRequest = RequestCompleteCombo < RequestsUntilSpecialRequest;
+                                if (!MakeCommonRequest) //First, when not making a common request, check if there's special request unlocked.
+                                {
+                                    List<int> PossibleRequests = new List<int>(), NotCompletedRequests = new List<int>();
+                                    for (int req = 0; req < gd.Base.RequestDB.Count; req++)
+                                    {
+                                        if (gd.Base.RequestDB[req].IsRequestDoable(player.player, gd))
+                                        {
+                                            PossibleRequests.Add(req);
+                                            if (!RequestsCompletedIDs.Contains(req))
+                                            {
+                                                NotCompletedRequests.Add(req);
+                                            }
+                                        }
+                                    }
+                                    if (NotCompletedRequests.Count > 0) //If there is not yet completed special request that the player can do at the moment, pick it.
+                                    {
+                                        Requests.AddRange(NotCompletedRequests);
+                                    }
+                                    else if (PossibleRequests.Count > 0) //Otherwise, check for all other special requests to pick at random.
+                                    {
+                                        Requests.AddRange(PossibleRequests);
+                                    }
+                                    else //If It all fails, generate a common request.
+                                    {
+                                        MakeCommonRequest = true;
+                                    }
+                                }
                                 if (MakeCommonRequest)
                                 {
                                     for (int req = 0; req < RequestBase.CommonRequests.Length; req++)
@@ -253,19 +280,9 @@ namespace giantsummon
                                         }
                                     }
                                 }
-                                else
-                                {
-                                    for (int req = 0; req < gd.Base.RequestDB.Count; req++)
-                                    {
-                                        if (gd.Base.RequestDB[req].IsRequestDoable(player.player, gd))
-                                        {
-                                            Requests.Add(req);
-                                        }
-                                    }
-                                }
                                 bool HasCompanionSummonedOrInTheWorld = (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID) || NpcMod.HasGuardianNPC(gd.ID, gd.ModID));
                                 bool GotRequest = false;
-                                if ((gd.FriendshipLevel == 0 || Main.rand.NextDouble() < 0.333f) && HasCompanionSummonedOrInTheWorld)
+                                if ((gd.FriendshipLevel == 0 || Main.rand.NextDouble() < 0.333f) && HasCompanionSummonedOrInTheWorld) //A talk request should never reset the quest chain.
                                 {
                                     CreateTalkRequest();
                                     Main.NewText(gd.Name + " wants to speak with you.");

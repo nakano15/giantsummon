@@ -3706,7 +3706,7 @@ namespace giantsummon
             bool Approach = false, Retreat = false, Jump = false, Duck = false, Attack = false;
             if (WaitingForManaRecharge && MP >= MMP)
                 WaitingForManaRecharge = false;
-            bool NearDeath = false && HP < MHP * 0.2f && !PlayerMounted;
+            bool NearDeath = HP < MHP * 0.2f && !PlayerMounted;
             if (MoveCursorToPosition(TargetPosition, TargetWidth, TargetHeight))
                 TargetInAim = true;
             if (HasFlag(GuardianFlags.Confusion))
@@ -3739,7 +3739,7 @@ namespace giantsummon
                                 continue;
                             if (Inventory[i].melee)
                             {
-                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (!PlayerMounted || Base.ReverseMount || (!UseHeavyMeleeAttackWhenMounted && !Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]))))
+                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || !Items.GuardianItemPrefab.IsHeavyItem(Inventory[i])) && (!PlayerMounted || Base.ReverseMount))
                                 {
                                     HighestMeleeDamage = Inventory[i].damage;
                                     MeleePosition = i;
@@ -3947,7 +3947,7 @@ namespace giantsummon
                             Approach = true;
                         }
                     }
-                    if (NearDeath)
+                    if (false && NearDeath)
                     {
                         if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) < TargetWidth * 0.5f + Width * 0.5f + 64f)
                         {
@@ -13705,7 +13705,7 @@ namespace giantsummon
             if (KnockedOut && !Downed)
             {
                 Origin.Y *= 0.5f;
-                Position.Y -= 20;
+                Position.Y -= 20 + 6;
             }
 
             Color HairColor = Base.TerrarianInfo.HairColor,

@@ -27,7 +27,7 @@ namespace giantsummon.Npcs
         const int ItemWidth = 22, ItemHeight = 96, ItemOriginX = 10, ItemOriginY = 88;
         private int SwordAttackReactionTime { get { if (Main.expertMode) { return 15; } return 30; } }
         private int PosSwordAttackRecoveryTime { get { if (Main.expertMode) { return 15; } return 60; } }
-        private bool BetrayedOnce = false;
+        private bool DeceivedOnce = false;
 
         public override void SetStaticDefaults()
         {
@@ -994,7 +994,7 @@ namespace giantsummon.Npcs
                     AiValue = PullMaxTime - 1;
                     npc.life = (int)(npc.lifeMax * 0.25);
                 }
-                BetrayedOnce = true;
+                DeceivedOnce = true;
             }
             else
             {
@@ -1012,7 +1012,7 @@ namespace giantsummon.Npcs
 
         public override bool CheckDead()
         {
-            if (AiState == 99 || BetrayedOnce)
+            if (AiState == 99 || DeceivedOnce)
             {
                 npc.life = 0;
                 return true;

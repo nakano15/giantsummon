@@ -355,6 +355,29 @@ namespace giantsummon
             }
         }
 
+        public static RequestBase.RequestRequirementDel GetUnderworldRequestRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    if (!Main.hardMode)
+                    {
+                        if (NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedQueenBee)
+                            return true;
+                        int DefSum = 0;
+                        for (int armor = 0; armor < 3; armor++)
+                        {
+                            if (player.armor[armor].type > 0)
+                                DefSum += player.armor[armor].defense;
+                        }
+                        return DefSum >= 13;
+                    }
+                    return NPC.downedMechBossAny;
+                };
+            }
+        }
+
         public static RequestBase.RequestRequirementDel GetHardmodeRequirement
         {
             get
@@ -362,6 +385,50 @@ namespace giantsummon
                 return delegate(Player player)
                 {
                     return Main.hardMode;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetHardmodeCorruptionRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return Main.hardMode && !WorldGen.crimson;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetHardmodeCrimsonRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return Main.hardMode && WorldGen.crimson;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetHardmodeJungleRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;
+                };
+            }
+        }
+
+        public static RequestBase.RequestRequirementDel GetHardmodeDungeonAndTempleRequirement
+        {
+            get
+            {
+                return delegate(Player player)
+                {
+                    return Main.hardMode && NPC.downedPlantBoss;
                 };
             }
         }

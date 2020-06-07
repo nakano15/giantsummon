@@ -139,7 +139,7 @@ namespace giantsummon.Creatures
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
         {
-            if (guardian.Velocity.Y != 0 && guardian.WallSlideStyle == 0 && !guardian.SittingOnPlayerMount)
+            if (guardian.Velocity.Y != 0 && guardian.WallSlideStyle == 0 && guardian.DashCooldown <= 0 && !guardian.SittingOnPlayerMount && !guardian.KnockedOut && !guardian.Downed)
             {
                 if (guardian.Velocity.Y < -1.5f)
                 {
@@ -158,7 +158,7 @@ namespace giantsummon.Creatures
 
         public override void GuardianBehaviorModScript(TerraGuardian guardian)
         {
-            if (guardian.DashCooldown <= 0 && (guardian.MoveLeft || guardian.MoveRight) && guardian.Velocity.X != 0 && guardian.Velocity.Y == 0)
+            if (guardian.DashCooldown <= 0 && (guardian.MoveLeft || guardian.MoveRight) && guardian.Velocity.X != 0 && guardian.Velocity.Y == 0 && !guardian.KnockedOut && !guardian.Downed)
             {
                 guardian.Velocity.Y = -5.6f;
             }

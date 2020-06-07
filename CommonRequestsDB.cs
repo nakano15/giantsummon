@@ -8,9 +8,10 @@ namespace giantsummon
 {
     public class CommonRequestsDB
     {
-        public static void PopulateCommonRequestsDB()
+        public static void PopulateCommonRequestsDB() //Never change the order of the quests, always add by the end, or else you may end up breaking the quests for saves.
         {
             List<RequestBase> Requests = new List<RequestBase>();
+            //PHM Surface
             RequestBase rb = new RequestBase("", 0, "", "", "", "", "(Slimes appears in the many places, but mostly in the forest.)");
             rb.AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 3);
             Requests.Add(rb);
@@ -42,7 +43,7 @@ namespace giantsummon
             rb = new RequestBase("", 60, "", "", "", "", "(Explore the world with the request giver.)");
             rb.AddExploreRequest(1000);
             Requests.Add(rb);
-            //
+            // PHM Corruption
             rb = new RequestBase("", 130, "", "", "", "", "(Eater of Souls are found in the Corruption.)");
             rb.AddRequestRequirement(RequestBase.GetCorruptionRequestRequirement);
             rb.AddHuntObjective(Terraria.ID.NPCID.EaterofSouls, 7, 0.2f);
@@ -57,7 +58,7 @@ namespace giantsummon
             rb.AddRequestRequirement(RequestBase.GetCorruptionRequestRequirement);
             rb.AddItemCollectionRequest(Terraria.ID.ItemID.RottenChunk, 5);
             Requests.Add(rb);
-            //
+            // PHM Crimson
             rb = new RequestBase("", 130, "", "", "", "", "(Crimeras are found in the Crimson.)");
             rb.AddRequestRequirement(RequestBase.GetCrimsonRequestRequirement);
             rb.AddHuntObjective(Terraria.ID.NPCID.Crimera, 7, 0.2f);
@@ -77,7 +78,7 @@ namespace giantsummon
             rb.AddRequestRequirement(RequestBase.GetCrimsonRequestRequirement);
             rb.AddItemCollectionRequest(Terraria.ID.ItemID.Vertebrae, 5);
             Requests.Add(rb);
-            //
+            //PHM Dungeon
             rb = new RequestBase("", 150, "", "", "", "", "(Angry Bones are found in the Dungeon.)");
             rb.AddRequestRequirement(RequestBase.GetDungeonRequestRequirement);
             rb.AddHuntObjective(Terraria.ID.NPCID.AngryBones, 10, 0.333f);
@@ -101,6 +102,179 @@ namespace giantsummon
             rb = new RequestBase("", 190, "", "", "", "", "(Golden Key can be acquired from some Dungeon creatures.)");
             rb.AddRequestRequirement(RequestBase.GetDungeonRequestRequirement);
             rb.AddItemCollectionRequest(Terraria.ID.ItemID.GoldenKey, 3, 0.333f);
+            Requests.Add(rb);
+            // PHM Underworld
+            rb = new RequestBase("", 210, "", "", "", "", "(Demons can be found in the deepest part of the world, the Underworld)");
+            rb.AddRequestRequirement(RequestBase.GetUnderworldRequestRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.Demon);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 215, "", "", "", "", "(Fire Imps can be found in the deepest part of the world, the Underworld)");
+            rb.AddRequestRequirement(RequestBase.GetUnderworldRequestRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.FireImp, 3, 0.2f);
+            Requests.Add(rb);
+            // HM Forest
+            rb = new RequestBase("", 240, "", "", "", "", "(Wraiths appears in many places, but most notably in surface, at night.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.Wraith, 3, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 230, "", "", "", "", "(Possessed Armors roams the forest during the night.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.PossessedArmor, 7, 0.333f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 245, "", "", "", "", "(Wandering Eyes attacks during the night.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.WanderingEye, 5, 0.35f);
+            Requests.Add(rb);
+            // HM Corruption
+            rb = new RequestBase("", 250, "", "", "", "", "(Corruptors can be found frequently in the Corruption.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeCorruptionRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.Corruptor, 10);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 265, "", "", "", "", "(World Feeders sometimes appears in the Corruption.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeCorruptionRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.SeekerHead, 5, 0.2f); //Seeker is how the World Feeder is known as in the game source.
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 275, "", "", "", "", "(Cursed Flames can be acquired from a number of Underground Corruption creatures.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeCorruptionRequirement);
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.CursedFlame, 12, 0.2f);
+            Requests.Add(rb);
+            // HM Crimson
+            rb = new RequestBase("", 250, "", "", "", "", "(Herplings appears frequently in the Crimson.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeCrimsonRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.Herpling, 10);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 265, "", "", "", "", "(Crimslimes appears in the Crimson.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeCrimsonRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.Crimslime, 5, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 275, "", "", "", "", "(Ichor can drop from some monsters in the Underground Crimson.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeCrimsonRequirement);
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.Ichor, 12, 0.2f);
+            Requests.Add(rb);
+            // HM Jungle
+            rb = new RequestBase("", 290, "", "", "", "", "(Moss Hornets appears in the Underground Jungle.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeJungleRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.MossHornet, 12);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 310, "", "", "", "", "(Giant Tortoises appears in the Underground Jungle.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeJungleRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.GiantTortoise, 7, 0.2f);
+            Requests.Add(rb);
+            // HM Temple
+            rb = new RequestBase("", 325, "", "", "", "", "(Lihzahrds appears in the Jungle Temple.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeDungeonAndTempleRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.Lihzahrd, 15, 0.333f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 335, "", "", "", "", "(Flying Snakes appears in the Jungle Temple.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeDungeonAndTempleRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.FlyingSnake, 10, 0.2f);
+            Requests.Add(rb);
+            // HM Dungeon
+            rb = new RequestBase("", 325, "", "", "", "", "(Dungeon Spirits can surge from creatures killed in the Dungeon.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeDungeonAndTempleRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.DungeonSpirit, 8, 0.333f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 310, "", "", "", "", "(Cursed Skulls appears in the Dungeon.)");
+            rb.AddRequestRequirement(RequestBase.GetHardmodeDungeonAndTempleRequirement);
+            rb.AddHuntObjective(Terraria.ID.NPCID.CursedSkull, 6, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Eye of Cthulhu for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss1;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.EyeofCthulhu, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Eater of Worlds for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return !WorldGen.crimson && player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss2;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.EaterofWorldsHead, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Brain of Cthulhu for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return WorldGen.crimson && player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss2;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.BrainofCthulhu, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Skeletron for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss3;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.SkeletronHead, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the King Slime for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedSlimeKing;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.KingSlime, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Queen Bee for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedQueenBee;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.QueenBee, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 620, "", "", "", "", "(Requester can call the Twins for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode && NPC.downedMechBossAny;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.Spazmatism, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 620, "", "", "", "", "(Requester can call The Destroyer for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode && NPC.downedMechBossAny;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.TheDestroyer, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 620, "", "", "", "", "(Requester can call the Skeletron Prime for you to fight against.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode && NPC.downedMechBossAny;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.SkeletronPrime, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 840, "", "", "", "", "(You can try spawning Plantera by breaking It's bulbs.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && NPC.downedPlantBoss;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.Plantera, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 920, "", "", "", "", "(You can try spawning The Golem by using a Lihzahrd Powercell on a Lihzahrd Altar.)");
+            rb.AddRequestRequirement(delegate(Player player)
+            {
+                return Main.hardMode && NPC.downedGolemBoss;
+            });
+            rb.AddKillBossRequest(Terraria.ID.NPCID.Golem, 1);
             Requests.Add(rb);
             //
             RequestBase.CommonRequests = Requests.ToArray();

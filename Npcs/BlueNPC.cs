@@ -15,7 +15,7 @@ namespace giantsummon.Npcs
         public int AiValue { get { return (int)npc.ai[1]; } set { npc.ai[1] = value; } }
         public DialogueChain dialogue = new DialogueChain();
 
-        public BlueNPC()
+        public BlueNPC() //TODO - Remake the entire recruitment method, changing how her recruitment works, to be less like what Zacks would like to do. 
             : base(GuardianBase.Blue, "")
         {
             //There is no right or wrong option in this dialogue.

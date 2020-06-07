@@ -1,3 +1,33 @@
 ﻿Rococo will no longer mention Alex when he's not in the world.
 You can no longer use potions when knocked out.
 A number of dialogue fixes.
+Knocked out companions will now be drawn in front of other companions, but wont be drawn in front of your character.
+Leopold's hopping animation will no longer happen when knocked out or dead.
+His hopping jump animation will now only play when dashing.
+New Request System is in:
+	System completelly restructured.
+	Requests will be disponible after the cooldown ends, regardless of how many requests you have ready to pick.
+		There is no cooldown of life for the request available, so you can just keep It on hold until you want to check It out.
+	You need to talk to the companion having the request to get a brief description about It, then you can pick If you want to accept or reject It.
+		If you have less than 3 requests active, you will get the request from the companion, and then the timer for you to do It will start running. The time is the same as in the old system, so you have plenty of time to complete It.
+		When you reject, the request is erased and enters in cooldown. When the cooldown timer ends, a new request is set available for you.
+	There is 1 in 3 chances of you getting a Talk request from the companion, so you just need to speak with It to hear what It has to say, and get a generous reward.
+	You will be getting common requests at first, but after completting 3 common requests, the companion may give you a special request:
+		The Special Request wont repeat unless you've completed all the requests possible at the moment for the companion.
+		Those requests are very personal for the companion, so It will be tied to them, and possibly have some extra lore about them.
+		Some companions may not have yet special requests, so you will still receive common or talk requests.
+		Talk request can appear when this request should appear, but will not reset the counter of requests completed.
+		Completting the special request will set the request counter to 0, so you need to do 3 more requests to get the next request.
+	Each request now has It's own reward value, aswell as the objectives also helps filling the reward value of the request.
+		I will explain the new reward system bellow.
+	You can also check the request information of companions following you, aswell as accept/reject them through the request tab.
+		To check the request of the companion, you need to have It selected on the tabs when checking the request tab.
+		Companions in the team that have requests will tell you If they have a request for you.
+	This system is still in testing state, so there may be bugs.
+New Reward system is in:
+	Companions will now award you item rewards based on a score.
+	All companions have a fixed number of rewards that may be given based on score.
+	Each companion is going to have their own special rewards for completting their requests.
+	Like the old system, if there is remaining score, you will gain coins as reward.
+You can no longer give orders while knocked out.
+Knocked out companions will now teleport to your position after your character respawns.

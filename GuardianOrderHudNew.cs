@@ -97,6 +97,11 @@ namespace giantsummon
         public static void Update(PlayerMod player)
         {
             if (!Active) return;
+            if (player.KnockedOut || player.player.dead)
+            {
+                Close();
+                return;
+            }
             List<Option> PickedOptions = new List<Option>();
             foreach (OptionHolder oh in OptionMenus)
             {

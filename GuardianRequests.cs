@@ -117,7 +117,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        if ((data.FriendshipLevel == 0 || PlayerMod.GetPlayerActiveRequests(player) < 3) && (PlayerMod.PlayerHasGuardianSummoned(player, data.ID, data.ModID) || NpcMod.HasGuardianNPC(data.ID, data.ModID)))
+                        if ((data.FriendshipLevel == 0 || PlayerMod.GetPlayerAcceptedRequestCount(player) < 3) && (PlayerMod.PlayerHasGuardianSummoned(player, data.ID, data.ModID) || NpcMod.HasGuardianNPC(data.ID, data.ModID)))
                         {
                             GenerateRequest(player, data);
                             foreach (TerraGuardian guardian in Guardians)
