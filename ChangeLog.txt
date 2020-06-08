@@ -31,3 +31,5 @@ New Reward system is in:
 	Like the old system, if there is remaining score, you will gain coins as reward.
 You can no longer give orders while knocked out.
 Knocked out companions will now teleport to your position after your character respawns.
+Face accessories are no longer displayed when the companion is sleeping, using a throne or knocked out.
+Brutus got a hair change.

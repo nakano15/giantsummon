@@ -569,7 +569,7 @@ namespace giantsummon
                     if (Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab)
                     {
                         GuardianNPC.GuardianNPCPrefab npc = ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC);
-                        if (!PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], npc.GuardianID, npc.GuardianModID))
+                        if (!PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], npc.GuardianID, npc.GuardianModID) && !npc.Guardian.WofFood)
                         {
                             npc.Guardian.DrawReviveBar();
                             npc.Guardian.DrawSocialMessages();
@@ -588,7 +588,7 @@ namespace giantsummon
                 {
                     foreach (TerraGuardian g in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                     {
-                        if (g.Active)
+                        if (g.Active && !g.WofFood)
                         {
                             g.DrawReviveBar();
                             g.DrawSocialMessages();
@@ -1675,7 +1675,7 @@ namespace giantsummon
                                         }
                                         for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
                                         {
-                                            if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss)
+                                            if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
                                             {
                                                 SlotStartPosition.Y += 26f;
                                                 RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];

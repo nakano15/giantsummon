@@ -2649,7 +2649,6 @@ namespace giantsummon
         {
             bool ReachedLocation = false;
             Vector2 MoveDir = Vector2.Zero;
-            //new Vector2(Position.X + Width * (float)Main.rand.NextDouble() - AimDirection.X, Position.Y + Height * (float)Main.rand.NextDouble() - AimDirection.Y);
             if (AimDirection.X >= Position.X + Width * 0.25f && AimDirection.X < Position.X + Width * 0.75f && AimDirection.Y >= Position.Y + Height * 0.25f && AimDirection.Y < Position.Y + Height * 0.75f)
             {
                 if (AimDirection.X != (int)(Position.X + Width * 0.5f) && AimDirection.Y != (int)(Position.Y + Height * 0.5f))
@@ -2658,7 +2657,6 @@ namespace giantsummon
                     MoveDir.Y = (Position.Y + Height * 0.5f - AimDirection.Y) * 0.7f;
                 }
                 ReachedLocation = true;
-                //return ReachedLocation;
             }
             else
             {
@@ -12553,13 +12551,9 @@ namespace giantsummon
             if (TileInfo.Y == 20 && !FireImmune)
             {
                 AddBuff(67, 20);
-                //this.Hurt((int)(20 * Base.HealthBonus * 0.5f), 0, false, true, " needed to cool it's feet.");
-                //AppliedDamage = true;
             }
             else if (TileInfo.Y == 15)
             {
-                //this.Hurt((int)(15 * Base.HealthBonus * 0.5f), 0, false, true, " showed It's thumb before sinking to It's death.");
-                //AppliedDamage = true;
                 if (GetCooldownValue(GuardianCooldownManager.CooldownType.SuffocationDelay) < 5)
                     IncreaseCooldownValue(GuardianCooldownManager.CooldownType.SuffocationDelay);
                 else
@@ -12585,6 +12579,8 @@ namespace giantsummon
 
         public void UpdateLavaScript()
         {
+            if (WofFood)
+                return;
             bool Tolerance = false;
             if (HasFlag(GuardianFlags.LavaTolerance))
             {
@@ -13329,7 +13325,10 @@ namespace giantsummon
                 HeadSlot = 44;
             }
             if (BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame)
+            {
                 HeadSlot = 0;
+                FaceSlot = 0;
+            }
             TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             Vector2 NewPosition = Position - Main.screenPosition;
             NewPosition.Y += (gfxOffY) * Scale * GravityDirection + 2 + MountedVerticalPositionBonus;

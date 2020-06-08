@@ -1041,6 +1041,11 @@ namespace giantsummon
                             SetIntegerValue(o, req.ObjectCount + (int)(req.ObjectExtraCountPerFriendshipLevel * gd.FriendshipLevel));
                         }
                         break;
+                    case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
+                        {
+                            SetIntegerValue(o, 1);
+                        }
+                        break;
                 }
             }
         }
