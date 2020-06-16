@@ -80,6 +80,11 @@ namespace giantsummon
         [Label("Guardians has Player Health and Mana status.")]
         [Tooltip("Forces guardians to have the health and mana values like the player would.")]
         public bool HealthAndManaPlayerStandards { get { return MainMod.SetGuardiansHealthAndManaToPlayerStandards; } set { MainMod.SetGuardiansHealthAndManaToPlayerStandards = value; } }
+        
+        //[Label("Tile Collision is the same as Hit Collision")]
+        //[Tooltip("When turned on, the game will no longer try using a player like collision detection on your companions. Will instead use their internal hitbox collision dimension.")]
+        //[DefaultValue(false)]
+        //public bool UseHitCollisionAsTileCollision { get { return MainMod.TileCollisionIsSameAsHitCollision; } set { MainMod.TileCollisionIsSameAsHitCollision = value; } }
 
         public override void OnChanged()
         {

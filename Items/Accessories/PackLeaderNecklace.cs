@@ -24,15 +24,16 @@ namespace giantsummon.Items.Accessories
                 if (!Guardian.Base.IsTerraGuardian)
                     return;
                 Guardian.ScaleMult *= 3;
-                Guardian.MHP *= 3;
-                Guardian.MeleeDamageMultiplier += Guardian.MeleeDamageMultiplier * 0.3f;
-                Guardian.RangedDamageMultiplier += Guardian.RangedDamageMultiplier * 0.3f;
-                Guardian.MagicDamageMultiplier += Guardian.MagicDamageMultiplier * 0.3f;
-                Guardian.SummonDamageMultiplier += Guardian.SummonDamageMultiplier * 0.3f;
-                Guardian.Defense += (int)(Guardian.Defense * 0.3f);
-                Guardian.DefenseRate += Guardian.DefenseRate * 0.3f;
-                Guardian.MeleeSpeed -= Guardian.MeleeSpeed * 0.3f;
-                //Guardian.MoveSpeed -= Guardian.MoveSpeed * 0.3f;
+                Guardian.MHP = (int)(Guardian.MHP * 1.8f);
+                Guardian.MeleeDamageMultiplier += Guardian.MeleeDamageMultiplier * 0.2f;
+                Guardian.RangedDamageMultiplier += Guardian.RangedDamageMultiplier * 0.2f;
+                Guardian.MagicDamageMultiplier += Guardian.MagicDamageMultiplier * 0.2f;
+                Guardian.SummonDamageMultiplier += Guardian.SummonDamageMultiplier * 0.2f;
+                Guardian.Defense += (int)(Guardian.Defense * 0.2f);
+                //Guardian.DefenseRate += Guardian.DefenseRate * 0.2f;
+                Guardian.MeleeSpeed += Guardian.MeleeSpeed * 0.2f;
+                Guardian.MoveSpeed -= Guardian.MoveSpeed * 0.1f;
+                Guardian.Aggro += 300;
                 Guardian.AddFlag(GuardianFlags.TitanGuardian);
             });
 		}

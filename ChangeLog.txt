@@ -33,3 +33,12 @@ You can no longer give orders while knocked out.
 Knocked out companions will now teleport to your position after your character respawns.
 Face accessories are no longer displayed when the companion is sleeping, using a throne or knocked out.
 Brutus got a hair change.
+Companions will no longer be reluctant about using heavy melee weapons when the player is mounting on them.
+Having a Titan sized guardian will no longer make monsters and bosses stronger.
+Nerfed Titan guardians status.
+	Now instead of 3 times their health, they will only get 80% more health.
+	Instead of 30% defense bonus, they only get 20%.
+	They no longer gain defense rate bonus.
+	Instead of their melee attack getting 30% faster, It gets 20% slower.
+	They now gain 10% move speed bonus.
+	They get 300 aggro.

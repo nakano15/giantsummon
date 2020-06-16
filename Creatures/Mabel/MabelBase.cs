@@ -385,7 +385,8 @@ namespace giantsummon.Creatures
             Mes.Add("*Sometimes one of my feet starts to hurt, because I place most of my weight on it.*");
             Mes.Add("*I have to admit, I fell sometimes when trying to mantain this pose. That also explains why I'm missing a teeth.*");
             Mes.Add("*I'm pursuing my life time goal, I'm going to be a Miss North Pole. But I wonder, what should I pursue next when I achieve that?*");
-            Mes.Add("*Don't blush, but I accompany you on your adventures because I like your company.*");
+            if(guardian.FriendshipLevel >= guardian.Base.CallUnlockLevel)
+                Mes.Add("*Don't blush, but I accompany you on your adventures because I like your company.*");
             Mes.Add("*Do you think I'm naive? Too many people says that that's my problem. But I don't see myself as being naive.*");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
             {

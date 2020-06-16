@@ -260,8 +260,8 @@ namespace giantsummon
             {
                 GuardianCount++;
                 SpawnDifficulty += guardian.LifeFruitHealth * 3 + guardian.LifeCrystalHealth;
-                if (guardian.HasFlag(GuardianFlags.TitanGuardian))
-                    HasTitan = true;
+                //if (guardian.HasFlag(GuardianFlags.TitanGuardian))
+                //    HasTitan = true;
             }
             const int MaxLifeCrystalBoost = 15 * 3, MaxLifeFruitBoost = 20, TotalHealthBoost = MaxLifeCrystalBoost + MaxLifeFruitBoost;
             if (HasTitan)
@@ -318,10 +318,10 @@ namespace giantsummon
                 }
             }
             const int MaxLifeCrystalBoost = 15 * 3, MaxLifeFruitBoost = 20, TotalHealthBoost = MaxLifeCrystalBoost + MaxLifeFruitBoost;
-            if (HasTitanGuardian)
+            /*if (HasTitanGuardian)
             {
                 SpawnDifficulty += TotalHealthBoost * 4;
-            }
+            }*/
             //float SpawnChanceBooster = (float)SpawnDifficulty / TotalHealthBoost;
             MobTypes mobType = MobTypes.Normal;
             if (SpawnDifficulty >= TotalHealthBoost * 10) // && Main.rand.Next(3600) < SpawnDifficulty - TotalHealthBoost * 5)

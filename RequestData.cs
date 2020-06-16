@@ -398,7 +398,7 @@ namespace giantsummon
                                                             float Speed = guardian.Velocity.X;
                                                             if (guardian.MountedOnPlayer || guardian.SittingOnPlayerMount)
                                                                 Speed = player.player.velocity.X;
-                                                            DistanceStack -= Math.Abs(Speed);
+                                                            DistanceStack -= Math.Abs(Speed) * 0.05f;
                                                             SetFloatValue(o, DistanceStack);
                                                             break;
                                                         }

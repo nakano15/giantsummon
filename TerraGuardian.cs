@@ -270,7 +270,14 @@ namespace giantsummon
                 }
                 else
                 {
-                    return 20;
+                    if (MainMod.TileCollisionIsSameAsHitCollision)
+                    {
+                        return Base.Width;
+                    }
+                    else
+                    {
+                        return 20;
+                    }
                 }
             }
         }
@@ -284,7 +291,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    int height = 42 - CollisionHeightDiscount;
+                    int height = (MainMod.TileCollisionIsSameAsHitCollision ? Base.Height : 42) - CollisionHeightDiscount;
                     if (mount.Active)
                         height += mount.HeightBoost;
                     return height;
@@ -2010,7 +2017,7 @@ namespace giantsummon
                 FlipGravity();
             if (MoveUp && !LastMoveUp && HasFlag(GuardianFlags.GravityChange))
                 FlipGravity();
-            if (HasBuff(Terraria.ID.BuffID.Titan))
+            if (HasBuff(Terraria.ID.BuffID.Titan) && !HasFlag(GuardianFlags.TitanGuardian))
                 FinalScale *= 2;
             if (HasFlag(GuardianFlags.VortexDebuff))
             {
@@ -2742,7 +2749,8 @@ namespace giantsummon
 
         public void WhenPlayerDies()
         {
-            DisplayEmotion(Emotions.Sad);
+            if(!KnockedOut)
+                DisplayEmotion(Emotions.Sad);
         }
 
         public void DoUpdateGuardianStatus()
@@ -3737,7 +3745,7 @@ namespace giantsummon
                                 continue;
                             if (Inventory[i].melee)
                             {
-                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || !Items.GuardianItemPrefab.IsHeavyItem(Inventory[i])) && (!PlayerMounted || Base.ReverseMount))
+                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) && (!PlayerMounted || Base.ReverseMount))))
                                 {
                                     HighestMeleeDamage = Inventory[i].damage;
                                     MeleePosition = i;
@@ -5699,6 +5707,10 @@ namespace giantsummon
             {
                 TileCheckDir += CollisionWidth * 0.5f;
                 Dir = 1;
+            }
+            if (CollisionWidth > 40)
+            {
+                Dir *= (CollisionWidth / 32) + 1;
             }
             for (int dx = 0; dx < 2; dx++)
             {

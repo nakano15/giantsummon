@@ -41,7 +41,7 @@ namespace giantsummon
             GuardiansGetKnockedOutUponDefeat = false, GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
-            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true;
+            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false;
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
         public const bool IndividualSkillLeveling = false;
@@ -355,88 +355,95 @@ namespace giantsummon
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
         {
-            if (ShowDebugInfo)
+            try
             {
-                Terraria.UI.LegacyGameInterfaceLayer gi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, Terraria.UI.InterfaceScaleType.UI);
-                layers.Add(gi);
-            }
-            if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
-            {
-                /*if (!Main.player[Main.myPlayer].dead)
+                if (ShowDebugInfo)
                 {
-                    for (int l = 0; l < layers.Count; l++)
+                    Terraria.UI.LegacyGameInterfaceLayer gi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, Terraria.UI.InterfaceScaleType.UI);
+                    layers.Add(gi);
+                }
+                if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
+                {
+                    /*if (!Main.player[Main.myPlayer].dead)
                     {
-                        if (!layers[l].Name.Contains("Mouse"))
+                        for (int l = 0; l < layers.Count; l++)
                         {
-                            layers.RemoveAt(l);
+                            if (!layers[l].Name.Contains("Mouse"))
+                            {
+                                layers.RemoveAt(l);
+                            }
                         }
+                    }*/
+                    if (Main.playerInventory)
+                        Main.playerInventory = false;
+                    Terraria.UI.LegacyGameInterfaceLayer downedInterface = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
+                    layers.Insert(0, downedInterface);
+                    /*if (!Main.player[Main.myPlayer].dead)
+                    {
+                        return;
+                    }*/
+                }
+                int MouseSlotPosition = -1, InventorySlotPosition = -1, ResourceBarPosition = -1, PlayerChatPos = -1;
+                bool RemoveInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
+                for (int l = 0; l < layers.Count; l++)
+                {
+                    if (MouseSlotPosition == -1 && layers[l].Name.Contains("Mouse"))
+                        MouseSlotPosition = l - 1;
+                    if (PlayerChatPos == -1 && layers[l].Name.Contains("Player Chat"))
+                        PlayerChatPos = l - 1;
+                    if (InventorySlotPosition == -1 && layers[l].Name.Contains("Inventory"))
+                    {
+                        InventorySlotPosition = l - 1;
                     }
-                }*/
-                if (Main.playerInventory)
-                    Main.playerInventory = false;
-                Terraria.UI.LegacyGameInterfaceLayer downedInterface = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
-                layers.Insert(0, downedInterface);
-                /*if (!Main.player[Main.myPlayer].dead)
-                {
-                    return;
-                }*/
-            }
-            int MouseSlotPosition = -1, InventorySlotPosition = -1, ResourceBarPosition = -1, PlayerChatPos = -1;
-            bool RemoveInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
-            for (int l = 0; l < layers.Count; l++)
-            {
-                if (MouseSlotPosition == -1 && layers[l].Name.Contains("Mouse"))
-                    MouseSlotPosition = l - 1;
-                if(PlayerChatPos == -1 && layers[l].Name.Contains("Player Chat"))
-                    PlayerChatPos = l - 1;
-                if (InventorySlotPosition == -1 && layers[l].Name.Contains("Inventory"))
-                {
-                    InventorySlotPosition = l - 1;
+                    if (ResourceBarPosition == -1 && layers[l].Name.Contains("Resource Bar"))
+                    {
+                        ResourceBarPosition = l;
+                        if (RemoveInventory)
+                            layers.RemoveAt(l);
+                    }
                 }
-                if (ResourceBarPosition == -1 && layers[l].Name.Contains("Resource Bar"))
+                Terraria.UI.LegacyGameInterfaceLayer dgi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Inventory Interface", DrawGuardianInventoryInterface, Terraria.UI.InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer hsi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, Terraria.UI.InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer gsi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Selection Interface", DrawGuardianSelectionInterface, Terraria.UI.InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer goi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, Terraria.UI.InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer gmi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, Terraria.UI.InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer dnagd = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Dialogue Interface", DrawNpcsAndGuardianDialogues, Terraria.UI.InterfaceScaleType.UI);
+                if (PlayerChatPos > -1)
                 {
-                    ResourceBarPosition = l;
-                    if (RemoveInventory)
-                        layers.RemoveAt(l);
+                    layers.Insert(PlayerChatPos, dnagd);
                 }
+                else if (MouseSlotPosition > -1)
+                {
+                    layers.Insert(MouseSlotPosition, dnagd);
+                }
+                if (MouseSlotPosition > -1)
+                {
+                    layers.Insert(MouseSlotPosition, goi);
+                    layers.Insert(MouseSlotPosition, gmi);
+                }
+                else
+                {
+                    layers.Add(goi);
+                    layers.Add(gmi);
+                }
+                if (InventorySlotPosition > -1)
+                    layers.Insert(InventorySlotPosition, dgi);
+                else if (MouseSlotPosition > -1)
+                    layers.Insert(MouseSlotPosition, dgi);
+                else
+                    layers.Add(dgi);
+                if (MouseSlotPosition > -1)
+                {
+                    layers.Insert(MouseSlotPosition, hsi);
+                    layers.Insert(MouseSlotPosition, gsi);
+                }
+                else
+                    layers.Add(hsi);
             }
-            Terraria.UI.LegacyGameInterfaceLayer dgi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Inventory Interface", DrawGuardianInventoryInterface, Terraria.UI.InterfaceScaleType.UI);
-            Terraria.UI.LegacyGameInterfaceLayer hsi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, Terraria.UI.InterfaceScaleType.UI);
-            Terraria.UI.LegacyGameInterfaceLayer gsi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Selection Interface", DrawGuardianSelectionInterface, Terraria.UI.InterfaceScaleType.UI);
-            Terraria.UI.LegacyGameInterfaceLayer goi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, Terraria.UI.InterfaceScaleType.UI);
-            Terraria.UI.LegacyGameInterfaceLayer gmi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, Terraria.UI.InterfaceScaleType.UI);
-            Terraria.UI.LegacyGameInterfaceLayer dnagd = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Dialogue Interface", DrawNpcsAndGuardianDialogues, Terraria.UI.InterfaceScaleType.UI);
-            if (PlayerChatPos > -1)
+            catch
             {
-                layers.Insert(PlayerChatPos, dnagd);
+
             }
-            else if (MouseSlotPosition > -1)
-            {
-                layers.Insert(MouseSlotPosition, dnagd);
-            }
-            if (MouseSlotPosition > -1)
-            {
-                layers.Insert(MouseSlotPosition, goi);
-                layers.Insert(MouseSlotPosition, gmi);
-            }
-            else
-            {
-                layers.Add(goi);
-                layers.Add(gmi);
-            }
-            if (InventorySlotPosition > -1)
-                layers.Insert(InventorySlotPosition, dgi);
-            else if (MouseSlotPosition > -1)
-                layers.Insert(MouseSlotPosition, dgi);
-            else
-                layers.Add(dgi);
-            if (MouseSlotPosition > -1)
-            {
-                layers.Insert(MouseSlotPosition, hsi);
-                layers.Insert(MouseSlotPosition, gsi);
-            }
-            else
-                layers.Add(hsi);
         }
 
         public static bool RectangleIntersects(Vector2 p1, int p1width, int p1height, Vector2 p2, int p2width, int p2height)

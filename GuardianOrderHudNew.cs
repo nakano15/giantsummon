@@ -17,7 +17,7 @@ namespace giantsummon
 
         public static void Open()
         {
-            if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.Active)
+            if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.Active || Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
                 return;
             SelectedGuardian = 255;
             OptionMenus.Clear();
@@ -55,7 +55,7 @@ namespace giantsummon
 
         public static void Draw()
         {
-            try
+            //try
             {
                 if (!Active)
                 {
@@ -88,10 +88,10 @@ namespace giantsummon
                     OrderPositionStart.X += WidthStack + 4;
                 }
             }
-            catch
+            /*catch
             {
                 Close();
-            }
+            }*/
         }
 
         public static void Update(PlayerMod player)
