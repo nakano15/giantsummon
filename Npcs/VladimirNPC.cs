@@ -111,6 +111,8 @@ namespace giantsummon.Npcs
                     bool ItemUsed = false, JumpUsed = false, MoveUsed = false;
                     if (ControllingGuardian)
                     {
+                        pm.Guardian.ImmuneTime = 3;
+                        pm.Guardian.ImmuneNoBlink = true;
                         ItemUsed = pm.Guardian.LastAction && pm.Guardian.ItemAnimationTime == 0;
                         JumpUsed = pm.Guardian.LastJump;
                         MoveUsed = (pm.Guardian.LastMoveLeft) ||
@@ -408,7 +410,7 @@ namespace giantsummon.Npcs
             return 0;
         }
 
-        public static bool CanRecruitVladimir { get { return !NpcMod.HasMetGuardian(GuardianBase.Vladimir) && NPC.downedQueenBee; } }
+        public static bool CanRecruitVladimir { get { return !NpcMod.HasMetGuardian(GuardianBase.Vladimir); } }
 
         public override bool CheckActive()
         {
@@ -648,7 +650,7 @@ namespace giantsummon.Npcs
                 if (firstButton)
                 {
                     RequestTaken = true;
-                    FishsToTake = (byte)Main.rand.Next(7, 19);
+                    FishsToTake = (byte)Main.rand.Next(7, 13);
                     Main.npcChatText = "*Thank you! I need some Honeyfins. Please be fast, I'm so hungry...*";
                 }
                 else

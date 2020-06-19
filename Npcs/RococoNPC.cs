@@ -137,11 +137,10 @@ namespace giantsummon.Npcs
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = npc.dontCountMe = true;
             base.AI();
         }
-        public static bool RococoMaySpawn { get { return NPC.downedBoss1; } }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (Main.dayTime && !NpcMod.HasGuardianNPC(0) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 0) && RococoMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<RococoNPC>()))
+            if (Main.dayTime && !NpcMod.HasGuardianNPC(0) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 0) && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<RococoNPC>()))
             {
                 return (float)(Main.time - 27000) / 432000;
             }

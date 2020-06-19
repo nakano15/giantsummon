@@ -139,8 +139,8 @@ namespace giantsummon
         public bool TutorialRequestIntroduction { get { return TutorialFlags[3]; } set { TutorialFlags[3] = value; } }
         public bool TutorialKnockOutIntroduction { get { return TutorialFlags[4]; } set { TutorialFlags[4] = value; } }
         public bool TutorialStatusIncreaseItemIntroduction { get { return TutorialFlags[5]; } set { TutorialFlags[5] = value; } }
-        public byte FriendshipLevel = 1, FriendshipExp = 0;
-        public byte FriendshipMaxExp { get { return (byte)(3 + FriendshipLevel / 5); } }
+        public byte FriendshipLevel = 0, FriendshipExp = 0;
+        public byte FriendshipMaxExp { get { return FriendshipLevel == 0 ? (byte)2 : (byte)(3 + FriendshipLevel / 5); } }
         public int LastFriendshipCount = -1;
         public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
 
@@ -151,7 +151,7 @@ namespace giantsummon
 
         public void RecalculateFriendshipLevel()
         {
-            FriendshipLevel = 1;
+            FriendshipLevel = 0;
             FriendshipExp = 0;
             int ExpSum = 0;
             foreach (GuardianData gd in MyGuardians.Values)

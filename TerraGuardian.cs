@@ -1843,6 +1843,211 @@ namespace giantsummon
                 MessageTime--;
         }
 
+        public void FloorVisual(bool Falling)
+        {
+            Point TilePosition = Position.ToTileCoordinates();
+            TilePosition.Y++;
+            if (GravityDirection == -1)
+            {
+                TilePosition.Y = (int)(Position.Y - Height - 0.1f) / 16;
+            }
+            int TileType = -1;
+            for (int x = -1; x < 2; x++)
+            {
+                if (Main.tile[TilePosition.X + x, TilePosition.Y] == null)
+                {
+                    Main.tile[TilePosition.X + x, TilePosition.Y] = new Tile();
+                }
+            }
+            if (Main.tile[TilePosition.X, TilePosition.Y].nactive() && Main.tileSolid[Main.tile[TilePosition.X, TilePosition.Y].type])
+            {
+                TileType = Main.tile[TilePosition.X, TilePosition.Y].type;
+            }
+            else if (Main.tile[TilePosition.X - 1, TilePosition.Y].nactive() && Main.tileSolid[Main.tile[TilePosition.X - 1, TilePosition.Y].type])
+            {
+                TileType = Main.tile[TilePosition.X - 1, TilePosition.Y].type;
+            }
+            else if (Main.tile[TilePosition.X + 1, TilePosition.Y].nactive() && Main.tileSolid[Main.tile[TilePosition.X + 1, TilePosition.Y].type])
+            {
+                TileType = Main.tile[TilePosition.X + 1, TilePosition.Y].type;
+            }
+            if (Main.tile[TilePosition.X - 1, TilePosition.Y].slope() != 0
+                || Main.tile[TilePosition.X, TilePosition.Y].slope() != 0 ||
+                Main.tile[TilePosition.X + 1, TilePosition.Y].slope() != 0)
+                TileType = -1;
+            if (TileType > -1 && !Wet)
+                MakeFloorDust(Falling, TileType);
+        }
+
+        private void MakeFloorDust(bool Falling, int type)
+        {
+            if (type == 147 || type == 25 || type == 53 || type == 189 || type == 0 || type == 123 || type == 57 || type == 112 || type == 116 || type == 196 || type == 193 || type == 195 || type == 197 || type == 199 || type == 229 || type == 371)
+            {
+                int Attempts = 1;
+                if (Falling)
+                    Attempts = 20;
+                for (int i = 0; i < Attempts; i++)
+                {
+                    bool Create = true;
+                    int DustType = 76;
+                    if (type == 53)
+                    {
+                        DustType = 32;
+                    }
+                    if (type == 189)
+                    {
+                        DustType = 16;
+                    }
+                    if (type == 0)
+                    {
+                        DustType = 0;
+                    }
+                    if (type == 123)
+                    {
+                        DustType = 53;
+                    }
+                    if (type == 57)
+                    {
+                        DustType = 36;
+                    }
+                    if (type == 112)
+                    {
+                        DustType = 14;
+                    }
+                    if (type == 116)
+                    {
+                        DustType = 51;
+                    }
+                    if (type == 196)
+                    {
+                        DustType = 108;
+                    }
+                    if (type == 193)
+                    {
+                        DustType = 4;
+                    }
+                    if (type == 195 || type == 199)
+                    {
+                        DustType = 5;
+                    }
+                    if (type == 197)
+                    {
+                        DustType = 4;
+                    }
+                    if (type == 229)
+                    {
+                        DustType = 153;
+                    }
+                    if (type == 371)
+                    {
+                        DustType = 243;
+                    }
+                    if (type == 25)
+                    {
+                        DustType = 37;
+                    }
+                    if (DustType == 32 && Main.rand.Next(2) == 0)
+                    {
+                        Create = false;
+                    }
+                    if (DustType == 14 && Main.rand.Next(2) == 0)
+                    {
+                        Create = false;
+                    }
+                    if (DustType == 51 && Main.rand.Next(2) == 0)
+                    {
+                        Create = false;
+                    }
+                    if (DustType == 36 && Main.rand.Next(2) == 0)
+                    {
+                        Create = false;
+                    }
+                    if (DustType == 0 && Main.rand.Next(3) != 0)
+                    {
+                        Create = false;
+                    }
+                    if (DustType == 53 && Main.rand.Next(3) != 0)
+                    {
+                        Create = false;
+                    }
+                    Color color = default(Color);
+                    if (type == 193)
+                    {
+                        color = new Color(30, 100, 255, 100);
+                    }
+                    if (type == 197)
+                    {
+                        color = new Color(97, 200, 255, 100);
+                    }
+                    if (!Falling)
+                    {
+                        if (Main.rand.Next(100) > (Math.Abs(Velocity.X) / 3) * 100)
+                        {
+                            Create = false;
+                        }
+                    }
+                    if (Create)
+                    {
+                        float VelX = Velocity.X;
+                        if (VelX > 6)
+                            VelX = 6;
+                        if (VelX < -6)
+                            VelX = -6;
+                        if (Velocity.X != 0 || Falling)
+                        {
+                            int DustPos = Dust.NewDust(new Vector2(Position.X - CollisionWidth * 0.5f, Position.Y - 2f), CollisionWidth, 6, DustType, 0, 0, 50, color, 1f);
+                            if (GravityDirection == -1)
+                            {
+                                Main.dust[DustPos].position.Y -= CollisionHeight + 4;
+                            }
+                            if (DustType == 76)
+                            {
+                                Main.dust[DustPos].scale += (float)Main.rand.Next(3) * 0.1f;
+                                Main.dust[DustPos].noLight = true;
+                            }
+                            if (DustType == 16 || DustType == 108 || DustType == 153)
+                            {
+                                Main.dust[DustPos].scale += (float)Main.rand.Next(6) * 0.1f;
+                            }
+                            if (DustType == 37)
+                            {
+                                Main.dust[DustPos].scale += 0.25f;
+                                Main.dust[DustPos].alpha = 50;
+                            }
+                            if (DustType == 5)
+                            {
+                                Main.dust[DustPos].scale += Main.rand.Next(2, 8) * 0.1f;
+                            }
+                            Main.dust[DustPos].noGravity = true;
+                            if (Attempts > 1)
+                            {
+                                Main.dust[DustPos].velocity.X *= 1.2f;
+                                Main.dust[DustPos].velocity.Y *= 0.8f;
+                                Main.dust[DustPos].velocity.Y -= 1f;
+                                Main.dust[DustPos].velocity *= 0.8f;
+                                Main.dust[DustPos].scale += Main.rand.Next(3) * 0.1f;
+                                Main.dust[DustPos].velocity.X = (Main.dust[DustPos].position.X - Position.X) * 0.2f;
+                                if (Main.dust[DustPos].velocity.Y > 0)
+                                {
+                                    Main.dust[DustPos].velocity.Y *= -1f;
+                                }
+                                Main.dust[DustPos].velocity.X += VelX * 0.3f;
+                            }
+                            else
+                            {
+                                Main.dust[DustPos].velocity *= 0.2f;
+                            }
+                            Main.dust[DustPos].position.X -= VelX;
+                            if (GravityDirection == -1)
+                            {
+                                Main.dust[DustPos].velocity.Y *= -1;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public float MountedVerticalPositionBonus
         {
             get
@@ -2310,6 +2515,7 @@ namespace giantsummon
             }
             UpdateSpelunkerGlowstickEffect();
             Base.GuardianUpdateScript(this);
+            //FloorVisual(Velocity.Y != 0);
         }
 
         public void GuardianMoodAndStatus()
@@ -2711,7 +2917,7 @@ namespace giantsummon
                 if (FriendshipLevel == Base.MountDamageReductionLevel)
                     Main.NewText("You will receive less damage while mounted on " + this.Name + ".");
                 if (FriendshipLevel == Base.MaySellYourLoot)
-                    Main.NewText("You can now send " + this.Name + " to the town to sell your loot, if It has a teleporting item on the inventory.");
+                    Main.NewText("You can now send " + this.Name + " to the town to sell your loot.");
                 if (FriendshipLevel == Base.KnownLevel || FriendshipLevel == Base.FriendsLevel || FriendshipLevel == Base.BestFriendLevel || FriendshipLevel == Base.BestFriendForeverLevel || FriendshipLevel == Base.BuddiesForLife)
                     Main.NewText("Your friendship with " + this.Name + " has been improved.");
             }
@@ -3881,7 +4087,7 @@ namespace giantsummon
                                     //if(TargetInAim)
                                     Attack = true;
                                 }
-                                if (Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
+                                if (!NearDeath && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
                                 {
                                     Jump = true;
                                 }
@@ -8020,19 +8226,53 @@ namespace giantsummon
             }
         }
 
+        /// <summary>
+        /// Add AI checking if the player fell or jumped in some place.
+        /// </summary>
+
+        public PlayerMovementStateEnumerator PlayerState = 0, LastPlayerState = 0;
+
+        public enum PlayerMovementStateEnumerator : byte
+        {
+            Normal,
+            Jumped,
+            Falling,
+            Drop
+        }
+        public List<KeyValuePair<PlayerMovementStateEnumerator, Point>> LastLoggedPlayerState = new List<KeyValuePair<PlayerMovementStateEnumerator, Point>>();
+
         public void FollowPlayerAI()
         {
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
             Player Owner = Main.player[OwnerPos];
-            Vector2 PositionDifference = Owner.Center;
-            float LeaderBottom = Owner.position.Y + Owner.height - 1;
-            int LeaderHeight = Owner.height;
+            Vector2 PositionDifference = Vector2.Zero;
+            float LeaderBottom = 0;
+            int LeaderHeight = 1;
+            LastPlayerState = PlayerState;
             if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
             {
                 TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.First(x => x.Active && x.PlayerMounted && !x.Base.ReverseMount);
                 PositionDifference = guardian.CenterPosition;
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
+                if (guardian.Velocity.Y == 0 && PlayerState > 0)
+                {
+                    PlayerState = 0;
+                }
+                else if (PlayerState == 0)
+                {
+                    if (guardian.Velocity.Y < 0 && guardian.LastJump)
+                    {
+                        PlayerState = PlayerMovementStateEnumerator.Jumped;
+                    }
+                    else if (guardian.Velocity.Y > 0)
+                    {
+                        if (guardian.LastMoveDown)
+                            PlayerState = PlayerMovementStateEnumerator.Drop;
+                        else
+                            PlayerState = PlayerMovementStateEnumerator.Falling;
+                    }
+                }
             }
             else if (Owner.GetModPlayer<PlayerMod>().ControllingGuardian)
             {
@@ -8040,6 +8280,100 @@ namespace giantsummon
                 PositionDifference = guardian.CenterPosition;
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
+                if (guardian.Velocity.Y == 0 && PlayerState > 0)
+                {
+                    PlayerState = 0;
+                }
+                else if (PlayerState == 0)
+                {
+                    if (guardian.Velocity.Y < 0 && guardian.LastJump)
+                    {
+                        PlayerState = PlayerMovementStateEnumerator.Jumped;
+                    }
+                    else if (guardian.Velocity.Y > 0)
+                    {
+                        if (guardian.LastMoveDown)
+                            PlayerState = PlayerMovementStateEnumerator.Drop;
+                        else
+                            PlayerState = PlayerMovementStateEnumerator.Falling;
+                    }
+                }
+            }
+            else
+            {
+                PositionDifference = Owner.Center;
+                LeaderBottom = Owner.position.Y + Owner.height - 1;
+                LeaderHeight = Owner.height;
+                if (Owner.velocity.Y == 0 && PlayerState > 0)
+                {
+                    PlayerState = 0;
+                }
+                else if (PlayerState == 0)
+                {
+                    if (Owner.velocity.Y < 0 && Owner.controlJump)
+                    {
+                        PlayerState = PlayerMovementStateEnumerator.Jumped;
+                    }
+                    else if(Owner.velocity.Y > 0)
+                    {
+                        if (Owner.controlDown)
+                            PlayerState = PlayerMovementStateEnumerator.Drop;
+                        else
+                            PlayerState = PlayerMovementStateEnumerator.Falling;
+                    }
+                }
+            }
+            if (false && !BeingPulledByPlayer)
+            {
+                if (PlayerState != LastPlayerState)
+                {
+                    KeyValuePair<PlayerMovementStateEnumerator, Point> PlayerStatePosition = new KeyValuePair<PlayerMovementStateEnumerator, Point>(PlayerState, new Point((int)Position.X / 16, (int)Position.Y / 16));
+                    LastLoggedPlayerState.Add(PlayerStatePosition);
+                }
+                if (LastLoggedPlayerState.Count > 0)
+                {
+                    KeyValuePair<PlayerMovementStateEnumerator, Point> ActionPoint = LastLoggedPlayerState[0];
+                    PositionDifference.X = ActionPoint.Value.X * 16 + 16;
+                    PositionDifference.Y = ActionPoint.Value.Y * 16 + 56;
+                    switch (ActionPoint.Key)
+                    {
+                        case PlayerMovementStateEnumerator.Jumped:
+                            if (ActionPoint.Value.X * 16 >= Position.X - CollisionWidth * 0.5f && ActionPoint.Value.X * 16 < Position.X + CollisionWidth * 0.5f)
+                            {                
+                                Jump = true;
+                                LastLoggedPlayerState.RemoveAt(0);
+                            }
+                            break;
+                        case PlayerMovementStateEnumerator.Drop:
+                            if (ActionPoint.Value.X * 16 >= Position.X - CollisionWidth * 0.5f && ActionPoint.Value.X * 16 < Position.X + CollisionWidth * 0.5f)
+                            {
+                                MoveDown = true;
+                                LastLoggedPlayerState.RemoveAt(0);
+                            }
+                            break;
+                        case PlayerMovementStateEnumerator.Falling:
+                            {
+                                if (ActionPoint.Value.X * 16 >= Position.X - CollisionWidth * 0.5f && ActionPoint.Value.X * 16 < Position.X + CollisionWidth * 0.5f)
+                                {
+                                    LastLoggedPlayerState.RemoveAt(0);
+                                }
+                            }
+                            break;
+                        case PlayerMovementStateEnumerator.Normal:
+                            {
+                                if (Velocity.Y == 0)
+                                    LastLoggedPlayerState.RemoveAt(0);
+                            }
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                if (LastLoggedPlayerState.Count > 0)
+                {
+                    LastLoggedPlayerState.Clear();
+                }
             }
             bool Confused = HasFlag(GuardianFlags.Confusion) && OwnerPos > -1;
             if (ChargeAhead)
@@ -12104,6 +12438,67 @@ namespace giantsummon
             }
         }
 
+        public Point[] UpdateTouchingTiles()
+        {
+            List<Point> TileList1 = new List<Point>(),
+            TileList2 = new List<Point>();
+            Vector2 Position = TopLeftPosition;
+            if (!Collision.IsClearSpotTest(Position + Velocity, 16, Width, Height, false, false, GravityDirection, true, true))
+            {
+                TileList1 = Collision.FindCollisionTile(Math.Sign(Velocity.Y) == 1 ? 2 : 3, Position + Velocity, 16, Width, Height, false, false, GravityDirection, true, false);
+            }
+            if (!Collision.IsClearSpotTest(Position, Math.Abs(Velocity.Y), Width, Height, false, false, GravityDirection, true, true))
+            {
+                TileList2 = Collision.FindCollisionTile(Math.Sign(Velocity.Y) == 1 ? 2 : 3, Position + Velocity, Math.Abs(Velocity.Y), Width, Height, false, false, GravityDirection, true, true);
+            }
+            return TileList1.Union(TileList2).ToArray();
+        }
+
+        public void TryBouncingOnTiles(Point[] AdjTiles)
+        {
+            if (Math.Abs(Velocity.Y) >= 5f && !this.Wet)
+            {
+                int y = -1;
+                foreach (Point current in AdjTiles)
+                {
+                    Tile tile = Main.tile[current.X, current.Y];
+                    if (tile != null && tile.active() && tile.nactive() && Main.tileBouncy[tile.type])
+                    {
+                        y = current.Y;
+                        break;
+                    }
+                }
+                if (y > -1)
+                {
+                    Velocity.Y *= 0.8f;
+                    if (Jump)
+                        Velocity.Y = MathHelper.Clamp(Velocity.Y, -13, 13);
+                    Position.Y = y * 16 - (Velocity.Y < 0 ? CollisionHeight : -16);
+                    Velocity.Y = MathHelper.Clamp(Velocity.Y, -20f, 20);
+                    if (Velocity.Y * GravityDirection < 0)
+                    {
+                        FallStart = (int)Position.Y / 16;
+                    }
+                }
+            }
+        }
+
+        public void WhenLandingOnDetonatorScript()
+        {
+            if (OwnerPos != Main.myPlayer)
+                return;
+            if (Velocity.Y >= 3f)
+            {
+                Point point = (Position + new Vector2(0, 0.01f)).ToTileCoordinates();
+                Tile tile = Framing.GetTileSafely(point.X, point.Y);
+                if (tile.active() && tile.type == Terraria.ID.TileID.Detonator && tile.frameY == 0 && tile.frameX < 36)
+                {
+                    Wiring.HitSwitch(point.X, point.Y);
+                    NetMessage.SendData(59, -1, -1, null, point.X, point.Y, 0f, 0f, 0, 0, 0);
+                }
+            }
+        }
+
         public void UpdateCollision()
         {
             if (HasFlag(GuardianFlags.Webbed))
@@ -12114,8 +12509,11 @@ namespace giantsummon
             int PositionX = (int)(this.Position.X / 16);
             float StepSpeed = 2f;
             bool Fall = MoveDown;
+            Point[] TouchingTile = UpdateTouchingTiles();
             Collision_Water(Collision_Lava());
             Collision_WalkDownSlopes();
+            TryBouncingOnTiles(TouchingTile);
+            WhenLandingOnDetonatorScript();
             if (HasFlag(GuardianFlags.WindPushed) && (Velocity.Y != 0 || !(MoveLeft || MoveRight)))
             {
                 DoSandstormPushing();

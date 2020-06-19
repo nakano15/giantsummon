@@ -24,11 +24,6 @@ namespace giantsummon.GuardianNPC.List
             return mod.Properties.Autoload;
         }
 
-        public static bool SpawnRequirement
-        {
-            get { return NPC.downedBoss1; }
-        }
-
         public WolfGuardian()
             : base(1)
         {

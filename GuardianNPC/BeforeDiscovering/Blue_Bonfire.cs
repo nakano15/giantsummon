@@ -75,7 +75,8 @@ namespace giantsummon.GuardianNPC.BeforeDiscovering
 		
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            bool MaySpawn = !NpcMod.HasMetGuardian(1) && !NpcMod.HasGuardianNPC(1) && GuardianNPC.List.WolfGuardian.SpawnRequirement && !NPC.AnyNPCs(npc.type);
+            return 0;
+            bool MaySpawn = !NpcMod.HasMetGuardian(1) && !NpcMod.HasGuardianNPC(1) && !NPC.AnyNPCs(npc.type);
             return (MaySpawn ? 1 : 0f);
         }
     }

@@ -131,108 +131,123 @@ namespace giantsummon
 
         public static void UpdateAndDraw()
         {
-            if (Main.gameMenu || Main.player[Main.myPlayer].dead || MainMod.Gameplay2PMode || Guardian.Downed)
-                return;
-            List<Texture2D> HeadTextures = new List<Texture2D>();
-            byte GuardianCount = 0;
-            foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+            try
             {
-                if (SpecificGuardian == 255 || SpecificGuardian == GuardianCount)
+                if (Main.gameMenu || Main.player[Main.myPlayer].dead || MainMod.Gameplay2PMode || Guardian.Downed)
+                    return;
+                List<TerraGuardian> HeadsToDraw = new List<TerraGuardian>();
+                byte GuardianCount = 0;
+                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
-                    if (g.Active && !g.Base.InvalidGuardian)
+                    if (SpecificGuardian == 255 || SpecificGuardian == GuardianCount)
                     {
-                        HeadTextures.Add(g.Base.sprites.HeadSprite);
+                        if (g.Active && !g.Base.InvalidGuardian)
+                        {
+                            HeadsToDraw.Add(g);
+                        }
                     }
+                    GuardianCount++;
                 }
-                GuardianCount++;
-            }
-            bool OrderButtonPressed = MainMod.OrderCallButtonPressed;
-            if (!OrderSelection)
-            {
-                if (Guardian.Active && OrderButtonPressed && Main.mouseItem.type == 0 && !Main.player[Main.myPlayer].mouseInterface)
+                bool OrderButtonPressed = MainMod.OrderCallButtonPressed;
+                if (!OrderSelection)
                 {
-                    OrderPickTime++;
-                    if (OrderPickTime >= 20)
+                    if (Guardian.Active && OrderButtonPressed && Main.mouseItem.type == 0 && !Main.player[Main.myPlayer].mouseInterface)
+                    {
+                        OrderPickTime++;
+                        if (OrderPickTime >= 20)
+                        {
+                            OrderPickTime = 0;
+                            Open();
+                        }
+                    }
+                    else if (OrderPickTime > 0)
                     {
                         OrderPickTime = 0;
-                        Open();
                     }
+                    return;
                 }
-                else if(OrderPickTime > 0)
+                Vector2 ScreenCenter = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.5f);
+                Vector2 MouseRelativePosition = ScreenCenter - new Vector2(Main.mouseX, Main.mouseY);
+                float MouseRotation = (float)Math.Atan2((double)-MouseRelativePosition.X, (double)-MouseRelativePosition.Y),
+                    Distance = MouseRelativePosition.Length();
+                if (MouseRotation < 0)
+                    MouseRotation += MaxAngle;
+                int SelectedOption = (int)(MouseRotation / RotationSum);
+                //MouseRotation = MathHelper.WrapAngle(MouseRotation);
+                if (HeadsToDraw.Count > 0)
                 {
-                    OrderPickTime = 0;
-                }
-                return;
-            }
-            Vector2 ScreenCenter = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.5f);
-            Vector2 MouseRelativePosition = ScreenCenter - new Vector2(Main.mouseX, Main.mouseY);
-            float MouseRotation = (float)Math.Atan2((double)-MouseRelativePosition.X, (double)-MouseRelativePosition.Y),
-                Distance = MouseRelativePosition.Length();
-            if(MouseRotation < 0)
-                MouseRotation += MaxAngle;
-            int SelectedOption = (int)(MouseRotation / RotationSum);
-            //MouseRotation = MathHelper.WrapAngle(MouseRotation);
-            if (HeadTextures.Count > 0)
-            {
-                float Sum = 1f / HeadTextures.Count * 6.283185307179586f;
-                for (int h = 0; h < HeadTextures.Count; h++)
-                {
-                    Vector2 HeadPosition = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.5f);
-                    if (HeadTextures.Count > 1)
+                    float Sum = 1f / HeadsToDraw.Count * 6.283185307179586f;
+                    for (int h = 0; h < HeadsToDraw.Count; h++)
                     {
-                        HeadPosition += 32 * (Sum * h).ToRotationVector2();
-                    }
-                    Texture2D texture = HeadTextures[h];
-                    HeadPosition.X -= texture.Width * 0.5f;
-                    HeadPosition.Y -= texture.Height * 0.5f;
-                    Main.spriteBatch.Draw(texture, HeadPosition, null, Color.White);
-                }
-            }
-            float LastY = 0;
-            for (int o = 0; o < OrderList.Count; o++)
-            {
-                float AngleStart = (o * RotationSum + StartRotation),
-                    AngleEnd = (AngleStart + RotationSum);
-                Vector2 PointA = new Vector2(OrderDistance * (float)Math.Sin(AngleStart), OrderDistance * (float)Math.Cos(AngleStart)),
-                    PointB = new Vector2(OrderDistance * (float)Math.Sin(AngleEnd), OrderDistance * (float)Math.Cos(AngleEnd));
-                float Angle = (float)Math.Atan2((float)(PointB.Y - PointA.Y), (float)(PointB.X - PointA.X)) - 1.570796326794897f;
-                Vector2 TextPosition = (PointA + (PointB - PointA) * 0.5f) * 4f;
-                PointA += ScreenCenter;
-                PointB += ScreenCenter;
-                TextPosition += ScreenCenter;
-                /*if (LastY - 5 < TextPosition.Y && LastY + 5 > TextPosition.Y)
-                {
-                    if (TextPosition.Y >= ScreenCenter.Y)
-                        TextPosition.Y += 22;
-                    else
-                        TextPosition.Y -= 22;
-                }
-                else
-                {
-                    LastY = TextPosition.Y;
-                }*/
-                float Scale = (PointB - PointA).Length();
-                Color color = Color.White;
-                if (Distance >= OrderDistance)
-                {
-                    bool InRange = false;
-                    InRange = o == SelectedOption; //(MouseRotation >= AngleStart && MouseRotation <= AngleEnd);
-                    if (InRange)
-                    {
-                        color = Color.Yellow;
-                        if (!OrderButtonPressed)
+                        Vector2 HeadPosition = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.5f);
+                        if (HeadsToDraw.Count > 1)
                         {
-                            ExecuteAction(OrderList[o]);
+                            HeadPosition += 32 * (Sum * h).ToRotationVector2();
+                        }
+                        if (HeadsToDraw[h].Base.IsTerraGuardian)
+                        {
+                            Texture2D texture = HeadsToDraw[h].Base.sprites.HeadSprite;
+                            HeadPosition.X -= texture.Width * 0.5f;
+                            HeadPosition.Y -= texture.Height * 0.5f;
+                            Main.spriteBatch.Draw(texture, HeadPosition, null, Color.White);
+                        }
+                        else
+                        {
+                            HeadPosition.Y -= 20;
+                            HeadsToDraw[h].DrawTerrarianHeadData(HeadPosition);
                         }
                     }
                 }
-                Main.spriteBatch.Draw(Main.blackTileTexture, PointA, new Rectangle(0, 0, 1, 1), color, Angle, Vector2.Zero, new Vector2(1, Scale), Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
-                Utils.DrawBorderString(Main.spriteBatch, OrderTranslation(OrderList[o]), TextPosition, color, 1f, 0.5f, 0.5f);
+                float LastY = 0;
+                for (int o = 0; o < OrderList.Count; o++)
+                {
+                    float AngleStart = (o * RotationSum + StartRotation),
+                        AngleEnd = (AngleStart + RotationSum);
+                    Vector2 PointA = new Vector2(OrderDistance * (float)Math.Sin(AngleStart), OrderDistance * (float)Math.Cos(AngleStart)),
+                        PointB = new Vector2(OrderDistance * (float)Math.Sin(AngleEnd), OrderDistance * (float)Math.Cos(AngleEnd));
+                    float Angle = (float)Math.Atan2((float)(PointB.Y - PointA.Y), (float)(PointB.X - PointA.X)) - 1.570796326794897f;
+                    Vector2 TextPosition = (PointA + (PointB - PointA) * 0.5f) * 4f;
+                    PointA += ScreenCenter;
+                    PointB += ScreenCenter;
+                    TextPosition += ScreenCenter;
+                    /*if (LastY - 5 < TextPosition.Y && LastY + 5 > TextPosition.Y)
+                    {
+                        if (TextPosition.Y >= ScreenCenter.Y)
+                            TextPosition.Y += 22;
+                        else
+                            TextPosition.Y -= 22;
+                    }
+                    else
+                    {
+                        LastY = TextPosition.Y;
+                    }*/
+                    float Scale = (PointB - PointA).Length();
+                    Color color = Color.White;
+                    if (Distance >= OrderDistance)
+                    {
+                        bool InRange = false;
+                        InRange = o == SelectedOption; //(MouseRotation >= AngleStart && MouseRotation <= AngleEnd);
+                        if (InRange)
+                        {
+                            color = Color.Yellow;
+                            if (!OrderButtonPressed)
+                            {
+                                ExecuteAction(OrderList[o]);
+                            }
+                        }
+                    }
+                    Main.spriteBatch.Draw(Main.blackTileTexture, PointA, new Rectangle(0, 0, 1, 1), color, Angle, Vector2.Zero, new Vector2(1, Scale), Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
+                    Utils.DrawBorderString(Main.spriteBatch, OrderTranslation(OrderList[o]), TextPosition, color, 1f, 0.5f, 0.5f);
+                }
+                if (!OrderButtonPressed)
+                {
+                    Close();
+                    return;
+                }
             }
-            if (!OrderButtonPressed)
+            catch
             {
-                Close();
-                return;
+
             }
         }
 

@@ -28,6 +28,9 @@ New Reward system is in:
 	Companions will now award you item rewards based on a score.
 	All companions have a fixed number of rewards that may be given based on score.
 	Each companion is going to have their own special rewards for completting their requests.
+	Some rewards will be given if you give the companions tools.
+		You don't need to keep those items on the first row of the inventory.
+		Fishing rewards will only have the chance to come, if you give them baits too.
 	Like the old system, if there is remaining score, you will gain coins as reward.
 You can no longer give orders while knocked out.
 Knocked out companions will now teleport to your position after your character respawns.
@@ -42,3 +45,15 @@ Nerfed Titan guardians status.
 	Instead of their melee attack getting 30% faster, It gets 20% slower.
 	They now gain 10% move speed bonus.
 	They get 300 aggro.
+Fixed a crash in the old order hud, which would happen when It tried to draw the head of Terrarian companions.
+Nerfed the maximum number of Honeyfins Vladimir may ask you.
+Removed information that tells you that companions who can sell your items needs a teleportation item in the inventory, because that's false since a number of updates ago.
+Friendship Ranking now starts as 0 for everyone.
+	You will require 2 friendship levels on companions to reach rank 1.
+	Everyone will see the effect of this, by having the character lose 2 friendship exp. That may cause your character to lose a friendship rank, but you can get It back.
+Changed Blue's recruitment script, so It now has more into It than a startle.
+	Also removed the requirement of killing the Eye of Cthulhu for her to begin spawning.
+You no longer need to beat Queen Bee to have Vladimir show up.
+	You most likelly will end up spawning her when trying to fulfill his request, anyway.
+You no longer need to have beaten Eye of Cthulhu to have the chance of Rococo showing up.
+	Also updated the recruitment tip from the Dryad.

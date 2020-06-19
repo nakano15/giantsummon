@@ -928,13 +928,13 @@ namespace giantsummon
                         {
                             PossibleMessages.Add("I've bumped during my travels with a cat who was looking for her husband. She's been travelling world by world looking for him, and she looked a bit worn out the last time I saw her. She could try getting some place to rest for a while before continuing her search. Would you help her, If you bump into her?");
                         }
-                        if (!HasMetGuardian(1) && GuardianNPC.List.WolfGuardian.SpawnRequirement)
+                        if (!HasMetGuardian(1))
                         {
                             PossibleMessages.Add("I've once met a Guardian that liked camping, If you place a campfire somewhere, It may show up.");
                         }
                         if (!HasMetGuardian(0))
                         {
-                            PossibleMessages.Add("There is a Guardian that will show up once there is a house available, just be sure to make it big enough for it to live.");
+                            PossibleMessages.Add("There is a TerraGuardian looking for a town with people to live with. He may end up showing up here anytime.");
                         }
                         if (!HasMetGuardian(5))
                         {
