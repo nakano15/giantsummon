@@ -37,6 +37,8 @@ BuffData.cs = For TerraGuardians buffs.
 
 ChangeLog.txt = Gotta keep track of what changed.
 
+CommonRequestsDB.cs = Contains the list of common requests any companion can give. Those requests are quite generic and vague.
+
 ConfigMod.cs = The script of the mod configurations are located here.
 
 DialogueChain.cs = Handles a quite poor quiz system to the mod. Used by Bree's recruitment.
@@ -71,7 +73,7 @@ GuardianPlayerAccessoryEffects.cs = Holds the effects the accessories causes on 
 
 GuardianRequests.cs = The request system script is here.
 
-GuardianSchedule.cs = This is a system I paused developing, which would add a kind of "schedule" to guardian town npcs.
+GuardianSchedule.cs = This is a system I paused developing, which would add a kind of "schedule" to guardian town npcs. Would be cool if they had their own daily lives, right?
 
 GuardianSelectionInterface.cs = Script of the Guardian Selection Interface is here.
 
@@ -102,6 +104,12 @@ PlayerMod.cs = Player scripts.
 ProjMod.cs = Projectile scripts.
 
 RenameGuardianCommand.cs = Rename Guardian command. I don't recommend using it on your own, though. Use the pencil on the GSI.
+
+RequestBase.cs = Is the base information used by requests, like request name, and objectives. Also holds the list of common requests.
+
+RequestData.cs = The request progress and information that is stored on the companions.
+
+Reward.cs = Object for rewards option storage, common rewards for all companions are in GuardianBase, while companion specific rewards... Too, somewhat, but insert into their own definition script.
 
 SavePlayerDefsCommand.cs = This is very useful If you want to create a companion that is a Terrarian, It will tell you the colors and skin variant used for the character.
 
