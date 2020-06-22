@@ -152,6 +152,14 @@ namespace giantsummon.Npcs
                     Main.NewText("There's something in the campfire.");
                     AiValue = 1;
                 }
+                float CampfireX = BonfireX * 16 + 8;
+                if (Math.Abs(npc.Center.X - CampfireX) > 40)
+                {
+                    if (npc.Center.X < CampfireX)
+                        MoveRight = true;
+                    else
+                        MoveLeft = true;
+                }
                 Rectangle FoV = new Rectangle(0, -150, 250, 300);
                 if (npc.direction < 0)
                     FoV.X -= FoV.Width;
@@ -251,8 +259,9 @@ namespace giantsummon.Npcs
                         case 9:
                             SayMessage("*She asks you what you think.*");
                             break;
+                            //
                         case 100:
-                            SayMessage("*The wolf told you not to sneak upon other people from behind.*");
+                            SayMessage("*The wolf tells you not to sneak upon other people from behind.*");
                             break;
                         case 101:
                             SayMessage("*Tells you that nearly sliced you in half with her sword.*");
@@ -271,6 +280,7 @@ namespace giantsummon.Npcs
                             ChangeAIStage(3); //I hope nobody complains about me recicling part of the dialogue.
                             ChangeStage = false;
                             break;
+                            //
                         case 151:
                             SayMessage("*She told you that If you need her, she will be here.*");
                             break;
