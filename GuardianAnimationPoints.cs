@@ -10,7 +10,7 @@ namespace giantsummon
     {
         public Point DefaultCoordinate = Point.Zero;
         private Dictionary<int, AnimationPoint> SpecificCoordinates = new Dictionary<int, AnimationPoint>();
-        public Point DefaultCoordinate2x { set { DefaultCoordinate.X = value.X * 2; DefaultCoordinate.Y = value.Y * 2; } }
+        public Point DefaultCoordinate2x { set { DefaultCoordinate = new Point(value.X * 2, value.Y * 2); } }
         public bool DefaultShowWeapon = false;
         public float DefaultRotation = 0f;
 

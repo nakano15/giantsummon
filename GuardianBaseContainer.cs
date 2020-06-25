@@ -16,10 +16,12 @@ namespace giantsummon
 
         public void Dispose()
         {
-            foreach (int k in GuardianList.Keys)
+            int[] keys = GuardianList.Keys.ToArray();
+            foreach (int k in keys)
             {
                 if(!GuardianList[k].InvalidGuardian)
                     GuardianList[k].sprites.Dispose();
+                GuardianList.Remove(k);
             }
             GuardianList.Clear();
         }

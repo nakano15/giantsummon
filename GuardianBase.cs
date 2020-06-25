@@ -48,6 +48,20 @@ namespace giantsummon
             HeadVanityPosition = new GuardianAnimationPoints(),
             WingPosition = new GuardianAnimationPoints();
         public Point SittingPoint = Point.Zero, SleepingOffset = Point.Zero;
+        public Point SittingPoint2x
+        {
+            set
+            {
+                SittingPoint = new Point(value.X * 2, value.Y * 2);
+            }
+        }
+        public Point SleepingOffset2x
+        {
+            set
+            {
+                SleepingOffset = new Point(value.X * 2, value.Y * 2);
+            }
+        }
         public GuardianSize Size = GuardianSize.Medium;
         public int Age = 15;
         public bool CanDuck = true, ReverseMount = false, DrinksBeverage = true;
@@ -677,10 +691,10 @@ namespace giantsummon
             CanDuck = false;
             MountUnlockLevel = 255;
             ItemUseFrames = invalidGuardianPoints.ItemUseFrames;
+            HeavySwingFrames = invalidGuardianPoints.HeavySwingFrames;
             HeadVanityPosition = invalidGuardianPoints.HeadVanityPosition;
             LeftHandPoints = invalidGuardianPoints.HandPoints;
             RightHandPoints = invalidGuardianPoints.HandPoints;
-            HeadVanityPosition = invalidGuardianPoints.HeadVanityPosition;
         }
 
         public static void UnloadGuardians()
