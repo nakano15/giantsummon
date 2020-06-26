@@ -449,6 +449,32 @@ namespace giantsummon
             return GetGuardianNPC(GuardianID, ModID) > -1;
         }
 
+        public static int GetMaleCompanionNPCCount()
+        {
+            int Count = 0;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Male)
+                {
+                    Count++;
+                }
+            }
+            return Count;
+        }
+
+        public static int GetFemaleCompanionNPCCount()
+        {
+            int Count = 0;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && !((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Male)
+                {
+                    Count++;
+                }
+            }
+            return Count;
+        }
+
         public static int GetTerraGuardianNPCCount()
         {
             int Count = 0;
@@ -468,6 +494,19 @@ namespace giantsummon
             for (int n = 0; n < 200; n++)
             {
                 if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Base.IsTerrarian)
+                {
+                    Count++;
+                }
+            }
+            return Count;
+        }
+
+        public static int GetGroupNPCCount(string GroupID)
+        {
+            int Count = 0;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.GroupID == GroupID)
                 {
                     Count++;
                 }

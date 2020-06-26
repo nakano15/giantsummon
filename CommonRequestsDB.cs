@@ -106,7 +106,7 @@ namespace giantsummon
             // PHM Underworld
             rb = new RequestBase("", 210, "", "", "", "", "(Demons can be found in the deepest part of the world, the Underworld)");
             rb.AddRequestRequirement(RequestBase.GetUnderworldRequestRequirement);
-            rb.AddHuntObjective(Terraria.ID.NPCID.Demon);
+            rb.AddHuntObjective(Terraria.ID.NPCID.Demon, 5);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 215, "", "", "", "", "(Fire Imps can be found in the deepest part of the world, the Underworld)");

@@ -16,9 +16,12 @@ namespace giantsummon
         public InvalidGuardianPoints invalidGuardianPoints = new InvalidGuardianPoints(true);
         public delegate void GuardianModDel(TerraGuardian guardian);
         public delegate void GuardianBehaviorModDel(TerraGuardian guardian, ref bool AllowAIMovement);
-        
+        public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian";
+
+        public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
         public string Name = "", Description = "";
+        public string GroupID = TerraGuardianGroupID;
         public int Width = 32, Height = 82, DuckingHeight = 52;
         public int SpriteWidth = 96, SpriteHeight = 96, FramesInRows = 20;
         public float Mass = 0.5f, MaxSpeed = 4.5f, Acceleration = 0.1f, SlowDown = 0.3f;
@@ -33,7 +36,6 @@ namespace giantsummon
         public float MountBurdenPercentage = 0.05f;
         public bool DontUseRightHand = false, DontUseHeavyWeapons = false, CanChangeGender = false, OneHanded2HWeaponWield = false, IsWraith = false;
         public GuardianEffect Effect = GuardianEffect.None;
-        private CompanionType companionType = CompanionType.TerraGuardian;
         public TerrarianCompanionInfos TerrarianInfo = null;
         public List<RequestBase> RequestDB = new List<RequestBase>();
         public List<Reward> RewardsList = new List<Reward>();
@@ -82,6 +84,8 @@ namespace giantsummon
         public float MaxWalkSpeedTime { get { return WalkAnimationFrameTime * WalkingFrames.Length; } }
         public List<int> DrawLeftArmInFrontOfHead = new List<int>();
         public bool SpecificBodyFrontFramePositions = false;
+
+        public string GetGroupID { get { return GroupID; } }
         /// <summary>
         /// Don't lie. :)
         /// </summary>
@@ -118,14 +122,14 @@ namespace giantsummon
 
         public void SetTerraGuardian()
         {
-            companionType = CompanionType.TerraGuardian;
+            GroupID = TerraGuardianGroupID;
             TerrarianInfo = null;
         }
 
         public void SetTerrarian()
         {
-            companionType = CompanionType.Terrarian;
             TerrarianInfo = new TerrarianCompanionInfos();
+            GroupID = TerrarianGroupID;
 
             Width = 20;
             Height = 42;
@@ -196,8 +200,9 @@ namespace giantsummon
             SittingPoint = new Point(10 * 2, 21 * 2);
         }
 
-        public bool IsTerraGuardian { get { return companionType == CompanionType.TerraGuardian; } }
-        public bool IsTerrarian { get { return companionType == CompanionType.Terrarian; } }
+        public bool IsTerraGuardian { get { return GetGroup.RecognizeAsTerraGuardian; } }
+        public bool IsTerrarian { get { return !GetGroup.CustomSprite; } }
+        public bool IsCustomSpriteCharacter { get { return GetGroup.CustomSprite; } }
 
         public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string RequestActiveTalkText = "")
         {
@@ -539,6 +544,11 @@ namespace giantsummon
 
         public static GuardianBase GetGuardianBase(int ID, string modid = "") //Add Mod Id
         {
+            if (!MainMod.TriedLoadingCustomGuardians)
+            {
+                MainMod.LoadCustomGuardians();
+                MainMod.TriedLoadingCustomGuardians = true;
+            }
             if (modid == "")
                 modid = MainMod.mod.Name;
             if (!GuardianList.ContainsKey(modid))
@@ -790,13 +800,7 @@ namespace giantsummon
                 return 0;
             }
         }
-
-        public enum CompanionType
-        {
-            TerraGuardian,
-            Terrarian
-        }
-
+        
         public enum GuardianEffect
         {
             None,

@@ -11,6 +11,8 @@ namespace giantsummon
     public class GuardianData
     {
         public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, ModID); } }
+        public Group GetGroup { get { return Base.GetGroup; } }
+        public string GroupID { get { return Base.GetGroupID; } }
         public string Name
         {
             get
@@ -172,11 +174,14 @@ namespace giantsummon
             RewardsToGet.AddRange(Base.RewardsList);
             {
                 Reward rwd = new Reward();
-                rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherHeart>();
-                rwd.RewardScore = 500;
-                rwd.InitialStack = 1;
-                rwd.RewardChance = 0.333f;
-                RewardsToGet.Add(rwd);
+                if (Base.IsTerraGuardian)
+                {
+                    rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherHeart>();
+                    rwd.RewardScore = 500;
+                    rwd.InitialStack = 1;
+                    rwd.RewardChance = 0.333f;
+                    RewardsToGet.Add(rwd);
+                }
                 //
                 rwd = new Reward();
                 rwd.ItemID = Terraria.ID.ItemID.LifeCrystal;
@@ -185,7 +190,7 @@ namespace giantsummon
                 rwd.RewardChance = 0.2f;
                 RewardsToGet.Add(rwd);
                 //
-                if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
+                if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Base.IsTerraGuardian)
                 {
                     rwd = new Reward();
                     rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherFruit>();

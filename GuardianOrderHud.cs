@@ -184,7 +184,7 @@ namespace giantsummon
                         {
                             HeadPosition += 32 * (Sum * h).ToRotationVector2();
                         }
-                        if (HeadsToDraw[h].Base.IsTerraGuardian)
+                        if (HeadsToDraw[h].Base.IsCustomSpriteCharacter)
                         {
                             Texture2D texture = HeadsToDraw[h].Base.sprites.HeadSprite;
                             HeadPosition.X -= texture.Width * 0.5f;

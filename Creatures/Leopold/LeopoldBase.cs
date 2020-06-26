@@ -61,7 +61,7 @@ namespace giantsummon.Creatures
             StandingFrame = 0;
             WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             PlayerMountedArmAnimation = JumpFrame = 9;
-            //HeavySwingFrames = new int[] { 10, 11, 12 };
+            HeavySwingFrames = new int[] { 10, 22, 23 };
             ItemUseFrames = new int[] { 10, 11, 12, 13 };
             //DuckingFrame = 20;
             //DuckingSwingFrames = new int[] { 21, 22, 12 };
@@ -86,12 +86,18 @@ namespace giantsummon.Creatures
 
             LeftHandPoints.AddFramePoint2x(20, 26, 29);
 
+            LeftHandPoints.AddFramePoint2x(22, 26, 13);
+            LeftHandPoints.AddFramePoint2x(23, 23, 25);
+
             //Right Hand
             RightHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(21 * 2, 20 * 2);
             RightHandPoints.AddFramePoint2x(10, 18, 2);
             RightHandPoints.AddFramePoint2x(11, 28, 7);
             RightHandPoints.AddFramePoint2x(12, 28, 14);
             RightHandPoints.AddFramePoint2x(13, 26, 21);
+
+            RightHandPoints.AddFramePoint2x(22, 28, 13);
+            RightHandPoints.AddFramePoint2x(23, 25, 25);
 
             //Mount Position
             MountShoulderPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(12 * 2, 9 * 2);
@@ -139,7 +145,7 @@ namespace giantsummon.Creatures
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
         {
-            if (guardian.Velocity.Y != 0 && guardian.WallSlideStyle == 0 && guardian.DashCooldown <= 0 && !guardian.SittingOnPlayerMount && !guardian.KnockedOut && !guardian.Downed)
+            if (guardian.Velocity.Y != 0 && guardian.WallSlideStyle == 0 && guardian.DashCooldown <= 0 && !guardian.SittingOnPlayerMount && !guardian.KnockedOut && !guardian.Downed && guardian.BodyAnimationFrame != HeavySwingFrames[1] && guardian.BodyAnimationFrame != HeavySwingFrames[2])
             {
                 if (guardian.Velocity.Y < -1.5f)
                 {

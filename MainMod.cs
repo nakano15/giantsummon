@@ -105,6 +105,34 @@ namespace giantsummon
         public static bool ToReviveIsGuardian = false, IsReviving = false;
         public static int ReviveTalkDelay = 0;
         public static int LastEventWave = 0;
+        public const string CustomCompanionCallString = "loadcompanions";
+        public static bool TriedLoadingCustomGuardians = false;
+        private static Dictionary<string, Group> CompanionGroups = new Dictionary<string, Group>();
+
+        public static Group AddNewGroup(string ID, string Name, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
+        {
+            Group g;
+            if (CompanionGroups.ContainsKey(ID))
+            {
+                g = CompanionGroups[ID];
+                if (!g.RecognizeAsTerraGuardian && RecognizeAsTerraGuardian)
+                    g.RecognizeAsTerraGuardian = true;
+                return g;
+            }
+            g = new Group();
+            g.Name = Name;
+            g.CustomSprite = CustomSprite;
+            g.RecognizeAsTerraGuardian = RecognizeAsTerraGuardian;
+            CompanionGroups.Add(ID, g);
+            return g;
+        }
+
+        public static Group GetGroup(string ID)
+        {
+            if (CompanionGroups.ContainsKey(ID))
+                return CompanionGroups[ID];
+            return AddNewGroup(ID, ID);
+        }
 
         public static void AddActiveGuardian(TerraGuardian Guardian)
         {
@@ -114,6 +142,14 @@ namespace giantsummon
         public static void UnloadModGuardians(Mod mod)
         {
             GuardianBase.UnloadContainer(mod);
+        }
+
+        public static void LoadCustomGuardians()
+        {
+            foreach (Mod mod in ModLoader.Mods)
+            {
+                mod.Call(new string[] { CustomCompanionCallString });
+            }
         }
 
         /*public static double TimeToTerrariaTime(int Hours, int Minutes, out bool Daytime)
@@ -211,16 +247,12 @@ namespace giantsummon
 
         public static void AddGuardianList(Mod ModName, GuardianBase.ModGuardianDB guardiandb)
         {
-            if (!ModGuardianLoader.ContainsKey(ModName.Name))
+            if (ModGuardianLoader.ContainsKey(ModName.Name))
             {
-                ModGuardianLoader.Add(ModName.Name, guardiandb);
+                ModGuardianLoader.Remove(ModName.Name);
             }
+            ModGuardianLoader.Add(ModName.Name, guardiandb);
         }
-
-        /*public bool AddGuardianToPlayer(Player player, int ID, Mod mod)
-        {
-            return player.GetModPlayer<PlayerMod>().AddNewGuardian(ID, mod.Name);
-        }*/
 
         public static bool TryGettingGuardianInfo(int ID, Mod mod, out GuardianBase guardian)
         {
@@ -682,7 +714,7 @@ namespace giantsummon
                 }
                 if (!Guardian.Base.InvalidGuardian)
                 {
-                    if (Guardian.Base.IsTerraGuardian)
+                    if (Guardian.Base.IsCustomSpriteCharacter)
                     {
                         Texture2D HeadTexture = Guardian.Base.sprites.HeadSprite;
                         Vector2 HeadDrawPosition = HealthbarPosition;
@@ -694,7 +726,7 @@ namespace giantsummon
                         Guardian.DrawFriendshipHeart(HeadDrawPosition);
                         XSum = 46f;
                     }
-                    else if (Guardian.Base.IsTerrarian)
+                    else
                     {
                         Texture2D HeadTexture = Guardian.Base.sprites.HeadSprite;
                         Vector2 HeadDrawPosition = HealthbarPosition;
@@ -981,7 +1013,7 @@ namespace giantsummon
                         {
                             ThisPosition.Y += 8f;
                         }
-                        if (guardian.Base.IsTerraGuardian)
+                        if (guardian.Base.IsCustomSpriteCharacter)
                         {
                             Texture2D texture;
                             if (guardian.Base.InvalidGuardian)
@@ -992,7 +1024,7 @@ namespace giantsummon
                             Main.spriteBatch.Draw(texture, ThisPosition, null, Color.White, 0f, Vector2.Zero, ScaleMod, SpriteEffects.None, 0f);
                             SelectionPosition.X += 32;
                         }
-                        else if (guardian.Base.IsTerrarian)
+                        else
                         {
                             SelectionPosition.X += 32;
                             ThisPosition.X += 16;
@@ -1910,6 +1942,8 @@ namespace giantsummon
                 GuardianStatusIconTexture = GetTexture("Interface/GuardianStatusIcon");
                 HideButtonTexture = GetTexture("Interface/HideButton");
             }
+            AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
+            AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
             InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
             InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
             CommonRequestsDB.PopulateCommonRequestsDB();

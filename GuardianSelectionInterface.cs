@@ -451,6 +451,7 @@ namespace giantsummon
                     //
                     List<string> ExtraInfoList = new List<string>();
                     ExtraInfoList.Add("Age: " + Age);
+                    ExtraInfoList.Add(DisplayGuardian.Base.GetGroup.Name);
                     ExtraInfoList.Add("Time: " + Time);
                     ExtraInfoList.Add("Size: " + DisplayGuardian.Base.Size.ToString());
                     ExtraInfoList.Add("Friend Grade: " + DisplayGuardian.FriendshipGradeText);

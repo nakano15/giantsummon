@@ -58,3 +58,8 @@ You no longer need to beat Queen Bee to have Vladimir show up.
 You no longer need to have beaten Eye of Cthulhu to have the chance of Rococo showing up.
 	Also updated the recruitment tip from the Dryad.
 Companions that teleports from higher places to revive someone will no longer get fall damage.
+Added Leopold's two handed weapon swing animation.
+Several fixes on custom mod companions system.
+Added Companion Groups system.
+	You assign a string ID to It, the game will locate the group, then get It's name, and If the companion is a custom sprite companion, and If It is recognized as TerraGuardian.
+	A lot better for sorting out your companions If you want.

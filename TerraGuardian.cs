@@ -54,6 +54,7 @@ namespace giantsummon
                 _Data = value;
             }
         }
+        public Group GetGroup { get { return Base.GetGroup; } }
         public int GetSomeoneToSpawnProjectileFor
         {
             get
@@ -67,6 +68,7 @@ namespace giantsummon
         }
         private GuardianData _Data;
         public string Name { get { if (Data.Name != null) return Data.Name; else return Base.Name; } set { Data.Name = value; } }
+        public string GroupID { get { return Base.GetGroupID; } }
         public string ModID { get { return Data.ModID; } set { Data.ModID = value; } }
         public int ID { get { return Data.ID; } set { Data.ID = value; } }
         public bool Active = false;
@@ -1505,7 +1507,7 @@ namespace giantsummon
             {
                 if (Velocity.Y == 0)
                 {
-                    if (Base.IsTerrarian)
+                    if (!Base.IsCustomSpriteCharacter)
                     {
                         Rotation = -1.570796326794897f * Direction;
                     }
@@ -1639,7 +1641,7 @@ namespace giantsummon
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = false;
             }
-            if (BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || Base.IsTerrarian)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0))
+            if (BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0))
             {
                 OffHandAction = false;
             }
@@ -8744,7 +8746,7 @@ namespace giantsummon
             if (HP > 0 && !EvadedAttack)
             {
                 bool PlayingAnotherSound = false;
-                if (Base.IsTerrarian)
+                if (!Base.IsCustomSpriteCharacter)
                 {
                     if (HasFlag(GuardianFlags.Petrified))
                     {
@@ -8768,7 +8770,7 @@ namespace giantsummon
                 }
                 if (!PlayingAnotherSound)
                 {
-                    if (Base.IsTerrarian && Base.HurtSound.SoundID == Terraria.ID.SoundID.PlayerHit && !Male)
+                    if (!Base.IsCustomSpriteCharacter && Base.HurtSound.SoundID == Terraria.ID.SoundID.PlayerHit && !Male)
                     {
                         MainMod.FemaleHitSound.PlaySound(CenterPosition);
                     }
@@ -13542,7 +13544,7 @@ namespace giantsummon
                 dummy.wings = WingType;
                 DoCache = true;
             }
-            if (Base.IsTerrarian && !Main.hairLoaded[Base.TerrarianInfo.HairStyle])
+            if (!Base.IsCustomSpriteCharacter && !Main.hairLoaded[Base.TerrarianInfo.HairStyle])
             {
                 dummy.hair = Base.TerrarianInfo.HairStyle;
                 DoCache = true;
@@ -13673,7 +13675,7 @@ namespace giantsummon
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);
             hitTileData.DrawFreshAnimations(Main.spriteBatch);
             bool DrawInvalidGuardian = Base.InvalidGuardian;
-            if (!Base.InvalidGuardian && !Base.IsTerrarian)
+            if (!Base.InvalidGuardian && Base.IsCustomSpriteCharacter)
             {
                 if (Base.sprites.HasErrorLoadingOccurred)
                     DrawInvalidGuardian = true;
@@ -13711,7 +13713,7 @@ namespace giantsummon
             BackSlot = 0;
             GetEquipmentSlots();
             HeadVanityIsAcc = false;
-            if (Base.IsTerraGuardian)
+            if (Base.IsCustomSpriteCharacter)
             {
                 ArmorSlot = LegSlot = HeadSlot = 0;
                 int id = ReturnEquippableHeadVanityEquip(out HeadVanityIsAcc);
@@ -13742,7 +13744,7 @@ namespace giantsummon
             TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             Vector2 NewPosition = Position - Main.screenPosition;
             NewPosition.Y += (gfxOffY) * Scale * GravityDirection + 2 + MountedVerticalPositionBonus;
-            if (Base.IsTerrarian)
+            if (!Base.IsCustomSpriteCharacter)
                 NewPosition.Y += 2;
             Vector2 Origin = new Vector2(SpriteWidth * 0.5f, SpriteHeight);
             if (GravityDirection < 0)
@@ -13856,11 +13858,11 @@ namespace giantsummon
             DrawWings(seffect, armorColor);
             Base.GuardianPreDrawScript(this, NewPosition, c, armorColor, Rotation, Origin, Scale, seffect);
             GuardianDrawData dd;
-            if (Base.IsTerraGuardian)
+            if (Base.IsCustomSpriteCharacter)
             {
                 DrawTerraGuardianData(NewPosition, c, armorColor, Origin, seffect, Shader);
             }
-            else if (Base.IsTerrarian)
+            else
             {
                 DrawTerrarianData(NewPosition, seffect, c, armorColor, IgnoreLighting);
             }
@@ -14046,7 +14048,7 @@ namespace giantsummon
 
         public void DrawTerrarianHeadData(Vector2 Position, float Scale = 1f)
         {
-            if (!Base.IsTerrarian)
+            if (Base.IsCustomSpriteCharacter)
                 return;
             SpriteEffects seffect = SpriteEffects.None;
             GuardianDrawData dd;
@@ -14063,7 +14065,7 @@ namespace giantsummon
                 DoWraithColoring(out SkinColor, out EyesColor, out EyesWhiteColor);
                 ArmorColor = SkinColor;
             }
-            bool IsTransformed = Base.IsTerrarian && HeadSlot >= 38 && HeadSlot <= 39;
+            bool IsTransformed = !Base.IsCustomSpriteCharacter && HeadSlot >= 38 && HeadSlot <= 39;
             Vector2 Origin = new Vector2(20, 0);
             bool DrawNormalHair = HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198,
                 DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
@@ -14126,7 +14128,7 @@ namespace giantsummon
                 PantsColor = Base.TerrarianInfo.PantsColor,
                 ShoesColor = Base.TerrarianInfo.ShoeColor,
                 ArmorColoring = Color.White;
-            bool IsTransformed = Base.IsTerrarian && HeadSlot >= 38 && HeadSlot <= 39;
+            bool IsTransformed = !Base.IsCustomSpriteCharacter && HeadSlot >= 38 && HeadSlot <= 39;
             if (Base.Effect == GuardianBase.GuardianEffect.Wraith)
             {
                 DoWraithColoring(out SkinColor, out EyesColor, out EyesWhiteColor);
@@ -14260,7 +14262,7 @@ namespace giantsummon
         {
             Vector2 NewPosition = Position - Main.screenPosition;
             NewPosition.Y += (gfxOffY + 2) * Scale * GravityDirection + MountedVerticalPositionBonus;
-            if (Base.IsTerrarian)
+            if (!Base.IsCustomSpriteCharacter)
                 NewPosition.Y += 2;
             if (EmotionDisplayTime > 0)
             {
