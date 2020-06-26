@@ -111,6 +111,11 @@ namespace giantsummon
             TempActiveGuardians.Add(Guardian.WhoAmID, Guardian);
         }
 
+        public static void UnloadModGuardians(Mod mod)
+        {
+            GuardianBase.UnloadContainer(mod);
+        }
+
         /*public static double TimeToTerrariaTime(int Hours, int Minutes, out bool Daytime)
         {
             double ResultTime = Hours * 3600 + (double)Minutes / 60;

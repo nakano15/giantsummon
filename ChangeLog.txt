@@ -57,3 +57,4 @@ You no longer need to beat Queen Bee to have Vladimir show up.
 	You most likelly will end up spawning her when trying to fulfill his request, anyway.
 You no longer need to have beaten Eye of Cthulhu to have the chance of Rococo showing up.
 	Also updated the recruitment tip from the Dryad.
+Companions that teleports from higher places to revive someone will no longer get fall damage.

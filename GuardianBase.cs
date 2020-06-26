@@ -716,6 +716,25 @@ namespace giantsummon
             }
         }
 
+        public static void UnloadContainer(Mod mod)
+        {
+            UnloadContainer(mod.Name);
+        }
+
+        public static void UnloadContainer(string mod)
+        {
+            string[] keys = GuardianList.Keys.ToArray();
+            foreach (string key in keys)
+            {
+                if (key == mod)
+                {
+                    GuardianList[key].Dispose();
+                    GuardianList.Remove(key);
+                    break;
+                }
+            }
+        }
+
         public class TerrarianCompanionInfos
         {
             public Color HairColor, SkinColor, EyeColor, ShirtColor, UnderShirtColor, PantsColor, ShoeColor;

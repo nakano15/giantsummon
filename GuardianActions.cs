@@ -358,6 +358,7 @@ namespace giantsummon
                                 {
                                     guardian.Position.X = TargetPosition.X + Main.rand.Next(TargetWidth);
                                     guardian.Position.Y = TargetPosition.Y + TargetHeight - 1;
+                                    guardian.FallStart = (int)guardian.Position.Y / 16;
                                 }
                                 else if (TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0)
                                 {
