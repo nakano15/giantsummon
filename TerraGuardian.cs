@@ -13135,19 +13135,26 @@ namespace giantsummon
             }
         }
 
-        public void TeleportToPlayer(bool force = false)
+        public void TeleportToPlayer(bool force = false, Player player = null)
         {
+            if (player == null)
+            {
+                if (OwnerPos > -1)
+                    player = Main.player[OwnerPos];
+                else
+                    return;
+            }
             if (!force && (PlayerMounted || PlayerControl || SittingOnPlayerMount))
                 return;
-            if (!Main.player[OwnerPos].gross && WofFacing)
+            if (!player.gross && WofFacing)
             {
                 return;
             }
             BeingPulledByPlayer = false;
-            if(Data.SitOnTheMount && Main.player[OwnerPos].mount.Active && !PlayerMounted && !PlayerControl)
+            if (Data.SitOnTheMount && player.mount.Active && !PlayerMounted && !PlayerControl)
                 DoSitOnPlayerMount(true);
-            Position = new Vector2(Main.player[OwnerPos].Center.X, Main.player[OwnerPos].position.Y + Main.player[OwnerPos].height);
-            Velocity = Main.player[OwnerPos].velocity;
+            Position = new Vector2(player.Center.X, player.position.Y + player.height);
+            Velocity = player.velocity;
             ImmuneTime = GetImmuneTime;
             FallProtection = true;
             SetFallStart();

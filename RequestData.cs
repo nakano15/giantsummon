@@ -451,11 +451,6 @@ namespace giantsummon
                                             break;
                                     }
                                 }
-                                if (ObjectiveCount == 0 && GetIntegerValue(99) == 0)
-                                {
-                                    SetIntegerValue(99, 1);
-                                    Main.NewText("Empty Request ID: " + RequestID + " Common? " + IsCommonRequest + " Talk? " + IsTalkQuest);
-                                }
                                 RequestCompleted = ObjectivesCompleted >= ObjectiveCount;
                             }
                         }
@@ -837,6 +832,8 @@ namespace giantsummon
                                 else
                                 {
                                     if (!IsCommonRequest) QuestObjectives.Add("[" + rb.Name + "]");
+                                    if(rb.Objectives.Count == 0)
+                                        QuestObjectives.Add("Empty Request ID: " + RequestID + " Common? " + IsCommonRequest + " Talk? " + IsTalkQuest);
                                     QuestObjectives.Add(" Report success to " + gd.Name + ".");
                                 }
                             }

@@ -106,6 +106,8 @@ namespace giantsummon.Creatures
             HeadVanityPosition.DefaultCoordinate2x = new Point(14, 9);
 
             HeadVanityPosition.AddFramePoint2x(20, 22, 18);
+            HeadVanityPosition.AddFramePoint2x(22, 18, 12);
+            HeadVanityPosition.AddFramePoint2x(23, 21, 17);
 
             //Wing Position
             WingPosition.DefaultCoordinate2x = new Point(16, 17);

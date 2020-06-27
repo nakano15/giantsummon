@@ -41,6 +41,8 @@ namespace giantsummon
             }
         }
         public bool KnockedOut = false, KnockedOutCold = false, FriendlyDuelDefeat = false;
+        public short ReviveCooldown = 0;
+        public const int HelpCooldown = 15;
         public int GuardianInventory = 0; //For messing with it's internal inventory or chest
         public int SelectedGuardian = -1;
         public int[] SelectedAssistGuardians = new int[MainMod.MaxExtraGuardianFollowers];
@@ -639,6 +641,13 @@ namespace giantsummon
                     DoForceKill(" has turned into ash.");
                 }
             }
+            else
+            {
+                if (ReviveCooldown > 0)
+                {
+                    ReviveCooldown = 0;
+                }
+            }
             if (KnockedOut)
             {
                 if (player.potionDelayTime < 5)
@@ -729,6 +738,42 @@ namespace giantsummon
                 float Distance = (Main.npc[Main.wof].Center - player.Center).Length();
                 if (Distance >= 3000)
                     ForceKill = true;
+            }
+            if (false && KnockedOutCold) //Disabled for now, needs better planning
+            {
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    ReviveCooldown++;
+                    if (ReviveCooldown >= HelpCooldown * 60)
+                    {
+                        KnockedOutCold = false;
+                        KnockedOut = true;
+                        ReviveCooldown = 0;
+                        Main.NewText("Waking up.");
+                        int NearestGuardian = -1;
+                        float NearestDistance = -1;
+                        foreach (int g in MainMod.ActiveGuardians.Keys)
+                        {
+                            if (!MainMod.ActiveGuardians[g].Downed && !MainMod.ActiveGuardians[g].KnockedOut && !MainMod.ActiveGuardians[g].IsPlayerHostile(player))
+                            {
+                                float Distance = (MainMod.ActiveGuardians[g].CenterPosition - player.Center).Length();
+                                if (NearestDistance == -1 || NearestDistance < Distance)
+                                {
+                                    NearestDistance = Distance;
+                                    NearestGuardian = g;
+                                }
+                            }
+                        }
+                        //Add teleport script and else
+                        if (NearestGuardian > -1)
+                        {
+                            MainMod.ActiveGuardians[NearestGuardian].TeleportToPlayer(false, player);
+                            ReviveCooldown = -HelpCooldown * 60;
+                        }
+                    }
+                }
+                if(ReviveBoost > 0 && ReviveCooldown > 0)
+                    ReviveCooldown = 0;
             }
         }
 
