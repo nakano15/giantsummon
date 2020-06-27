@@ -1717,19 +1717,21 @@ namespace giantsummon
                                                 Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestInfo(d), Guardian), true);
                                             }
                                         }
+                                        ButtonPosition.X -= 48;
                                         for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
                                         {
                                             if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
                                             {
                                                 SlotStartPosition.Y += 26f;
+                                                ButtonPosition.Y += 26;
                                                 RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
                                                 ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
-                                                ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
-                                                if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
+                                                ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f);
+                                                if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
                                                     Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
                                                 {
                                                     player.player.mouseInterface = true;
-                                                    Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
+                                                    Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
                                                     if (Main.mouseLeft && Main.mouseLeftRelease)
                                                     {
                                                         CheckingQuestBrief = false;

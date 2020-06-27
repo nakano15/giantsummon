@@ -15,7 +15,7 @@ namespace giantsummon.Creatures
             Size = GuardianSize.Large;
             Width = 28;
             Height = 84;
-            DuckingHeight = 52;
+            DuckingHeight = 54;
             SpriteWidth = 96;
             SpriteHeight = 96;
             Age = 15;
@@ -39,9 +39,10 @@ namespace giantsummon.Creatures
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
             ContestThirdPlace = 0;
-            
-            AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
-            AddInitialItem(Terraria.ID.ItemID.Mushroom, 3);
+
+            AddInitialItem(Terraria.ID.ItemID.AmberStaff, 1);
+            AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
+            AddInitialItem(Terraria.ID.ItemID.ManaPotion, 15);
 
             //Animation Frames
             StandingFrame = 0;
@@ -49,8 +50,8 @@ namespace giantsummon.Creatures
             JumpFrame = 9;
             HeavySwingFrames = new int[] { 14, 15, 16 };
             ItemUseFrames = new int[] { 10, 11, 12, 13 };
-            //DuckingFrame = 20;
-            //DuckingSwingFrames = new int[] { 21, 22, 12 };
+            DuckingFrame = 22;
+            DuckingSwingFrames = new int[] { 23, 24, 25 };
             SittingFrame = 18;
             ChairSittingFrame = 17;
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 16, 17, 21, 22 });
@@ -59,6 +60,7 @@ namespace giantsummon.Creatures
             SleepingOffset.X = 16;
             ReviveFrame = 19;
             DownedFrame = 21;
+            ThroneSittingFrame = 26;
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(17, 0);
@@ -78,6 +80,10 @@ namespace giantsummon.Creatures
 
             LeftHandPoints.AddFramePoint2x(19, 37, 43);
 
+            LeftHandPoints.AddFramePoint2x(23, 32, 14);
+            LeftHandPoints.AddFramePoint2x(24, 42, 24);
+            LeftHandPoints.AddFramePoint2x(25, 36, 38);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(10, 15, 2);
             RightHandPoints.AddFramePoint2x(11, 35, 10);
@@ -89,6 +95,10 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(16, 43, 40);
 
             RightHandPoints.AddFramePoint2x(19, 39, 43);
+
+            RightHandPoints.AddFramePoint2x(23, 35, 14);
+            RightHandPoints.AddFramePoint2x(24, 45, 24);
+            RightHandPoints.AddFramePoint2x(25, 39, 38);
 
             //MountedPosition
             MountShoulderPoints.DefaultCoordinate2x = new Point(16, 31);
@@ -105,8 +115,19 @@ namespace giantsummon.Creatures
 
             MountShoulderPoints.AddFramePoint2x(19, 11, 26);
 
+            MountShoulderPoints.AddFramePoint2x(22, 14, 38);
+            MountShoulderPoints.AddFramePoint2x(23, 14, 38);
+            MountShoulderPoints.AddFramePoint2x(24, 14, 38);
+            MountShoulderPoints.AddFramePoint2x(25, 14, 38);
+
             //Hat Position
             HeadVanityPosition.DefaultCoordinate2x = new Point(22, 10);
+            HeadVanityPosition.AddFramePoint2x(16, 36, 21);
+            HeadVanityPosition.AddFramePoint2x(19, 33, 24);
+            HeadVanityPosition.AddFramePoint2x(22, 33, 25);
+            HeadVanityPosition.AddFramePoint2x(23, 33, 25);
+            HeadVanityPosition.AddFramePoint2x(24, 33, 25);
+            HeadVanityPosition.AddFramePoint2x(25, 33, 25);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)

@@ -361,11 +361,11 @@ namespace giantsummon
                                     case 6:
                                         if (Negation)
                                         {
-                                            MouseText = "Terrarian";
+                                            MouseText = "Terra Creature";
                                         }
                                         else
                                         {
-                                            MouseText = "TerraGuardian";
+                                            MouseText = "Ether Realm Creature";
                                         }
                                         break;
                                     case 7:

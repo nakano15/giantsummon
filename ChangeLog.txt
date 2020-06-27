@@ -63,3 +63,6 @@ Several fixes on custom mod companions system.
 Added Companion Groups system.
 	You assign a string ID to It, the game will locate the group, then get It's name, and If the companion is a custom sprite companion, and If It is recognized as TerraGuardian.
 	A lot better for sorting out your companions If you want.
+Changed the "Is TerraGuardian" icon on the Guardian Selection Interface.
+	Instead of saying if It's a Terrarian or a TerraGuardian, It will tell if the companion is a Ether Realm Creature, or a Terra Creature.
+	The difference affects Ether Heart and Fruit.

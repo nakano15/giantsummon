@@ -1211,6 +1211,16 @@ namespace giantsummon
 
         public void StrongMonsterLoot(NPC npc)
         {
+            if (npc.type == Terraria.ID.NPCID.EaterofWorldsBody || npc.type == Terraria.ID.NPCID.EaterofWorldsHead || npc.type == Terraria.ID.NPCID.EaterofWorldsTail)
+            {
+                for (int n = 0; n < 200; n++)
+                {
+                    if (Main.npc[n].active && (Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsBody || Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsHead))
+                    {
+                        return;
+                    }
+                }
+            }
             List<KeyValuePair<int, float>> ExtraLootChances = new List<KeyValuePair<int, float>>();
             Action<int, int> DropLoot = delegate(int ID, int Stack)
             {
@@ -1231,16 +1241,12 @@ namespace giantsummon
                 case 13:
                 case 14:
                 case 15:
-                    DropLoot(Terraria.ID.ItemID.DemoniteOre, Main.rand.Next(10, 16) * (int)mobType);
-                    DropLoot(Terraria.ID.ItemID.ShadowScale, Main.rand.Next(5, 9) * (int)mobType);
-                    break;
-                case 266:
-                    DropLoot(Terraria.ID.ItemID.CrimtaneOre, Main.rand.Next(20, 26) * (int)mobType);
-                    DropLoot(Terraria.ID.ItemID.TissueSample, Main.rand.Next(20, 31) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.DemoniteOre, Main.rand.Next(120, 181) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.ShadowScale, Main.rand.Next(50, 71) * (int)mobType);
                     break;
                 case 267:
-                    DropLoot(Terraria.ID.ItemID.CrimtaneOre, Main.rand.Next(10, 16) * (int)mobType);
-                    DropLoot(Terraria.ID.ItemID.TissueSample, Main.rand.Next(5, 9) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.CrimtaneOre, Main.rand.Next(120, 181) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.TissueSample, Main.rand.Next(50, 71) * (int)mobType);
                     break;
                 case 35:
                     DropLoot(Terraria.ID.ItemID.Bone, Main.rand.Next(30, 41) * (int)mobType);

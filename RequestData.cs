@@ -362,6 +362,7 @@ namespace giantsummon
                                             }
                                             break;
                                         case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
+                                        case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
                                             {
                                                 if (GetIntegerValue(o) <= 0)
                                                 {
@@ -449,6 +450,11 @@ namespace giantsummon
                                             }
                                             break;
                                     }
+                                }
+                                if (ObjectiveCount == 0 && GetIntegerValue(99) == 0)
+                                {
+                                    SetIntegerValue(99, 1);
+                                    Main.NewText("Empty Request ID: " + RequestID + " Common? " + IsCommonRequest + " Talk? " + IsTalkQuest);
                                 }
                                 RequestCompleted = ObjectivesCompleted >= ObjectiveCount;
                             }
@@ -794,8 +800,9 @@ namespace giantsummon
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
                                         {
-                                            if (GetIntegerValue(o) == 0)
+                                            if (GetIntegerValue(o) > 0)
                                             {
+                                                HasPendingObjective = true;
                                                 RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)rb.Objectives[o];
                                                 string BossName = "";
                                                 if (req.BossID == Terraria.ID.NPCID.Spazmatism || req.BossID == Terraria.ID.NPCID.Retinazer)
@@ -1063,6 +1070,64 @@ namespace giantsummon
             {
                 switch (rb.Objectives[o].objectiveType)
                 {
+                    case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
+                        {
+                            int Stack = GetIntegerValue(o);
+                            if (Stack > 0)
+                            {
+                                bool Count = false;
+                                RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)rb.Objectives[o];
+                                if (req.BossID == Terraria.ID.NPCID.EaterofWorldsBody || req.BossID == Terraria.ID.NPCID.EaterofWorldsHead || req.BossID == Terraria.ID.NPCID.EaterofWorldsTail)
+                                {
+                                    if (npc.type == Terraria.ID.NPCID.EaterofWorldsBody || npc.type == Terraria.ID.NPCID.EaterofWorldsHead || npc.type == Terraria.ID.NPCID.EaterofWorldsTail)
+                                    {
+                                        bool HasBodyAlive = false;
+                                        for (int n = 0; n < 200; n++)
+                                        {
+                                            if (Main.npc[n].active && (Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsHead || Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsBody))
+                                            {
+                                                HasBodyAlive = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!HasBodyAlive)
+                                            Count = true;
+                                    }
+                                }
+                                else if (req.BossID == Terraria.ID.NPCID.Spazmatism || req.BossID == Terraria.ID.NPCID.Retinazer)
+                                {
+                                    if (npc.type == Terraria.ID.NPCID.Spazmatism || npc.type == Terraria.ID.NPCID.Retinazer)
+                                    {
+                                        bool OneOfTheTwoAlive = false;
+                                        for (int n = 0; n < 200; n++)
+                                        {
+                                            if (Main.npc[n].active && (Main.npc[n].type == Terraria.ID.NPCID.Spazmatism || Main.npc[n].type == Terraria.ID.NPCID.Retinazer))
+                                            {
+                                                OneOfTheTwoAlive = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!OneOfTheTwoAlive)
+                                        {
+                                            Count = true;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (npc.type == req.BossID)
+                                    {
+                                        Count = true;
+                                    }
+                                }
+                                if (Count)
+                                {
+                                    SetIntegerValue(o, 0);
+                                    Main.NewText("Success!");
+                                }
+                            }
+                        }
+                        break;
                     case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
                         {
                             int Stack = GetIntegerValue(o);
