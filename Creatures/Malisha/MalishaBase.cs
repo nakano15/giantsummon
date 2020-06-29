@@ -120,6 +120,8 @@ namespace giantsummon.Creatures
             MountShoulderPoints.AddFramePoint2x(24, 14, 38);
             MountShoulderPoints.AddFramePoint2x(25, 14, 38);
 
+            MountShoulderPoints.AddFramePoint2x(26, 14, 32);
+
             //Hat Position
             HeadVanityPosition.DefaultCoordinate2x = new Point(22, 10);
             HeadVanityPosition.AddFramePoint2x(16, 36, 21);
@@ -128,6 +130,16 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(23, 33, 25);
             HeadVanityPosition.AddFramePoint2x(24, 33, 25);
             HeadVanityPosition.AddFramePoint2x(25, 33, 25);
+
+            //Wing Position
+            WingPosition.AddFramePoint2x(14, -1000, -1000);
+            WingPosition.AddFramePoint2x(15, -1000, -1000);
+            WingPosition.AddFramePoint2x(16, -1000, -1000);
+
+            WingPosition.AddFramePoint2x(19, 28, 33);
+            WingPosition.AddFramePoint2x(23, 28, 33);
+            WingPosition.AddFramePoint2x(24, 28, 33);
+            WingPosition.AddFramePoint2x(25, 28, 33);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -148,18 +160,12 @@ namespace giantsummon.Creatures
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, false);
-                /*rect.Y += rect.Height * 4;
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
-                guardian.AddDrawData(dd, false);*/
             }
             else
             {
                 rect.Y += rect.Height * 2;
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, false);
-                /*rect.Y += rect.Height * 4;
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
-                guardian.AddDrawData(dd, false);*/
             }
         }
 
@@ -177,11 +183,12 @@ namespace giantsummon.Creatures
                     rect.Y += rect.Height * 2;
                     dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                     guardian.AddDrawData(dd, true);
-                    /*rect.Y += rect.Height * 4;
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
-                    guardian.AddDrawData(dd, true);*/
+                    rect.Y += rect.Height * 2;
                 }
-                rect.Y = rect.Height * 4;
+                else
+                {
+                    rect.Y += rect.Height * 4;
+                }
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                 guardian.AddDrawData(dd, true);
             }

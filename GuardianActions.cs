@@ -787,6 +787,11 @@ namespace giantsummon
                                             if (!guardian.HasMagicMirror)
                                             {
                                                 SetIntegerValue(TeleportMethod, 1);
+                                                SetIntegerValue(PlayerLastMountedCheckVar, (guardian.PlayerMounted ? 1 : 0));
+                                                if(guardian.PlayerMounted)
+                                                    guardian.ToggleMount(true);
+                                                if (guardian.SittingOnPlayerMount)
+                                                    guardian.DoSitOnPlayerMount(false);
                                                 //InUse = false;
                                                 //return;
                                             }
@@ -1288,7 +1293,7 @@ namespace giantsummon
                                                 guardian.StuckTimer = 0;
                                                 InUse = false;
                                                 if (GetIntegerValue(PlayerLastMountedCheckVar) == 1)
-                                                    guardian.ToggleMount(true);
+                                                    guardian.ToggleMount();
                                                 else if (guardian.OwnerPos > -1)
                                                     guardian.Velocity = Main.player[guardian.OwnerPos].velocity;
 

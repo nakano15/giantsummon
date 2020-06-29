@@ -66,3 +66,4 @@ Added Companion Groups system.
 Changed the "Is TerraGuardian" icon on the Guardian Selection Interface.
 	Instead of saying if It's a Terrarian or a TerraGuardian, It will tell if the companion is a Ether Realm Creature, or a Terra Creature.
 	The difference affects Ether Heart and Fruit.
+Sending your companion to sell your items, without It having a magic mirror, and also mounted on your mount, will no longer cause the companion to take you with It unless you dismount.
