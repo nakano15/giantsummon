@@ -148,7 +148,8 @@ namespace giantsummon
         {
             foreach (Mod mod in ModLoader.Mods)
             {
-                mod.Call(new string[] { CustomCompanionCallString });
+                if(mod.Name != "ItemCustomizer")
+                    mod.Call(new string[] { CustomCompanionCallString });
             }
         }
 

@@ -1,1 +1,1 @@
-﻿
+﻿Item Customizer added to the exception list.
