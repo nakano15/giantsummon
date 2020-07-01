@@ -144,12 +144,21 @@ namespace giantsummon
             GuardianBase.UnloadContainer(mod);
         }
 
+
         public static void LoadCustomGuardians()
         {
             foreach (Mod mod in ModLoader.Mods)
             {
-                if(mod.Name != "ItemCustomizer")
-                    mod.Call(new string[] { CustomCompanionCallString });
+                if (mod.Name != "ItemCustomizer" && mod.Name != "ShopExpander")
+                {
+                    try
+                    {
+                        mod.Call(new string[] { CustomCompanionCallString });
+                    }
+                    catch //Ignore crashes.
+                    {
+                    }
+                }
             }
         }
 

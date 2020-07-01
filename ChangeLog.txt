@@ -1,1 +1,3 @@
-﻿Item Customizer added to the exception list.
+﻿Inverted the order of factors when handling companion body and arms animations.
+	Instead of setting up the arms animations first, and then the body, now It sets up the body animations first, and then the arms.
+	Due to this change, I can remove 2 flags from many scripts.

@@ -11541,6 +11541,206 @@ namespace giantsummon
             }
             bool UsingLeftArmAnimation = false, UsingRightArmAnimation = false;
             bool PlayMovementAnimation = true;
+            if (PlayMovementAnimation)
+            {
+                UpdateWingAnimation();
+                bool FurnitureOverridingAnimation = false;
+                bool GuardianHasCarpet = HasCarpet();
+                if (UsingFurniture && furniturex > -1 && furniturey > -1 && TargetID == -1)
+                {
+                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    if (tile != null)
+                    {
+                        switch (tile.type)
+                        {
+                            case Terraria.ID.TileID.Chairs:
+                                {
+                                    int AnimationID = Base.SittingFrame;
+                                    if (Base.ChairSittingFrame > -1)
+                                        AnimationID = Base.ChairSittingFrame;
+                                    BodyAnimationFrame = AnimationID;
+                                    LeftArmAnimationFrame = AnimationID;
+                                    RightArmAnimationFrame = AnimationID;
+                                }
+                                break;
+                            case Terraria.ID.TileID.Benches:
+                            case Terraria.ID.TileID.Thrones:
+                                {
+                                    FurnitureOverridingAnimation = true;
+                                    int AnimationID = Base.ThroneSittingFrame;
+                                    if (AnimationID == -1)
+                                    {
+                                        if (Base.ChairSittingFrame > -1)
+                                            AnimationID = Base.ChairSittingFrame;
+                                        else
+                                            AnimationID = Base.SittingFrame;
+                                    }
+                                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = AnimationID;
+                                }
+                                break;
+                            case Terraria.ID.TileID.Beds:
+                                {
+                                    FurnitureOverridingAnimation = true;
+                                    int AnimationID = Base.BedSleepingFrame;
+                                    if (AnimationID == -1)
+                                    {
+                                        if (Base.ChairSittingFrame > -1)
+                                            AnimationID = Base.ChairSittingFrame;
+                                        else
+                                            AnimationID = Base.SittingFrame;
+                                    }
+                                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = AnimationID;
+                                    if (EmotionDisplayTime <= 0)
+                                        DisplayEmotion(Emotions.Sleepy);
+                                }
+                                break;
+                        }
+                    }
+                }
+                else if (PlayerControl && Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian != null)
+                {
+                    TerraGuardian otherguardian = Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian;
+                    int Animation = Base.SittingFrame;
+                    BodyAnimationFrame = Animation;
+                    LeftArmAnimationFrame = Animation;
+                    RightArmAnimationFrame = Animation;
+                }
+                else if (mount.Active)
+                {
+                    BodyAnimationFrame = Base.SittingFrame;
+                    LeftArmAnimationFrame = Base.SittingFrame;
+                    RightArmAnimationFrame = Base.SittingFrame;
+                }
+                else if (WallSlideStyle > 0)
+                {
+                    BodyAnimationFrame = Base.JumpFrame;
+                    if (Base.DontUseRightHand)
+                    {
+                        LeftArmAnimationFrame = Base.ItemUseFrames[2];
+                        UsingLeftArmAnimation = true;
+                    }
+                    else
+                    {
+                        RightArmAnimationFrame = Base.ItemUseFrames[2];
+                        UsingRightArmAnimation = true;
+                    }
+                }
+                else if (Wet && HasCooldown(GuardianCooldownManager.CooldownType.SwimTime))
+                {
+                    int SwimValue = GetCooldownValue(GuardianCooldownManager.CooldownType.SwimTime);
+                    /*if (BodyAnimationFrame == 0 || BodyAnimationFrame >= 9)
+                        BodyAnimationFrame = 1;
+                    AnimationTime++;
+                    if (AnimationTime >= 4)
+                    {
+                        BodyAnimationFrame++;
+                        AnimationTime -= 4;
+                        if (BodyAnimationFrame >= 9)
+                            BodyAnimationFrame -= 8;
+                    }*/
+                    float MaxAnimationTime = Base.MaxWalkSpeedTime;
+                    AnimationTime++;
+                    //bool ReverseAnimation = Velocity.X > 0 && LookingLeft || Velocity.X < 0 && !LookingLeft;
+                    if (AnimationTime < 0f)
+                        AnimationTime += MaxAnimationTime;
+                    if (AnimationTime >= MaxAnimationTime)
+                        AnimationTime -= MaxAnimationTime;
+                    int PickedFrame = (int)(AnimationTime / Base.WalkAnimationFrameTime);
+                    BodyAnimationFrame = PickedFrame;
+                    int ArmFrame = Base.StandingFrame;
+                    if (SwimValue >= 10 && SwimValue < 20)
+                        ArmFrame = Base.JumpFrame;
+                    if (PlayerMounted)
+                    {
+                        UsingLeftArmAnimation = true;
+                        LeftArmAnimationFrame = ArmFrame;
+                    }
+                    RightArmAnimationFrame = ArmFrame;
+                    UsingRightArmAnimation = true;
+                }
+                else if (GuardianHasCarpet)
+                {
+                    BodyAnimationFrame = Base.StandingFrame;
+                }
+                else if (Velocity.Y == 0)
+                {
+                    if (Velocity.X != 0 && (!HasFlag(GuardianFlags.WindPushed) || (MoveLeft == true || MoveRight == true)))
+                    {
+                        /*if (BodyAnimationFrame < 1 || BodyAnimationFrame >= 9)
+                        {
+                            BodyAnimationFrame = 1;
+                            AnimationTime = 0;
+                        }*/
+                        float MaxAnimationTime = Base.MaxWalkSpeedTime * Scale;
+                        float SpeedX = Math.Abs(Velocity.X);
+                        if ((Velocity.X > 0 && Direction < 0) || (Velocity.X < 0 && Direction > 0))
+                            SpeedX *= -1;
+                        AnimationTime += SpeedX / (WalkMode ? WalkMaxSpeed : MaxSpeed);
+                        //bool ReverseAnimation = Velocity.X > 0 && LookingLeft || Velocity.X < 0 && !LookingLeft;
+                        if (AnimationTime < 0f)
+                            AnimationTime += MaxAnimationTime;
+                        if (AnimationTime >= MaxAnimationTime)
+                            AnimationTime -= MaxAnimationTime;
+                        int PickedFrame = (int)(AnimationTime / (Base.WalkAnimationFrameTime * Scale));
+                        if (PickedFrame >= 0 && PickedFrame < Base.WalkingFrames.Length)
+                            BodyAnimationFrame = Base.WalkingFrames[PickedFrame];
+                    }
+                    else
+                    {
+                        BodyAnimationFrame = Base.StandingFrame;
+                        AnimationTime = 0;
+                    }
+                }
+                else
+                {
+                    BodyAnimationFrame = Base.JumpFrame;
+                    AnimationTime = 0;
+                }
+                if (!FurnitureOverridingAnimation)
+                {
+                    if (PlayerMounted && !Ducking)
+                    {
+                        if (Base.ReverseMount)
+                        {
+                            LeftArmAnimationFrame = Base.SittingFrame;
+                            UsingLeftArmAnimation = true;
+                        }
+                        else if (Base.PlayerMountedArmAnimation > -1)
+                        {
+                            LeftArmAnimationFrame = Base.PlayerMountedArmAnimation;
+                            UsingLeftArmAnimation = true;
+                        }
+                    }
+                    if (GrabbingPlayer && (ItemAnimationTime == 0 || ItemUseType != ItemUseTypes.HeavyVerticalSwing))
+                    {
+                        if (!Base.DontUseRightHand)
+                        {
+                            RightArmAnimationFrame = Base.ItemUseFrames[2];
+                            UsingRightArmAnimation = true;
+                        }
+                        else
+                        {
+                            LeftArmAnimationFrame = Base.ItemUseFrames[2];
+                            UsingLeftArmAnimation = true;
+                        }
+                    }
+                    if (Ducking)
+                    {
+                        BodyAnimationFrame = Base.DuckingFrame;
+                        LeftArmAnimationFrame = BodyAnimationFrame;
+                        RightArmAnimationFrame = BodyAnimationFrame;
+                    }
+                }
+            }
+            if (MountedOnPlayer)
+            {
+                BodyAnimationFrame = Base.SittingFrame;
+                if (Base.IsTerrarian && ItemAnimationTime == 0)
+                {
+                    LeftArmAnimationFrame = 3;
+                    UsingLeftArmAnimation = true;
+                }
+            }
             if (ItemAnimationTime > 0 || FreezeItemUseAnimation)
             {
                 HeldHand PrefferedHand = HeldHand.Left;
@@ -11853,217 +12053,6 @@ namespace giantsummon
                         RightArmAnimationFrame = Frame;
                         UsingRightArmAnimation = true;
                     }
-                }
-            }
-            if (PlayMovementAnimation)
-            {
-                UpdateWingAnimation();
-                bool FurnitureOverridingAnimation = false;
-                bool GuardianHasCarpet = HasCarpet();
-                if (UsingFurniture && furniturex > -1 && furniturey > -1 && TargetID == -1)
-                {
-                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
-                    if (tile != null)
-                    {
-                        switch (tile.type)
-                        {
-                            case Terraria.ID.TileID.Chairs:
-                                {
-                                    int AnimationID = Base.SittingFrame;
-                                    if (Base.ChairSittingFrame > -1)
-                                        AnimationID = Base.ChairSittingFrame;
-                                    BodyAnimationFrame = AnimationID;
-                                    if (!UsingLeftArmAnimation)
-                                        LeftArmAnimationFrame = AnimationID;
-                                    if (!UsingRightArmAnimation)
-                                        RightArmAnimationFrame = AnimationID;
-                                }
-                                break;
-                            case Terraria.ID.TileID.Benches:
-                            case Terraria.ID.TileID.Thrones:
-                                {
-                                    FurnitureOverridingAnimation = true;
-                                    int AnimationID = Base.ThroneSittingFrame;
-                                    if (AnimationID == -1)
-                                    {
-                                        if (Base.ChairSittingFrame > -1)
-                                            AnimationID = Base.ChairSittingFrame;
-                                        else
-                                            AnimationID = Base.SittingFrame;
-                                    }
-                                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = AnimationID;
-                                }
-                                break;
-                            case Terraria.ID.TileID.Beds:
-                                {
-                                    FurnitureOverridingAnimation = true;
-                                    int AnimationID = Base.BedSleepingFrame;
-                                    if (AnimationID == -1)
-                                    {
-                                        if (Base.ChairSittingFrame > -1)
-                                            AnimationID = Base.ChairSittingFrame;
-                                        else
-                                            AnimationID = Base.SittingFrame;
-                                    }
-                                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = AnimationID;
-                                    if (EmotionDisplayTime <= 0)
-                                        DisplayEmotion(Emotions.Sleepy);
-                                }
-                                break;
-                        }
-                    }
-                }
-                else if (PlayerControl && Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian != null)
-                {
-                    TerraGuardian otherguardian = Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian;
-                    int Animation = Base.SittingFrame;
-                    BodyAnimationFrame = Animation;
-                    if (!UsingLeftArmAnimation)
-                        LeftArmAnimationFrame = Animation;
-                    if (!UsingRightArmAnimation)
-                        RightArmAnimationFrame = Animation;
-                }
-                else if (mount.Active)
-                {
-                    BodyAnimationFrame = Base.SittingFrame;
-                    if (!UsingLeftArmAnimation)
-                        LeftArmAnimationFrame = Base.SittingFrame;
-                    if (!UsingRightArmAnimation)
-                        RightArmAnimationFrame = Base.SittingFrame;
-                }
-                else if (WallSlideStyle > 0)
-                {
-                    BodyAnimationFrame = Base.JumpFrame;
-                    if (Base.DontUseRightHand)
-                    {
-                        LeftArmAnimationFrame = Base.ItemUseFrames[2];
-                        UsingLeftArmAnimation = true;
-                    }
-                    else
-                    {
-                        RightArmAnimationFrame = Base.ItemUseFrames[2];
-                        UsingRightArmAnimation = true;
-                    }
-                }
-                else if (Wet && HasCooldown(GuardianCooldownManager.CooldownType.SwimTime))
-                {
-                    int SwimValue = GetCooldownValue(GuardianCooldownManager.CooldownType.SwimTime);
-                    /*if (BodyAnimationFrame == 0 || BodyAnimationFrame >= 9)
-                        BodyAnimationFrame = 1;
-                    AnimationTime++;
-                    if (AnimationTime >= 4)
-                    {
-                        BodyAnimationFrame++;
-                        AnimationTime -= 4;
-                        if (BodyAnimationFrame >= 9)
-                            BodyAnimationFrame -= 8;
-                    }*/
-                    float MaxAnimationTime = Base.MaxWalkSpeedTime;
-                    AnimationTime++;
-                    //bool ReverseAnimation = Velocity.X > 0 && LookingLeft || Velocity.X < 0 && !LookingLeft;
-                    if (AnimationTime < 0f)
-                        AnimationTime += MaxAnimationTime;
-                    if (AnimationTime >= MaxAnimationTime)
-                        AnimationTime -= MaxAnimationTime;
-                    int PickedFrame = (int)(AnimationTime / Base.WalkAnimationFrameTime);
-                    BodyAnimationFrame = PickedFrame;
-                    int ArmFrame = Base.StandingFrame;
-                    if (SwimValue >= 10 && SwimValue < 20)
-                        ArmFrame = Base.JumpFrame;
-                    if (!UsingLeftArmAnimation && !PlayerMounted)
-                    {
-                        UsingLeftArmAnimation = true;
-                        LeftArmAnimationFrame = ArmFrame;
-                    }
-                    if (!UsingRightArmAnimation)
-                    {
-                        RightArmAnimationFrame = ArmFrame;
-                        UsingRightArmAnimation = true;
-                    }
-                }
-                else if (GuardianHasCarpet)
-                {
-                    BodyAnimationFrame = Base.StandingFrame;
-                }
-                else if (Velocity.Y == 0)
-                {
-                    if (Velocity.X != 0 && (!HasFlag(GuardianFlags.WindPushed) || (MoveLeft == true || MoveRight == true)))
-                    {
-                        /*if (BodyAnimationFrame < 1 || BodyAnimationFrame >= 9)
-                        {
-                            BodyAnimationFrame = 1;
-                            AnimationTime = 0;
-                        }*/
-                        float MaxAnimationTime = Base.MaxWalkSpeedTime * Scale;
-                        float SpeedX = Math.Abs(Velocity.X);
-                        if ((Velocity.X > 0 && Direction < 0) || (Velocity.X < 0 && Direction > 0))
-                            SpeedX *= -1;
-                        AnimationTime += SpeedX / (WalkMode ? WalkMaxSpeed : MaxSpeed);
-                        //bool ReverseAnimation = Velocity.X > 0 && LookingLeft || Velocity.X < 0 && !LookingLeft;
-                        if (AnimationTime < 0f)
-                            AnimationTime += MaxAnimationTime;
-                        if (AnimationTime >= MaxAnimationTime)
-                            AnimationTime -= MaxAnimationTime;
-                        int PickedFrame = (int)(AnimationTime / (Base.WalkAnimationFrameTime * Scale));
-                        if (PickedFrame >= 0 && PickedFrame < Base.WalkingFrames.Length)
-                            BodyAnimationFrame = Base.WalkingFrames[PickedFrame];
-                    }
-                    else
-                    {
-                        BodyAnimationFrame = Base.StandingFrame;
-                        AnimationTime = 0;
-                    }
-                }
-                else
-                {
-                    BodyAnimationFrame = Base.JumpFrame;
-                    AnimationTime = 0;
-                }
-                if (!FurnitureOverridingAnimation)
-                {
-                    if (PlayerMounted && !Ducking && !UsingLeftArmAnimation)
-                    {
-                        if (Base.ReverseMount)
-                        {
-                            LeftArmAnimationFrame = Base.SittingFrame;
-                            UsingLeftArmAnimation = true;
-                        }
-                        else if (Base.PlayerMountedArmAnimation > -1)
-                        {
-                            LeftArmAnimationFrame = Base.PlayerMountedArmAnimation;
-                            UsingLeftArmAnimation = true;
-                        }
-                    }
-                    if (GrabbingPlayer && (ItemAnimationTime == 0 || ItemUseType != ItemUseTypes.HeavyVerticalSwing))
-                    {
-                        if (!Base.DontUseRightHand)
-                        {
-                            RightArmAnimationFrame = Base.ItemUseFrames[2];
-                            UsingRightArmAnimation = true;
-                        }
-                        else
-                        {
-                            LeftArmAnimationFrame = Base.ItemUseFrames[2];
-                            UsingLeftArmAnimation = true;
-                        }
-                    }
-                    if (Ducking)
-                    {
-                        BodyAnimationFrame = Base.DuckingFrame;
-                        if (!UsingLeftArmAnimation)
-                            LeftArmAnimationFrame = BodyAnimationFrame;
-                        if (!UsingRightArmAnimation)
-                            RightArmAnimationFrame = BodyAnimationFrame;
-                    }
-                }
-            }
-            if (MountedOnPlayer)
-            {
-                BodyAnimationFrame = Base.SittingFrame;
-                if (Base.IsTerrarian && ItemAnimationTime == 0)
-                {
-                    LeftArmAnimationFrame = 3;
-                    UsingLeftArmAnimation = true;
                 }
             }
             if (!FreezeItemUseAnimation)
