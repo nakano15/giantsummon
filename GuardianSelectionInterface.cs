@@ -604,7 +604,7 @@ namespace giantsummon
                     ElementPosition.Y += 28f;
                 }
                 ElementPosition.X = InterfacePosition.X + (ListWidth + 8) * ScaleX + 22f;
-                if (!VoteButtonClickedOnce)
+                if (false && !VoteButtonClickedOnce) //Disabled because there is no contest.
                 {
                     string ButtonText = "Vote";
                     Color ButtonColor = Color.White;

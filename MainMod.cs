@@ -28,12 +28,12 @@ namespace giantsummon
         public static bool CheckingQuestBrief = false;
         public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true;
         //Contest related
-        public const string VoteLink = "https://forms.gle/w8tDTpEXSZvKE4WH8";
+        public const string VoteLink = ""; //
         public static bool HasPlayerAwareOfContestMonthChange = false;
-        public const int LastContestModVersion = 60;
-        public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-1982670";
+        public const int LastContestModVersion = 62;
+        public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 62, LastModVersion = 62;
+        public const int ModVersion = 63, LastModVersion = 62;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
