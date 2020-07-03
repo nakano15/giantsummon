@@ -2,3 +2,4 @@
 	Instead of setting up the arms animations first, and then the body, now It sets up the body animations first, and then the arms.
 	Due to this change, I can remove 2 flags from many scripts.
 Disabled Vote button on the Guardian Selection Interface, since there will be no contest.
+Fixed a problem where a request accepted message could have the chance of being shown, when you complete Nemesis requests.

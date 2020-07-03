@@ -122,7 +122,7 @@ namespace giantsummon.Creatures
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "I have got a little task for you, If you don't mind, I can come with you to do it.";
+                return "Good. What? Were expecting something else, I can't really express anything for what you did.";
             return "I can't cheer for you doing what I asked you to do.";
         }
 

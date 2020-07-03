@@ -20,6 +20,7 @@ namespace giantsummon
         public byte AssistSlot = 0;
         public int SavedPosX = -1, SavedPosY = -1; //Redo the path finding if moving to it was interrupted by any way.
         public bool PathingInterrupted = false;
+        public List<CharacterInfo> NearbyFoes = new List<CharacterInfo>(), NearbyAllies = new List<CharacterInfo>();
         public const int ItemStackCount = 100, ItemStackTurns = Main.maxItems / ItemStackCount;
         public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, Data.ModID); } }
         public GuardianData Data //Think of a way of arranging the Guardian Datas in the player, and also be able to retrieve them when necessary.
@@ -8024,6 +8025,139 @@ namespace giantsummon
             }
         }
 
+        public void CheckNearbyCharacters()
+        {
+            NearbyAllies.Clear();
+            NearbyFoes.Clear();
+            float DistanceMod = 1f;
+            if (HasFlag(GuardianFlags.LightPotion))
+                DistanceMod *= 1.2f;
+            if (HasFlag(GuardianFlags.NightVisionPotion))
+                DistanceMod *= 1.25f;
+            if (HasFlag(GuardianFlags.Blind))
+                DistanceMod *= 0.66f;
+            if (HasFlag(GuardianFlags.Blackout))
+                DistanceMod *= 0.25f;
+            if (HasFlag(GuardianFlags.HunterPotion))
+                DistanceMod *= 1.5f;
+            if (Scale > 1)
+                DistanceMod *= Scale;
+            DistanceMod *= 320f;
+            Vector2 Center = this.CenterPosition;
+            for (int c = 0; c < 255; c++)
+            {
+                if (Main.player[c].active && Main.player[c].Distance(Center) < DistanceMod)
+                {
+                    CharacterInfo CharInfo = new CharacterInfo(c, TargetTypes.Player);
+                    if (CharInfo.IsFriendly(this))
+                        NearbyAllies.Add(CharInfo);
+                    else
+                        NearbyFoes.Add(CharInfo);
+                }
+                if (c < 200 && Main.npc[c].active && Main.npc[c].Distance(Center) < DistanceMod)
+                {
+                    CharacterInfo CharInfo = new CharacterInfo(c, TargetTypes.Npc);
+                    if (CharInfo.IsFriendly(this))
+                        NearbyAllies.Add(CharInfo);
+                    else
+                        NearbyFoes.Add(CharInfo);
+                }
+            }
+            foreach (int key in MainMod.ActiveGuardians.Keys)
+            {
+                if ((MainMod.ActiveGuardians[key].CenterPosition - Center).Length() < DistanceMod)
+                {
+                    CharacterInfo CharInfo = new CharacterInfo(key, TargetTypes.Guardian);
+                    if (CharInfo.IsFriendly(this))
+                        NearbyAllies.Add(CharInfo);
+                    else
+                        NearbyFoes.Add(CharInfo);
+                }
+            }
+        }
+
+        public void AnotherCombatBehavior()
+        {
+            Vector2 AggroCenter = CenterPosition;
+            if (OwnerPos > -1 && ProtectMode)
+            {
+                AggroCenter = Main.player[OwnerPos].Center;
+            }
+            if (TargetID == -1)
+            {
+                if (!HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+                {
+                    float HighestAggro = float.MaxValue;
+                    CharacterInfo Target = null;
+                    foreach (CharacterInfo cInfo in NearbyFoes)
+                    {
+                        cInfo.CalculateDistance(AggroCenter);
+                        float AggroValue = cInfo.Distance;
+                        switch (cInfo.GetMyType)
+                        {
+                            case TargetTypes.Player:
+                                AggroValue -= Main.player[cInfo.GetMyPosition].aggro;
+                                break;
+                            case TargetTypes.Npc:
+
+                                break;
+                            case TargetTypes.Guardian:
+                                AggroValue -= MainMod.ActiveGuardians[cInfo.GetMyPosition].Aggro;
+                                break;
+                        }
+                        if (AggroValue < HighestAggro)
+                        {
+                            Target = cInfo;
+                            HighestAggro = AggroValue;
+                        }
+                    }
+                    if (Target != null)
+                    {
+                        this.TargetID = Target.GetMyPosition;
+                        TargetType = Target.GetMyType;
+                    }
+                }
+            }
+            if (TargetID == -1)
+                return;
+            switch (TargetType)
+            {
+                case TargetTypes.Guardian:
+                    if (!MainMod.ActiveGuardians.ContainsKey(TargetID))
+                    {
+                        TargetID = -1;
+                        return;
+                    }
+                    break;
+                case TargetTypes.Player:
+                    if (!Main.player[TargetID].active || Main.player[TargetID].dead || Main.player[TargetID].GetModPlayer<PlayerMod>().KnockedOutCold)
+                    {
+                        TargetID = -1;
+                        return;
+                    }
+                    break;
+                case TargetTypes.Npc:
+                    if (!Main.npc[TargetID].active)
+                    {
+                        TargetID = -1;
+                        return;
+                    }
+                    break;
+            }
+            if (ItemAnimationTime == 0) //Try picking best weapon for situation
+            {
+
+            }
+        }
+
+        //Maybe add a moment in the AI, where the companion analyzes how It should handle the target.
+        public enum CombatBehavior
+        {
+            Berseker, //Attacks foes, while not minding being hurt in the process
+            Tanker, //Attacks enemies on front row, but tries to avoid being hurt in the process.
+            ThirdAi //Melee AI for when the melee character is injured, so keeps some distance while attacking foes.
+        }
+
         public void LookForThreats()
         {
             Player Owner = null;
@@ -8165,6 +8299,15 @@ namespace giantsummon
                         return true;
                     }
                 }
+            }
+            return false;
+        }
+
+        public bool IsNpcHostile(NPC n)
+        {
+            if (n.CanBeChasedBy(null))
+            {
+                return true;
             }
             return false;
         }
