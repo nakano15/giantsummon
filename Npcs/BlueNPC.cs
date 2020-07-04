@@ -201,7 +201,7 @@ namespace giantsummon.Npcs
             }
             else if (AiStage == 10)
             {
-                if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X)  >= 300)
+                if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 300)
                 {
                     ChangeAIStage(RefusalStep);
                     SayMessage("*She looks saddened after you refused without saying a thing.*");

@@ -3,3 +3,9 @@
 	Due to this change, I can remove 2 flags from many scripts.
 Disabled Vote button on the Guardian Selection Interface, since there will be no contest.
 Fixed a problem where a request accepted message could have the chance of being shown, when you complete Nemesis requests.
+Added missing verb to the death by giving up message, and also added a variant to the death message.
+Changed the Death by lava damage message on companions.
+Companions will no longer "brick" when unarmed.
+Companions will now behave better when attacking with melee weapons.
+Fixed a bug where the companion would not use the left (right) arm correctly when swimming.
+If Leopold is able to swim, he'll no longer play the long jumping animation when underwater.

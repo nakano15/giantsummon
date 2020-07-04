@@ -1288,7 +1288,7 @@ namespace giantsummon
             {
                 if (KnockedOutCold && player.controlHook)
                 {
-                    DoForceKill(player.name + " couldn't get help to revived.");
+                    DoForceKill(player.name + (Main.rand.Next(2) == 1 ? " succumbed to injuries." : " couldn't get help to be revived."));
                     //player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " couldn't get help to revive."), 0, 0, false);
                     player.fullRotation = 0;
                 }

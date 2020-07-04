@@ -355,7 +355,7 @@ namespace giantsummon
                 return WeaponPosition;
             }
         }
-        public int GetMeleeWeaponRange(int ItemPosition = -1)
+        public int GetMeleeWeaponRangeX(int ItemPosition = -1)
         {
             int Range = 40;
             int WeaponPosition = (ItemPosition == -1 ? GetHighestDamageMeleeWeaponPosition : ItemPosition);
@@ -375,16 +375,70 @@ namespace giantsummon
                     else
                         Range = this.Inventory[WeaponPosition].width;
                 }
-                Range = (int)(Range * Inventory[WeaponPosition].scale * 1.4f);
+                Range = (int)(Range * Inventory[WeaponPosition].scale);
             }
-            int AttackRangeX = 0;
             {
+                int AttackRangeX = 0;
                 int y;
                 GetLeftHandPosition(Base.ItemUseFrames[2], out AttackRangeX, out y);
-                AttackRangeX = (int)(Width * 0.5f) - AttackRangeX;
+                AttackRangeX = (int)(SpriteWidth * 0.5f) - AttackRangeX;
+                Range += (int)(AttackRangeX * Scale);
             }
-            Range += (int)(AttackRangeX * Scale);
             return Range;
+        }
+        public void GetMeleeWeaponRangeY(int ItemPosition, out float RangeYUpper, out float RangeYLower)
+        {
+            RangeYLower = 40;
+            RangeYUpper = 40;
+            int WeaponPosition = (ItemPosition == -1 ? GetHighestDamageMeleeWeaponPosition : ItemPosition);
+            if (WeaponPosition > -1)
+            {
+                if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[WeaponPosition]))
+                {
+                    if (Main.itemTexture[this.Inventory[WeaponPosition].type].Height >= Main.itemTexture[this.Inventory[WeaponPosition].type].Width)
+                    {
+                        RangeYLower = Main.itemTexture[this.Inventory[WeaponPosition].type].Height;
+                    }
+                    else
+                    {
+                        RangeYLower = Main.itemTexture[this.Inventory[WeaponPosition].type].Width;
+                    }
+                }
+                else
+                {
+                    if (this.Inventory[WeaponPosition].height >= this.Inventory[WeaponPosition].width)
+                        RangeYLower = this.Inventory[WeaponPosition].height;
+                    else
+                        RangeYLower = this.Inventory[WeaponPosition].width;
+                }
+                RangeYLower = (int)(RangeYLower * Inventory[WeaponPosition].scale);
+            }
+            RangeYUpper = RangeYLower;
+            {
+                int AttackRangeYUpper = 0, AttackRangeYLower = 0;
+                int x;
+                if (MainMod.IsGuardianItem(Inventory[WeaponPosition]))
+                {
+                    GetBetweenHandsPosition(Base.HeavySwingFrames[0], out x, out AttackRangeYUpper);
+                }
+                else
+                {
+                    GetLeftHandPosition(Base.ItemUseFrames[0], out x, out AttackRangeYUpper);
+                }
+                AttackRangeYUpper = -SpriteHeight + AttackRangeYUpper;
+                RangeYUpper += (int)(AttackRangeYUpper * Scale);
+
+                if (MainMod.IsGuardianItem(Inventory[WeaponPosition]))
+                {
+                    GetBetweenHandsPosition(Base.HeavySwingFrames[2], out x, out AttackRangeYUpper);
+                }
+                else
+                {
+                    GetLeftHandPosition(Base.ItemUseFrames[3], out x, out AttackRangeYLower);
+                }
+                AttackRangeYLower = -SpriteHeight + AttackRangeYLower;
+                RangeYLower += (int)(AttackRangeYLower * Scale);
+            }
         }
         public Rectangle HitBox = Rectangle.Empty;
         public Rectangle WeaponCollision = new Rectangle();
@@ -3830,13 +3884,19 @@ namespace giantsummon
             if (WeaponPosition > -1)
             {
                 Item weapon = Inventory[WeaponPosition];
+                float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition) + TargetWidth * 0.5f, UpperY, LowerY;
+                GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY);
+                InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
+                InRangeY = TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y;
+                /*
                 Vector2 TopLeftCollision = Position;
                 int Height = (int)(Kneeling ? Base.DuckingHeight * Scale : Base.Height * Scale);
                 TopLeftCollision.Y -= (Kneeling ? DuckingHeight : Height) + weapon.height * weapon.scale * 0.8f * Scale;
                 TopLeftCollision.X -= Width * 0.5f + weapon.width * weapon.scale * Scale;
                 //float CollisionWidth = Width + weapon.width * weapon.scale * 2.2f * Scale,
                 //    CollisionHeight = Height + weapon.height * weapon.scale * 2.4f * Scale;
-                float WeaponAttackRange = GetMeleeWeaponRange(WeaponPosition);
+                float WeaponAttackRange = GetMeleeWeaponRangeX(WeaponPosition);
+                float WeaponUpperY, WeaponLowerY;
                 if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) <= WeaponAttackRange + TargetWidth * 0.5f)
                 {
                     InRangeX = true;
@@ -3846,11 +3906,11 @@ namespace giantsummon
                     InRangeY = true;
                 //if (ID == GuardianBase.Sardine)
                 //    Main.NewText("RangeX = " + InRangeX + "  RangeY = " + InRangeY);
-                return InRangeX && InRangeY;
+                return InRangeX && InRangeY;*/
             }
             else
             {
-                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) <= GetMeleeWeaponRange() + TargetWidth * 0.5f)
+                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f)
                 {
                     InRangeX = true;
                 }
@@ -3859,7 +3919,7 @@ namespace giantsummon
                 if (Position.Y >= TargetPosition.Y && Position.Y - Height < TargetPosition.Y + TargetHeight)
                     InRangeY = true;
             }
-            return false;
+            return InRangeX && InRangeY;
         }
 
         public void NewCombatScript()
@@ -7463,7 +7523,7 @@ namespace giantsummon
             //Add support to the option of picking the weapon and AI based on the item position on the guardian inventory.
             bool Approach = false, Retreat = false, Attack = false, GoMelee = false;
             Vector2 SquaredDistance = new Vector2(TargetPosition.X + TargetWidth * 0.5f, TargetPosition.Y + TargetHeight * 0.5f) - CenterPosition;
-            int MeleeRange = (int)(GetMeleeWeaponRange());
+            int MeleeRange = (int)(GetMeleeWeaponRangeX());
             bool InMeleeRangeX = Math.Abs(CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f) < MeleeRange + TargetWidth * 0.5f;// && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -(MeleeRange + TargetWidth * 0.5f);
             bool TooCloseMeleeRangeX = Math.Abs(CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f) < (Width + TargetWidth) * 0.5f + 28; // && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -((Width + TargetWidth) * 0.5f + 28);
             bool InMeleeRangeY = CenterPosition.Y - (TargetPosition.Y + TargetHeight) >= -(MeleeRange + TargetHeight * 0.5f) && CenterPosition.Y - TargetPosition.Y < MeleeRange + TargetHeight * 0.5f;
@@ -8065,7 +8125,7 @@ namespace giantsummon
             }
             foreach (int key in MainMod.ActiveGuardians.Keys)
             {
-                if ((MainMod.ActiveGuardians[key].CenterPosition - Center).Length() < DistanceMod)
+                if (key != WhoAmID && (MainMod.ActiveGuardians[key].CenterPosition - Center).Length() < DistanceMod)
                 {
                     CharacterInfo CharInfo = new CharacterInfo(key, TargetTypes.Guardian);
                     if (CharInfo.IsFriendly(this))
@@ -8120,6 +8180,8 @@ namespace giantsummon
             }
             if (TargetID == -1)
                 return;
+            Vector2 TargetPosition = Vector2.Zero;
+            int TargetWidth = 0, TargetHeight = 0;
             switch (TargetType)
             {
                 case TargetTypes.Guardian:
@@ -8128,6 +8190,10 @@ namespace giantsummon
                         TargetID = -1;
                         return;
                     }
+                    TerraGuardian g = MainMod.ActiveGuardians[TargetID];
+                    TargetPosition = g.TopLeftPosition;
+                    TargetWidth = g.Width;
+                    TargetHeight = g.Height;
                     break;
                 case TargetTypes.Player:
                     if (!Main.player[TargetID].active || Main.player[TargetID].dead || Main.player[TargetID].GetModPlayer<PlayerMod>().KnockedOutCold)
@@ -8135,6 +8201,9 @@ namespace giantsummon
                         TargetID = -1;
                         return;
                     }
+                    TargetPosition = Main.player[TargetID].position;
+                    TargetWidth = Main.player[TargetID].width;
+                    TargetHeight = Main.player[TargetID].height;
                     break;
                 case TargetTypes.Npc:
                     if (!Main.npc[TargetID].active)
@@ -8142,21 +8211,83 @@ namespace giantsummon
                         TargetID = -1;
                         return;
                     }
+                    TargetPosition = Main.npc[TargetID].position;
+                    TargetWidth = Main.npc[TargetID].width;
+                    TargetHeight = Main.npc[TargetID].height;
                     break;
+                default:
+                    TargetID = -1;
+                    return;
             }
+            float DistanceX = 0, DistanceY = 0;
+            if (TargetPosition.X + TargetWidth * 0.5f >= Position.X)
+            {
+                DistanceX = TargetPosition.X - (Position.X - Width * 0.5f);
+            }
+            else
+            {
+                DistanceX = TargetPosition.X + TargetWidth - (Position.X + Width * 0.5f);
+            }
+            DistanceY = TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f;
             if (ItemAnimationTime == 0) //Try picking best weapon for situation
             {
-
+                float LastDamage = 0, LastMeleeDamage = 0;
+                for (int i = 0; i < 10; i++)
+                {
+                    if (Inventory[i].damage == 0) continue;
+                    if (Inventory[i].melee)
+                    {
+                        int Range = GetMeleeWeaponRangeX(i);
+                        bool InRangeX = false, InRangeY = false;
+                        if (Range <= Math.Abs(DistanceX))
+                        {
+                            InRangeX = true;
+                        }
+                        float UpperY, LowerY;
+                        GetMeleeWeaponRangeY(i, out UpperY, out LowerY);
+                        UpperY += Position.Y;
+                        LowerY += Position.Y;
+                        if (UpperY <= TargetPosition.Y + TargetHeight || LowerY >= TargetPosition.Y)
+                        {
+                            InRangeY = true;
+                        }
+                        float Dps = Inventory[i].damage * (float)Inventory[i].useTime / 60;
+                        if (InRangeX && InRangeY && Dps > LastMeleeDamage)
+                        {
+                            SelectedItem = i;
+                            LastMeleeDamage = Dps;
+                        }
+                    }
+                    if (Inventory[i].ranged || Inventory[i].thrown)
+                    {
+                        int i1, damage;
+                        float f1, f2;
+                        GetAmmoInfo(Inventory[i], false, out i1, out f1, out damage, out f2);
+                        float Dps = (Inventory[i].damage + damage) * (float)Inventory[i].useTime / 60;
+                        if (Dps > LastDamage && LastMeleeDamage == 0)
+                        {
+                            SelectedItem = i;
+                            LastDamage = Dps;
+                        }
+                    }
+                    if (Inventory[i].magic)
+                    {
+                        if (MP >= Inventory[i].mana * ManaCostMult)
+                        {
+                            float Dps = Inventory[i].damage * (float)Inventory[i].useTime / 60;
+                            if (Dps > LastDamage && LastMeleeDamage == 0)
+                            {
+                                SelectedItem = i;
+                                LastDamage = Dps;
+                            }
+                        }
+                    }
+                }
             }
+
         }
 
         //Maybe add a moment in the AI, where the companion analyzes how It should handle the target.
-        public enum CombatBehavior
-        {
-            Berseker, //Attacks foes, while not minding being hurt in the process
-            Tanker, //Attacks enemies on front row, but tries to avoid being hurt in the process.
-            ThirdAi //Melee AI for when the melee character is injured, so keeps some distance while attacking foes.
-        }
 
         public void LookForThreats()
         {
@@ -9586,7 +9717,10 @@ namespace giantsummon
                         ItemAnimationTime = ItemMaxAnimationTime = AtkSpeed;
                         ItemUseTime = ItemMaxUseTime = AtkSpeed;
                         Damage = 20;
-                        ItemUseType = ItemUseTypes.HeavyVerticalSwing;
+                        if (Base.DontUseHeavyWeapons)
+                            ItemUseType = ItemUseTypes.LightVerticalSwing;
+                        else
+                            ItemUseType = ItemUseTypes.HeavyVerticalSwing;
                         CriticalRate = 5;
                         Knockback *= MeleeKnockback;
                     }
@@ -11793,11 +11927,8 @@ namespace giantsummon
                     int ArmFrame = Base.StandingFrame;
                     if (SwimValue >= 10 && SwimValue < 20)
                         ArmFrame = Base.JumpFrame;
-                    if (PlayerMounted)
-                    {
-                        UsingLeftArmAnimation = true;
-                        LeftArmAnimationFrame = ArmFrame;
-                    }
+                    UsingLeftArmAnimation = true;
+                    LeftArmAnimationFrame = ArmFrame;
                     RightArmAnimationFrame = ArmFrame;
                     UsingRightArmAnimation = true;
                 }
@@ -11912,7 +12043,7 @@ namespace giantsummon
                         UsingRightArmAnimation = true;
                     }
                 }
-                else if (ItemUseType == ItemUseTypes.ClawAttack)
+                else if (ItemUseType == ItemUseTypes.ClawAttack) //So dated attack... If I revamp the basic attack, this will get an use.
                 {
                     if (AnimationPercentage < 0.33f)
                     {
@@ -13154,7 +13285,7 @@ namespace giantsummon
                 int Damage = 80;
                 if (HasFlag(GuardianFlags.LavaDamageReduction))
                     Damage = 50;
-                this.Hurt((int)(Damage * HealthHealMult), 0, false, true, " melted, showing It's thumb before sinking.");
+                this.Hurt((int)(Damage * HealthHealMult), 0, false, true, " melted, giving a thumbs-up while sinking.");
                 AddCooldown(GuardianCooldownManager.CooldownType.LavaHurt, GetImmuneTime);
             }
         }
