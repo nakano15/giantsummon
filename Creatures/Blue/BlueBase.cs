@@ -55,7 +55,7 @@ namespace giantsummon.Creatures
             CallUnlockLevel = 0;
 
             PopularityContestsWon = 3;
-            ContestSecondPlace = 1;
+            ContestSecondPlace = 2;
             ContestThirdPlace = 1;
 
             AddInitialItem(Terraria.ID.ItemID.IronBroadsword, 1);

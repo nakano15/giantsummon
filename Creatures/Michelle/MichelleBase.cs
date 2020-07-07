@@ -31,7 +31,7 @@ namespace giantsummon.Creatures
             TerrarianInfo.PantsColor = new Microsoft.Xna.Framework.Color(179, 36, 245);
             TerrarianInfo.ShoeColor = new Microsoft.Xna.Framework.Color(206, 29, 29);
 
-            PopularityContestsWon = 0;
+            PopularityContestsWon = 1;
             ContestSecondPlace = 1;
             ContestThirdPlace = 0;
 

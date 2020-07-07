@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Terraria;
 
 namespace giantsummon.Creatures
 {
@@ -11,30 +12,31 @@ namespace giantsummon.Creatures
         public MalishaBase()
         {
             Name = "Malisha";
-            Description = "";
+            Description = "Two things are important for her: Practicing\nMagic and Testing. Don't volunteer.";
             Size = GuardianSize.Large;
             Width = 28;
             Height = 84;
             DuckingHeight = 54;
             SpriteWidth = 96;
             SpriteHeight = 96;
-            Age = 15;
-            Male = true;
-            InitialMHP = 200; //1000
-            LifeCrystalHPBonus = 40;
-            LifeFruitHPBonus = 10;
-            Accuracy = 0.15f;
-            Mass = 0.5f;
-            MaxSpeed = 5.2f;
-            Acceleration = 0.18f;
-            SlowDown = 0.47f;
+            Age = 21;
+            Male = false;
+            InitialMHP = 135; //960
+            LifeCrystalHPBonus = 15;
+            LifeFruitHPBonus = 30;
+            InitialMP = 30;
+            Accuracy = 0.91f;
+            Mass = 0.45f;
+            MaxSpeed = 5.8f;
+            Acceleration = 0.15f;
+            SlowDown = 0.41f;
             MaxJumpHeight = 15;
-            JumpSpeed = 7.08f;
+            JumpSpeed = 6.36f;
             CanDuck = true;
             ReverseMount = false;
-            DrinksBeverage = false;
+            DrinksBeverage = true;
             SetTerraGuardian();
-            CallUnlockLevel = 0;
+            CallUnlockLevel = 5;
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
@@ -205,6 +207,56 @@ namespace giantsummon.Creatures
                     guardian.AddDrawData(dd, true);
                 }
             }
+        }
+
+        //It has been so long that I got this companion idea, that I even forgot her personality. Oops.
+        public override string GreetMessage(Terraria.Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add(".");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            return Mes[Main.rand.Next(Mes.Count)];
         }
     }
 }

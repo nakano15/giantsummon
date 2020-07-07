@@ -51,7 +51,7 @@ namespace giantsummon.Creatures
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
-            ContestThirdPlace = 1;
+            ContestThirdPlace = 2;
 
             AddInitialItem(Terraria.ID.ItemID.CobaltSword, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);

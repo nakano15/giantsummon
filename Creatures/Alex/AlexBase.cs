@@ -50,7 +50,7 @@ namespace giantsummon.Creatures
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
-            ContestThirdPlace = 3;
+            ContestThirdPlace = 4;
 
             AddInitialItem(Terraria.ID.ItemID.Trident, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);

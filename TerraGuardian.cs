@@ -5247,9 +5247,8 @@ namespace giantsummon
                     {
                         if (MoveIndoors)
                         {
-                            bool JustTurnedToNight = !Main.dayTime && Main.time == 0;
-                            //if (DayNightTransition && !Main.dayTime && UsingFurniture)
-                            //    LeaveFurniture();
+                            if (!Main.dayTime && Main.time == 0 && UsingFurniture)
+                                LeaveFurniture();
                             int HouseX = Main.npc[NpcPosition].homeTileX * 16,
                                 HouseY = Main.npc[NpcPosition].homeTileY * 16;
                             if (HouseX < 0 || HouseY < 0)
@@ -5647,281 +5646,6 @@ namespace giantsummon
             }
         }
 
-        public void IdleBehavior()
-        {
-            bool IdleFollower = false;
-            if ((OwnerPos > -1 && ((PlayerMounted && !GuardianHasControlWhenMounted) || !IdleFollower)) || GuardingPosition.HasValue || TargetID > -1)
-            {
-                return;
-            }
-            bool MoveIndoor = !Main.dayTime || Main.raining || Main.eclipse;
-            int GetNpcPosition = NpcMod.GetGuardianNPC(ID, ModID);
-            if (GetNpcPosition > -1 && Main.player[Main.myPlayer].talkNPC == GetNpcPosition)
-            {
-                AddCooldown(GuardianCooldownManager.CooldownType.WaitTime, 200);
-                FaceDirection(Main.player[Main.myPlayer].Center.X < Position.X);
-                if (HasCooldown(GuardianCooldownManager.CooldownType.WanderTime))
-                    RemoveCooldown(GuardianCooldownManager.CooldownType.WanderTime);
-            }
-            WalkMode = true;
-            if (IdleFollower)
-                MoveIndoor = false;
-            if (furniturex > -1 && furniturey > -1 && HasCooldown(GuardianCooldownManager.CooldownType.WanderTime))
-            {
-                LeaveFurniture();
-            }
-            if (MoveIndoor)
-            {
-                int CenterX = 0, CenterY = 0;
-                if (OwnerPos > -1)
-                {
-                    CenterX = (int)Main.player[OwnerPos].Center.X / 16;
-                    CenterY = (int)Main.player[OwnerPos].Center.Y / 16;
-                }
-                else if (GetNpcPosition > -1)
-                {
-                    NPC npc = Main.npc[GetNpcPosition];
-                    CenterX = npc.homeTileX;
-                    CenterY = npc.homeTileY;
-                }
-                else
-                {
-                    CenterX = (int)Position.X / 16;
-                    CenterY = (int)Position.Y / 16;
-                }
-                int PosX = (int)Position.X / 16, PosY = (int)Position.Y / 16;
-                if (CenterX == -1 && CenterY == -1)
-                {
-                    if (!HasCooldown(GuardianCooldownManager.CooldownType.WaitTime))
-                    {
-                        AddCooldown(GuardianCooldownManager.CooldownType.WaitTime, 200 + Main.rand.Next(200));
-                        FaceDirection(!LookingLeft);
-                    }
-                }
-                else if (CenterX == PosX && CenterY == PosY)
-                {
-                    if (!HasCooldown(GuardianCooldownManager.CooldownType.WaitTime))
-                    {
-                        AddCooldown(GuardianCooldownManager.CooldownType.WaitTime, 200 + Main.rand.Next(200));
-                        FaceDirection(!LookingLeft);
-                    }
-                }
-                else
-                {
-                    if (Main.player[Main.myPlayer].Distance(CenterPosition) >= Main.screenWidth && Main.player[Main.myPlayer].Distance(new Vector2(CenterX * 16, CenterY * 16)) >= Main.screenWidth)
-                    {
-                        if (furniturex > -1 && furniturey > -1)
-                        {
-                            Position.X = furniturex * 16;
-                            Position.Y = furniturey * 16;
-                        }
-                        else
-                        {
-                            Position.X = CenterX * 16;
-                            Position.Y = CenterY * 16;
-                        }
-                    }
-                    else
-                    {
-                        if (!HasCooldown(GuardianCooldownManager.CooldownType.WanderTime))
-                        {
-                            FaceDirection(CenterX < PosX);
-                            AddCooldown(GuardianCooldownManager.CooldownType.WanderTime, 50);
-                        }
-                        else
-                        {
-                            if (LookingLeft)
-                                MoveLeft = true;
-                            else
-                                MoveRight = true;
-                            int YCheck = (int)Position.Y / 16;
-                            if (YCheck != CenterY)
-                            {
-                                bool StairAbove, StairUnder;
-                                CheckForStairways(out StairUnder, out StairAbove);
-                                if (CenterY > YCheck && StairUnder)
-                                {
-                                    MoveDown = true;
-                                }
-                                if (CenterY < YCheck && StairAbove)
-                                {
-                                    MoveUp = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (HasCooldown(GuardianCooldownManager.CooldownType.SittingTime))
-                {
-                    //:D
-                }
-                else if (HasCooldown(GuardianCooldownManager.CooldownType.WanderTime))
-                {
-                    if ((LastMoveLeft || LastMoveRight) && Velocity.X == 0)
-                    {
-                        FaceDirection(!LookingLeft);
-                    }
-                    if (LookingLeft)
-                        MoveLeft = true;
-                    else
-                        MoveRight = true;
-                    float LastX = Position.X - Velocity.X;
-                    bool LastXUnder8 = LastX % 16 < 8, 
-                        CurXUnder8 = Position.X % 16 < 8;
-                    if (LastXUnder8 != CurXUnder8)
-                    {
-                        bool StairUnder, StairAbove;
-                        CheckForStairways(out StairUnder, out StairAbove);
-                        if (StairUnder || StairAbove)
-                        {
-                            if (HasFlag(GuardianFlags.ClimbStairUpwards))
-                            {
-                                if (StairAbove)
-                                    MoveUp = true;
-                                else
-                                    RemoveFlag(GuardianFlags.ClimbStairUpwards);
-                            }
-                            else if (HasFlag(GuardianFlags.ClimbStairsDownwards))
-                            {
-                                if (StairUnder)
-                                    MoveDown = true;
-                                else
-                                    RemoveFlag(GuardianFlags.ClimbStairsDownwards);
-                            }
-                            else if (Main.rand.NextDouble() < 0.5)
-                            {
-                                if (StairUnder && StairAbove)
-                                {
-                                    if (Main.rand.NextDouble() < 0.5)
-                                    {
-                                        MoveUp = true;
-                                        AddFlag(GuardianFlags.ClimbStairUpwards);
-                                    }
-                                    else
-                                    {
-                                        MoveDown = true;
-                                        AddFlag(GuardianFlags.ClimbStairsDownwards);
-                                    }
-                                }
-                                else
-                                {
-                                    if (StairAbove)
-                                        MoveUp = true;
-                                    else if (StairUnder)
-                                        MoveDown = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            RemoveFlag(GuardianFlags.ClimbStairsDownwards);
-                            RemoveFlag(GuardianFlags.ClimbStairUpwards);
-                        }
-                    }
-                }
-                else if (HasCooldown(GuardianCooldownManager.CooldownType.WaitTime))
-                {
-                    //Do nothing :D
-                }
-                else
-                {
-                    if (HasFlag(GuardianFlags.LastWasMovingIdle))
-                    {
-                        RemoveFlag(GuardianFlags.LastWasMovingIdle);
-                        AddCooldown(GuardianCooldownManager.CooldownType.WaitTime, 200 + Main.rand.Next(200));
-                    }
-                    else
-                    {
-                        if (Main.rand.Next(2) == 0)
-                        {
-                            AddCooldown(GuardianCooldownManager.CooldownType.WaitTime, 200 + Main.rand.Next(200));
-                            FaceDirection(!LookingLeft);
-                        }
-                        else
-                        {
-                            AddFlag(GuardianFlags.LastWasMovingIdle);
-                            int TileCheckX = (int)CenterPosition.X / 16, TileCheckY = (int)Position.Y / 16 - 3;
-                            bool TryingToUseChair = false, ChairToTheLeft = false;
-                            if (Main.rand.Next(3) == 0)
-                            {
-                                for (int y = 0; y < 3; y++)
-                                {
-                                    for (int x = -8; x <= 8; x++)
-                                    {
-                                        int TileX = TileCheckX + x, TileY = TileCheckY + y;
-                                        if (TileX >= 0 && TileY >= 0 && TileX < Main.maxTilesX && TileY < Main.maxTilesY)
-                                        {
-                                            Tile tile = Framing.GetTileSafely(TileX, TileY);
-                                            if (tile != null && tile.active() && tile.type == Terraria.ID.TileID.Chairs)
-                                            {
-                                                TryingToUseChair = true;
-                                                ChairToTheLeft = x < 0;
-                                                UseFurniture(TileX, TileY);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (TryingToUseChair)
-                            {
-                                AddCooldown(GuardianCooldownManager.CooldownType.SittingTime, 1000 + Main.rand.Next(500));
-                            }
-                            else
-                            {
-                                AddCooldown(GuardianCooldownManager.CooldownType.WanderTime, 200 + Main.rand.Next(200));
-                                /*for (int t = 0; t < 20; t++)
-                                {
-                                    int MX = (int)Position.X / 16 + Main.rand.Next(-20, 21), MY = (int)Position.Y / 16 + Main.rand.Next(-20, 21);
-                                    if (CreatePathingTo(MX, MY))
-                                        break;
-                                }*/
-                            }
-                        }
-                    }
-                }
-            }
-            if (MoveRight || MoveLeft)
-            {
-                int TileCheckX = (int)(Position.X + (int)(Width * 0.25f * Direction)) / 16,
-                    TileCheckY = (int)(Position.Y) / 16;
-                bool Pitfall = true;
-
-                for (int y = 0; y < 4; y++)
-                {
-                    for (int x = 0; x < 2; x++)
-                    {
-                        Tile undertile = Framing.GetTileSafely(TileCheckX + x * Direction, TileCheckY + y);
-                        if (undertile.active() && (Main.tileSolid[undertile.type] || Main.tileSolidTop[undertile.type]))
-                        {
-                            Pitfall = false;
-                        }
-                    }
-                }
-                if (Pitfall)
-                {
-                    if (MoveRight)
-                    {
-                        MoveRight = false;
-                        MoveLeft = true;
-                    }
-                    else if (MoveLeft)
-                    {
-                        MoveRight = true;
-                        MoveLeft = false;
-                    }
-                }
-            }
-            if (Wet || LavaWet)
-            {
-                if (!HasCooldown(GuardianCooldownManager.CooldownType.WanderTime))
-                    AddCooldown(GuardianCooldownManager.CooldownType.WanderTime, 5);
-            }
-        }
-
         public void DoorHandler()
         {
             if (!MoveLeft && !MoveRight) return;
@@ -6004,73 +5728,6 @@ namespace giantsummon
                         closeDoor = true;
                         doorx = TileX;
                         doory = TileY;
-                    }
-                }
-            }
-        }
-
-        public void LootItemScript()
-        {
-            if (OwnerPos == -1 || (DoAction.InUse && (DoAction.Inactivity || DoAction.CantUseInventory))) return;
-            Vector2 Center = CenterPosition;
-            float NearestX = 368f;
-            for (int i = 0; i < Main.maxItems; i++)
-            {
-                if (Main.item[i].active)
-                {
-                    float PullDistance = 65;
-                    bool IsHealthPickup = Main.item[i].type == 58 || Main.item[i].type == 1734 || Main.item[i].type == 1867,
-                        IsManaPickup = Main.item[i].type == Terraria.ID.ItemID.Star || Main.item[i].type == Terraria.ID.ItemID.SoulCake || Main.item[i].type == Terraria.ID.ItemID.SugarPlum;
-                    if (IsHealthPickup || IsManaPickup || MayLootItems)
-                    {
-                        if (Math.Abs(Main.item[i].position.X - Center.X) < Main.item[i].width + Width + PullDistance)
-                        {
-                            if (Math.Abs(Main.item[i].position.Y - Center.Y) < Main.item[i].height + Height + PullDistance)
-                            {
-                                if (IsHealthPickup)
-                                {
-                                    int LifeRestoreValue = (int)(20 * HealthHealMult);
-                                    if (OwnerPos != -1)
-                                    {
-                                        Main.player[OwnerPos].GetModPlayer<PlayerMod>().ShareHealthReplenishWithGuardians(20);
-                                        Main.item[i].healLife = 20;
-                                        int PlayerLifeRestoreValue = Main.player[OwnerPos].GetHealLife(Main.item[i]);
-                                        Main.player[OwnerPos].statLife += PlayerLifeRestoreValue;
-                                        Main.player[OwnerPos].HealEffect(PlayerLifeRestoreValue);
-                                        if (Main.player[OwnerPos].statLife > Main.player[OwnerPos].statLifeMax2)
-                                            Main.player[OwnerPos].statLife = Main.player[OwnerPos].statLifeMax2;
-                                    }
-                                    else
-                                    {
-                                        this.RestoreHP(LifeRestoreValue);
-                                    }
-                                    Main.item[i].active = false;
-                                }
-                                else if (IsManaPickup)
-                                {
-                                    int ManaRestoreValue = (int)(100 * ManaHealMult);
-                                    if (OwnerPos != -1)
-                                    {
-                                        Main.player[OwnerPos].GetModPlayer<PlayerMod>().ShareManaReplenishWithGuardians(100);
-                                        Main.item[i].healMana = 100;
-                                        int PlayerManaRestoreValue = Main.player[OwnerPos].GetHealMana(Main.item[i]);
-                                        Main.player[OwnerPos].statMana += PlayerManaRestoreValue;
-                                        Main.player[OwnerPos].ManaEffect(PlayerManaRestoreValue);
-                                        if (Main.player[OwnerPos].statMana > Main.player[OwnerPos].statManaMax2)
-                                            Main.player[OwnerPos].statMana = Main.player[OwnerPos].statManaMax2;
-                                    }
-                                    else
-                                    {
-                                        this.RestoreMP(ManaRestoreValue, false);
-                                    }
-                                    Main.item[i].active = false;
-                                }
-                                else
-                                {
-                                    MoveItemToInventory(Main.item[i]);
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -6467,7 +6124,6 @@ namespace giantsummon
 
         public bool AttemptToGrabPlayer()
         {
-            //GrabbingPlayer = false;
             if (!Main.player[OwnerPos].dead && !BeingPulledByPlayer)
             {
                 if (PlayerMounted)
@@ -6682,7 +6338,7 @@ namespace giantsummon
                 HealthRegenPower -= 120;
                 if (HP < MHP)
                 {
-                    int HPRestore = (int)HealthHealMult;//(int)(Base.InitialMHP / 100);
+                    int HPRestore = (int)HealthHealMult;
                     if (HPRestore < 1) HPRestore = 1;
                     HP += HPRestore;
 
@@ -6743,7 +6399,7 @@ namespace giantsummon
                         if (HasFlag(GuardianFlags.Poisoned) || HasFlag(GuardianFlags.Venom))
                             DeathMessage = " lost It's fight against the poisons.";
                         else if (HasFlag(GuardianFlags.Electrified))
-                            DeathMessage = " got tired of his shocking experience.";
+                            DeathMessage = " got tired of It's shocking experience.";
                         else
                             DeathMessage = " turned into coal.";
                         Knockout(DeathMessage);
@@ -7045,7 +6701,7 @@ namespace giantsummon
             //Buffs.Clear();
         }
 
-        public bool HasDuplicatedEquipped(int id)
+        public bool HasDuplicateEquipped(int id)
         {
             for (int e = 0; e < 8; e++)
             {
@@ -7053,129 +6709,6 @@ namespace giantsummon
                     return true;
             }
             return false;
-        }
-
-        public void Save(Terraria.ModLoader.IO.TagCompound tag)
-        {
-            tag.Add("ModVersion", MainMod.ModVersion);
-            tag.Add("GuardianID", ID);
-            tag.Add("FriendshipLevel", FriendshipLevel);
-            tag.Add("FriendshipProgress", FriendshipProgression);
-            tag.Add("TravellingStacker", TravellingStacker);
-            tag.Add("HealthPercentage", (HP == MHP ? 1f : (float)HP / MHP));
-            tag.Add("LifeCrystals", LifeCrystalHealth);
-            tag.Add("LifeFruits", LifeFruitHealth);
-            tag.Add("CombatTactic", (byte)tactic);
-            tag.Add("TankingFlag", Tanker);
-            tag.Add("QuickMountOverride", OverrideQuickMountToMountGuardianInstead);
-            tag.Add("MountMeleeUsageToggle", UseHeavyMeleeAttackWhenMounted);
-            tag.Add("AvoidCombat", AvoidCombat);
-            tag.Add("ChargeAhead", ChargeAhead);
-            int InventorySize = Inventory.Length;
-            tag.Add("InventorySize",InventorySize);
-            for (int i = 0; i < InventorySize; i++)
-            {
-                //tag.Add("Inventory_" + i + "_Type", this.Inventory[i].type);
-                //tag.Add("Inventory_" + i + "_Stack", this.Inventory[i].stack);
-                //tag.Add("Inventory_" + i + "_Prefix", this.Inventory[i].prefix);
-                tag.Add("Inventory_" + i + "_exists", this.Inventory[i].type != 0);
-                if (this.Inventory[i].type != 0)
-                {
-                    tag.Add("Inventory_" + i, this.Inventory[i]);
-                }
-            }
-            int EquipmentsSize = Equipments.Length;
-            tag.Add("EquipmentsSize", EquipmentsSize);
-            for (int e = 0; e < EquipmentsSize; e++)
-            {
-                //tag.Add("Equipment_" + e + "_Type", this.Equipments[e].type);
-                //tag.Add("Equipment_" + e + "_Stack", this.Equipments[e].stack);
-                //tag.Add("Equipment_" + e + "_Prefix", this.Equipments[e].prefix);
-                tag.Add("Equipment_" + e + "_exists", this.Equipments[e].type != 0);
-                if (this.Equipments[e].type != 0)
-                {
-                    tag.Add("Equipment_" + e, this.Equipments[e]);
-                }
-            }
-            //request.Save(tag, null);
-        }
-
-        public void Load(Terraria.ModLoader.IO.TagCompound tag)
-        {
-            int ModVersion = tag.GetInt("ModVersion");
-            ID = tag.GetInt("GuardianID");
-            if (ModVersion >= 7)
-            {
-                FriendshipLevel = tag.GetByte("FriendshipLevel");
-                FriendshipProgression = tag.GetByte("FriendshipProgress");
-                TravellingStacker = tag.GetFloat("TravellingStacker");
-            }
-            if (ModVersion >= 1)
-            {
-                float HealthPercentage = tag.GetFloat("HealthPercentage");
-                HP = (int)(MHP * HealthPercentage);
-            }
-            LifeCrystalHealth = (byte)tag.GetInt("LifeCrystals");
-            LifeFruitHealth = (byte)tag.GetInt("LifeFruits");
-            if (ModVersion >= 5)
-                tactic = (CombatTactic)tag.GetByte("CombatTactic");
-            if(ModVersion >= 6)
-                Tanker = tag.GetBool("TankingFlag");
-            if(ModVersion >= 11)
-                OverrideQuickMountToMountGuardianInstead = tag.GetBool("QuickMountOverride");
-            if (ModVersion >= 12)
-                UseHeavyMeleeAttackWhenMounted = tag.GetBool("MountMeleeUsageToggle");
-            if (ModVersion >= 13)
-            {
-                AvoidCombat = tag.GetBool("AvoidCombat");
-                ChargeAhead = tag.GetBool("ChargeAhead");
-            }
-            int ContainerSize = tag.GetInt("InventorySize");
-            for (int i = 0; i < ContainerSize; i++)
-            {
-                Item j = new Item();
-                if (ModVersion < 2)
-                {
-                    j.SetDefaults(tag.GetInt("Inventory_" + i + "_Type"));
-                    j.stack = tag.GetInt("Inventory_" + i + "_Stack");
-                    j.prefix = tag.GetByte("Inventory_" + i + "_Prefix");
-                }
-                else
-                {
-                    bool ItemExists = true;
-                    if (ModVersion >= 3) ItemExists = tag.GetBool("Inventory_" + i + "_exists");
-                    if (ItemExists)
-                    {
-                        j = tag.Get<Item>("Inventory_" + i);
-                    }
-                }
-                if (i < Inventory.Length)
-                    Inventory[i] = j;
-            }
-            ContainerSize = tag.GetInt("EquipmentsSize");
-            for (int e = 0; e < ContainerSize; e++)
-            {
-                Item j = new Item();
-                if (ModVersion < 4)
-                {
-                    j.SetDefaults(tag.GetInt("Equipment_" + e + "_Type"));
-                    j.stack = tag.GetInt("Equipment_" + e + "_Stack");
-                    j.prefix = tag.GetByte("Equipment_" + e + "_Prefix");
-                }
-                else
-                {
-                    if (tag.GetBool("Equipment_" + e + "_exists"))
-                    {
-                        j = tag.Get<Item>("Equipment_" + e);
-                    }
-                }
-                if (e < Equipments.Length)
-                    Equipments[e] = j;
-            }
-            //if (ModVersion >= 8)
-            //    request.Load(tag, ModVersion, null);
-            UpdateStatus = true;
-            ResetHealthRegen();
         }
 
         public bool AttemptToUseHealingPotion()
@@ -7240,7 +6773,7 @@ namespace giantsummon
 
         public void CombatBehavior()
         {
-            if (TargetID == -1 || PlayerControl || Action || DoAction.InUse && (DoAction.IgnoreCombat) || (BeingPulledByPlayer && !SuspendedByChains))
+            if (TargetID == -1 || PlayerControl || Action || (DoAction.InUse && DoAction.IgnoreCombat) || (BeingPulledByPlayer && !SuspendedByChains))
                 return;
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;

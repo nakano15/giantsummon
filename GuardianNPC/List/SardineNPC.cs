@@ -27,18 +27,26 @@ namespace giantsummon.GuardianNPC.List
         public override void SetChatButtons(ref string button, ref string button2)
         {
             base.SetChatButtons(ref button, ref button2);
-            if (!GuardianBountyQuest.SardineTalkedToAboutBountyQuests)
+            if (!CheckingRequest)
             {
-                button2 = "About Bounties";
-            }
-            else
-            {
-                button2 = "Report bounty";
+                if (!GuardianBountyQuest.SardineTalkedToAboutBountyQuests)
+                {
+                    button2 = "About Bounties";
+                }
+                else
+                {
+                    button2 = "Report bounty";
+                }
             }
         }
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
+            if (CheckingRequest)
+            {
+                base.OnChatButtonClicked(firstButton, ref shop);
+                return;
+            }
             if (!firstButton)
             {
                 if (!GuardianBountyQuest.SardineTalkedToAboutBountyQuests)

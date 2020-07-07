@@ -48,7 +48,7 @@ namespace giantsummon.Creatures
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 1;
-            ContestThirdPlace = 0;
+            ContestThirdPlace = 1;
 
             AddInitialItem(Terraria.ID.ItemID.EnchantedBoomerang, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);

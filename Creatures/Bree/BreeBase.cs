@@ -52,7 +52,7 @@ namespace giantsummon.Creatures
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
-            ContestThirdPlace = 1;
+            ContestThirdPlace = 2;
 
             AddInitialItem(Terraria.ID.ItemID.PlatinumBroadsword, 1);
             AddInitialItem(Terraria.ID.ItemID.FlintlockPistol, 1);
