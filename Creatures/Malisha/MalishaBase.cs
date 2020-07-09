@@ -213,49 +213,117 @@ namespace giantsummon.Creatures
         public override string GreetMessage(Terraria.Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add(".");
+            Mes.Add("Oh, a Terrarian. I think I may have a use for you.");
+            Mes.Add("You're a Terrarian? You're smaller than I initially thought.");
+            Mes.Add("You're really small, my neck aches a bit trying to look at you. Say, would you mind participating of some experiements?");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            Mes.Add("Don't mind what people says, I'm one of the best magicians in the Ether Realm.");
+            if (player.Male)
+                Mes.Add("You're making me a bit uncomfortable with the angle you're looking at me. Just a bit.");
+            else
+                Mes.Add("You can't see my head, or something?");
+            Mes.Add("I once tried to conjure demons, that's when I had to leave the first village I lived in hurry.");
+            Mes.Add("Always wondered why you get stronger by using specific kinds of outfits? Well, me too.");
+            Mes.Add("It's not easy being a prodigy, but when you're one, you have to keep working hard to continue being.");
+            Mes.Add("I have perfect control of my magic! Now, at least. Let's not revive past experiences.");
+            Mes.Add("Nobody really complained about my experiements. Here.");
+
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Wizard))
+            {
+                Mes.Add("I tried to cast a conjuration spell with " + NPC.firstNPCName(Terraria.ID.NPCID.Wizard) + " once, we ended up spawning a rain of Corrupt Bunnies.");
+                Mes.Add("I tend to share my work with " + NPC.firstNPCName(Terraria.ID.NPCID.Wizard) + " sometimes, at least one wont blame the other if something explodes.");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
+            {
+                Mes.Add(NPC.firstNPCName(Terraria.ID.NPCID.Stylist) + " says that wants to do magic with my hair, but I sense that her magic level is 0.");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Dryad))
+            {
+                Mes.Add("Can you tell " + NPC.firstNPCName(Terraria.ID.NPCID.Dryad) + " that I don't need a baby sitter? If the fauna suddenly tries to eat you alive is because... Well, probably not my fault.");
+                Mes.Add(NPC.firstNPCName(Terraria.ID.NPCID.Dryad) + " says that I'm a living sign of bad omen. No matter what she says, I will keep experiementing.");
+            }
+
+            if (NpcMod.HasGuardianNPC(Rococo))
+            {
+                Mes.Add("I tried to analyze [gn:" + Rococo + "]'s intelligence once, I got a NotANumber Exception Error at line 297.");
+            }
+            if (NpcMod.HasGuardianNPC(Blue))
+            {
+                Mes.Add("[gn:" + Blue + "] seems a bit bothered for having another girl in the town.");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string TalkMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            Mes.Add("I wont burn your town to cinder, If that's what's on your mind.");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string NoRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            Mes.Add("I have something else to experiement on right now.");
+            Mes.Add("No, I'm not looking for test subjects right now.");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            Mes.Add("Hey, I need your help for one of my experiements. Don't worry, I wont harm you in the process.");
+            Mes.Add("My magician magnificence stops me from doing this right now, If you could help me.");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            Mes.Add("Thank you! Time for the experiement. I hope this time It doesn't explodes.");
+            Mes.Add("Good. If you manage to smell something foul, or hear random screams, don't worry, It's just part of the process.");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string HomelessMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            if (Main.bloodMoon)
+            {
+                Mes.Add("...");
+                Mes.Add("...WHAT? GIVE ME A HOUSE, FOOL!");
+                Mes.Add("What do I have to do, FOR YOU TO GIVE ME A PLACE TO LIVE?!");
+            }
+            else
+            {
+                Mes.Add("There is a lot of places to practice, but I need a moment to recharge my mana.");
+                Mes.Add("Everything seems to want a piece of me, would be nice If I had some peaceful place to stay.");
+                if (Main.raining)
+                {
+                    Mes.Add("I think I know a spell to stop this rain, but I don't have the mana to cast It. I wouldn't need that If I had a house.");
+                    if (player.Male)
+                        Mes.Add("I really hate to be wet, even more because It attracts looks of peo... Where are you looking at?");
+                    else
+                        Mes.Add("You're wet too, maybe we should go to some place dry instead of staying in the rain.");
+                }
+                if (!Main.dayTime)
+                {
+                    Mes.Add("It's fascinating that there are dead terrarians roaming the world at night. But It'd like to study that behind walls.");
+                    Mes.Add("I really hate the night, so many eyes peeking on me. I really need some place for myself.");
+                }
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
         {
             List<string> Mes = new List<string>();
+            Mes.Add("");
             return Mes[Main.rand.Next(Mes.Count)];
         }
     }
