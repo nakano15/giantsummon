@@ -11,3 +11,7 @@ Fixed a bug where the companion would not use the left (right) arm correctly whe
 If Leopold is able to swim, he'll no longer play the long jumping animation when underwater.
 You can now reject requests from Sardine.
 Death due to Electrified debuff is no longer gender bound.
+Your companions will no longer go "Steve" when trying to attack a monster without having any weapon in the inventory, so they will no longer spam attack independing on distance until the target is dead.
+Reduced the Assist and Snipe ranged attack distances from the companion.
+	Assist: Instead of 268 pixels, the companion will only stay away from the target for 120 pixels.
+	Snipe: Instead of 380 pixels, the companion will only stay away from the target for 260 pixels.

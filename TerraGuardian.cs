@@ -355,7 +355,7 @@ namespace giantsummon
                 return WeaponPosition;
             }
         }
-        public int GetMeleeWeaponRangeX(int ItemPosition = -1)
+        public int GetMeleeWeaponRangeX(int ItemPosition = -1, bool Ducking = false)
         {
             int Range = 40;
             int WeaponPosition = (ItemPosition == -1 ? GetHighestDamageMeleeWeaponPosition : ItemPosition);
@@ -380,13 +380,16 @@ namespace giantsummon
             {
                 int AttackRangeX = 0;
                 int y;
-                GetLeftHandPosition(Base.ItemUseFrames[2], out AttackRangeX, out y);
+                int Frame = Base.ItemUseFrames[2];
+                if (Ducking && Base.CanDuck)
+                    Frame = Base.DuckingSwingFrames[2];
+                GetLeftHandPosition(Frame, out AttackRangeX, out y);
                 AttackRangeX = (int)(SpriteWidth * 0.5f) - AttackRangeX;
                 Range += (int)(AttackRangeX * Scale);
             }
             return Range;
         }
-        public void GetMeleeWeaponRangeY(int ItemPosition, out float RangeYUpper, out float RangeYLower)
+        public void GetMeleeWeaponRangeY(int ItemPosition, out float RangeYUpper, out float RangeYLower, bool Kneeling = false)
         {
             RangeYLower = 40;
             RangeYUpper = 40;
@@ -423,7 +426,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    GetLeftHandPosition(Base.ItemUseFrames[0], out x, out AttackRangeYUpper);
+                    GetLeftHandPosition(Kneeling && Base.CanDuck ? Base.DuckingSwingFrames[0] : Base.ItemUseFrames[0], out x, out AttackRangeYUpper);
                 }
                 AttackRangeYUpper = -SpriteHeight + AttackRangeYUpper;
                 RangeYUpper += (int)(AttackRangeYUpper * Scale);
@@ -434,7 +437,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    GetLeftHandPosition(Base.ItemUseFrames[3], out x, out AttackRangeYLower);
+                    GetLeftHandPosition(Kneeling && Base.CanDuck ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[3], out x, out AttackRangeYLower);
                 }
                 AttackRangeYLower = -SpriteHeight + AttackRangeYLower;
                 RangeYLower += (int)(AttackRangeYLower * Scale);
@@ -3884,8 +3887,8 @@ namespace giantsummon
             if (WeaponPosition > -1)
             {
                 Item weapon = Inventory[WeaponPosition];
-                float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition) + TargetWidth * 0.5f, UpperY, LowerY;
-                GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY);
+                float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition, Kneeling) + TargetWidth * 0.5f, UpperY, LowerY;
+                GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY, Kneeling);
                 InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
                 InRangeY = TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y;
                 /*
@@ -4129,7 +4132,7 @@ namespace giantsummon
                     {
                         case CombatTactic.Charge:
                             {
-                                if (SelectedItem > -1 && Inventory[SelectedItem].melee)
+                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                 {
                                     GoMelee = true;
                                 }
@@ -4158,16 +4161,17 @@ namespace giantsummon
                             break;
                         case CombatTactic.Assist:
                             {
-                                if (SelectedItem > -1 && Inventory[SelectedItem].melee)
+                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                 {
                                     GoMelee = true;
                                 }
                                 else
                                 {
+                                    const float AssistDistance = 120f;
                                     float DistanceX = (TargetPosition.X + TargetWidth * 0.5f) - (CenterPosition.X);
-                                    if (Math.Abs(DistanceX) >= TargetWidth + Width + 268)
+                                    if (Math.Abs(DistanceX) >= TargetWidth + Width + AssistDistance)
                                         Approach = true;
-                                    else if (Math.Abs(DistanceX) <= TargetWidth + Width + 268 - 24)
+                                    else if (Math.Abs(DistanceX) <= TargetWidth + Width + AssistDistance - 24)
                                         Retreat = true;
                                     //if (TargetInAim)
                                     Attack = true;
@@ -4176,10 +4180,15 @@ namespace giantsummon
                             break;
                         case CombatTactic.Snipe:
                             {
+                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                {
+                                    GoMelee = true;
+                                }
                                 float DistanceX = (TargetPosition.X + TargetWidth * 0.5f) - (CenterPosition.X);
-                                if (Math.Abs(DistanceX) >= TargetWidth + Width + 380)
+                                const float SnipeDistance = 260f;
+                                if (Math.Abs(DistanceX) >= TargetWidth + Width + SnipeDistance)
                                     Approach = true;
-                                else if (Math.Abs(DistanceX) <= TargetWidth + Width + 380 - 24)
+                                else if (Math.Abs(DistanceX) <= TargetWidth + Width + SnipeDistance - 24)
                                     Retreat = true;
                                 //if (TargetInAim)
                                 Attack = true;
@@ -7776,11 +7785,16 @@ namespace giantsummon
                         {
                             InRangeX = true;
                         }
-                        float UpperY, LowerY;
-                        GetMeleeWeaponRangeY(i, out UpperY, out LowerY);
-                        UpperY += Position.Y;
-                        LowerY += Position.Y;
-                        if (UpperY <= TargetPosition.Y + TargetHeight || LowerY >= TargetPosition.Y)
+                        float StandingUpperY, StandingLowerY, KneelingUpperY = 0, KneelingLowerY = 0;
+                        GetMeleeWeaponRangeY(i, out StandingUpperY, out StandingLowerY, false);
+                        if(Base.CanDuck) GetMeleeWeaponRangeY(i, out KneelingUpperY, out KneelingLowerY, true);
+                        StandingUpperY += Position.Y;
+                        StandingLowerY += Position.Y;
+                        KneelingLowerY += Position.Y;
+                        KneelingUpperY += Position.Y;
+                        float ResultUpperY = StandingUpperY < KneelingUpperY ? StandingUpperY : KneelingUpperY,
+                            ResultLowerY = StandingLowerY < KneelingLowerY ? StandingLowerY : KneelingLowerY;
+                        if (ResultUpperY <= TargetPosition.Y + TargetHeight || ResultLowerY >= TargetPosition.Y)
                         {
                             InRangeY = true;
                         }
