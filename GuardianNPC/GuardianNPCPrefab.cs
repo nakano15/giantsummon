@@ -100,7 +100,7 @@ namespace giantsummon.GuardianNPC
             Guardian.ReturnEquippableHeadVanityEquip(out acc);
             return false || !PlayerHasThisGuardianMetAndInvoked && (acc || Guardian.ReturnEquippableHeadVanityEquip(out acc) == -1);
         }
-        
+
         public override void AI()
         {
             npc.breath = 100;
@@ -199,7 +199,6 @@ namespace giantsummon.GuardianNPC
                         Guardian.Position.X = npc.position.X + npc.width * 0.5f;
                         Guardian.Position.Y = npc.position.Y + npc.height - (Guardian.Height - npc.height) - 1;
                         Guardian.SetFallStart();
-                        Guardian.AddCooldown(GuardianCooldownManager.CooldownType.WaitTime, 200 + Main.rand.Next(200));
                         TeleportFrame = false;
                     }
                     bool WasDefeatedBefore = Guardian.Downed;

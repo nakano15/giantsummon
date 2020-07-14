@@ -355,7 +355,7 @@ namespace giantsummon
                 return WeaponPosition;
             }
         }
-        public int GetMeleeWeaponRangeX(int ItemPosition = -1, bool Ducking = false)
+        public int GetMeleeWeaponRangeX(int ItemPosition = -1, bool Kneeling = false)
         {
             int Range = 40;
             int WeaponPosition = (ItemPosition == -1 ? GetHighestDamageMeleeWeaponPosition : ItemPosition);
@@ -381,7 +381,7 @@ namespace giantsummon
                 int AttackRangeX = 0;
                 int y;
                 int Frame = Base.ItemUseFrames[2];
-                if (Ducking && Base.CanDuck)
+                if (Kneeling && Base.CanDuck)
                     Frame = Base.DuckingSwingFrames[2];
                 GetLeftHandPosition(Frame, out AttackRangeX, out y);
                 AttackRangeX = (int)(SpriteWidth * 0.5f) - AttackRangeX;
@@ -426,18 +426,17 @@ namespace giantsummon
                 }
                 else
                 {
-                    GetLeftHandPosition(Kneeling && Base.CanDuck ? Base.DuckingSwingFrames[0] : Base.ItemUseFrames[0], out x, out AttackRangeYUpper);
+                    GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[0] : Base.ItemUseFrames[0], out x, out AttackRangeYUpper);
                 }
                 AttackRangeYUpper = -SpriteHeight + AttackRangeYUpper;
                 RangeYUpper += (int)(AttackRangeYUpper * Scale);
-
                 if (MainMod.IsGuardianItem(Inventory[WeaponPosition]))
                 {
-                    GetBetweenHandsPosition(Base.HeavySwingFrames[2], out x, out AttackRangeYUpper);
+                    GetBetweenHandsPosition(Base.HeavySwingFrames[2], out x, out AttackRangeYLower);
                 }
                 else
                 {
-                    GetLeftHandPosition(Kneeling && Base.CanDuck ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[3], out x, out AttackRangeYLower);
+                    GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[3], out x, out AttackRangeYLower);
                 }
                 AttackRangeYLower = -SpriteHeight + AttackRangeYLower;
                 RangeYLower += (int)(AttackRangeYLower * Scale);
@@ -3895,7 +3894,7 @@ namespace giantsummon
                 float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition, Kneeling) + TargetWidth * 0.5f, UpperY, LowerY;
                 GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY, Kneeling);
                 InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
-                InRangeY = TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y;
+                InRangeY = TargetPosition.Y + TargetHeight >= UpperY + Position.Y || TargetPosition.Y < LowerY + Position.Y;
                 /*
                 Vector2 TopLeftCollision = Position;
                 int Height = (int)(Kneeling ? Base.DuckingHeight * Scale : Base.Height * Scale);
@@ -3929,6 +3928,8 @@ namespace giantsummon
             }
             return InRangeX && InRangeY;
         }
+
+        public const int NormalTargetMemoryTime = 5 * 60, BossTargetMemoryTime = 30 * 60;
 
         public void NewCombatScript()
         {
@@ -3984,7 +3985,7 @@ namespace giantsummon
             {
                 float LCX = Position.X, RCX = Position.X;
                 const int XCheckDistance = 320;
-                if (OwnerPos > -1)
+                if (OwnerPos > -1 && !GuardingPosition.HasValue)
                 {
                     Player p = Main.player[OwnerPos];
                     float PlayerCenter = p.Center.X;
@@ -4008,6 +4009,19 @@ namespace giantsummon
                 {
                     NeedsDucking = true;
                     TargetOnSight = true;
+                }
+            }
+            if (TargetOnSight)
+            {
+                SetCooldownValue(GuardianCooldownManager.CooldownType.TargetMemoryCooldown, (TargetType == TargetTypes.Npc && Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[TargetID].type]) ? BossTargetMemoryTime : NormalTargetMemoryTime);
+            }
+            else
+            {
+                if (!HasCooldown(GuardianCooldownManager.CooldownType.TargetMemoryCooldown))
+                {
+                    TargetID = -1;
+                    AttackingTarget = false;
+                    return;
                 }
             }
             bool Approach = false, Retreat = false, Jump = false, Duck = false, Attack = false;

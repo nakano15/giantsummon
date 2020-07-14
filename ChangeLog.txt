@@ -30,3 +30,4 @@ The mod will no longer tell you when a companion has a new request for you.
 	I did this change, because just by simply telling that the companion has a quest, will not only end up spoiling your gameplay, but also stressing you out.
 	The only way of finding out If a companion has a request, is either by talking to It about requests, or checking the Guardian Selection Interface.
 	Companions following you that has just unlocked a Talk request will still tell you that the request was unlocked.
+Reviewed the body sprites of: Blue, Bree and Mabel.

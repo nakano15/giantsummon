@@ -25,9 +25,6 @@ namespace giantsummon
             WaterJump,
             LavaToleranceCooldown,
             SpeedBootsSoundEffect,
-            WanderTime,
-            WaitTime,
-            SittingTime,
             SuffocationDelay,
             StickyTileBreak,
             RocketSoundDelay,
@@ -46,7 +43,8 @@ namespace giantsummon
             BiomeCheckStacker,
             SpelunkerEffect,
             PhantasmCooldown,
-            NebulaCD
+            NebulaCD,
+            TargetMemoryCooldown
         }
     }
 }
