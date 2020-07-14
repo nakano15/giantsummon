@@ -275,23 +275,26 @@ namespace giantsummon
             if ((gd.FriendshipLevel == 0 || Main.rand.NextDouble() < 0.333f) && HasCompanionSummonedOrInTheWorld) //A talk request should never reset the quest chain.
             {
                 CreateTalkRequest();
-                Main.NewText(gd.Name + " wants to speak with you.");
+                if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
+                    Main.NewText(gd.Name + " wants to speak with you.");
                 GotRequest = true;
             }
             else if (Requests.Count > 0 && HasCompanionSummonedOrInTheWorld)
             {
                 ChangeRequest(gd, Requests[Main.rand.Next(Requests.Count)], MakeCommonRequest);
-                Main.NewText(gd.Name + " has a request for you.");
+                //if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
+                //    Main.NewText(gd.Name + " has a request for you.");
                 GotRequest = true;
             }
             else
             {
                 Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
             }
-            if (GotRequest && !player.TutorialRequestIntroduction)
+            if (GotRequest && !player.TutorialRequestIntroduction) //got to move this
             {
                 player.TutorialRequestIntroduction = true;
                 Main.NewText("Someone gave you a request. Helping them will reward with friendship experience, and also with some interesting rewards.");
+                Main.NewText("Check out " + gd.Name + " and see what It wants.");
             }
         }
 

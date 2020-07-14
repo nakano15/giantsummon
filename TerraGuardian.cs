@@ -519,6 +519,7 @@ namespace giantsummon
         public float KnockdownRotation = 0f;
         public int SeekingItem = -1;
         public int TargetID = -1;
+        public bool AttackingTarget = false;
         public bool TargetInAim = false;
         public TargetTypes TargetType = TargetTypes.Npc;
         public Item[] Equipments { get { return Data.Equipments; } set { Data.Equipments = value; } }
@@ -583,6 +584,9 @@ namespace giantsummon
         public float DamageStacker { get { return Data.DamageStacker; } set { Data.DamageStacker = value; } }
         public byte FoodStacker { get { return Data.FoodStacker; } set { Data.FoodStacker = value; } }
         public byte DrinkStacker { get { return Data.DrinkStacker; } set { Data.DrinkStacker = value; } }
+        public const int MaxComfortStack = 10 * 60;
+        public float ComfortStack { get { return Data.ComfortStack; } set { Data.ComfortStack = value; } }
+        public byte ComfortPoints { get { return Data.ComfortPoints; } set { Data.ComfortPoints = value; } }
         public Emotions CurrentEmotion = Emotions.Neutral;
         public float EmotionDisplayTime = 0f;
         public const float MaxEmotionDisplaytime = 3f;
@@ -2575,6 +2579,7 @@ namespace giantsummon
             }
             UpdateSpelunkerGlowstickEffect();
             Base.GuardianUpdateScript(this);
+            UpdateComfortStack();
             //FloorVisual(Velocity.Y != 0);
         }
 
@@ -3941,6 +3946,7 @@ namespace giantsummon
                     if (!Main.npc[TargetID].active || Main.npc[TargetID].friendly || Main.npc[TargetID].dontTakeDamage)
                     {
                         TargetID = -1;
+                        AttackingTarget = false;
                         return;
                     }
                     TargetPosition = Main.npc[TargetID].position;
@@ -3953,6 +3959,7 @@ namespace giantsummon
                     if (!Main.player[TargetID].active || Main.player[TargetID].dead || !IsPlayerHostile(Main.player[TargetID]))
                     {
                         TargetID = -1;
+                        AttackingTarget = false;
                         return;
                     }
                     TargetPosition = Main.player[TargetID].position;
@@ -3964,6 +3971,7 @@ namespace giantsummon
                     if (!MainMod.ActiveGuardians.ContainsKey(TargetID) || MainMod.ActiveGuardians[TargetID].Downed || !IsGuardianHostile(MainMod.ActiveGuardians[TargetID]))
                     {
                         TargetID = -1;
+                        AttackingTarget = false;
                         return;
                     }
                     TargetPosition = MainMod.ActiveGuardians[TargetID].TopLeftPosition;
@@ -3971,6 +3979,27 @@ namespace giantsummon
                     TargetWidth = MainMod.ActiveGuardians[TargetWidth].Width;
                     TargetHeight = MainMod.ActiveGuardians[TargetWidth].Height;
                     break;
+            }
+            if (!AttackingTarget)
+            {
+                float LCX = Position.X, RCX = Position.X;
+                const int XCheckDistance = 320;
+                if (OwnerPos > -1)
+                {
+                    Player p = Main.player[OwnerPos];
+                    float PlayerCenter = p.Center.X;
+                    if (Position.X > PlayerCenter)
+                        LCX = PlayerCenter;
+                    else if (Position.X < PlayerCenter)
+                        RCX = PlayerCenter;
+                }
+                if (((Math.Abs(RCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance || Math.Abs(LCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance) &&
+                Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) <= 180))
+                {
+                    AttackingTarget = true;
+                }
+                else
+                    return;
             }
             bool TargetOnSight = CanHit(TargetPosition, TargetWidth, TargetHeight), NeedsDucking = false;
             if (!TargetOnSight)
@@ -4463,7 +4492,7 @@ namespace giantsummon
                 if (PlayerControl) TogglePlayerControl();
                 if (GuardingPosition.HasValue) ToggleWait();
             }
-            FurnitureUsageScript();
+            UpdateFurnitureUsageScript();
             //LootItemScript();
             DoLootItems();
         }
@@ -4954,6 +4983,38 @@ namespace giantsummon
             }
         }
 
+        public bool IsUsingThrone
+        {
+            get
+            {
+                if (furniturex > -1 && furniturey > -1)
+                {
+                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    if (tile.active() && tile.type == Terraria.ID.TileID.Thrones)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        public bool IsUsingBench
+        {
+            get
+            {
+                if (furniturex > -1 && furniturey > -1)
+                {
+                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    if (tile.active() && tile.type == Terraria.ID.TileID.Benches)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         public bool IsUsingBed
         {
             get
@@ -4970,7 +5031,7 @@ namespace giantsummon
             }
         }
 
-        public void FurnitureUsageScript()
+        public void UpdateFurnitureUsageScript()
         {
             if (furniturex != -1 && furniturey != -1)
             {
@@ -5042,6 +5103,7 @@ namespace giantsummon
                                 //SittingPosition.Y += 32;
                                 SittingPosition.Y -= (Base.SittingPoint.Y - SpriteHeight) * Scale;
                                 Position = SittingPosition;
+                                ComfortStack += 0.05f;
                             }
                             break;
                         case Terraria.ID.TileID.Thrones:
@@ -5058,6 +5120,10 @@ namespace giantsummon
                                     SittingPosition.X += SitPointX;
                                 }
                                 Position = SittingPosition;
+                                if(tile.type == Terraria.ID.TileID.Thrones)
+                                    ComfortStack += 0.1f;
+                                else
+                                    ComfortStack += 0.07f;
                                 //Position.Y -= 10 - (10 * Scale);
                             }
                             break;
@@ -5080,6 +5146,7 @@ namespace giantsummon
                                     RestPosition.Y += Base.SleepingOffset.Y;
                                     LookingLeft = BedFacingLeft;
                                 }
+                                ComfortStack += 0.09f;
                                 Position = RestPosition;
                                 //Position.Y -= 10 - (10 * Scale);
                             }
@@ -5091,6 +5158,60 @@ namespace giantsummon
             else
             {
                 UsingFurniture = false;
+            }
+        }
+
+        public void UpdateComfortStack()
+        {
+            if (TargetID > -1)
+                return;
+            float ComfortSum = 0;
+            if (!Main.bloodMoon && !Main.eclipse)
+            {
+                if (UsingFurniture)
+                {
+                    switch (Main.tile[furniturex, furniturey].type)
+                    {
+                        case Terraria.ID.TileID.Chairs:
+                            ComfortSum += 0.015f;
+                            break;
+                        case Terraria.ID.TileID.Thrones:
+                            ComfortSum += 0.025f;
+                            break;
+                        case Terraria.ID.TileID.Benches:
+                            ComfortSum += 0.017f;
+                            break;
+                        case Terraria.ID.TileID.Beds:
+                            ComfortSum += 0.019f;
+                            break;
+                    }
+                }
+                else
+                {
+                    if (Velocity.Y == 0 && Velocity.X == 0)
+                        ComfortSum += 0.01f;
+                    else
+                        ComfortSum += 0.0033f;
+                }
+                ComfortSum += ComfortSum * 0.02f * TownNpcs;
+                if (ZoneCorrupt || ZoneCrimson)
+                    ComfortSum *= 0.6f;
+                if (Main.invasionProgress > 0)
+                    ComfortSum *= 0.4f;
+                if (NPC.TowerActiveNebula || NPC.TowerActiveSolar || NPC.TowerActiveStardust || NPC.TowerActiveVortex || NPC.MoonLordCountdown > 0 || NPC.AnyNPCs(Terraria.ID.NPCID.MoonLordCore))
+                    ComfortSum *= 0.2f;
+                ComfortStack += ComfortSum;
+            }
+            if (ComfortStack >= MaxComfortStack)
+            {
+                ComfortStack -= MaxComfortStack;
+                ComfortPoints++;
+                byte MaxComfortExp = (byte)(10 + FriendshipLevel / 3);
+                if (ComfortPoints >= MaxComfortExp)
+                {
+                    ComfortPoints -= (byte)(10 + FriendshipLevel / 3);
+                    IncreaseFriendshipProgress(1);
+                }
             }
         }
 
@@ -5556,7 +5677,7 @@ namespace giantsummon
             }
             if (PlayerMounted && GuardianHasControlWhenMounted)
                 return false;
-            if (TargetID == -1 && Velocity.X == 0 && !MoveLeft && !MoveRight && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            if (TargetID == -1 && !MoveLeft && !MoveRight && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
                 foreach (int key in MainMod.ActiveGuardians.Keys)
                 {

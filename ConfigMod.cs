@@ -55,6 +55,10 @@ namespace giantsummon
         [Tooltip("There is no guarantee that it will work, but at least can debug it.")]
         public bool TestMpSync { get { return MainMod.NetplaySync; } set { MainMod.NetplaySync = value; } }
 
+        [Label("Classic Mode?")]
+        [Tooltip("You can only have 1 companion following you.")]
+        public bool ClassicMode { get { return MainMod.ClassicMode; } set { MainMod.ClassicMode = value; } }
+
         [Label("Increase all monsters health based on number of guardians following?")]
         [Tooltip("Only available on singleplayer. Having more than 1 guardian following you, increases monsters health by 5% per guardian.")]
         public bool MobHealthBoost { get { return MainMod.MobHealthBoost; } set { MainMod.MobHealthBoost = value; } }

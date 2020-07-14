@@ -103,6 +103,8 @@ namespace giantsummon
         {
             get
             {
+                if (MainMod.ClassicMode)
+                    return 0;
                 int Count = FriendshipLevel;
                 int Allowance = 0;
                 if (Count >= 2)
@@ -1045,6 +1047,7 @@ namespace giantsummon
             bool MagicMirrorTrigger = (player.inventory[player.selectedItem].type == 50 || player.inventory[player.selectedItem].type == 3124 || player.inventory[player.selectedItem].type == 3199) && player.itemAnimation > 0 && player.itemTime == player.inventory[player.selectedItem].useTime / 2;
             bool FoundFirstTitanGuardian = false;
             MountSitOrder = FollowFrontOrder = FollowBackOrder = 0;
+            byte GuardianSlot = 0;
             foreach (TerraGuardian guardian in GetAllGuardianFollowers)
             {
                 if (!guardian.Active)
@@ -1057,7 +1060,7 @@ namespace giantsummon
                     FoundFirstTitanGuardian = true;
                     TitanGuardian = AssistSlot;
                 }
-                if (TitanGuardian < 255 && TitanGuardian != AssistSlot)
+                if (GuardianSlot > MaxExtraGuardiansAllowed && TitanGuardian < 255 && TitanGuardian != AssistSlot)
                 {
                     Main.NewText(guardian.Name + " were dismissed.");
                     DismissGuardian(AssistSlot);
@@ -1136,6 +1139,7 @@ namespace giantsummon
                     }
                 }
                 AssistSlot++;
+                GuardianSlot++;
             }
             if (!FoundFirstTitanGuardian)
                 TitanGuardian = 255;

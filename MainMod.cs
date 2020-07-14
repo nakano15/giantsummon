@@ -33,15 +33,15 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 63, LastModVersion = 62;
+        public const int ModVersion = 64, LastModVersion = 62;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false,
             GuardiansGetKnockedOutUponDefeat = false, GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
-            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false;
+            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, ClassicMode = false;
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
         public const bool IndividualSkillLeveling = false;
@@ -593,14 +593,8 @@ namespace giantsummon
             if(true)
             {
                 List<string> New = new List<string>();
-                New.Add("Moving Up: " + guardian.LastMoveUp);
-                New.Add("Moving Down: " + guardian.LastMoveDown);
-                New.Add("Moving Left: " + guardian.LastMoveLeft);
-                New.Add("Moving Right: " + guardian.LastMoveRight);
-                New.Add("Action: " + guardian.LastAction);
-                New.Add("Jump: " + guardian.Jump);
-                New.Add("Target On Sight: " + guardian.TargetInAim);
-                New.Add("Target Position: " + guardian.TargetID);
+                New.Add("Comfort Points: " + guardian.ComfortPoints);
+                New.Add("Comfort Stack: " + guardian.ComfortStack + "/" + TerraGuardian.MaxComfortStack);
                 /*foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;

@@ -434,7 +434,7 @@ namespace giantsummon.GuardianNPC
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
             //return false;
-            return (GuardianID == 0 && (GuardianModID == "" || GuardianModID == MainMod.mod.Name) && !NpcMod.HasMetGuardian(0, "")) || (NpcMod.HasMetGuardian(GuardianID, GuardianModID) && WorldMod.CanSpawnGuardianNPC(GuardianID, GuardianModID));
+            return NpcMod.HasMetGuardian(GuardianID, GuardianModID) && WorldMod.CanSpawnGuardianNPC(GuardianID, GuardianModID);
         }
 
         public override bool CheckConditions(int left, int right, int top, int bottom)

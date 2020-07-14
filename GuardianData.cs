@@ -51,8 +51,8 @@ namespace giantsummon
         public float HealthHealMult = 1f, ManaHealMult = 1f;
         public int MaxLifeCrystalHealth { get { return Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals; } }
         public int MaxLifeFruitHealth { get { return Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals + Base.LifeFruitHPBonus * TerraGuardian.MaxLifeFruit; } }
-        public float TravellingStacker = 0f, DamageStacker = 0f; //For damagestacker to work, I need to know whose projectiles were spawned from a Guardian.
-        public byte FoodStacker = 0, DrinkStacker = 0;
+        public float TravellingStacker = 0f, DamageStacker = 0f, ComfortStack = 0f; //For damagestacker to work, I need to know whose projectiles were spawned from a Guardian.
+        public byte FoodStacker = 0, DrinkStacker = 0, ComfortPoints = 0;
         public CombatTactic tactic = CombatTactic.Assist;
         public TimeSpan LifeTime = new TimeSpan();
         public bool CanBeCalled { get { return FriendshipLevel >= Base.CallUnlockLevel; } }
@@ -842,6 +842,8 @@ namespace giantsummon
             tag.Add("DamageStacker_" + UniqueID, DamageStacker);
             tag.Add("FoodStacker_" + UniqueID, FoodStacker);
             tag.Add("DrinkStacker_" + UniqueID, DrinkStacker);
+            tag.Add("ComfortStack_" + UniqueID, ComfortStack);
+            tag.Add("ComfortPoints_" + UniqueID, ComfortPoints);
             tag.Add("HealthPercentage_" + UniqueID, HP <= 0 ? 0 : (HP == MHP ? 1f : (float)HP / MHP));
             tag.Add("IsKnockedOut_" + UniqueID, KnockedOut);
             tag.Add("IsKnockedOutCold_" + UniqueID, KnockedOutCold);
@@ -946,6 +948,11 @@ namespace giantsummon
             {
                 FoodStacker = tag.GetByte("FoodStacker_" + UniqueID);
                 DrinkStacker = tag.GetByte("DrinkStacker_" + UniqueID);
+            }
+            if (ModVersion >= 64)
+            {
+                ComfortStack = tag.GetFloat("ComfortStack_" + UniqueID);
+                ComfortPoints = tag.GetByte("ComfortPoints_" + UniqueID);
             }
             float HealthPercentage = -1;
             if (ModVersion >= 1)
