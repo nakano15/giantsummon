@@ -418,7 +418,8 @@ namespace giantsummon
                 }
                 RangeYLower = (int)(RangeYLower * Inventory[WeaponPosition].scale);
             }
-            RangeYUpper = RangeYLower;
+            RangeYUpper = -RangeYLower;
+            RangeYLower *= 0.55f;
             {
                 int AttackRangeYUpper = 0, AttackRangeYLower = 0;
                 int x;
@@ -430,7 +431,7 @@ namespace giantsummon
                 {
                     GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[0] : Base.ItemUseFrames[0], out x, out AttackRangeYUpper);
                 }
-                AttackRangeYUpper = -SpriteHeight + AttackRangeYUpper;
+                //AttackRangeYUpper = -SpriteHeight + AttackRangeYUpper;
                 RangeYUpper += (int)(AttackRangeYUpper * Scale);
                 if (MainMod.IsGuardianItem(Inventory[WeaponPosition]))
                 {
@@ -440,7 +441,7 @@ namespace giantsummon
                 {
                     GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[3], out x, out AttackRangeYLower);
                 }
-                AttackRangeYLower = -SpriteHeight + AttackRangeYLower;
+                //AttackRangeYLower = -SpriteHeight + AttackRangeYLower;
                 RangeYLower += (int)(AttackRangeYLower * Scale);
             }
         }
@@ -3898,26 +3899,17 @@ namespace giantsummon
                 float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition, Kneeling) + TargetWidth * 0.5f, UpperY, LowerY;
                 GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY, Kneeling);
                 InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
-                InRangeY = TargetPosition.Y + TargetHeight >= UpperY + Position.Y - Height && TargetPosition.Y < LowerY + Position.Y;
-                /*
-                Vector2 TopLeftCollision = Position;
-                int Height = (int)(Kneeling ? Base.DuckingHeight * Scale : Base.Height * Scale);
-                TopLeftCollision.Y -= (Kneeling ? DuckingHeight : Height) + weapon.height * weapon.scale * 0.8f * Scale;
-                TopLeftCollision.X -= Width * 0.5f + weapon.width * weapon.scale * Scale;
-                //float CollisionWidth = Width + weapon.width * weapon.scale * 2.2f * Scale,
-                //    CollisionHeight = Height + weapon.height * weapon.scale * 2.4f * Scale;
-                float WeaponAttackRange = GetMeleeWeaponRangeX(WeaponPosition);
-                float WeaponUpperY, WeaponLowerY;
-                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) <= WeaponAttackRange + TargetWidth * 0.5f)
+                InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) ||
+                    (UpperY + Position.Y - Height >= TargetPosition.Y && LowerY + Position.Y <= TargetPosition.Y + TargetHeight);
+                /*for (int x = -10; x <= 10; x++)
                 {
-                    InRangeX = true;
-                }
-                //if (TopLeftCollision.Y + CollisionHeight >= TargetPosition.Y && TopLeftCollision.Y < TargetPosition.Y + TargetHeight)
-                if(TopLeftCollision.Y < TargetPosition.Y + TargetHeight && Position.Y + Height > TargetPosition.Y)
-                    InRangeY = true;
-                //if (ID == GuardianBase.Sardine)
-                //    Main.NewText("RangeX = " + InRangeX + "  RangeY = " + InRangeY);
-                return InRangeX && InRangeY;*/
+                    Vector2 DustPos = new Vector2(Position.X + (AttackWidth * 0.1f * x), UpperY + Position.Y);
+                    Dust d = Dust.NewDustDirect(DustPos, 3, 3, Terraria.ID.DustID.GreenBlood, 0, 0);
+                    d.noGravity = true;
+                    DustPos.Y = LowerY + Position.Y;
+                    d = Dust.NewDustDirect(DustPos, 3, 3, Terraria.ID.DustID.GreenBlood, 0, 0);
+                    d.noGravity = true;
+                }*/
             }
             else
             {
