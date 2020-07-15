@@ -419,6 +419,11 @@ namespace giantsummon
             return player.GetModPlayer<PlayerMod>().GetGuardian(ID, ModID);
         }
 
+        public static bool HasGuardianSummoned(Player player, int ID, Mod mod)
+        {
+            return HasGuardianSummoned(player, ID, mod.Name);
+        }
+
         public static bool HasGuardianSummoned(Player player, int ID, string ModID = "")
         {
             if (ModID == "")
@@ -1044,7 +1049,7 @@ namespace giantsummon
                 }
             }
             byte AssistSlot = 0;
-            bool MagicMirrorTrigger = (player.inventory[player.selectedItem].type == 50 || player.inventory[player.selectedItem].type == 3124 || player.inventory[player.selectedItem].type == 3199) && player.itemAnimation > 0 && player.itemTime == player.inventory[player.selectedItem].useTime / 2;
+            bool TeleportTrigger = (player.inventory[player.selectedItem].type == 50 || player.inventory[player.selectedItem].type == 3124 || player.inventory[player.selectedItem].type == 3199 || player.inventory[player.selectedItem].type == Terraria.ID.ItemID.RecallPotion || player.inventory[player.selectedItem].type == Terraria.ID.ItemID.TeleportationPotion) && player.itemAnimation > 0 && player.itemTime == player.inventory[player.selectedItem].useTime / 2;
             bool FoundFirstTitanGuardian = false;
             MountSitOrder = FollowFrontOrder = FollowBackOrder = 0;
             byte GuardianSlot = 0;
@@ -1067,7 +1072,7 @@ namespace giantsummon
                     AssistSlot++;
                     continue;
                 }
-                if (MagicMirrorTrigger && !guardian.WofFacing)
+                if (TeleportTrigger && !guardian.WofFacing)
                 {
                     guardian.TeleportToPlayer(true);
                 }

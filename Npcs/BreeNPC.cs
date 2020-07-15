@@ -39,6 +39,7 @@ namespace giantsummon.Npcs
         public override void SetDefaults()
         {
             base.SetDefaults();
+            npc.GivenName = "White Cat";
             //npc.townNPC = true;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
             npc.dontCountMe = true;

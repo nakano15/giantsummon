@@ -21,6 +21,8 @@ namespace giantsummon
         public int SavedPosX = -1, SavedPosY = -1; //Redo the path finding if moving to it was interrupted by any way.
         public bool PathingInterrupted = false;
         public List<CharacterInfo> NearbyFoes = new List<CharacterInfo>(), NearbyAllies = new List<CharacterInfo>();
+        public List<byte> NpcsSpotted = new List<byte>(), PlayersSpotted = new List<byte>();
+        public List<int> GuardiansSpotted = new List<int>();
         public const int ItemStackCount = 100, ItemStackTurns = Main.maxItems / ItemStackCount;
         public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, Data.ModID); } }
         public GuardianData Data //Think of a way of arranging the Guardian Datas in the player, and also be able to retrieve them when necessary.
@@ -2753,7 +2755,9 @@ namespace giantsummon
                 float Distance = MovementDirection.Length();
                 float Speed = 12f;
                 if (furniturex > -1)
+                {
                     LeaveFurniture();
+                }
                 //if (Distance > 512) Speed = 8f;
                 if (Distance >= 1512f)
 				{
@@ -3894,7 +3898,7 @@ namespace giantsummon
                 float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition, Kneeling) + TargetWidth * 0.5f, UpperY, LowerY;
                 GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY, Kneeling);
                 InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
-                InRangeY = TargetPosition.Y + TargetHeight >= UpperY + Position.Y || TargetPosition.Y < LowerY + Position.Y;
+                InRangeY = TargetPosition.Y + TargetHeight >= UpperY + Position.Y - Height && TargetPosition.Y < LowerY + Position.Y;
                 /*
                 Vector2 TopLeftCollision = Position;
                 int Height = (int)(Kneeling ? Base.DuckingHeight * Scale : Base.Height * Scale);
@@ -4060,7 +4064,7 @@ namespace giantsummon
                                 continue;
                             if (Inventory[i].melee)
                             {
-                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) && (!PlayerMounted || Base.ReverseMount))))
+                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || (!PlayerMounted || Base.ReverseMount))))
                                 {
                                     HighestMeleeDamage = Inventory[i].damage;
                                     MeleePosition = i;
@@ -5207,7 +5211,7 @@ namespace giantsummon
                     else
                         ComfortSum += 0.0033f;
                 }
-                ComfortSum += ComfortSum * 0.02f * TownNpcs;
+                ComfortSum += ComfortSum * 0.02f * (TownNpcs > 3 ? 3 : TownNpcs);
                 if (ZoneCorrupt || ZoneCrimson)
                     ComfortSum *= 0.6f;
                 if (Main.invasionProgress > 0)
@@ -5691,7 +5695,7 @@ namespace giantsummon
             }
             if (PlayerMounted && GuardianHasControlWhenMounted)
                 return false;
-            if (TargetID == -1 && !MoveLeft && !MoveRight && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            if (TargetID == -1 && !MoveLeft && !MoveRight)
             {
                 foreach (int key in MainMod.ActiveGuardians.Keys)
                 {
@@ -7993,6 +7997,8 @@ namespace giantsummon
                 DistanceMod *= 1.5f;
             if (Scale > 1)
                 DistanceMod *= Scale;
+            int SpotRangeX = 480;
+            int SpotRangeY = 360;
             float NearestDistance = 480f;
             if (HurtPanic)
             {
@@ -8002,6 +8008,8 @@ namespace giantsummon
             else if (Passive)
                 NearestDistance = 96f;
             NearestDistance *= DistanceMod;
+            List<byte> NpcsSpotted = new List<byte>(), PlayersSpotted = new List<byte>();
+            List<int> GuardiansSpotted = new List<int>();
             Vector2 CenterPosition = this.CenterPosition;
             Vector2 TopLeftPosition = this.TopLeftPosition;
             if (ProtectMode && OwnerPos > -1)
@@ -8047,24 +8055,52 @@ namespace giantsummon
             int HighestNumber = 255;
             for (int t = 0; t < HighestNumber; t++)
             {
-                if (t < 200 && Main.npc[t].active && Main.npc[t].CanBeChasedBy(null) && Collision.CanHitLine(TopLeftPosition, Width, Height, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height)) //(Collision.CanHitLine(TopLeftPosition, Width, Height, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height) || Collision.CanHitLine(CollisionPosition, Width, CollisionHeight, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height))
+                if (t < 200 && Main.npc[t].active) //(Collision.CanHitLine(TopLeftPosition, Width, Height, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height) || Collision.CanHitLine(CollisionPosition, Width, CollisionHeight, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height))
                 {
-                    float Distance = Main.npc[t].Distance(MyPosition);
-                    if (Distance < NearestDistance)
+                    bool CollisionCanHit = Collision.CanHitLine(TopLeftPosition, Width, Height, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height);
+                    if (Math.Abs(Main.npc[t].position.X + Main.npc[t].width * 0.5f - Position.X) < SpotRangeX &&
+                        Math.Abs(Main.npc[t].position.Y + Main.npc[t].height * 0.5f - Position.Y - Height * 0.5f) < SpotRangeY &&
+                        CollisionCanHit)
                     {
-                        NearestDistance = Distance;
-                        TargetID = t;
-                        TargetType = TargetTypes.Npc;
+                        if (!this.NpcsSpotted.Contains((byte)t))
+                        {
+                            this.DoTrigger(TriggerTypes.NpcSpotted, t);
+                        }
+                        NpcsSpotted.Add((byte)t);
+                    }
+                    if (Main.npc[t].CanBeChasedBy(null) && CollisionCanHit)
+                    {
+                        float Distance = Main.npc[t].Distance(MyPosition);
+                        if (Distance < NearestDistance)
+                        {
+                            NearestDistance = Distance;
+                            TargetID = t;
+                            TargetType = TargetTypes.Npc;
+                        }
                     }
                 }
-                if (t < 255 && Main.player[t].active && IsPlayerHostile(Main.player[t]) && !Main.player[t].dead && Collision.CanHitLine(TopLeftPosition, Width, Height, Main.player[t].position, Main.player[t].width, Main.player[t].height)) //(Collision.CanHitLine(TopLeftPosition, Width, Height, Main.player[t].position, Main.player[t].width, Main.player[t].height) || Collision.CanHitLine(CollisionPosition, Width, CollisionHeight, Main.player[t].position, Main.player[t].width, Main.player[t].height))
+                if (t < 255 && Main.player[t].active) //(Collision.CanHitLine(TopLeftPosition, Width, Height, Main.player[t].position, Main.player[t].width, Main.player[t].height) || Collision.CanHitLine(CollisionPosition, Width, CollisionHeight, Main.player[t].position, Main.player[t].width, Main.player[t].height))
                 {
-                    float Distance = Main.player[t].Distance(MyPosition);
-                    if (Distance < NearestDistance)
+                    bool CollisionCanHit = Collision.CanHitLine(TopLeftPosition, Width, Height, Main.player[t].position, Main.player[t].width, Main.player[t].height);
+                    if (Math.Abs(Main.player[t].position.X + Main.player[t].width * 0.5f - Position.X) < SpotRangeX &&
+                        Math.Abs(Main.player[t].position.Y + Main.player[t].height * 0.5f - Position.Y - Height * 0.5f) < SpotRangeY &&
+                        CollisionCanHit)
                     {
-                        NearestDistance = Distance;
-                        TargetID = t;
-                        TargetType = TargetTypes.Player;
+                        if (!this.PlayersSpotted.Contains((byte)t))
+                        {
+                            this.DoTrigger(TriggerTypes.PlayerSpotted, t);
+                        }
+                        PlayersSpotted.Add((byte)t);
+                    }
+                    if (IsPlayerHostile(Main.player[t]) && !Main.player[t].dead && CollisionCanHit)
+                    {
+                        float Distance = Main.player[t].Distance(MyPosition);
+                        if (Distance < NearestDistance)
+                        {
+                            NearestDistance = Distance;
+                            TargetID = t;
+                            TargetType = TargetTypes.Player;
+                        }
                     }
                 }
             }
@@ -8073,7 +8109,18 @@ namespace giantsummon
                 if (key != WhoAmID)
                 {
                     TerraGuardian guardian = MainMod.ActiveGuardians[key];
-                    if (!guardian.Downed && IsGuardianHostile(guardian) && Collision.CanHitLine(TopLeftPosition, Width,Height, guardian.TopLeftPosition, guardian.Width, guardian.Height))
+                    bool CollisionCanHit = Collision.CanHitLine(TopLeftPosition, Width, Height, guardian.TopLeftPosition, guardian.Width, guardian.Height);
+                    if (Math.Abs(guardian.Position.X - Position.X) < SpotRangeX &&
+                        Math.Abs(guardian.Position.Y - guardian.Height * 0.5f - Position.Y - Height * 0.5f) < SpotRangeY &&
+                        CollisionCanHit)
+                    {
+                        if (!this.GuardiansSpotted.Contains(key))
+                        {
+                            this.DoTrigger(TriggerTypes.GuardianSpotted, key);
+                        }
+                        GuardiansSpotted.Add(key);
+                    }
+                    if (!guardian.Downed && IsGuardianHostile(guardian) && CollisionCanHit)
                     {
                         float Distance = (guardian.CenterPosition - MyPosition).Length();
                         if (Distance < NearestDistance)
@@ -8087,6 +8134,9 @@ namespace giantsummon
             }
             if (!LastHadTarget && TargetID > -1 && !MainMod.TestNewCombatAI)
                 TargetInAim = false;
+            this.NpcsSpotted = NpcsSpotted;
+            this.PlayersSpotted = PlayersSpotted;
+            this.GuardiansSpotted = GuardiansSpotted;
         }
 
         public bool IsGuardianHostile(TerraGuardian g)
@@ -8204,15 +8254,19 @@ namespace giantsummon
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
             Player Owner = Main.player[OwnerPos];
             Vector2 PositionDifference = Vector2.Zero;
-            float LeaderBottom = 0;
+            float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0;
             int LeaderHeight = 1;
+            bool LeaderWet = false;
             LastPlayerState = PlayerState;
             if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
             {
                 TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.First(x => x.Active && x.PlayerMounted && !x.Base.ReverseMount);
                 PositionDifference = guardian.CenterPosition;
+                LeaderCenterX = PositionDifference.X;
+                LeaderSpeedX = guardian.Velocity.X;
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
+                LeaderWet = guardian.Wet;
                 if (guardian.Velocity.Y == 0 && PlayerState > 0)
                 {
                     PlayerState = 0;
@@ -8236,8 +8290,11 @@ namespace giantsummon
             {
                 TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().Guardian;
                 PositionDifference = guardian.CenterPosition;
+                LeaderCenterX = PositionDifference.X;
+                LeaderSpeedX = guardian.Velocity.X;
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
+                LeaderWet = guardian.Wet;
                 if (guardian.Velocity.Y == 0 && PlayerState > 0)
                 {
                     PlayerState = 0;
@@ -8260,8 +8317,11 @@ namespace giantsummon
             else
             {
                 PositionDifference = Owner.Center;
+                LeaderCenterX = PositionDifference.X;
+                LeaderSpeedX = Owner.velocity.X;
                 LeaderBottom = Owner.position.Y + Owner.height - 1;
                 LeaderHeight = Owner.height;
+                LeaderWet = Owner.wet;
                 if (Owner.velocity.Y == 0 && PlayerState > 0)
                 {
                     PlayerState = 0;
@@ -8358,25 +8418,25 @@ namespace giantsummon
                 }
                 if (!PlayerMounted)
                 {
-                    if (Math.Abs(PositionDifference.X - Owner.velocity.X) > 48f + DistanceBonus)
+                    if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 48f + DistanceBonus)
                     {
                         if (PositionDifference.X < 0)
                             MoveLeft = true;
                         else
                             MoveRight = true;
                     }
-                    else if (ChargeAhead) //To try keeping up with the player when on charge AI.
+                    else if (ChargeAhead && LeaderSpeedX != 0) //To try keeping up with the player when on charge AI.
                     {
-                        if (Owner.velocity.X < 0)
+                        if (LeaderSpeedX < 0)
                         {
-                            if (Velocity.X >= Owner.velocity.X)
+                            if (Velocity.X >= LeaderSpeedX)
                             {
                                 MoveLeft = true;
                             }
                         }
-                        else if (Owner.velocity.X > 0)
+                        else if (LeaderSpeedX > 0)
                         {
-                            if (Velocity.X <= Owner.velocity.X)
+                            if (Velocity.X <= LeaderSpeedX)
                             {
                                 MoveRight = true;
                             }
@@ -8384,20 +8444,20 @@ namespace giantsummon
                         if (StuckTimer > 0)
                             StuckTimer = 0;
                     }
-                    else if (Owner.velocity.X != 0)
+                    else if (LeaderSpeedX != 0)
                     {
-                        if (Math.Abs(PositionDifference.X - Owner.velocity.X) > 36f + DistanceBonus)
+                        if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 36f + DistanceBonus)
                         {
-                            if (Position.X < Owner.Center.X)
+                            if (Position.X < LeaderCenterX)
                             {
-                                if (Velocity.X <= Owner.velocity.X)
+                                if (Velocity.X <= LeaderSpeedX)
                                 {
                                     MoveRight = true;
                                 }
                             }
                             else
                             {
-                                if (Velocity.X >= Owner.velocity.X)
+                                if (Velocity.X >= LeaderSpeedX)
                                 {
                                     MoveLeft = true;
                                 }
@@ -8407,7 +8467,7 @@ namespace giantsummon
                     bool TryFlying = WingType > 0,
                         TrySwimming = Wet && (HasFlag(GuardianFlags.SwimmingAbility) || HasFlag(GuardianFlags.Merfolk));
                     bool PlayerAboveMe = Owner.velocity.Y != 0 && (Velocity.Y == 0 ? LeaderBottom < Position.Y - (LeaderHeight * 2 + Height) : LeaderBottom < Position.Y - LeaderHeight * 0.5f),
-                        PlayerAboveMeSwim = TrySwimming && LeaderBottom < Position.Y - 8;
+                        PlayerAboveMeSwim = TrySwimming && ((LeaderWet && LeaderBottom < Position.Y - 8) || LeaderBottom < Position.Y + Height - 8);
                     if (PlayerAboveMeSwim)
                     {
                         Jump = true;
@@ -8417,19 +8477,14 @@ namespace giantsummon
                         Jump = true;
                         WingFlightTime++;
                     }
-                    /*if (Velocity.Y == 0 && Owner.position.Y + Owner.height - 32 > Position.Y && IsStandingOnAPlatform && HasSolidGroundUnder())
+                    else if (Breath < BreathMax && !TryFlying && !TrySwimming && Wet && !LeaderWet)
                     {
-                        MoveDown = true;
+                        //Try leaving water when drowning by going to where the leader is, If the leader isn't at water.
+                        if (Position.X < LeaderCenterX)
+                            MoveRight = true;
+                        else
+                            MoveLeft = true;
                     }
-                    if (!Jump && Velocity.Y == 0 && Owner.position.Y + Owner.height < Position.Y - 32 && HasPlatformAbove()) //Is above
-                    {
-                        //Jump = true;
-                        JumpUntilHeight = Owner.position.Y + Owner.height;
-                    }*/
-                    /*if (Owner.position.Y + Owner.height > Position.Y)
-                    {
-                        MoveDown = true;
-                    }*/
                 }
                 //MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f));
                 //MoveCursorToPosition(Owner.position, Owner.width, Owner.height);
@@ -11609,14 +11664,12 @@ namespace giantsummon
                     int ArmFrame = Base.StandingFrame;
                     if (SwimValue >= 10 && SwimValue < 20)
                         ArmFrame = Base.JumpFrame;
-                    UsingLeftArmAnimation = true;
                     LeftArmAnimationFrame = ArmFrame;
                     RightArmAnimationFrame = ArmFrame;
-                    UsingRightArmAnimation = true;
                 }
                 else if (GuardianHasCarpet)
                 {
-                    BodyAnimationFrame = Base.StandingFrame;
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
                 }
                 else if (Velocity.Y == 0)
                 {
@@ -11639,17 +11692,17 @@ namespace giantsummon
                             AnimationTime -= MaxAnimationTime;
                         int PickedFrame = (int)(AnimationTime / (Base.WalkAnimationFrameTime * Scale));
                         if (PickedFrame >= 0 && PickedFrame < Base.WalkingFrames.Length)
-                            BodyAnimationFrame = Base.WalkingFrames[PickedFrame];
+                            BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.WalkingFrames[PickedFrame];
                     }
                     else
                     {
-                        BodyAnimationFrame = Base.StandingFrame;
+                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
                         AnimationTime = 0;
                     }
                 }
                 else
                 {
-                    BodyAnimationFrame = Base.JumpFrame;
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.JumpFrame;
                     AnimationTime = 0;
                 }
                 if (!FurnitureOverridingAnimation)
@@ -11659,7 +11712,6 @@ namespace giantsummon
                         if (Base.ReverseMount)
                         {
                             LeftArmAnimationFrame = Base.SittingFrame;
-                            UsingLeftArmAnimation = true;
                         }
                         else if (Base.PlayerMountedArmAnimation > -1)
                         {
@@ -11682,15 +11734,13 @@ namespace giantsummon
                     }
                     if (Ducking)
                     {
-                        BodyAnimationFrame = Base.DuckingFrame;
-                        LeftArmAnimationFrame = BodyAnimationFrame;
-                        RightArmAnimationFrame = BodyAnimationFrame;
+                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.DuckingFrame;
                     }
                 }
             }
             if (MountedOnPlayer)
             {
-                BodyAnimationFrame = Base.SittingFrame;
+                BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.SittingFrame;
                 if (Base.IsTerrarian && ItemAnimationTime == 0)
                 {
                     LeftArmAnimationFrame = 3;
@@ -12017,10 +12067,10 @@ namespace giantsummon
             }
             Base.GuardianAnimationOverride(this, 0, ref BodyAnimationFrame);
             Base.GuardianAnimationScript(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
-            if (!UsingLeftArmAnimation)
-                LeftArmAnimationFrame = BodyAnimationFrame;
-            if (!UsingRightArmAnimation)
-                RightArmAnimationFrame = BodyAnimationFrame;
+            //if (!UsingLeftArmAnimation)
+            //    LeftArmAnimationFrame = BodyAnimationFrame;
+            //if (!UsingRightArmAnimation)
+            //    RightArmAnimationFrame = BodyAnimationFrame;
             Base.GuardianAnimationOverride(this, 1, ref LeftArmAnimationFrame);
             Base.GuardianAnimationOverride(this, 2, ref RightArmAnimationFrame);
         }
@@ -12315,8 +12365,8 @@ namespace giantsummon
                 {
                     if (Velocity.Y * GravityDirection > 2f)
                         Velocity.Y = 2f * GravityDirection;
-                    SetFallStart();
                 }
+                //SetFallStart();
             }
         }
 
@@ -12589,6 +12639,7 @@ namespace giantsummon
                     WallSlideStyle++;
                 if (HasFlag(GuardianFlags.ClimbingPaws))
                     WallSlideStyle++;
+                SetFallStart();
             }
             DoorHandler();
             if (OwnerPos > -1 && (MoveLeft || MoveRight) && !MoveDown)
@@ -13105,6 +13156,8 @@ namespace giantsummon
             SetFallStart();
             AimDirection = CenterPosition.ToPoint();
             SetStuckCheckPositionToMe();
+            TargetID = -1;
+            AttackingTarget = false;
         }
 
         private void Collision_Move(Vector2 OldDryVelocity, float SpeedPercentage = 0.5f)

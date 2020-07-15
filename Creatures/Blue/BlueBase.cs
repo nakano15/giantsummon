@@ -544,38 +544,84 @@ namespace giantsummon.Creatures
             return "*[name] is dancing away.*";
         }
 
-        public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
         {
-            if ((!UsingRightArm || !UsingRightArm) && guardian.BodyAnimationFrame != DuckingFrame && guardian.BodyAnimationFrame != ThroneSittingFrame && guardian.BodyAnimationFrame != BedSleepingFrame)
+            if (trigger == TriggerTypes.NpcSpotted)
             {
-                bool HasBunnyInInventory = false;
-                for (int i = 0; i < 10; i++)
+                NPC npc = Main.npc[Value];
+                if (npc.type == Terraria.ModLoader.ModContent.NPCType<Npcs.ZombieGuardian>())
                 {
-                    if (guardian.Inventory[i].type == Terraria.ID.ItemID.Bunny || guardian.Inventory[i].type == Terraria.ID.ItemID.GoldBunny)
+                    switch (Main.rand.Next(3))
                     {
-                        HasBunnyInInventory = true;
-                        break;
+                        case 0:
+                            guardian.SaySomething("*What? No! No no no! It can't be happening. Zacks!*");
+                            break;
+                        case 1:
+                            guardian.SaySomething("*Zacks! What happened to you? It's me! Blue!*");
+                            break;
+                        case 2:
+                            guardian.SaySomething("*Zacks? Is that you? Zacks, look at me! Zacks!!*");
+                            break;
                     }
                 }
-                if (HasBunnyInInventory)
+            }
+            if (trigger == TriggerTypes.NpcDies)
+            {
+                NPC npc = Main.npc[Value];
+                if (npc.type == Terraria.ModLoader.ModContent.NPCType<Npcs.ZombieGuardian>())
+                {
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            guardian.SaySomething("*Zacks... We'll find a way of opening your eyes...*");
+                            break;
+                        case 1:
+                            guardian.SaySomething("*No! That can't be It! There must be a way of saving him!*");
+                            break;
+                        case 2:
+                            guardian.SaySomething("*No! Zacks!! Nooooo!!! Don't leave me again.*");
+                            break;
+                    }
+                }
+            }
+            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+        }
+
+        public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
+        {
+            bool HasBunnyInInventory = false;
+            for (int i = 0; i < 10; i++)
+            {
+                if (guardian.Inventory[i].type == Terraria.ID.ItemID.Bunny || guardian.Inventory[i].type == Terraria.ID.ItemID.GoldBunny)
+                {
+                    HasBunnyInInventory = true;
+                    break;
+                }
+            }
+            if (HasBunnyInInventory)
+            {
+                if (guardian.BodyAnimationFrame != DuckingFrame && guardian.BodyAnimationFrame != ThroneSittingFrame && guardian.BodyAnimationFrame != BedSleepingFrame)
                 {
                     const int BunnyHoldingFrame = 29;
                     if (guardian.BodyAnimationFrame == StandingFrame)
                         guardian.BodyAnimationFrame = BunnyHoldingFrame;
-                    if (guardian.BodyAnimationFrame == BedSleepingFrame)
-                    {
-                        guardian.BodyAnimationFrame = 30;
-                    }
-                    if (!UsingLeftArm)
+                    //Todo - Add the throne sitting animation here.
+                    if (!UsingLeftArm || guardian.PlayerMounted)
                     {
                         guardian.LeftArmAnimationFrame = BunnyHoldingFrame;
-                        UsingLeftArm = true;
                     }
                     if (!UsingRightArm)
                     {
                         guardian.RightArmAnimationFrame = BunnyHoldingFrame;
-                        UsingRightArm = true;
                     }
+                }
+                else if (guardian.BodyAnimationFrame == BedSleepingFrame)
+                {
+                    guardian.BodyAnimationFrame = guardian.LeftArmAnimationFrame = guardian.RightArmAnimationFrame = 30;
+                }
+                else if (guardian.BodyAnimationFrame == ThroneSittingFrame)
+                {
+                    guardian.BodyAnimationFrame = guardian.LeftArmAnimationFrame = guardian.RightArmAnimationFrame = 31;
                 }
             }
         }

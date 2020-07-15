@@ -405,7 +405,11 @@ namespace giantsummon.Npcs
                 !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianID) && spawnInfo.player.ZoneJungle && 
                 Main.rand.Next(256 - (int)spawnInfo.player.position.Y / 1024) == 0)
             {
-                return 1;
+                Tile t = Framing.GetTileSafely(spawnInfo.spawnTileX, spawnInfo.spawnTileY);
+                if (t.wall == Terraria.ID.WallID.HiveUnsafe || t.type == Terraria.ID.TileID.HoneyBlock)
+                {
+                    return 1;
+                }
             }
             return 0;
         }

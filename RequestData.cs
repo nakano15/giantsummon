@@ -602,7 +602,7 @@ namespace giantsummon
                     RequestCompleteCombo = 0;
                 else
                     RequestCompleteCombo++;
-                if (!IsCommonRequest && !IsTalkQuest && RequestsCompletedIDs.Contains(RequestID))
+                if (!IsCommonRequest && !IsTalkQuest && !RequestsCompletedIDs.Contains(RequestID))
                 {
                     RequestsCompletedIDs.Add(RequestID);
                 }

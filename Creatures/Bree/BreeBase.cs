@@ -116,6 +116,72 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(16, 14, 13);
 
             HeadVanityPosition.AddFramePoint2x(18, 16, 22);
+
+            RequestList();
+            LoadSkinList();
+        }
+
+        public void LoadSkinList()
+        {
+            AddSkin(1, "Bagless", delegate(GuardianData gd, Player player)
+            {
+                return gd.HasPersonalRequestBeenCompleted(0);
+            });
+        }
+
+        public void RequestList()
+        {
+            AddNewRequest("Stay", 400, "You people really nag me to stay for longer here. I'll make a deal, catch me quite a number of fish, and I'll stay.",
+                "Before you go, keep in mind that must not be just any fish. It must be the most delicious fish in my taste. Yes, I'm talking about the Double Cod. Now go, before I change my mind.",
+                "You don't really want me to stay, right? I didn't wanted to stay, anyway.",
+                "You managed to do that? Alright, I can put down my things in my house and stay for longer. My back was beggining to ache, anyway.",
+                "You don't know where to find a Double Cod? The Jungle is where you should go!");
+            AddItemCollectionObjective(Terraria.ID.ItemID.DoubleCod, 15, 0);
+            AddRequestRequirement(RequestBase.GetFishingRodRequirement);
+        }
+
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        {
+            if (trigger == TriggerTypes.NpcSpotted)
+            {
+                NPC npc = Main.npc[Value];
+                if (npc.type == Terraria.ID.NPCID.KingSlime && NpcMod.TrappedCatKingSlime == npc.whoAmI)
+                {
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            guardian.SaySomething("I can't believe! We have to help him!", true);
+                            break;
+                        case 1:
+                            guardian.SaySomething("Well, we found him. Now we need to get him out of there.", true);
+                            break;
+                        case 2:
+                            guardian.SaySomething("Oh no! We have to do something, or else that giant slime will lunch my husband!", true);
+                            break;
+                    }
+                }
+            }
+            if (trigger == TriggerTypes.NpcDies)
+            {
+                NPC npc = Main.npc[Value];
+                if (npc.type == Terraria.ID.NPCID.KingSlime && NpcMod.TrappedCatKingSlime == npc.whoAmI)
+                {
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            guardian.SaySomething("Whew... He's safe... Let's check him out.", true);
+                            break;
+                        case 1:
+                            guardian.SaySomething("Whew, he's safe! At least he looks okay in blue color.", true);
+                            break;
+                        case 2:
+                            guardian.SaySomething("We saved him! Let's go see if he's okay.", true);
+                            break;
+                    }
+                    guardian.IncreaseFriendshipProgress(1);
+                }
+            }
+            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)

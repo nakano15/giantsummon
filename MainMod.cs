@@ -1257,136 +1257,224 @@ namespace giantsummon
                     case GuardianItemSlotButtons.Equipment:
                         {
                             Utils.DrawBorderString(Main.spriteBatch, "Equipments", SlotStartPosition, Color.White);
-                            ManagingGuardianEquipments = true;
-                            for (int s = 0; s < 9; s++)
+                            SlotStartPosition.Y += 20;
+                            if (Guardian.Base.IsCustomSpriteCharacter)
                             {
-                                Vector2 SlotPosition = SlotStartPosition;
-                                SlotPosition.Y += s * 56 * Main.inventoryScale + 20;
-                                if (SlotPosition.Y + 56 * Main.inventoryScale >= Main.screenHeight)
+                                SlotStartPosition.X = 0;
+                                string[] EquipmentTab = new string[] { "Equipment", "Skins", "Outfits" }; //Set the empty string to always be the last
                                 {
-                                    SlotPosition.X += 56 * Main.inventoryScale + 20;
-                                    SlotPosition.Y -= SlotPosition.Y - 20 - SlotStartPosition.Y;
-                                }
-                                int context = 8;
-                                if (s > 2)
-                                {
-                                    context = 10;
-                                    SlotPosition.Y += 4;
-                                }
-                                if (s == 8 && (!Guardian.ExtraAccessorySlot || (!Main.expertMode && Guardian.Equipments[8].type == 0)))
-                                    continue;
-                                if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + 56 * Main.inventoryScale && Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + 56 * Main.inventoryScale)
-                                {
-                                    Main.player[Main.myPlayer].mouseInterface = true;
-                                    if (BlockedInventory)
+                                    const float TabSize = 0.85f;
+                                    SlotStartPosition.X = 2 + 56 + StartX;
+                                    for (int s = 0; s < EquipmentTab.Length; s++)
                                     {
-                                        MouseOverText = "Can't change equipments right now.";
-                                    }
-                                    else
-                                    {
-                                        ItemSlot.OverrideHover(Guardian.Equipments, context, s);
-                                        HoverItem = Guardian.Equipments[s];
-                                        if (Main.mouseLeft && Main.mouseLeftRelease)
+                                        if (EquipmentTab[s] == "")
+                                            continue;
+                                        Vector2 ButtonDim = Utils.DrawBorderString(Main.spriteBatch, EquipmentTab[s], SlotStartPosition, Color.Black, TabSize);
+                                        Color buttonColor = (s == GuardianInventoryMenuSubTab ? Color.White : Color.Black);
+                                        if (Main.mouseX >= SlotStartPosition.X - 2 && Main.mouseX < SlotStartPosition.X + ButtonDim.X + 2 && Main.mouseY >= SlotStartPosition.Y - 2 && Main.mouseY < SlotStartPosition.Y + ButtonDim.Y + 2)
                                         {
-                                            /*if (Main.mouseItem.type > 0 && !giantsummon.IsGuardianItem(Main.mouseItem))
+                                            buttonColor = Color.Cyan;
+                                            Main.player[Main.myPlayer].mouseInterface = true;
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
-                                                Main.NewText("This item doesn't fit my Guardian...");
+                                                GuardianInventoryMenuSubTab = s;
                                             }
-                                            else*/
+                                        }
+                                        Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)SlotStartPosition.X - 2, (int)SlotStartPosition.Y - 2, (int)ButtonDim.X + 3, (int)ButtonDim.Y + 3), buttonColor);
+                                        Utils.DrawBorderString(Main.spriteBatch, EquipmentTab[s], SlotStartPosition, Color.White, TabSize);
+                                        SlotStartPosition.X += ButtonDim.X + 4f;
+                                    }
+                                }
+                                SlotStartPosition.X = 50;
+                                SlotStartPosition.Y += 30;
+                            }
+                            switch (GuardianInventoryMenuSubTab)
+                            {
+                                case 0: //Equipments
+                                    {
+                                        ManagingGuardianEquipments = true;
+                                        for (int s = 0; s < 9; s++)
+                                        {
+                                            Vector2 SlotPosition = SlotStartPosition;
+                                            SlotPosition.Y += s * 56 * Main.inventoryScale + 20;
+                                            if (SlotPosition.Y + 56 * Main.inventoryScale >= Main.screenHeight)
                                             {
-                                                int HeldItemID = Main.mouseItem.type;
-                                                bool Allow = true;//Main.mouseItem.type == 0 || (s < 3 && Main.mouseItem.modItem is Items.GuardianItemPrefab) || s >= 3;
-                                                //Main.mouseItem.modItem is Items.GuardianItemPrefab ||
-                                                if (Allow)
+                                                SlotPosition.X += 56 * Main.inventoryScale + 20;
+                                                SlotPosition.Y -= SlotPosition.Y - 20 - SlotStartPosition.Y;
+                                            }
+                                            int context = 8;
+                                            if (s > 2)
+                                            {
+                                                context = 10;
+                                                SlotPosition.Y += 4;
+                                            }
+                                            if (s == 8 && (!Guardian.ExtraAccessorySlot || (!Main.expertMode && Guardian.Equipments[8].type == 0)))
+                                                continue;
+                                            if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + 56 * Main.inventoryScale && Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + 56 * Main.inventoryScale)
+                                            {
+                                                Main.player[Main.myPlayer].mouseInterface = true;
+                                                if (BlockedInventory)
                                                 {
-                                                    Allow = false;
-                                                    switch (s)
-                                                    {
-                                                        case 0:
-                                                            if (Main.mouseItem.type == 0 || Main.mouseItem.headSlot > 0)
-                                                                Allow = true;
-                                                            break;
-                                                        case 1:
-                                                            if (Main.mouseItem.type == 0 || Main.mouseItem.bodySlot > 0)
-                                                                Allow = true;
-                                                            break;
-                                                        case 2:
-                                                            if (Main.mouseItem.type == 0 || Main.mouseItem.legSlot > 0)
-                                                                Allow = true;
-                                                            break;
-                                                        default:
-                                                            if (Main.mouseItem.type == 0 || Main.mouseItem.accessory)
-                                                            {
-                                                                Allow = true;
-                                                                if (Main.mouseItem.type != 0)
-                                                                {
-                                                                    for (int a = 3; a < 9; a++)
-                                                                    {
-                                                                        if (Guardian.Equipments[a].type == Main.mouseItem.type)
-                                                                        {
-                                                                            Allow = false;
-                                                                            break;
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                            break;
-                                                    }
-                                                }
-                                                if (Allow)
-                                                {
-                                                    Main.mouseItem.favorited = false;
-                                                    ItemSlot.LeftClick(Guardian.Equipments, 0, s);
+                                                    MouseOverText = "Can't change equipments right now.";
                                                 }
                                                 else
                                                 {
-                                                    Main.NewText("I can't do that...");
+                                                    ItemSlot.OverrideHover(Guardian.Equipments, context, s);
+                                                    HoverItem = Guardian.Equipments[s];
+                                                    if (Main.mouseLeft && Main.mouseLeftRelease)
+                                                    {
+                                                        /*if (Main.mouseItem.type > 0 && !giantsummon.IsGuardianItem(Main.mouseItem))
+                                                        {
+                                                            Main.NewText("This item doesn't fit my Guardian...");
+                                                        }
+                                                        else*/
+                                                        {
+                                                            int HeldItemID = Main.mouseItem.type;
+                                                            bool Allow = true;//Main.mouseItem.type == 0 || (s < 3 && Main.mouseItem.modItem is Items.GuardianItemPrefab) || s >= 3;
+                                                            //Main.mouseItem.modItem is Items.GuardianItemPrefab ||
+                                                            if (Allow)
+                                                            {
+                                                                Allow = false;
+                                                                switch (s)
+                                                                {
+                                                                    case 0:
+                                                                        if (Main.mouseItem.type == 0 || Main.mouseItem.headSlot > 0)
+                                                                            Allow = true;
+                                                                        break;
+                                                                    case 1:
+                                                                        if (Main.mouseItem.type == 0 || Main.mouseItem.bodySlot > 0)
+                                                                            Allow = true;
+                                                                        break;
+                                                                    case 2:
+                                                                        if (Main.mouseItem.type == 0 || Main.mouseItem.legSlot > 0)
+                                                                            Allow = true;
+                                                                        break;
+                                                                    default:
+                                                                        if (Main.mouseItem.type == 0 || Main.mouseItem.accessory)
+                                                                        {
+                                                                            Allow = true;
+                                                                            if (Main.mouseItem.type != 0)
+                                                                            {
+                                                                                for (int a = 3; a < 9; a++)
+                                                                                {
+                                                                                    if (Guardian.Equipments[a].type == Main.mouseItem.type)
+                                                                                    {
+                                                                                        Allow = false;
+                                                                                        break;
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        break;
+                                                                }
+                                                            }
+                                                            if (Allow)
+                                                            {
+                                                                Main.mouseItem.favorited = false;
+                                                                ItemSlot.LeftClick(Guardian.Equipments, 0, s);
+                                                            }
+                                                            else
+                                                            {
+                                                                Main.NewText("I can't do that...");
+                                                            }
+                                                            if (HeldItemID != Main.mouseItem.type)
+                                                                Guardian.EquipmentChanged();
+                                                        }
+                                                    }
+                                                    ItemSlot.MouseHover(Guardian.Equipments, context, s);
                                                 }
-                                                if (HeldItemID != Main.mouseItem.type)
-                                                    Guardian.EquipmentChanged();
                                             }
+                                            ItemSlot.Draw(Main.spriteBatch, Guardian.Equipments, context, s, SlotPosition);
                                         }
-                                        ItemSlot.MouseHover(Guardian.Equipments, context, s);
+                                        SlotStartPosition.X += 120;
+                                        Vector2 BodyDyeSlot = SlotStartPosition;
+                                        Utils.DrawBorderString(Main.spriteBatch, "Body Dye", BodyDyeSlot, Color.White);
+                                        BodyDyeSlot.Y += 24f;
+                                        if (Main.mouseX >= BodyDyeSlot.X && Main.mouseX < BodyDyeSlot.X + 56 * Main.inventoryScale && Main.mouseY >= BodyDyeSlot.Y && Main.mouseY < BodyDyeSlot.Y + 56 * Main.inventoryScale)
+                                        {
+                                            HoverItem = Guardian.BodyDye;
+                                            Main.player[Main.myPlayer].mouseInterface = true;
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                                            {
+                                                ItemSlot.LeftClick(ref Guardian.Data.BodyDye, ItemSlot.Context.EquipDye);
+                                            }
+                                            ItemSlot.MouseHover(ref Guardian.Data.BodyDye, ItemSlot.Context.EquipDye);
+                                        }
+                                        ItemSlot.Draw(Main.spriteBatch, ref Guardian.Data.BodyDye, ItemSlot.Context.EquipDye, BodyDyeSlot);
+                                        ManagingGuardianEquipments = true;
+                                        SlotStartPosition.X += 96;
+                                        string[] InfosToDraw = new string[]{
+                                            "Melee Damage: " + Math.Round(Guardian.MeleeDamageMultiplier * 100, 2) + "%",
+                                            "Ranged Damage: " + Math.Round(Guardian.RangedDamageMultiplier * 100, 2) + "%",
+                                            "Magic Damage: " + Math.Round(Guardian.MagicDamageMultiplier * 100, 2) + "%",
+                                            "Summon Damage: " + Math.Round(Guardian.SummonDamageMultiplier * 100, 2) + "%",
+                                            "Attack Time: " + Math.Round(Guardian.MeleeSpeed * 100, 2) + "%",
+                                            "Walk Speed: " + Math.Round(Guardian.MoveSpeed * 100, 2) + "%",
+                                            "Defense: " + Guardian.Defense,
+                                            "Defense Rate: " + Math.Round(Guardian.DefenseRate * 100, 2) + "%",
+                                            "Dodge Rate: " + Math.Round(Guardian.DodgeRate, 2) + "%",
+                                            "Block Rate: " + Math.Round(Guardian.BlockRate, 2) + "%",
+							                "Cover Rate: " + Math.Round(Guardian.CoverRate, 2) + "%",
+							                "Accuracy: " + Math.Round(Guardian.Accuracy * 100, 2) + "%"
+                                        };
+                                        SlotStartPosition.Y += 30f;
+                                        foreach (string s in InfosToDraw)
+                                        {
+                                            Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, Color.White);
+                                            SlotStartPosition.Y += 22f;
+                                        }
                                     }
-                                }
-                                ItemSlot.Draw(Main.spriteBatch, Guardian.Equipments, context, s, SlotPosition);
-                            }
-                            SlotStartPosition.X += 120;
-                            Vector2 BodyDyeSlot = SlotStartPosition;
-                            Utils.DrawBorderString(Main.spriteBatch, "Body Dye", BodyDyeSlot, Color.White);
-                            BodyDyeSlot.Y += 24f;
-                            if (Main.mouseX >= BodyDyeSlot.X && Main.mouseX < BodyDyeSlot.X + 56 * Main.inventoryScale && Main.mouseY >= BodyDyeSlot.Y && Main.mouseY < BodyDyeSlot.Y + 56 * Main.inventoryScale)
-                            {
-                                HoverItem = Guardian.BodyDye;
-                                Main.player[Main.myPlayer].mouseInterface = true;
-                                if (Main.mouseLeft && Main.mouseLeftRelease)
-                                {
-                                    ItemSlot.LeftClick(ref Guardian.Data.BodyDye, ItemSlot.Context.EquipDye);
-                                }
-                                ItemSlot.MouseHover(ref Guardian.Data.BodyDye, ItemSlot.Context.EquipDye);
-                            }
-                            ItemSlot.Draw(Main.spriteBatch, ref Guardian.Data.BodyDye, ItemSlot.Context.EquipDye, BodyDyeSlot);
-                            ManagingGuardianEquipments = true;
-                            SlotStartPosition.X += 96;
-                            string[] InfosToDraw = new string[]{
-                            "Melee Damage: " + Math.Round(Guardian.MeleeDamageMultiplier * 100, 2) + "%",
-                            "Ranged Damage: " + Math.Round(Guardian.RangedDamageMultiplier * 100, 2) + "%",
-                            "Magic Damage: " + Math.Round(Guardian.MagicDamageMultiplier * 100, 2) + "%",
-                            "Summon Damage: " + Math.Round(Guardian.SummonDamageMultiplier * 100, 2) + "%",
-                            "Attack Time: " + Math.Round(Guardian.MeleeSpeed * 100, 2) + "%",
-                            "Walk Speed: " + Math.Round(Guardian.MoveSpeed * 100, 2) + "%",
-                            "Defense: " + Guardian.Defense,
-                            "Defense Rate: " + Math.Round(Guardian.DefenseRate * 100, 2) + "%",
-                            "Dodge Rate: " + Math.Round(Guardian.DodgeRate, 2) + "%",
-                            "Block Rate: " + Math.Round(Guardian.BlockRate, 2) + "%",
-							"Cover Rate: " + Math.Round(Guardian.CoverRate, 2) + "%",
-							"Accuracy: " + Math.Round(Guardian.Accuracy * 100, 2) + "%"
-                        };
-                            SlotStartPosition.Y += 30f;
-                            foreach (string s in InfosToDraw)
-                            {
-                                Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, Color.White);
-                                SlotStartPosition.Y += 22f;
+                                    break;
+                                case 1: //Skins
+                                    {
+                                        bool HasSkin = false;
+                                        foreach (SkinReqStruct skin in Guardian.Base.SkinList)
+                                        {
+                                            HasSkin = true;
+                                            bool Active = Guardian.Data.SkinID == skin.SkinID;
+                                            bool LastActive = Active;
+                                            bool RequirementBeaten = skin.Requirement(Guardian.Data, player.player);
+                                            AddOnOffButton(SlotStartPosition.X, SlotStartPosition.Y, skin.Name, ref Active, RequirementBeaten, !RequirementBeaten);
+                                            if (Active != LastActive)
+                                            {
+                                                if (Active)
+                                                    Guardian.Data.SkinID = skin.SkinID;
+                                                else
+                                                    Guardian.Data.SkinID = 0;
+                                            }
+                                            SlotStartPosition.Y += 20;
+                                        }
+                                        if (!HasSkin)
+                                        {
+                                            Utils.DrawBorderString(Main.spriteBatch, "This companion has no skin right now.", SlotStartPosition, Color.White);
+                                        }
+                                    }
+                                    break;
+                                case 2: //Outfits
+                                    {
+                                        bool HasOutfit = false;
+                                        foreach (SkinReqStruct skin in Guardian.Base.OutfitList)
+                                        {
+                                            HasOutfit = true;
+                                            bool Active = Guardian.Data.SkinID == skin.SkinID;
+                                            bool LastActive = Active;
+                                            bool RequirementBeaten = skin.Requirement(Guardian.Data, player.player);
+                                            AddOnOffButton(SlotStartPosition.X, SlotStartPosition.Y, skin.Name, ref Active, RequirementBeaten, !RequirementBeaten);
+                                            if (Active != LastActive)
+                                            {
+                                                if (Active)
+                                                    Guardian.Data.SkinID = skin.SkinID;
+                                                else
+                                                    Guardian.Data.SkinID = 0;
+                                            }
+                                            SlotStartPosition.Y += 20;
+                                        }
+                                        if (!HasOutfit)
+                                        {
+                                            Utils.DrawBorderString(Main.spriteBatch, "This companion has no outfits right now.", SlotStartPosition, Color.White);
+                                        }
+                                    }
+                                    break;
                             }
                         }
                         break;
@@ -1840,12 +1928,12 @@ namespace giantsummon
             return true;
         }
 
-        public static void AddOnOffButton(float PosX, float PosY, string Text, ref bool State)
+        public static void AddOnOffButton(float PosX, float PosY, string Text, ref bool State, bool Activeable = true, bool Grayed = false)
         {
             const float DistanceFromButton = 38f;
             //
             PosX += DistanceFromButton;
-            Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(PosX, PosY), Color.White);
+            Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(PosX, PosY), (Grayed ? Color.Gray : Color.White));
             PosX -= DistanceFromButton * 1.5f;
             //
             Vector2 ButtonPosition = new Vector2((int)PosX, (int)PosY);
@@ -1854,7 +1942,7 @@ namespace giantsummon
                 Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
             {
                 Main.player[Main.myPlayer].mouseInterface = true;
-                if (Main.mouseLeft && Main.mouseLeftRelease)
+                if (Activeable && Main.mouseLeft && Main.mouseLeftRelease)
                     State = !State;
             }
         }

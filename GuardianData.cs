@@ -159,6 +159,11 @@ namespace giantsummon
             }
         }
 
+        public bool HasPersonalRequestBeenCompleted(int ID)
+        {
+            return request.RequestsCompletedIDs.Contains(ID);
+        }
+
         /*public T GetModGuardian<T>(Mod mod) where T : ModGuardianData
         {
             if (ModData.ContainsKey(mod.Name))
@@ -174,7 +179,7 @@ namespace giantsummon
             RewardsToGet.AddRange(Base.RewardsList);
             {
                 Reward rwd = new Reward();
-                if (Base.IsTerraGuardian)
+                if (!MainMod.ClassicMode && Base.IsTerraGuardian)
                 {
                     rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherHeart>();
                     rwd.RewardScore = 500;
@@ -190,7 +195,7 @@ namespace giantsummon
                 rwd.RewardChance = 0.2f;
                 RewardsToGet.Add(rwd);
                 //
-                if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Base.IsTerraGuardian)
+                if (!MainMod.ClassicMode && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Base.IsTerraGuardian)
                 {
                     rwd = new Reward();
                     rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherFruit>();

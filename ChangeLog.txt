@@ -31,3 +31,17 @@ The mod will no longer tell you when a companion has a new request for you.
 	The only way of finding out If a companion has a request, is either by talking to It about requests, or checking the Guardian Selection Interface.
 	Companions following you that has just unlocked a Talk request will still tell you that the request was unlocked.
 Reviewed the body sprites of: Blue, Bree and Mabel.
+Companions will now forget who they were attacking when teleporting to your position.
+Blue will now preffer using both arms to hold her bunny, instead of using one of them to hold your character.
+Companions sliding on walls will now reset the fall height.
+Bree will no longer be shown by her name when you find her during your travels.
+	She can introduce herself.
+Vladimir will now appear either inside a bee hive, or above It.
+Fixed a bug where companions personal requests weren't counting as completed.
+Added a Skin and Outfit tab.
+	Skins and Outfits are planned to be acquired in-game, If you beat certain requirement.
+	Currently, only Bree has a unlockable skin, you get It from completting her personal request.
+	Skins changes the companion body, while outfits gives them clothings.
+	Terrarian companions will not get skins and outfits, since you can give them yourself.
+Companions will now try to leave water when they are drowning, and your character is somewhere dry.
+Added Blue's missing animations with a Bunny.

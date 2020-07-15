@@ -56,7 +56,7 @@ namespace giantsummon
         public bool TestMpSync { get { return MainMod.NetplaySync; } set { MainMod.NetplaySync = value; } }
 
         [Label("Classic Mode?")]
-        [Tooltip("You can only have 1 companion following you.")]
+        [Tooltip("You can only have 1 companion following you, and requests no longer give Ether Heart and Ether Fruit.")]
         public bool ClassicMode { get { return MainMod.ClassicMode; } set { MainMod.ClassicMode = value; } }
 
         [Label("Increase all monsters health based on number of guardians following?")]

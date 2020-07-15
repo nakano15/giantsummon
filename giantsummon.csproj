@@ -212,6 +212,7 @@
     <Compile Include="RequestData.cs" />
     <Compile Include="Reward.cs" />
     <Compile Include="SavePlayerDefsCommand.cs" />
+    <Compile Include="SkinReqStruct.cs" />
     <Compile Include="SoundData.cs" />
     <Compile Include="TerraGuardian.cs" />
     <Compile Include="TriggerHandler.cs" />

@@ -39,6 +39,7 @@ namespace giantsummon
         public TerrarianCompanionInfos TerrarianInfo = null;
         public List<RequestBase> RequestDB = new List<RequestBase>();
         public List<Reward> RewardsList = new List<Reward>();
+        public List<SkinReqStruct> SkinList = new List<SkinReqStruct>(), OutfitList = new List<SkinReqStruct>();
 
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;
@@ -198,6 +199,18 @@ namespace giantsummon
 
             //Sitting Position
             SittingPoint = new Point(10 * 2, 21 * 2);
+        }
+
+        public void AddSkin(byte ID, string Name, SkinReqStruct.SkinRequirementDel requirement)
+        {
+            SkinReqStruct skin = new SkinReqStruct(ID, Name, requirement);
+            SkinList.Add(skin);
+        }
+
+        public void AddOutfit(byte ID, string Name, SkinReqStruct.SkinRequirementDel requirement)
+        {
+            SkinReqStruct skin = new SkinReqStruct(ID, Name, requirement);
+            OutfitList.Add(skin);
         }
 
         public bool IsTerraGuardian { get { return GetGroup.RecognizeAsTerraGuardian; } }
