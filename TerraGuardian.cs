@@ -383,10 +383,18 @@ namespace giantsummon
             {
                 int AttackRangeX = 0;
                 int y;
-                int Frame = Base.ItemUseFrames[2];
+                if ((ItemPosition == -1 && !Base.DontUseHeavyWeapons) || (ItemPosition > -1 && MainMod.IsGuardianItem(Inventory[ItemPosition])))
+                {
+                    GetBetweenHandsPosition(Base.HeavySwingFrames[0], out AttackRangeX, out y);
+                }
+                else
+                {
+                    GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[2], out AttackRangeX, out y);
+                }
+                /*int Frame = Base.ItemUseFrames[2];
                 if (Kneeling && Base.CanDuck)
                     Frame = Base.DuckingSwingFrames[2];
-                GetLeftHandPosition(Frame, out AttackRangeX, out y);
+                GetLeftHandPosition(Frame, out AttackRangeX, out y);*/
                 AttackRangeX = (int)(SpriteWidth * 0.5f) - AttackRangeX;
                 Range += (int)(AttackRangeX * Scale);
             }
@@ -423,7 +431,7 @@ namespace giantsummon
             {
                 int AttackRangeYUpper = 0, AttackRangeYLower = 0;
                 int x;
-                if (ItemPosition == -1 || MainMod.IsGuardianItem(Inventory[ItemPosition]))
+                if ((ItemPosition == -1 && !Base.DontUseHeavyWeapons) || (ItemPosition > -1 && MainMod.IsGuardianItem(Inventory[ItemPosition])))
                 {
                     GetBetweenHandsPosition(Base.HeavySwingFrames[0], out x, out AttackRangeYUpper);
                 }
@@ -433,7 +441,7 @@ namespace giantsummon
                 }
                 //AttackRangeYUpper = -SpriteHeight + AttackRangeYUpper;
                 RangeYUpper += (int)(AttackRangeYUpper * Scale);
-                if (ItemPosition == -1 || MainMod.IsGuardianItem(Inventory[ItemPosition]))
+                if ((ItemPosition == -1 && !Base.DontUseHeavyWeapons) || (ItemPosition > -1 && MainMod.IsGuardianItem(Inventory[ItemPosition])))
                 {
                     GetBetweenHandsPosition(Base.HeavySwingFrames[2], out x, out AttackRangeYLower);
                 }

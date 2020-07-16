@@ -422,7 +422,7 @@ namespace giantsummon.Npcs
                 {
                     npc.frameCounter++;
                     Frame = ((int)npc.frameCounter / 5) % 4;
-                    if (Frame == 2)
+                    if (Frame == 3)
                         Frame = 1;
                     Frame += 19;
                 }
@@ -433,7 +433,7 @@ namespace giantsummon.Npcs
             }
             if (Frame >= AlexGuardianBase.FramesInRows)
             {
-                npc.frame.Y += Frame / AlexGuardianBase.FramesInRows;
+                npc.frame.Y = Frame / AlexGuardianBase.FramesInRows;
                 Frame -= npc.frame.Y * AlexGuardianBase.FramesInRows;
             }
             else

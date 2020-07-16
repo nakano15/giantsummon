@@ -104,6 +104,15 @@ namespace giantsummon.Npcs
 
         public override void AI()
         {
+            if (npc.ai[2] == 0)
+            {
+                if ((Math.Abs(Main.player[Main.myPlayer].Center.X - npc.Center.X) >= NPC.sWidth * 0.5f + NPC.safeRangeX ||
+                    Math.Abs(Main.player[Main.myPlayer].Center.Y - npc.Center.Y) >= NPC.sHeight * 0.5f + NPC.safeRangeY))
+                {
+                    Main.NewText("A Giant Raccoon appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + " position.");
+                }
+                npc.ai[2] = 1;
+            }
             if (!Main.dayTime)
             {
                 bool PlayerInRange = false;

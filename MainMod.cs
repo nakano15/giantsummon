@@ -538,8 +538,8 @@ namespace giantsummon
                 {
                     Text = "Press '" + Main.cHook + "' to give up.";
                     Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28), Color.OrangeRed, 1f, 0.5f, 0.5f);
-                    Text = "Getting help in " + Math.Round(PlayerMod.HelpCooldown - (float)Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReviveCooldown / 60, 1) + " seconds";
-                    Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28 + 26), Color.OrangeRed, 0.85f, 0.5f, 0.5f);
+                    //Text = "Getting help in " + Math.Round(PlayerMod.HelpCooldown - (float)Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReviveCooldown / 60, 1) + " seconds";
+                    //Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28 + 26), Color.OrangeRed, 0.85f, 0.5f, 0.5f);
                 }
 
             }

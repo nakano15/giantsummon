@@ -64,7 +64,7 @@ namespace giantsummon.Creatures
             //DuckingFrame = 20;
             //DuckingSwingFrames = new int[] { 21, 22, 12 };
             SittingFrame = 14;
-            ChairSittingFrame = 18;
+            ChairSittingFrame = 31;
             SittingItemUseFrames = new int[] { 15, 16, 17 };
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 10, 11, 15 });
             ThroneSittingFrame = 22;
