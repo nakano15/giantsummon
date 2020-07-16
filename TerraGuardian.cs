@@ -103,6 +103,7 @@ namespace giantsummon
         public bool OverrideQuickMountToMountGuardianInstead { get { return Data.OverrideQuickMountToMountGuardianInstead; } set { Data.OverrideQuickMountToMountGuardianInstead = value; } }
         public bool UseHeavyMeleeAttackWhenMounted { get { return Data.UseHeavyMeleeAttackWhenMounted; } set { Data.UseHeavyMeleeAttackWhenMounted = value; } }
         public bool UseWeaponsByInventoryOrder { get { return Data.UseWeaponsByInventoryOrder; } set { Data.UseWeaponsByInventoryOrder = value; } }
+        public bool HideWereForm { get { return Data.HideWereForm; } set { Data.HideWereForm = value; } }
         public float Accuracy { get { if (_Accuracy < 1f) return _Accuracy; return 1f; } set { _Accuracy = value; } }
         private float _Accuracy = 1f;
         public bool FallProtection = false;
@@ -395,35 +396,34 @@ namespace giantsummon
         {
             RangeYLower = 40;
             RangeYUpper = 40;
-            int WeaponPosition = (ItemPosition == -1 ? GetHighestDamageMeleeWeaponPosition : ItemPosition);
-            if (WeaponPosition > -1)
+            if (ItemPosition > -1)
             {
-                if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[WeaponPosition]))
+                if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[ItemPosition]))
                 {
-                    if (Main.itemTexture[this.Inventory[WeaponPosition].type].Height >= Main.itemTexture[this.Inventory[WeaponPosition].type].Width)
+                    if (Main.itemTexture[this.Inventory[ItemPosition].type].Height >= Main.itemTexture[this.Inventory[ItemPosition].type].Width)
                     {
-                        RangeYLower = Main.itemTexture[this.Inventory[WeaponPosition].type].Height;
+                        RangeYLower = Main.itemTexture[this.Inventory[ItemPosition].type].Height;
                     }
                     else
                     {
-                        RangeYLower = Main.itemTexture[this.Inventory[WeaponPosition].type].Width;
+                        RangeYLower = Main.itemTexture[this.Inventory[ItemPosition].type].Width;
                     }
                 }
                 else
                 {
-                    if (this.Inventory[WeaponPosition].height >= this.Inventory[WeaponPosition].width)
-                        RangeYLower = this.Inventory[WeaponPosition].height;
+                    if (this.Inventory[ItemPosition].height >= this.Inventory[ItemPosition].width)
+                        RangeYLower = this.Inventory[ItemPosition].height;
                     else
-                        RangeYLower = this.Inventory[WeaponPosition].width;
+                        RangeYLower = this.Inventory[ItemPosition].width;
                 }
-                RangeYLower = (int)(RangeYLower * Inventory[WeaponPosition].scale);
+                RangeYLower = (int)(RangeYLower * Inventory[ItemPosition].scale);
             }
             RangeYUpper = -RangeYLower;
-            RangeYLower *= 0.55f;
+            RangeYLower *= 0.5f;
             {
                 int AttackRangeYUpper = 0, AttackRangeYLower = 0;
                 int x;
-                if (MainMod.IsGuardianItem(Inventory[WeaponPosition]))
+                if (ItemPosition == -1 || MainMod.IsGuardianItem(Inventory[ItemPosition]))
                 {
                     GetBetweenHandsPosition(Base.HeavySwingFrames[0], out x, out AttackRangeYUpper);
                 }
@@ -433,7 +433,7 @@ namespace giantsummon
                 }
                 //AttackRangeYUpper = -SpriteHeight + AttackRangeYUpper;
                 RangeYUpper += (int)(AttackRangeYUpper * Scale);
-                if (MainMod.IsGuardianItem(Inventory[WeaponPosition]))
+                if (ItemPosition == -1 || MainMod.IsGuardianItem(Inventory[ItemPosition]))
                 {
                     GetBetweenHandsPosition(Base.HeavySwingFrames[2], out x, out AttackRangeYLower);
                 }
@@ -3898,29 +3898,30 @@ namespace giantsummon
                 Item weapon = Inventory[WeaponPosition];
                 float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition, Kneeling) + TargetWidth * 0.5f, UpperY, LowerY;
                 GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY, Kneeling);
-                InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
-                InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) ||
+                InRangeX = Math.Abs(Position.X + Velocity.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
+                InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) || 
                     (UpperY + Position.Y - Height >= TargetPosition.Y && LowerY + Position.Y <= TargetPosition.Y + TargetHeight);
                 /*for (int x = -10; x <= 10; x++)
                 {
                     Vector2 DustPos = new Vector2(Position.X + (AttackWidth * 0.1f * x), UpperY + Position.Y);
                     Dust d = Dust.NewDustDirect(DustPos, 3, 3, Terraria.ID.DustID.GreenBlood, 0, 0);
                     d.noGravity = true;
+                    d.velocity.X = d.velocity.Y = 0;
                     DustPos.Y = LowerY + Position.Y;
                     d = Dust.NewDustDirect(DustPos, 3, 3, Terraria.ID.DustID.GreenBlood, 0, 0);
+                    d.velocity.X = d.velocity.Y = 0;
                     d.noGravity = true;
                 }*/
             }
             else
             {
-                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f)
-                {
-                    InRangeX = true;
-                }
+                InRangeX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f;
                 //if (TopLeftCollision.X + Width >= TargetPosition.X && TopLeftCollision.X < TargetPosition.X + TargetWidth)
                 //    InRangeX = true;
-                if (Position.Y >= TargetPosition.Y && Position.Y - Height < TargetPosition.Y + TargetHeight)
-                    InRangeY = true;
+                float UpperY, LowerY;
+                GetMeleeWeaponRangeY(-1, out UpperY, out LowerY, false);
+                InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) ||
+                    (UpperY + Position.Y - Height >= TargetPosition.Y && LowerY + Position.Y <= TargetPosition.Y + TargetHeight);
             }
             return InRangeX && InRangeY;
         }
@@ -4050,13 +4051,14 @@ namespace giantsummon
                         int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
                         int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
                         bool MagicItemNeedsRecharge = false;
+                        bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
                         for (int i = 0; i < 10; i++)
                         {
                             if (Inventory[i].type == 0)
                                 continue;
                             if (Inventory[i].melee)
                             {
-                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || (PlayerMounted && !Items.GuardianItemPrefab.IsHeavyItem(Inventory[i])))))
+                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || MayUseHeavyWeapon))
                                 {
                                     HighestMeleeDamage = Inventory[i].damage;
                                     MeleePosition = i;
@@ -4265,10 +4267,15 @@ namespace giantsummon
                     }
                     else
                     {
-                        if (!InRangeX)
+                        float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + TargetWidth * 0.5f;
+                        if (Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) > AttackRange)
+                            Approach = true;
+                        else if (Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < Width * 0.5f + 8)
+                            Retreat = true;
+                        /*if (!InRangeX)
                         {
                             Approach = true;
-                        }
+                        }*/
                     }
                     if (false && NearDeath)
                     {
@@ -8771,7 +8778,7 @@ namespace giantsummon
                     {
                         Main.PlaySound(Terraria.ID.SoundID.Item27, CenterPosition);
                     }
-                    else if (HasFlag(GuardianFlags.Werewolf) || Inventory.Take(10).Any(x => x.type == Terraria.ID.ItemID.MoonCharm))
+                    else if (!HideWereForm && (HasFlag(GuardianFlags.Werewolf) || Inventory.Take(10).Any(x => x.type == Terraria.ID.ItemID.MoonCharm)))
                     {
                         Main.PlaySound(3, (int)CenterPosition.X, (int)CenterPosition.Y, 6, 1f, 0f);
                         PlayingAnotherSound = true;
@@ -13348,17 +13355,20 @@ namespace giantsummon
                     }
                 }
             }
-            if (werewolf)
+            if (!HideWereForm)
             {
-                HeadSlot = 38;
-                ArmorSlot = 21;
-                LegSlot = 20;
-            }
-            if (merfolk)
-            {
-                HeadSlot = 39;
-                ArmorSlot = 22;
-                LegSlot = 21;
+                if (werewolf)
+                {
+                    HeadSlot = 38;
+                    ArmorSlot = 21;
+                    LegSlot = 20;
+                }
+                if (merfolk)
+                {
+                    HeadSlot = 39;
+                    ArmorSlot = 22;
+                    LegSlot = 21;
+                }
             }
         }
 
@@ -13926,6 +13936,11 @@ namespace giantsummon
             DisplayPosition.Y -= (int)Main.screenPosition.Y;
             Main.spriteBatch.Draw(Main.blackTileTexture, DisplayPosition, Color.Red * 0.5f); //For debugging.   
 			*/
+            /*Rectangle HitboxDisplay = HitBox;
+            HitboxDisplay.X -= (int)Main.screenPosition.X;
+            HitboxDisplay.Y -= (int)Main.screenPosition.Y;
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.Unknown, Main.blackTileTexture, HitboxDisplay, null, Color.Red * 0.5f);
+            AddDrawData(dd, false);*/
             foreach (PathFinder.Breadcrumbs path in Paths)
             {
                 Vector2 Pos = new Vector2(path.X * 16, path.Y * 16) - Main.screenPosition;
@@ -14118,6 +14133,7 @@ namespace giantsummon
                 hairrect = new Rectangle(0, 56 * LeftArmAnimationFrame - 336, 40, 56);
             if (hairrect.Y < 0)
                 hairrect.Y = 0;
+            bool ShowHair = HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaFemale && HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaMale;
             bool LeftArmInFront = SittingOnPlayerMount;
             int SkinVariant = Base.TerrarianInfo.GetSkinVariant(Male);
             Vector2 Origin = new Vector2(20, 56);
@@ -14178,7 +14194,7 @@ namespace giantsummon
             bool DrawNormalHair = HeadSlot == 0 || HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198,
                 DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
             bool HideLegs = LegSlot == 143 || LegSlot == 106 || LegSlot == 140;
-            if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28)
+            if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28 && HeadSlot != 201)
                 DrawNormalHair = true;
             DrawWings(seffect, ArmorColoring);
             DrawChains();
@@ -14223,7 +14239,7 @@ namespace giantsummon
             AddDrawData(dd, false);
             dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, bodyrect, EyesWhiteColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);
-            if (Base.TerrarianInfo.HairStyle >= 0)
+            if (ShowHair && Base.TerrarianInfo.HairStyle >= 0)
             {
                 if (DrawNormalHair)
                 {
@@ -14251,18 +14267,18 @@ namespace giantsummon
             if (ArmorSlot > 0)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorArm, Main.armorArmTexture[ArmorSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, LeftArmInFront);
+                AddDrawData(dd, true);
             }
             else
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodyArmSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, LeftArmInFront);
+                AddDrawData(dd, true);
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultUndershirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmUndershirt], Position, bodyrect, UndershirtColor, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, LeftArmInFront);
+                AddDrawData(dd, true);
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmShirt], Position, bodyrect, ShirtColor, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, LeftArmInFront);
+                AddDrawData(dd, true);
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHand, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmHand], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, LeftArmInFront);
+                AddDrawData(dd, true);
             }
         }
 

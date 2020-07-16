@@ -33,9 +33,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 64, LastModVersion = 62;
+        public const int ModVersion = 65, LastModVersion = 62;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false,
             GuardiansGetKnockedOutUponDefeat = false, GuardiansDontDiesAfterDownedDefeat = false;
@@ -1293,6 +1293,7 @@ namespace giantsummon
                                 case 0: //Equipments
                                     {
                                         ManagingGuardianEquipments = true;
+                                        float EquipmentSlot6StartPos = 0f;
                                         for (int s = 0; s < 9; s++)
                                         {
                                             Vector2 SlotPosition = SlotStartPosition;
@@ -1308,6 +1309,10 @@ namespace giantsummon
                                                 context = 10;
                                                 SlotPosition.Y += 4;
                                             }
+                                            if (s == 2)
+                                                EquipmentSlot6StartPos = SlotPosition.Y;
+                                            if (s == 2 + 5)
+                                                SlotPosition.Y = EquipmentSlot6StartPos;
                                             if (s == 8 && (!Guardian.ExtraAccessorySlot || (!Main.expertMode && Guardian.Equipments[8].type == 0)))
                                                 continue;
                                             if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + 56 * Main.inventoryScale && Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + 56 * Main.inventoryScale)
@@ -1573,6 +1578,8 @@ namespace giantsummon
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Auto Sell when inventory is filled.", ref Guardian.Data.AutoSellWhenInvIsFull);
                                         SlotStartPosition.Y += 26;
                                     }
+                                    AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Hide Werewolf/Merfolk form?", ref Guardian.Data.HideWereForm);
+                                    SlotStartPosition.Y += 26;
                                     break;
                                 case 1: //Combat
                                     if (!Guardian.AvoidCombat)

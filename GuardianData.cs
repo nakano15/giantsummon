@@ -33,7 +33,7 @@ namespace giantsummon
         public int ID = 0;
         public bool IsStarter = false;
         public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;
-        public bool OverrideQuickMountToMountGuardianInstead = false, UseHeavyMeleeAttackWhenMounted = true;
+        public bool OverrideQuickMountToMountGuardianInstead = false, UseHeavyMeleeAttackWhenMounted = true, HideWereForm = false;
         public Item[] Equipments = new Item[9]; //3 body equipments and 6 accessories
         public Item[] Inventory = new Item[50];
         public byte SkinID = 0, OutfitID = 0; //Skin handles changing the body of the guardians. Outfits gives clothings to them.
@@ -871,6 +871,7 @@ namespace giantsummon
             tag.Add("UseWeaponsByInventoryOrder" + UniqueID, UseWeaponsByInventoryOrder);
             tag.Add("ProtectMode" + UniqueID, ProtectMode);
             tag.Add("AutoSell" + UniqueID, AutoSellWhenInvIsFull);
+            tag.Add("HideWereForm" + UniqueID, HideWereForm);
             tag.Add("GiftGiven_" + UniqueID, GiftGiven);
             for (int i = 0; i < 8; i++)
             {
@@ -1029,6 +1030,10 @@ namespace giantsummon
             if (ModVersion >= 49)
             {
                 AutoSellWhenInvIsFull = tag.GetBool("AutoSell" + UniqueID);
+            }
+            if (ModVersion >= 65)
+            {
+                HideWereForm = tag.GetBool("HideWereForm" + UniqueID);
             }
             if (ModVersion >= 30)
             {

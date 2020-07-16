@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace giantsummon
 {
-    public class ProjMod : GlobalProjectile
+    public partial class ProjMod : GlobalProjectile
     {
         public static Dictionary<int, TerraGuardian> GuardianProj = new Dictionary<int, TerraGuardian>();
         public static int ProjParent = -1;
@@ -42,14 +42,48 @@ namespace giantsummon
             if (IsGuardianProjectile(projectile.whoAmI))
             {
                 TerraGuardian g = GuardianProj[projectile.whoAmI];
+                if (projectile.minion)
+                {
+                    Main.player[projectile.owner].numMinions--;
+                    Main.player[projectile.owner].slotsMinions -= projectile.minionSlots;
+                    if (g.MinionSlotCount + projectile.minionSlots > g.MaxMinions && projectile.owner == Main.myPlayer)
+                    {
+                        if (projectile.type == 627 || projectile.type == 628)
+                        {
+                            int byUuid = Projectile.GetByUUID(projectile.owner, projectile.ai[0]);
+                            if (byUuid > -1)
+                            {
+                                Projectile proj = Main.projectile[byUuid];
+                                if (proj.type != 625)
+                                {
+                                    proj.localAI[1] = projectile.localAI[1];
+                                }
+                                proj = Main.projectile[(int)projectile.localAI[1]];
+                                proj.ai[0] = projectile.ai[0];
+                                proj.ai[1] = 1;
+                                proj.netUpdate = true;
+                            }
+                        }
+                        projectile.Kill();
+                    }
+                    else
+                    {
+                        g.NumMinions++;
+                        g.MinionSlotCount += projectile.minionSlots;
+                    }
+                }
+                if (projectile.aiStyle == 62)
+                {
+                    HornetSummonAI(projectile);
+                    return false;
+                }
+                if (projectile.aiStyle == 26)
+                {
+                    GroundPetsAndBabySlimeAI(projectile);
+                    return false;
+                }
                 backup = new PlayerDataBackup(Main.player[projectile.owner], g);
                 BackupUsed = true;
-                if (projectile.minionSlots > 0)
-                {
-                    projectile.timeLeft = 2;
-                    //Main.player[projectile.owner].numMinions--;
-                    g.NumMinions++;
-                }
             }
             else
             {

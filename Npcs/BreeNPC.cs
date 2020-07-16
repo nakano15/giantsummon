@@ -36,10 +36,14 @@ namespace giantsummon.Npcs
             dialogues.AddDialogue("You're right, I have to keep looking. But I'm getting worn out after so much travelling.", "You are awful! But maybe you are right? I don't know, all I know is that I'm tired.", "Take a rest before you search for him.", "Why don't you stay here?", true);
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("WhiteCat");
+        }
+
         public override void SetDefaults()
         {
             base.SetDefaults();
-            npc.GivenName = "White Cat";
             //npc.townNPC = true;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
             npc.dontCountMe = true;

@@ -613,7 +613,7 @@ namespace giantsummon.Creatures
                     if (guardian.BodyAnimationFrame == StandingFrame)
                         guardian.BodyAnimationFrame = BunnyHoldingFrame;
                     //Todo - Add the throne sitting animation here.
-                    if (!UsingLeftArm || guardian.PlayerMounted)
+                    if (!UsingLeftArm || (guardian.PlayerMounted && ((guardian.Base.PlayerMountedArmAnimation > -1 && guardian.LeftArmAnimationFrame == guardian.Base.PlayerMountedArmAnimation) || guardian.LeftArmAnimationFrame == guardian.Base.JumpFrame)))
                     {
                         guardian.LeftArmAnimationFrame = BunnyHoldingFrame;
                     }

@@ -107,6 +107,7 @@
     <Compile Include="GuardianNPC\List\SardineNPC.cs" />
     <Compile Include="GuardianNPC\Terrarians\MichelleNPC.cs" />
     <Compile Include="GuardianOrderHudNew.cs" />
+    <Compile Include="GuardianProjAI.cs" />
     <Compile Include="GuardianSchedule.cs" />
     <Compile Include="GuardianSkills.cs" />
     <Compile Include="Items\Accessories\FirstSymbol.cs" />

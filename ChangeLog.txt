@@ -50,3 +50,8 @@ Nerfed the number of boss spawning items that you can find as reward from Bounty
 Nerfed also the number of Life Crystals, Life Fruits, Ether Hearts and Ether Fruits you get from Bounty Quests.
 	For Life Crystal and It's variant, you can have the chance of only finding one.
 	For Life Fruit and It's variant, you can get up to 2.
+There is now a option on the companion AI to hide their Merfolk and Werewolf form.
+	Don't ask.
+Mabel will enjoy a bit less sitting on Thrones and Benches.
+	Instead of having her hands behind the head, she will now have her hands on her leg.
+Fixed the Lamia Hair showing the Terrarian companion hair when equipped.
