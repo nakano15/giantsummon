@@ -4056,7 +4056,7 @@ namespace giantsummon
                                 continue;
                             if (Inventory[i].melee)
                             {
-                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || (!PlayerMounted || Base.ReverseMount))))
+                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || (PlayerMounted && !Items.GuardianItemPrefab.IsHeavyItem(Inventory[i])))))
                                 {
                                     HighestMeleeDamage = Inventory[i].damage;
                                     MeleePosition = i;
@@ -4934,6 +4934,7 @@ namespace giantsummon
                 if (GuardianUsingFurniture)
                 {
                     furniturex = furniturey = -1;
+                    UsingFurniture = false;
                 }
                 return !GuardianUsingFurniture;
             }
@@ -5059,6 +5060,7 @@ namespace giantsummon
                 if (tile == null || !tile.active())
                 {
                     furniturex = furniturey = -1;
+                    UsingFurniture = false;
                     return;
                 }
                 if (Math.Abs(Position.X - TileCenterX) > 8)
@@ -5180,20 +5182,27 @@ namespace giantsummon
             {
                 if (UsingFurniture)
                 {
-                    switch (Main.tile[furniturex, furniturey].type)
+                    if (furniturex == -1 && furniturey == -1)
                     {
-                        case Terraria.ID.TileID.Chairs:
-                            ComfortSum += 0.015f;
-                            break;
-                        case Terraria.ID.TileID.Thrones:
-                            ComfortSum += 0.025f;
-                            break;
-                        case Terraria.ID.TileID.Benches:
-                            ComfortSum += 0.017f;
-                            break;
-                        case Terraria.ID.TileID.Beds:
-                            ComfortSum += 0.019f;
-                            break;
+                        UsingFurniture = false;
+                    }
+                    else
+                    {
+                        switch (Main.tile[furniturex, furniturey].type)
+                        {
+                            case Terraria.ID.TileID.Chairs:
+                                ComfortSum += 0.012f;
+                                break;
+                            case Terraria.ID.TileID.Thrones:
+                                ComfortSum += 0.015f;
+                                break;
+                            case Terraria.ID.TileID.Benches:
+                                ComfortSum += 0.013f;
+                                break;
+                            case Terraria.ID.TileID.Beds:
+                                ComfortSum += 0.016f;
+                                break;
+                        }
                     }
                 }
                 else
@@ -8063,6 +8072,8 @@ namespace giantsummon
                     if (Main.npc[t].CanBeChasedBy(null) && CollisionCanHit)
                     {
                         float Distance = Main.npc[t].Distance(MyPosition);
+                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[t].type] || Main.npc[t].boss)
+                            Distance *= 0.5f;
                         if (Distance < NearestDistance)
                         {
                             NearestDistance = Distance;
@@ -8311,7 +8322,7 @@ namespace giantsummon
                 PositionDifference = Owner.Center;
                 LeaderCenterX = PositionDifference.X;
                 LeaderSpeedX = Owner.velocity.X;
-                LeaderBottom = Owner.position.Y + Owner.height - 1;
+                LeaderBottom = Owner.position.Y + Owner.height;
                 LeaderHeight = Owner.height;
                 LeaderWet = Owner.wet;
                 if (Owner.velocity.Y == 0 && PlayerState > 0)
@@ -8459,7 +8470,7 @@ namespace giantsummon
                     bool TryFlying = WingType > 0,
                         TrySwimming = Wet && (HasFlag(GuardianFlags.SwimmingAbility) || HasFlag(GuardianFlags.Merfolk));
                     bool PlayerAboveMe = Owner.velocity.Y != 0 && (Velocity.Y == 0 ? LeaderBottom < Position.Y - (LeaderHeight * 2 + Height) : LeaderBottom < Position.Y - LeaderHeight * 0.5f),
-                        PlayerAboveMeSwim = TrySwimming && ((LeaderWet && LeaderBottom < Position.Y - 8) || LeaderBottom < Position.Y + Height - 8);
+                        PlayerAboveMeSwim = TrySwimming && ((LeaderWet && LeaderBottom < Position.Y - 8) || (!LeaderWet && LeaderBottom < Position.Y + Height - 8));
                     if (PlayerAboveMeSwim)
                     {
                         Jump = true;

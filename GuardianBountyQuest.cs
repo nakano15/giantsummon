@@ -1258,26 +1258,26 @@ namespace giantsummon
                 if (NPC.downedMoonlord)
                     BossSpawnItems.Add(ItemID.CelestialSigil);
                 i.SetDefaults(BossSpawnItems[Main.rand.Next(BossSpawnItems.Count)]);
-                if (i.maxStack > 0)
+                /*if (i.maxStack > 0)
                 {
                     i.stack += Main.rand.Next((int)(3 * RewardMod));
-                }
+                }*/
                 Rewards.Add(i);
             }
-            if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
+            if (!MainMod.ClassicMode && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
             {
                 i = new Item();
                 i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherFruit>());
                 if (Main.rand.NextDouble() < 0.6 * RewardMod)
-                    i.stack += Main.rand.Next((int)(3 * RewardMod));
+                    i.stack += Main.rand.Next((int)(2 * RewardMod));
                 Rewards.Add(i);
             }
-            if (Main.rand.Next(3) == 0)
+            if (!MainMod.ClassicMode && Main.rand.Next(3) == 0)
             {
                 i = new Item();
                 i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherHeart>());
-                if (Main.rand.NextDouble() < 0.4 * RewardMod)
-                    i.stack += Main.rand.Next((int)(2 * RewardMod));
+                //if (Main.rand.NextDouble() < 0.4 * RewardMod)
+                //    i.stack += Main.rand.Next((int)(2 * RewardMod));
                 Rewards.Add(i);
             }
             if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
@@ -1292,8 +1292,8 @@ namespace giantsummon
             {
                 i = new Item();
                 i.SetDefaults(ItemID.LifeCrystal);
-                if (Main.rand.NextDouble() < 0.4 * RewardMod)
-                    i.stack += Main.rand.Next((int)(RewardMod));
+                //if (Main.rand.NextDouble() < 0.4 * RewardMod)
+                //    i.stack += Main.rand.Next((int)(RewardMod));
                 Rewards.Add(i);
             }
             if (spawnBiome != SpawnBiome.Underworld && Main.rand.Next(5) == 0)

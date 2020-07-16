@@ -551,17 +551,24 @@ namespace giantsummon.Creatures
                 NPC npc = Main.npc[Value];
                 if (npc.type == Terraria.ModLoader.ModContent.NPCType<Npcs.ZombieGuardian>())
                 {
-                    switch (Main.rand.Next(3))
+                    if ((guardian.OwnerPos > -1 && PlayerMod.PlayerHasGuardian(Main.player[guardian.OwnerPos], GuardianBase.Zacks)) || NpcMod.HasMetGuardian(GuardianBase.Zacks))
                     {
-                        case 0:
-                            guardian.SaySomething("*What? No! No no no! It can't be happening. Zacks!*");
-                            break;
-                        case 1:
-                            guardian.SaySomething("*Zacks! What happened to you? It's me! Blue!*");
-                            break;
-                        case 2:
-                            guardian.SaySomething("*Zacks? Is that you? Zacks, look at me! Zacks!!*");
-                            break;
+                        guardian.SaySomething("*Hello again, Zacks.*");
+                    }
+                    else
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0:
+                                guardian.SaySomething("*What? No! No no no! It can't be happening. Zacks!*");
+                                break;
+                            case 1:
+                                guardian.SaySomething("*Zacks! What happened to you? It's me! Blue!*");
+                                break;
+                            case 2:
+                                guardian.SaySomething("*Zacks? Is that you? Zacks, look at me! Zacks!!*");
+                                break;
+                        }
                     }
                 }
             }

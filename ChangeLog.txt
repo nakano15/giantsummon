@@ -45,3 +45,8 @@ Added a Skin and Outfit tab.
 	Terrarian companions will not get skins and outfits, since you can give them yourself.
 Companions will now try to leave water when they are drowning, and your character is somewhere dry.
 Added Blue's missing animations with a Bunny.
+Nerfed the number of boss spawning items that you can find as reward from Bounty Quests.
+	Instead of giving about 1~3 items, It will only give 1.
+Nerfed also the number of Life Crystals, Life Fruits, Ether Hearts and Ether Fruits you get from Bounty Quests.
+	For Life Crystal and It's variant, you can have the chance of only finding one.
+	For Life Fruit and It's variant, you can get up to 2.
