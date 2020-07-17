@@ -1,0 +1,6 @@
+Fix the left arm of terrarian companions showing in front of the body on incorrect moments.
+Instead of adding dialogues to dismiss a companion when in their recruitment, instead make so the companion is added to the companion list, but not set to spawn on the world.
+Make companion npcs be able to share the same house, by making one of the companion npcs get the other companion data, and then removing It.
+Add a method that damages the ko'd health recovery, also halting health regen effect from allies, and can kill the one having the ko health damage when It reaches 0.
+Add a skin and outfit container to the game, so other mod skins and outfits can be added to the mod.
+	The container also should have a hook for the drawing scripts, if there isn't already in the mod.
