@@ -160,6 +160,7 @@ namespace giantsummon
             //DuckingFrame = 20;
             //DuckingSwingFrames = new int[] { 21, 22, 12 };
             SittingFrame = 6;
+            BedSleepingFrame = 0;
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 1, 2 });
 
             //Left Hand

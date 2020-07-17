@@ -14150,6 +14150,11 @@ namespace giantsummon
                 Origin.Y *= 0.5f;
                 Position.Y -= 20 + 6;
             }
+            else if (BodyAnimationFrame == Base.BedSleepingFrame)
+            {
+                Origin.Y *= 0.5f;
+                Position.Y -= 20 + 6;
+            }
 
             Color HairColor = Base.TerrarianInfo.HairColor,
                 EyesColor = Base.TerrarianInfo.EyeColor,

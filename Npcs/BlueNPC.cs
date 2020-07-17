@@ -149,7 +149,7 @@ namespace giantsummon.Npcs
                     {
                         npc.direction = -1;
                     }
-                    Main.NewText("There's something in the campfire.");
+                    Main.NewText("There's something on the campfire.");
                     AiValue = 1;
                 }
                 float CampfireX = BonfireX * 16 + 8;
@@ -398,7 +398,7 @@ namespace giantsummon.Npcs
                     Main.npc[NpcPos].direction = FacingLeft ? -1 : 1;
                     Main.npc[NpcPos].position.X -= 32 * Main.npc[NpcPos].direction;
                     //Main.npc[NpcPos].position.X -= Main.npc[NpcPos].width * 0.8f * Main.npc[NpcPos].direction;
-                    Main.NewText("There's something on the campfire.");
+                    //Main.NewText("There's something on the campfire.");
                 }
                 return NpcPos;
             }

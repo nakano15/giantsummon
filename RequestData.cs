@@ -690,7 +690,7 @@ namespace giantsummon
                                             {
                                                 RequestBase.HuntRequestObjective req = (RequestBase.HuntRequestObjective)rb.Objectives[o];
                                                 HasPendingObjective = true;
-                                                QuestObjectives.Add(" Hunt " + GetIntegerValue(o) + " " + Lang.GetNPCName(req.NpcID) + ".");
+                                                QuestObjectives.Add(" Hunt " + GetIntegerValue(o) + " " + (req.NpcID == 1 ? "Slime" : "" + Lang.GetNPCName(req.NpcID)) + ".");
                                             }
                                         }
                                         break;
@@ -1062,6 +1062,69 @@ namespace giantsummon
             }
         }
 
+        public static bool IsRequiredMonster(NPC npc, int ReqMobID)
+        {
+            int m = npc.type;
+            bool IsQuestMob = false;
+            if (m == NPCID.EaterofWorldsHead || m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail)
+            {
+                bool HasBodyPart = false;
+                for (int n = 0; n < 200; n++)
+                {
+                    if (n != npc.whoAmI && Main.npc[n].active && Main.npc[n].type == NPCID.EaterofWorldsBody)
+                    {
+                        HasBodyPart = true;
+                        break;
+                    }
+                }
+                IsQuestMob = !HasBodyPart;
+            }
+            else if (m == ReqMobID)
+                IsQuestMob = true;
+            else
+            {
+                switch (ReqMobID)
+                {
+                    case NPCID.Zombie: //Add event monsters to the list.
+                        IsQuestMob = m == 430 || m == 132 || m == 186 || m == 432 || m == 187 || m == 433 || m == 188 || m == 434 || m == 189 || m == 435 ||
+                            m == 200 || m == 436 || m == 319 || m == 320 || m == 321 || m == 331 || m == 332 || m == 223 || m == 52 || m == 53 || m == 536 ||
+                            m == Terraria.ID.NPCID.ZombieEskimo || m == NPCID.ArmedZombieEskimo || m == 255 || m == 254 || m == Terraria.ID.NPCID.BloodZombie;
+                        break;
+                    case NPCID.ZombieEskimo:
+                        IsQuestMob = m == NPCID.ArmedZombieEskimo;
+                        break;
+                    case NPCID.DemonEye:
+                        IsQuestMob = m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
+                        break;
+                    case NPCID.BloodCrawler:
+                        IsQuestMob = m == NPCID.BloodCrawlerWall;
+                        break;
+                    case NPCID.Demon:
+                        IsQuestMob = m == NPCID.VoodooDemon;
+                        break;
+                    case NPCID.JungleCreeper:
+                        IsQuestMob = m == NPCID.JungleCreeperWall;
+                        break;
+                    case NPCID.Hornet:
+                        IsQuestMob = m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy;
+                        break;
+                    case NPCID.AngryBones:
+                        IsQuestMob = m == 294 || m == 295 || m == 296;
+                        break;
+                    case NPCID.BlueArmoredBones:
+                        IsQuestMob = m == NPCID.BlueArmoredBonesMace || m == NPCID.BlueArmoredBonesNoPants || m == NPCID.BlueArmoredBonesSword;
+                        break;
+                    case NPCID.RustyArmoredBonesAxe:
+                        IsQuestMob = m == NPCID.RustyArmoredBonesFlail || m == NPCID.RustyArmoredBonesSword || m == NPCID.RustyArmoredBonesSwordNoArmor;
+                        break;
+                    case NPCID.HellArmoredBones:
+                        IsQuestMob = m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
+                        break;
+                }
+            }
+            return IsQuestMob;
+        }
+
         public void OnMobKill(GuardianData gd, NPC npc)
         {
             if (requestState != RequestState.RequestActive) return;
@@ -1134,7 +1197,7 @@ namespace giantsummon
                             if (Stack > 0)
                             {
                                 int MobID = ((RequestBase.HuntRequestObjective)rb.Objectives[o]).NpcID;
-                                int m = npc.type;
+                                /*int m = npc.type;
                                 bool IsQuestMob = false;
                                 if (m == NPCID.EaterofWorldsHead)
                                 {
@@ -1193,8 +1256,8 @@ namespace giantsummon
                                         //    IsQuestMob = m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail;
                                         //    break;
                                     }
-                                }
-                                if (IsQuestMob)
+                                }*/
+                                if (IsRequiredMonster(npc, MobID))
                                 {
                                     Stack--;
                                     SetIntegerValue(o, Stack);

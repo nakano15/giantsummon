@@ -156,7 +156,6 @@
     <Compile Include="GuardianNPC\List\RococoNPC.cs" />
     <Compile Include="GuardianOrderHud.cs" />
     <Compile Include="GuardianPlayerAccessoryEffects.cs" />
-    <Compile Include="GuardianRequests.cs" />
     <Compile Include="GuardianSelectionInterface.cs" />
     <Compile Include="GuardianSprites.cs" />
     <Compile Include="GuardianFlags.cs" />

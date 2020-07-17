@@ -1,5 +1,4 @@
-﻿The mod will now tell you when Rococo appear nearby.
-Fixed the range checking of the melee attack on combat AI, when your companion doesn't have a heavy swing attack.
-Removed the revive message, because help is never coming.
-Fixed Alex's tail animation when over the player.
-Changed Alex's sitting animation, to the same as the petrified animation, but colored.
+﻿Fixed a bug where two messages telling that Blue appeared nearby, written in different ways, would pop up.
+	There is no more something in and on the campfire.
+The mod now counts as zombies:
+	Halloween and Christmas themed zombies, Frozen Zombies, Spore Zombies, Blood Zombie, Raincoat Zombie, The Groom, The Bride and Doctor Bones.
