@@ -292,7 +292,7 @@ namespace giantsummon
                             }
                             bool RepelingEnemies = false;
                             guardian.MoveLeft = guardian.MoveRight = false;
-                            if (guardian.TargetID > -1)
+                            if (guardian.IsAttackingSomething)
                             {
                                 Vector2 EnemyPosition;
                                 int EnemyWidth, EnemyHeight;
@@ -312,7 +312,7 @@ namespace giantsummon
                                     {
                                         guardian.FaceDirection(TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0);
                                         byte ReviveBoost = 1;
-                                        if (guardian.TargetID == -1)
+                                        if (!guardian.IsAttackingSomething)
                                             ReviveBoost += 1;
                                         if (IsPlayer)
                                             Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
@@ -1681,7 +1681,7 @@ namespace giantsummon
                         break;
 
                     case ActionIDs.UseBuffPotions:
-                        if (guardian.ItemAnimationTime <= 0 && guardian.TargetID == -1)
+                        if (guardian.ItemAnimationTime <= 0 && !guardian.IsAttackingSomething)
                         {
                             bool AllBuffsUsed = true;
                             for (int i = 0; i < 50; i++)
@@ -1700,7 +1700,7 @@ namespace giantsummon
                         break;
 
                     case ActionIDs.UseStatusIncreaseItems:
-                        if (guardian.ItemAnimationTime <= 0 && guardian.TargetID < 0)
+                        if (guardian.ItemAnimationTime <= 0 && !guardian.IsAttackingSomething)
                         {
                             bool AllItemsUsed = true;
                             for (int i = 0; i < 50; i++)

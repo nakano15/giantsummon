@@ -389,8 +389,12 @@ namespace giantsummon
             }
         }
 
-        public override void PostUpdateMiscEffects()
+        public override void PostUpdateEquips()
         {
+            if (KnockedOut)
+            {
+                player.waterWalk = player.waterWalk2 = false;
+            }
         }
 
         public static TerraGuardian GetPlayerSummonedGuardian(Player player, int ID, Mod mod)

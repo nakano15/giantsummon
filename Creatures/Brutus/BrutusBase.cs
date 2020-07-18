@@ -348,6 +348,13 @@ namespace giantsummon.Creatures
                 Mes.Add("*If you call me giant kitty, I will punch your stomach.*");
                 Mes.Add("*Don't listen to what [gn:"+GuardianBase.Michelle+"] says about me, I'm as tough as a rock.*");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
+            {
+                Mes.Add("*Hey, did you came from [gn:" + Malisha + "]'s house? Do you know if she needs a test subject for something?*");
+                Mes.Add("*I really like participating of [gn:" + Malisha + "]'s experiement, that way I can stay close to her for quite a long time.*");
+                Mes.Add("*[gn:" + Malisha + "] once casted a shrinking spell on me, I would normally have been scared of that, if It wasn't for the view of her I had. I mean... Wow! I hope she repeats that experiement in the future.*");
+                Mes.Add("*Do you think [gn"+Malisha+"] and I... No... Nevermind... Why am I talking about this to you?*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");

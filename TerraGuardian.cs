@@ -85,7 +85,6 @@ namespace giantsummon
         public bool HurtPanic = false;
         public bool LastWasInCombat = false;
         public bool WaitingForManaRecharge = false;
-        public bool IsInCombat { get { return TargetID > -1; } }
         public bool Male { get { if (Base.CanChangeGender) { return Data.Male; } return Base.Male; } set { if (Base.CanChangeGender) Data.Male = value; } }
         public bool Tanker { get { return Data.Tanker; } set { Data.Tanker = value; if (Data.Tanker) { Aggro += TankerAggroBonus; } else { Aggro -= TankerAggroBonus; } } }
         public bool PlayerMounted = false;
@@ -530,6 +529,7 @@ namespace giantsummon
         public int SeekingItem = -1;
         public int TargetID = -1;
         public bool AttackingTarget = false;
+        public bool IsAttackingSomething { get { return TargetID > -1 && AttackingTarget; } }
         public bool TargetInAim = false;
         public TargetTypes TargetType = TargetTypes.Npc;
         public Item[] Equipments { get { return Data.Equipments; } set { Data.Equipments = value; } }
@@ -1721,7 +1721,7 @@ namespace giantsummon
             {
                 int LastOffhandItem = -1;
                 if (SelectedOffhand > -1) LastOffhandItem = Inventory[SelectedOffhand].type;
-                PickOffhandForTheSituation(IsInCombat);
+                PickOffhandForTheSituation(IsAttackingSomething);
             }
             else if (LastOffHandAction)
             {
@@ -3211,9 +3211,11 @@ namespace giantsummon
             MaxSpeed *= MoveSpeed;
             HP = (int)(LastHealthPercentage * MHP);
             MP = (int)(LastManaPercentage * MMP);
-            if (Downed)
+            if (KnockedOut)
             {
                 Aggro = -50 + Aggro / 2;
+                if (HasFlag(GuardianFlags.WaterWalking))
+                    RemoveFlag(GuardianFlags.WaterWalking);
             }
         }
 
@@ -3811,7 +3813,7 @@ namespace giantsummon
         {
             if (Paths.Count > 0)
             {
-                if (TargetID > -1)
+                if (IsAttackingSomething)
                 {
                     PathingInterrupted = true;
                     return false;
@@ -4380,7 +4382,7 @@ namespace giantsummon
                 return;
             if (!DoAction.InUse && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
-                if (TargetID > -1)
+                if (IsAttackingSomething)
                 {
                     Vector2 TargetPos;
                     int TargetWidth, TargetHeight;
@@ -4481,7 +4483,7 @@ namespace giantsummon
                     MoveLeft = MoveRight = Jump = MoveDown = false;
                 }
                 ExternalCompatibilityScripts.RunBehaviorStatusScript(this);
-                if (!PlayerControl && TargetID == -1)
+                if (!PlayerControl && !IsAttackingSomething)
                     MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f) * Scale);
                 if (!PlayerControl)
                 {
@@ -5061,7 +5063,7 @@ namespace giantsummon
         {
             if (furniturex != -1 && furniturey != -1)
             {
-                if (TargetID > -1)
+                if (IsAttackingSomething)
                 {
                     if (UsingFurniture)
                     {
@@ -5130,7 +5132,6 @@ namespace giantsummon
                                 //SittingPosition.Y += 32;
                                 SittingPosition.Y -= (Base.SittingPoint.Y - SpriteHeight) * Scale;
                                 Position = SittingPosition;
-                                ComfortStack += 0.05f;
                             }
                             break;
                         case Terraria.ID.TileID.Thrones:
@@ -5147,10 +5148,6 @@ namespace giantsummon
                                     SittingPosition.X += SitPointX;
                                 }
                                 Position = SittingPosition;
-                                if(tile.type == Terraria.ID.TileID.Thrones)
-                                    ComfortStack += 0.1f;
-                                else
-                                    ComfortStack += 0.07f;
                                 //Position.Y -= 10 - (10 * Scale);
                             }
                             break;
@@ -5173,7 +5170,8 @@ namespace giantsummon
                                     RestPosition.Y += Base.SleepingOffset.Y;
                                     LookingLeft = BedFacingLeft;
                                 }
-                                ComfortStack += 0.09f;
+                                if (!Base.IsCustomSpriteCharacter)
+                                    Rotation = -1.570796326794897f * Direction;
                                 Position = RestPosition;
                                 //Position.Y -= 10 - (10 * Scale);
                             }
@@ -5190,7 +5188,7 @@ namespace giantsummon
 
         public void UpdateComfortStack()
         {
-            if (TargetID > -1)
+            if (IsAttackingSomething)
                 return;
             float ComfortSum = 0;
             if (!Main.bloodMoon && !Main.eclipse)
@@ -5206,16 +5204,16 @@ namespace giantsummon
                         switch (Main.tile[furniturex, furniturey].type)
                         {
                             case Terraria.ID.TileID.Chairs:
-                                ComfortSum += 0.012f;
+                                ComfortSum += 0.025f;
                                 break;
                             case Terraria.ID.TileID.Thrones:
-                                ComfortSum += 0.015f;
+                                ComfortSum += 0.05f;
                                 break;
                             case Terraria.ID.TileID.Benches:
-                                ComfortSum += 0.013f;
+                                ComfortSum += 0.043f;
                                 break;
                             case Terraria.ID.TileID.Beds:
-                                ComfortSum += 0.016f;
+                                ComfortSum += 0.02f;
                                 break;
                         }
                     }
@@ -5310,7 +5308,7 @@ namespace giantsummon
         {
             if (OwnerPos == -1 || HasCooldown(GuardianCooldownManager.CooldownType.FoodCheckingCooldown))
                 return;
-            if (ItemUseTime == 0 && TargetID == -1 && !HasBuff(Terraria.ID.BuffID.WellFed))
+            if (ItemUseTime == 0 && !IsAttackingSomething && !HasBuff(Terraria.ID.BuffID.WellFed))
             {
                 for (int i = 0; i < 50; i++)
                 {
@@ -5322,7 +5320,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (ItemUseTime == 0 && TargetID != -1 && !HasBuff(Terraria.ID.BuffID.Tipsy))
+            if (ItemUseTime == 0 && IsAttackingSomething && !HasBuff(Terraria.ID.BuffID.Tipsy))
             {
                 for (int i = 0; i < 50; i++)
                 {
@@ -5388,7 +5386,7 @@ namespace giantsummon
 
         public bool NewIdleBehavior()
         {
-            if (OwnerPos > -1 && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || TargetID != -1 || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
+            if (OwnerPos > -1 && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
                 return false;
             }
@@ -5711,7 +5709,7 @@ namespace giantsummon
             }
             if (PlayerMounted && GuardianHasControlWhenMounted)
                 return false;
-            if (TargetID == -1 && !MoveLeft && !MoveRight)
+            if (!IsAttackingSomething && !MoveLeft && !MoveRight)
             {
                 foreach (int key in MainMod.ActiveGuardians.Keys)
                 {
@@ -5905,7 +5903,7 @@ namespace giantsummon
             float GrabItemDistance = 65f;
             if (SeekingItem > -1 && (!Main.item[SeekingItem].active || Main.item[SeekingItem].type == 0 || Main.item[SeekingItem].stack == 0 || (Center - Main.item[SeekingItem].Center).Length() >= 368))
                 SeekingItem = -1;
-            bool CheckForLoot = SeekingItem == -1 && TargetID == -1 && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown);
+            bool CheckForLoot = SeekingItem == -1 && IsAttackingSomething && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown);
             float NearestPos = 368f;
             if (SeekingItem > -1)
             {
@@ -6066,7 +6064,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (ChaseItems && SeekingItem > -1 && TargetID == -1)
+            if (ChaseItems && SeekingItem > -1 && !IsAttackingSomething)
             {
                 MoveLeft = MoveRight = false;
                 if (Math.Abs(Main.item[SeekingItem].Center.X - Center.X) >= Width)
@@ -6247,7 +6245,7 @@ namespace giantsummon
             if (OwnerPos == -1 || Is2PControlled || PlayerControl || Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut || KnockedOut || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320)) return false;
             Player owner = Main.player[OwnerPos];
             bool NoInput = !owner.controlLeft && !owner.controlRight && !owner.controlJump && !owner.controlDown && owner.itemAnimation <= 0,
-                IsAfkAbuse = (NoInput && TargetID > 0 && owner.townNPCs == 0);
+                IsAfkAbuse = (NoInput && IsAttackingSomething && owner.townNPCs == 0);
             if (NoInput)
             {
                 float LastAFKCounter = AfkCounter;
@@ -6937,7 +6935,7 @@ namespace giantsummon
 
         public void CombatBehavior()
         {
-            if (TargetID == -1 || PlayerControl || Action || (DoAction.InUse && DoAction.IgnoreCombat) || (BeingPulledByPlayer && !SuspendedByChains))
+            if (!IsAttackingSomething || PlayerControl || Action || (DoAction.InUse && DoAction.IgnoreCombat) || (BeingPulledByPlayer && !SuspendedByChains))
                 return;
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
@@ -7840,7 +7838,7 @@ namespace giantsummon
             {
                 AggroCenter = Main.player[OwnerPos].Center;
             }
-            if (TargetID == -1)
+            if (!IsAttackingSomething)
             {
                 if (!HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
                 {
@@ -7875,7 +7873,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (TargetID == -1)
+            if (!IsAttackingSomething)
                 return;
             Vector2 TargetPosition = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
@@ -8034,7 +8032,7 @@ namespace giantsummon
                 TopLeftPosition = Owner.position;
                 TopLeftPosition.Y += Owner.height - Height;
             }
-            if (TargetID > -1)
+            if (IsAttackingSomething)
             {
                 if (TargetType == TargetTypes.Npc && Main.npc[TargetID].active)
                 {
@@ -8066,7 +8064,7 @@ namespace giantsummon
             {
                 MyPosition += (AimDirection.ToVector2() - MyPosition) * 0.5f;
             }
-            bool LastHadTarget = TargetID > -1;
+            bool LastHadTarget = IsAttackingSomething;
             int TotalActiveGuardians = MainMod.ActiveGuardians.Count;
             int HighestNumber = 255;
             for (int t = 0; t < HighestNumber; t++)
@@ -8150,7 +8148,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (!LastHadTarget && TargetID > -1 && !MainMod.TestNewCombatAI)
+            if (!LastHadTarget && IsAttackingSomething && !MainMod.TestNewCombatAI)
                 TargetInAim = false;
             this.NpcsSpotted = NpcsSpotted;
             this.PlayersSpotted = PlayersSpotted;
@@ -8238,7 +8236,7 @@ namespace giantsummon
             {
                 IncreaseStuckTimer();
             }
-            if (TargetID == -1 && (!PlayerMountedButHasControl || !HasPlayerAFK))
+            if (!IsAttackingSomething && (!PlayerMountedButHasControl || !HasPlayerAFK))
             {
                 if (Math.Abs(PositionDifference.X) > Width)
                 {
@@ -8417,18 +8415,18 @@ namespace giantsummon
                 PositionDifference.X += (96f + Math.Abs(Owner.velocity.X)) * Owner.direction * (Confused ? -1 : 1);
             }
             PositionDifference -= Position;
-            float DistanceMult = TargetID > -1 ? 1.5f : 1f, DistanceBonus = 48 * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
+            float DistanceMult = IsAttackingSomething ? 1.5f : 1f, DistanceBonus = 48 * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
             if (ChargeAhead)
                 PositionDifference.X += DistanceBonus * Owner.direction * (Confused ? -1 : 1);
             DistanceMult *= Scale;
-            if (ProtectMode && TargetID > -1)
+            if (ProtectMode && IsAttackingSomething)
                 DistanceMult *= 0.2f;
             bool PlayerIsHooked = Owner.grapCount > 0;
-            if (!Downed && !PlayerMounted && !PlayerIsHooked && (((TargetID == -1 && Math.Abs(PositionDifference.Y) >= 320f * DistanceMult) || Math.Abs(PositionDifference.Y) >= 640f * DistanceMult) || Math.Abs(PositionDifference.X) >= 640f * DistanceMult))
+            if (!Downed && !PlayerMounted && !PlayerIsHooked && (((!IsAttackingSomething && Math.Abs(PositionDifference.Y) >= 320f * DistanceMult) || Math.Abs(PositionDifference.Y) >= 640f * DistanceMult) || Math.Abs(PositionDifference.X) >= 640f * DistanceMult))
             {
                 IncreaseStuckTimer();
             }
-            if (TargetID == -1)
+            if (!IsAttackingSomething)
             {
                 if (UsingFurniture && Math.Abs(PositionDifference.X) >= 160f)
                 {
@@ -9049,7 +9047,7 @@ namespace giantsummon
 
         public void GetTargetInformation(out Vector2 Position, out int Width, out int Height)
         {
-            if (TargetID > -1)
+            if (IsAttackingSomething)
             {
                 switch (TargetType)
                 {
@@ -11578,7 +11576,7 @@ namespace giantsummon
                 UpdateWingAnimation();
                 bool FurnitureOverridingAnimation = false;
                 bool GuardianHasCarpet = HasCarpet();
-                if (UsingFurniture && furniturex > -1 && furniturey > -1 && TargetID == -1)
+                if (UsingFurniture && furniturex > -1 && furniturey > -1 && !IsAttackingSomething)
                 {
                     Tile tile = Framing.GetTileSafely(furniturex, furniturey);
                     if (tile != null)
@@ -13098,7 +13096,7 @@ namespace giantsummon
 
         public void CheckForLifeCrystals()
         {
-            if (ItemAnimationTime > 0 || TargetID > -1 || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            if (ItemAnimationTime > 0 || IsAttackingSomething || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
                 return;
             }
@@ -14155,7 +14153,6 @@ namespace giantsummon
                 Origin.Y *= 0.5f;
                 Position.Y -= 20 + 6;
             }
-
             Color HairColor = Base.TerrarianInfo.HairColor,
                 EyesColor = Base.TerrarianInfo.EyeColor,
                 EyesWhiteColor = Color.White,

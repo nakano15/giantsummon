@@ -353,6 +353,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*Did you knew that [gn:" + Michelle + "] will try joining the Miss North Pole contest? I'm so happy, I never wondered I would have a rival. Wait... Is that good or bad?*");
                 Mes.Add("*I'm so glad to have met [gn:"+Michelle+"]. She's a great person to have around.*");
             }
+            if (NpcMod.HasGuardianNPC(Malisha))
+            {
+                Mes.Add("*I wonder if I'm not accepted into the Miss North Pole contest because I'm not a reindeer. Maybe [gn:"+Malisha+"] could help me solve that?*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

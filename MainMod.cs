@@ -35,10 +35,10 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 65, LastModVersion = 62;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
-        public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false,
-            GuardiansGetKnockedOutUponDefeat = false, GuardiansDontDiesAfterDownedDefeat = false;
+        public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
+            GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
             SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, ClassicMode = false;
@@ -1307,12 +1307,17 @@ namespace giantsummon
                                             if (s > 2)
                                             {
                                                 context = 10;
-                                                SlotPosition.Y += 4;
                                             }
-                                            if (s == 2)
+                                            if (s == 3)
+                                            {
+                                                SlotPosition.Y += 4;
                                                 EquipmentSlot6StartPos = SlotPosition.Y;
+                                            }
                                             if (s == 2 + 5)
+                                            {
+                                                SlotPosition.X += 56 * Main.inventoryScale + 20;
                                                 SlotPosition.Y = EquipmentSlot6StartPos;
+                                            }
                                             if (s == 8 && (!Guardian.ExtraAccessorySlot || (!Main.expertMode && Guardian.Equipments[8].type == 0)))
                                                 continue;
                                             if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + 56 * Main.inventoryScale && Main.mouseY >= SlotPosition.Y && Main.mouseY < SlotPosition.Y + 56 * Main.inventoryScale)

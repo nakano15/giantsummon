@@ -101,6 +101,7 @@
     <Compile Include="GuardianNPC\List\LeopoldNPC.cs" />
     <Compile Include="GuardianNPC\List\DominoNPC.cs" />
     <Compile Include="GuardianNPC\List\MabelNPC.cs" />
+    <Compile Include="GuardianNPC\List\MalishaNPC.cs" />
     <Compile Include="GuardianNPC\List\NemesisGuardian.cs" />
     <Compile Include="GuardianNPC\List\VladimirNPC.cs" />
     <Compile Include="GuardianNPC\List\ZacksNPC.cs" />
@@ -312,6 +313,7 @@
     <Content Include="Creatures\Rococo\right_arm.png" />
     <Content Include="GuardianNPC\List\Alex_Head.png" />
     <Content Include="GuardianNPC\List\Bree_Head.png" />
+    <Content Include="GuardianNPC\List\Malisha_Head.png" />
     <Content Include="GuardianNPC\List\Vladimir_Head.png" />
     <Content Include="GuardianNPC\List\Leopold_Head.png" />
     <Content Include="GuardianNPC\List\Mabel_Head.png" />

@@ -384,10 +384,22 @@ namespace giantsummon.Creatures
                 Mes.Add("If you want to make me feel annoyed, just leave me 5 minutes with [gn:" + GuardianBase.Michelle + "] in the same room.");
                 Mes.Add("I hate [gn:" + GuardianBase.Michelle + "], she just don't stop talking!");
             }
+            if (NpcMod.HasGuardianNPC(Malisha))
+            {
+                Mes.Add("If [gn:" + Malisha + "] cause one more explosion, I will go have some serious talking with her.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("Eek!! Turn the other side!");
                 Mes.Add("Do you really have to enter here and talk to me while I'm using the toilet?");
+            }
+            if (Main.bloodMoon)
+            {
+                Mes.Clear();
+                Mes.Add("What am I supposed to do to have A MOMENT ALONE!");
+                Mes.Add("GO AWAY!");
+                Mes.Add("Do you have to bother me, now?");
+                Mes.Add("You're annoying me!");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

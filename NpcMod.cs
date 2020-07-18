@@ -668,9 +668,10 @@ namespace giantsummon
                 if (NearestGuardian > -1)
                 {
                     TerraGuardian guardian = ((GuardianNPC.GuardianNPCPrefab)Main.npc[NearestGuardian].modNPC).Guardian;
-                    if (guardian.TargetID == -1)
+                    if (!guardian.IsAttackingSomething)
                     {
                         guardian.TargetID = npc.whoAmI;
+                        guardian.AttackingTarget = true;
                         guardian.TargetType = TerraGuardian.TargetTypes.Npc;
                         guardian.DisplayEmotion(TerraGuardian.Emotions.Alarmed);
                     }
@@ -787,6 +788,10 @@ namespace giantsummon
                     {
                         PossibleMessages.Add("Since you've found " + GetGuardianNPCName(GuardianBase.Michelle) + ", I wonder If there are other people going to join your travels.");
                     }
+                    if (HasGuardianNPC(GuardianBase.Malisha))
+                    {
+                        PossibleMessages.Add("D-d-did you s-see " + GetGuardianNPCName(GuardianBase.Malisha) + " with a doll that looks like me?");
+                    }
                     break;
                 case Terraria.ID.NPCID.Nurse:
                     {
@@ -836,6 +841,10 @@ namespace giantsummon
                         PossibleMessages.Add("If you want me to do your hair, you will have to wait a day or two for my arms to rest, because " + GetGuardianNPCName(1) + " wanted me to do her hair, but do you know how much hair she has?");
                     if (HasGuardianNPC(7))
                         PossibleMessages.Add("I feel pitty of " + GetGuardianNPCName(7) + ", she asks me to do her hair, but she nearly has any, so I pretend that I'm doing something.");
+                    if (HasGuardianNPC(GuardianBase.Malisha))
+                    {
+                        PossibleMessages.Add("I think I could do some hair work on " + GetGuardianNPCName(GuardianBase.Malisha) + ".");
+                    }
                     break;
                 case Terraria.ID.NPCID.Mechanic:
                     if (HasGuardianNPC(0))
@@ -1050,6 +1059,10 @@ namespace giantsummon
                     {
                         PossibleMessages.Add("I don't know the reason, but " + NpcMod.GetGuardianNPCName(11) + " gets extremelly aggressive during Bloodmoons. I recommend you to avoid contact with him during those events.");
                     }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
+                    {
+                        PossibleMessages.Add("I know trouble when I see one, and that one is named " + NpcMod.GetGuardianNPCName(GuardianBase.Malisha) + ".");
+                    }
                     break;
                 case Terraria.ID.NPCID.Angler:
                     if (HasGuardianNPC(0) && Main.rand.Next(2) == 0)
@@ -1112,10 +1125,21 @@ namespace giantsummon
                     {
                         PossibleMessages.Add("That girl is the devil! " + GetGuardianNPCName(GuardianBase.Michelle) + " nearly dropped me into a lava pit because I tried to collect her rent!");
                     }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
+                    {
+                        PossibleMessages.Add("Missed me? It's because " + NpcMod.GetGuardianNPCName(GuardianBase.Malisha) + " turned me into a frog, and has placed me inside a cage for hours! I had only flies to eat meanwhile, FLIES!");
+                    }
                     break;
                 case Terraria.ID.NPCID.PartyGirl:
                     if (HasGuardianNPC(6) && Main.rand.Next(2) == 0)
                         PossibleMessages.Add("Looks like " + GetGuardianNPCName(6) + " flourishes when It's his birthday party. He enjoys the most of the special day, I say.");
+                    break;
+                case Terraria.ID.NPCID.Wizard:
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
+                    {
+                        PossibleMessages.Add("I'm really glad of meeting some one as enthusiast of magic as me, I would have " + NpcMod.GetGuardianNPCName(GuardianBase.Malisha) + " as my apprentice If I had met her earlier.");
+                        PossibleMessages.Add(NpcMod.GetGuardianNPCName(GuardianBase.Malisha) + "s researches have quite some interesting results, but some of them are extremelly volatile.");
+                    }
                     break;
             }
             if (PossibleMessages.Count > 0)

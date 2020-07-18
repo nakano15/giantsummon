@@ -376,6 +376,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*Why [gn:" + Michelle + "] doesn't talk with me?*");
                 Mes.Add("*I think [gn:" + Michelle + "] seems to be a cool person, but she always ignores me...*");
             }
+            if (NpcMod.HasGuardianNPC(Malisha))
+            {
+                Mes.Add("*It's quite nice having a new girl on the town. No, I'm not cheating [gn:" + Blue + "] If that's what is on your mind.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");

@@ -2,3 +2,12 @@
 	There is no more something in and on the campfire.
 The mod now counts as zombies:
 	Halloween and Christmas themed zombies, Frozen Zombies, Spore Zombies, Blood Zombie, Raincoat Zombie, The Groom, The Bride and Doctor Bones.
+Fixed a bug where the companion would be locked in place, when It notices a monster nearby, but isn't in enough range to begin attacking It.
+When using NExperience mod, companions will no longer gain Defense bonus from game modes while having no defense at all on themselves.
+Water walk effects will now be negated when you or you companion gets knocked out.
+Your companions will now correctly gain aggro reduction when knocked out.
+The 6th accessory slot will now be shown correctly where It should be.
+Fixed a bug where comfort would get an extra boost due to old comfort script intervention.
+Terrarian companions now sleeps in beds.
+Bree got Blood Moon messages.
+	Why didn't she had?

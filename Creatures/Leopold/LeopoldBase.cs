@@ -288,6 +288,18 @@ namespace giantsummon.Creatures
                 Mes.Add("*I discovered a way of dealing with [gn:" + Michelle + "], I just need to talk about my researches.*");
                 Mes.Add("*That girl [gn:"+Michelle+"] surelly is curious. I wonder, what's wrong with her?*");
             }
+            if (NpcMod.HasGuardianNPC(Malisha))
+            {
+                Mes.Add("*Of everyone you could have let move into this world, you had to let [gn:"+Malisha+"] live here? She's a menace to us all!*");
+                Mes.Add("*During my life of mentoring, I never regretted teaching someone, except for [gn:"+Malisha+"]. She's not careless, or cares about the wellbeing of the people she does experiements to.*");
+                Mes.Add("*Sometimes I think [gn:" + Malisha + "] is trying to eat me. If I suddenly disappear, try looking inside her mouth.*");
+                Mes.Add("*Huh? Sorry, I'm trying to make my house [gn:"+Malisha+"] proof.*");
+                Mes.Add("*My greatest misfortunes in life begins when [gn:"+Malisha+"] says that has a new experiement to test.*");
+                if (NpcMod.HasGuardianNPC(Zacks))
+                {
+                    Mes.Add("*I wouldn't be surprised if what happeend to [gn:"+Zacks+"] wasn't [gn:"+Malisha+"]s doing.*");
+                }
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -367,6 +379,11 @@ namespace giantsummon.Creatures
                 if (ReviveGuardian.ID == GuardianBase.Mabel)
                 {
                     Mes.Add("*Oh no... My nose... Someone has a leaf I could use?*");
+                }
+                if (ReviveGuardian.ID == GuardianBase.Malisha)
+                {
+                    Mes.Add("*Ugh... I really don't want to... But... I'll help...*");
+                    Mes.Add("*I hope she stops tormenting me after this.*");
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];

@@ -459,6 +459,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] says that hates when [gn:" + GuardianBase.Michelle + "] pets her hair.*");
                 Mes.Add("*[name] is saying taht needs some space, but [gn:" + GuardianBase.Michelle + "] doesn't get it.*");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
+            {
+                Mes.Add("*[name] seems to have casted some kind of spell on you, but It didn't seem to work. With a disappointment look, she tells herself that needs to research some more.*");
+                Mes.Add("*[name] seems to be reading some kind of magic book.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is saying that you're making her embarrassed.*");

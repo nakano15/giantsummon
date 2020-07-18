@@ -79,7 +79,7 @@ namespace giantsummon.Compatibility
             Guardian.MagicDamageMultiplier = (Guardian.MagicDamageMultiplier + mod.MagicDamageSum) * mod.MagicDamageMult;
             Guardian.SummonDamageMultiplier = (Guardian.SummonDamageMultiplier + mod.MinionDamageSum) * mod.MinionDamageMult;
             Guardian.MeleeSpeed = (Guardian.MeleeSpeed + mod.MeleeSpeedSum) * mod.MeleeSpeedMult;
-            Guardian.Defense = (int)((Guardian.Defense + mod.DefenseSum) * mod.DefenseMult);
+            if(Guardian.Defense > 0) Guardian.Defense = (int)((Guardian.Defense + mod.DefenseSum) * mod.DefenseMult);
             Guardian.HealthHealMult += mod.MaxHealthMult * Guardian.HealthHealMult;
             Guardian.ManaHealMult += mod.MaxManaMult * Guardian.ManaHealMult;
             if (!NExperience.MainMod.ItemStatusCapper || !gamemode.AllowLevelCapping)

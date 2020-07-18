@@ -125,7 +125,7 @@ namespace giantsummon.Npcs
                             MoveLeft = true;
                         }
                     }
-                    if (guardian.TargetID == -1)
+                    if (!guardian.IsAttackingSomething)
                     {
                         guardian.FaceDirection(!IsSardineToTheLeft);
                     }

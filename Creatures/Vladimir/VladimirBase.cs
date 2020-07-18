@@ -728,6 +728,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*I like hugging [gn:" + Michelle + "], she's one of the few persons that wants a hug for no actual reason.*");
                 Mes.Add("*Sometimes I sing a lullaby at night for [gn:"+Michelle+"].*");
             }
+            if (NpcMod.HasGuardianNPC(Malisha))
+            {
+                Mes.Add("*I'm glad that [gn:"+Malisha+"] noticed that I'm not much into chatting while hugging.*");
+                Mes.Add("*How did [gn:"+Malisha+"] knew of my family? I hope she doesn't tell them that I'm here. It could bring trouble to this realm.*");
+            }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
             {
@@ -792,7 +797,7 @@ namespace giantsummon.Creatures
 
             if (IsPlayerBeingHugged)
             {
-                if (guardian.TargetID > -1)
+                if (guardian.IsAttackingSomething)
                 {
                     if (!Main.bloodMoon)
                     {

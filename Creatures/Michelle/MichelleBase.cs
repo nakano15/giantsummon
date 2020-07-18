@@ -208,6 +208,11 @@ namespace giantsummon.Creatures
                     Mes.Add("Everytime [gn:" + GuardianBase.Vladimir + "] hugs someone, he looks very happy and satisfied. I think he really loves that.");
                     Mes.Add("A number of people in the town thinks that [gn:" + GuardianBase.Vladimir + "] hugging people is exquisite, but I saw them being hugged by him too.");
                 }
+                if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
+                {
+                    Mes.Add("I'm trying my best not to hate [gn:" + Malisha + "], but she keeps turning me into a different critter whenever I try to pet her.");
+                    Mes.Add("Do you think [gn:" + Malisha + "] hates me? Yeah, I think not too.");
+                }
                 int GNPCCount = NpcMod.GetTerraGuardianNPCCount();
                 if (GNPCCount >= 10)
                 {
