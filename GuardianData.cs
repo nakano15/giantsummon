@@ -179,7 +179,7 @@ namespace giantsummon
             RewardsToGet.AddRange(Base.RewardsList);
             {
                 Reward rwd = new Reward();
-                if (!MainMod.ClassicMode && Base.IsTerraGuardian)
+                if (!MainMod.NoEtherItems && Base.IsTerraGuardian)
                 {
                     rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherHeart>();
                     rwd.RewardScore = 500;
@@ -195,7 +195,7 @@ namespace giantsummon
                 rwd.RewardChance = 0.2f;
                 RewardsToGet.Add(rwd);
                 //
-                if (!MainMod.ClassicMode && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Base.IsTerraGuardian)
+                if (!MainMod.NoEtherItems && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Base.IsTerraGuardian)
                 {
                     rwd = new Reward();
                     rwd.ItemID = ModContent.ItemType<Items.Consumable.EtherFruit>();

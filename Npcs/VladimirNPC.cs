@@ -330,7 +330,7 @@ namespace giantsummon.Npcs
                         {
                             Main.npcChatText = Message;
                         }
-                        else
+                        else if(HugPassed)
                         {
                             SayMessage(Message);
                         }
@@ -392,6 +392,19 @@ namespace giantsummon.Npcs
             else if (RequestTaken)
             {
                 npc.TargetClosest();
+                float Distance = npc.Center.X - Main.player[npc.target].Center.X;
+                if (Math.Abs(Distance) >= 68f)
+                {
+                    if (Distance < 0)
+                        MoveRight = true;
+                    else
+                        MoveLeft = true;
+                }
+                if (npc.Distance(Main.player[npc.target].Center) >= 520f)
+                {
+                    npc.position = Main.player[npc.target].position;
+                    npc.position.Y -= Base.SpriteHeight - Player.defaultHeight;
+                }
             }
             if (HuggingPlayer > -1) DrawInFrontOfPlayers.Add(HuggingPlayer);
             base.AI();
@@ -405,11 +418,11 @@ namespace giantsummon.Npcs
                 !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianID) && spawnInfo.player.ZoneJungle && 
                 Main.rand.Next(256 - (int)spawnInfo.player.position.Y / 1024) == 0)
             {
-                Tile t = Framing.GetTileSafely(spawnInfo.spawnTileX, spawnInfo.spawnTileY);
-                if (t.wall == Terraria.ID.WallID.HiveUnsafe || t.type == Terraria.ID.TileID.HoneyBlock)
-                {
+                //Tile t = Framing.GetTileSafely(spawnInfo.spawnTileX, spawnInfo.spawnTileY);
+                //if (t.wall == Terraria.ID.WallID.HiveUnsafe || t.type == Terraria.ID.TileID.HoneyBlock)
+                //{
                     return 1;
-                }
+                //}
             }
             return 0;
         }

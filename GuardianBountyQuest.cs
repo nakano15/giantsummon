@@ -1264,7 +1264,7 @@ namespace giantsummon
                 }*/
                 Rewards.Add(i);
             }
-            if (!MainMod.ClassicMode && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
+            if (!MainMod.NoEtherItems && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
             {
                 i = new Item();
                 i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherFruit>());
@@ -1272,7 +1272,7 @@ namespace giantsummon
                     i.stack += Main.rand.Next((int)(2 * RewardMod));
                 Rewards.Add(i);
             }
-            if (!MainMod.ClassicMode && Main.rand.Next(3) == 0)
+            if (!MainMod.NoEtherItems && Main.rand.Next(3) == 0)
             {
                 i = new Item();
                 i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherHeart>());

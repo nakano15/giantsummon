@@ -35,13 +35,13 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 65, LastModVersion = 62;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
-            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, ClassicMode = false;
+            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false;
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
         public const bool IndividualSkillLeveling = false;
@@ -1307,13 +1307,13 @@ namespace giantsummon
                                             if (s > 2)
                                             {
                                                 context = 10;
+                                                SlotPosition.Y += 4;
                                             }
                                             if (s == 3)
                                             {
-                                                SlotPosition.Y += 4;
                                                 EquipmentSlot6StartPos = SlotPosition.Y;
                                             }
-                                            if (s == 2 + 5)
+                                            if (s == 3 + 5)
                                             {
                                                 SlotPosition.X += 56 * Main.inventoryScale + 20;
                                                 SlotPosition.Y = EquipmentSlot6StartPos;

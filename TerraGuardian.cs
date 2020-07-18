@@ -3947,6 +3947,7 @@ namespace giantsummon
             }
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
+            bool TargetIsBoss = false;
             bool ThroughWall = false;
             switch (TargetType)
             {
@@ -3957,6 +3958,7 @@ namespace giantsummon
                         AttackingTarget = false;
                         return;
                     }
+                    TargetIsBoss = Main.npc[TargetID].boss || Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[TargetID].type];
                     TargetPosition = Main.npc[TargetID].position;
                     TargetVelocity = Main.npc[TargetID].velocity;
                     TargetWidth = Main.npc[TargetWidth].width;
@@ -3991,7 +3993,12 @@ namespace giantsummon
             if (!AttackingTarget)
             {
                 float LCX = Position.X, RCX = Position.X;
-                const int XCheckDistance = 320;
+                int XCheckDistance = 320, YCheckDistance = 180;
+                if (TargetIsBoss)
+                {
+                    XCheckDistance += 160;
+                    YCheckDistance *= 2;
+                }
                 if (OwnerPos > -1 && !GuardingPosition.HasValue)
                 {
                     Player p = Main.player[OwnerPos];
@@ -4002,7 +4009,7 @@ namespace giantsummon
                         RCX = PlayerCenter;
                 }
                 if (((Math.Abs(RCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance || Math.Abs(LCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance) &&
-                Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) <= 180))
+                Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) <= YCheckDistance))
                 {
                     AttackingTarget = true;
                 }
@@ -5225,7 +5232,7 @@ namespace giantsummon
                     else
                         ComfortSum += 0.0033f;
                 }
-                ComfortSum += ComfortSum * 0.02f * (TownNpcs > 3 ? 3 : TownNpcs);
+                ComfortSum += ComfortSum * 0.03f * (TownNpcs > 5 ? 5 : TownNpcs);
                 if (ZoneCorrupt || ZoneCrimson)
                     ComfortSum *= 0.6f;
                 if (Main.invasionProgress > 0)

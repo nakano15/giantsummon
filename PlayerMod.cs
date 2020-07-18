@@ -103,19 +103,17 @@ namespace giantsummon
         {
             get
             {
-                if (MainMod.ClassicMode)
-                    return 0;
                 int Count = FriendshipLevel;
                 int Allowance = 0;
                 if (Count >= 2)
                     Allowance++;
-                if (Count >= 5)
+                if (Count >= 6) //5
                     Allowance++;
-                if (Count >= 8)
+                if (Count >= 12) //8
                     Allowance++;
-                if (Count >= 10)
+                if (Count >= 18) //10
                     Allowance++;
-                if (Count >= 14)
+                if (Count >= 25) //14
                     Allowance++;
                 if (Allowance > MainMod.MaxExtraGuardianFollowers)
                     Allowance = MainMod.MaxExtraGuardianFollowers;
