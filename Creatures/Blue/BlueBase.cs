@@ -469,6 +469,23 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] is saying that you're making her embarrassed.*");
                 Mes.Add("*[name] would like you to turn the other way, If you want to talk.*");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                if (NpcMod.HasGuardianNPC(GuardianBase.Zacks))
+                {
+                    Mes.Add("*[name] says that doesn't really mind sharing the room with you, but wonder if [gn:"+GuardianBase.Zacks+"] wont mind It.*");
+                }
+                else
+                {
+                    Mes.Add("*[name] says that doesn't really mind sharing the room with you.*");
+                }
+                Mes.Add("*[name] tells you that may be hard to share the same bed with you.*");
+            }
+            if (NpcMod.IsGuardianPlayerRoomMate(player, Zacks))
+            {
+                Mes.Add("*[name] asked if you're sharing room with [gn:"+Zacks+"], she then says that may wonder why he wouldn't want to share his room with her, and then got saddened.*");
+                Mes.Add("*[name] asks if you're sharing room with [gn:"+Zacks+"], then she asked if he's fine.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

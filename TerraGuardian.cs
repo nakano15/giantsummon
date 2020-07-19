@@ -5066,6 +5066,27 @@ namespace giantsummon
             }
         }
 
+        public bool IsPlayerRoomMate(Player player)
+        {
+            if (player.SpawnX > -1 && player.SpawnY > -1)
+            {
+                int NpcPosition = NpcMod.GetGuardianNPC(ID, ModID);
+                if (NpcPosition > -1)
+                {
+                    NPC npc = Main.npc[NpcPosition];
+                    WorldGen.ScoreRoom();
+                    for (int n = 0; n < WorldGen.numRoomTiles; n++)
+                    {
+                        if (WorldGen.roomX[n] == player.SpawnX && WorldGen.roomY[n] == player.SpawnY)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         public void UpdateFurnitureUsageScript()
         {
             if (furniturex != -1 && furniturey != -1)
@@ -5145,6 +5166,7 @@ namespace giantsummon
                         case Terraria.ID.TileID.Benches:
                             {
                                 Vector2 SittingPosition = new Vector2(furniturex * 16 + 8, furniturey * 16 + 16);
+                                LookingLeft = false;
                                 if (Base.ThroneSittingFrame == -1)
                                 {
                                     SittingPosition.Y -= Base.SittingPoint.Y * Scale - SpriteHeight + 16;
@@ -5202,6 +5224,7 @@ namespace giantsummon
             {
                 if (UsingFurniture)
                 {
+                    ComfortSum += 0.03f;
                     if (furniturex == -1 && furniturey == -1)
                     {
                         UsingFurniture = false;
@@ -5232,7 +5255,7 @@ namespace giantsummon
                     else
                         ComfortSum += 0.0033f;
                 }
-                ComfortSum += ComfortSum * 0.03f * (TownNpcs > 5 ? 5 : TownNpcs);
+                ComfortSum += ComfortSum * 0.05f * (TownNpcs > 5 ? 5 : TownNpcs);
                 if (ZoneCorrupt || ZoneCrimson)
                     ComfortSum *= 0.6f;
                 if (Main.invasionProgress > 0)
@@ -5384,7 +5407,7 @@ namespace giantsummon
 
         public void FaceDirection(bool Left)
         {
-            if (!FreezeItemUseAnimation)
+            if (!FreezeItemUseAnimation && BodyAnimationFrame != Base.ThroneSittingFrame)
                 LookingLeft = Left;
         }
 
@@ -13767,7 +13790,7 @@ namespace giantsummon
             {
                 HeadSlot = 44;
             }
-            if (BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame)
+            if ((Base.IsCustomSpriteCharacter && BodyAnimationFrame == Base.BedSleepingFrame) || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame)
             {
                 HeadSlot = 0;
                 FaceSlot = 0;

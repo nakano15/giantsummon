@@ -385,6 +385,17 @@ namespace giantsummon.Creatures
                 Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");
                 Mes.Add("*You don't know what I'm passing through here.*");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*Yes, I can share my room with you, I can't sleep at night, anyway.*");
+                Mes.Add("*If you're worried about being devoured during the night, don't worry, I wont. I know how to search for food outside.*");
+                Mes.Add("*There is not much I can do during the night. Either I watch the window, or you sleep. I think I saw you putting your thumb on your mouth, one night. Though.*");
+            }
+            if (NpcMod.IsGuardianPlayerRoomMate(player, Blue))
+            {
+                Mes.Add("*So, you're sharing room with [gn:"+Blue+"], huh... I may wonder why she wouldn't want to share her room with me.*");
+                Mes.Add("*Say.. You're sharing room with [gn:"+Blue+"], right? How's she?*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

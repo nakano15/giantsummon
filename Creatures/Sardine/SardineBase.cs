@@ -325,6 +325,19 @@ namespace giantsummon.Creatures
                 Mes.Add("Do you humans always visits bathrooms when others are using it?");
                 Mes.Add("I'm trying to concentrate here, If you excuse me.");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("It's really good to have a room mate, I wonder if we could play table top games before sleeping.");
+                Mes.Add("Having a room mate is so cool.");
+                if (NpcMod.HasGuardianNPC(GuardianBase.Bree))
+                {
+                    Mes.Add("I like sharing the room with you, but sometimes I think I should share It with [gn:"+Bree+"], instead.");
+                }
+            }
+            if (NpcMod.IsGuardianPlayerRoomMate(player, GuardianBase.Bree))
+            {
+                Mes.Add("Uh... So... Maybe [gn:"+Bree+"] should be sharing her room with me?");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

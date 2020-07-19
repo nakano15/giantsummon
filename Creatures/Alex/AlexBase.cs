@@ -487,6 +487,11 @@ namespace giantsummon.Creatures
                 Mes.Add("I'm trying hard to aim at the hole.");
                 Mes.Add("Is this how you humans uses toilet? It's very hard for me to use it.");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("You'll sleep on my bedroom? That's awesome! I will keep you protected while you sleep.");
+                Mes.Add("You'll share your bed with me? This is the best day ever!");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

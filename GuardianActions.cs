@@ -368,6 +368,7 @@ namespace giantsummon
                                 {
                                     guardian.MoveRight = true;
                                 }
+                                guardian.WalkMode = false;
                                 SetIntegerValue(IReviveTime, ResTime + 1);
                             }
                             else

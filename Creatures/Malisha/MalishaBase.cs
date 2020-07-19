@@ -9,6 +9,16 @@ namespace giantsummon.Creatures
 {
     public class MalishaBase : GuardianBase
     {
+        /// <summary>
+        /// -Loves makes experiements with magic and alchemy.
+        /// -Doesn't mind not using clothes.
+        /// -Leopolds apprentice.
+        /// -Loves tormenting her mentor.
+        /// -Feels uncomfortable when people look in her chest.
+        /// -Expelled from many villages due to her experiements.
+        /// -Initially thought the Terrarian world is a naturalism colony.
+        /// -Turns into a mad scientist during Blood Moons, testing experiements on anyone who gets in her sight.
+        /// </summary>
         public MalishaBase()
         {
             Name = "Malisha";
@@ -209,6 +219,62 @@ namespace giantsummon.Creatures
             }
         }
 
+        public override string CallUnlockMessage
+        {
+            get
+            {
+                return "*You seems to have seens various kinds of places during your travels, maybe that can help me find test subjects.*";
+            }
+        }
+
+        public override string MountUnlockMessage
+        {
+            get
+            {
+                return "*It's not me, It's you, you're slowing down the expedition. I can carry you around during the exploration, If you want. I have better uses for my hands than holding you, so I guess I can use my tail, if you don't mind.*";
+            }
+        }
+
+        public override string ControlUnlockMessage
+        {
+            get
+            {
+                return "*Okay, It's not working either way. I have an idea, what If I go alone in the travels? Just tell me where you wanted to go.*";
+            }
+        }
+
+        public override string FriendLevelMessage
+        {
+            get
+            {
+                return "*You're the only person in this town who doesn't comes complaining at my experiements. I guess I should thank you for that.*";
+            }
+        }
+
+        public override string BestFriendLevelMessage
+        {
+            get
+            {
+                return "*Oh, hello. No, nothing exploded today. You were just checking If I was alright? Oh.*";
+            }
+        }
+
+        public override string BFFLevelMessage
+        {
+            get
+            {
+                return "*Hello again, feel free to stay as long as you want on my laboratory. Maybe you can give me a hand?*";
+            }
+        }
+
+        public override string BuddyForLifeLevelMessage
+        {
+            get
+            {
+                return "*There is still lots I need to research for and do experiements, but I feel like here I'll be able to, so Thank You.*";
+            }
+        }
+
         //It has been so long that I got this companion idea, that I even forgot her personality. Oops.
         public override string GreetMessage(Terraria.Player player, TerraGuardian guardian)
         {
@@ -362,6 +428,21 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*Are you curious If I can use the toilet like anyone else? If your curiosity is now gone, please could go away with It?*");
                 Mes.Add("*Why are you bothering me on my reflection moment?*");
+            }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*Yes, I would love having you as a room mate. Heh.*");
+                Mes.Add("*Feel free to get some sleep anytime you want. If you do so now, would be perfect.*");
+                Mes.Add("*Feeling drowzy? No worry, you can lie down in any bed in our room.*");
+                Mes.Add("*It's good to have company during the night, even more when I'm working on my experiements.*");
+                if (NpcMod.HasGuardianNPC(Leopold))
+                {
+                    Mes.Add("*How silly, like I would use my dear room mate as test subject. Psh...*");
+                }
+            }
+            if (NpcMod.IsGuardianPlayerRoomMate(player, Leopold))
+            {
+                Mes.Add("*You're sharing room with [gn:" + Leopold + "]? Would you mind move somewhere else? Huh? I have no actual reason for asking. Sigh..*");
             }
 
             if (Main.bloodMoon)

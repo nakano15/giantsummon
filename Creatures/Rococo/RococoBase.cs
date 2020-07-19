@@ -407,6 +407,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] is telling me to plug my nose.*");
                 Mes.Add("*[name] is asking if there is no other moment to chat.*");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*[name] is very happy for having you as his room mate.*");
+                Mes.Add("*[name] says that no longer fear sleeping at night, since you shared your room with him.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

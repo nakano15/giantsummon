@@ -4,5 +4,5 @@ Make companion npcs be able to share the same house, by making one of the compan
 Add a method that damages the ko'd health recovery, also halting health regen effect from allies, and can kill the one having the ko health damage when It reaches 0.
 Add a skin and outfit container to the game, so other mod skins and outfits can be added to the mod.
 	The container also should have a hook for the drawing scripts, if there isn't already in the mod.
-Terrarian companions doesn't sleep in beds, they only "sits" on them.
-There is a bug with the companion AI, when there's a target nearby but It isn't going to attack because isn't near, It will stand still until attacked or pulled.
+A flag checking if the companion is the player room mate.
+A script to check if the companion is in It's room.

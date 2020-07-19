@@ -364,11 +364,11 @@ namespace giantsummon
         {
             return GetGuardianNPC(GuardianID, mod.Name);
         }
-        
+
         public static int GetGuardianNPC(int GuardianID, string ModID = "")
         {
             int Pos = -1;
-            if(ModID == "")
+            if (ModID == "")
                 ModID = MainMod.mod.Name;
             for (int n = 0; n < 200; n++)
             {
@@ -380,6 +380,22 @@ namespace giantsummon
                 }
             }
             return Pos;
+        }
+
+        public static bool IsGuardianPlayerRoomMate(Player player, int GuardianID, string ModID = "")
+        {
+            int Pos = -1;
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).GuardianID == GuardianID &&
+                    ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).GuardianModID == ModID)
+                {
+                    return ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.IsPlayerRoomMate(player);
+                }
+            }
+            return false;
         }
 
         public override bool PreDraw(NPC npc, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)

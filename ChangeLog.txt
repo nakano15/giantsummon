@@ -1,2 +1,8 @@
 ﻿Readjusted Mabel's chest sprite.
 Fixed a stray pixel problem on Blue.
+Terrarian companions will no longer remove their headgear when stopped.
+	This issue surged because the standing animation is the same as the sleep animation, and sleep animation normally removes headgear from TerraGuardians.
+More comfort boost.
+Fixed Leopold's dash running animation not working for the arms.
+Town guardians will now hurry to revive downed allies nearby.
+Companions will now comment when your character is their room mate.

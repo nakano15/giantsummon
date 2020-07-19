@@ -185,6 +185,11 @@ namespace giantsummon.Creatures
                 Mes.Add("I always win the stare contest, because [gn:8] ends up laughing after a few minutes staring my face. I don't know why.");
                 Mes.Add("I think [gn:8] is super effective on the town, since she atracts attention of almost everyone in the town. Me? I don't care. \"Sips coffee\"");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("I don't mind sharing the room with you. There's enough space.");
+                Mes.Add("If you get a bed for yourself, you are free to stay as long as you want.");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

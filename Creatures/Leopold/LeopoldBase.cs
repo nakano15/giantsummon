@@ -17,6 +17,7 @@ namespace giantsummon.Creatures
         /// -Female Terrarians keep touching his tail.
         /// -Spends most of his day reading books.
         /// -Rarelly leaves house, unless for a research.
+        /// -Fears Malisha killing him.
         /// </summary>
         public LeopoldBase()
         {
@@ -161,6 +162,10 @@ namespace giantsummon.Creatures
                 {
                     guardian.BodyAnimationFrame = 19;
                 }
+                if (!UsingLeftArm)
+                    guardian.LeftArmAnimationFrame = guardian.BodyAnimationFrame;
+                if (!UsingRightArm)
+                    guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame;
             }
         }
 
@@ -299,6 +304,24 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("*I wouldn't be surprised if what happeend to [gn:"+Zacks+"] wasn't [gn:"+Malisha+"]s doing.*");
                 }
+            }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Add("*What's with you Terrarians? Don't you know that this is a moment of privacy?*");
+                if (!player.Male)
+                    Mes.Add("*No! Don't try touching my tail now!*");
+                Mes.Add("*You're interrupting my reflection moment! Go away!*");
+            }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*Yes, I don't mind sharing my room with you, just place your bed somewhere.*");
+                Mes.Add("*I hope you don't snore at night, because I need sleep to process my researches.*");
+                Mes.Add("*You're not planning on throwing parties every night, I've had enough of those during the Magic University.*");
+            }
+            if (NpcMod.IsGuardianPlayerRoomMate(player, Malisha))
+            {
+                Mes.Add("*You must either be courageous, or very stupid, for sharing your room with [gn:"+Malisha+"]. Who knows what she does to you while you sleep?*");
+                Mes.Add("*Stop sharing room with [gn:"+Malisha+"], you may wake up tied in a bed while she does wacky experiements on you.*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

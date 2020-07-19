@@ -8,6 +8,12 @@ namespace giantsummon.Creatures
 {
     public class MichelleBase : GuardianBase
     {
+        /// <summary>
+        /// -Likes cute critters.
+        /// -Friendly towards anyone.
+        /// -Not that great of an adventurer.
+        /// -Likes the company of TerraGuardians.
+        /// </summary>
         public MichelleBase()
         {
             Name = "Michelle";
@@ -227,6 +233,11 @@ namespace giantsummon.Creatures
                 if (GNPCCount >= 1 && GNPCCount < 5)
                 {
                     Mes.Add("I liked to meet the TerraGuardians, I wonder If there are more around.");
+                }
+                if (guardian.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("Yes! I can share my room with you. We could play pillow fight sleeping.");
+                    Mes.Add("I like having you as a room mate, but I would like having a TerraGuardian more.");
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];

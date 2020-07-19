@@ -919,6 +919,11 @@ namespace giantsummon.Creatures
                         Mes.Add("*Sorry If I'm hugging too strong, but I really need to use some strength right now.*");
                         Mes.Add("*Oh! Did that noise scared you?*");
                     }
+                    if (guardian.IsPlayerRoomMate(player))
+                    {
+                        Mes.Add("*I'm very happy of sharing my room with you, I never feel lonelly again.*");
+                        Mes.Add("*Having someone to hug during the night always makes the night better.*");
+                    }
                 }
             }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];

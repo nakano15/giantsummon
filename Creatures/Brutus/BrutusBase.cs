@@ -360,6 +360,12 @@ namespace giantsummon.Creatures
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");
                 Mes.Add("*I wonder how many times I will have to flush this thing.*");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*I promisse to protect you while you sleep. I wont close my eyes during the entire night.*");
+                Mes.Add("*If anything tries to attack you while sleeping, will never expect me to be here. You will be safe.*");
+                Mes.Add("*So, you need my protection during the night? I can help you with that.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

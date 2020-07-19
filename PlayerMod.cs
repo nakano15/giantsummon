@@ -643,7 +643,10 @@ namespace giantsummon
             {
                 if (player.breath <= 0)
                 {
-                    DoForceKill(" didn't had more air.");
+                    bool Mermaid = player.head == Terraria.ID.ArmorIDs.Head.SeashellHairpin &&
+                        player.body == Terraria.ID.ArmorIDs.Body.MermaidAdornment &&
+                        player.legs == Terraria.ID.ArmorIDs.Legs.MermaidTail;
+                    DoForceKill((Mermaid ? " drowned?" : (Main.rand.Next(2) == 0 ? " suffocated" : " ran out of air.")));
                 }
                 else if (player.lavaWet && !player.lavaImmune)
                 {

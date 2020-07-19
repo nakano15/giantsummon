@@ -16,6 +16,7 @@ namespace giantsummon.Creatures
         /// -Exceeds on caffeine when stressed.
         /// -Loves company.
         /// -Insecure.
+        /// -She saw Rococo before, somewhere.
         /// </summary>
 
         public MabelBase()
@@ -238,10 +239,10 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*How do I look? How do I look-How do I look-How do I look? \"She's blinking her eyes very fast, about 30 frames per second.\"*");
                 Mes.Add("*The night will be ended soon-The night will be ended soon.*");
-                Mes.Add("*She seems to be drinking a mug of coffee, or half a dozen, through out the night.*");
+                Mes.Add("(She seems to be drinking a mug of coffee, or half a dozen, through out the night.)");
                 Mes.Add("*You'll keep me safe, right? Right? RIGHT?!*");
                 if (AnglerInTown)
-                    Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] is safe. Kids doesn't dies, right? They turn into smoke and goes away, right? He's safe,right? Right?*");
+                    Mes.Add("*[nn:" + Terraria.ID.NPCID.Angler + "] is safe. Kids doesn't dies, right? They turn into smoke and goes away, right? He's safe, right? Right?*");
             }
             else
             {
@@ -268,7 +269,7 @@ namespace giantsummon.Creatures
                     {
                         Mes.Add("*It's a beautiful day outside. I guess I'll go have a walk.*");
                         Mes.Add("*Don't you just love this kind of weather? It always makes me want to go out for a walk.*");
-                        Mes.Add("\"She's humming while looking through the window.\"");
+                        Mes.Add("(She's humming while looking through the window.)");
                     }
                 }
             }
@@ -285,6 +286,12 @@ namespace giantsummon.Creatures
                 Mes.Add("*There is the correct time and place to do this. But you had to talk to me while I'm using the toilet?*");
                 Mes.Add("*Could you... Just... Return another time?*");
                 Mes.Add("*Don't you know that there are a few moments one needs privacy? I'm trying to lose some weight here.*");
+            }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*Huh? You're going to sleep in my room? That is so cool! I wonder what is It like to share a room with someone.*");
+                Mes.Add("*Sharing my room with you is amazing! I really like that.*");
+                Mes.Add("*Sometimes gets cold at night, so It's nice having someone help me get warm.*");
             }
 
             if (NpcMod.HasGuardianNPC(0))
