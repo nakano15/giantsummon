@@ -2130,8 +2130,8 @@ namespace giantsummon
                     {
                         Npcs.GuardianActorNPC ganpc = ((Npcs.GuardianActorNPC)Main.npc[n].modNPC);
                         Color color = Lighting.GetColor((int)ganpc.npc.Center.X / 16, (int)ganpc.npc.Center.Y / 16);
-                        Terraria.DataStructures.DrawData[] dds = ganpc.GetDrawDatas(color, true);
-                        for (int x = 0; x < dds.Length; x++)
+                        List<Terraria.DataStructures.DrawData> dds = ganpc.GetDrawDatas(color, true);
+                        for (int x = 0; x < dds.Count; x++)
                         {
                             Terraria.DataStructures.DrawData dd = dds[x];
                             dd.ignorePlayerRotation = true;

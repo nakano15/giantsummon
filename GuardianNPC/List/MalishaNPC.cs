@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace giantsummon.GuardianNPC.List
 {
     [AutoloadHead]
-    public class MalishaNPC : GuardianNPCPrefab
+    public class PantherGuardian : GuardianNPCPrefab
     {
         public override string HeadTexture
         {
@@ -24,7 +24,7 @@ namespace giantsummon.GuardianNPC.List
             return base.Autoload(ref name);
         }
 
-        public MalishaNPC()
+        public PantherGuardian()
             : base(GuardianBase.Malisha)
         {
 

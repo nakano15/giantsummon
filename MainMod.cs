@@ -128,6 +128,27 @@ namespace giantsummon
             return g;
         }
 
+        public static int CalculateMessageTime(string s)
+        {
+            int Time = 100;
+            foreach (char c in s)
+            {
+                if (c == '.' || c == ':')
+                {
+                    Time += 7;
+                }
+                else if (c == ',' || c == ';')
+                {
+                    Time += 5;
+                }
+                else if (c != ' ' && c != '\n')
+                {
+                    Time++;
+                }
+            }
+            return Time;
+        }
+
         public static Group GetGroup(string ID)
         {
             if (CompanionGroups.ContainsKey(ID))

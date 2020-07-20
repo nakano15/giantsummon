@@ -228,10 +228,11 @@ namespace giantsummon.Npcs
             return base.CanChat();
         }
 
-        public void SayMessage(string Text)
+        public int SayMessage(string Text)
         {
             MessageText = Text;
-            MessageTime = 300;
+            MessageTime = MainMod.CalculateMessageTime(Text);
+            return MessageTime;
         }
         
         public override void FindFrame(int frameHeight)
@@ -299,10 +300,15 @@ namespace giantsummon.Npcs
             }
         }
 
-        public DrawData[] GetDrawDatas(Microsoft.Xna.Framework.Color drawColor, bool FrontPart = false)
+        public virtual void ModifyDrawDatas(List<DrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)
+        {
+
+        }
+
+        public List<DrawData> GetDrawDatas(Microsoft.Xna.Framework.Color drawColor, bool FrontPart = false)
         {
             if (Base.sprites.HasErrorLoadingOccurred)
-                return new DrawData[0];
+                return new List<DrawData>();
             else if (!Base.sprites.IsTextureLoaded)
             {
                 Base.sprites.LoadTextures();
@@ -367,6 +373,10 @@ namespace giantsummon.Npcs
 
             DrawData dd;
             Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, 0f);
+            if (GuardianID == GuardianBase.Malisha && GuardianModID == mod.Name)
+            {
+
+            }
             if (!FrontPart)
             {
                 dd = new DrawData(Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
@@ -386,7 +396,8 @@ namespace giantsummon.Npcs
             }
             dd = new DrawData(Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
             dds.Add(dd);
-            return dds.ToArray();
+            ModifyDrawDatas(dds, DrawPos, bodyrect, leftarmrect, rightarmrect, Origin, drawColor, seffects);
+            return dds;
         }
     }
 }

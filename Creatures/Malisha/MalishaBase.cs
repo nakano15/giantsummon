@@ -501,7 +501,18 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             Mes.Add("*I wont burn your town to cinder, If that's what's on your mind.*");
             Mes.Add("*After I told the people on the town I was living before that I was going away for a vacation, a party has started in the town. I think they were wishing me good luck.*");
-            Mes.Add("**");
+            Mes.Add("*I feel so alive when testing things on living things. It is unfortunate if they end up no longer living after the testing.*");
+            if (NpcMod.HasGuardianNPC(GuardianBase.Leopold))
+            {
+                Mes.Add("*Don't tell [gn:" + GuardianBase.Leopold + "], but I love having his company. He also helps me with my experiements, even though he clearly doesn't want.*");
+                Mes.Add("*I tried several times to earn [gn:"+GuardianBase.Leopold+"]'s respect, but he always complains of my methods.*");
+                Mes.Add("*I don't mean to do any harm when I mess with [gn:"+Leopold+"], I just love having him around.*");
+            }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Zacks))
+            {
+                Mes.Add("*I may be wrong, but the moment [gn:" + GuardianBase.Zacks + "] died was perfect. Well, he could have died for good if wasn't.*");
+                Mes.Add("*Maybe I have something to do with what happened to [gn:" + GuardianBase.Zacks + "], but I may be wrong. Just try not to tell anyone about that.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
