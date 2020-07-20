@@ -107,17 +107,28 @@ namespace giantsummon.Npcs
 
         public static void TrySpawningBrutus()
         {
-            if (NpcMod.HasMetGuardian(6, ""))
+            if (NpcMod.HasMetGuardian(6, "") || NPC.AnyNPCs(ModContent.NPCType<BrutusNPC>()))
                 return;
-            if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || Main.time >= 27000 || Main.time % 60 > 0)
+            if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || Main.time >= 27000)
             {
                 return;
             }
             if (Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0)
                 return;
-            int SpawnChance = (int)(27000 / Main.dayRate) * 4;
-            int Chance = ChanceCounter();
-            if (Chance < ProgressCountForBrutusToAppear || Main.rand.Next(SpawnChance) > Chance - ProgressCountForBrutusToAppear)
+            if (!((int)Main.time == 3 * 3600 || (int)Main.time == 3.5 * 3600 || (int)Main.time == 4 * 3600 || (int)Main.time == 4.5 * 3600 || (int)Main.time == 5 * 3600 || (int)Main.time == 5.5 * 3600 || (int)Main.time == 6 * 3600))
+            {
+                return;
+            }
+            int NpcCount = 0;
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].townNPC)
+                    NpcCount++;
+            }
+            if (NpcCount < 5)
+                return;
+            int SpawnChance = 300 - ChanceCounter() * 5;
+            if (SpawnChance > 0 && Main.rand.Next(SpawnChance) > 0)
             {
                 return;
             }

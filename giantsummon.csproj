@@ -136,6 +136,7 @@
     <Compile Include="Npcs\GuardianActorNPC.cs" />
     <Compile Include="Npcs\LeopoldNPC.cs" />
     <Compile Include="Npcs\MabelNPC.cs" />
+    <Compile Include="Npcs\MalishaNPC.cs" />
     <Compile Include="Npcs\RococoNPC.cs" />
     <Compile Include="Npcs\VladimirNPC.cs" />
     <Compile Include="Npcs\ZombieGuardian.cs" />

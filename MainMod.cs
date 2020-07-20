@@ -108,6 +108,7 @@ namespace giantsummon
         public const string CustomCompanionCallString = "loadcompanions";
         public static bool TriedLoadingCustomGuardians = false;
         private static Dictionary<string, Group> CompanionGroups = new Dictionary<string, Group>();
+        public static float TimeTranslated = 0;
 
         public static Group AddNewGroup(string ID, string Name, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
         {

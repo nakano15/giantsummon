@@ -104,6 +104,7 @@ namespace giantsummon
                 HourChange = true;
             }
             LastTime = TimeParser;
+            MainMod.TimeTranslated = (float)TimeParser;
         }
 
         public override void Initialize()

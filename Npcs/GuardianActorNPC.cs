@@ -67,6 +67,8 @@ namespace giantsummon.Npcs
             npc.townNPC = true;
             npc.friendly = true;
             npc.direction = 1;
+            if (npc.GetGlobalNPC<NpcMod>().mobType > MobTypes.Normal)
+                npc.GetGlobalNPC<NpcMod>().mobType = MobTypes.Normal;
         }
 
         public override bool CheckActive()
@@ -93,10 +95,7 @@ namespace giantsummon.Npcs
                 {
                     IdleBehaviorType = (byte)Main.rand.Next(2);
                     IdleBehaviorTime = 200 + Main.rand.Next(200);
-                    if (npc.ai[0] == 0)
-                    {
-                        npc.direction *= -1;
-                    }
+                    npc.direction *= -1;
                 }
                 if (IdleBehaviorType == 1)
                 {

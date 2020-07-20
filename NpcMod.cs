@@ -1006,13 +1006,19 @@ namespace giantsummon
                         }
                         if (!HasMetGuardian(6))
                         {
-                            if (Npcs.BrutusNPC.ChanceCounter() >= Npcs.BrutusNPC.ProgressCountForBrutusToAppear)
+                            int TownNpcCount = 0;
+                            for (int n = 0; n < 200; n++)
                             {
-                                PossibleMessages.Add("I've heard stories of an old Royal Guard from the Ether Realm who lost his job, and is now roaming through worlds to work as a bodyguard for anyone who hurts him, or pay for his job. I think the chance of him appearing will increase if you overcome challenges on this world.");
+                                if (Main.npc[n].active && Main.npc[n].townNPC)
+                                    TownNpcCount++;
+                            }
+                            if (TownNpcCount >= 5)
+                            {
+                                PossibleMessages.Add("I've heard stories of an old Royal Guard from the Ether Realm who lost his job, and is now roaming through worlds to work as a bodyguard for anyone who hurts him, or pay for his job. I think he may end up appearing in this world.");
                             }
                             else
                             {
-                                PossibleMessages.Add("I've heard stories of an old Royal Guard from the Ether Realm that lost his job, and now is now roaming through worlds to work as a bodyguard for someone. I think he visits worlds where a number of challenges have been overcome. I'm not sure If he would visit this world.");
+                                PossibleMessages.Add("I've heard stories of an old Royal Guard from the Ether Realm that lost his job, and now is now roaming through worlds to work as a bodyguard for someone. I think he may want to visit worlds with quite a number of people he can get a job from.");
                             }
                         }
                         if (!HasMetGuardian(8) && Npcs.MabelNPC.CanSpawnMabel)
