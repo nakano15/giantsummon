@@ -9,6 +9,8 @@ namespace giantsummon.Creatures
 {
     public class BreeBase : GuardianBase
     {
+        public const string BaglessTextureID = "bagless_body";
+
         /// <summary>
         /// -A bit grumpy.
         /// -Sardine's Wife.
@@ -186,7 +188,7 @@ namespace giantsummon.Creatures
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
-            sprites.AddExtraTexture("bagless_body", "body_no_bag");
+            sprites.AddExtraTexture(BaglessTextureID, "body_no_bag");
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
@@ -198,14 +200,14 @@ namespace giantsummon.Creatures
                     {
                         if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
                         {
-                            gdd.Texture = sprites.GetExtraTexture("bagless_body");
+                            gdd.Texture = sprites.GetExtraTexture(BaglessTextureID);
                         }
                     }
                     foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
                     {
                         if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
                         {
-                            gdd.Texture = sprites.GetExtraTexture("bagless_body");
+                            gdd.Texture = sprites.GetExtraTexture(BaglessTextureID);
                         }
                     }
                     break;

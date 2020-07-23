@@ -210,7 +210,12 @@ namespace giantsummon
 
         public void AddOutfit(byte ID, string Name, SkinReqStruct.SkinRequirementDel requirement)
         {
-            SkinReqStruct skin = new SkinReqStruct(ID, Name, requirement);
+            AddOutfit(ID, Name, requirement, false);
+        }
+
+        public void AddOutfit(byte ID, string Name, SkinReqStruct.SkinRequirementDel requirement, bool SkinUsesHead)
+        {
+            SkinReqStruct skin = new SkinReqStruct(ID, Name, requirement, SkinUsesHead);
             OutfitList.Add(skin);
         }
 

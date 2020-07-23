@@ -174,12 +174,12 @@ namespace giantsummon.Npcs
                         if (PlayerMod.PlayerHasGuardian(Main.player[p], GuardianBase.Blue))
                         {
                             ChangeAIStage(150);
-                            SayMessage("*The wolf is calling you.*");
+                            AiValue = SayMessage("*The wolf is calling you.*");
                         }
                         else
                         {
                             ChangeAIStage(1);
-                            SayMessage("*The wolf seems to be calling you.*");
+                            AiValue = SayMessage("*The wolf seems to be calling you.*");
                         }
                     }
                 }
@@ -194,8 +194,8 @@ namespace giantsummon.Npcs
                 {
                     if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) < 96)
                     {
-                        SayMessage("*It asks if you're here for camping, too.*");
                         ChangeAIStage(2);
+                        AiValue = SayMessage("*It asks if you're here for camping, too.*");
                     }
                 }
             }
@@ -204,7 +204,7 @@ namespace giantsummon.Npcs
                 if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 300)
                 {
                     ChangeAIStage(RefusalStep);
-                    SayMessage("*She looks saddened after you refused without saying a thing.*");
+                    AiValue = SayMessage("*She looks saddened after you refused without saying a thing.*");
                 }
             }
             else if (AiStage == 150)
@@ -217,8 +217,8 @@ namespace giantsummon.Npcs
                 {
                     if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) < 96)
                     {
-                        SayMessage("*She seems happy for seeing you again.*");
                         ChangeAIStage(151);
+                        AiValue = SayMessage("*She seems happy for seeing you again.*");
                     }
                 }
             }
@@ -229,75 +229,75 @@ namespace giantsummon.Npcs
                     npc.direction = -1;
                 else
                     npc.direction = 1;
-                if (AiValue++ >= DialogueDelay)
+                if (AiStage != 10 && AiValue-- <= 0)
                 {
-                    AiValue -= DialogueDelay;
+                    AiValue = 0;
                     bool ChangeStage = true;
                     switch (AiStage)
                     {
                         case 2:
-                            SayMessage("*After you denied, she asked if you're an adventurer.*");
+                            AiValue = SayMessage("*After you denied, she asked if you're an adventurer.*");
                             break;
                         case 3:
-                            SayMessage("*After you told her that, she looked very interessed.*");
+                            AiValue = SayMessage("*After you told her that, she looked very interessed.*");
                             break;
                         case 4:
-                            SayMessage("*She tells you that on truth, didn't came to your world for camping.*");
+                            AiValue = SayMessage("*She tells you that on truth, didn't came to your world for camping.*");
                             break;
                         case 5:
-                            SayMessage("*She tells you that she's looking for someone that looks like her. And asks If you saw someone like that.*");
+                            AiValue = SayMessage("*She tells you that she's looking for someone that looks like her. And asks If you saw someone like that.*");
                             break;
                         case 6:
-                            SayMessage("*After you said that you didn't, she looked saddened.*");
+                            AiValue = SayMessage("*After you said that you didn't, she looked saddened.*");
                             break;
                         case 7:
-                            SayMessage("*She asked If you wouldn't mind if she followed you on your adventures.*");
+                            AiValue = SayMessage("*She asked If you wouldn't mind if she followed you on your adventures.*");
                             break;
                         case 8:
-                            SayMessage("*Says that while helping you on your adventure, she may find who she's looking for.*");
+                            AiValue = SayMessage("*Says that while helping you on your adventure, she may find who she's looking for.*");
                             break;
                         case 9:
-                            SayMessage("*She asks you what you think.*");
+                            AiValue = SayMessage("*She asks you what you think.*");
                             break;
                             //
                         case 100:
-                            SayMessage("*The wolf tells you not to sneak upon other people from behind.*");
+                            AiValue = SayMessage("*The wolf tells you not to sneak upon other people from behind.*");
                             break;
                         case 101:
-                            SayMessage("*Tells you that nearly sliced you in half with her sword.*");
+                            AiValue = SayMessage("*Tells you that nearly sliced you in half with her sword.*");
                             break;
                         case 102:
-                            SayMessage("*Trying to calm down.*");
+                            AiValue = SayMessage("*Trying to calm down.*");
                             break;
                         case 103:
-                            SayMessage("*She tells you that you really scared her. And apologized for earlier.*");
+                            AiValue = SayMessage("*She tells you that you really scared her. And apologized for earlier.*");
                             break;
                         case 104:
-                            SayMessage("*She asks what are you doing here, If you're here for camping too.*");
+                            AiValue = SayMessage("*She asks what are you doing here, If you're here for camping too.*");
                             break;
                         case 105:
-                            SayMessage("*You told her that you're exploring the world.*");
+                            AiValue = SayMessage("*You told her that you're exploring the world.*");
                             ChangeAIStage(3); //I hope nobody complains about me recicling part of the dialogue.
                             ChangeStage = false;
                             break;
                             //
                         case 151:
-                            SayMessage("*She told you that If you need her, she will be here.*");
+                            AiValue = SayMessage("*She told you that If you need her, she will be here.*");
                             break;
                         case 152:
                             RecruitmentScripts();
                             return;
                         case 155:
-                            SayMessage("*She told you to stop doing that to her.*");
+                            AiValue = SayMessage("*She told you to stop doing that to her.*");
                             break;
                         case 156:
-                            SayMessage("*She says that you nearly made her heart jump out of her mouth.*");
+                            AiValue = SayMessage("*She says that you nearly made her heart jump out of her mouth.*");
                             break;
                         case 157:
-                            SayMessage("*She tells you that If you need her help, she will be here.*");
+                            AiValue = SayMessage("*She tells you that If you need her help, she will be here.*");
                             break;
                         case 158:
-                            SayMessage("*And asks you not to scare her again.*");
+                            AiValue = SayMessage("*And asks you not to scare her again.*");
                             break;
                         case 159:
                             RecruitmentScripts();
@@ -305,6 +305,8 @@ namespace giantsummon.Npcs
                     }
                     if(ChangeStage)
                         AiStage++;
+                    if (AiValue == 0)
+                        AiValue = DialogueDelay;
                 }
                 if ((!Main.player[npc.target].active || Main.player[npc.target].dead) || Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 300)
                 {

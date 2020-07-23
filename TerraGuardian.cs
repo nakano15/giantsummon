@@ -12589,7 +12589,7 @@ namespace giantsummon
             float LastPositionX = this.Position.X;
             int PositionX = (int)(this.Position.X / 16);
             float StepSpeed = 2f;
-            bool Fall = MoveDown;
+            bool Fall = MoveDown && !MoveUp;
             Point[] TouchingTile = UpdateTouchingTiles();
             Collision_Water(Collision_Lava());
             Collision_WalkDownSlopes();
@@ -13832,6 +13832,10 @@ namespace giantsummon
             {
                 HeadSlot = 0;
                 FaceSlot = 0;
+            }
+            if (Data.OutfitID > 0 && Base.OutfitList[Data.OutfitID].SkinUsesHead)
+            {
+                HeadSlot = 0;
             }
             TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             Vector2 NewPosition = Position - Main.screenPosition;

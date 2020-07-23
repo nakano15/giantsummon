@@ -33,7 +33,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 65, LastModVersion = 62;
+        public const int ModVersion = 66, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -130,7 +130,7 @@ namespace giantsummon
 
         public static int CalculateMessageTime(string s)
         {
-            int Time = 100;
+            int Time = 300;
             foreach (char c in s)
             {
                 if (c == '.' || c == ':')
@@ -1465,7 +1465,7 @@ namespace giantsummon
                                             HasSkin = true;
                                             bool Active = Guardian.Data.SkinID == skin.SkinID;
                                             bool LastActive = Active;
-                                            bool RequirementBeaten = skin.Requirement(Guardian.Data, player.player);
+                                            bool RequirementBeaten = ShowDebugInfo || skin.Requirement(Guardian.Data, player.player);
                                             AddOnOffButton(SlotStartPosition.X, SlotStartPosition.Y, skin.Name, ref Active, RequirementBeaten, !RequirementBeaten);
                                             if (Active != LastActive)
                                             {
@@ -1488,16 +1488,16 @@ namespace giantsummon
                                         foreach (SkinReqStruct skin in Guardian.Base.OutfitList)
                                         {
                                             HasOutfit = true;
-                                            bool Active = Guardian.Data.SkinID == skin.SkinID;
+                                            bool Active = Guardian.Data.OutfitID == skin.SkinID;
                                             bool LastActive = Active;
-                                            bool RequirementBeaten = skin.Requirement(Guardian.Data, player.player);
+                                            bool RequirementBeaten = ShowDebugInfo || skin.Requirement(Guardian.Data, player.player);
                                             AddOnOffButton(SlotStartPosition.X, SlotStartPosition.Y, skin.Name, ref Active, RequirementBeaten, !RequirementBeaten);
                                             if (Active != LastActive)
                                             {
                                                 if (Active)
-                                                    Guardian.Data.SkinID = skin.SkinID;
+                                                    Guardian.Data.OutfitID = skin.SkinID;
                                                 else
-                                                    Guardian.Data.SkinID = 0;
+                                                    Guardian.Data.OutfitID = 0;
                                             }
                                             SlotStartPosition.Y += 20;
                                         }

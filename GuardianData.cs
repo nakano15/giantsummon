@@ -919,6 +919,8 @@ namespace giantsummon
             request.Save(tag, UniqueID);
             //request.Save(tag, UniqueID);
             tag.Add("ExistenceTime_" + UniqueID, LifeTime.TotalSeconds);
+            tag.Add("SkinID_" + UniqueID, SkinID);
+            tag.Add("OutfitID_" + UniqueID, OutfitID);
         }
 
         public void Load(Terraria.ModLoader.IO.TagCompound tag, int ModVersion, int UniqueID)
@@ -1132,6 +1134,11 @@ namespace giantsummon
             //    request.Load(tag, ModVersion, UniqueID);
             if (ModVersion >= 15)
                 LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
+            if (ModVersion >= 66)
+            {
+                SkinID = tag.GetByte("SkinID_" + UniqueID);
+                OutfitID = tag.GetByte("OutfitID_" + UniqueID);
+            }
         }
 
         public bool CheckForImportantMessages(out string Text)

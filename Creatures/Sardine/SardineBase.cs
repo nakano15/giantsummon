@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace giantsummon.Creatures
 {
@@ -16,6 +17,8 @@ namespace giantsummon.Creatures
         /// -Bree's Husband.
         /// -Bullied by Blue and Zacks.
         /// </summary>
+
+        public const string CaitSithOutfitID = "cs_outfit";
 
         public SardineBase()
         {
@@ -115,6 +118,91 @@ namespace giantsummon.Creatures
 
             GetRequests();
             GetRewards();
+            LoadSkins();
+        }
+
+        public void LoadSkins()
+        {
+            AddOutfit(1, "Cait Sith", delegate(GuardianData gd, Player player)
+            {
+                return false;//gd.HasPersonalRequestBeenCompleted(0);
+            }, true);
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(CaitSithOutfitID, "caitsith_outfit");
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
+        {
+            switch (guardian.Data.OutfitID)
+            {
+                case 1:
+                    {
+                        Texture2D texture = sprites.GetExtraTexture(CaitSithOutfitID);
+                        int BodyFramePosition = -1, RightArmPosition = -1, HeadEquipPosition = -1, BodyFrontPosition = -1;
+                        bool HasVanityItem = TerraGuardian.HeadSlot > 0 || TerraGuardian.FaceSlot > 0;
+                        for (int t = 0; t < TerraGuardian.DrawBehind.Count; t++)
+                        {
+                            if (TerraGuardian.DrawBehind[t].textureType == GuardianDrawData.TextureType.TGRightArm)
+                            {
+                                RightArmPosition = t;
+                            }
+                            if (TerraGuardian.DrawBehind[t].textureType == GuardianDrawData.TextureType.TGBody)
+                            {
+                                BodyFramePosition = t;
+                            }
+                            if (TerraGuardian.DrawBehind[t].textureType == GuardianDrawData.TextureType.TGBodyFront)
+                            {
+                                BodyFrontPosition = t;
+                            }
+                            if (TerraGuardian.DrawBehind[t].textureType == GuardianDrawData.TextureType.TGHeadAccessory)
+                            {
+                                HeadEquipPosition = t;
+                            }
+                        }
+                        if (BodyFramePosition > -1)
+                        {
+                            Rectangle bodyrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                            bodyrect.Height += 16;
+                            DrawPosition.Y -= 16;
+                            GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, bodyrect, color, Rotation, Origin, Scale, seffect);
+                            TerraGuardian.DrawBehind.Insert(RightArmPosition++, dd);
+                            BodyFramePosition += 2;
+                            bodyrect.Y += bodyrect.Height;
+                            dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, bodyrect, color, Rotation, Origin, Scale, seffect);
+                            TerraGuardian.DrawBehind.Insert(BodyFramePosition++, dd);
+                            bodyrect.Y += bodyrect.Height;
+                            dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, bodyrect, color, Rotation, Origin, Scale, seffect);
+                            TerraGuardian.DrawBehind.Insert(BodyFramePosition++, dd);
+                            bodyrect.Y += bodyrect.Height;
+                            dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, bodyrect, color, Rotation, Origin, Scale, seffect);
+                            TerraGuardian.DrawBehind.Insert(BodyFramePosition++, dd);
+                            if (!HasVanityItem)
+                            {
+                                bodyrect.Y += bodyrect.Height;
+                                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, bodyrect, color, Rotation, Origin, Scale, seffect);
+                                /*if (HeadEquipPosition > -1)
+                                {
+                                    if (HeadEquipPosition >= TerraGuardian.DrawBehind.Count - 1)
+                                    {
+                                        TerraGuardian.DrawBehind.Add(dd);
+                                    }
+                                    else
+                                    {
+                                        TerraGuardian.DrawBehind.Insert(HeadEquipPosition, dd);
+                                    }
+                                }
+                                else*/
+                                {
+                                    TerraGuardian.DrawBehind.Insert(BodyFramePosition++, dd);
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
         }
 
         public void GetRequests()
