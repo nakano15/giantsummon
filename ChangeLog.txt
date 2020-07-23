@@ -9,3 +9,8 @@ Companions will now comment when your character is their room mate.
 Changed the requirement as to which is necessary for Brutus to show up.
 	Instead of increasing minimally the chances of him showing up by defeating challenges in the world, now you need to have at least 5 town npcs in the world, and wait for him to show up.
 	It doesn't really makes sense offering a bodyguard job to someone who can overcome dangers, beside due to how lazy he is... Okay, his spawn chance is still boosted by number of bosses killed.
+Fixed an aiming problem companions were having in combat.
+	Due to that, they will now only try attacking when they have their aim set on their target.
+Malisha arrives.
+Brutus recruit npc will now only try leaving the world at night.
+Nerfed Blue's chest.

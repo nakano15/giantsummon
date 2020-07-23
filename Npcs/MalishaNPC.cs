@@ -294,6 +294,7 @@ namespace giantsummon.Npcs
                     case 11:
                         Main.npcChatText = "*I'm Malisha, by the way. I'll try enjoying my time here.*";
                         PlayerMod.AddPlayerGuardian(Main.player[npc.target], GuardianBase.Malisha);
+                        PlayerMod.GetPlayerGuardian(Main.player[npc.target], GuardianBase.Malisha).IncreaseFriendshipProgress(1);
                         NpcMod.AddGuardianMet(GuardianBase.Malisha);
                         npc.Transform(ModContent.NPCType<GuardianNPC.List.PantherGuardian>());
                         return;

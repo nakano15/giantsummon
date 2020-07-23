@@ -939,6 +939,10 @@ namespace giantsummon.Creatures
             Mes.Add("*Okay, Okay, I admit. I begun exploring to look for places where I could help people, and fill the hole left by my brother. Good thing that there is way more to fill that hole than I expected.*");
             Mes.Add("*Whenever I hug someone, most of the times they start talking about things that troubles them. So I feel like a therapist most of the time, but one who mostly listens only.*");
             Mes.Add("*You would be impressed at the variety of troubles I listen to when hugging people.*");
+            if (NpcMod.HasGuardianNPC(Malisha))
+            {
+                Mes.Add("*I have to tell you, [gn:"+Malisha+"] scares me a bit.*");
+            }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
 

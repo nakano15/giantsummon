@@ -2939,19 +2939,25 @@ namespace giantsummon
         {
             bool ReachedLocation = false;
             Vector2 MoveDir = Vector2.Zero;
-            if (AimDirection.X >= Position.X + Width * 0.25f && AimDirection.X < Position.X + Width * 0.75f && AimDirection.Y >= Position.Y + Height * 0.25f && AimDirection.Y < Position.Y + Height * 0.75f)
+            if (Width < 40)
+                Width = 40;
+            if (Height < 40)
+                Height = 40;
+            if (AimDirection.X >= Position.X + Width * 0.2f && AimDirection.X < Position.X + Width * 0.8f && AimDirection.Y >= Position.Y + Height * 0.2f && AimDirection.Y < Position.Y + Height * 0.8f)
             {
                 if (AimDirection.X != (int)(Position.X + Width * 0.5f) && AimDirection.Y != (int)(Position.Y + Height * 0.5f))
                 {
-                    MoveDir.X = (Position.X + Width * 0.5f - AimDirection.X) * 0.7f;
-                    MoveDir.Y = (Position.Y + Height * 0.5f - AimDirection.Y) * 0.7f;
+                    MoveDir.X = (Position.X + Width * 0.5f - AimDirection.X);
+                    MoveDir.Y = (Position.Y + Height * 0.5f - AimDirection.Y);
                 }
                 ReachedLocation = true;
             }
             else
             {
-                MoveDir.X = (Position.X + Width * (Width == 0 ? 1f : (float)Main.rand.NextDouble()) - AimDirection.X);
-                MoveDir.Y = (Position.Y + Height * (Height == 0 ? 1f : (float)Main.rand.NextDouble()) - AimDirection.Y);
+                MoveDir.X = (Position.X + Width * 0.5f - AimDirection.X);
+                MoveDir.Y = (Position.Y + Height * 0.5f - AimDirection.Y);
+                //MoveDir.X = (Position.X + Width * (Width == 0 ? 1f : (float)Main.rand.NextDouble()) - AimDirection.X);
+                //MoveDir.Y = (Position.Y + Height * (Height == 0 ? 1f : (float)Main.rand.NextDouble()) - AimDirection.Y);
             }
             const float MaxMouseMoveSpeed = 26f;
             if (MoveDir.Length() > MaxMouseMoveSpeed)
@@ -3942,7 +3948,6 @@ namespace giantsummon
         {
             if (TargetID == -1 || (DoAction.InUse && DoAction.IgnoreCombat))
             {
-                TargetInAim = false;
                 return;
             }
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
@@ -4042,6 +4047,7 @@ namespace giantsummon
             if (WaitingForManaRecharge && MP >= MMP)
                 WaitingForManaRecharge = false;
             bool NearDeath = HP < MHP * 0.2f && !PlayerMounted;
+            bool TargetInAim = false;
             if (MoveCursorToPosition(TargetPosition, TargetWidth, TargetHeight))
                 TargetInAim = true;
             if (HasFlag(GuardianFlags.Confusion))
@@ -4376,7 +4382,7 @@ namespace giantsummon
             {
                 this.Jump = true;
             }
-            if (Attack && ItemAnimationTime == 0 && !Action && !LastAction)// || (SelectedItem > -1 && Inventory[SelectedItem].autoReuse)))
+            if (Attack && TargetInAim && ItemAnimationTime == 0 && !Action && !LastAction)// || (SelectedItem > -1 && Inventory[SelectedItem].autoReuse)))
             {
                 //if(TargetInAim)
                 this.Action = true;
@@ -5422,6 +5428,7 @@ namespace giantsummon
             }
             bool IsTownNpc = OwnerPos == -1;
             bool DoIdleMovement = true;
+            int HouseX = -1, HouseY = -1;
             if (IsTownNpc)
             {
                 bool MoveIndoors = !Main.dayTime || (Main.dayTime && Main.time < 5400) || Main.raining || Main.eclipse;
@@ -5439,10 +5446,14 @@ namespace giantsummon
                     {
                         if (MoveIndoors)
                         {
-                            if (!Main.dayTime && Main.time == 0 && UsingFurniture)
-                                LeaveFurniture();
-                            int HouseX = Main.npc[NpcPosition].homeTileX * 16,
-                                HouseY = Main.npc[NpcPosition].homeTileY * 16;
+                            if (!Main.dayTime && Main.time == 0)
+                            {
+                                if(UsingFurniture)
+                                    LeaveFurniture();
+                                ChangeIdleAction(IdleActions.GoHome, 5);
+                            }
+                            HouseX = Main.npc[NpcPosition].homeTileX * 16;
+                            HouseY = Main.npc[NpcPosition].homeTileY * 16;
                             if (HouseX < 0 || HouseY < 0)
                             {
                                 HouseX = (int)Position.X;
@@ -5608,6 +5619,11 @@ namespace giantsummon
                                     ChangeIdleAction(IdleActions.Wander, 200 + Main.rand.Next(200));
                             }
                             break;
+                        case IdleActions.GoHome:
+                            {
+                                ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
+                            }
+                            break;
                         default:
                             {
                                 ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
@@ -5626,6 +5642,23 @@ namespace giantsummon
                 case IdleActions.UseNearbyFurniture:
                 case IdleActions.TryGoingSleep:
                     WalkMode = true;
+                    break;
+                case IdleActions.GoHome:
+                    {
+                        if (HouseX > -1 && HouseY > -1)
+                        {
+                            float DistanceFromHome = HouseX - Position.X;
+                            if (Math.Abs(DistanceFromHome) > 8f)
+                            {
+                                WalkMode = true;
+                                if (DistanceFromHome > 0)
+                                    MoveRight = true;
+                                else
+                                    MoveLeft = true;
+                                IdleActionTime = 5;
+                            }
+                        }
+                    }
                     break;
                 case IdleActions.Wander:
                     {
@@ -5834,6 +5867,11 @@ namespace giantsummon
                     TryFindingNearbyBed();
                     if (furniturex == -1 && furniturey == -1)
                         ChangeIdleAction(IdleActions.Wait, 50 + Main.rand.Next(50));
+                    break;
+                case IdleActions.GoHome:
+                    if (UsingFurniture)
+                        LeaveFurniture();
+                    IdleActionTime = 5;
                     break;
             }
         }
@@ -13999,6 +14037,8 @@ namespace giantsummon
                 }
                 Utils.DrawBorderString(Main.spriteBatch, s, Pos, Color.White);
             }
+            //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
+            //AddDrawData(dd, true);
         }
 
         public void DrawReviveBar()

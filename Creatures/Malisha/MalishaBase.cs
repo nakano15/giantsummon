@@ -417,6 +417,7 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*[gn:"+Vladimir+"] comes from a lineage of warriors, but he seems to be the opposite of his parents. Would he mind if I did a research to investigate why?*");
                 Mes.Add("*Whenever I need to process my thoughts, I visit [gn:" + Vladimir + "]. I tried talking about them with him, but he looked uninteressed, so I remain quiet.*");
+                Mes.Add("*Aaack! I fell asleep when processing my thoughts with [gn:"+Vladimir+"]! I must get back to researching.*");
             }
             if (NpcMod.HasGuardianNPC(Michelle))
             {
@@ -442,7 +443,7 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.IsGuardianPlayerRoomMate(player, Leopold))
             {
-                Mes.Add("*You're sharing room with [gn:" + Leopold + "]? Would you mind move somewhere else? Huh? I have no actual reason for asking. Sigh..*");
+                Mes.Add("*You're sharing room with [gn:" + Leopold + "]? Would you mind moving somewhere else? Huh? I have no actual reason for asking. Sigh..*");
             }
 
             if (Main.bloodMoon)
@@ -452,7 +453,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*Don't worry, this wont hurt a bit.*");
                 Mes.Add("*How did you know that I needed someone for my experiement?*");
                 Mes.Add("*Good, I was needing someone for my brain transplant machine. Ready to turn into a Squirrel?*");
-                Mes.Add("*I got you now! Now drink this potion!*");
+                Mes.Add("*I got you! Now drink this potion!*");
                 
                 int BuffID = -1;
                 switch (Main.rand.Next(10))
@@ -505,13 +506,21 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(GuardianBase.Leopold))
             {
                 Mes.Add("*Don't tell [gn:" + GuardianBase.Leopold + "], but I love having his company. He also helps me with my experiements, even though he clearly doesn't want.*");
-                Mes.Add("*I tried several times to earn [gn:"+GuardianBase.Leopold+"]'s respect, but he always complains of my methods.*");
-                Mes.Add("*I don't mean to do any harm when I mess with [gn:"+Leopold+"], I just love having him around.*");
+                Mes.Add("*I tried several times to earn [gn:"+GuardianBase.Leopold+"]'s respect, but he always complains of my methods, so I no longer care about that.*");
+                Mes.Add("*I really love scaring [gn:"+Leopold+"], I even have a stack of leaves for when I take It too far.*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Zacks))
             {
                 Mes.Add("*I may be wrong, but the moment [gn:" + GuardianBase.Zacks + "] died was perfect. Well, he could have died for good if wasn't.*");
                 Mes.Add("*Maybe I have something to do with what happened to [gn:" + GuardianBase.Zacks + "], but I may be wrong. Just try not to tell anyone about that.*");
+            }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Blue))
+            {
+                Mes.Add("*[gn:" + GuardianBase.Blue + "], seems a bit too obsessed with the bunny transformation spell. What she could possibly used It on?*");
+                if (NpcMod.HasGuardianNPC(GuardianBase.Zacks))
+                {
+                    Mes.Add("*I'm impressed at how [gn:"+GuardianBase.Blue+"] still loves [gn:"+Zacks+"]. Tell me when something bad happen to them, I would like to analyze their brains while It's still fresh.*");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

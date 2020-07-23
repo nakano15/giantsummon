@@ -109,16 +109,13 @@ namespace giantsummon.Npcs
         {
             if (NpcMod.HasMetGuardian(6, "") || NPC.AnyNPCs(ModContent.NPCType<BrutusNPC>()))
                 return;
-            if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || Main.time >= 27000)
+            const int SpawnTime = 3 * 3600;
+            if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || (Main.time < SpawnTime || WorldMod.LastTime >= 7.5))
             {
                 return;
             }
             if (Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0)
                 return;
-            if (!((int)Main.time == 3 * 3600 || (int)Main.time == 3.5 * 3600 || (int)Main.time == 4 * 3600 || (int)Main.time == 4.5 * 3600 || (int)Main.time == 5 * 3600 || (int)Main.time == 5.5 * 3600 || (int)Main.time == 6 * 3600))
-            {
-                return;
-            }
             int NpcCount = 0;
             for (int n = 0; n < 200; n++)
             {
@@ -127,7 +124,7 @@ namespace giantsummon.Npcs
             }
             if (NpcCount < 5)
                 return;
-            int SpawnChance = 300 - ChanceCounter() * 5;
+            int SpawnChance = 20 - ChanceCounter() / 2;
             if (SpawnChance > 0 && Main.rand.Next(SpawnChance) > 0)
             {
                 return;
@@ -243,6 +240,11 @@ namespace giantsummon.Npcs
                             }
                             if (SceneTime >= 1080)
                             {
+                                Player player = Main.player[npc.target];
+                                PlayerMod.AddPlayerGuardian(player, GuardianBase.Brutus);
+                                GuardianData gd = PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus);
+                                if (gd.FriendshipLevel == 0)
+                                    gd.IncreaseFriendshipProgress(1);
                                 npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());
                             }
                             BodyFrame = LeftArmFrame = RightArmFrame = Frame;
@@ -341,7 +343,7 @@ namespace giantsummon.Npcs
                     break;
             }
             base.AI(); //Never.Remove
-            if (!Main.dayTime || Main.time >= 48600)
+            if (!Main.dayTime)
             {
                 bool PlayerInRange = false;
                 for (int p = 0; p < 255; p++)
