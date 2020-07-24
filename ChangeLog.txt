@@ -1,6 +1,1 @@
-﻿Companions can no longer try dropping of platforms when holding up control.
-	That could cause a bug where the companion would try falling, and getting back into the platform repeatedly.
-Outfits are no longer a Skin selector with a different name.
-You no longer need to rush trying to talk to Blue on the next 5 seconds since she asks what you were thinking.
-Companions will no longer hurry their dialogue when speaking to your character.
-Skins and Outfits selected will now correctly be saved with the companion.
+﻿

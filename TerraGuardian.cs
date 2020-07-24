@@ -13565,6 +13565,36 @@ namespace giantsummon
             return VanityID;
         }
 
+        public void AddDrawDataAfter(GuardianDrawData dd, int Position, bool InFrontOfPlayer)
+        {
+            if (dd.Texture == null)
+                return;
+            if (!MountedOnPlayer || Downed)
+                dd.IgnorePlayerRotation = true;
+            if (InFrontOfPlayer)
+            {
+                if (Position + 1 >= DrawFront.Count)
+                {
+                    DrawFront.Add(dd);
+                }
+                else
+                {
+                    DrawFront.Insert(Position + 1, dd);
+                }
+            }
+            else
+            {
+                if (Position + 1 >= DrawBehind.Count)
+                {
+                    DrawBehind.Add(dd);
+                }
+                else
+                {
+                    DrawBehind.Insert(Position + 1, dd);
+                }
+            }
+        }
+
         public void AddDrawData(GuardianDrawData dd, bool InFrontOfPlayer)
         {
             if (dd.Texture == null)
@@ -13820,22 +13850,21 @@ namespace giantsummon
             }
             if (HeadSlot == 201 && !Male)
                 HeadSlot = 202;
-            if (HeadSlot == 0 && Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
+            if (Data.OutfitID == 0 || !Base.OutfitList.Any(x => x.SkinID == Data.OutfitID && x.SkinUsesHead))
             {
-                HeadSlot = Terraria.ID.ArmorIDs.Head.PartyHat;
-            }
-            if (HeadSlot == 0 && Main.xMas)
-            {
-                HeadSlot = 44;
+                if (HeadSlot == 0 && Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
+                {
+                    HeadSlot = Terraria.ID.ArmorIDs.Head.PartyHat;
+                }
+                if (HeadSlot == 0 && Main.xMas)
+                {
+                    HeadSlot = 44;
+                }
             }
             if ((Base.IsCustomSpriteCharacter && BodyAnimationFrame == Base.BedSleepingFrame) || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame)
             {
                 HeadSlot = 0;
                 FaceSlot = 0;
-            }
-            if (Data.OutfitID > 0 && Base.OutfitList[Data.OutfitID].SkinUsesHead)
-            {
-                HeadSlot = 0;
             }
             TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             Vector2 NewPosition = Position - Main.screenPosition;

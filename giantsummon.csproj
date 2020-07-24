@@ -245,6 +245,7 @@
     <Content Include="Creatures\Malisha\left_arm.png" />
     <Content Include="Creatures\Malisha\right_arm.png" />
     <Content Include="Creatures\Malisha\tails.png" />
+    <Content Include="Creatures\Sardine\caitsith_outfit.png" />
     <Content Include="Creatures\Vladimir\body.png" />
     <Content Include="Creatures\Vladimir\body_front.png" />
     <Content Include="Creatures\Vladimir\head.png" />
