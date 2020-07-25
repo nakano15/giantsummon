@@ -242,6 +242,7 @@ namespace giantsummon.Npcs
                             {
                                 Player player = Main.player[npc.target];
                                 PlayerMod.AddPlayerGuardian(player, GuardianBase.Brutus);
+                                PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus).IncreaseFriendshipProgress(1);
                                 GuardianData gd = PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus);
                                 if (gd.FriendshipLevel == 0)
                                     gd.IncreaseFriendshipProgress(1);
@@ -486,6 +487,7 @@ namespace giantsummon.Npcs
                 if (Main.player[Main.myPlayer].BuyItem(Item.buyPrice(0, HirePrice)))
                 {
                     PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+                    PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                     NpcMod.AddGuardianMet(6);
                     Main.NewText("You bought " + NpcAlias + "'s help.");
                     npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());

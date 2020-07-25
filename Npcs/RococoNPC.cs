@@ -55,6 +55,7 @@ namespace giantsummon.Npcs
             else if (AcceptedOnce)
             {
                 PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+                PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                 npc.Transform(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
                 ((GuardianNPC.List.RaccoonGuardian)npc.modNPC).UnlockGuardian();
             }

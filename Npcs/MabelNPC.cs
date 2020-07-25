@@ -204,6 +204,7 @@ namespace giantsummon.Npcs
                     if (AiTimer == 30 + DialogueTime * 7)
                     {
                         PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], 8);
+                        PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], 8).IncreaseFriendshipProgress(1);
                         NpcMod.AddGuardianMet(8);
                         npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
                     }

@@ -105,7 +105,10 @@ namespace giantsummon.Npcs
 
         private void RecruitmentScripts()
         {
+            bool PlayerHadBlue = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Blue);
             PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Blue);
+            if (!PlayerHadBlue)
+                PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).IncreaseFriendshipProgress(1);
             NpcMod.AddGuardianMet(GuardianBase.Blue);
             npc.Transform(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
         }

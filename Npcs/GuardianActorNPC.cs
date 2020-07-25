@@ -245,12 +245,14 @@ namespace giantsummon.Npcs
             else if (npc.velocity.X != 0)
             {
                 float MaxTime = Base.MaxWalkSpeedTime;
+                if (Walk)
+                    MaxTime *= 3;
                 float AnimationSpeed = Math.Abs(npc.velocity.X);
                 if ((npc.velocity.X > 0 && npc.direction < 0) || (npc.velocity.X < 0 && npc.direction > 0))
                 {
                     AnimationSpeed *= -1;
                 }
-                npc.frameCounter += AnimationSpeed / Base.MaxSpeed;
+                npc.frameCounter += AnimationSpeed / MaxTime;
                 if (npc.frameCounter < 0)
                     npc.frameCounter += MaxTime;
                 if (npc.frameCounter >= MaxTime)

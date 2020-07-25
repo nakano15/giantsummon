@@ -6,3 +6,4 @@ Add a skin and outfit container to the game, so other mod skins and outfits can 
 	The container also should have a hook for the drawing scripts, if there isn't already in the mod.
 A flag checking if the companion is the player room mate.
 A script to check if the companion is in It's room.
+There may be a chance of another mod npc being added as starter guardian on the starter guardian companion list.

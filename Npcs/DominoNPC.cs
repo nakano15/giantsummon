@@ -400,7 +400,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.playerInTown && !NpcMod.HasGuardianNPC(GuardianID) && CanSpawnDomino(spawnInfo.player) && !NPC.AnyNPCs(ModContent.NPCType<DominoNPC>()))
+            if (!spawnInfo.playerInTown && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && CanSpawnDomino(spawnInfo.player) && !NPC.AnyNPCs(ModContent.NPCType<DominoNPC>()))
             {
                 return 0.00390625f;
             }
@@ -454,6 +454,7 @@ namespace giantsummon.Npcs
             {
                 Main.npcChatText = "*Thanks mate.*";
                 PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+                if(!PlayerHasDomino) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                 NpcMod.AddGuardianMet(GuardianID, GuardianModID);
                 npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
             }

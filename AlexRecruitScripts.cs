@@ -47,12 +47,13 @@ namespace giantsummon
         {
             const int TombstoneWidth = 2, TombstoneHeight = 2;
             int StartPosX = 0, StartPosY = 0;
-            retry:
-            status.Message = "Trying to spawn a tombstone.";
+        retry:
+            int Attempt = 0;
             while (true)
             {
+                status.Message = "Trying to spawn a tombstone. (" + (Attempt++) + ")";
                 StartPosX = Main.rand.Next((int)Main.leftWorld / 16, (int)Main.rightWorld / 16 - TombstoneWidth);
-                StartPosY = Main.rand.Next((int)Main.topWorld / 16, (int)Main.worldSurface - TombstoneHeight);
+                StartPosY = Main.rand.Next((int)(Main.worldSurface * 0.35f), (int)Main.worldSurface - TombstoneHeight);
                 //StartPosY = (int)Main.topWorld / 16;
                 bool AtLeastOnePositionFound = false, PassedSurface = false;
                 while (true)
@@ -97,13 +98,29 @@ namespace giantsummon
                             SomeTileInTheWay = true;
                             break;
                         }
+                        if (Main.tile[StartPosX + x, StartPosY + y].wall > 0)
+                        {
+                            SomeTileInTheWay = true;
+                            break;
+                        }
                     }
                 }
                 bool NonSolidTileBellow = false;
                 for (int x = 0; x < TombstoneWidth; x++)
                 {
                     int TileY = StartPosY + TombstoneHeight + 1;
-                    if (!Main.tile[StartPosX + x, TileY].active() || !Main.tileSolid[Main.tile[StartPosX + x, TileY].type])
+                    if (Main.tile[StartPosX + x, TileY].nactive() || !Main.tileSolid[Main.tile[StartPosX + x, TileY].type])
+                    {
+                        NonSolidTileBellow = true;
+                        break;
+                    }
+                    if (Main.tile[StartPosX + x, TileY].halfBrick() || Main.tile[StartPosX + x, TileY].slope() > 0)
+                    {
+                        NonSolidTileBellow = true;
+                        break;
+                    }
+                    if (Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.Cloud || Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.RainCloud || 
+                        Terraria.ID.TileID.Sets.Corrupt[Main.tile[StartPosX + x, TileY].type])
                     {
                         NonSolidTileBellow = true;
                         break;
@@ -112,6 +129,15 @@ namespace giantsummon
                 if (!SomeTileInTheWay && !NonSolidTileBellow)
                 {
                     break;
+                }
+                if (Attempt >= 500)
+                {
+                    status.Message = "Unable to spawn Tombstone.";
+                    Attempt = 0;
+                    while (Attempt++ < 300)
+                    {
+
+                    }
                 }
                 //status.Message = "Failed at PosX = " + StartPosX + "  PosY = " + StartPosY + ".";
             }

@@ -171,7 +171,11 @@ namespace giantsummon.Creatures
                                 DrawPosition.Y -= 16;
                                 GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, bodyrect, color, Rotation, Origin, Scale, seffect);
                                 if (RightArmPosition > -1)
-                                    guardian.AddDrawDataAfter(dd, RightArmPosition, false);
+                                {
+                                    //if (!guardian.MountedOnPlayer || guardian.Downed) dd.IgnorePlayerRotation = true;
+                                    guardian.InsertDrawData(dd, RightArmPosition, false);
+                                    //TerraGuardian.DrawBehind.Insert(RightArmPosition, dd);
+                                }
                                 BodyFramePosition += 2;
                                 bodyrect.Y += bodyrect.Height;
                                 dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, bodyrect, color, Rotation, Origin, Scale, seffect);
@@ -218,7 +222,7 @@ namespace giantsummon.Creatures
                 "I didn't liked the result of my last fight against the King Slime, and I think there's still Gel inside my ears. I wonder If we could try doing the fight again, but this time doing it right. What do you think?",
                 "Amazing! Just tell me when you're ready, and I will call It.",
                 "What? I can't hear you! Must be the Gel. Did you deny?",
-                "That is how It is done! And It was really good to face It from outside, too.",
+                "That is how It is done! And It was really good to face It from outside, too. I feel that now I have the right to use this outfit, the Travelling Merchant said that he got It from a Post Apocalyptic Futuristic Tokyo. I don't even have any idea of what Tokyo is, but the outfit seems to look good on me. Let's check It out?",
                 "Just tell me when you want me to call It. Let's prepare ourselves first before trying.");
             AddRequestRequirement(delegate(Player player)
             {

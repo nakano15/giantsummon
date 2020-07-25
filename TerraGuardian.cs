@@ -85,6 +85,8 @@ namespace giantsummon
         public bool HurtPanic = false;
         public bool LastWasInCombat = false;
         public bool WaitingForManaRecharge = false;
+        public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
+        public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
         public bool Male { get { if (Base.CanChangeGender) { return Data.Male; } return Base.Male; } set { if (Base.CanChangeGender) Data.Male = value; } }
         public bool Tanker { get { return Data.Tanker; } set { Data.Tanker = value; if (Data.Tanker) { Aggro += TankerAggroBonus; } else { Aggro -= TankerAggroBonus; } } }
         public bool PlayerMounted = false;
@@ -360,7 +362,7 @@ namespace giantsummon
         public int GetMeleeWeaponRangeX(int ItemPosition = -1, bool Kneeling = false)
         {
             int Range = 40;
-            int WeaponPosition = (ItemPosition == -1 ? GetHighestDamageMeleeWeaponPosition : ItemPosition);
+            int WeaponPosition = ItemPosition;
             if (WeaponPosition > -1)
             {
                 if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[WeaponPosition]))
@@ -384,17 +386,17 @@ namespace giantsummon
                 int y;
                 if ((ItemPosition == -1 && !Base.DontUseHeavyWeapons) || (ItemPosition > -1 && MainMod.IsGuardianItem(Inventory[ItemPosition])))
                 {
-                    GetBetweenHandsPosition(Base.HeavySwingFrames[0], out AttackRangeX, out y);
+                    GetBetweenHandsPosition(Base.HeavySwingFrames[0], true, out AttackRangeX, out y);
                 }
                 else
                 {
-                    GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[2], out AttackRangeX, out y);
+                    GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[2], true, out AttackRangeX, out y);
                 }
                 /*int Frame = Base.ItemUseFrames[2];
                 if (Kneeling && Base.CanDuck)
                     Frame = Base.DuckingSwingFrames[2];
                 GetLeftHandPosition(Frame, out AttackRangeX, out y);*/
-                AttackRangeX = (int)(SpriteWidth * 0.5f) - AttackRangeX;
+                //AttackRangeX = (int)(SpriteWidth * 0.5f) - AttackRangeX;
                 Range += (int)(AttackRangeX * Scale);
             }
             return Range;
@@ -3931,7 +3933,7 @@ namespace giantsummon
             }
             else
             {
-                InRangeX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f;
+                InRangeX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f;
                 //if (TopLeftCollision.X + Width >= TargetPosition.X && TopLeftCollision.X < TargetPosition.X + TargetWidth)
                 //    InRangeX = true;
                 float UpperY, LowerY;
@@ -3966,8 +3968,8 @@ namespace giantsummon
                     TargetIsBoss = Main.npc[TargetID].boss || Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[TargetID].type];
                     TargetPosition = Main.npc[TargetID].position;
                     TargetVelocity = Main.npc[TargetID].velocity;
-                    TargetWidth = Main.npc[TargetWidth].width;
-                    TargetHeight = Main.npc[TargetWidth].height;
+                    TargetWidth = Main.npc[TargetID].width;
+                    TargetHeight = Main.npc[TargetID].height;
                     ThroughWall = Main.npc[TargetID].noTileCollide;
                     break;
                 case TargetTypes.Player:
@@ -3979,8 +3981,8 @@ namespace giantsummon
                     }
                     TargetPosition = Main.player[TargetID].position;
                     TargetVelocity = Main.player[TargetID].velocity;
-                    TargetWidth = Main.player[TargetWidth].width;
-                    TargetHeight = Main.player[TargetWidth].height;
+                    TargetWidth = Main.player[TargetID].width;
+                    TargetHeight = Main.player[TargetID].height;
                     break;
                 case TargetTypes.Guardian:
                     if (!MainMod.ActiveGuardians.ContainsKey(TargetID) || MainMod.ActiveGuardians[TargetID].Downed || !IsGuardianHostile(MainMod.ActiveGuardians[TargetID]))
@@ -3991,8 +3993,8 @@ namespace giantsummon
                     }
                     TargetPosition = MainMod.ActiveGuardians[TargetID].TopLeftPosition;
                     TargetVelocity = MainMod.ActiveGuardians[TargetID].Velocity;
-                    TargetWidth = MainMod.ActiveGuardians[TargetWidth].Width;
-                    TargetHeight = MainMod.ActiveGuardians[TargetWidth].Height;
+                    TargetWidth = MainMod.ActiveGuardians[TargetID].Width;
+                    TargetHeight = MainMod.ActiveGuardians[TargetID].Height;
                     break;
             }
             if (!AttackingTarget)
@@ -4073,7 +4075,7 @@ namespace giantsummon
                     {
                         int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
                         int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
-                        bool MagicItemNeedsRecharge = false;
+                        bool MagicItemNeedsRecharge = false, NoManaMagicItem = false;
                         bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
                         for (int i = 0; i < 10; i++)
                         {
@@ -4099,15 +4101,27 @@ namespace giantsummon
                             {
                                 if (Inventory[i].damage > HighestMagicDamage && (!UseWeaponsByInventoryOrder || MagicPosition == -1))
                                 {
-                                    if (MP >= Inventory[i].mana * ManaCostMult)
+                                    int ManaCost = (int)(Inventory[i].mana * ManaCostMult);
+                                    if (Inventory[i].type == Terraria.ID.ItemID.SpaceGun && HasFlag(GuardianFlags.MeteorSetEffect))
+                                    {
+                                        HighestMagicDamage = Inventory[i].damage;
+                                        MagicPosition = i;
+                                        ManaCost = 0;
+                                        NoManaMagicItem = true;
+                                    }
+                                    else if (MP >= Inventory[i].mana * ManaCostMult)
                                     {
                                         HighestMagicDamage = Inventory[i].damage;
                                         MagicPosition = i;
                                         MagicItemNeedsRecharge = false;
+                                        NoManaMagicItem = false;
                                     }
                                     else if (MagicPosition == -1)
                                     {
+                                        HighestMagicDamage = Inventory[i].damage;
+                                        MagicPosition = i;
                                         MagicItemNeedsRecharge = true;
+                                        NoManaMagicItem = false;
                                     }
                                 }
                             }
@@ -4135,7 +4149,7 @@ namespace giantsummon
                         {
                             SelectedItem = RangedPosition;
                         }
-                        if (MagicPosition > -1 && (!WaitingForManaRecharge || ManaCostMult == 0) && !HasFlag(GuardianFlags.Silence))
+                        if (MagicPosition > -1 && ((!WaitingForManaRecharge || NoManaMagicItem) || ManaCostMult == 0) && !HasFlag(GuardianFlags.Silence))
                         {
                             SelectedItem = MagicPosition;
                         }
@@ -4160,10 +4174,10 @@ namespace giantsummon
                             SelectedItem = MeleePosition;
                     }
                 }
-                if (HasFlag(GuardianFlags.Confusion) && OwnerPos > -1)
+                /*if (HasFlag(GuardianFlags.Confusion) && OwnerPos > -1)
                 {
                     TargetPosition.X += (Main.player[OwnerPos].Center.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
-                }
+                }*/
                 bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
                 if (false && !TargetOnSight)
                 {
@@ -4262,7 +4276,7 @@ namespace giantsummon
                 }
                 if (GoMelee)
                 {
-                    bool InRangeX = false, InRangeY = false;
+                    bool InRangeX, InRangeY;
                     CheckAttackRange(SelectedItem, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
                     if (InRangeX)
                     {
@@ -4288,32 +4302,13 @@ namespace giantsummon
                         if (NeedsDucking)
                             Duck = true;
                     }
-                    else
-                    {
-                        float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + TargetWidth * 0.5f;
-                        if (Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) > AttackRange)
-                            Approach = true;
-                        else if (Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < Width * 0.5f + 8)
-                            Retreat = true;
-                        /*if (!InRangeX)
-                        {
-                            Approach = true;
-                        }*/
-                    }
-                    if (false && NearDeath)
-                    {
-                        if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) < TargetWidth * 0.5f + Width * 0.5f + 64f)
-                        {
-                            Retreat = true;
-                        }
-                    }
-                    else
-                    {
-                        if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X) < (TargetWidth + Width) * 0.5f + 28f)
-                        {
-                            Retreat = true;
-                        }
-                    }
+                    float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + TargetWidth * 0.5f,
+                        DistanceAbs = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                    //Main.NewText("Range X: " + AttackRange + "  Distance ABS: " + DistanceAbs + "  Target Width: " + TargetWidth + "  Target Height: " + TargetHeight);
+                    if (DistanceAbs < Width * 0.5f + 8)
+                        Retreat = true;
+                    else if (DistanceAbs >= AttackRange)
+                        Approach = true;
                 }
             }
             if (Duck && ItemAnimationTime == 0)
@@ -5557,6 +5552,10 @@ namespace giantsummon
                                     {
                                         if (IdleActionTime == 0 || (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.Wait))
                                             ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
+                                        if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
+                                        {
+                                            MoveDown = true;
+                                        }
                                     }
                                     else
                                     {
@@ -5569,10 +5568,6 @@ namespace giantsummon
                                                     ChangeIdleAction(IdleActions.UseNearbyFurniture, 200 + Main.rand.Next(200));
                                                 else
                                                     ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
-                                            }
-                                            if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
-                                            {
-                                                MoveDown = true;
                                             }
                                         }
                                     }
@@ -9303,15 +9298,27 @@ namespace giantsummon
         public Vector2 GetLeftHandPosition(int Frame)
         {
             int x, y;
-            GetLeftHandPosition(Frame, out x, out y);
+            GetLeftHandPosition(Frame, false, out x, out y);
+            return new Vector2(x, y);
+        }
+
+        public Vector2 GetLeftHandPosition(int Frame, bool IgnoreDirection)
+        {
+            int x, y;
+            GetLeftHandPosition(Frame, IgnoreDirection, out x, out y);
             return new Vector2(x, y);
         }
 
         public void GetLeftHandPosition(int Frame, out int X, out int Y)
         {
+            GetLeftHandPosition(Frame, false, out X, out Y);
+        }
+
+        public void GetLeftHandPosition(int Frame, bool IgnoreDirection, out int X, out int Y)
+        {
             Base.GuardianAnimationOverride(this, 1, ref Frame);
             Base.LeftHandPoints.GetPositionFromFrame(Frame, out X, out Y);
-            if (LookingLeft)
+            if (!IgnoreDirection && LookingLeft)
                 X = SpriteWidth - X;
             X -= (int)(SpriteWidth * 0.5f);
             if (GravityDirection > 0) Y -= SpriteHeight;
@@ -9328,11 +9335,23 @@ namespace giantsummon
             return new Vector2(x, y);
         }
 
+        public Vector2 GetRightHandPosition(int Frame, bool IgnoreDirection)
+        {
+            int x, y;
+            GetRightHandPosition(Frame, IgnoreDirection, out x, out y);
+            return new Vector2(x, y);
+        }
+
         public void GetRightHandPosition(int Frame, out int X, out int Y)
+        {
+            GetRightHandPosition(Frame, false, out X, out Y);
+        }
+
+        public void GetRightHandPosition(int Frame, bool IgnoreDirection, out int X, out int Y)
         {
             Base.GuardianAnimationOverride(this, 2, ref Frame);
             Base.RightHandPoints.GetPositionFromFrame(Frame, out X, out Y);
-            if (LookingLeft)
+            if (!IgnoreDirection && LookingLeft)
                 X = SpriteWidth - X;
             X -= (int)(SpriteWidth * 0.5f);
             if (GravityDirection > 0) Y -= SpriteHeight;
@@ -9396,14 +9415,26 @@ namespace giantsummon
         public Vector2 GetBetweenHandsPosition(int Frame)
         {
             int x, y;
-            GetBetweenHandsPosition(Frame, out x, out y);
+            GetBetweenHandsPosition(Frame, false, out x, out y);
+            return new Vector2(x, y);
+        }
+
+        public Vector2 GetBetweenHandsPosition(int Frame, bool IgnoreDirection)
+        {
+            int x, y;
+            GetBetweenHandsPosition(Frame, IgnoreDirection, out x, out y);
             return new Vector2(x, y);
         }
 
         public void GetBetweenHandsPosition(int Frame, out int ItemPositionX, out int ItemPositionY)
         {
+            GetBetweenHandsPosition(Frame, false, out ItemPositionX, out ItemPositionY);
+        }
+
+        public void GetBetweenHandsPosition(int Frame, bool IgnoreDirection, out int ItemPositionX, out int ItemPositionY)
+        {
             Base.GetBetweenHandsPosition(Frame, out ItemPositionX, out ItemPositionY);
-            if (LookingLeft)
+            if (!IgnoreDirection && LookingLeft)
                 ItemPositionX = SpriteWidth - ItemPositionX;
             ItemPositionX -= (int)(SpriteWidth * 0.5f);
             if (GravityDirection > 0) ItemPositionY -= SpriteHeight;
@@ -11764,12 +11795,14 @@ namespace giantsummon
                             BodyAnimationFrame = 1;
                             AnimationTime = 0;
                         }*/
-                        float MaxAnimationTime = Base.MaxWalkSpeedTime * Scale;
+                        float MaxAnimationTime = Base.MaxWalkSpeedTime;
+                        MaxAnimationTime *= Scale;
                         float SpeedX = Math.Abs(Velocity.X);
+                        if (WalkMode)
+                            SpeedX *= 3;
                         if ((Velocity.X > 0 && Direction < 0) || (Velocity.X < 0 && Direction > 0))
                             SpeedX *= -1;
-                        AnimationTime += SpeedX / (WalkMode ? WalkMaxSpeed : MaxSpeed);
-                        //bool ReverseAnimation = Velocity.X > 0 && LookingLeft || Velocity.X < 0 && !LookingLeft;
+                        AnimationTime += SpeedX / MaxSpeed;
                         if (AnimationTime < 0f)
                             AnimationTime += MaxAnimationTime;
                         if (AnimationTime >= MaxAnimationTime)
@@ -13569,8 +13602,8 @@ namespace giantsummon
         {
             if (dd.Texture == null)
                 return;
-            if (!MountedOnPlayer || Downed)
-                dd.IgnorePlayerRotation = true;
+            //if (!MountedOnPlayer || Downed)
+            //    dd.IgnorePlayerRotation = true;
             if (InFrontOfPlayer)
             {
                 if (Position + 1 >= DrawFront.Count)
@@ -13599,8 +13632,8 @@ namespace giantsummon
         {
             if (dd.Texture == null)
                 return;
-            if (!MountedOnPlayer || Downed)
-                dd.IgnorePlayerRotation = true;
+            //if (!MountedOnPlayer || Downed)
+            //    dd.IgnorePlayerRotation = true;
             if (InFrontOfPlayer)
             {
                 DrawFront.Add(dd);
@@ -13615,8 +13648,8 @@ namespace giantsummon
         {
             if (dd.Texture == null)
                 return;
-            if (!MountedOnPlayer || Downed)
-                dd.IgnorePlayerRotation = true;
+            //if (!MountedOnPlayer || Downed)
+            //    dd.IgnorePlayerRotation = true;
             if (InFrontOfPlayer)
             {
                 DrawFront.Insert(Position, dd);
@@ -14072,6 +14105,20 @@ namespace giantsummon
             }
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);
+            foreach (GuardianDrawData gdd in DrawBehind)
+            {
+                if (!MountedOnPlayer || Downed)
+                {
+                    gdd.IgnorePlayerRotation = true;
+                }
+            }
+            foreach (GuardianDrawData gdd in DrawFront)
+            {
+                if (!MountedOnPlayer || Downed)
+                {
+                    gdd.IgnorePlayerRotation = true;
+                }
+            }
         }
 
         public void DrawReviveBar()

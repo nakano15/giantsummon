@@ -40,6 +40,7 @@ namespace giantsummon.Npcs
             npc.DeathSound = SoundID.NPCDeath2;
             npc.knockBackResist = 0.33f;
             npc.aiStyle = -1;
+            npc.rarity = 1;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
             npc.townNPC = true;
             npc.friendly = true;
@@ -71,7 +72,12 @@ namespace giantsummon.Npcs
                     {
                         Player player = Main.player[npc.target];
                         PlayerIsMale = player.Male;
-                        if (Math.Abs(player.Center.X - npc.Center.X) < Distance && Collision.CanHitLine(npc.position, npc.width, npc.height, player.position, player.width, player.height))
+                        Rectangle FoV = new Rectangle(0, -150, 250, 300);
+                        if (npc.direction < 0)
+                            FoV.X -= FoV.Width;
+                        FoV.X += (int)npc.Center.X;
+                        FoV.Y += (int)npc.Center.Y;
+                        if (FoV.Intersects(player.getRect()) && Collision.CanHitLine(npc.position, npc.width, npc.height, player.position, player.width, player.height))
                         {
                             //Chase Player
                             npc.ai[AI_TYPE] = 1;
@@ -209,6 +215,7 @@ namespace giantsummon.Npcs
                                         case 18:
                                             //Guardian GET!
                                             PlayerMod.AddPlayerGuardian(Main.player[npc.target], AlexID);
+                                            PlayerMod.GetPlayerGuardian(Main.player[npc.target], AlexID).IncreaseFriendshipProgress(1);
                                             npc.Transform(ModContent.NPCType<GuardianNPC.List.GiantDogGuardian>());
                                             break;
                                     }
@@ -418,7 +425,7 @@ namespace giantsummon.Npcs
             }
             else
             {
-                if (npc.ai[AI_TYPE] == 2 && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID) && npc.ai[AI_TIMER] < 12 * 30)
+                if (npc.ai[AI_TYPE] == 2 && ((!PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID) && npc.ai[AI_TIMER] < 12 * 30) || (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID) && npc.ai[AI_TIMER] < 2 * 30))) //&& !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID)
                 {
                     npc.frameCounter++;
                     Frame = ((int)npc.frameCounter / 5) % 4;

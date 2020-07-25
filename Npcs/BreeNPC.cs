@@ -556,6 +556,7 @@ namespace giantsummon.Npcs
             //Transform into Bree guardian npc
             NpcMod.AddGuardianMet(7);
             Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().AddNewGuardian(7);
+            PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], 7).IncreaseFriendshipProgress(1);
             npc.Transform(ModContent.NPCType<GuardianNPC.List.FemaleCatGuardian>());
         }
 

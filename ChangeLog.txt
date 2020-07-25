@@ -1,1 +1,17 @@
-﻿
+﻿Tried making It easier for you to find Alex in the world, now he'll spawn:
+	On the Surface.
+	Some place without walls.
+	Non corrupted zones.
+	Non sloped or half block tiles.
+	He'll appear on Lifeform Analyzer.
+Also did changes to his recruit npc.
+	Alex no longer has eagle eyes. he can no longer find you before you find him.
+Sardine's Cait Sith outfit added to the mod.
+	Help him to be able to flip It on.
+Domino will no longer stalk you trying to move into your world, whenever you send him home.
+Companions will now try using the Space Gun, whenever they are wearing the Meteor set, and they are waiting for mana to recharge.
+Companions walking will now have their animation run 3 times faster, to make their movement look less weird.
+I did the following changes to companion recruitments:
+	Now recruiting the companions for the first time, will rise their friendship level to 1.
+		This prevents you meeting the companions twice, and avoiding having to do their request to be able to increase their friendship level.
+	When the scene where Leopold notices the TerraGuardians ends, your character will not automatically get him on your companion list, but also get a friendship level.

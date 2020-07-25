@@ -398,6 +398,9 @@ namespace giantsummon.Npcs
                                         case GuardianBase.Vladimir:
                                             Message = "*I think that guy needs a hug. Maybe It will end up fixing his head, I guess.*";
                                             break;
+                                        case GuardianBase.Malisha:
+                                            Message = "*And he still fears even his own shadow.*";
+                                            break;
                                     }
                                 }
                                 Guardian.SaySomething(Message);
@@ -444,6 +447,9 @@ namespace giantsummon.Npcs
                                             break;
                                         case GuardianBase.Vladimir:
                                             Message = "*How can you think of hugs at a moment like this?*";
+                                            break;
+                                        case GuardianBase.Malisha:
+                                            Message = "*W-what the! What are you doing here? And who's that?*";
                                             break;
                                     }
                                 }
@@ -492,6 +498,9 @@ namespace giantsummon.Npcs
                                         case GuardianBase.Vladimir:
                                             Message = "*What moment like this, the Terrarian is my buddy. And can understand what we are talking.*";
                                             break;
+                                        case GuardianBase.Malisha:
+                                            Message = "*I moved to here for a vacation, then this Terrarian let me live here.*";
+                                            break;
                                     }
                                 }
                                 Guardian.SaySomething(Message);
@@ -529,6 +538,8 @@ namespace giantsummon.Npcs
                             break;
                         case SceneIDs.LeopoldTurnsToTownNPC:
                             NpcMod.AddGuardianMet(10);
+                            PlayerMod.AddPlayerGuardian(player, GuardianID, GuardianModID);
+                            PlayerMod.GetPlayerGuardian(player, GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                             npc.Transform(ModContent.NPCType<GuardianNPC.List.BunnyGuardian>());
                             break;
 
@@ -580,7 +591,9 @@ namespace giantsummon.Npcs
         public override string GetChat()
         {
             NpcMod.AddGuardianMet(GuardianID, GuardianModID);
+            bool PlayerHasLeopold = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
             PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+            if(!PlayerHasLeopold)PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
             npc.Transform(ModContent.NPCType<GuardianNPC.List.BunnyGuardian>());
             //Transform into the town npc.
             if (SceneID == SceneIDs.LeopoldFreeForRecruit)
