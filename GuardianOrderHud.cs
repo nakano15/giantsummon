@@ -79,7 +79,7 @@ namespace giantsummon
                     OrderList.Add(Orders.UseBuffPotions);
                 if (!Guardian.HasCooldown(GuardianCooldownManager.CooldownType.HealingPotionCooldown) && !Guardian.DoAction.InUse)
                     OrderList.Add(Orders.HealSelf);
-                if (!Guardian.PlayerControl && Guardian.HasFlag(GuardianFlags.MayGoSellLoot) && (Guardian.HasItem(Terraria.ID.ItemID.MagicMirror) || Guardian.HasItem(Terraria.ID.ItemID.IceMirror) || Guardian.HasItem(Terraria.ID.ItemID.CellPhone)) && !Guardian.DoAction.InUse)
+                if (!Guardian.PlayerControl && Guardian.HasFlag(GuardianFlags.MayGoSellLoot) && !Guardian.DoAction.InUse)
                     OrderList.Add(Orders.GoSellLoot);
                 if (guardians.Any(g => g.Active && g.PlayerMounted && g.FriendshipLevel >= g.Base.StopMindingAFK))
                 {

@@ -4303,7 +4303,7 @@ namespace giantsummon
                             Duck = true;
                     }
                     float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + TargetWidth * 0.5f,
-                        DistanceAbs = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                        DistanceAbs = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f);
                     //Main.NewText("Range X: " + AttackRange + "  Distance ABS: " + DistanceAbs + "  Target Width: " + TargetWidth + "  Target Height: " + TargetHeight);
                     if (DistanceAbs < Width * 0.5f + 8)
                         Retreat = true;

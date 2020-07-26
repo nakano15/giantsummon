@@ -16,3 +16,4 @@ I did the following changes to companion recruitments:
 		This prevents you meeting the companions twice, and avoiding having to do their request to be able to increase their friendship level.
 	When the scene where Leopold notices the TerraGuardians ends, your character will not automatically get him on your companion list, but also get a friendship level.
 Bounty Requests now have the chance of giving weapons and accessories as rewards, but currently, only pre hardmode weapons and accessories will be given.
+On the old order interface, you can now send your companions to sell items without the necessity of having a magic mirror in their inventory.
