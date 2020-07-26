@@ -1114,11 +1114,58 @@ namespace giantsummon
             string AnnounceText = "New Bounty Quest available!";
             if (IsAnnouncementBox)
             {
-                AnnounceText += "\nHunt " + TargetFullName + " in the " + spawnBiome.ToString() + "." + 
-                    "\nReward: " + Main.ValueToCoins(CoinReward);
+                AnnounceText += "\nHunt " + TargetFullName + " in the " + spawnBiome.ToString() + ".";
+                if (CoinReward > 0 || RewardList.Length > 0)
+                {
+                    AnnounceText += "\nReward: ";
+                }
+                if (CoinReward > 0)
+                {
+                    int p = 0, g = 0, s = 0, c = CoinReward;
+                    if (c >= 100)
+                    {
+                        s += c / 100;
+                        c -= s * 100;
+                    }
+                    if (s >= 100)
+                    {
+                        g += s / 100;
+                        s -= g * 100;
+                    }
+                    if (g >= 100)
+                    {
+                        p += g / 100;
+                        g -= p * 100;
+                    }
+                    if (p > 0)
+                    {
+                        AnnounceText += "[i/s" + p + ":" + Terraria.ID.ItemID.PlatinumCoin + "]";
+                    }
+                    if (g > 0)
+                    {
+                        AnnounceText += "[i/s" + g + ":" + Terraria.ID.ItemID.GoldCoin + "]";
+                    }
+                    if (s > 0)
+                    {
+                        AnnounceText += "[i/s" + s + ":" + Terraria.ID.ItemID.SilverCoin + "]";
+                    }
+                    if (c > 0)
+                    {
+                        AnnounceText += "[i/s" + c + ":" + Terraria.ID.ItemID.CopperCoin + "]";
+                    }
+                    //AnnounceText += Main.ValueToCoins(CoinReward);
+                }
                 if (RewardList.Length > 0)
                 {
-                    AnnounceText += " and " + RewardList[0].HoverName;
+                    AnnounceText += " and ";// +RewardList[0].HoverName;
+                    if (RewardList[0].prefix > 0)
+                    {
+                        AnnounceText += "[i/p" + RewardList[0].prefix + ":" + RewardList[0].type + "]";
+                    }
+                    else
+                    {
+                        AnnounceText += "[i/s" + RewardList[0].stack + ":" + RewardList[0].type + "]";
+                    }
                 }
                 AnnounceText += ".";
             }
@@ -1213,13 +1260,17 @@ namespace giantsummon
                 }
                 Rewards.Add(i);
             }
-            if (false && Main.rand.NextDouble() < 0.15 * RewardMod)
+            if (Main.rand.NextDouble() < 0.1f * RewardMod)
             {
-                int WeaponID = GetRandomWeaponID(RewardMod);
-                if (WeaponID > 0)
+                i = GetRandomAccessory();
+                if (i != null)
+                    Rewards.Add(i);
+            }
+            if (Main.rand.NextDouble() < 0.15 * RewardMod)
+            {
+                i = GetRandomWeaponID();
+                if (i != null)
                 {
-                    i = new Item();
-                    i.SetDefaults(WeaponID, false);
                     Rewards.Add(i);
                 }
             }
@@ -1330,110 +1381,354 @@ namespace giantsummon
             RewardList = Rewards.ToArray();
         }
 
-        public static int GetRandomWeaponID(float RewardRate = 1f)
+        public static Item GetRandomWeaponID()
         {
             int WeaponID = 0;
-            if (Main.hardMode)
+            switch (spawnBiome)
             {
+                case SpawnBiome.Corruption:
+                    switch (Main.rand.Next(5))
+                    {
+                        case 0:
+                            WeaponID = ItemID.BallOHurt;
+                            break;
+                        case 1:
+                            WeaponID = ItemID.DemonBow;
+                            break;
+                        case 2:
+                            WeaponID = ItemID.Musket;
+                            break;
+                        case 3:
+                            WeaponID = ItemID.Vilethorn;
+                            break;
+                        case 4:
+                            WeaponID = ItemID.LightsBane;
+                            break;
+                    }
+                    break;
 
-            }
-            else
-            {
-                if (Main.rand.Next(2) == 0)
-                {
-                    WeaponID = ItemID.LightsBane;
-                    if (Main.rand.NextDouble() < 0.3 * RewardRate)
+                case SpawnBiome.Crimson:
+                    switch (Main.rand.Next(6))
+                    {
+                        case 0:
+                            WeaponID = ItemID.TheRottedFork;
+                            break;
+                        case 1:
+                            WeaponID = ItemID.TheUndertaker;
+                            break;
+                        case 2:
+                            WeaponID = ItemID.TheMeatball;
+                            break;
+                        case 3:
+                            WeaponID = ItemID.TendonBow;
+                            break;
+                        case 4:
+                            WeaponID = ItemID.CrimsonRod;
+                            break;
+                        case 5:
+                            WeaponID = ItemID.BloodButcherer;
+                            break;
+                    }
+                    break;
+
+                case SpawnBiome.Dungeon:
+                    switch (Main.rand.Next(5))
+                    {
+                        case 0:
+                            WeaponID = ItemID.Muramasa;
+                            break;
+                        case 1:
+                            WeaponID = ItemID.Handgun;
+                            break;
+                        case 2:
+                            WeaponID = ItemID.AquaScepter;
+                            break;
+                        case 3:
+                            WeaponID = ItemID.MagicMissile;
+                            break;
+                        case 4:
+                            WeaponID = ItemID.BlueMoon;
+                            break;
+                    }
+                    break;
+
+                case SpawnBiome.Jungle:
+                    if (Main.rand.NextDouble() < 0.5f)
+                    {
+                        if (Main.rand.Next(2) == 0)
+                            WeaponID = ItemID.BladeofGrass;
+                        else
+                            WeaponID = ItemID.ThornChakram;
+                    }
+                    else
                     {
                         switch (Main.rand.Next(4))
                         {
                             case 0:
-                                WeaponID = ItemID.BallOHurt;
+                                WeaponID = ItemID.BeeKeeper;
                                 break;
                             case 1:
-                                WeaponID = ItemID.DemonBow;
+                                WeaponID = ItemID.BeesKnees;
                                 break;
                             case 2:
-                                WeaponID = ItemID.Musket;
+                                WeaponID = ItemID.BeeGun;
                                 break;
                             case 3:
-                                WeaponID = ItemID.Vilethorn;
+                                WeaponID = ItemID.HornetStaff;
                                 break;
                         }
                     }
-                }
-                else
-                {
-                    WeaponID = ItemID.BloodButcherer;
-                    if (Main.rand.NextDouble() < 0.3 * RewardRate)
-                    {
-                        switch (Main.rand.Next(5))
-                        {
-                            case 0:
-                                WeaponID = ItemID.TheRottedFork;
-                                break;
-                            case 1:
-                                WeaponID = ItemID.TheUndertaker;
-                                break;
-                            case 2:
-                                WeaponID = ItemID.TheMeatball;
-                                break;
-                            case 3:
-                                WeaponID = ItemID.TendonBow;
-                                break;
-                            case 4:
-                                WeaponID = ItemID.CrimsonRod;
-                                break;
-                        }
-                    }
-                }
-                if (Main.rand.NextDouble() < 0.4f * RewardRate)
-                {
-                    switch (Main.rand.Next(4))
+                    break;
+
+                case SpawnBiome.Underworld:
+                    switch (Main.rand.Next(6))
                     {
                         case 0:
-                            switch (Main.rand.Next(5))
-                            {
-                                case 0:
-                                    WeaponID = ItemID.Muramasa;
-                                    break;
-                                case 1:
-                                    WeaponID = ItemID.Handgun;
-                                    break;
-                                case 2:
-                                    WeaponID = ItemID.AquaScepter;
-                                    break;
-                                case 3:
-                                    WeaponID = ItemID.MagicMissile;
-                                    break;
-                                case 4:
-                                    WeaponID = ItemID.BlueMoon;
-                                    break;
-                            }
-                            break;
-                        case 1:
-                            WeaponID = ItemID.BladeofGrass;
-                            break;
-                        case 2:
                             WeaponID = ItemID.FieryGreatsword;
                             break;
+                        case 1:
+                            WeaponID = ItemID.DarkLance;
+                            break;
+                        case 2:
+                            WeaponID = ItemID.Sunfury;
+                            break;
                         case 3:
-                            switch (Main.rand.Next(3))
-                            {
-                                case 0:
-                                    WeaponID = ItemID.BeeKeeper;
-                                    break;
-                                case 1:
-                                    WeaponID = ItemID.BeesKnees;
-                                    break;
-                                case 2:
-                                    WeaponID = ItemID.BeeGun;
-                                    break;
-                            }
+                            WeaponID = ItemID.FlowerofFire;
+                            break;
+                        case 4:
+                            WeaponID = ItemID.Flamelash;
+                            break;
+                        case 5:
+                            WeaponID = ItemID.HellwingBow;
+                            break;
+                    }
+                    break;
+
+                case SpawnBiome.Hallow:
+                    WeaponID = ItemID.PearlwoodSword;
+                    break;
+            }
+            if (WeaponID > 0)
+            {
+                Item i = new Item();
+                i.SetDefaults(WeaponID);
+                if (i.melee)
+                {
+                    switch (Main.rand.Next(10))
+                    {
+                        case 1:
+                            i.prefix = Terraria.ID.PrefixID.Dangerous;
+                            break;
+                        case 2:
+                            i.prefix = Terraria.ID.PrefixID.Savage;
+                            break;
+                        case 3:
+                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            break;
+                        case 4:
+                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            break;
+                        case 5:
+                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            break;
+                        case 6:
+                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            break;
+                        case 7:
+                            i.prefix = Terraria.ID.PrefixID.Savage;
+                            break;
+                        case 8:
+                            i.prefix = Terraria.ID.PrefixID.Legendary;
+                            break;
+                        case 9:
+                            i.prefix = Terraria.ID.PrefixID.Superior;
                             break;
                     }
                 }
+                if (i.ranged)
+                {
+                    switch (Main.rand.Next(10))
+                    {
+                        case 1:
+                            i.prefix = Terraria.ID.PrefixID.Deadly2;
+                            break;
+                        case 2:
+                            i.prefix = Terraria.ID.PrefixID.Rapid;
+                            break;
+                        case 3:
+                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            break;
+                        case 4:
+                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            break;
+                        case 5:
+                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            break;
+                        case 6:
+                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            break;
+                        case 7:
+                            i.prefix = Terraria.ID.PrefixID.Powerful;
+                            break;
+                        case 8:
+                            i.prefix = Terraria.ID.PrefixID.Unreal;
+                            break;
+                        case 9:
+                            i.prefix = Terraria.ID.PrefixID.Superior;
+                            break;
+                    }
+                }
+                if (i.magic)
+                {
+                    switch (Main.rand.Next(10))
+                    {
+                        case 1:
+                            i.prefix = Terraria.ID.PrefixID.Masterful;
+                            break;
+                        case 2:
+                            i.prefix = Terraria.ID.PrefixID.Celestial;
+                            break;
+                        case 3:
+                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            break;
+                        case 4:
+                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            break;
+                        case 5:
+                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            break;
+                        case 6:
+                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            break;
+                        case 7:
+                            i.prefix = Terraria.ID.PrefixID.Mystic;
+                            break;
+                        case 8:
+                            i.prefix = Terraria.ID.PrefixID.Mythical;
+                            break;
+                        case 9:
+                            i.prefix = Terraria.ID.PrefixID.Superior;
+                            break;
+                    }
+                }
+                if (i.summon)
+                {
+                    switch (Main.rand.Next(9))
+                    {
+                        case 1:
+                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            break;
+                        case 2:
+                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            break;
+                        case 3:
+                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            break;
+                        case 4:
+                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            break;
+                        case 5:
+                            i.prefix = Terraria.ID.PrefixID.Murderous;
+                            break;
+                        case 6:
+                            i.prefix = Terraria.ID.PrefixID.Hurtful;
+                            break;
+                        case 7:
+                            i.prefix = Terraria.ID.PrefixID.Unpleasant;
+                            break;
+                        case 8:
+                            i.prefix = Terraria.ID.PrefixID.Superior;
+                            break;
+                    }
+                }
+                return i;
             }
-            return WeaponID;
+            return null;
+        }
+
+        public static Item GetRandomAccessory()
+        {
+            List<int> ItemIDs = new List<int>();
+            ItemIDs.Add(Terraria.ID.ItemID.Aglet);
+            ItemIDs.Add(Terraria.ID.ItemID.HermesBoots);
+            ItemIDs.Add(Terraria.ID.ItemID.ClimbingClaws);
+            ItemIDs.Add(Terraria.ID.ItemID.ShoeSpikes);
+            ItemIDs.Add(Terraria.ID.ItemID.Flipper);
+            ItemIDs.Add(Terraria.ID.ItemID.LuckyHorseshoe);
+            ItemIDs.Add(Terraria.ID.ItemID.ShinyRedBalloon);
+            //
+            ItemIDs.Add(Terraria.ID.ItemID.BandofRegeneration);
+
+            switch (spawnBiome)
+            {
+                case SpawnBiome.Corruption:
+                    ItemIDs.Add(Terraria.ID.ItemID.BandofRegeneration);
+                    break;
+                case SpawnBiome.Crimson:
+                    ItemIDs.Add(Terraria.ID.ItemID.PanicNecklace);
+                    break;
+                case SpawnBiome.Dungeon:
+                    ItemIDs.Add(Terraria.ID.ItemID.CobaltShield);
+                    break;
+                case SpawnBiome.Jungle:
+                    ItemIDs.Add(Terraria.ID.ItemID.AnkletoftheWind);
+                    ItemIDs.Add(Terraria.ID.ItemID.FeralClaws);
+                    ItemIDs.Add(Terraria.ID.ItemID.FlowerBoots);
+                    break;
+                case SpawnBiome.Underworld:
+                    ItemIDs.Add(Terraria.ID.ItemID.LavaCharm);
+                    ItemIDs.Add(Terraria.ID.ItemID.ObsidianRose);
+                    ItemIDs.Add(Terraria.ID.ItemID.ObsidianSkull);
+                    ItemIDs.Add(Terraria.ID.ItemID.MagmaStone);
+                    break;
+            }
+            if (ItemIDs.Count > 0)
+            {
+                Item i = new Item();
+                i.SetDefaults(ItemIDs[Main.rand.Next(ItemIDs.Count)]);
+                if (Main.rand.NextDouble() < 0.8f)
+                {
+                    switch (Main.rand.Next(12))
+                    {
+                        case 0:
+                            i.prefix = Terraria.ID.PrefixID.Armored;
+                            break;
+                        case 1:
+                            i.prefix = Terraria.ID.PrefixID.Warding;
+                            break;
+                        case 2:
+                            i.prefix = Terraria.ID.PrefixID.Precise;
+                            break;
+                        case 3:
+                            i.prefix = Terraria.ID.PrefixID.Lucky;
+                            break;
+                        case 4:
+                            i.prefix = Terraria.ID.PrefixID.Angry;
+                            break;
+                        case 5:
+                            i.prefix = Terraria.ID.PrefixID.Menacing;
+                            break;
+                        case 6:
+                            i.prefix = Terraria.ID.PrefixID.Hasty;
+                            break;
+                        case 7:
+                            i.prefix = Terraria.ID.PrefixID.Quick;
+                            break;
+                        case 8:
+                            i.prefix = Terraria.ID.PrefixID.Intrepid;
+                            break;
+                        case 9:
+                            i.prefix = Terraria.ID.PrefixID.Violent;
+                            break;
+                        case 10:
+                            i.prefix = Terraria.ID.PrefixID.Arcane;
+                            break;
+
+                    }
+                }
+                return i;
+            }
+            return null;
         }
 
         public static string GetDifficultyList()

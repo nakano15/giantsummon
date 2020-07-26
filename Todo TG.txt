@@ -7,3 +7,4 @@ Add a skin and outfit container to the game, so other mod skins and outfits can 
 A flag checking if the companion is the player room mate.
 A script to check if the companion is in It's room.
 There may be a chance of another mod npc being added as starter guardian on the starter guardian companion list.
+Create a method to repopulate the list of starter guardians before generating a new world. Do It kind of like you did for the custom companion list.

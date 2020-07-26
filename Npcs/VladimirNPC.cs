@@ -529,7 +529,7 @@ namespace giantsummon.Npcs
                     {
                         int HuggedPlayer = HuggingPlayer;
                         npc.Transform(ModContent.NPCType<GuardianNPC.List.BearNPC>());
-                        bool PlayerHasVladimir = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer]);
+                        bool PlayerHasVladimir = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID);
                         PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID);
                         if (!PlayerHasVladimir) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID).IncreaseFriendshipProgress(1);
                         NpcMod.AddGuardianMet(GuardianID);
