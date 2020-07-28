@@ -75,7 +75,7 @@ namespace giantsummon.Creatures
             SleepingOffset.X = -2;
 
             SpecificBodyFrontFramePositions = true;
-            BodyFrontFrameSwap.Add(16, 0);
+            BodyFrontFrameSwap.Add(17, 0);
 
             //Left Hand
             LeftHandPoints.AddFramePoint2x(10, 10, 12);

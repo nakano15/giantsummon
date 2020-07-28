@@ -35,7 +35,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 66, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -105,7 +105,7 @@ namespace giantsummon
         public static bool ToReviveIsGuardian = false, IsReviving = false;
         public static int ReviveTalkDelay = 0;
         public static int LastEventWave = 0;
-        public const string CustomCompanionCallString = "loadcompanions";
+        public const string CustomCompanionCallString = "loadcompanions", CustomStarterCallString = "loadstarters";
         public static bool TriedLoadingCustomGuardians = false;
         private static Dictionary<string, Group> CompanionGroups = new Dictionary<string, Group>();
         public static float TimeTranslated = 0;
@@ -166,12 +166,16 @@ namespace giantsummon
             GuardianBase.UnloadContainer(mod);
         }
 
+        public static bool IsntExceptionMod(string s)
+        {
+            return s != "ItemCustomizer" && s != "ShopExpander";
+        }
 
         public static void LoadCustomGuardians()
         {
             foreach (Mod mod in ModLoader.Mods)
             {
-                if (mod.Name != "ItemCustomizer" && mod.Name != "ShopExpander")
+                if (IsntExceptionMod(mod.Name))
                 {
                     try
                     {
@@ -180,6 +184,24 @@ namespace giantsummon
                     catch //Ignore crashes.
                     {
                     }
+                }
+            }
+        }
+
+        public static void GetInitialCompanionsList()
+        {
+            InitialGuardians.Clear();
+            InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
+            InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
+            foreach (Mod mod in ModLoader.Mods)
+            {
+                if (IsntExceptionMod(mod.Name))
+                {
+                    try
+                    {
+                        mod.Call(new string[] { CustomStarterCallString });
+                    }
+                    catch { }
                 }
             }
         }
@@ -2050,6 +2072,26 @@ namespace giantsummon
             return gamePadState.IsButtonDown(button) && oldGamePadState.IsButtonUp(button);
         }
 
+        public static string GetTitleText
+        {
+            get
+            {
+                string s = "";
+                switch (Main.rand.Next(8))
+                {
+                    case 0: s = "With more friends for you to meet!"; break;
+                    case 1: s = "Contains snouts, furs and tails."; break;
+                    case 2: s = "One Man's Army."; break;
+                    case 3: s = "Terrarian's Ark."; break;
+                    case 4: s = "Tales from the Ether Realm."; break;
+                    case 5: s = "Town management simulator."; break;
+                    case 6: s = "It's hard to pick the best."; break;
+                    case 7: s = "Gotta meet 'em all!"; break;
+                }
+                return "Terraria: " + s;
+            }
+        }
+
         public override void Load()
         {
             orderCallButton = RegisterHotKey("Order Wheel Key", "Q");
@@ -2073,11 +2115,13 @@ namespace giantsummon
                 CrownTexture = GetTexture("Interface/Crown");
                 GuardianStatusIconTexture = GetTexture("Interface/GuardianStatusIcon");
                 HideButtonTexture = GetTexture("Interface/HideButton");
+                if (Main.rand.NextDouble() < 0.5)
+                {
+                    Main.instance.Window.Title = GetTitleText;
+                }
             }
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
-            InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
-            InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
             CommonRequestsDB.PopulateCommonRequestsDB();
             try
             {

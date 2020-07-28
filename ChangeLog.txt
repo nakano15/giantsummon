@@ -17,3 +17,15 @@ I did the following changes to companion recruitments:
 	When the scene where Leopold notices the TerraGuardians ends, your character will not automatically get him on your companion list, but also get a friendship level.
 Bounty Requests now have the chance of giving weapons and accessories as rewards, but currently, only pre hardmode weapons and accessories will be given.
 On the old order interface, you can now send your companions to sell items without the necessity of having a magic mirror in their inventory.
+Changed when the mod will populate the starter companions list.
+	Now the list will be populated when generating a world, instead of when the mod loads.
+	This change is to possibly fix and issue where incorrect npcs could try spawning with the world, that also includes other mod npcs.
+Fixed a bug where Sardine's left (right) leg wouldn't be drawn in front of the player when mounted.
+Added Title texts that can appear in the game window when the mod loads.
+Companions will no longer spawn in the world higher than they were before you logged out.
+	Stopped their Keep on Rising trend.
+Skill Reset Potions are not a very exciting reward, so I moved their importance position lower on Bounty Quests.
+	Due to this, Fishing accessories, rare informative accessories, teleportation mirrors, random accessories and random weapons will show on the announcement of the request as spotlight item.
+	Skill reset potions will be rarer now, too.
+Brutus will no longer go away when you are afk, independing of the level.
+	Let's use the logic, he's a bodyguard, and you hired him. Why he would return to his house after dying, if he's supposed to protect you regardless of the situation?

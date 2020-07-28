@@ -1207,12 +1207,6 @@ namespace giantsummon
                 }
                 Rewards.Add(i);
             }
-            if (Main.rand.NextDouble() < 0.5 * RewardMod)
-            {
-                i = new Item();
-                i.SetDefaults(ModContent.ItemType<Items.Consumable.SkillResetPotion>());
-                Rewards.Add(i);
-            }
             if (Main.rand.NextDouble() < 0.1 * RewardMod)
             {
                 i = new Item();
@@ -1273,6 +1267,12 @@ namespace giantsummon
                 {
                     Rewards.Add(i);
                 }
+            }
+            if (Main.rand.NextDouble() < 0.1 * RewardMod)
+            {
+                i = new Item();
+                i.SetDefaults(ModContent.ItemType<Items.Consumable.SkillResetPotion>());
+                Rewards.Add(i);
             }
             if (Main.rand.NextDouble() < 0.25 * RewardMod)
             {

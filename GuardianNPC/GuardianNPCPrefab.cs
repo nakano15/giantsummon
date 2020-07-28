@@ -191,13 +191,13 @@ namespace giantsummon.GuardianNPC
                     if (npc.position.X < 16 || npc.position.Y < 16)
                     {
                         TeleportFrame = true;
-                        npc.position.X = Main.spawnTileX * 16;
-                        npc.position.Y = Main.spawnTileY * 16;
+                        npc.position.X = Main.spawnTileX * 16 - npc.width * 0.5f;
+                        npc.position.Y = Main.spawnTileY * 16 - npc.height;
                     }
                     if (TeleportFrame)
                     {
                         Guardian.Position.X = npc.position.X + npc.width * 0.5f;
-                        Guardian.Position.Y = npc.position.Y + npc.height - (Guardian.Height - npc.height) - 1;
+                        Guardian.Position.Y = npc.position.Y + npc.height - 1;
                         Guardian.SetFallStart();
                         TeleportFrame = false;
                     }
@@ -209,10 +209,10 @@ namespace giantsummon.GuardianNPC
                     npc.velocity = Guardian.Velocity;
                     npc.width = Guardian.Width;
                     npc.height = Guardian.Height;
-                    //npc.lifeMax = Guardian.MHP;
-                    //npc.life = Guardian.HP;
+                    npc.lifeMax = Guardian.MHP;
+                    npc.life = Guardian.HP;
                     npc.direction = Guardian.Direction;
-                    //if (npc.life < 1) npc.life = 1;
+                    if (npc.life < 1) npc.life = npc.lifeMax;
                     if (!WasDefeatedBefore && Guardian.Downed)
                     {
                         Main.NewText(Guardian.Name + " was slain...", 255, 0, 0);

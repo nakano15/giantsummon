@@ -133,6 +133,7 @@ namespace giantsummon
             tasks.Add(new PassLegacy("Spawning Starter Guardian.", delegate(GenerationProgress progress)
             {
                 progress.Message = "Spawning Starter Guardian";
+                MainMod.GetInitialCompanionsList();
                 int NpcID = MainMod.InitialGuardians[Main.rand.Next(MainMod.InitialGuardians.Count)];
                 int npc = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, NpcID);
                 ((GuardianNPC.GuardianNPCPrefab)Main.npc[npc].modNPC).UnlockGuardian();

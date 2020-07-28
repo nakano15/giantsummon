@@ -48,6 +48,7 @@ namespace giantsummon.Creatures
             DontUseRightHand = false;
             OneHanded2HWeaponWield = true;
             CallUnlockLevel = 0;
+            StopMindingAFK = 0;
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
