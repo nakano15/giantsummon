@@ -12,7 +12,7 @@ namespace giantsummon
     public class GuardianActions
     {
         public bool InUse = false;
-        public int _ID = 0;
+        private int _ID = 0;
         public int ID { get { return _ID; } set { _ID = value; } }
         public bool IsGuardianSpecificAction = false;
         public int Time = 0, Step = 0;

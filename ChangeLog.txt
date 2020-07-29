@@ -1,1 +1,8 @@
-﻿
+﻿Blue and Zacks will now wander in the wilderness at night to howl at the moon, during Full Moon nights.
+	They will never do that during a Blood Moon.
+	If there were sound effects though...
+Lowered the position hats are placed on Malisha's head.
+Brutus will enter a defensive stance near your character when your character doesn't takes any action in 1 minute.
+	Brutus will kneel behind the player, protecting It from damage from ahead and behind.
+	While in this state, the player will be immune to damage, until Brutus dies, or somehow gets far away from your position.
+	Brutus will not move while in this state, but will still retaliate monsters that gets in range of his attacks.

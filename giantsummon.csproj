@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="AlexRecruitScripts.cs" />
     <Compile Include="BuffData.cs" />
+    <Compile Include="Buffs\Defended.cs" />
     <Compile Include="Buffs\HeavyInjury.cs" />
     <Compile Include="Buffs\Injury.cs" />
     <Compile Include="Buffs\Obstruction.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
     <Compile Include="ConfigMod.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
+    <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
@@ -222,6 +224,7 @@
     <Compile Include="WorldMod.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Buffs\Defended.png" />
     <Content Include="Buffs\FirstAidCooldown.png" />
     <Content Include="Buffs\GuardianModBuff.png" />
     <Content Include="Buffs\HeavyInjury.png" />
@@ -279,6 +282,7 @@
     <Content Include="Creatures\Leopold\head.png" />
     <Content Include="Creatures\Leopold\left_arm.png" />
     <Content Include="Creatures\Leopold\right_arm.png" />
+    <Content Include="Defended.png" />
     <Content Include="GuardianNPC\List\Domino_Head.png" />
     <Content Include="Creatures\Domino\left_arm.png" />
     <Content Include="Creatures\Domino\right_arm.png" />

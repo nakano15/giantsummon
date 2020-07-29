@@ -516,6 +516,7 @@ namespace giantsummon
         private List<int> PlayerHit = new List<int>(),
             NpcHit = new List<int>();
         private int doorx = -1, doory = -1;
+        public bool HasDoorOpened { get { return closeDoor; } }
         public int furniturex = -1, furniturey = -1;
         public bool UsingFurniture = false;
         private bool closeDoor = false;
@@ -5414,7 +5415,7 @@ namespace giantsummon
 
         public bool MayTryGoingSleep { get { return !Main.eclipse && !Main.bloodMoon && ((!Main.dayTime && Main.time >= 9000) || (Main.dayTime && Main.time < 3600)); } }
         public bool HasPlayerAFK { get { return (OwnerPos > -1 && ((!MainMod.GuardiansIdleEasierOnTowns && AfkCounter >= 180 * 60) || (MainMod.GuardiansIdleEasierOnTowns && TownNpcs >= 3 && AfkCounter >= 60 * 15))); } }
-
+        
         public bool NewIdleBehavior()
         {
             if (OwnerPos > -1 && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))

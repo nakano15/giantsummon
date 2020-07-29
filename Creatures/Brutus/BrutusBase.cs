@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria;
+using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 
 namespace giantsummon.Creatures
@@ -489,6 +490,69 @@ namespace giantsummon.Creatures
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public const int ProtectModeID = 0;
+
+        public override void GuardianUpdateScript(TerraGuardian guardian)
+        {
+            if (!guardian.DoAction.InUse && guardian.OwnerPos > -1 && guardian.AfkCounter >= 60 * 60)
+            {
+                guardian.StartNewGuardianAction(ProtectModeID);
+            }
+        }
+
+        public override void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)
+        {
+            if (action.IsGuardianSpecificAction)
+            {
+                switch (action.ID)
+                {
+                    case ProtectModeID:
+                        {
+                            if (guardian.OwnerPos == -1)
+                            {
+                                action.InUse = false;
+                                return;
+                            }
+                            if (guardian.AfkCounter < 60)
+                            {
+                                action.InUse = false;
+                                return;
+                            }
+                            const byte CurrentActionID = 0;
+                            int Action = action.GetIntegerValue(CurrentActionID);
+                            Player defended = Main.player[guardian.OwnerPos];
+                            const int Offset = 7 * 2;
+                            float DefendX = defended.Center.X - Offset * defended.direction;
+                            if (Action == 0)
+                            {
+                                if (guardian.Position.X + guardian.Velocity.X > DefendX)
+                                    guardian.MoveLeft = true;
+                                else
+                                    guardian.MoveRight = true;
+                                if (Math.Abs(guardian.Position.X - DefendX) < 5 && Math.Abs(guardian.Velocity.X) < 3f)
+                                {
+                                    Action = 1;
+                                }
+                            }
+                            else if (Action == 1)
+                            {
+                                guardian.Position.X = DefendX;
+                                if (!guardian.IsAttackingSomething)
+                                {
+                                    guardian.LookingLeft = defended.direction == -1;
+                                }
+                                guardian.Jump = false;
+                                guardian.MoveDown = true;
+                                guardian.OffHandAction = true;
+                                defended.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                            }
+                            action.SetIntegerValue(CurrentActionID, Action);
+                        }
+                        break;
+                }
+            }
         }
     }
 }
