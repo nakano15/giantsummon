@@ -1702,7 +1702,7 @@ namespace giantsummon
             {
                 UpdateKnockoutState();
             }
-            if (BeingPulledByPlayer && (PlayerMounted || PlayerControl))
+            if (BeingPulledByPlayer && (PlayerMounted || PlayerControl || Downed))
                 BeingPulledByPlayer = false;
             if (ItemAnimationTime > 0 && Velocity.Y == 0 && ItemUseType != ItemUseTypes.AimingUse && ItemUseType != ItemUseTypes.CursedAttackAttempt && ItemUseType != ItemUseTypes.ItemDrink2h && ItemUseType != ItemUseTypes.OverHeadItemUse && ItemUseType != ItemUseTypes.LightVerticalSwing) //avoiding movement when attacking
             {

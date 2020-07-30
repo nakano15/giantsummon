@@ -1120,6 +1120,9 @@ namespace giantsummon
                     case NPCID.HellArmoredBones:
                         IsQuestMob = m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
                         break;
+                    case NPCID.BlueSlime:
+                        IsQuestMob = m == NPCID.SlimeRibbonGreen || m == NPCID.SlimeRibbonRed || m == NPCID.SlimeRibbonWhite || m == NPCID.SlimeRibbonYellow || m == 302; //302 is Bunny Slime
+                        break;
                 }
             }
             return IsQuestMob;
@@ -1197,66 +1200,6 @@ namespace giantsummon
                             if (Stack > 0)
                             {
                                 int MobID = ((RequestBase.HuntRequestObjective)rb.Objectives[o]).NpcID;
-                                /*int m = npc.type;
-                                bool IsQuestMob = false;
-                                if (m == NPCID.EaterofWorldsHead)
-                                {
-                                    bool HasBodyPart = false;
-                                    for (int n = 0; n < 200; n++)
-                                    {
-                                        if (Main.npc[n].active && Main.npc[n].type == NPCID.EaterofWorldsBody)
-                                        {
-                                            HasBodyPart = true;
-                                            break;
-                                        }
-                                    }
-                                    IsQuestMob = !HasBodyPart;
-                                }
-                                else if (m == MobID)
-                                    IsQuestMob = true;
-                                else
-                                {
-                                    switch (MobID)
-                                    {
-                                        case NPCID.Zombie:
-                                            IsQuestMob = m == 430 || m == 132 || m == 186 || m == 432 || m == 187 || m == 433 || m == 188 || m == 434 || m == 189 || m == 435 ||
-                                                m == 200 || m == 436;
-                                            break;
-                                        case NPCID.ZombieEskimo:
-                                            IsQuestMob = m == NPCID.ArmedZombieEskimo;
-                                            break;
-                                        case NPCID.DemonEye:
-                                            IsQuestMob = m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
-                                            break;
-                                        case NPCID.BloodCrawler:
-                                            IsQuestMob = m == NPCID.BloodCrawlerWall;
-                                            break;
-                                        case NPCID.Demon:
-                                            IsQuestMob = m == NPCID.VoodooDemon;
-                                            break;
-                                        case NPCID.JungleCreeper:
-                                            IsQuestMob = m == NPCID.JungleCreeperWall;
-                                            break;
-                                        case NPCID.Hornet:
-                                            IsQuestMob = m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy;
-                                            break;
-                                        case NPCID.AngryBones:
-                                            IsQuestMob = m == 294 || m == 295 || m == 296;
-                                            break;
-                                        case NPCID.BlueArmoredBones:
-                                            IsQuestMob = m == NPCID.BlueArmoredBonesMace || m == NPCID.BlueArmoredBonesNoPants || m == NPCID.BlueArmoredBonesSword;
-                                            break;
-                                        case NPCID.RustyArmoredBonesAxe:
-                                            IsQuestMob = m == NPCID.RustyArmoredBonesFlail || m == NPCID.RustyArmoredBonesSword || m == NPCID.RustyArmoredBonesSwordNoArmor;
-                                            break;
-                                        case NPCID.HellArmoredBones:
-                                            IsQuestMob = m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
-                                            break;
-                                        //case NPCID.EaterofWorldsHead:
-                                        //    IsQuestMob = m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail;
-                                        //    break;
-                                    }
-                                }*/
                                 if (IsRequiredMonster(npc, MobID))
                                 {
                                     Stack--;

@@ -8,3 +8,4 @@ A flag checking if the companion is the player room mate.
 A script to check if the companion is in It's room.
 Companions sometimes dies off screen?
 	Generally happens with either Sardine and Bree?
+https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2063334
