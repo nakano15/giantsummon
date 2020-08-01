@@ -10,7 +10,7 @@ namespace giantsummon
     {
         public static RequestBase[] CommonRequests = new RequestBase[0];
         public string Name = "";
-        public string BriefText = "", AcceptText = "", DenyText = "", CompleteText = "", RequestInfoText = "";
+        public string BriefText = "", AcceptText = "", DenyText = "", CompleteText = "", RequestInfoText = "", FailureText = "";
         public List<RequestObjective> Objectives = new List<RequestObjective>();
         public delegate bool RequestRequirementDel(Terraria.Player player);
         public RequestRequirementDel Requirement = delegate(Terraria.Player player) { return true; };
@@ -25,6 +25,7 @@ namespace giantsummon
             this.DenyText = DenyText;
             this.CompleteText = CompleteText;
             this.RequestInfoText = RequestInfoText;
+            this.FailureText = FailureText;
         }
 
         public void AddRequestRequirement(RequestRequirementDel req)
@@ -140,6 +141,29 @@ namespace giantsummon
             Objectives.Add(req);
         }
 
+        public void AddTalkToRequest(int NpcID, string Message)
+        {
+            TalkRequestObjective req = new TalkRequestObjective();
+            req.NpcID = NpcID;
+            req.MessageText = Message;
+            NPC npc = new NPC();
+            npc.SetDefaults(NpcID);
+            req.NpcName = npc.GivenOrTypeName;
+            Objectives.Add(req);
+        }
+
+        public void AddRequesterShouldNotBeKodRequirement()
+        {
+            RequesterShouldNotBeKodObjective req = new RequesterShouldNotBeKodObjective();
+            Objectives.Add(req);
+        }
+
+        public void AddNobodyShouldNotBeKodRequirement()
+        {
+            NobodyCanBeKodObjective req = new NobodyCanBeKodObjective();
+            Objectives.Add(req);
+        }
+
         public class KillBossRequest : RequestObjective
         {
             public int BossID = 0, DifficultyBonus = 0;
@@ -245,7 +269,38 @@ namespace giantsummon
             public int NpcID = 0, Stack = 1;
             public float StackIncreasePerFriendshipLevel = 0.5f;
 
-            public HuntRequestObjective() : base(ObjectiveTypes.HuntMonster)
+            public HuntRequestObjective()
+                : base(ObjectiveTypes.HuntMonster)
+            {
+
+            }
+        }
+
+        public class TalkRequestObjective : RequestObjective
+        {
+            public string MessageText = "", NpcName = "";
+            public int NpcID = 0;
+
+            public TalkRequestObjective()
+                : base(ObjectiveTypes.TalkTo)
+            {
+
+            }
+        }
+
+        public class RequesterShouldNotBeKodObjective : RequestObjective
+        {
+            public RequesterShouldNotBeKodObjective()
+                : base(ObjectiveTypes.RequesterCannotKnockout)
+            {
+
+            }
+        }
+
+        public class NobodyCanBeKodObjective : RequestObjective
+        {
+            public NobodyCanBeKodObjective()
+                : base(ObjectiveTypes.NobodyCanBeKod)
             {
 
             }
@@ -271,7 +326,10 @@ namespace giantsummon
                 RequiresRequester,
                 ObjectCollection,
                 CompanionRequirement,
-                KillBoss
+                KillBoss,
+                TalkTo,
+                RequesterCannotKnockout,
+                NobodyCanBeKod
             }
         }
 

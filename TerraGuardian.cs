@@ -5008,7 +5008,7 @@ namespace giantsummon
         {
             get
             {
-                if (furniturex > -1 && furniturey > -1)
+                if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
                     Tile tile = Framing.GetTileSafely(furniturex, furniturey);
                     if (tile.active() && tile.type == 15 && (tile.frameY / 36 == 1 || tile.frameY / 36 == 20))
@@ -13430,11 +13430,6 @@ namespace giantsummon
             Utils.DrawBorderString(Main.spriteBatch, FriendshipLevel.ToString(), Position, Color.White * Opacity, 0.75f, 0.5f, 0.5f);
         }
 
-        public void ReportRequest()
-        {
-            Data.ReportRequest(this);
-        }
-
         public void GetEquipmentSlots()
         {
             HeadSlot = Equipments[0].headSlot;
@@ -13627,6 +13622,37 @@ namespace giantsummon
                     DrawBehind.Insert(Position + 1, dd);
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the position of the texture by type.
+        /// </summary>
+        /// <param name="TT">The type of the texture.</param>
+        /// <param name="Position">Position in the array.</param>
+        /// <param name="Front">Retuns true if It's a DrawFront sprite.</param>
+        /// <returns>Returns true when finds the body part.</returns>
+        public bool GetTextureSpritePosition(GuardianDrawData.TextureType TT, out int Position, out bool Front)
+        {
+            Position = 0;
+            Front = true;
+            for (int i = 0; i < DrawFront.Count; i++)
+            {
+                if (DrawFront[i].textureType == TT)
+                {
+                    Position = i;
+                    return true;
+                }
+            }
+            Front = false;
+            for (int i = 0; i < DrawBehind.Count; i++)
+            {
+                if (DrawBehind[i].textureType == TT)
+                {
+                    Position = i;
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void AddDrawData(GuardianDrawData dd, bool InFrontOfPlayer)
@@ -13826,7 +13852,7 @@ namespace giantsummon
                 return;
             if (WofFood)
                 return;
-            DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && Base.ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount || (AssistSlot == 0 && LeftArmAnimationFrame == Base.ReviveFrame);
+            DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && Base.ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount || (AssistSlot == 0 && LeftArmAnimationFrame == Base.ReviveFrame) || UsingFurniture;
             DrawRightBodyPartsInFrontOfPlayer = false;
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);
             hitTileData.DrawFreshAnimations(Main.spriteBatch);

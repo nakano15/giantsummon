@@ -672,18 +672,7 @@ namespace giantsummon
                     Fatigue = -32;
             }
         }
-
-        public void ReportRequest(TerraGuardian guardian)
-        {
-            if (request.Active)
-            {
-                if (request.CompleteRequest(guardian, this, Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>()))
-                {
-                    //IncreaseFriendshipProgress(FriendshipLevel == 0 ? (byte)1 : request.FriendshipReward);
-                }
-            }
-        }
-
+        
         public Item[] GetRewards(int Score, Player player)
         {
             List<Reward> RewardsToGet = new List<Reward>();

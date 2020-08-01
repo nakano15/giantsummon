@@ -1734,7 +1734,7 @@ namespace giantsummon
                             string[] RequestDesc = d.request.GetRequestText(Main.player[Main.myPlayer], d);
                             foreach (string s in RequestDesc)
                             {
-                                SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, Color.White).Y;
+                                SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, (d.request.Failed ? Color.Red : Color.White)).Y;
                             }
                             if (Guardian.Active && Guardian.ID == d.ID && Guardian.ModID == d.ModID)
                             {
@@ -1833,7 +1833,7 @@ namespace giantsummon
                                 }
                                 else if (d.request.requestState == RequestData.RequestState.RequestActive)
                                 {
-                                    if (d.request.RequestCompleted)
+                                    if (d.request.RequestCompleted || d.request.Failed)
                                     {
                                         Vector2 ButtonPosition = SlotStartPosition;
                                         ButtonPosition.X += 48f;
@@ -1847,7 +1847,14 @@ namespace giantsummon
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
                                                 CheckingQuestBrief = false;
-                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestComplete(d, Guardian), Guardian), true);
+                                                if (d.request.Failed)
+                                                {
+                                                    Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestFailed(d, Guardian), Guardian), true);
+                                                }
+                                                else
+                                                {
+                                                    Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestComplete(d, Guardian), Guardian), true);
+                                                }
                                                 d.request.CompleteRequest(Guardian, d, player);
                                             }
                                         }

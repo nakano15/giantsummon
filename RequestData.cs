@@ -16,7 +16,7 @@ namespace giantsummon
         public int Time = 30 * 60;
         public RequestState requestState = RequestState.Cooldown;
         public const int MinRequestTimer = 1800, MaxRequestTimer = 3600, MinRequestSpawnTime = 600, MaxRequestSpawnTime = 1200;
-        public bool RequestCompleted = false;
+        public bool RequestCompleted = false, Failed = false;
         public Dictionary<int, int> IntegerVars = new Dictionary<int, int>();
         public Dictionary<int, float> FloatVars = new Dictionary<int, float>();
         public bool IsTalkQuest = false, IsCommonRequest = false;
@@ -40,7 +40,7 @@ namespace giantsummon
         {
             foreach (RequestBase.RequestObjective o in GetRequestBase(d).Objectives)
             {
-                if ((o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore && ((RequestBase.ExploreRequest)o).RequiresGuardianActive) || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester)
+                if ((o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore && ((RequestBase.ExploreRequest)o).RequiresGuardianActive) || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout)
                     return true;
             }
             return false;
@@ -452,6 +452,57 @@ namespace giantsummon
                                                 ObjectivesCompleted++;
                                             }
                                             break;
+                                        case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout:
+                                            {
+                                                if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
+                                                {
+                                                    SetIntegerValue(o, 1);
+                                                    TerraGuardian tg = PlayerMod.GetPlayerSummonedGuardian(player.player, gd.ID, gd.ModID);
+                                                    if (tg.KnockedOutCold || tg.Downed)
+                                                    {
+                                                        if (!Failed && player.player.whoAmI == Main.myPlayer)
+                                                            Main.NewText("Requester was defeated, " + gd.Name + " request failed.", 255);
+                                                        Failed = true;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    SetIntegerValue(o, 0);
+                                                }
+                                            }
+                                            break;
+                                        case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
+                                            {
+                                                if (player.KnockedOutCold || player.player.dead)
+                                                {
+                                                    if (!Failed && player.player.whoAmI == Main.myPlayer)
+                                                        Main.NewText("You were defeated, " + gd.Name + " request failed.", 255);
+                                                    Failed = true;
+                                                }
+                                                foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
+                                                {
+                                                    if (!tg.Active) continue;
+                                                    if (tg.KnockedOutCold || tg.Downed)
+                                                    {
+                                                        if (!Failed && player.player.whoAmI == Main.myPlayer)
+                                                            Main.NewText("One of your companions was defeated, " + gd.Name + " request failed.", 255);
+                                                        Failed = true;
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        case RequestBase.RequestObjective.ObjectiveTypes.TalkTo:
+                                            {
+                                                if (GetIntegerValue(o) < 1)
+                                                {
+                                                    RequestBase.TalkRequestObjective req = (RequestBase.TalkRequestObjective)rb.Objectives[o];
+                                                    if (player.player.talkNPC > -1 && Main.npc[player.player.talkNPC].type == req.NpcID)
+                                                    {
+                                                        Main.npcChatText += "\n" + req.MessageText;
+                                                    }
+                                                }
+                                            }
+                                            break;
                                     }
                                 }
                                 RequestCompleted = ObjectivesCompleted >= ObjectiveCount;
@@ -464,6 +515,14 @@ namespace giantsummon
 
         public bool CompleteRequest(TerraGuardian guardian, GuardianData gd, PlayerMod player)
         {
+            if (Failed)
+            {
+                RequestCompleted = false;
+                Failed = false;
+                requestState = RequestState.Cooldown;
+                Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+                return true;
+            }
             if (RequestCompleted || IsTalkQuest)
             {
                 int RewardScore = (IsTalkQuest ? 500 : GetRequestBase(gd).RequestScore + 200);
@@ -640,6 +699,13 @@ namespace giantsummon
             if (IsCommonRequest)
                 return gd.Base.CompletedRequestMessage(Main.player[Main.myPlayer], giver);
             return GetRequestBase(gd).CompleteText;
+        }
+
+        public string GetRequestFailed(GuardianData gd, TerraGuardian giver)
+        {
+            if (IsCommonRequest)
+                return "(Request cancelled)";
+            return GetRequestBase(gd).FailureText;
         }
 
         public string GetRequestInfo(GuardianData gd)
@@ -823,6 +889,30 @@ namespace giantsummon
                                             }
                                         }
                                         break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout:
+                                        {
+                                            QuestObjectives.Add("Requester must not be defeated.");
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
+                                        {
+                                            QuestObjectives.Add("Nobody can be defeated.");
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.TalkTo:
+                                        {
+                                            RequestBase.TalkRequestObjective req = (RequestBase.TalkRequestObjective)rb.Objectives[o];
+                                            if (GetIntegerValue(o) == 0)
+                                            {
+                                                QuestObjectives.Add("Speak with " + req.NpcName + ".");
+                                                HasPendingObjective = true;
+                                            }
+                                            else
+                                            {
+                                                QuestObjectives.Add("Spoken with " + req.NpcName + ".");
+                                            }
+                                        }
+                                        break;
                                 }
                             }
                             if (!ForceShowObjective)
@@ -999,6 +1089,7 @@ namespace giantsummon
             IntegerVars.Clear();
             FloatVars.Clear();
             RequestID = 0;
+            Failed = false;
             IsTalkQuest = true;
             IsCommonRequest = false;
             requestState = RequestState.HasRequestReady;
@@ -1009,6 +1100,7 @@ namespace giantsummon
             IntegerVars.Clear();
             FloatVars.Clear();
             RequestID = ID;
+            Failed = false;
             IsTalkQuest = false;
             requestState = RequestState.HasRequestReady;
             this.IsCommonRequest = CommonRequest;
@@ -1054,6 +1146,12 @@ namespace giantsummon
                         }
                         break;
                     case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
+                        {
+                            SetIntegerValue(o, 1);
+                        }
+                        break;
+                    case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
+                    case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout:
                         {
                             SetIntegerValue(o, 1);
                         }

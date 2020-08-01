@@ -223,9 +223,9 @@ namespace giantsummon
         public bool IsTerrarian { get { return !GetGroup.CustomSprite; } }
         public bool IsCustomSpriteCharacter { get { return GetGroup.CustomSprite; } }
 
-        public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string RequestActiveTalkText = "")
+        public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string FailureText = "")
         {
-            RequestBase rb = new RequestBase(Name, RequestScore, BriefText, AcceptText, DenyText, CompleteInfo, RequestActiveTalkText);
+            RequestBase rb = new RequestBase(Name, RequestScore, BriefText, AcceptText, DenyText, CompleteInfo, FailureText);
             RequestDB.Add(rb);
         }
 
@@ -298,6 +298,30 @@ namespace giantsummon
             if (RequestDB.Count > 0)
             {
                 RequestDB[RequestDB.Count - 1].AddKillBossRequest(BossID, GemLevelBonus);
+            }
+        }
+
+        public void AddTalkRequest(int NpcID, string Message)
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddTalkToRequest(NpcID, Message);
+            }
+        }
+
+        public void AddNoRequesterKoRequirement()
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddRequesterShouldNotBeKodRequirement();
+            }
+        }
+
+        public void AddNobodyKodRequirement()
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddNobodyShouldNotBeKodRequirement();
             }
         }
 

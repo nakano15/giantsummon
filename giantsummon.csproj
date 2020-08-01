@@ -242,6 +242,8 @@
     <Content Include="ChangeLog.txt" />
     <Content Include="Creatures\Alex\right_arm_front.png" />
     <Content Include="Creatures\Bree\body_no_bag.png" />
+    <Content Include="Creatures\Brutus\royal_guard_outfit.png" />
+    <Content Include="Creatures\Brutus\royal_guard_outfit_f.png" />
     <Content Include="Creatures\Malisha\body.png" />
     <Content Include="Creatures\Malisha\body_front.png" />
     <Content Include="Creatures\Malisha\head.png" />

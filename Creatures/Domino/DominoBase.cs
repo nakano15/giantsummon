@@ -96,6 +96,13 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(14, 34, 18);
 
             HeadVanityPosition.AddFramePoint2x(20, 34, 18);
+
+            RequestList();
+        }
+
+        public void RequestList()
+        {
+
         }
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)

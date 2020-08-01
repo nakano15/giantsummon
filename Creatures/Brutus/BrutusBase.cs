@@ -5,11 +5,14 @@ using System.Text;
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace giantsummon.Creatures
 {
     public class BrutusBase : GuardianBase
     {
+        public const string RoyalGuardSkinID = "royal_guard", RoyalGuardSkinFID = "royal_guard_f";
+
         /// <summary>
         /// -Was a Royal Guard in the Ether Realm.
         /// -Has some sense of ethic over his actions.
@@ -170,6 +173,33 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(24, 26, 23);
 
             HeadVanityPosition.AddFramePoint2x(26, 41, 30);
+
+            SkinsAndOutfits();
+            RequestList();
+        }
+
+        public void RequestList()
+        {
+            AddNewRequest("A Little Warm Up", 250,
+                "*Terrarian, I need your help to test my power. There is a creature you call Skeletron in this world, I want to face It alongside you, to see if I can try protecting you. Can you give me a help on this?*",
+                "*Thank you. Maybe there is some way of calling It again, I have no idea how you could do that.*",
+                "*Oh, you're not ready to face It again? Don't worry about that, I'm okay.*",
+                "*I think we did good on this fight, and there were no casualities. I'm happy with this result.*",
+                "*I can't protect someone If I let the ones I'm supposed to protect die... I still need to practice more.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return NPC.downedBoss3;
+            });
+            AddKillBossRequest(Terraria.ID.NPCID.SkeletronHead, 2);
+            AddRequesterSummonedRequirement();
+            AddNobodyKodRequirement();
+            //
+            
+        }
+
+        public void SkinsAndOutfits()
+        {
+            AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return true; });
         }
 
         public override string MountUnlockMessage
@@ -490,6 +520,178 @@ namespace giantsummon.Creatures
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(RoyalGuardSkinID, "royal_guard_outfit");
+            sprites.AddExtraTexture(RoyalGuardSkinFID, "royal_guard_outfit_f");
+        }
+
+        public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
+        {
+            if (AnimationID == 2 && guardian.OutfitID == 1 && Frame == 0 && guardian.IsAttackingSomething && (!guardian.OffHandAction || guardian.SelectedOffhand == -1))
+            {
+                Frame = 1;
+            }
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin2, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
+        {
+            switch (guardian.OutfitID)
+            {
+                case 1:
+                    {
+                        int FramePosition;
+                        bool IsFrameFront;
+                        Texture2D texture = sprites.GetExtraTexture(RoyalGuardSkinID);
+                        Rectangle LeftArmFrame = guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame),
+                            RightArmFrame = guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame),
+                            BodyFrame = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                        /*LeftArmFrame.X = (int)(LeftArmFrame.X * 0.5f);
+                        LeftArmFrame.Y = (int)(LeftArmFrame.Y * 0.5f);
+                        RightArmFrame.X = (int)(RightArmFrame.X * 0.5f);
+                        RightArmFrame.Y = (int)(RightArmFrame.Y * 0.5f);
+                        BodyFrame.X = (int)(BodyFrame.X * 0.5f);
+                        BodyFrame.Y = (int)(BodyFrame.Y * 0.5f);
+                        BodyFrame.Width = LeftArmFrame.Width = RightArmFrame.Width = (int)(RightArmFrame.Width * 0.5f);
+                        BodyFrame.Height = LeftArmFrame.Height = RightArmFrame.Height = (int)(RightArmFrame.Height * 0.5f);*/
+                        int FrameVerticalDistance = BodyFrame.Height * 2;
+                        float SpriteScale = Scale;
+                        GuardianDrawData gdd;
+                        Vector2 Origin = Origin2;// *0.5f;
+                        byte BodyPositionBonus = 0, LeftArmPositionBonus = 0, RightArmPositionBonus = 0;
+                        if (guardian.GetTextureSpritePosition(GuardianDrawData.TextureType.TGRightArm, out FramePosition, out IsFrameFront))
+                        {
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, RightArmFrame, color, Rotation, Origin, SpriteScale, seffect);
+                            guardian.InsertDrawData(gdd, FramePosition + RightArmPositionBonus, IsFrameFront);
+                            LeftArmFrame.Y += FrameVerticalDistance;
+                            RightArmFrame.Y += FrameVerticalDistance;
+                            BodyFrame.Y += FrameVerticalDistance;
+                            //RightArmPositionBonus++;
+                        }
+                        else
+                        {
+                            LeftArmFrame.Y += FrameVerticalDistance;
+                            RightArmFrame.Y += FrameVerticalDistance;
+                            BodyFrame.Y += FrameVerticalDistance;
+                        }
+                        //Draw Right Arm and Shield
+                        if (guardian.RightArmAnimationFrame == ThroneSittingFrame || guardian.RightArmAnimationFrame == BedSleepingFrame || guardian.RightArmAnimationFrame == DownedFrame)
+                        {
+                            if (guardian.GetTextureSpritePosition(GuardianDrawData.TextureType.TGBody, out FramePosition, out IsFrameFront))
+                            {
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, RightArmFrame, color, Rotation, Origin, SpriteScale, seffect);
+                                guardian.AddDrawDataAfter(gdd, FramePosition + BodyPositionBonus, IsFrameFront);
+                                LeftArmFrame.Y += FrameVerticalDistance;
+                                RightArmFrame.Y += FrameVerticalDistance;
+                                BodyFrame.Y += FrameVerticalDistance;
+                                BodyPositionBonus++;
+                                //
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, RightArmFrame, color, Rotation, Origin, SpriteScale, seffect);
+                                guardian.AddDrawDataAfter(gdd, FramePosition + BodyPositionBonus, IsFrameFront);
+                                LeftArmFrame.Y += FrameVerticalDistance;
+                                RightArmFrame.Y += FrameVerticalDistance;
+                                BodyFrame.Y += FrameVerticalDistance;
+                                BodyPositionBonus++;
+                            }
+                            else
+                            {
+                                LeftArmFrame.Y += FrameVerticalDistance * 2;
+                                RightArmFrame.Y += FrameVerticalDistance * 2;
+                                BodyFrame.Y += FrameVerticalDistance * 2;
+                            }
+                        }
+                        else
+                        {
+                            if (guardian.GetTextureSpritePosition(GuardianDrawData.TextureType.TGRightArm, out FramePosition, out IsFrameFront))
+                            {
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, RightArmFrame, color, Rotation, Origin, SpriteScale, seffect);
+                                guardian.AddDrawDataAfter(gdd, FramePosition + RightArmPositionBonus, IsFrameFront);
+                                LeftArmFrame.Y += FrameVerticalDistance;
+                                RightArmFrame.Y += FrameVerticalDistance;
+                                BodyFrame.Y += FrameVerticalDistance;
+                                RightArmPositionBonus++;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, RightArmFrame, color, Rotation, Origin, SpriteScale, seffect);
+                                guardian.AddDrawDataAfter(gdd, FramePosition + RightArmPositionBonus, IsFrameFront);
+                                LeftArmFrame.Y += FrameVerticalDistance;
+                                RightArmFrame.Y += FrameVerticalDistance;
+                                BodyFrame.Y += FrameVerticalDistance;
+                                RightArmPositionBonus++;
+                            }
+                            else
+                            {
+                                LeftArmFrame.Y += FrameVerticalDistance * 2;
+                                RightArmFrame.Y += FrameVerticalDistance * 2;
+                                BodyFrame.Y += FrameVerticalDistance * 2;
+                            }
+                        }
+                        //Back Cloak
+                        if (guardian.GetTextureSpritePosition(GuardianDrawData.TextureType.TGBody, out FramePosition, out IsFrameFront))
+                        {
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, BodyFrame, color, Rotation, Origin, SpriteScale, seffect);
+                            guardian.InsertDrawData(gdd, FramePosition, IsFrameFront);
+                            LeftArmFrame.Y += FrameVerticalDistance;
+                            RightArmFrame.Y += FrameVerticalDistance;
+                            BodyFrame.Y += FrameVerticalDistance;
+                        }
+                        else
+                        {
+                            LeftArmFrame.Y += FrameVerticalDistance;
+                            RightArmFrame.Y += FrameVerticalDistance;
+                            BodyFrame.Y += FrameVerticalDistance;
+                        }
+                        //Pants, Greaves, Shirt and Cloak
+                        if (guardian.GetTextureSpritePosition(GuardianDrawData.TextureType.TGBody, out FramePosition, out IsFrameFront))
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (i > 0 || !guardian.IsUsingToilet)
+                                {
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, BodyFrame, color, Rotation, Origin, SpriteScale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, FramePosition + BodyPositionBonus, IsFrameFront);
+                                }
+                                LeftArmFrame.Y += FrameVerticalDistance;
+                                RightArmFrame.Y += FrameVerticalDistance;
+                                BodyFrame.Y += FrameVerticalDistance;
+                                BodyPositionBonus++;
+                            }
+                        }
+                        else
+                        {
+                            LeftArmFrame.Y += FrameVerticalDistance * 4;
+                            RightArmFrame.Y += FrameVerticalDistance * 4;
+                            BodyFrame.Y += FrameVerticalDistance * 4;
+                        }
+                        if (guardian.GetTextureSpritePosition(GuardianDrawData.TextureType.TGBodyFront, out FramePosition, out IsFrameFront))
+                        {
+                            int FrameID = guardian.Base.GetBodyFrontSprite(guardian.BodyAnimationFrame);
+                            if (FrameID > -1)
+                            {
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(RoyalGuardSkinFID), DrawPosition, guardian.GetAnimationFrameRectangle(FrameID), color, Rotation, Origin, SpriteScale, seffect);
+                                guardian.AddDrawDataAfter(gdd, FramePosition, IsFrameFront);
+                            }
+                        }
+                        //Left Arm
+                        if (guardian.GetTextureSpritePosition(GuardianDrawData.TextureType.TGLeftArm, out FramePosition, out IsFrameFront))
+                        {
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, LeftArmFrame, color, Rotation, Origin, SpriteScale, seffect);
+                            guardian.AddDrawDataAfter(gdd, FramePosition + LeftArmPositionBonus, IsFrameFront);
+
+                            LeftArmPositionBonus++;
+                            LeftArmFrame.Y += FrameVerticalDistance;
+                            RightArmFrame.Y += FrameVerticalDistance;
+                            BodyFrame.Y += FrameVerticalDistance;
+                        }
+                        else
+                        {
+                            LeftArmFrame.Y += FrameVerticalDistance;
+                            RightArmFrame.Y += FrameVerticalDistance;
+                            BodyFrame.Y += FrameVerticalDistance;
+                        }
+                    }
+                    break;
+            }
         }
 
         public const int ProtectModeID = 0;

@@ -394,6 +394,12 @@ namespace giantsummon.GuardianNPC
                                 {
 
                                 }
+                                else if (data.request.Failed)
+                                {
+                                    data.request.CompleteRequest(Guardian, data, player.GetModPlayer<PlayerMod>());
+                                    Mes = data.request.GetRequestFailed(data, Guardian);
+                                    Main.npcChatText = MessageParser(Mes, Guardian);
+                                }
                                 else if (data.request.RequestCompleted && data.request.CompleteRequest(Guardian, data, player.GetModPlayer<PlayerMod>()))
                                 {
                                     Mes = data.request.GetRequestComplete(data, Guardian);
