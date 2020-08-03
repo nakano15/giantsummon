@@ -102,7 +102,17 @@ namespace giantsummon.Creatures
 
         public void RequestList()
         {
-
+            AddNewRequest("Pincer Bane", 220, 
+                "*Hey Terrarian, I have a client looking for Snatcher Jaws for some reason, would you like to help me with this? I can share the profit with you.*",
+                "*Perfect. Snatchers can be found in the Jungle. Don't get too close to them, in other words, use guns. Also, try not to damage the jaws too much, I get more profit if they are intact.*",
+                "*Psh. Go away.*",
+                "*Good job, here is your share. If someone asks, we didn't see each other.*",
+                "*Lost? Snatchers appears on the Jungle Surface. Try not to go to the Underground Jungle, since Man Eaters are not in wrapped the package.*");
+            AddObjectCollectionRequest("Snatcher Jaw", 5);
+            AddObjectDroppingMonster(Terraria.ID.NPCID.Snatcher, 0.75f);
+            //
+            AddNewRequest("", 260, 
+                "**");
         }
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)

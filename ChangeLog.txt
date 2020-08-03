@@ -9,3 +9,7 @@ Brutus will enter a defensive stance near your character when your character doe
 Event slimes will now be recognized as slimes to hunt.
 Defeated companions will no longer show a chain when you try pulling them before they are defeated.
 Fixed a number of problems with Brutus sprites.
+Fixed some more broken english on Malishas dialogues.
+Companions now gains coins when killing monsters.
+	They wont make use of them right now.
+	Nope, you can't take their coins.

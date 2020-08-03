@@ -34,6 +34,7 @@ namespace giantsummon
         public bool IsStarter = false;
         public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;
         public bool OverrideQuickMountToMountGuardianInstead = false, UseHeavyMeleeAttackWhenMounted = true, HideWereForm = false;
+        public uint Coins = 0;
         public Item[] Equipments = new Item[9]; //3 body equipments and 6 accessories
         public Item[] Inventory = new Item[50];
         public byte SkinID = 0, OutfitID = 0; //Skin handles changing the body of the guardians. Outfits gives clothings to them.
@@ -519,6 +520,48 @@ namespace giantsummon
             }
         }
 
+        public void AddCoins(int p = 0, int g = 0, int s = 0, int c = 0)
+        {
+            int v = c;
+            if (s > 0) v += s * 100;
+            if (g > 0) v += g * 10000;
+            if (p > 0) v += p * 1000000;
+            AddCoins(v);
+        }
+
+        public void AddCoins(int Sum)
+        {
+            if (Sum < 0)
+            {
+                return;
+            }
+            if ((long)Sum + this.Coins > uint.MaxValue)
+            {
+                this.Coins = uint.MaxValue;
+            }
+            else
+            {
+                this.Coins += (uint)Sum;
+            }
+        }
+
+        public bool SubtractCoins(int p = 0, int g = 0, int s = 0, int c = 0)
+        {
+            int v = c;
+            if (s > 0) v += s * 100;
+            if (g > 0) v += g * 10000;
+            if (p > 0) v += p * 1000000;
+            return SubtractCoins(v);
+        }
+        
+        public bool SubtractCoins(int Sub)
+        {
+            if (Sub < Coins)
+                return false;
+            Coins -= (uint)Sub;
+            return true;
+        }
+
         public ModGuardianData GetModData(Mod mod)
         {
             return GetModData(mod.Name);
@@ -910,6 +953,7 @@ namespace giantsummon
             tag.Add("ExistenceTime_" + UniqueID, LifeTime.TotalSeconds);
             tag.Add("SkinID_" + UniqueID, SkinID);
             tag.Add("OutfitID_" + UniqueID, OutfitID);
+            tag.Add("Coins_" + UniqueID, (int)Coins - int.MaxValue);
         }
 
         public void Load(Terraria.ModLoader.IO.TagCompound tag, int ModVersion, int UniqueID)
@@ -1127,6 +1171,10 @@ namespace giantsummon
             {
                 SkinID = tag.GetByte("SkinID_" + UniqueID);
                 OutfitID = tag.GetByte("OutfitID_" + UniqueID);
+            }
+            if (ModVersion >= 67)
+            {
+                Coins = (uint)(tag.GetInt("Coins_" + UniqueID) + int.MaxValue);
             }
         }
 

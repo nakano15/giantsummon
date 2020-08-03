@@ -1213,6 +1213,17 @@ namespace giantsummon
                                 }
                             }
                         }
+                        if (npc.value > 0)
+                        {
+                            uint CoinReward = (uint)npc.value / 20;
+                            foreach (TerraGuardian tg in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                            {
+                                if (tg.Active && !tg.KnockedOut && !tg.Downed)
+                                {
+                                    tg.Coins += CoinReward;
+                                }
+                            }
+                        }
                     }
                 }
             }

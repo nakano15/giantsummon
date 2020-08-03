@@ -10,14 +10,14 @@ namespace giantsummon.Creatures
     public class MalishaBase : GuardianBase
     {
         /// <summary>
-        /// -Loves makes experiements with magic and alchemy.
+        /// -Loves makes experiments with magic and alchemy.
         /// -Doesn't mind not using clothes.
         /// -Leopolds apprentice.
         /// -Loves tormenting her mentor.
         /// -Feels uncomfortable when people look in her chest.
-        /// -Expelled from many villages due to her experiements.
+        /// -Expelled from many villages due to her experiments.
         /// -Initially thought the Terrarian world is a naturalism colony.
-        /// -Turns into a mad scientist during Blood Moons, testing experiements on anyone who gets in her sight.
+        /// -Turns into a mad scientist during Blood Moons, testing experiments on anyone who gets in her sight.
         /// </summary>
         public MalishaBase()
         {
@@ -247,7 +247,7 @@ namespace giantsummon.Creatures
         {
             get
             {
-                return "*You're the only person in this town who doesn't comes complaining at my experiements. I guess I should thank you for that.*";
+                return "*You're the only person in this town who doesn't comes complaining at my experiments. I guess I should thank you for that.*";
             }
         }
 
@@ -271,7 +271,7 @@ namespace giantsummon.Creatures
         {
             get
             {
-                return "*There is still lots I need to research for and do experiements, but I feel like here I'll be able to, so Thank You.*";
+                return "*There is still lots I need to research for and do experiments, but I feel like here I'll be able to, so Thank You.*";
             }
         }
 
@@ -281,7 +281,7 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             Mes.Add("*Oh, a Terrarian. I think I may have a use for you.*");
             Mes.Add("*Funny, I thought here was a naturalist colony, but you're still wearing clothes.*");
-            Mes.Add("*You're really small, my neck aches a bit trying to look at you. Say, would you mind participating of some experiements?*");
+            Mes.Add("*You're really small, my neck aches a bit trying to look at you. Say, would you mind participating of some experiments?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -297,12 +297,12 @@ namespace giantsummon.Creatures
             Mes.Add("*Always wondered why you get stronger by using specific kinds of outfits? Well, me too.*");
             Mes.Add("*It's not easy being a prodigy, but when you're one, you have to keep working hard to continue being.*");
             Mes.Add("*I have perfect control of my magic! Now, at least. Let's not revive past experiences.*");
-            Mes.Add("*Nobody really complained about my experiements. Here.*");
+            Mes.Add("*Nobody really complained about my experiments. Here.*");
 
             Mes.Add("*Well, I could go to the Ether Realm to get some of my clothes, but It's too much work...*");
             Mes.Add("*You ever wondered why the TerraGuardians have no clothes in this world? Well, I never, that's the main reason I came here.*");
             Mes.Add("*I feel like people actually look directly into my \'mana depository\' when they look at me.*");
-            Mes.Add("*I'm a bit disappointed that this isn't a naturalist colony like I initially thought, but I'm glad I can do my experiements here.*");
+            Mes.Add("*I'm a bit disappointed that this isn't a naturalist colony like I initially thought, but I'm glad I can do my experiments here.*");
 
             if (Main.dayTime)
             {
@@ -319,9 +319,9 @@ namespace giantsummon.Creatures
             }
             else
             {
-                Mes.Add("*To reduce the annoyance levels, I try to do quiet experiements during this time, to avoid annoying neighbors of bothering me.*");
+                Mes.Add("*To reduce the annoyance levels, I try to do quiet experiments during this time, to avoid annoying neighbors of bothering me.*");
                 Mes.Add("*I'm glad you came, would you mind sitting on that chair? I will just need to tie your arms and legs afterwards, though.*");
-                Mes.Add("*Came visit me? Or did someone sent you? Because I'm pretty sure someone must have been annoyed by my experiements.*");
+                Mes.Add("*Came visit me? Or did someone sent you? Because I'm pretty sure someone must have been annoyed by my experiments.*");
                 Mes.Add("*What's with those Demon Eyes? It's like as they didn't see a TerraGuardian before.*");
                 Mes.Add("*When a Demon Eye charges on someone, isn't supposed that they would get hurt too?*");
             }
@@ -337,7 +337,7 @@ namespace giantsummon.Creatures
 
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Guide))
             {
-                Mes.Add("*" + NPC.firstNPCName(Terraria.ID.NPCID.Guide) + " got really pale when he saw me doing experiements with a doll that looks like him.*");
+                Mes.Add("*" + NPC.firstNPCName(Terraria.ID.NPCID.Guide) + " got really pale when he saw me doing experiments with a doll that looks like him.*");
                 Mes.Add("*Say, do you know why " + NPC.firstNPCName(Terraria.ID.NPCID.Guide) + " is on flames?*");
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Wizard))
@@ -352,7 +352,7 @@ namespace giantsummon.Creatures
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Dryad))
             {
                 Mes.Add("*Can you tell " + NPC.firstNPCName(Terraria.ID.NPCID.Dryad) + " that I don't need a baby sitter? If the fauna suddenly tries to eat you alive is because... Well, probably not my fault.*");
-                Mes.Add("*" +NPC.firstNPCName(Terraria.ID.NPCID.Dryad) + " says that I'm a living sign of bad omen. No matter what she says, I will keep experiementing.*");
+                Mes.Add("*" +NPC.firstNPCName(Terraria.ID.NPCID.Dryad) + " says that I'm a living sign of bad omen. No matter what she says, I will keep experimenting.*");
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Clothier))
             {
@@ -395,7 +395,7 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Bree))
             {
-                Mes.Add("*I'd hate having [gn: " + Bree+ "] as a neighbor. If I wanted to hear complaints about my experiements, I would have remained on the Ether Realm.*");
+                Mes.Add("*I'd hate having [gn: " + Bree+ "] as a neighbor. If I wanted to hear complaints about my experiments, I would have remained on the Ether Realm.*");
             }
             if (NpcMod.HasGuardianNPC(Mabel))
             {
@@ -404,12 +404,12 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Domino))
             {
-                Mes.Add("*It's interesting to see someone interessed in my experiements, [gn:" + Domino + "] buys them from me often for resale. At least I got someone to fund my experiements.*");
+                Mes.Add("*It's interesting to see someone interessed in my experiments, [gn:" + Domino + "] buys them from me often for resale. At least I got someone to fund my experiments.*");
                 Mes.Add("*Some may call my researchs junk, [gn:" + Domino + "], calls them profit.*");
             }
             if (NpcMod.HasGuardianNPC(Leopold))
             {
-                Mes.Add("*Interesting having [gn:" + Leopold + "] around, I could torment him with my experiements.*");
+                Mes.Add("*Interesting having [gn:" + Leopold + "] around, I could torment him with my experiments.*");
                 Mes.Add("*[gn:" + Leopold + "] and I have quite a story back then, he call me an example of how not to research magic. That doesn't stops me of using what I learn on him.*");
                 Mes.Add("*[gn:" + Leopold+"] is my mentor, I wouldn't say that I'm his best studdent, even more when I test what I learned on him.*");
             }
@@ -422,7 +422,7 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(Michelle))
             {
                 Mes.Add("*Everytime [gn:" + Michelle + "] comes bother me, I transform her into a different critter.*");
-                Mes.Add("*[gn:" + Michelle + "] always arrives just in time I need someone to test my experiements.*");
+                Mes.Add("*[gn:" + Michelle + "] always arrives just in time I need someone to test my experiments.*");
             }
 
             if (guardian.IsUsingToilet)
@@ -435,7 +435,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*Yes, I would love having you as a room mate. Heh.*");
                 Mes.Add("*Feel free to get some sleep anytime you want. If you do so now, would be perfect.*");
                 Mes.Add("*Feeling drowzy? No worry, you can lie down in any bed in our room.*");
-                Mes.Add("*It's good to have company during the night, even more when I'm working on my experiements.*");
+                Mes.Add("*It's good to have company during the night, even more when I'm working on my experiments.*");
                 if (NpcMod.HasGuardianNPC(Leopold))
                 {
                     Mes.Add("*How silly, like I would use my dear room mate as test subject. Psh...*");
@@ -451,7 +451,7 @@ namespace giantsummon.Creatures
                 Mes.Clear();
                 Mes.Add("*Mwahahaha! You have triggered my trap card!*");
                 Mes.Add("*Don't worry, this wont hurt a bit.*");
-                Mes.Add("*How did you know that I needed someone for my experiement?*");
+                Mes.Add("*How did you know that I needed someone for my experiment?*");
                 Mes.Add("*Good, I was needing someone for my brain transplant machine. Ready to turn into a Squirrel?*");
                 Mes.Add("*I got you! Now drink this potion!*");
                 
@@ -505,7 +505,7 @@ namespace giantsummon.Creatures
             Mes.Add("*I feel so alive when testing things on living things. It is unfortunate if they end up no longer living after the testing.*");
             if (NpcMod.HasGuardianNPC(GuardianBase.Leopold))
             {
-                Mes.Add("*Don't tell [gn:" + GuardianBase.Leopold + "], but I love having his company. He also helps me with my experiements, even though he clearly doesn't want.*");
+                Mes.Add("*Don't tell [gn:" + GuardianBase.Leopold + "], but I love having his company. He also helps me with my experiments, even though he clearly doesn't want.*");
                 Mes.Add("*I tried several times to earn [gn:"+GuardianBase.Leopold+"]'s respect, but he always complains of my methods, so I no longer care about that.*");
                 Mes.Add("*I really love scaring [gn:"+Leopold+"], I even have a stack of leaves for when I take It too far.*");
             }
@@ -528,7 +528,7 @@ namespace giantsummon.Creatures
         public override string NoRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("I have something else to experiement on right now.");
+            Mes.Add("I have something else to experiment on right now.");
             Mes.Add("No, I'm not looking for test subjects right now.");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -536,15 +536,15 @@ namespace giantsummon.Creatures
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Hey, I need your help for one of my experiements. Don't worry, I wont harm you in the process.*");
-            Mes.Add("*My experiements stops me from doing this right now, If you could help me.*");
+            Mes.Add("*Hey, I need your help for one of my experiments. Don't worry, I wont harm you in the process.*");
+            Mes.Add("*My experiments stops me from doing this right now, If you could help me.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Thank you! Time for the experiement. I hope this time It doesn't explodes.*");
+            Mes.Add("*Thank you! Time for the experiment. I hope this time It doesn't explodes.*");
             Mes.Add("*Good. If you manage to smell something foul, or hear random screams, don't worry, It's just part of the process.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -596,7 +596,7 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             if (IsPlayer)
             {
-                Mes.Add("*If you don't make It, would you mind If I do experiements with your body?*");
+                Mes.Add("*If you don't make It, would you mind If I do experiments with your body?*");
                 Mes.Add("*I think this may allow me to learn more about your anathomy.*");
                 Mes.Add("*If I close here, may solve your bleeding problem.*");
                 if(RevivePlayer.Male)
@@ -649,7 +649,7 @@ namespace giantsummon.Creatures
                     if (ReviveGuardian.Base.IsTerrarian)
                     {
                         Mes.Add("*Okay, you'll be fine... If you survive...*");
-                        Mes.Add("*If you don't make It, you wont mind if I do experiements with your body, right?*");
+                        Mes.Add("*If you don't make It, you wont mind if I use your body on my future experiments, right?*");
                         Mes.Add("*This will ease your pain while I work, drink It.*");
                     }
                     else

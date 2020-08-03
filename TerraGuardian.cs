@@ -120,6 +120,7 @@ namespace giantsummon
         public float WingFlightTime = 0, WingMaxFlightTime = 0;
         public int RocketTime = 0, RocketMaxTime = 0;
         public float Stealth = 0f;
+        public uint Coins { get { return Data.Coins; } set { Data.Coins = value; } }
         public List<BuffData> Buffs { get { return Data.Buffs; } set { Data.Buffs = value; } }
         public List<int> BuffImmunity = new List<int>();
         private bool FreezeItemUseAnimation = false;
@@ -3902,6 +3903,26 @@ namespace giantsummon
             return false;
         }
 
+        public void AddCoins(int p = 0, int g = 0, int s = 0, int c = 0)
+        {
+            Data.AddCoins(p, g, s, c);
+        }
+
+        public void AddCoins(int Sum)
+        {
+            Data.AddCoins(Sum);
+        }
+
+        public bool SubtractCoins(int p = 0, int g = 0, int s = 0, int c = 0)
+        {
+            return Data.SubtractCoins(p, g, s, c);
+        }
+
+        public bool SubtractCoins(int Sub)
+        {
+            return Data.SubtractCoins(Sub);
+        }
+
         public bool CheckAttackRange(int WeaponPosition, Vector2 TargetPosition, int TargetWidth, int TargetHeight, bool Kneeling = false)
         {
             bool a, b;
@@ -4056,7 +4077,7 @@ namespace giantsummon
             if (HasFlag(GuardianFlags.Confusion))
             {
                 if(OwnerPos > -1)
-                    TargetPosition.X += (Main.player[OwnerPos].Center.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
+                    TargetPosition.X += (TargetPosition.X + TargetWidth * 0.5f - Main.player[OwnerPos].Center.X) * 2;
             }
             //AimDirection.X = (int)(TargetPosition.X + TargetVelocity.X + TargetWidth * 0.5f);
             //AimDirection.Y = (int)(TargetPosition.Y + TargetVelocity.Y + TargetHeight * 0.5f);

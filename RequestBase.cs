@@ -16,7 +16,7 @@ namespace giantsummon
         public RequestRequirementDel Requirement = delegate(Terraria.Player player) { return true; };
         public int RequestScore = 500;
 
-        public RequestBase(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteText = "", string RequestInfoText = "")
+        public RequestBase(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteText = "", string RequestInfoText = "", string FailureText = "")
         {
             this.Name = Name;
             this.RequestScore = RequestScore;

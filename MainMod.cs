@@ -33,7 +33,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 66, LastModVersion = 65;
+        public const int ModVersion = 67, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -986,6 +986,39 @@ namespace giantsummon
         }
 
         private static bool HiddenInterface = false;
+        private static uint LastCoinValue = 0;
+        private static byte CopperCoins = 0, SilverCoins = 0, GoldCoins = 0;
+        public static ushort PlatinumCoins = 0;
+
+        public static void UpdateCoinCount(TerraGuardian g)
+        {
+            UpdateCoinCount(g.Data);
+        }
+
+        public static void UpdateCoinCount(GuardianData gd)
+        {
+            uint c = gd.Coins, s = 0, g = 0, p = 0;
+            if (c >= 100)
+            {
+                s += c / 100;
+                c -= s * 100;
+            }
+            if (s >= 100)
+            {
+                g += s / 100;
+                s -= g * 100;
+            }
+            if (g >= 100)
+            {
+                p += g / 100;
+                g -= p * 100;
+            }
+            CopperCoins = (byte)c;
+            SilverCoins = (byte)s;
+            GoldCoins = (byte)g;
+            PlatinumCoins = (ushort)p;
+            LastCoinValue = gd.Coins;
+        }
 
         public bool DrawGuardianInventoryInterface()
         {
@@ -1019,6 +1052,11 @@ namespace giantsummon
                 {
                     Guardian = player.AssistGuardians[SelectedGuardian - 1];
                 }
+            }
+            if (Guardian.Active)
+            {
+                if (Guardian.Coins != LastCoinValue)
+                    UpdateCoinCount(Guardian);
             }
             //
             float StartX = 0;
@@ -1296,6 +1334,37 @@ namespace giantsummon
                                 }
                                 ItemSlot.Draw(Main.spriteBatch, Guardian.Inventory, 0, i, SlotPosition);
                             }
+                        }
+                        SlotStartPosition.Y += 56 * Main.inventoryScale * 5 + 20;
+                        Vector2 CoinTextPosition = SlotStartPosition;
+                        if (Main.mouseX >= CoinTextPosition.X && Main.mouseX < CoinTextPosition.X + 560 * Main.inventoryScale &&
+                            Main.mouseY >= CoinTextPosition.Y && Main.mouseY < CoinTextPosition.Y + 24)
+                            Main.player[Main.myPlayer].mouseInterface = true;
+                        CoinTextPosition.X += Utils.DrawBorderString(Main.spriteBatch, "Personal Savings: ", CoinTextPosition, Color.White).X;
+                        for (byte c = 0; c < 4; c++)
+                        {
+                            byte CoinID = (byte)(Terraria.ID.ItemID.PlatinumCoin - c);
+                            Texture2D CoinTexture = Main.itemTexture[CoinID];
+                            float TextureScale = 1f;
+                            ushort CoinValue = 0;
+                            switch (c)
+                            {
+                                case 0:
+                                    CoinValue = PlatinumCoins;
+                                    break;
+                                case 1:
+                                    CoinValue = GoldCoins;
+                                    break;
+                                case 2:
+                                    CoinValue = SilverCoins;
+                                    break;
+                                case 3:
+                                    CoinValue = CopperCoins;
+                                    break;
+                            }
+                            CoinTextPosition.X += Utils.DrawBorderString(Main.spriteBatch, CoinValue.ToString(), CoinTextPosition, Color.White, TextureScale).X;
+                            Main.spriteBatch.Draw(CoinTexture, CoinTextPosition, null, Color.White, 0f, Vector2.Zero, TextureScale, SpriteEffects.None, 0);
+                            CoinTextPosition.X += 20;
                         }
                         break;
                     case GuardianItemSlotButtons.Equipment:

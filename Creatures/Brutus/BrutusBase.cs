@@ -184,7 +184,8 @@ namespace giantsummon.Creatures
                 "*Terrarian, I need your help to test my power. There is a creature you call Skeletron in this world, I want to face It alongside you, to see if I can try protecting you. Can you give me a help on this?*",
                 "*Thank you. Maybe there is some way of calling It again, I have no idea how you could do that.*",
                 "*Oh, you're not ready to face It again? Don't worry about that, I'm okay.*",
-                "*I think we did good on this fight, and there were no casualities. I'm happy with this result.*",
+                "*I think we did good on this fight, but I feel bad about the Clothier's death. I can't really feel any sense of victory in this fight.*",
+                "*You want to know how to call the Skeletron? I have no idea either. It's related to the Clother, right? Maybe there is a way.*",
                 "*I can't protect someone If I let the ones I'm supposed to protect die... I still need to practice more.*");
             AddRequestRequirement(delegate(Player player)
             {
@@ -194,7 +195,15 @@ namespace giantsummon.Creatures
             AddRequesterSummonedRequirement();
             AddNobodyKodRequirement();
             //
-            
+            AddNewRequest("Jaws Hunter", 270,
+                "*I need to get stronger, which means I need to eat more meat. No, I'm nothinking about you or your citizens. There isn't much variety of edible things in this world, but I think Sharks will help me with this matter. What do you think? Ready for some fishing?*",
+                "*Terrarian, allow me to assist you in this request. I want to get stronger, but I can't risk endangering my client with It.*",
+                "*Yes, their jaws are really big, maybe I should try something smaller, like bats.*",
+                "*Wow! Look at all that Shark meat. I think I can turn all that into muscles in a few weeks.*");
+            AddRequestRequirement(RequestBase.GetNightRequestRequirement);
+            AddObjectCollectionRequest("Shark Meat", 5, 0.2f);
+            AddObjectDroppingMonster(Terraria.ID.NPCID.Shark, 0.8f);
+            //
         }
 
         public void SkinsAndOutfits()

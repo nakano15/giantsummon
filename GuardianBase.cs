@@ -223,9 +223,9 @@ namespace giantsummon
         public bool IsTerrarian { get { return !GetGroup.CustomSprite; } }
         public bool IsCustomSpriteCharacter { get { return GetGroup.CustomSprite; } }
 
-        public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string FailureText = "")
+        public void AddNewRequest(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteInfo = "", string RequestInfo = "", string FailureText = "")
         {
-            RequestBase rb = new RequestBase(Name, RequestScore, BriefText, AcceptText, DenyText, CompleteInfo, FailureText);
+            RequestBase rb = new RequestBase(Name, RequestScore, BriefText, AcceptText, DenyText, CompleteInfo, RequestInfo, FailureText);
             RequestDB.Add(rb);
         }
 
