@@ -135,13 +135,13 @@ namespace giantsummon.Creatures
             MountShoulderPoints.AddFramePoint2x(26, 14, 32);
 
             //Hat Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(22, 10 + 2);
-            HeadVanityPosition.AddFramePoint2x(16, 36, 21 + 2);
-            HeadVanityPosition.AddFramePoint2x(19, 33, 24 + 2);
-            HeadVanityPosition.AddFramePoint2x(22, 33, 25 + 2);
-            HeadVanityPosition.AddFramePoint2x(23, 33, 25 + 2);
-            HeadVanityPosition.AddFramePoint2x(24, 33, 25 + 2);
-            HeadVanityPosition.AddFramePoint2x(25, 33, 25 + 2);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(22 + 1, 10 + 2);
+            HeadVanityPosition.AddFramePoint2x(16, 36 + 1, 21 + 2);
+            HeadVanityPosition.AddFramePoint2x(19, 33 + 1, 24 + 2);
+            HeadVanityPosition.AddFramePoint2x(22, 33 + 1, 25 + 2);
+            HeadVanityPosition.AddFramePoint2x(23, 33 + 1, 25 + 2);
+            HeadVanityPosition.AddFramePoint2x(24, 33 + 1, 25 + 2);
+            HeadVanityPosition.AddFramePoint2x(25, 33 + 1, 25 + 2);
 
             //Wing Position
             WingPosition.AddFramePoint2x(14, -1000, -1000);
