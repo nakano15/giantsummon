@@ -199,7 +199,7 @@ namespace giantsummon.Creatures
                 "*I need to get stronger, which means I need to eat more meat. No, I'm nothinking about you or your citizens. There isn't much variety of edible things in this world, but I think Sharks will help me with this matter. What do you think? Ready for some fishing?*",
                 "*Terrarian, allow me to assist you in this request. I want to get stronger, but I can't risk endangering my client with It.*",
                 "*Yes, their jaws are really big, maybe I should try something smaller, like bats.*",
-                "*Wow! Look at all that Shark meat. I think I can turn all that into muscles in a few weeks.*");
+                "*Wow! Look at all that Shark meat. I think I can turn all that in muscles in a few weeks.*");
             AddRequestRequirement(RequestBase.GetNightRequestRequirement);
             AddObjectCollectionRequest("Shark Meat", 5, 0.2f);
             AddObjectDroppingMonster(Terraria.ID.NPCID.Shark, 0.8f);

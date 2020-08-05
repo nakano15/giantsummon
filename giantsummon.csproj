@@ -130,6 +130,7 @@
     <Compile Include="ModGuardianData.cs" />
     <Compile Include="ModTargetting.cs" />
     <Compile Include="NetMod.cs" />
+    <Compile Include="Node.cs" />
     <Compile Include="Npcs\AlexNPC.cs" />
     <Compile Include="Npcs\BlueNPC.cs" />
     <Compile Include="Npcs\BreeNPC.cs" />
@@ -284,7 +285,6 @@
     <Content Include="Creatures\Leopold\head.png" />
     <Content Include="Creatures\Leopold\left_arm.png" />
     <Content Include="Creatures\Leopold\right_arm.png" />
-    <Content Include="Defended.png" />
     <Content Include="GuardianNPC\List\Domino_Head.png" />
     <Content Include="Creatures\Domino\left_arm.png" />
     <Content Include="Creatures\Domino\right_arm.png" />

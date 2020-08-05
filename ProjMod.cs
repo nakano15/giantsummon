@@ -26,6 +26,13 @@ namespace giantsummon
 
         public override void SetDefaults(Projectile projectile)
         {
+            /*if (ProjParent > -1)
+            {
+                if (GuardianProj.ContainsKey(ProjParent))
+                {
+                    GuardianProj.Add(projectile.whoAmI, GuardianProj[ProjParent]);
+                }
+            }*/
             switch (projectile.type)
             {
                 case Terraria.ID.ProjectileID.BoneJavelin:
@@ -35,7 +42,7 @@ namespace giantsummon
                     break;
             }
         }
-
+        
         public override bool PreAI(Projectile projectile)
         {
             ProjParent = projectile.whoAmI;
@@ -44,9 +51,7 @@ namespace giantsummon
                 TerraGuardian g = GuardianProj[projectile.whoAmI];
                 if (projectile.minion)
                 {
-                    Main.player[projectile.owner].numMinions--;
-                    Main.player[projectile.owner].slotsMinions -= projectile.minionSlots;
-                    if (g.MinionSlotCount + projectile.minionSlots > g.MaxMinions && projectile.owner == Main.myPlayer)
+                    if (!g.Active || (g.MinionSlotCount + projectile.minionSlots > g.MaxMinions && projectile.owner == Main.myPlayer))
                     {
                         if (projectile.type == 627 || projectile.type == 628)
                         {
@@ -68,6 +73,7 @@ namespace giantsummon
                     }
                     else
                     {
+                        projectile.minionPos = g.NumMinions;
                         g.NumMinions++;
                         g.MinionSlotCount += projectile.minionSlots;
                     }

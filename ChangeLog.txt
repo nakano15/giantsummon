@@ -13,3 +13,7 @@ Fixed some more broken english on Malishas dialogues.
 Companions now gains coins when killing monsters.
 	They wont make use of them right now.
 	Nope, you can't take their coins.
+Companions will now be able to automatically health/mana increasing items again, without giving them the order to, if:
+	The item is placed in one of the first rows of their inventory.
+	The item isn't marked as new.
+	Your inventory isn't opened, or isn't checking the companion inventory.

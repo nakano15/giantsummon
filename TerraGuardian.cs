@@ -3770,6 +3770,224 @@ namespace giantsummon
             }
         }
 
+        public bool IsTileInSameHouse(int StartX, int StartY, int TileX, int TileY)
+        {
+            const byte MaxCheckDistance = 40;
+            List<Node> CurNodes = new List<Node>(), NextNodes = new List<Node>();
+            while (true)
+            {
+                Tile floortile = Framing.GetTileSafely(StartX, StartY + 1);
+                if (!floortile.active() || !Main.tileSolid[floortile.type])
+                {
+                    StartY++;
+                }
+                else
+                {
+                    break;
+                }
+                if (StartY >= Main.bottomWorld)
+                    return false;
+            }
+            NextNodes.Add(new Node((ushort)StartX, (ushort)StartY, 0, Node.StepDirection.Left));
+            NextNodes.Add(new Node((ushort)StartX, (ushort)StartY, 0, Node.StepDirection.Right));
+            NextNodes.Add(new Node((ushort)StartX, (ushort)StartY, 0, Node.StepDirection.Up));
+            NextNodes.Add(new Node((ushort)StartX, (ushort)StartY, 0, Node.StepDirection.Down));
+            while (NextNodes.Count > 0)
+            {
+                CurNodes = NextNodes;
+                NextNodes = new List<Node>();
+                while (CurNodes.Count > 0)
+                {
+                    Node n = CurNodes[0];
+                    byte Step = n.TileStep;
+                    ushort tx = n.px, ty = n.py;
+                    Gore.NewGorePerfect(new Vector2(tx * 16 + 8, ty * 16 + 8), Vector2.Zero, Terraria.ID.GoreID.ButcherSaw);
+                    if (tx == TileX && ty == TileY)
+                        return true;
+                    CurNodes.RemoveAt(0);
+                    if (Step >= MaxCheckDistance) continue;
+                    switch (n.direction)
+                    {
+                        case Node.StepDirection.Left:
+                            if (tx > Main.leftWorld)
+                            {
+                                Tile floortile = Framing.GetTileSafely(tx, ty + 1);
+                                if (floortile.active() && floortile.type == Terraria.ID.TileID.Platforms) //Check for stairs
+                                {
+                                    Node newnode = new Node((ushort)(tx - 1), ty, (byte)(Step + 1), Node.StepDirection.Left);
+                                    NextNodes.Add(newnode);
+                                    for (int i = -1; i < 2; i += 2)
+                                    {
+                                        if (i == -1 && tx <= Main.leftWorld)
+                                            continue;
+                                        ushort ntx = (ushort)(i + tx), nty = (ushort)(ty);
+                                        Tile othertile = Framing.GetTileSafely(ntx, nty);
+                                        if (othertile.active() && floortile.type == Terraria.ID.TileID.Platforms)
+                                        {
+                                            newnode = new Node(tx, (ushort)(ty - 1), (byte)(Step + 1), (i == -1 ? Node.StepDirection.Left : Node.StepDirection.Right));
+                                            NextNodes.Add(newnode);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    tx--;
+                                    for (int y = 0; y < 8; y++)
+                                    {
+                                        int nty = ty - (y + 1);
+                                        Tile tile = Framing.GetTileSafely(tx, nty);
+                                        if (tile.active() && tile.type == Terraria.ID.TileID.Platforms)
+                                        {
+                                            Node newnode = new Node(tx, (ushort)(nty - 1), (byte)(Step + 1), Node.StepDirection.Up);
+                                            NextNodes.Add(newnode);
+                                        }
+                                    }
+                                    if (MainMod.IsSolidTile(tx, ty))
+                                    {
+                                        bool Blocked = false;
+                                        for (int y = 0; y < 5; y++)
+                                        {
+                                            ty--;
+                                            Blocked = MainMod.IsSolidTile(tx, ty);
+                                            if (!Blocked)
+                                                break;
+                                        }
+                                        if (Blocked)
+                                            break;
+                                        Node newnode = new Node(tx, ty, (byte)(Step + 1), n.direction);
+                                        NextNodes.Add(newnode);
+                                    }
+                                    else if (!MainMod.IsSolidTile(tx, ty + 1))
+                                    {
+                                        bool Blocked = false;
+                                        for (int y = 0; y < 5; y++)
+                                        {
+                                            ty++;
+                                            Blocked = MainMod.IsSolidTile(tx, ty);
+                                            if (Blocked)
+                                                break;
+                                        }
+                                        if (!Blocked)
+                                            break;
+                                        Node newnode = new Node(tx, (ushort)(ty - 1), (byte)(Step + 1), n.direction);
+                                        NextNodes.Add(newnode);
+                                    }
+                                }
+                            }
+                            break;
+                        case Node.StepDirection.Right:
+                            if (tx < Main.rightWorld)
+                            {
+                                Tile floortile = Framing.GetTileSafely(tx, ty + 1);
+                                if (floortile.active() && floortile.type == Terraria.ID.TileID.Platforms) //Check for stairs
+                                {
+                                    Node newnode = new Node((ushort)(tx + 1), ty, (byte)(Step + 1), Node.StepDirection.Right);
+                                    NextNodes.Add(newnode);
+                                    for (int i = -1; i < 2; i += 2)
+                                    {
+                                        if (i == -1 && tx >= Main.rightWorld)
+                                            continue;
+                                        ushort ntx = (ushort)(i + tx), nty = (ushort)(ty);
+                                        Tile othertile = Framing.GetTileSafely(ntx, nty);
+                                        if (othertile.active() && floortile.type == Terraria.ID.TileID.Platforms)
+                                        {
+                                            newnode = new Node(tx, (ushort)(ty - 1), (byte)(Step + 1), (i == -1 ? Node.StepDirection.Left : Node.StepDirection.Right));
+                                            NextNodes.Add(newnode);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    tx++;
+                                    for (int y = 0; y < 8; y++)
+                                    {
+                                        int nty = ty - (y + 1);
+                                        Tile tile = Framing.GetTileSafely(tx, nty);
+                                        if (tile.active() && tile.type == Terraria.ID.TileID.Platforms)
+                                        {
+                                            Node newnode = new Node(tx, (ushort)(nty - 1), (byte)(Step + 1), Node.StepDirection.Up);
+                                            NextNodes.Add(newnode);
+                                        }
+                                    }
+                                    if (MainMod.IsSolidTile(tx, ty))
+                                    {
+                                        bool Blocked = false;
+                                        for (int y = 0; y < 5; y++)
+                                        {
+                                            ty--;
+                                            Blocked = MainMod.IsSolidTile(tx, ty);
+                                            if (!Blocked)
+                                                break;
+                                        }
+                                        if (Blocked)
+                                            break;
+                                        Node newnode = new Node(tx, ty, (byte)(Step + 1), n.direction);
+                                        NextNodes.Add(newnode);
+                                    }
+                                    else if (!MainMod.IsSolidTile(tx, ty + 1))
+                                    {
+                                        bool Blocked = false;
+                                        for (int y = 0; y < 5; y++)
+                                        {
+                                            ty++;
+                                            Blocked = MainMod.IsSolidTile(tx, ty);
+                                            if (Blocked)
+                                                break;
+                                        }
+                                        if (!Blocked)
+                                            break;
+                                        Node newnode = new Node(tx, (ushort)(ty - 1), (byte)(Step + 1), n.direction);
+                                        NextNodes.Add(newnode);
+                                    }
+                                }
+                            }
+                            break;
+                        case Node.StepDirection.Up:
+                            if (ty > Main.topWorld)
+                            {
+                                for (int x = -1; x < 2; x += 2)
+                                {
+                                    Tile floorTile = Framing.GetTileSafely(tx + x, ty + 1);
+                                    if (floorTile.active() && MainMod.IsSolidTile(tx + x, ty + 1) && floorTile.type != Terraria.ID.TileID.Platforms)
+                                    {
+                                        Node newnode = new Node((ushort)(tx + x), ty, (byte)(Step + 1), (x == -1 ? Node.StepDirection.Left : Node.StepDirection.Right));
+                                        NextNodes.Add(newnode);
+                                    }
+                                }
+                            }
+                            break;
+                        case Node.StepDirection.Down:
+                            if (ty < Main.bottomWorld)
+                            {
+                                Tile floorTile = Framing.GetTileSafely(tx, ty + 1);
+                                if (floorTile.type != Terraria.ID.TileID.Platforms)
+                                    break;
+                                for (int y = 2; y < 9; y++)
+                                {
+                                    if (ty + y >= Main.bottomWorld)
+                                        break;
+                                    floorTile = Framing.GetTileSafely(tx, ty + y);
+                                    if (floorTile.active() && Main.tileSolid[floorTile.type])
+                                    {
+                                        Node newnode = new Node(tx, ty, (byte)(Step + 1), Node.StepDirection.Left);
+                                        NextNodes.Add(newnode);
+                                        newnode = new Node(tx, ty, (byte)(Step + 1), Node.StepDirection.Right);
+                                        NextNodes.Add(newnode);
+                                        if (floorTile.type == Terraria.ID.TileID.Platforms)
+                                        {
+                                            newnode = new Node(tx, ty, (byte)(Step + 1), Node.StepDirection.Down);
+                                            NextNodes.Add(newnode);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+            return false;
+        }
+
         public bool CreatePathingTo(int X, int Y)
         {
             byte Attempts = 0;
@@ -4520,7 +4738,7 @@ namespace giantsummon
                     //CheckIfCanSummon();
                     CheckIfCanDoAction();
                     OffHandAction = true;
-                    //CheckForLifeCrystals();
+                    CheckForLifeCrystals();
                     TryJumpingTallTiles();
                     //TryLandingOnSafeSpot();
                 }
@@ -5105,6 +5323,11 @@ namespace giantsummon
                             return true;
                         }
                     }
+                    /*if (npc.homeless)
+                        return false;
+                    bool FoundPlace = IsTileInSameHouse(npc.homeTileX, npc.homeTileY, player.SpawnX, player.SpawnY);
+                    Main.NewText("Companion " + (FoundPlace ? "has" : "didn't") + " found your player bed.");
+                    return FoundPlace;*/
                 }
             }
             return false;
@@ -5344,7 +5567,7 @@ namespace giantsummon
             int SummonerWeaponPosition = -1;
             for (int i = 0; i < 10; i++)
             {
-                if (this.Inventory[i].type != 0 && this.Inventory[i].summon)
+                if (this.Inventory[i].type != 0 && this.Inventory[i].summon && !this.Inventory[i].sentry)
                 {
                     SummonerWeaponPosition = i;
                     break;
@@ -6239,6 +6462,7 @@ namespace giantsummon
                 if (FirstEmptySlot > -1)
                 {
                     Inventory[FirstEmptySlot] = item.Clone();
+                    Inventory[FirstEmptySlot].newAndShiny = true;
                     item.SetDefaults(0);
                     item.active = false;
                     EmptyInventorySlots--;
@@ -11632,7 +11856,8 @@ namespace giantsummon
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Ballistic);
             if (proj.magic)
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Mysticism);
-            if (proj.minion)
+            if (proj.minion || proj.type == 376 || proj.type == 374 || 
+                proj.type == Terraria.ID.ProjectileID.StardustCellMinionShot || proj.type == 389 || proj.type == 195 || proj.type == 408)
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Leadership);
         }
 
@@ -13219,12 +13444,14 @@ namespace giantsummon
 
         public void CheckForLifeCrystals()
         {
-            if (ItemAnimationTime > 0 || IsAttackingSomething || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            if (ItemAnimationTime > 0 || (Main.playerInventory && MainMod.SelectedGuardianInventorySlot == MainMod.GuardianItemSlotButtons.Inventory) || IsAttackingSomething || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
                 return;
             }
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 10; i++)
             {
+                if (this.Inventory[i].newAndShiny)
+                    continue;
                 if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeCrystal || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherHeart>() && Base.IsTerraGuardian)) && this.LifeCrystalHealth < MaxLifeCrystals)
                 {
                     this.SelectedItem = i;

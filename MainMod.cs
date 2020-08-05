@@ -352,7 +352,23 @@ namespace giantsummon
 
         public override void MidUpdateGoreProjectile()
         {
-
+            foreach (int p in ProjMod.GuardianProj.Keys)
+            {
+                if (Main.projectile[p].active) //Deduct num minions and their slots, and increase max minions
+                {
+                    Projectile proj = Main.projectile[p];
+                    if (Main.projectile[p].minion)
+                    {
+                        //Main.player[proj.owner].numMinions--;
+                        //Main.player[proj.owner].slotsMinions -= proj.minionSlots;
+                        Main.player[proj.owner].maxMinions++;
+                    }
+                    else if (Main.projectile[p].sentry)
+                    {
+                        Main.player[proj.owner].maxTurrets++;
+                    }
+                }
+            }
         }
 
         public override void MidUpdateProjectileItem()

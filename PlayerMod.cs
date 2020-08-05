@@ -1148,6 +1148,7 @@ namespace giantsummon
                             player.mount.Dismount(player);
                     }
                 }
+                //player.maxMinions += guardian.NumMinions;
                 AssistSlot++;
                 GuardianSlot++;
             }
