@@ -88,6 +88,7 @@
     <Compile Include="Creatures\Nemesis\NemesisBase.cs" />
     <Compile Include="Creatures\Rococo\RococoBase.cs" />
     <Compile Include="Creatures\Sardine\SardineBase.cs" />
+    <Compile Include="Creatures\Wrath\WrathBase.cs" />
     <Compile Include="Creatures\Zacks\ZacksBase.cs" />
     <Compile Include="DialogueChain.cs" />
     <Compile Include="ExternalCompatibilityScripts.cs" />
@@ -285,6 +286,12 @@
     <Content Include="Creatures\Leopold\head.png" />
     <Content Include="Creatures\Leopold\left_arm.png" />
     <Content Include="Creatures\Leopold\right_arm.png" />
+    <Content Include="Creatures\Wrath\body.png" />
+    <Content Include="Creatures\Wrath\body_front.png" />
+    <Content Include="Creatures\Wrath\head.png" />
+    <Content Include="Creatures\Wrath\left_arm.png" />
+    <Content Include="Creatures\Wrath\right_arm.png" />
+    <Content Include="Creatures\Wrath\right_arm_front.png" />
     <Content Include="GuardianNPC\List\Domino_Head.png" />
     <Content Include="Creatures\Domino\left_arm.png" />
     <Content Include="Creatures\Domino\right_arm.png" />

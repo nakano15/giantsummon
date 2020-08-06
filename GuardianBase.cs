@@ -699,6 +699,9 @@ namespace giantsummon
                     case 13:
                         gb = new MichelleBase();
                         break;
+                    case 14:
+                        gb = new WrathBase();
+                        break;
                 }
             }
             if (gb == null)
