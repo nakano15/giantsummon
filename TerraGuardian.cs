@@ -267,6 +267,7 @@ namespace giantsummon
         {
             return OtherCollision - CollisionPosition;
         }
+        public bool ExecutingAttackAnimation { get { return ItemAnimationTime > 0 || FreezeItemUseAnimation; } }
 
         public int CollisionWidth
         {
@@ -12722,9 +12723,12 @@ namespace giantsummon
                         dust.noGravity = true;
                     }
                 }
-                Velocity.Y += FallSpeed * GravityDirection;
-                if (Velocity.Y * GravityDirection > MaxFallSpeed)
-                    Velocity.Y = MaxFallSpeed * GravityDirection;
+                if (!HasFlag(GuardianFlags.NoGravity))
+                {
+                    Velocity.Y += FallSpeed * GravityDirection;
+                    if (Velocity.Y * GravityDirection > MaxFallSpeed)
+                        Velocity.Y = MaxFallSpeed * GravityDirection;
+                }
                 if (SelectedItem > -1 && Inventory[SelectedItem].type == 946 || SelectedOffhand > -1 && Inventory[SelectedOffhand].type == 946)
                 {
                     if (Velocity.Y * GravityDirection > 2f)
@@ -12901,17 +12905,20 @@ namespace giantsummon
             }
             Vector2 VelocityBackup = Velocity;
             StickyTileCollision();
-            Velocity = Collision.TileCollision(CollisionPosition, Velocity, CollisionWidth, CollisionHeight, Fall, false, GravityDirection);
-            if (HasFlag(GuardianFlags.WaterWalking))
+            if (!HasFlag(GuardianFlags.NoTileCollision))
             {
-                Vector2 CurVelocity = Velocity;
-                Velocity = Collision.WaterCollision(CollisionPosition, Velocity, CollisionWidth, CollisionHeight, Fall, false, true);
-                if (Velocity != CurVelocity)
-                    FallStart = (int)(Position.Y / 16);
+                Velocity = Collision.TileCollision(CollisionPosition, Velocity, CollisionWidth, CollisionHeight, Fall, false, GravityDirection);
+                if (HasFlag(GuardianFlags.WaterWalking))
+                {
+                    Vector2 CurVelocity = Velocity;
+                    Velocity = Collision.WaterCollision(CollisionPosition, Velocity, CollisionWidth, CollisionHeight, Fall, false, true);
+                    if (Velocity != CurVelocity)
+                        FallStart = (int)(Position.Y / 16);
+                }
+                if (!HasFlag(GuardianFlags.IceSkating) && !FallProtection)
+                    CheckForIceBreak();
+                Collision.SwitchTiles(CollisionPosition, CollisionWidth, CollisionHeight, CollisionPosition - Velocity, 1);
             }
-            if(!HasFlag(GuardianFlags.IceSkating) && !FallProtection)
-                CheckForIceBreak();
-            Collision.SwitchTiles(CollisionPosition, CollisionWidth, CollisionHeight, CollisionPosition - Velocity, 1);
             if (Wet)
             {
                 if (HoneyWet)

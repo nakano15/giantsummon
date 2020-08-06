@@ -9,3 +9,7 @@ A script to check if the companion is in It's room.
 Companions sometimes dies off screen?
 	Generally happens with either Sardine and Bree?
 https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2063334
+The Pig Guardians needs the following frames for their cloud form:
+	Moving Backwards, Defeated and Reviving.
+	Is It necessary to add furniture usage animations? I guess so.
+	Chair Sitting, Throne sitting and Bed sleeping animations.

@@ -8,7 +8,7 @@ namespace giantsummon.Creatures
 {
     public class WrathBase : GuardianBase
     {
-        public WrathBase()
+        public WrathBase() //I'll need to think how I'll make the cloud form of them work, and toggle.
             : base()
         {
             Name = "Wrath";
@@ -77,10 +77,114 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(17, 26, 26);
         }
 
+        public bool GetIfIsCloudForm(TerraGuardian guardian)
+        {
+            return true;
+            if (guardian.OwnerPos > -1)
+            {
+                return Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().PigGuardianCloudForm[PlayerMod.AngerPigGuardianID];
+            }
+            else
+            {
+                return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[PlayerMod.AngerPigGuardianID];
+            }
+        }
+
+        public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
+        {
+            bool CloudForm = GetIfIsCloudForm(guardian);
+            if (CloudForm)
+            {
+                if (guardian.Velocity.X != 0)
+                {
+                    if (AnimationID == 0)
+                    {
+                        Frame = 20;
+                    }
+                    else
+                    {
+                        if (!guardian.ExecutingAttackAnimation)
+                        {
+                            Frame = 20;
+                        }
+                    }
+                }
+                else
+                {
+                    if (AnimationID == 0)
+                    {
+                        Frame = 19;
+                    }
+                }
+            }
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Microsoft.Xna.Framework.Vector2 DrawPosition, Microsoft.Xna.Framework.Color color, Microsoft.Xna.Framework.Color armorColor, float Rotation, Microsoft.Xna.Framework.Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
+        {
+            const float Opacity = 0.8f;
+            if (GetIfIsCloudForm(guardian))
+            {
+                foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
+                {
+                    if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
+                        gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
+                    {
+                        gdd.color *= Opacity;
+                    }
+                }
+                foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
+                {
+                    if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
+                        gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
+                    {
+                        gdd.color *= Opacity;
+                    }
+                }
+            }
+
+        }
+
         public override void Attributes(TerraGuardian g)
         {
             g.MeleeDamageMultiplier += 0.05f;
             g.Defense -= 4;
+            if (GetIfIsCloudForm(g))
+            {
+                //if (!g.HasFlag(GuardianFlags.NoGravity))
+                //    g.AddFlag(GuardianFlags.NoGravity);
+                //if (!g.HasFlag(GuardianFlags.NoTileCollision))
+                //    g.AddFlag(GuardianFlags.NoTileCollision);
+            }
+        }
+
+        public override void GuardianBehaviorModScript(TerraGuardian guardian)
+        {
+            if (GetIfIsCloudForm(guardian))
+            {
+                /*if (guardian.Jump)
+                {
+                    if (guardian.Velocity.Y < -3f)
+                    {
+                        guardian.Velocity.Y = -3f;
+                    }
+                    else
+                    {
+                        guardian.Velocity.Y += -0.05f;
+                    }
+                }
+                else*/
+                {
+                    if (guardian.Velocity.Y >= 2.3f)
+                    {
+                        guardian.Velocity.Y = 2.3f;
+                        guardian.SetFallStart();
+                    }
+                    else
+                    {
+                        //guardian.Velocity.Y += 0.05f;
+                    }
+                }
+            }
         }
     }
 }

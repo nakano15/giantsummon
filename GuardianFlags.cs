@@ -175,6 +175,8 @@ namespace giantsummon
         ClimbStairsDownwards,
         TitanGuardian,
         GoldenShowerStance,
-        FirstSymbolEffect
+        FirstSymbolEffect,
+        NoGravity,
+        NoTileCollision
     }
 }
