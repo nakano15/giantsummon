@@ -475,12 +475,15 @@ namespace giantsummon
                 }
                 //Spawn companion at SpawnX * 16 and SpawnY * 16 position
                 TerraGuardian guardian = null;
-                foreach (int Key in MainMod.ActiveGuardians.Keys)
+                if (Main.netMode == 0) //Never. Do. This. On. MP. Wonder not being able to complete a request, because your friend called your companion.
                 {
-                    if (MainMod.ActiveGuardians[Key].ID == GuardianID && MainMod.ActiveGuardians[Key].ModID == ModID)
+                    foreach (int Key in MainMod.ActiveGuardians.Keys)
                     {
-                        guardian = MainMod.ActiveGuardians[Key];
-                        break;
+                        if (MainMod.ActiveGuardians[Key].ID == GuardianID && MainMod.ActiveGuardians[Key].ModID == ModID)
+                        {
+                            guardian = MainMod.ActiveGuardians[Key];
+                            break;
+                        }
                     }
                 }
                 bool SpawnGuardian = guardian == null;

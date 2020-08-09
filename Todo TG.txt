@@ -22,3 +22,6 @@ Add an option that when the player is knocked out cold and there is nobody nearb
 Companion grouping system.
 	The grouping system will be used by the house finder, to tell which guardians can share their room with the other guardian.
 	Should check if there's enough chairs for them to move in.
+Make so when you call a companion to follow you, check if the town npcs isn't already on the world, and then use It to call the companion.
+	Make sure to add a script on dismiss to remove the ownership from the town npcs, or else, you'll have an unintended follower.
+	This shouldn't be possible on multiplayer, on multiplayer there should be the companion npc, and the companions the players are carrying around.
