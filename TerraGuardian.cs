@@ -69,6 +69,20 @@ namespace giantsummon
                 return Main.myPlayer; 
             }
         }
+        public WorldMod.GuardianTownNpcState GetTownNpcInfo
+        {
+            get
+            {
+                for (int t = 0; t < WorldMod.MaxGuardianNpcsInWorld; t++)
+                {
+                    if (WorldMod.GuardianNPCsInWorld[t] != null && WorldMod.GuardianNPCsInWorld[t].CharID.ID == ID && WorldMod.GuardianNPCsInWorld[t].CharID.ModID == ModID)
+                    {
+                        return WorldMod.GuardianNPCsInWorld[t];
+                    }
+                }
+                return null;
+            }
+        }
         private GuardianData _Data;
         public string Name { get { if (Data.Name != null) return Data.Name; else return Base.Name; } set { Data.Name = value; } }
         public string GroupID { get { return Base.GetGroupID; } }
@@ -204,6 +218,18 @@ namespace giantsummon
         public int MessageTime = 0;
         public List<GuardianFlags> FlagList = new List<GuardianFlags>();
         public Vector2 Position = Vector2.Zero, Velocity = Vector2.Zero;
+        public Vector2 PositionWithOffset
+        {
+            get
+            {
+                Vector2 p = Position;
+                p.X += OffsetX;
+                p.Y += OffsetY;
+                return p;
+            }
+        }
+        public Vector2 OriginalPosition = Vector2.Zero;
+        public float OffsetX = 0, OffsetY = 0;
         public float Rotation = 0f, Scale = 1f;
         public float ScaleMult = 1f;
         public float FinalScale = 1f;
@@ -1658,6 +1684,7 @@ namespace giantsummon
             {
                 OwnerPos = -1;
             }
+            OffsetX = OffsetY = 0;
             MainMod.AddActiveGuardian(this);
             WalkMode = false;
             Rotation = 0f;
@@ -5673,17 +5700,17 @@ namespace giantsummon
             if (IsTownNpc)
             {
                 bool MoveIndoors = !Main.dayTime || (Main.dayTime && Main.time < 5400) || Main.raining || Main.eclipse;
-                int NpcPosition = NpcMod.GetGuardianNPC(ID, ModID);
-                if (NpcPosition > -1)
+                WorldMod.GuardianTownNpcState TownNpcInfo = GetTownNpcInfo;
+                if (TownNpcInfo != null)
                 {
-                    if (Main.player[Main.myPlayer].talkNPC == NpcPosition && (!DoAction.InUse || !DoAction.ProceedIdleAIDuringDialogue))
+                    /*if (Main.player[Main.myPlayer].talkNPC == NpcPosition && (!DoAction.InUse || !DoAction.ProceedIdleAIDuringDialogue))
                     {
                         if (!DoAction.InUse || DoAction.NpcCanFacePlayer) FaceDirection(Main.player[Main.myPlayer].Center.X < Position.X);
                         if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture) || IdleActionTime < 5)
                             ChangeIdleAction(IdleActions.Wait, 200);
                         DoIdleMovement = false;
                     }
-                    else
+                    else*/
                     {
                         if (MoveIndoors)
                         {
@@ -5693,8 +5720,8 @@ namespace giantsummon
                                     LeaveFurniture();
                                 ChangeIdleAction(IdleActions.GoHome, 5);
                             }
-                            HouseX = Main.npc[NpcPosition].homeTileX * 16;
-                            HouseY = Main.npc[NpcPosition].homeTileY * 16;
+                            HouseX = TownNpcInfo.HomeX * 16;
+                            HouseY = TownNpcInfo.HomeY * 16;
                             if (HouseX < 0 || HouseY < 0)
                             {
                                 HouseX = (int)Position.X;
@@ -7031,6 +7058,13 @@ namespace giantsummon
         {
             KnockedOut = true;
             HP += MHP / 2;
+            if (HP <= 0)
+            {
+                if (MainMod.GuardiansDontDiesAfterDownedDefeat)
+                    KnockedOutCold = true;
+                else
+                    Knockout(" wasn't able to endure the damage.");
+            }
             if (PlayerMounted)
                 ToggleMount(true, false);
             TriggerHandler.FireGuardianDownedTrigger(this.CenterPosition, this, 0, false);
@@ -9971,8 +10005,8 @@ namespace giantsummon
                         FaceDirection(CenterPosition.X - AimDirection.X >= 0);
                     if (AnimationPercentage >= 0.4f)
                     {
-                        WeaponCollision.X = (int)(Position.X + (Width * 0.25f) * Direction);
-                        WeaponCollision.Y = (int)Position.Y;
+                        WeaponCollision.X = (int)(PositionWithOffset.X + (Width * 0.25f) * Direction);
+                        WeaponCollision.Y = (int)PositionWithOffset.Y;
                         if (GravityDirection > 0)
                             WeaponCollision.Y -= Height;
                         WeaponCollision.Width = (int)(Width * 0.5f);
@@ -10031,8 +10065,8 @@ namespace giantsummon
                         WeaponCollision.Y += WeaponCollision.Height;
                         WeaponCollision.Height *= -1;
                     }
-                    WeaponCollision.X += ItemPositionX + (int)Position.X;
-                    WeaponCollision.Y += ItemPositionY + (int)Position.Y;
+                    WeaponCollision.X += ItemPositionX + (int)PositionWithOffset.X;
+                    WeaponCollision.Y += ItemPositionY + (int)PositionWithOffset.Y;
                 }
                 else if (ItemUseType == ItemUseTypes.LightVerticalSwing)
                 {
@@ -10109,8 +10143,8 @@ namespace giantsummon
                         ItemRotation += MathHelper.ToRadians(-45) * -Direction;
                     if (GravityDirection < 0)
                         ItemRotation *= -1;
-                    WeaponCollision.X = ItemPositionX + (int)Position.X;
-                    WeaponCollision.Y = ItemPositionY + (int)Position.Y;
+                    WeaponCollision.X = ItemPositionX + (int)PositionWithOffset.X;
+                    WeaponCollision.Y = ItemPositionY + (int)PositionWithOffset.Y;
                     WeaponCollision.Width = ItemWidth;
                     WeaponCollision.Height = ItemHeight;
                     if (Frame == 0)
@@ -10338,7 +10372,7 @@ namespace giantsummon
                 }*/
                 if (GravityDirection < 0)
                 {
-                    //WeaponCollision.Y = (int)(Position.Y + Position.Y - WeaponCollision.Y);
+                    //WeaponCollision.Y = (int)(Position.Y + Position.Y - WeaponCollision.Y); //???
                 }
                 if (SelectedItem == -1 || (Inventory[SelectedItem].melee && !Inventory[SelectedItem].noMelee))
                 {
@@ -10813,7 +10847,7 @@ namespace giantsummon
                     AddBuff(Terraria.ID.BuffID.PeaceCandle, 3);
                     if (!this.Wet)
                     {
-                        Lighting.AddLight(Position + new Vector2(OffHandPositionX, OffHandPositionY), 0.9f, 0.1f, 0.75f);
+                        Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0.9f, 0.1f, 0.75f);
                     }
                 }
                 if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.WaterCandle)
@@ -10821,7 +10855,7 @@ namespace giantsummon
                     AddBuff(Terraria.ID.BuffID.WaterCandle, 3);
                     if (!this.Wet)
                     {
-                        Lighting.AddLight(Position + new Vector2(OffHandPositionX, OffHandPositionY), 0, 0.5f, 1f);
+                        Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0, 0.5f, 1f);
                     }
                 }
                 if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.UnicornonaStick)
@@ -11372,7 +11406,7 @@ namespace giantsummon
                 {
                     maxValue = 7;
                 }
-                Vector2 ItemLocation = Position;
+                Vector2 ItemLocation = PositionWithOffset;
                 ItemLocation.X += (OffHand ? OffHandPositionX : ItemPositionX);
                 ItemLocation.Y += (OffHand ? OffHandPositionY : ItemPositionY);
                 if (Main.rand.Next(maxValue) == 0)
@@ -11397,22 +11431,22 @@ namespace giantsummon
             }
             if (item.type == 282)
             {
-                Vector2 position11 = new Vector2(Position.X + ItemPositionX + Velocity.X, Position.Y + ItemPositionY);
+                Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
                 Lighting.AddLight(position11, 0.7f, 1f, 0.8f);
             }
             if (item.type == 286)
             {
-                Vector2 position11 = new Vector2(Position.X + ItemPositionX + Velocity.X, Position.Y + ItemPositionY);
+                Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
                 Lighting.AddLight(position11, 0.7f, 0.8f, 1f);
             }
             if (item.type == 3002)
             {
-                Vector2 position11 = new Vector2(Position.X + ItemPositionX + Velocity.X, Position.Y + ItemPositionY);
+                Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
                 Lighting.AddLight(position11, 1.05f, 0.95f, 0.55f);
             }
             if (item.type == 3002)
             {
-                Vector2 position11 = new Vector2(Position.X + ItemPositionX + Velocity.X, Position.Y + ItemPositionY);
+                Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
                 Lighting.AddLight(position11, 1f, 0.6f, 0.85f);
             }
         }
@@ -14182,7 +14216,7 @@ namespace giantsummon
                 FaceSlot = 0;
             }
             TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
-            Vector2 NewPosition = Position - Main.screenPosition;
+            Vector2 NewPosition = PositionWithOffset - Main.screenPosition; //Position - Main.screenPosition;
             NewPosition.Y += (gfxOffY) * Scale * GravityDirection + 2 + MountedVerticalPositionBonus;
             if (!Base.IsCustomSpriteCharacter)
                 NewPosition.Y += 2;

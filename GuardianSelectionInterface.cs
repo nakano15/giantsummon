@@ -61,7 +61,7 @@ namespace giantsummon
             foreach (int key in keys)
             {
                 GuardianData gd = player.MyGuardians[key];
-                if (WorldMod.CanSpawnGuardianNPC(gd.ID, gd.ModID))
+                if (WorldMod.CanGuardianNPCSpawnInTheWorld(gd.ID, gd.ModID))
                 {
                     GuardiansLivingHere.Add(key);
                 }
@@ -126,7 +126,7 @@ namespace giantsummon
                     Vector2 Position = ElementPosition;
                     Position.Y += i * 26;
                     Color c = Color.White;
-                    if (!WorldMod.CanSpawnGuardianNPC(g.ID, g.ModID))
+                    if (!WorldMod.CanGuardianNPCSpawnInTheWorld(g.ID, g.ModID))
                         c = Color.Gray;
                     if (Selected == index)
                         c = Color.Yellow;
@@ -255,6 +255,7 @@ namespace giantsummon
                     DisplayGuardian.LookingLeft = false;
                     DisplayGuardian.LastFriendshipLevel = DisplayGuardian.FriendshipLevel;
                     DisplayGuardian.LastFriendshipValue = DisplayGuardian.FriendshipProgression;
+                    DisplayGuardian.UpdateAnimation();
                     DisplayGuardian.Draw(true);
                     {
                         Vector2 CrownPosition = new Vector2(TabStartX, InterfacePosition.Y + 8 + 8);
@@ -521,7 +522,7 @@ namespace giantsummon
                 if (Selected > -1)
                 {
                     string ButtonText = "";
-                    if (WorldMod.CanSpawnGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID))
+                    if (WorldMod.CanGuardianNPCSpawnInTheWorld(DisplayGuardian.ID, DisplayGuardian.ModID))
                     {
                         ButtonText = "Send Home";
                     }
@@ -546,7 +547,7 @@ namespace giantsummon
                         MouseText = "Toggles if the Guardian can move in to a house in your world or not.";
                         if (Main.mouseLeft && Main.mouseLeftRelease)
                         {
-                            if (WorldMod.CanSpawnGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID))
+                            if (WorldMod.CanGuardianNPCSpawnInTheWorld(DisplayGuardian.ID, DisplayGuardian.ModID))
                             {
                                 WorldMod.RemoveGuardianNPCToSpawn(DisplayGuardian.ID, DisplayGuardian.ModID);
                             }

@@ -14,6 +14,7 @@ namespace giantsummon.GuardianNPC
         public string GuardianModID = "";
         public TerraGuardian Guardian;
         private bool TeleportFrame = true;
+
         private bool PlayerHasThisGuardianMetAndInvoked { get { return Main.netMode == 0 && PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianID, GuardianModID); } }
         //Later, add a script to make so the Guardian be hidden on singleplayer, if the player has it summoned.
         private bool DuplicateChecked = false;
@@ -125,7 +126,7 @@ namespace giantsummon.GuardianNPC
             }
             if (MainMod.CheckIfGuardianNpcsCanStayAtHomeCheck)
             {
-                if (!WorldMod.CanSpawnGuardianNPC(GuardianID, GuardianModID))
+                if (!WorldMod.CanGuardianNPCSpawnInTheWorld(GuardianID, GuardianModID))
                 {
                     bool HasPlayerNearby = false;
                     for (int p = 0; p < 255; p++)
@@ -242,7 +243,7 @@ namespace giantsummon.GuardianNPC
         {
             if (!PlayerHasThisGuardianMetAndInvoked)
             {
-                Guardian.Draw();
+                //Guardian.Draw();
             }
             base.DrawEffects(ref drawColor);
         }
@@ -438,8 +439,8 @@ namespace giantsummon.GuardianNPC
 
         public override bool CanTownNPCSpawn(int numTownNPCs, int money)
         {
-            //return false;
-            return NpcMod.HasMetGuardian(GuardianID, GuardianModID) && WorldMod.CanSpawnGuardianNPC(GuardianID, GuardianModID);
+            return false; //Remove this later.
+            return NpcMod.HasMetGuardian(GuardianID, GuardianModID) && WorldMod.CanGuardianNPCSpawnInTheWorld(GuardianID, GuardianModID);
         }
 
         public override bool CheckConditions(int left, int right, int top, int bottom)

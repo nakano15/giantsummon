@@ -12,7 +12,7 @@ namespace giantsummon.Creatures
             : base()
         {
             Name = "Wrath";
-            Description = "One of the emotion pieces fragments\nof a TerraGuardian.";
+            Description = "One of the emotion pieces fragments\nof a TerraGuardian. Very volatile.";
             Size = GuardianSize.Medium;
             Width = 10 * 2;
             Height = 27 * 2;
@@ -184,6 +184,8 @@ namespace giantsummon.Creatures
                         //guardian.Velocity.Y += 0.05f;
                     }
                 }
+                if(!guardian.KnockedOut && !guardian.MountedOnPlayer)
+                    guardian.OffsetY -= ((float)Math.Sin(Main.GlobalTime * 2)) * 5;
             }
         }
     }

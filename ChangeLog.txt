@@ -17,3 +17,5 @@ Companions will now be able to automatically health/mana increasing items again,
 	The item is placed in one of the first rows of their inventory.
 	The item isn't marked as new.
 	Your inventory isn't opened, or isn't checking the companion inventory.
+The mod will now try to update the companion animation when getting their sprite on the Guardian Selection Interface.
+	That may be necessary depending on the companion, and the current situation of the world, or something else.

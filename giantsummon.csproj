@@ -97,6 +97,7 @@
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
     <Compile Include="GuardianDrawData.cs" />
+    <Compile Include="GuardianID.cs" />
     <Compile Include="GuardianManagement.cs" />
     <Compile Include="GuardianNPC\List\AlexNPC.cs" />
     <Compile Include="GuardianNPC\List\BrutusNPC.cs" />

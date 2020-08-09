@@ -791,6 +791,11 @@ namespace giantsummon
             }
         }
 
+        public virtual bool RoomNeeds()
+        {
+            return WorldMod.BasicRoomNeeds();
+        }
+
         public class TerrarianCompanionInfos
         {
             public Color HairColor, SkinColor, EyeColor, ShirtColor, UnderShirtColor, PantsColor, ShoeColor;

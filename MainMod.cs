@@ -33,7 +33,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 67, LastModVersion = 65;
+        public const int ModVersion = 68, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = true;
         //Downed system configs
@@ -245,7 +245,7 @@ namespace giantsummon
         public static bool IsSolidTile(int x, int y)
         {
             Tile tile = GetTile(x, y);
-            return tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]);
+            return tile.active() && Main.tileSolid[tile.type];
         }
 
         public static bool CanPassThroughThisTile(int x, int y)
