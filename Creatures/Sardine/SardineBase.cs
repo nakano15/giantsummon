@@ -239,6 +239,48 @@ namespace giantsummon.Creatures
 
         }
 
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = base.GetGuardianExtraDialogueActions(guardian); //It's empty, anyways.
+            Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption(!GuardianBountyQuest.SardineTalkedToAboutBountyQuests ? "About Bounties" : "Report Bounty", BountyQuestProgressCheckButtonAction));
+            return Options;
+        }
+
+        public void BountyQuestProgressCheckButtonAction(TerraGuardian tg)
+        {
+            if (!GuardianBountyQuest.SardineTalkedToAboutBountyQuests)
+            {
+                GuardianMouseOverAndDialogueInterface.SetDialogue("Since It's so boring staying at home, I decided to do something in to make me busy. I will open a Bounty Hunting agency here, but first I need a Sign inside my house. If you end up placing one, I will place the latest bounty here.");
+                GuardianBountyQuest.SardineTalkedToAboutBountyQuests = true;
+            }
+            else
+            {
+                if (GuardianBountyQuest.SignID == -1)
+                {
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("I can see that you are eager to get requests, but I need a sign in my house first.");
+                }
+                else if (GuardianBountyQuest.PlayerAlreadyRedeemedReward(Main.player[Main.myPlayer]))
+                {
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("I don't have anything else for you. Wait until another bounty shows up.");
+                }
+                else if (GuardianBountyQuest.PlayerRedeemReward(Main.player[Main.myPlayer]))
+                {
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("Nice job! If I were there with you, you'd take half the time facing it, but whatever.");
+                }
+                else
+                {
+                    if (Main.rand.Next(2) == 0)
+                    {
+                        GuardianMouseOverAndDialogueInterface.SetDialogue("The bounty target appears in the " + GuardianBountyQuest.spawnBiome.ToString() + ", cause a mayhem on it until It shows up.");
+                    }
+                    else
+                    {
+                        GuardianMouseOverAndDialogueInterface.SetDialogue("Beware when facing the target, It is not just a regular monster.");
+                    }
+                }
+            }
+        }
+
         public override string CallUnlockMessage
         {
             get

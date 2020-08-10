@@ -19,3 +19,4 @@ Companions will now be able to automatically health/mana increasing items again,
 	Your inventory isn't opened, or isn't checking the companion inventory.
 The mod will now try to update the companion animation when getting their sprite on the Guardian Selection Interface.
 	That may be necessary depending on the companion, and the current situation of the world, or something else.
+Fixed a crash that caused bounty requests to crash, when you receive a bounty before facing any boss.

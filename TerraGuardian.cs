@@ -1669,6 +1669,8 @@ namespace giantsummon
 
         public void Update(Player Owner = null)
         {
+            if (!Active)
+                return;
             CollisionHeightDiscount = 0;
             FinalScale = ScaleMult;
             if (Owner != null)
@@ -3131,7 +3133,6 @@ namespace giantsummon
             ManaCostMult = 1f;
             ShotSpeedMult = 1f;
             FlagList.Clear();
-            ExternalCompatibilityScripts.RunResetScript(this);
             byte HeavyArmorPieces = 0;
             for (int e = 0; e < 9; e++)
             {
@@ -3226,7 +3227,6 @@ namespace giantsummon
             if (PlayerMounted && !Base.ReverseMount)
                 CoverRate += 20;
             Base.Attributes(this);
-            ExternalCompatibilityScripts.RunUpdateStatusScript(this);
             UpdateBuffEffects();
             MeleeSpeed -= 0.05f * HeavyArmorPieces;
             MoveSpeed -= 0.05f * HeavyArmorPieces;
@@ -4685,10 +4685,10 @@ namespace giantsummon
                         }
                     }
                 }
-                foreach (int key in MainMod.ActiveGuardians.Keys) //Later
+                foreach (int key in MainMod.ActiveGuardians.Keys)
                 {
                     TerraGuardian g = MainMod.ActiveGuardians[key];
-                    if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && (!MountedEdition && InPerceptionRange(g.CenterPosition, PerceptionRange) || g.HitBox.Intersects(HitBox)))
+                    if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && ((!MountedEdition && InPerceptionRange(g.CenterPosition, PerceptionRange)) || g.HitBox.Intersects(HitBox)))
                     {
                         byte ReviveBoost = g.ReviveBoost;
                         if (ReviveBoost < LowestReviveBoost)
@@ -4699,7 +4699,7 @@ namespace giantsummon
                         }
                     }
                 }
-                if (Priority > -1)
+                if (Priority > -1 || IsGuardian)
                 {
                     if (!IsGuardian)
                     {
@@ -4707,6 +4707,7 @@ namespace giantsummon
                     }
                     else
                     {
+                        //Main.NewText("Attempting to revive : " + MainMod.ActiveGuardians[Priority].Name);
                         GuardianActions.TryRevivingGuardian(this, MainMod.ActiveGuardians[Priority]);
                     }
                 }
@@ -4747,7 +4748,6 @@ namespace giantsummon
                     {
                         if (!NewIdleBehavior())
                         {
-                            //IdleBehavior();
                             GuardingPositionAI();
                             FollowPlayerAI();
                         }
@@ -4758,7 +4758,6 @@ namespace giantsummon
                 {
                     MoveLeft = MoveRight = Jump = MoveDown = false;
                 }
-                ExternalCompatibilityScripts.RunBehaviorStatusScript(this);
                 if (!PlayerControl && !IsAttackingSomething)
                     MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f) * Scale);
                 if (!PlayerControl)
@@ -5339,11 +5338,10 @@ namespace giantsummon
         {
             if (player.SpawnX > -1 && player.SpawnY > -1)
             {
-                int NpcPosition = NpcMod.GetGuardianNPC(ID, ModID);
-                if (NpcPosition > -1)
+                WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
+                if (townnpc != null && !townnpc.Homeless)
                 {
-                    NPC npc = Main.npc[NpcPosition];
-                    WorldGen.ScoreRoom();
+                    WorldGen.StartRoomCheck(townnpc.HomeX, townnpc.HomeY);
                     for (int n = 0; n < WorldGen.numRoomTiles; n++)
                     {
                         if (WorldGen.roomX[n] == player.SpawnX && WorldGen.roomY[n] == player.SpawnY)
@@ -5351,11 +5349,6 @@ namespace giantsummon
                             return true;
                         }
                     }
-                    /*if (npc.homeless)
-                        return false;
-                    bool FoundPlace = IsTileInSameHouse(npc.homeTileX, npc.homeTileY, player.SpawnX, player.SpawnY);
-                    Main.NewText("Companion " + (FoundPlace ? "has" : "didn't") + " found your player bed.");
-                    return FoundPlace;*/
                 }
             }
             return false;
@@ -5690,6 +5683,19 @@ namespace giantsummon
         
         public bool NewIdleBehavior()
         {
+            if (!IsAttackingSomething && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition == WhoAmID)
+            {
+                if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture) || IdleActionTime < 5)
+                    ChangeIdleAction(IdleActions.Wait, 200);
+                if (Velocity.X == 0)
+                {
+                    if (Main.player[Main.myPlayer].Center.X < Position.X)
+                        LookingLeft = true;
+                    else
+                        LookingLeft = false;
+                }
+                return true;
+            }
             if (OwnerPos > -1 && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
                 return false;
@@ -5720,8 +5726,22 @@ namespace giantsummon
                                     LeaveFurniture();
                                 ChangeIdleAction(IdleActions.GoHome, 5);
                             }
-                            HouseX = TownNpcInfo.HomeX * 16;
-                            HouseY = TownNpcInfo.HomeY * 16;
+                            if (!TownNpcInfo.Homeless)
+                            {
+                                HouseX = TownNpcInfo.HomeX;
+                                HouseY = TownNpcInfo.HomeY;
+                            }
+                            if (HouseX > -1 && HouseY > -1)
+                            {
+                                while (!Main.tile[HouseX, HouseY].active() || !Main.tileSolid[Main.tile[HouseX, HouseY].type])
+                                {
+                                    HouseY++;
+                                    if (HouseY >= Main.maxTilesY - 20)
+                                        break;
+                                }
+                            }
+                            HouseX *= 16;
+                            HouseY *= 16;
                             if (HouseX < 0 || HouseY < 0)
                             {
                                 HouseX = (int)Position.X;
@@ -5960,6 +5980,26 @@ namespace giantsummon
                                     FaceDirection(false);
                                 }
                             }
+                        }
+                        int CheckAheadX = (int)(Position.X + (CollisionWidth * 0.5f + 8) * Direction) / 16,
+                            CheckAheadStartY = (int)(Position.Y) / 16;
+                        byte Gap = 0;
+                        for (int height = 0; height < 8; height++)
+                        {
+                            if (MainMod.IsSolidTile(CheckAheadX, CheckAheadStartY - height) && !Terraria.ID.TileID.Sets.Platforms[Main.tile[CheckAheadX, CheckAheadStartY - height].type])
+                            {
+                                Gap = 0;
+                            }
+                            else
+                            {
+                                Gap++;
+                                if (Gap == 3)
+                                    break;
+                            }
+                        }
+                        if (Gap < 3)
+                        {
+                            LookingLeft = !LookingLeft;
                         }
                         if (LookingLeft)
                             MoveLeft = true;
@@ -7008,11 +7048,11 @@ namespace giantsummon
             }
             else
             {
-                if (NpcMod.HasGuardianNPC(ID))
+                WorldMod.GuardianTownNpcState townstate = GetTownNpcInfo;
+                if (townstate != null && !townstate.Homeless)
                 {
-                    int NpcPos = NpcMod.GetGuardianNPC(ID);
-                    this.Position.X = Main.npc[NpcPos].homeTileX * 16;
-                    this.Position.Y = Main.npc[NpcPos].homeTileY * 16;
+                    this.Position.X = townstate.HomeX * 16;
+                    this.Position.Y = townstate.HomeY * 16;
                 }
                 else
                 {
@@ -14539,6 +14579,17 @@ namespace giantsummon
             dd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, Base.sprites.LeftArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
             dd.Shader = Shader;
             AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
+        }
+
+        public void DrawHead(Vector2 CenterPosition, float Scale = 1f)
+        {
+            if (!Base.IsCustomSpriteCharacter)
+            {
+                DrawTerrarianHeadData(Position, Scale);
+                return;
+            }
+            Main.spriteBatch.Draw(Base.sprites.HeadSprite, CenterPosition + new Vector2(-Base.sprites.HeadSprite.Width * 0.5f, -Base.sprites.HeadSprite.Height * 0.5f),
+                null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
         }
 
         public void DrawTerrarianHeadData(Vector2 Position, float Scale = 1f)

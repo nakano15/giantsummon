@@ -596,93 +596,96 @@ namespace giantsummon
 
         public static void TryFindingASign()
         {
-            int SardinePosition = NpcMod.GetGuardianNPC(SardineID);
             SignID = -1;
-            if (SardinePosition > -1)
+            if (!WorldMod.IsGuardianNpcInWorld(SardineID))
             {
-                int HPX = Main.npc[SardinePosition].homeTileX,
-                    HPY = Main.npc[SardinePosition].homeTileY;
-                if (HPX > -1 && HPY > -1)
+                return;
+            }
+            WorldMod.GuardianTownNpcState townstate = WorldMod.GetTownNpcState(SardineID);
+            if (townstate == null || townstate.Homeless)
+                return;
+            int HPX = townstate.HomeX,
+                HPY = townstate.HomeY;
+            if (HPX > -1 && HPY > -1)
+            {
+                int TileCount = 0;
+                List<KeyValuePair<int, int>> NextTileCheck = new List<KeyValuePair<int, int>>(),
+                    CheckedTiles = new List<KeyValuePair<int, int>>();
+                NextTileCheck.Add(new KeyValuePair<int, int>(HPX, HPY));
+                while (TileCount < 60 && NextTileCheck.Count > 0)
                 {
-                    int TileCount = 0;
-                    List<KeyValuePair<int, int>> NextTileCheck = new List<KeyValuePair<int, int>>(),
-                        CheckedTiles = new List<KeyValuePair<int, int>>();
-                    NextTileCheck.Add(new KeyValuePair<int, int>(HPX, HPY));
-                    while (TileCount < 60 && NextTileCheck.Count > 0)
+                    KeyValuePair<int, int> CurrentTile = NextTileCheck[0];
+                    NextTileCheck.RemoveAt(0);
+                    CheckedTiles.Add(CurrentTile);
+                    int TileX = CurrentTile.Key, TileY = CurrentTile.Value;
+                    if (TileX >= Main.leftWorld && TileX < Main.rightWorld &&
+                        TileY >= Main.topWorld && TileY < Main.bottomWorld)
                     {
-                        KeyValuePair<int, int> CurrentTile = NextTileCheck[0];
-                        NextTileCheck.RemoveAt(0);
-                        CheckedTiles.Add(CurrentTile);
-                        int TileX = CurrentTile.Key, TileY = CurrentTile.Value;
-                        if (TileX >= Main.leftWorld && TileX < Main.rightWorld &&
-                            TileY >= Main.topWorld && TileY < Main.bottomWorld)
+                        if (Main.tile[TileX, TileY].active() && Main.tileSign[Main.tile[TileX, TileY].type])
                         {
-                            if (Main.tile[TileX, TileY].active() && Main.tileSign[Main.tile[TileX, TileY].type])
+                            SignID = Sign.ReadSign(TileX, TileY, true);
+                            if (SignID > -1)
                             {
-                                SignID = Sign.ReadSign(TileX, TileY, true);
-                                if (SignID > -1)
+                                IsAnnouncementBox = (Main.tile[TileX, TileY].type == Terraria.ID.TileID.AnnouncementBox);
+                                NextTileCheck.Clear();
+                                CheckedTiles.Clear();
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            int tx = TileX, ty = TileY;
+                            ty--;
+                            if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
+                            {
+                                KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
+                                if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
                                 {
-                                    IsAnnouncementBox = (Main.tile[TileX, TileY].type == Terraria.ID.TileID.AnnouncementBox);
-                                    NextTileCheck.Clear();
-                                    CheckedTiles.Clear();
-                                    break;
+                                    NextTileCheck.Add(key);
                                 }
                             }
-                            else
+                            tx = TileX;
+                            ty = TileY;
+                            tx++;
+                            if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
                             {
-                                int tx = TileX, ty = TileY;
-                                ty--;
-                                if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
+                                KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
+                                if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
                                 {
-                                    KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
-                                    if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
-                                    {
-                                        NextTileCheck.Add(key);
-                                    }
+                                    NextTileCheck.Add(key);
                                 }
-                                tx = TileX;
-                                ty = TileY;
-                                tx++;
-                                if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
+                            }
+                            tx = TileX;
+                            ty = TileY;
+                            ty++;
+                            if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
+                            {
+                                KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
+                                if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
                                 {
-                                    KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
-                                    if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
-                                    {
-                                        NextTileCheck.Add(key);
-                                    }
+                                    NextTileCheck.Add(key);
                                 }
-                                tx = TileX;
-                                ty = TileY;
-                                ty++;
-                                if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
+                            }
+                            tx = TileX;
+                            ty = TileY;
+                            tx--;
+                            if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
+                            {
+                                KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
+                                if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
                                 {
-                                    KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
-                                    if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
-                                    {
-                                        NextTileCheck.Add(key);
-                                    }
-                                }
-                                tx = TileX;
-                                ty = TileY;
-                                tx--;
-                                if (!Main.tile[tx, ty].active() || !Main.tileSolid[Main.tile[tx, ty].type])
-                                {
-                                    KeyValuePair<int, int> key = new KeyValuePair<int, int>(tx, ty);
-                                    if (!NextTileCheck.Contains(key) && !CheckedTiles.Contains(key))
-                                    {
-                                        NextTileCheck.Add(key);
-                                    }
+                                    NextTileCheck.Add(key);
                                 }
                             }
                         }
-                        TileCount++;
                     }
+                    TileCount++;
                 }
-                if (SignID > -1)
-                {
-                    //UpdateBountyBoardText();
-                    Main.sign[SignID].text = "Request coming soon...";
-                }
+            }
+            if (SignID > -1)
+            {
+                //UpdateBountyBoardText();
+                Main.sign[SignID].text = "Request coming soon...";
             }
         }
 
@@ -1308,12 +1311,15 @@ namespace giantsummon
                     BossSpawnItems.Add(ItemID.TruffleWorm);
                 if (NPC.downedMoonlord)
                     BossSpawnItems.Add(ItemID.CelestialSigil);
-                i.SetDefaults(BossSpawnItems[Main.rand.Next(BossSpawnItems.Count)]);
-                /*if (i.maxStack > 0)
+                if (BossSpawnItems.Count > 0)
                 {
-                    i.stack += Main.rand.Next((int)(3 * RewardMod));
-                }*/
-                Rewards.Add(i);
+                    i.SetDefaults(BossSpawnItems[Main.rand.Next(BossSpawnItems.Count)]);
+                    /*if (i.maxStack > 0)
+                    {
+                        i.stack += Main.rand.Next((int)(3 * RewardMod));
+                    }*/
+                    Rewards.Add(i);
+                }
             }
             if (!MainMod.NoEtherItems && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
             {

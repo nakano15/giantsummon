@@ -189,6 +189,47 @@ namespace giantsummon.Creatures
             }
         }
 
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian Guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            GuardianMouseOverAndDialogueInterface.DialogueOption Option = new GuardianMouseOverAndDialogueInterface.DialogueOption((Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction ? "Enough" : "Be Hugged"), HugOptionAction);
+            Options.Add(Option);
+            return Options;
+        }
+
+        public void HugOptionAction(TerraGuardian Guardian)
+        {
+            if (Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction)
+            {
+                Guardian.DoAction.InUse = false;
+
+                Main.npcChatText = (((Creatures.VladimirBase)Guardian.Base).GetEndHugMessage(Guardian));
+                Guardian.DoAction.Players[0].Bottom = Guardian.Position;
+            }
+            else if (!Guardian.DoAction.InUse)
+            {
+                PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+                if (player.MountedOnGuardian || player.GuardianMountingOnPlayer)
+                {
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("*Get off your guardian first.*");
+                }
+                else
+                {
+                    GuardianActions ga = Guardian.StartNewGuardianAction(0);
+                    if (ga != null)
+                    {
+                        ga.Players.Add(Main.player[Main.myPlayer]);
+                        GuardianMouseOverAndDialogueInterface.SetDialogue("*Press Jump button If you want me to stop.*");
+                    }
+                }
+            }
+            else
+            {
+                GuardianMouseOverAndDialogueInterface.SetDialogue("*I can't right now.*");
+            }
+            GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Guardian);
+        }
+
         public override void ForceDrawInFrontOfPlayer(TerraGuardian guardian, ref bool LeftArmInFront, ref bool RightArmInFront)
         {
             if (guardian.LeftArmAnimationFrame == 1 || guardian.LeftArmAnimationFrame == 12)

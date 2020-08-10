@@ -534,6 +534,11 @@ namespace giantsummon
 
         }
 
+        public virtual List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            return new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+        }
+
         public void CalculateHealthToGive(int ResultMHP, float LCBonusPercentage = 1f, float LFBonusPercentage = 1f)
         {
             int LCHealth = (int)(ResultMHP * (0.6f * LCBonusPercentage / 15)), LFHealth = (int)(ResultMHP * (0.2f * LFBonusPercentage / 20));

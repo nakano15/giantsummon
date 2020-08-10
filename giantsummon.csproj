@@ -91,14 +91,15 @@
     <Compile Include="Creatures\Wrath\WrathBase.cs" />
     <Compile Include="Creatures\Zacks\ZacksBase.cs" />
     <Compile Include="DialogueChain.cs" />
-    <Compile Include="ExternalCompatibilityScripts.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GuardianArmorAndSetEffects.cs" />
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
     <Compile Include="GuardianDrawData.cs" />
+    <Compile Include="GuardianHouseManagementInterface.cs" />
     <Compile Include="GuardianID.cs" />
     <Compile Include="GuardianManagement.cs" />
+    <Compile Include="GuardianMouseOverAndDialogueInterface.cs" />
     <Compile Include="GuardianNPC\List\AlexNPC.cs" />
     <Compile Include="GuardianNPC\List\BrutusNPC.cs" />
     <Compile Include="GuardianNPC\List\BreeNPC.cs" />

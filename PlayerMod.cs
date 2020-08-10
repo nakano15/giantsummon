@@ -147,6 +147,8 @@ namespace giantsummon
         public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
         public bool[] PigGuardianCloudForm = new bool[5];
         public const int AngerPigGuardianID = 0;
+        public int TalkingGuardianPosition = 0;
+        public bool IsTalkingToAGuardian = false;
 
         public static int GetPlayerAcceptedRequestCount(Player player)
         {
@@ -567,6 +569,10 @@ namespace giantsummon
                 UpdateKnockOut();
             }
             FriendlyDuelDefeat = false;
+            if (player.whoAmI == Main.myPlayer)
+            {
+                GuardianMouseOverAndDialogueInterface.Update();
+            }
         }
 
         public void UpdateReviveSystem()
@@ -1639,11 +1645,28 @@ namespace giantsummon
                 {
                     SelectedAssistGuardians[AssistSlot - 1] = Id;
                 }
-                TerraGuardian guardian = new TerraGuardian();
+                TerraGuardian guardian = null;
+                bool HasTownNpc = false;
+                if (Main.netMode == 0 && WorldMod.IsGuardianNpcInWorld(MyGuardians[Id].ID, MyGuardians[Id].ModID))
+                {
+                    for (int gn = 0; gn < WorldMod.GuardianTownNPC.Count; gn++)
+                    {
+                        if (WorldMod.GuardianTownNPC[gn].ID == MyGuardians[Id].ID && WorldMod.GuardianTownNPC[gn].ModID == MyGuardians[Id].ModID)
+                        {
+                            guardian = WorldMod.GuardianTownNPC[gn];
+                            HasTownNpc = true;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    guardian = new TerraGuardian();
+                }
                 guardian.OwnerPos = player.whoAmI;
                 guardian.Active = true;
                 guardian.AssistSlot = AssistSlot;
-                if (!Main.gameMenu)
+                if (!Main.gameMenu && !HasTownNpc)
                 {
                     guardian.Spawn();
                 }
@@ -1654,6 +1677,7 @@ namespace giantsummon
                     this.Guardian = guardian;
                 else
                     AssistGuardians[AssistSlot - 1] = guardian;
+                //guardian.TeleportToPlayer();
                 if (player.whoAmI == Main.myPlayer && !TutorialOrderIntroduction)
                 {
                     TutorialOrderIntroduction = true;
@@ -1722,12 +1746,29 @@ namespace giantsummon
         {
             TerraGuardian Guardian;
             if (AssistSlot == 0)
+            {
                 Guardian = this.Guardian;
+                if(Main.netMode == 0)
+                    this.Guardian = new TerraGuardian();
+            }
             else
+            {
                 Guardian = AssistGuardians[AssistSlot - 1];
+                if (Main.netMode == 0)
+                    AssistGuardians[AssistSlot - 1] = new TerraGuardian();
+            }
             if (Guardian.Active)
             {
-                Guardian.Active = false;
+                if (Main.netMode > 0)
+                {
+                    Guardian.Active = false;
+                }
+                else
+                {
+                    Guardian.OwnerPos = -1;
+                    Guardian.AssistSlot = 0;
+                    //Guardian.Spawn();
+                }
                 if (MainMod.NetplaySync && Main.netMode == 1 && Main.myPlayer == player.whoAmI && AssistSlot == 0)
                     NetMod.SendGuardianSummonState(player, SelectedGuardian, -1, player.whoAmI);
                 if (AssistSlot == 0)

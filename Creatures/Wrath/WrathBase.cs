@@ -79,7 +79,7 @@ namespace giantsummon.Creatures
 
         public bool GetIfIsCloudForm(TerraGuardian guardian)
         {
-            return true;
+            //return true;
             if (guardian.OwnerPos > -1)
             {
                 return Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().PigGuardianCloudForm[PlayerMod.AngerPigGuardianID];
@@ -184,7 +184,7 @@ namespace giantsummon.Creatures
                         //guardian.Velocity.Y += 0.05f;
                     }
                 }
-                if(!guardian.KnockedOut && !guardian.MountedOnPlayer)
+                if(!guardian.KnockedOut && !guardian.MountedOnPlayer && !guardian.UsingFurniture && guardian.Velocity.Y == 0)
                     guardian.OffsetY -= ((float)Math.Sin(Main.GlobalTime * 2)) * 5;
             }
         }

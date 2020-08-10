@@ -530,9 +530,9 @@ namespace giantsummon
                 {
                     if (guardian.ID == gd.ID && guardian.ModID == gd.ModID)
                     {
-                        if (player.player.talkNPC > -1)
+                        if (player.IsTalkingToAGuardian)
                         {
-                            Main.npcChatText = GuardianNPC.GuardianNPCPrefab.MessageParser(gd.Base.TalkMessage(player.player, guardian), guardian);
+                            GuardianMouseOverAndDialogueInterface.SetDialogue(gd.Base.TalkMessage(player.player, guardian), guardian);
                         }
                         else
                         {
