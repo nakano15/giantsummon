@@ -78,6 +78,7 @@
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
+    <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />
     <Compile Include="Creatures\Bree\BreeBase.cs" />

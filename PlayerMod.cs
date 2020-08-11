@@ -145,8 +145,7 @@ namespace giantsummon
         public byte FriendshipMaxExp { get { return FriendshipLevel == 0 ? (byte)2 : (byte)(3 + FriendshipLevel / 5); } }
         public int LastFriendshipCount = -1;
         public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
-        public bool[] PigGuardianCloudForm = new bool[5];
-        public const int AngerPigGuardianID = 0;
+        public bool[] PigGuardianCloudForm = new bool[5]; //Must be saved with the player. Last one is for the big form.
         public int TalkingGuardianPosition = 0;
         public bool IsTalkingToAGuardian = false;
 
@@ -1677,7 +1676,7 @@ namespace giantsummon
                     this.Guardian = guardian;
                 else
                     AssistGuardians[AssistSlot - 1] = guardian;
-                //guardian.TeleportToPlayer();
+                guardian.TeleportToPlayer();
                 if (player.whoAmI == Main.myPlayer && !TutorialOrderIntroduction)
                 {
                     TutorialOrderIntroduction = true;

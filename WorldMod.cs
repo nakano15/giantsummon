@@ -268,6 +268,7 @@ namespace giantsummon
             if (Version >= 69)
             {
                 int NumTownGuardians = tag.GetInt("NumTownGuardians");
+                List<GuardianID> SpawnedGuardianIDs = new List<GuardianID>();
                 GuardianTownNPC.Clear();
                 for (int i = 0; i < NumTownGuardians; i++)
                 {
@@ -285,7 +286,6 @@ namespace giantsummon
                         tg.Position.X = PositionX;
                         tg.Position.Y = PositionY;
                         tg.SetFallStart();
-                        GuardianTownNPC.Add(tg);
                         if (HPPercentage != 1) //Disabled because what the f is happening here?
                         {
                             tg.HP = (int)((float)tg.MHP * HPPercentage);
@@ -296,6 +296,11 @@ namespace giantsummon
                     else
                     {
                         tg.Spawn();
+                    }
+                    if (!SpawnedGuardianIDs.Any(x => x.ID == ID && x.ModID == ModID))
+                    {
+                        GuardianTownNPC.Add(tg);
+                        SpawnedGuardianIDs.Add(new GuardianID(ID, ModID));
                     }
                 }
             }
@@ -363,10 +368,11 @@ namespace giantsummon
             int ChairCount = 0, BedCount = 0;
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
-                Tile tile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i]];
-                if (tile.type == Terraria.ID.TileID.Beds)
+                Tile tile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i]],
+                    uppertile = Main.tile[WorldGen.roomX[i], WorldGen.roomY[i] - 1];
+                if (tile.type == Terraria.ID.TileID.Beds && uppertile.type == Terraria.ID.TileID.Beds)
                     BedCount++;
-                if (tile.type == Terraria.ID.TileID.Chairs)
+                if (tile.type == Terraria.ID.TileID.Chairs && uppertile.type == Terraria.ID.TileID.Chairs)
                     ChairCount++;
             }
             if (ChairCount > 0 && BedCount > 0)
@@ -450,163 +456,156 @@ namespace giantsummon
 
         public static void TrySpawningOrMovingGuardianNPC(int GuardianID, string ModID, int X, int Y)
         {
-            if (!Main.wallHouse[Main.tile[X, Y].wall] || !WorldGen.StartRoomCheck(X,Y))
+            if (!Main.wallHouse[Main.tile[X, Y].wall] || !WorldGen.StartRoomCheck(X, Y))
                 return;
             GuardianBase gb = GuardianBase.GetGuardianBase(GuardianID, ModID);
-            if (WorldGen.roomY2 - WorldGen.roomY1 < gb.Height / 16)
+            if (!Housing_IsRoomTallEnoughForGuardian(gb))
                 return;
             GetRoomScoreForGuardian(gb, out RoomOccupied, out RoomEvil, out RoomScore);
             if (RoomScore <= 0 || !gb.RoomNeeds())
             {
                 return;
             }
-            //Main.NewText("Spawn chance for " + gb.Name + "! Evil biome? " + RoomEvil + " Score: " + RoomScore + " Occupied: " + RoomOccupied);
-            //Check if no other companion needs house, if any other companion needs house, remove It.
-
             if (Housing_IsRoomCrowded(gb)) return;
-            int GuardianPosition = -1;
-            for (int npc = 0; npc < MaxGuardianNpcsInWorld; npc++)
+            for (int npc = 0; npc < GuardianTownNPC.Count; npc++)
             {
-                if (GuardianNPCsInWorld[npc] != null && IsGuardianNpcInWorld(GuardianNPCsInWorld[npc].CharID) && GuardianNPCsInWorld[npc].Homeless) //Don't try using this to check if companions has valid house.
+                GuardianTownNpcState townstate = GuardianTownNPC[npc].GetTownNpcInfo;
+                if (townstate != null && townstate.Homeless)
                 {
-                    GuardianPosition = npc;
+                    MoveGuardianToHouse(GuardianTownNPC[npc], X, Y, true);
+                    return;
+                }
+            }
+            Main.NewText("Spawn chance for " + gb.Name + "! Evil biome? " + RoomEvil + " Score: " + RoomScore + " Occupied: " + RoomOccupied);
+            int SpawnX = WorldGen.bestX, SpawnY = WorldGen.bestY;
+            Housing_TryGettingPlaceForCompanionToStay(ref SpawnX, ref SpawnY);
+            int SpawnXBackup = SpawnX, SpawnYBackup = SpawnY;
+            bool NoPlayerNearby = true;
+            Rectangle rect = new Rectangle(SpawnX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, SpawnY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+            for (int i = 0; i < 255; i++)
+            {
+                if (!Main.player[i].active)
+                    continue;
+                if (Main.player[i].getRect().Intersects(rect))
+                {
+                    NoPlayerNearby = false;
                     break;
                 }
             }
-            if (GuardianPosition == -1) //Try spawning guardian
+            if (!NoPlayerNearby && SpawnY <= Main.worldSurface)
             {
-                int SpawnX = WorldGen.bestX, SpawnY = WorldGen.bestY;
-                Housing_TryGettingPlaceForCompanionToStay(ref SpawnX, ref SpawnY);
-                int SpawnXBackup = SpawnX, SpawnYBackup = SpawnY;
-                bool NoPlayerNearby = true;
-                Rectangle rect = new Rectangle(SpawnX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, SpawnY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
-                for (int i = 0; i < 255; i++)
+                for (int dist = 1; dist < 500; dist++)
                 {
-                    if (!Main.player[i].active)
-                        continue;
-                    if (Main.player[i].getRect().Intersects(rect))
+                    for (int dir = 0; dir < 2; dir++)
                     {
-                        NoPlayerNearby = false;
-                        break;
-                    }
-                }
-                if (!NoPlayerNearby && SpawnY <= Main.worldSurface)
-                {
-                    for (int dist = 1; dist < 500; dist++)
-                    {
-                        for (int dir = 0; dir < 2; dir++)
+                        if (dir == 0)
                         {
-                            if (dir == 0)
+                            SpawnX = WorldGen.bestX + dist;
+                        }
+                        else
+                        {
+                            SpawnX = WorldGen.bestX - dist;
+                        }
+                        if (SpawnX > 10 && SpawnX < Main.maxTilesX - 10)
+                        {
+                            int YCheck = WorldGen.bestY - dist;
+                            double SurfacePosition = WorldGen.bestY + dist;
+                            if (YCheck < 10) YCheck = 10;
+                            if (SurfacePosition > Main.worldSurface) SurfacePosition = Main.worldSurface;
+                            while (YCheck < SurfacePosition)
                             {
-                                SpawnX = WorldGen.bestX + dist;
-                            }
-                            else
-                            {
-                                SpawnX = WorldGen.bestX - dist;
-                            }
-                            if (SpawnX > 10 && SpawnX < Main.maxTilesX - 10)
-                            {
-                                int YCheck = WorldGen.bestY - dist;
-                                double SurfacePosition = WorldGen.bestY + dist;
-                                if (YCheck < 10) YCheck = 10;
-                                if (SurfacePosition > Main.worldSurface) SurfacePosition = Main.worldSurface;
-                                while (YCheck < SurfacePosition)
+                                SpawnY = YCheck;
+                                if (!(Main.tile[SpawnX, YCheck].nactive() && Main.tileSolid[Main.tile[SpawnX, YCheck].type]))
                                 {
-                                    SpawnY = YCheck;
-                                    if (!(Main.tile[SpawnX, YCheck].nactive() && Main.tileSolid[Main.tile[SpawnX, YCheck].type]))
+                                    YCheck++;
+                                    continue;
+                                }
+                                if (!Collision.SolidTiles(SpawnX - 1, SpawnX + 1, YCheck - 3, YCheck - 1))
+                                {
+                                    NoPlayerNearby = true;
+                                    rect = new Rectangle(SpawnX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, YCheck * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                    for (int n = 0; n < 255; n++)
                                     {
-                                        YCheck++;
-                                        continue;
-                                    }
-                                    if (!Collision.SolidTiles(SpawnX - 1, SpawnX + 1, YCheck - 3, YCheck - 1))
-                                    {
-                                        NoPlayerNearby = true;
-                                        rect = new Rectangle(SpawnX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, YCheck * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
-                                        for (int n = 0; n < 255; n++)
+                                        if (!Main.player[n].active)
+                                            continue;
+                                        if (Main.player[n].getRect().Intersects(rect))
                                         {
-                                            if (!Main.player[n].active)
-                                                continue;
-                                            if (Main.player[n].getRect().Intersects(rect))
-                                            {
-                                                NoPlayerNearby = false;
-                                                break;
-                                            }
+                                            NoPlayerNearby = false;
+                                            break;
                                         }
                                     }
-                                    break;
                                 }
-                            }
-                            if (NoPlayerNearby)
                                 break;
+                            }
                         }
                         if (NoPlayerNearby)
                             break;
                     }
-                }
-                TerraGuardian guardian = null;
-                if (Main.netMode == 0) //Never. Do. This. On. MP. Wonder not being able to complete a request, because your friend called your companion.
-                {
-                    foreach (int Key in MainMod.ActiveGuardians.Keys)
-                    {
-                        if (MainMod.ActiveGuardians[Key].ID == GuardianID && MainMod.ActiveGuardians[Key].ModID == ModID)
-                        {
-                            guardian = MainMod.ActiveGuardians[Key];
-                            break;
-                        }
-                    }
-                }
-                bool SpawnGuardian = guardian == null;
-                if (guardian == null)
-                {
-                    guardian = new TerraGuardian(GuardianID, ModID);
-                    guardian.Active = true;
-                    guardian.Spawn();
-                    guardian.Position.X = SpawnX * 16;
-                    guardian.Position.Y = (SpawnY - 2) * 16;
-                }
-                if (!IsGuardianNpcInWorld(GuardianID, ModID))
-                {
-                    GuardianTownNPC.Add(guardian);
-                }
-                GuardianTownNpcState npcstate = GuardianNPCsInWorld.First(x => x.CharID.ID == GuardianID && x.CharID.ModID == ModID);
-                npcstate.HomeX = SpawnXBackup;
-                npcstate.HomeY = SpawnYBackup;
-                npcstate.Homeless = false;
-                string Message = guardian.Name + (SpawnGuardian ? " arrives." : " settles in your world.");
-                Color color = (guardian.Base.Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
-                if (Main.netMode == 0)
-                {
-                    Main.NewText(Message, color);
-                }
-                else if (Main.netMode == 2)
-                {
-                    NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Message), color.R, color.G, color.B, color.A);
+                    if (NoPlayerNearby)
+                        break;
                 }
             }
-            else
+            TerraGuardian guardian = null;
+            if (Main.netMode == 0) //Never. Do. This. On. MP. Wonder not being able to complete a request, because your friend called your companion.
             {
-                GuardianTownNpcState state = GuardianNPCsInWorld[GuardianPosition];
-                state.HomeX = WorldGen.bestX;
-                state.HomeY = WorldGen.bestY;
-                state.Homeless = false;
+                foreach (int Key in MainMod.ActiveGuardians.Keys)
+                {
+                    if (MainMod.ActiveGuardians[Key].ID == GuardianID && MainMod.ActiveGuardians[Key].ModID == ModID)
+                    {
+                        guardian = MainMod.ActiveGuardians[Key];
+                        break;
+                    }
+                }
+            }
+            bool SpawnGuardian = guardian == null;
+            if (guardian == null)
+            {
+                guardian = new TerraGuardian(GuardianID, ModID); //Probably is somewhere in the script, but I had a swarm of Rococos in my test town. Seems to happen when you have a companion following you, and It's trying to settle in.
+                guardian.Active = true;
+                guardian.Spawn();
+                guardian.Position.X = SpawnX * 16;
+                guardian.Position.Y = (SpawnY - 2) * 16;
+            }
+            if (!IsGuardianNpcInWorld(GuardianID, ModID))
+            {
+                GuardianTownNPC.Add(guardian);
+            }
+            GuardianTownNpcState npcstate = GuardianNPCsInWorld.First(x => x.CharID.ID == GuardianID && x.CharID.ModID == ModID);
+            npcstate.HomeX = SpawnXBackup;
+            npcstate.HomeY = SpawnYBackup;
+            npcstate.Homeless = false;
+            string Message = guardian.Name + (SpawnGuardian ? " arrives." : " settles in your world.");
+            Color color = (guardian.Base.Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
+            if (Main.netMode == 0)
+            {
+                Main.NewText(Message, color);
+            }
+            else if (Main.netMode == 2)
+            {
+                NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Message), color.R, color.G, color.B, color.A);
             }
         }
 
+        public static bool Housing_IsRoomTallEnoughForGuardian(GuardianBase gb)
+        {
+            bool CanMoveIn = gb.Height / 16 <= WorldGen.roomY2 - WorldGen.roomY1;
+            return CanMoveIn;
+        }
+        
         public static bool Housing_IsRoomCrowded(GuardianBase tg)
         {
             int TownNPCCounterForHouse = Housing_GetMaxNumberOfHabitants();
             int CountHouseUsers = 0;
+            bool TownNPC = false;
             for (int n = 0; n < 200; n++)
             {
                 if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
                 {
-                    //for (int i = 0; i < WorldGen.numRoomTiles; i++)
+                    if (Housing_IsInRoom(Main.npc[n].homeTileX, Main.npc[n].homeTileY))
                     {
-                        if (Housing_IsInRoom(Main.npc[n].homeTileX, Main.npc[n].homeTileY))
-                        {
-                            CountHouseUsers++;
-                            break;
-                        }
+                        TownNPC = true;
+                        CountHouseUsers++;
+                        break;
                     }
                 }
                 if (CountHouseUsers >= TownNPCCounterForHouse)
@@ -616,104 +615,77 @@ namespace giantsummon
             {
                 if (WorldMod.GuardianNPCsInWorld[g] != null && !WorldMod.GuardianNPCsInWorld[g].Homeless)
                 {
-                    //for (int i = 0; i < WorldGen.numRoomTiles; i++)
+                    if (Housing_IsInRoom(WorldMod.GuardianNPCsInWorld[g].HomeX, WorldMod.GuardianNPCsInWorld[g].HomeY))
                     {
-                        if (Housing_IsInRoom(WorldMod.GuardianNPCsInWorld[g].HomeX, WorldMod.GuardianNPCsInWorld[g].HomeY))
-                        {
-                            CountHouseUsers++;
-                            break;
-                        }
+                        CountHouseUsers++;
                     }
                 }
                 if (CountHouseUsers >= TownNPCCounterForHouse)
                     return true;
             }
+            //if (CountHouseUsers > 0)
+            //    return true;
+            //Main.NewText("Room Users: " + CountHouseUsers + " Max: " + TownNPCCounterForHouse);
             return false;
         }
 
         public static void Housing_TryGettingPlaceForCompanionToStay(ref int SpawnX, ref int SpawnY)
         {
-            List<Point> ImpossibleRooms = new List<Point>();
+            List<Point> ImpossiblePoints = new List<Point>();
             for (int n = 0; n < 200; n++)
             {
                 if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
                 {
-                    for (int i = 0; i < WorldGen.numRoomTiles; i++)
-                    {
-                        if (Main.npc[n].homeTileX == WorldGen.roomX[i] && Main.npc[n].homeTileY == WorldGen.roomY[i])
-                        {
-                            ImpossibleRooms.Add(new Point(WorldGen.roomX[i], WorldGen.roomY[i]));
-                            break;
-                        }
-                    }
+                    ImpossiblePoints.Add(new Point(Main.npc[n].homeTileX, Main.npc[n].homeTileY));
                 }
             }
             for (int g = 0; g < WorldMod.MaxGuardianNpcsInWorld; g++)
             {
                 if (WorldMod.GuardianNPCsInWorld[g] != null && !WorldMod.GuardianNPCsInWorld[g].Homeless)
                 {
-                    for (int i = 0; i < WorldGen.numRoomTiles; i++)
-                    {
-                        if (WorldMod.GuardianNPCsInWorld[g].HomeX == WorldGen.roomX[i] && WorldMod.GuardianNPCsInWorld[g].HomeY == WorldGen.roomY[i])
-                        {
-                            ImpossibleRooms.Add(new Point(WorldGen.roomX[i], WorldGen.roomY[i]));
-                            break;
-                        }
-                    }
+                    ImpossiblePoints.Add(new Point(WorldMod.GuardianNPCsInWorld[g].HomeX, WorldMod.GuardianNPCsInWorld[g].HomeY));
                 }
             }
             List<Point> PossiblePlaces = new List<Point>();
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
                 int x = WorldGen.roomX[i], y = WorldGen.roomY[i];
-                if (!ImpossibleRooms.Any(z => z.X == x && z.Y == y) && Housing_IsInRoom(x, y) && !Housing_CheckIfIsCeiling(x, y))
+                if (!ImpossiblePoints.Any(z => z.X == x && z.Y == y) && Housing_IsInRoom(x, y) && !Housing_CheckIfIsCeiling(x, y) && TileID.Sets.RoomNeeds.CountsAsChair.Any(t => t == Main.tile[x, y].type) && TileID.Sets.RoomNeeds.CountsAsChair.Any(t => t == Main.tile[x, y - 1].type))
                 {
-                    bool HasChair = false;
-                    for (int j = 0; j < TileID.Sets.RoomNeeds.CountsAsChair.Length; j++)
-                    {
-                        if (TileID.Sets.RoomNeeds.CountsAsChair[j] == Main.tile[x, y].type)
-                        {
-                            HasChair = true;
-                            break;
-                        }
-                    }
-                    if (HasChair)
-                    {
-                        SpawnX = x;
-                        SpawnY = y;
-                        break;
-                    }
+                    SpawnX = x;
+                    SpawnY = y;
+                    break;
                 }
             }
         }
 
-        public static bool MoveGuardianToHouse(TerraGuardian tg, int x, int y)
+        public static bool MoveGuardianToHouse(TerraGuardian tg, int x, int y, bool Silent = false)
         {
             if (!WorldGen.StartRoomCheck(x, y))
             {
-                Main.NewText("Is that a house?", new Color(255, 240, 20), false);
+                if(!Silent)Main.NewText("Is that a house?", new Color(255, 240, 20), false);
                 return false;
             }
             if (!tg.Base.RoomNeeds())
             {
-                Main.NewText("That house lacks something!", new Color(255, 240, 20), false);
+                if (!Silent) Main.NewText("That house lacks something!", new Color(255, 240, 20), false);
             }
             bool Occupied, Evil;
             int Score;
             GetRoomScoreForGuardian(tg.Base, out Occupied, out Evil, out Score);
             if (Score <= 0)
             {
-                Main.NewText("That's not a valid house!", new Color(255, 240, 20), false);
+                if (!Silent) Main.NewText("That's not a valid house!", new Color(255, 240, 20), false);
                 return false;
             }
             if (Housing_IsRoomCrowded(tg.Base))
             {
-                Main.NewText("Too many people here!", new Color(255, 240, 20), false);
+                if (!Silent) Main.NewText("Too many people here!", new Color(255, 240, 20), false);
                 return false;
             }
-            if (WorldGen.roomY2 - WorldGen.roomY1 < tg.Height / 16)
+            if (!Housing_IsRoomTallEnoughForGuardian(tg.Base))
             {
-                Main.NewText("House is too small! Needs to be " + (tg.Height / 16) + " tiles tall.", new Color(255, 240, 20), false);
+                if (!Silent) Main.NewText("House is too small! Needs to be " + (tg.Height / 16) + " tiles tall.", new Color(255, 240, 20), false);
                 return false;
             }
             GuardianTownNpcState townstate = tg.GetTownNpcInfo;

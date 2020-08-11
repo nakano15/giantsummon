@@ -5033,6 +5033,24 @@ namespace giantsummon
         {
             List<Point> Found = new List<Point>();
             Point GuardianPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
+            WorldMod.GuardianTownNpcState townstate = GetTownNpcInfo;
+            if (townstate != null && !townstate.Homeless)
+            {
+                GuardianPosition.X = townstate.HomeX;
+                GuardianPosition.Y = townstate.HomeY;
+            }
+            if (WorldGen.StartRoomCheck(GuardianPosition.X, GuardianPosition.Y))
+            {
+                for (int t = 0; t < WorldGen.numTileCount; t++)
+                {
+                    int x = WorldGen.roomX[t], y = WorldGen.roomY[t];
+                    if (y >= 10 && TileType.Contains(Main.tile[x, y].type) && TileType.Contains(Main.tile[x, y - 1].type))
+                    {
+                        Found.Add(new Point(x, y));
+                    }
+                }
+                return Found.ToArray();
+            }
             const int SearchWidth = 20;
             if (XDist == -1)
                 XDist = SearchWidth;
@@ -5742,7 +5760,7 @@ namespace giantsummon
                             }
                             HouseX *= 16;
                             HouseY *= 16;
-                            if (HouseX < 0 || HouseY < 0)
+                            if (TownNpcInfo.Homeless)
                             {
                                 HouseX = (int)Position.X;
                                 HouseY = (int)Position.Y;
@@ -5798,7 +5816,15 @@ namespace giantsummon
                                         }
                                         else
                                         {
-                                            ChangeIdleAction(IdleActions.UseNearbyFurniture, 200 + Main.rand.Next(200));
+                                            if (Main.rand.NextDouble() < 0.333f)
+                                            {
+                                                ChangeIdleAction(IdleActions.UseNearbyFurniture, 400 + Main.rand.Next(200));
+                                            }
+                                            else
+                                            {
+                                                ChangeIdleAction(IdleActions.Wait, 400 + Main.rand.Next(200));
+                                                FaceDirection(!LookingLeft);
+                                            }
                                             DoIdleMovement = false;
                                             //ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
                                             //FaceDirection(!LookingLeft);
@@ -11963,6 +11989,8 @@ namespace giantsummon
             return false;
         }
 
+        public static bool UsingLeftArmAnimation = false, UsingRightArmAnimation = false;
+
         public void UpdateAnimation()
         {
             if (HasFlag(GuardianFlags.Petrified))
@@ -11970,6 +11998,7 @@ namespace giantsummon
                 if (Base.PetrifiedFrame > -1)
                 {
                     BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.PetrifiedFrame;
+                    ApplyFrameAnimationChangeScripts();
                 }
                 return;
             }
@@ -11988,9 +12017,11 @@ namespace giantsummon
                 {
                     BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
                 }
+                ApplyFrameAnimationChangeScripts();
                 return;
             }
-            bool UsingLeftArmAnimation = false, UsingRightArmAnimation = false;
+            UsingLeftArmAnimation = false;
+            UsingRightArmAnimation = false;
             bool PlayMovementAnimation = true;
             if (PlayMovementAnimation)
             {
@@ -12500,16 +12531,17 @@ namespace giantsummon
                     }
                 }
             }
+            ApplyFrameAnimationChangeScripts();
+        }
+
+        public void ApplyFrameAnimationChangeScripts()
+        {
             if (!FreezeItemUseAnimation)
             {
                 DoAction.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
             }
-            Base.GuardianAnimationOverride(this, 0, ref BodyAnimationFrame);
             Base.GuardianAnimationScript(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
-            //if (!UsingLeftArmAnimation)
-            //    LeftArmAnimationFrame = BodyAnimationFrame;
-            //if (!UsingRightArmAnimation)
-            //    RightArmAnimationFrame = BodyAnimationFrame;
+            Base.GuardianAnimationOverride(this, 0, ref BodyAnimationFrame);
             Base.GuardianAnimationOverride(this, 1, ref LeftArmAnimationFrame);
             Base.GuardianAnimationOverride(this, 2, ref RightArmAnimationFrame);
         }
