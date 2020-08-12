@@ -293,6 +293,10 @@ namespace giantsummon
                 }
             }
             AddOption(OptionText, CheckRequestButtonAction);
+            if (MayGiveBirthdayGift(tg))
+            {
+                AddOption("I have a gift for you", GiveGiftButtonAction);
+            }
             Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             AddOption("Goodbye", CloseDialogueButtonAction);
         }
@@ -405,6 +409,54 @@ namespace giantsummon
             pm.IsTalkingToAGuardian = false;
             Options.Clear();
             Dialogue = new string[0];
+        }
+
+        public static void GiveGiftButtonAction(TerraGuardian Guardian)
+        {
+            int GiftSlot = -1, EmptyGuardianSlot = -1;
+            for (int i = 0; i < 50; i++)
+            {
+                if (Guardian.Inventory[i].type == 0)
+                {
+                    EmptyGuardianSlot = i;
+                }
+                if (MainPlayer.inventory[i].type == ModContent.ItemType<Items.Misc.BirthdayPresent>())
+                {
+                    GiftSlot = i;
+                }
+            }
+            if (GiftSlot > -1 && EmptyGuardianSlot > -1)
+            {
+                Guardian.Inventory[EmptyGuardianSlot] = MainPlayer.inventory[GiftSlot].Clone();
+                MainPlayer.inventory[GiftSlot].SetDefaults(0);
+                GuardianActions.OpenBirthdayPresent(Guardian, EmptyGuardianSlot);
+                SetDialogue("*You gave the gift.*");
+                return;
+            }
+            else
+            {
+                SetDialogue("(Something went wrong... Either the guardian has no inventory space free, or you don't have a gift.)");
+            }
+        }
+
+        public static bool MayGiveBirthdayGift(TerraGuardian Guardian)
+        {
+            bool GiveGift = false;
+            Player player = Main.player[Main.myPlayer];
+            if (!Guardian.DoAction.InUse && PlayerMod.PlayerHasGuardian(player, Guardian.ID, Guardian.ModID) && PlayerMod.IsGuardianBirthday(player, Guardian.ID, Guardian.ModID) && !PlayerMod.HasGuardianBeenGifted(player, Guardian.ID, Guardian.ModID) &&
+                player.HasItem(ModContent.ItemType<Items.Misc.BirthdayPresent>()))
+            {
+                GuardianData gd = PlayerMod.GetPlayerGuardian(player, Guardian.ID, Guardian.ModID);
+                for (int i = 0; i < 50; i++)
+                {
+                    if (gd.Inventory[i].type == 0)
+                    {
+                        GiveGift = true;
+                        break;
+                    }
+                }
+            }
+            return GiveGift;
         }
 
         public static string MessageParser(string Message, TerraGuardian guardian)

@@ -2799,7 +2799,12 @@ namespace giantsummon
                 float Speed = 12f;
                 if (furniturex > -1)
                 {
-                    LeaveFurniture();
+                    if (UsingFurniture)
+                        LeaveFurniture();
+                    else
+                    {
+                        furniturex = furniturey = -1;
+                    }
                 }
                 //if (Distance > 512) Speed = 8f;
                 if (Distance >= 1512f)
@@ -5008,7 +5013,7 @@ namespace giantsummon
             }
         }
 
-        public void UseNearbyFurniture(int XDist = 9, ushort SpecificFurniture = ushort.MaxValue, bool UseBeds = false)
+        public void UseNearbyFurniture(int XDist = 9, ushort SpecificFurniture = ushort.MaxValue, bool UseBeds = false, bool Home = false)
         {
             List<ushort> TilesToUse = new List<ushort>();
             TilesToUse.Add(Terraria.ID.TileID.Chairs);
@@ -5016,7 +5021,7 @@ namespace giantsummon
             TilesToUse.Add(Terraria.ID.TileID.Thrones);
             if (UseBeds)
                 TilesToUse.Add(Terraria.ID.TileID.Beds);
-            Point[] Furnitures = TryFindingFurnitureInsideHouse(TilesToUse.ToArray(), false, XDist);
+            Point[] Furnitures = TryFindingFurniture(TilesToUse.ToArray(), false, XDist, Home);
             if (Furnitures.Length > 0)
             {
                 Point point = Furnitures[Main.rand.Next(Furnitures.Length)];
@@ -5024,17 +5029,17 @@ namespace giantsummon
             }
         }
 
-        public Point[] TryFindingFurnitureInsideHouse(ushort TileType, bool StopOnPlatformWalls, int XDist = -1)
+        public Point[] TryFindingFurniture(ushort TileType, bool StopOnPlatformWalls, int XDist = -1, bool AtHome = false)
         {
-            return TryFindingFurnitureInsideHouse(new ushort[] { TileType }, StopOnPlatformWalls, XDist);
+            return TryFindingFurniture(new ushort[] { TileType }, StopOnPlatformWalls, XDist, AtHome);
         }
 
-        public Point[] TryFindingFurnitureInsideHouse(ushort[] TileType, bool StopOnPlatformWalls, int XDist = -1)
+        public Point[] TryFindingFurniture(ushort[] TileType, bool StopOnPlatformWalls, int XDist = -1, bool AtHome = false)
         {
             List<Point> Found = new List<Point>();
             Point GuardianPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
             WorldMod.GuardianTownNpcState townstate = GetTownNpcInfo;
-            if (townstate != null && !townstate.Homeless)
+            if (townstate != null && !townstate.Homeless && AtHome)
             {
                 GuardianPosition.X = townstate.HomeX;
                 GuardianPosition.Y = townstate.HomeY;
@@ -5187,7 +5192,7 @@ namespace giantsummon
         {
             if (IsUsingBed)
                 return;
-            Point[] NearbyBeds = TryFindingFurnitureInsideHouse(Terraria.ID.TileID.Beds, true);
+            Point[] NearbyBeds = TryFindingFurniture(Terraria.ID.TileID.Beds, true);
             if (NearbyBeds.Length > 0)
             {
                 UseFurniture(NearbyBeds[0].X, NearbyBeds[0].Y);
@@ -5703,7 +5708,7 @@ namespace giantsummon
         {
             if (!IsAttackingSomething && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition == WhoAmID)
             {
-                if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture) || IdleActionTime < 5)
+                if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome) || IdleActionTime < 5)
                     ChangeIdleAction(IdleActions.Wait, 200);
                 if (Velocity.X == 0)
                 {
@@ -5835,7 +5840,7 @@ namespace giantsummon
                             else //Has House
                             {
                                 float XDif = Position.X - HouseX, YDif = Position.Y - HouseY;
-                                if (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurniture && (Math.Abs(XDif) > 8 || Math.Abs(YDif) > 48))
+                                if (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome && (Math.Abs(XDif) > 8 || Math.Abs(YDif) > 48))
                                 {
                                     if (CurrentIdleAction != IdleActions.Wander || IdleActionTime <= 0)
                                     {
@@ -5878,13 +5883,13 @@ namespace giantsummon
                                     }
                                     else
                                     {
-                                        if (CurrentIdleAction != IdleActions.UseNearbyFurniture)
+                                        if (CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome)
                                         {
                                             if (CurrentIdleAction != IdleActions.Wait || IdleActionTime <= 0)
                                             {
                                                 FaceDirection(!LookingLeft);
                                                 if (Main.rand.NextDouble() < 0.6f)
-                                                    ChangeIdleAction(IdleActions.UseNearbyFurniture, 200 + Main.rand.Next(200));
+                                                    ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 200 + Main.rand.Next(200));
                                                 else
                                                     ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
                                             }
@@ -5954,6 +5959,7 @@ namespace giantsummon
                     }
                     break;
                 case IdleActions.UseNearbyFurniture:
+                case IdleActions.UseNearbyFurnitureHome:
                 case IdleActions.TryGoingSleep:
                     WalkMode = true;
                     break;
@@ -6188,6 +6194,9 @@ namespace giantsummon
                     break;
                 case IdleActions.UseNearbyFurniture:
                     UseNearbyFurniture();
+                    break;
+                case IdleActions.UseNearbyFurnitureHome:
+                    UseNearbyFurniture(9, ushort.MaxValue, false, true);
                     break;
                 case IdleActions.TryGoingSleep:
                     if (UsingFurniture)
@@ -15499,6 +15508,7 @@ namespace giantsummon
             Wait,
             Wander,
             UseNearbyFurniture,
+            UseNearbyFurnitureHome,
             TryGoingSleep,
             GoHome
         }

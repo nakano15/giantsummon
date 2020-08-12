@@ -37,6 +37,7 @@ namespace giantsummon
                         int BannerX = townnpc.HomeX, BannerY = townnpc.HomeY;
                         if (BannerX < 0 || BannerY < 0)
                             continue;
+                        BannerY--;
                         if (Main.tile[BannerX, BannerY] == null)
                             continue;
                         bool EndsOnNullTile = false;
@@ -75,7 +76,7 @@ namespace giantsummon
                         if (Main.mouseX >= BannerPosition.X && Main.mouseX < BannerPosition.X + Main.HouseBannerTexture[1].Width &&
                             Main.mouseY >= BannerPosition.Y && Main.mouseY < BannerPosition.Y + Main.HouseBannerTexture[1].Height)
                         {
-                            MainPlayer.mouseInterface = true;
+                            //MainPlayer.mouseInterface = true;
                             MouseText = guardian.Name;
                             if (Main.mouseRight && Main.mouseRightRelease)
                             {

@@ -21,7 +21,7 @@ namespace giantsummon
         public static GuardianTownNpcState[] GuardianNPCsInWorld = new GuardianTownNpcState[MaxGuardianNpcsInWorld]; //Change this to a objects, key must contain ID and GuardianID, value contain Homeless, HomeX and HomeY.
         public static KeyValuePair<int, string> SpawnGuardian = new KeyValuePair<int, string>(0, "");
         public static int GuardiansMetCount { get { return GuardiansMet.Count; } }
-        public static byte SpawnDelay = 0;
+        public static byte SpawnDelay = 0, LeaveCooldown = 0;
 
         public static void AllowGuardianNPCToSpawn(int ID, string ModID = "")
         {
@@ -107,13 +107,19 @@ namespace giantsummon
             }
             LastTime = TimeParser;
             MainMod.TimeTranslated = (float)TimeParser;
-            SpawnDelay++;
-            if (SpawnDelay >= 20)
+            if (Main.netMode != 1)
             {
-                SpawnDelay = 0;
-                if (Main.netMode != 1)
+                SpawnDelay++;
+                if (SpawnDelay >= 20)
                 {
+                    LeaveCooldown++;
+                    SpawnDelay = 0;
                     CheckIfGuardianNPCCanSpawn();
+                    if (LeaveCooldown >= 10)
+                    {
+                        LeaveCooldown = 0;
+                        CheckIfSomeoneMustLeaveWorld();
+                    }
                 }
             }
             foreach (TerraGuardian tg in GuardianTownNPC)
@@ -125,11 +131,49 @@ namespace giantsummon
             }
         }
 
+        public static void CheckIfSomeoneMustLeaveWorld()
+        {
+            if (GuardianTownNPC.Count == 0)
+            {
+                return;
+            }
+            //pick a random guardian to try leaving.
+            int Pos = Main.rand.Next(GuardianTownNPC.Count);
+            if (GuardianTownNPC[Pos].GetTownNpcInfo == null)
+            {
+                bool HasPlayerNearby = false;
+                for (int p = 0; p < 255; p++)
+                {
+                    Player player = Main.player[p];
+                    if (player.active && Math.Abs(player.Center.X - GuardianTownNPC[Pos].Position.X) < NPC.sWidth && Math.Abs(player.Center.Y - GuardianTownNPC[Pos].CenterPosition.Y) < NPC.sHeight)
+                    {
+                        HasPlayerNearby = true;
+                        break;
+                    }
+                }
+                if (!HasPlayerNearby)
+                {
+                    if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianTownNPC[Pos].ID, GuardianTownNPC[Pos].ModID))
+                    {
+                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessageGuardianSummoned);
+                    }
+                    else
+                    {
+                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage);
+                    }
+                    GuardianTownNPC.RemoveAt(Pos);
+                }
+            }
+        }
+
         public override void Initialize()
         {
             GuardiansMet.Clear();
             GuardianTownNPC.Clear();
-            GuardianNPCsInWorld = new GuardianTownNpcState[MaxGuardianNpcsInWorld];
+            for (int i = 0; i < MaxGuardianNpcsInWorld; i++)
+            {
+                GuardianNPCsInWorld[i] = null;
+            }
             Compatibility.NExperienceCompatibility.ResetOnWorldLoad();
             GuardianBountyQuest.Reset();
             AlexRecruitScripts.SpawnedTombstone = false;
@@ -604,7 +648,7 @@ namespace giantsummon
                     if (Housing_IsInRoom(Main.npc[n].homeTileX, Main.npc[n].homeTileY))
                     {
                         TownNPC = true;
-                        CountHouseUsers++;
+                        //CountHouseUsers++;
                         break;
                     }
                 }
@@ -631,6 +675,7 @@ namespace giantsummon
 
         public static void Housing_TryGettingPlaceForCompanionToStay(ref int SpawnX, ref int SpawnY)
         {
+            return;
             List<Point> ImpossiblePoints = new List<Point>();
             for (int n = 0; n < 200; n++)
             {
@@ -654,6 +699,10 @@ namespace giantsummon
                 {
                     SpawnX = x;
                     SpawnY = y;
+                    if (SpawnX < WorldGen.roomX1 + 3)
+                        SpawnX = WorldGen.roomX1 + 3;
+                    if (SpawnX > WorldGen.roomX2 - 3)
+                        SpawnX = WorldGen.roomX2 - 3;
                     break;
                 }
             }

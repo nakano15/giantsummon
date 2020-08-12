@@ -17,7 +17,7 @@ namespace giantsummon.GuardianNPC
 
         private bool PlayerHasThisGuardianMetAndInvoked { get { return Main.netMode == 0 && PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianID, GuardianModID); } }
         //Later, add a script to make so the Guardian be hidden on singleplayer, if the player has it summoned.
-        private bool DuplicateChecked = false;
+        private bool FirstFrame = true;
         
         public GuardianNPCPrefab(int ID, string ModID = "")
         {
@@ -26,6 +26,7 @@ namespace giantsummon.GuardianNPC
                 ModID = MainMod.mod.Name;
             GuardianModID = ModID;
             Guardian = new TerraGuardian(ID, ModID);
+            Guardian.Active = true;
         }
 
         public void UnlockGuardian()
@@ -102,21 +103,60 @@ namespace giantsummon.GuardianNPC
             return false || !PlayerHasThisGuardianMetAndInvoked && (acc || Guardian.ReturnEquippableHeadVanityEquip(out acc) == -1);
         }
 
+        public void DisableAndSpawnTownGuardian()
+        {
+            TerraGuardian guardian = null; //Somehow, It's spawning duplicate version of the guardians. Probably is because of the first frame, It doesn't have enough time to populate the active guardian list.
+            if (Main.netMode == 0)
+            {
+                foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                {
+                    if (tg.ID == GuardianID && tg.ModID == GuardianModID)
+                    {
+                        guardian = tg;
+                        break;
+                    }
+                }
+            }
+            if (guardian == null)
+            {
+                guardian = Guardian;
+            }
+            if (!WorldMod.IsGuardianNpcInWorld(GuardianID, GuardianModID))
+            {
+                WorldMod.GuardianTownNPC.Add(guardian);
+            }
+            else //Replace
+            {
+                for (int g = 0; g < WorldMod.GuardianTownNPC.Count; g++)
+                {
+                    if (WorldMod.GuardianTownNPC[g].ID == GuardianID && WorldMod.GuardianTownNPC[g].ModID == GuardianModID)
+                    {
+                        WorldMod.GuardianTownNPC[g] = guardian;
+                        break;
+                    }
+                }
+            }
+            /*WorldMod.GuardianTownNpcState townstate = guardian.GetTownNpcInfo;
+            if (townstate != null)
+            {
+                if (!npc.homeless)
+                {
+                    WorldMod.MoveGuardianToHouse(guardian, npc.homeTileX, npc.homeTileY, true);
+                }
+                else
+                {
+                    townstate.Homeless = true;
+                }
+                //townstate.Homeless = npc.homeless;
+                //townstate.HomeX = npc.homeTileX;
+                //townstate.HomeY = npc.homeTileY;
+            }*/
+            npc.active = false;
+        }
+
         public override void AI()
         {
             npc.breath = 100;
-            if (!DuplicateChecked)
-            {
-                for (int n = 0; n < npc.whoAmI; n++)
-                {
-                    if (Main.npc[n].type == npc.type)
-                    {
-                        npc.active = false;
-                        return;
-                    }
-                }
-                DuplicateChecked = true;
-            }
             npc.dontTakeDamageFromHostiles = npc.dontTakeDamage = true;
             npc.life = npc.lifeMax;
             if (!NpcMod.HasGuardianNPC(GuardianID, GuardianModID))
@@ -169,6 +209,13 @@ namespace giantsummon.GuardianNPC
             }
             if (Guardian != null)
             {
+                if (FirstFrame)
+                    FirstFrame = false;
+                else
+                {
+                    DisableAndSpawnTownGuardian();
+                    return;
+                }
                 if (CheckingRequest && Main.player[Main.myPlayer].talkNPC != npc.whoAmI)
                 {
                     CheckingRequest = false;
