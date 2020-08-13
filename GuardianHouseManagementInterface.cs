@@ -94,9 +94,15 @@ namespace giantsummon
                 Vector2 RowPosition = new Vector2(0, Main.screenHeight - SlotSpace - 8);
                 int CurrentGuardian = 0;
                 bool MouseOverHouseIcon = false;
-                while (CurrentGuardian < WorldMod.GuardianTownNPC.Count)
+                List<TerraGuardian> Guardians = new List<TerraGuardian>();
+                foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                 {
-                    int MaxNum = WorldMod.GuardianTownNPC.Count - CurrentGuardian;
+                    if (tg.GetTownNpcInfo != null)
+                        Guardians.Add(tg);
+                }
+                while (CurrentGuardian < Guardians.Count)
+                {
+                    int MaxNum = Guardians.Count - CurrentGuardian;
                     if (MaxNum <= 0)
                         break;
                     if (MaxNum > MaxRowItems)
@@ -106,10 +112,10 @@ namespace giantsummon
                     RowPosition.X = Main.screenWidth * 0.5f - MaxNum * SlotSpace * 0.5f;
                     for (int num = 0; num < MaxNum; num++)
                     {
-                        if (CurrentGuardian >= WorldMod.GuardianTownNPC.Count)
+                        if (CurrentGuardian >= Guardians.Count)
                             break;
                         Main.spriteBatch.Draw(Main.inventoryBack6Texture, RowPosition, null, Main.inventoryBack, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
-                        WorldMod.GuardianTownNPC[CurrentGuardian].DrawHead(RowPosition + new Vector2(28, 28) * Scale);
+                        Guardians[CurrentGuardian].DrawHead(RowPosition + new Vector2(28, 28) * Scale);
                         if (Main.mouseX >= RowPosition.X && Main.mouseX < RowPosition.X + SlotSpace &&
                             Main.mouseY >= RowPosition.Y && Main.mouseY < RowPosition.Y + SlotSpace)
                         {
@@ -118,7 +124,7 @@ namespace giantsummon
                             if (Main.mouseLeft && Main.mouseLeftRelease)
                             {
                                 IsPickingAGuardianHouse = true;
-                                PickedGuardianToGiveHousing = WorldMod.GuardianTownNPC[CurrentGuardian].WhoAmID;
+                                PickedGuardianToGiveHousing = Guardians[CurrentGuardian].WhoAmID;
                                 Main.PlaySound(12, -1, -1, 1, 1f, 0f);
                             }
                         }

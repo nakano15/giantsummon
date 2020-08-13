@@ -730,7 +730,8 @@ namespace giantsummon.Npcs
                                 NpcMod.AddGuardianMet(3);
                                 Main.player[Target.TargetPosition].GetModPlayer<PlayerMod>().AddNewGuardian(3);
                                 PlayerMod.GetPlayerGuardian(Main.player[Target.TargetPosition], 3).IncreaseFriendshipProgress(1);
-                                npc.Transform(ModContent.NPCType<GuardianNPC.List.ZombieWolfGuardian>());
+                                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Zacks);
+                                //npc.Transform(ModContent.NPCType<GuardianNPC.List.ZombieWolfGuardian>());
                                 return;
                                 //NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, mod.NPCType<GuardianNPC.List.ZombieWolfGuardian>());
                                 //npc.active = false;
@@ -767,7 +768,8 @@ namespace giantsummon.Npcs
                             else if (AiValue == 30 + DialogueLineTime * 4)
                             {
                                 NpcMod.AddGuardianMet(3);
-                                npc.Transform(ModContent.NPCType<GuardianNPC.List.ZombieWolfGuardian>());
+                                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Zacks);
+                                //npc.Transform(ModContent.NPCType<GuardianNPC.List.ZombieWolfGuardian>());
                                 return;
                             }
                             AiValue++;

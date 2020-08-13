@@ -107,7 +107,7 @@ namespace giantsummon.Npcs
 
         public static void TrySpawningBrutus()
         {
-            if (NpcMod.HasMetGuardian(6, "") || NPC.AnyNPCs(ModContent.NPCType<BrutusNPC>()))
+            if (NpcMod.HasMetGuardian(6, "") || WorldMod.IsGuardianNpcInWorld(GuardianBase.Brutus))
                 return;
             const int SpawnTime = 3 * 3600;
             if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || (Main.time < SpawnTime || WorldMod.LastTime >= 7.5))
@@ -246,7 +246,8 @@ namespace giantsummon.Npcs
                                 GuardianData gd = PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus);
                                 if (gd.FriendshipLevel == 0)
                                     gd.IncreaseFriendshipProgress(1);
-                                npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());
+                                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Brutus);
+                                //npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());
                             }
                             BodyFrame = LeftArmFrame = RightArmFrame = Frame;
                         }
@@ -490,8 +491,9 @@ namespace giantsummon.Npcs
                     PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                     NpcMod.AddGuardianMet(6);
                     Main.NewText("You bought " + NpcAlias + "'s help.");
-                    npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());
-                    Main.player[Main.myPlayer].talkNPC = -1;
+                    WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Brutus);
+                    //npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());
+                    //Main.player[Main.myPlayer].talkNPC = -1;
                 }
                 else
                 {

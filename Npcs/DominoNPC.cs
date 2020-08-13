@@ -128,7 +128,8 @@ namespace giantsummon.Npcs
                             {
                                 BrutusChat = "*Ugh...*";
                                 NpcMod.AddGuardianMet(GuardianID, GuardianModID);
-                                npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
+                                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                                //npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
                             }
                             break;
                     }
@@ -312,7 +313,8 @@ namespace giantsummon.Npcs
                                     {
                                         PlayerMod.AddPlayerGuardian(player, GuardianID, GuardianModID);
                                         NpcMod.AddGuardianMet(GuardianID, GuardianModID);
-                                        npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
+                                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                                        //npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
                                         return;
                                     }
                                 }
@@ -456,7 +458,8 @@ namespace giantsummon.Npcs
                 PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
                 if(!PlayerHasDomino) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                 NpcMod.AddGuardianMet(GuardianID, GuardianModID);
-                npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
+                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                //npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
             }
             if (DialogueStep == 10)
             {

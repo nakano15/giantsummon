@@ -528,7 +528,8 @@ namespace giantsummon.Npcs
                     if (HugPassed)
                     {
                         int HuggedPlayer = HuggingPlayer;
-                        npc.Transform(ModContent.NPCType<GuardianNPC.List.BearNPC>());
+                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                        //npc.Transform(ModContent.NPCType<GuardianNPC.List.BearNPC>());
                         bool PlayerHasVladimir = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID);
                         PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID);
                         if (!PlayerHasVladimir) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID).IncreaseFriendshipProgress(1);
@@ -536,15 +537,22 @@ namespace giantsummon.Npcs
                         if (HuggedPlayer > -1)
                         {
                             Player player = Main.player[HuggedPlayer];
-                            GuardianActions ga = ((GuardianNPC.List.BearNPC)npc.modNPC).Guardian.StartNewGuardianAction(0);
-                            if (ga != null)
+                            foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
                             {
-                                ga.Players.Add(player);
-                                Main.npcChatText = "*Thank you! I will try finding me a empty house to move in, but first, I will wait until ask me to stop hugging you.*";
-                            }
-                            else
-                            {
-                                Main.npcChatText = "*Thank you! I could hug you more, but for some reason I can't. Just tell me whenever you need one. Now I will try looking for a house to live.*";
+                                if (tg.ID == GuardianID && tg.ModID == GuardianModID)
+                                {
+                                    GuardianActions ga = tg.StartNewGuardianAction(0);
+                                    if (ga != null)
+                                    {
+                                        ga.Players.Add(player);
+                                        Main.npcChatText = "*Thank you! I will try finding me a empty house to move in, but first, I will wait until ask me to stop hugging you.*";
+                                    }
+                                    else
+                                    {
+                                        Main.npcChatText = "*Thank you! I could hug you more, but for some reason I can't. Just tell me whenever you need one. Now I will try looking for a house to live.*";
+                                    }
+                                    break;
+                                }
                             }
                         }
                         else

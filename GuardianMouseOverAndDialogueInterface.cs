@@ -67,6 +67,63 @@ namespace giantsummon
                 DialogueLines = 0;
         }
 
+        public static void StartDialogue(TerraGuardian tg)
+        {
+            Main.CancelHairWindow();
+            Main.npcShop = 0;
+            Main.InGuideCraftMenu = false;
+            Main.player[Main.myPlayer].dropItemCheck();
+            Main.npcChatCornerItem = 0;
+            Main.player[Main.myPlayer].sign = -1;
+            Main.editSign = false;
+            Main.player[Main.myPlayer].talkNPC = -1;
+            Main.playerInventory = false;
+            Main.player[Main.myPlayer].chest = -1;
+            Recipe.FindRecipes();
+            Main.PlaySound(24, -1, -1, 1, 1f, 0f);
+            Player player = MainPlayer;
+            PlayerMod modPlayer = player.GetModPlayer<PlayerMod>();
+            modPlayer.IsTalkingToAGuardian = true;
+            modPlayer.TalkingGuardianPosition = tg.WhoAmID;
+            //GetCompanionDialogue
+            GetDefaultOptions(tg);
+            string Message = "";
+            if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
+            {
+                modPlayer.AddNewGuardian(tg.ID, tg.ModID);
+                if (tg.ID == WorldMod.SpawnGuardian.Key && tg.ModID == WorldMod.SpawnGuardian.Value)
+                    modPlayer.GetGuardian(tg.ID, tg.ModID).IsStarter = true;
+                Message = tg.Base.GreetMessage(player, tg);
+            }
+            else
+            {
+                if (PlayerMod.IsGuardianBirthday(player, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
+                    Message = tg.Base.BirthdayMessage(player, tg);
+                else
+                {
+                    string t;
+                    if (tg.Data.CheckForImportantMessages(out t))
+                    {
+                        Message = t;
+                    }
+                    else if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless)
+                        Message = tg.Base.HomelessMessage(player, tg);
+                    else
+                        Message = tg.Base.NormalMessage(player, tg);
+                }
+            }
+            if (!NpcMod.HasMetGuardian(tg.ID, tg.ModID))
+            {
+                Message = tg.Base.GreetMessage(player, tg);
+                NpcMod.AddGuardianMet(tg.ID, tg.ModID);
+                if (WorldMod.HasEmptyGuardianNPCSlot())
+                    WorldMod.AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
+                if (modPlayer.HasGuardian(tg.ID, tg.ModID))
+                    modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);
+            }
+            SetDialogue(Message, tg);
+        }
+
         public static void Update()
         {
             SomeoneMouseOver = false;
@@ -109,23 +166,7 @@ namespace giantsummon
                             TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
                             if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg))
                             {
-                                Main.CancelHairWindow();
-                                Main.npcShop = 0;
-                                Main.InGuideCraftMenu = false;
-                                Main.player[Main.myPlayer].dropItemCheck();
-                                Main.npcChatCornerItem = 0;
-                                Main.player[Main.myPlayer].sign = -1;
-                                Main.editSign = false;
-                                Main.player[Main.myPlayer].talkNPC = -1;
-                                Main.playerInventory = false;
-                                Main.player[Main.myPlayer].chest = -1;
-                                Recipe.FindRecipes();
-                                Main.PlaySound(24, -1, -1, 1, 1f, 0f);
-                                player.IsTalkingToAGuardian = true;
-                                player.TalkingGuardianPosition = MouseOverGuardian;
-                                //GetCompanionDialogue
-                                SetDialogue(tg.Base.TalkMessage(player.player, tg), tg);
-                                GetDefaultOptions(tg);
+                                StartDialogue(tg);
                             }
                         }
                     }
@@ -134,7 +175,7 @@ namespace giantsummon
             if (player.IsTalkingToAGuardian)
             {
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
+                if (!IsInChattingRange(tg) || Main.playerInventory || MainPlayer.talkNPC > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
                 {
                     player.IsTalkingToAGuardian = false;
                 }
@@ -174,12 +215,12 @@ namespace giantsummon
             if (SomeoneMouseOver && MainMod.ActiveGuardians.ContainsKey(MouseOverGuardian))
             {
                 TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
-                if(IsInChattingRange(tg))
+                if(IsInChattingRange(tg) && !tg.Downed && !tg.KnockedOut)
                     Main.spriteBatch.Draw(Main.chatTexture, new Vector2(tg.Position.X - Main.chatTexture.Width * 0.5f - (-tg.Width * 0.5f - 8) * tg.Direction, tg.Position.Y - tg.Height - Main.chatTexture.Height) - Main.screenPosition, null, Main.mouseTextColorReal, 0f, Vector2.Zero, 1f, (tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0f);
                 Vector2 TextPosition = tg.Position;
-                TextPosition.Y -= tg.Base.Height - 22;
-                string Text = tg.ReferenceName + " " + tg.HP + "/" + tg.MHP;
-                Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition - Main.screenPosition, Color.White * Main.cursorAlpha, 1f, 0.5f, 0.5f);
+                TextPosition.Y -= tg.Base.SpriteHeight - 22;
+                string Text = (tg.OwnerPos == MainPlayer.whoAmI ? tg.Name : tg.ReferenceName) + " " + tg.HP + "/" + tg.MHP;
+                Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition - Main.screenPosition, Color.White * Main.cursorAlpha, 1f, 0.5f, 1f);
             }
         }
 
@@ -401,6 +442,7 @@ namespace giantsummon
         {
             tg.request.UponRejecting();
             SetDialogue(tg.request.GetRequestDeny(tg.Data), tg);
+            GetDefaultOptions(tg);
         }
 
         public static void CloseDialogueButtonAction(TerraGuardian tg)

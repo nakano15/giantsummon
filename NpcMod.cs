@@ -161,6 +161,44 @@ namespace giantsummon
             }
         }
 
+        public static TerraGuardian SpawnGuardianNPC(float X, float Y, int ID, string ModID = "", bool ForceMove = false) //Will try spawning if there is no other of his type existing
+        {
+            TerraGuardian tg = null;
+            foreach (TerraGuardian g in WorldMod.GuardianTownNPC)
+            {
+                if (g.ID == ID && g.ModID == ModID)
+                {
+                    tg = g;
+                    break;
+                }
+            }
+            if (tg == null && Main.netMode == 0)
+            {
+                foreach (TerraGuardian g in MainMod.ActiveGuardians.Values)
+                {
+                    if (g.ID == ID && g.ModID == ModID)
+                    {
+                        tg = g;
+                        break;
+                    }
+                }
+            }
+            if (tg == null)
+            {
+                tg = new TerraGuardian(ID, ModID);
+                tg.Position.X = X;
+                tg.Position.Y = Y;
+                tg.Active = true;
+            }
+            else if (ForceMove)
+            {
+                tg.Position.X = X;
+                tg.Position.Y = Y;
+            }
+            WorldMod.AddTownGuardianNpc(tg);
+            return tg;
+        }
+
         public override bool PreAI(NPC npc)
         {
             if(npc.soulDrain)
@@ -398,6 +436,8 @@ namespace giantsummon
             return false;
         }
 
+        public static List<GuardianDrawData> GuardianPostDrawData = new List<GuardianDrawData>();
+
         public override bool PreDraw(NPC npc, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
             if (npc.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
@@ -414,6 +454,17 @@ namespace giantsummon
             {
                 Main.ninjaTexture = MainMod.TrappedCatTexture;
             }
+            GuardianPostDrawData.Clear();
+            foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
+            {
+                if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Npc && gdm.DrawTargetID == npc.whoAmI && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
+                {
+                    MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
+                    foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
+                        gdd.Draw(Main.spriteBatch);
+                    GuardianPostDrawData.AddRange(TerraGuardian.DrawFront);
+                }
+            }
             return true;
         }
 
@@ -423,6 +474,11 @@ namespace giantsummon
             {
                 Main.ninjaTexture = MainMod.NinjaTextureBackup;
             }
+            foreach (GuardianDrawData gdd in GuardianPostDrawData)
+            {
+                gdd.Draw(Main.spriteBatch);
+            }
+            GuardianPostDrawData.Clear();
         }
 
         public override bool CheckActive(NPC npc)
@@ -1174,7 +1230,8 @@ namespace giantsummon
         {
             if (npc.type == Terraria.ID.NPCID.PossessedArmor && !NpcMod.HasMetGuardian(4) && Main.rand.Next(100) == 0)
             {
-                int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<GuardianNPC.List.ArmorWraith>());
+                //int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<GuardianNPC.List.ArmorWraith>());
+                SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Nemesis);
                 Main.NewText("There's something over there.");
                 NpcMod.AddGuardianMet(4);
             }
@@ -1247,8 +1304,10 @@ namespace giantsummon
             }
             if (TrappedCatKingSlime == npc.whoAmI)
             {
-                int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<GuardianNPC.List.CatGuardian>());
-                ((GuardianNPC.GuardianNPCPrefab)Main.npc[npcpos].modNPC).Guardian.AddBuff(Terraria.ID.BuffID.Slimed, 300);
+                TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Center.Y, GuardianBase.Sardine);
+                tg.AddBuff(Terraria.ID.BuffID.Slimed, 300);
+                //int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<GuardianNPC.List.CatGuardian>());
+                //((GuardianNPC.GuardianNPCPrefab)Main.npc[npcpos].modNPC).Guardian.AddBuff(Terraria.ID.BuffID.Slimed, 300);
                 TrappedCatKingSlime = -1;
             }
             if (GuardianBountyQuest.TargetMonsterID > 0)

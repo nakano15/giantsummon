@@ -33,7 +33,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 69, LastModVersion = 65;
+        public const int ModVersion = 70, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = true;
         //Downed system configs
@@ -91,7 +91,7 @@ namespace giantsummon
         public static int GuardianNpcHousingCheckCooldown = 0;
         public const int MaxGuardianNpcHousingCheckCooldown = 60 * 60 * 3;
         public static bool CheckIfGuardianNpcsCanStayAtHomeCheck { get { return GuardianNpcHousingCheckCooldown == MaxGuardianNpcHousingCheckCooldown; } }
-        public static List<int> InitialGuardians = new List<int>();
+        public static List<GuardianID> InitialGuardians = new List<GuardianID>();
         public static List<KeyValuePair<byte, int>> PlayerGuardianSync = new List<KeyValuePair<byte, int>>();
         public static bool NetplaySync = true;
         public static ModHotKey orderCallButton;
@@ -109,6 +109,7 @@ namespace giantsummon
         public static bool TriedLoadingCustomGuardians = false;
         private static Dictionary<string, Group> CompanionGroups = new Dictionary<string, Group>();
         public static float TimeTranslated = 0;
+        public static List<GuardianDrawMoment> DrawMoment = new List<GuardianDrawMoment>();
 
         public static Group AddNewGroup(string ID, string Name, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
         {
@@ -156,9 +157,16 @@ namespace giantsummon
             return AddNewGroup(ID, ID);
         }
 
-        public static void AddActiveGuardian(TerraGuardian Guardian)
+        public static void AddActiveGuardian(TerraGuardian Guardian, bool Force = false)
         {
-            TempActiveGuardians.Add(Guardian.WhoAmID, Guardian);
+            if (!TempActiveGuardians.ContainsKey(Guardian.WhoAmID))
+            {
+                TempActiveGuardians.Add(Guardian.WhoAmID, Guardian);
+            }
+            if (Force && !ActiveGuardians.ContainsKey(Guardian.WhoAmID))
+            {
+                ActiveGuardians.Add(Guardian.WhoAmID, Guardian);
+            }
         }
 
         public static void UnloadModGuardians(Mod mod)
@@ -191,8 +199,8 @@ namespace giantsummon
         public static void GetInitialCompanionsList()
         {
             InitialGuardians.Clear();
-            InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
-            InitialGuardians.Add(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
+            InitialGuardians.Add(new GuardianID(GuardianBase.Rococo));
+            InitialGuardians.Add(new GuardianID(GuardianBase.Blue));
             foreach (Mod mod in ModLoader.Mods)
             {
                 if (IsntExceptionMod(mod.Name))
@@ -294,9 +302,9 @@ namespace giantsummon
             mod = this;
 		}
 
-        public static void AddInitialGuardian(int NpcID)
+        public static void AddInitialGuardian(GuardianID ID)
         {
-            InitialGuardians.Add(NpcID);
+            InitialGuardians.Add(ID);
         }
 
         public static void AddGuardianList(Mod ModName, GuardianBase.ModGuardianDB guardiandb)
@@ -338,6 +346,18 @@ namespace giantsummon
         public override void Unload()
         {
             GuardianBase.UnloadGuardians();
+        }
+
+        public static bool IsGuardianInTheWorld(int ID, string ModId = "")
+        {
+            if (ModId == "")
+                ModId = mod.Name;
+            foreach (TerraGuardian tg in ActiveGuardians.Values)
+            {
+                if (tg.ID == ID && tg.ModID == ModId && (Main.netMode == 0 || tg.OwnerPos == -1))
+                    return true;
+            }
+            return false;
         }
 
         public static bool IsGuardianItem(Item item)
@@ -440,7 +460,7 @@ namespace giantsummon
             AlexRecruitScripts.AlexNPCPosition = -1;
             Npcs.BrutusNPC.TrySpawningBrutus();
             Npcs.MabelNPC.TrySpawningMabel();
-            GuardianNPC.Terrarians.MichelleGuardian.TrySpawningMichelle();
+            GuardianSpawningScripts.TrySpawningMichelle();
         }
 
         public override void PostUpdateEverything()
@@ -458,6 +478,13 @@ namespace giantsummon
             if (ReviveTalkDelay > 0)
                 ReviveTalkDelay--;
             LastEventWave = Main.invasionProgressWave;
+            for (int dm = 0; dm < MainMod.DrawMoment.Count; dm++)
+            {
+                if (!ActiveGuardians.ContainsKey(MainMod.DrawMoment[dm].GuardianWhoAmID))
+                {
+                    MainMod.DrawMoment.RemoveAt(dm);
+                }
+            }
         }
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
@@ -596,12 +623,15 @@ namespace giantsummon
             //
             int BarDimY = (int)(Main.screenHeight * (1f - BarSize) * 0.25f);
             Color ClosingBarsColor = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOutCold ? new Color(0, 0, 0, (int)(255 * (1f - BarSize))) : new Color((byte)(128 * (1f - BarSize)), 0, 0, (int)(255 * (1f - BarSize)));
+            float ClosingBar2EffectPercentage = 0.5f + ((float)Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime / (PlayerMod.MaxRescueTime * 60)) * 1f;
+            if (ClosingBar2EffectPercentage > 1f)
+                ClosingBar2EffectPercentage = 1f;
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, BarDimY), ClosingBarsColor);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, BarDimY, Main.screenWidth, BarDimY), ClosingBarsColor * 0.5f);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * 0.5f);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, BarDimY, Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY), Main.screenWidth, BarDimY), ClosingBarsColor);
             //
-            if (!Main.player[Main.myPlayer].dead)
+            if (!Main.player[Main.myPlayer].dead && (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOutCold || Main.player[Main.myPlayer].statLife > 1))
             {
                 Vector2 BarPosition = new Vector2(Main.screenWidth * 0.5f - BarWidth * 0.5f - 2, Main.screenHeight * 0.8f - BarHeight * 0.5f - 2);
                 Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)BarPosition.X, (int)BarPosition.Y, BarWidth + 4, BarHeight + 4), Color.Black);
@@ -616,7 +646,7 @@ namespace giantsummon
             }
             if (!Main.player[Main.myPlayer].dead)
             {
-                string Text = "Downed";
+                string Text = "Knocked Out";
                 if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReviveBoost > 0)
                     Text = "Being Revived";
                 Utils.DrawBorderStringBig(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f), Color.OrangeRed, 1f, 0.5f, 0.5f);
@@ -624,8 +654,11 @@ namespace giantsummon
                 {
                     Text = "Press '" + Main.cHook + "' to give up.";
                     Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28), Color.OrangeRed, 1f, 0.5f, 0.5f);
-                    //Text = "Getting help in " + Math.Round(PlayerMod.HelpCooldown - (float)Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReviveCooldown / 60, 1) + " seconds";
-                    //Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28 + 26), Color.OrangeRed, 0.85f, 0.5f, 0.5f);
+                    if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime > 0)
+                    {
+                        Text = "Rescue in " + Math.Round(PlayerMod.MaxRescueTime - (float)Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime / 60, 1) + " seconds";
+                        Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28 + 26), Color.OrangeRed, 0.85f, 0.5f, 0.5f);
+                    }
                 }
 
             }

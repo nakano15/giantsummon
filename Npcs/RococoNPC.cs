@@ -35,8 +35,9 @@ namespace giantsummon.Npcs
         {
             if (PlayerHasRococo)
             {
-                npc.Transform(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
-                ((GuardianNPC.List.RaccoonGuardian)npc.modNPC).UnlockGuardian();
+                NpcMod.AddGuardianMet(GuardianID, GuardianModID);
+                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                //npc.Transform(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
             }
             else if (!RejectedOnce && !AcceptedOnce)
             {
@@ -56,8 +57,9 @@ namespace giantsummon.Npcs
             {
                 PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
                 PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
-                npc.Transform(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
-                ((GuardianNPC.List.RaccoonGuardian)npc.modNPC).UnlockGuardian();
+                NpcMod.AddGuardianMet(GuardianID, GuardianModID);
+                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                //npc.Transform(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
             }
         }
 

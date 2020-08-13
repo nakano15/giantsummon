@@ -57,7 +57,7 @@ namespace giantsummon.Npcs
             }
         }
 
-        public static bool CanSpawnMabel { get { return !NPC.AnyNPCs(ModContent.NPCType<MabelNPC>()) && (NPC.AnyNPCs(Terraria.ID.NPCID.PartyGirl) || Terraria.GameContent.Events.BirthdayParty.PartyIsUp); } }
+        public static bool CanSpawnMabel { get { return !WorldMod.IsGuardianNpcInWorld(GuardianBase.Mabel) && (NPC.AnyNPCs(Terraria.ID.NPCID.PartyGirl) || Terraria.GameContent.Events.BirthdayParty.PartyIsUp); } }
 
         public static void TrySpawningMabel()
         {
@@ -167,7 +167,8 @@ namespace giantsummon.Npcs
                     if (AiTimer == 30 + DialogueTime * 5)
                     {
                         NpcMod.AddGuardianMet(8);
-                        npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
+                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                        //npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
                     }
                 }
                 else
@@ -206,7 +207,8 @@ namespace giantsummon.Npcs
                         PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], 8);
                         PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], 8).IncreaseFriendshipProgress(1);
                         NpcMod.AddGuardianMet(8);
-                        npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
+                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                        //npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
                     }
                 }
                 AiTimer++;

@@ -363,7 +363,7 @@ namespace giantsummon.Npcs
                                 string Message = "";
                                 if (Guardian.ModID == MainMod.mod.Name)
                                 {
-                                    switch (Guardian.ID)
+                                    switch (Guardian.ID) //What about moving those dialogues to a separate method, so It's easier to find them.
                                     {
                                         default:
                                             Message = "*"+Guardian.Name+" is saying that you're It's friend.*";
@@ -540,7 +540,8 @@ namespace giantsummon.Npcs
                             NpcMod.AddGuardianMet(10);
                             PlayerMod.AddPlayerGuardian(player, GuardianID, GuardianModID);
                             PlayerMod.GetPlayerGuardian(player, GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
-                            npc.Transform(ModContent.NPCType<GuardianNPC.List.BunnyGuardian>());
+                            WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                            //npc.Transform(ModContent.NPCType<GuardianNPC.List.BunnyGuardian>());
                             break;
 
                             //////////////////////////////////
@@ -593,26 +594,33 @@ namespace giantsummon.Npcs
             NpcMod.AddGuardianMet(GuardianID, GuardianModID);
             bool PlayerHasLeopold = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
             PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
-            if(!PlayerHasLeopold)PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
-            npc.Transform(ModContent.NPCType<GuardianNPC.List.BunnyGuardian>());
+            if (!PlayerHasLeopold) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
+            //npc.Transform(ModContent.NPCType<GuardianNPC.List.BunnyGuardian>());
             //Transform into the town npc.
+            string Mes = "";
             if (SceneID == SceneIDs.LeopoldFreeForRecruit)
             {
-                return "*Why did you make me act like a fool in front of your TerraGuardians? That will make it harder for people to remember me as a wise sage.*";
+                Mes = "*Why did you make me act like a fool in front of your TerraGuardians? That will make it harder for people to remember me as a wise sage.*";
             }
-            if (SocialAct)
+            else if (SocialAct)
             {
-                return "*You can talk?! Wait, why didn't you talked to me sooner then? I nearly thought you were... No... Nevermind... I'm Leopold, the Sage.*";
+                Mes = "*You can talk?! Wait, why didn't you talked to me sooner then? I nearly thought you were... No... Nevermind... I'm Leopold, the Sage.*";
             }
-            if (FearAct)
+            else if (FearAct)
             {
-                return "*Huh? You're friendly? And can talk?! Oh... Thank... No... I'm fine.. It's just... Uh... Pleased to meet you, by the way... I'm Leopold, the Sage.*";
+                Mes = "*Huh? You're friendly? And can talk?! Oh... Thank... No... I'm fine.. It's just... Uh... Pleased to meet you, by the way... I'm Leopold, the Sage.*";
             }
-            if (ScareAct)
+            else if (ScareAct)
             {
-                return "*What?! You can talk!? Why did you made me pass through all that you idiot! Ugh... I'm Leopold, the Sage, by the way. Do you... Do you have some spare leaves with you...?*";
+                Mes = "*What?! You can talk!? Why did you made me pass through all that you idiot! Ugh... I'm Leopold, the Sage, by the way. Do you... Do you have some spare leaves with you...?*";
             }
-            return "*You can understand what I say?! Wow! The book was right!!*";
+            else
+            {
+                Mes = "*You can understand what I say?! Wow! The book was right!!*";
+            }
+            WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+            GuardianMouseOverAndDialogueInterface.SetDialogue(Mes);
+            return Mes;
         }
 
         public static bool CanSpawnLeopold { get { return WorldMod.GuardiansMetCount >= 5 && !NpcMod.HasMetGuardian(10) && !NpcMod.HasGuardianNPC(10); } }

@@ -41,8 +41,8 @@ namespace giantsummon
             }
         }
         public bool KnockedOut = false, KnockedOutCold = false, FriendlyDuelDefeat = false;
-        public short ReviveCooldown = 0;
-        public const int HelpCooldown = 15;
+        public short RescueTime = 0;
+        public const int MaxRescueTime = 10;
         public int GuardianInventory = 0; //For messing with it's internal inventory or chest
         public int SelectedGuardian = -1;
         public int[] SelectedAssistGuardians = new int[MainMod.MaxExtraGuardianFollowers];
@@ -148,6 +148,7 @@ namespace giantsummon
         public bool[] PigGuardianCloudForm = new bool[5]; //Must be saved with the player. Last one is for the big form.
         public int TalkingGuardianPosition = 0;
         public bool IsTalkingToAGuardian = false;
+        public byte TerraGuardiansNearby = 0;
 
         public static int GetPlayerAcceptedRequestCount(Player player)
         {
@@ -572,6 +573,22 @@ namespace giantsummon
             {
                 GuardianMouseOverAndDialogueInterface.Update();
             }
+            TerraGuardiansNearby = 0;
+            Vector2 Center = player.Center;
+            foreach (TerraGuardian g in WorldMod.GuardianTownNPC)
+            {
+                if (g.OwnerPos == -1 && g.Position.X >= Center.X - NPC.sWidth && g.Position.X < Center.X + NPC.sWidth &&
+                    g.CenterPosition.Y >= Center.Y - NPC.sHeight && g.CenterPosition.Y < Center.Y + NPC.sHeight)
+                {
+                    TerraGuardiansNearby++;
+                    player.townNPCs += g.Base.TownNpcSlot;
+                }
+            }
+            /*foreach (TerraGuardian g in MainMod.ActiveGuardians.Values)
+            {
+                if (g.InPerceptionRange(player.Center))
+                    TerraGuardiansNearby++;
+            }*/
         }
 
         public void UpdateReviveSystem()
@@ -662,9 +679,9 @@ namespace giantsummon
             }
             else
             {
-                if (ReviveCooldown > 0)
+                if (RescueTime > 0)
                 {
-                    ReviveCooldown = 0;
+                    RescueTime = 0;
                 }
             }
             if (KnockedOut)
@@ -758,41 +775,106 @@ namespace giantsummon
                 if (Distance >= 3000)
                     ForceKill = true;
             }
-            if (false && KnockedOutCold) //Disabled for now, needs better planning
+            if (KnockedOutCold) //Disabled for now, needs better planning
             {
                 if (player.whoAmI == Main.myPlayer)
                 {
-                    ReviveCooldown++;
-                    if (ReviveCooldown >= HelpCooldown * 60)
+                    if (!GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed))
                     {
-                        KnockedOutCold = false;
-                        KnockedOut = true;
-                        ReviveCooldown = 0;
-                        Main.NewText("Waking up.");
-                        int NearestGuardian = -1;
-                        float NearestDistance = -1;
-                        foreach (int g in MainMod.ActiveGuardians.Keys)
+                        RescueTime++;
+                        if (RescueTime >= MaxRescueTime * 60)
                         {
-                            if (!MainMod.ActiveGuardians[g].Downed && !MainMod.ActiveGuardians[g].KnockedOut && !MainMod.ActiveGuardians[g].IsPlayerHostile(player))
+                            KnockedOutCold = false;
+                            KnockedOut = true;
+                            RescueTime = 0;
+                            TerraGuardian rescuer = null;
+                            bool RescuerIsHomeless = true;
+                            float NearestRescuerDistance = float.MaxValue;
+                            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                             {
-                                float Distance = (MainMod.ActiveGuardians[g].CenterPosition - player.Center).Length();
-                                if (NearestDistance == -1 || NearestDistance < Distance)
+                                if (tg.OwnerPos == -1 && !tg.DoAction.InUse && !tg.Downed && !tg.KnockedOut && tg.GetTownNpcInfo != null)
                                 {
-                                    NearestDistance = Distance;
-                                    NearestGuardian = g;
+                                    float Distance = player.Distance(tg.CenterPosition);
+                                    bool IsHomeless = tg.GetTownNpcInfo.Homeless;
+                                    if (Distance < NearestRescuerDistance)
+                                    {
+                                        if ((RescuerIsHomeless && IsHomeless) || !IsHomeless)
+                                        {
+                                            rescuer = tg;
+                                            NearestRescuerDistance = Distance;
+                                            RescuerIsHomeless = IsHomeless;
+                                        }
+                                    }
+                                }
+                            }
+                            if (rescuer != null)
+                            {
+                                rescuer.Spawn();
+                                player.position = rescuer.CenterPosition;
+                                GuardianActions.TryRevivingPlayer(rescuer, player);
+                            }
+                            else
+                            {
+                                player.Spawn();
+                            }
+                            player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
+                            //Send to some guardian house and then move It in.
+                            //If the above isn't possible, send to spawn, and place some guardian nearby.
+                            foreach (TerraGuardian tg in GetAllGuardianFollowers)
+                            {
+                                if (tg.Active && (tg.KnockedOut || tg.KnockedOutCold))
+                                {
+                                    tg.TeleportToPlayer();
+                                    tg.KnockedOutCold = false;
+                                    //tg.ExitDownedState();
+                                }
+                            }
+                            if (player.whoAmI == Main.myPlayer)
+                            {
+                                Main.BlackFadeIn = 255;
+                                Main.renderNow = true;
+                            }
+                            if (Main.netMode == 0)
+                            {
+                                Main.time += Main.rand.Next(10, 35) * 0.1f * 3600;
+                                if (Main.dayTime)
+                                {
+                                    if (Main.time >= 15 * 3600)
+                                    {
+                                        Main.time -= 15 * 3600;
+                                        Main.dayTime = false;
+                                    }
+                                    /*if (Main.dayTime)
+                                    {
+                                        if (Main.eclipse)
+                                        {
+                                            Main.dayTime = true;
+                                            Main.time = Main.rand.Next(5, 15) * 0.1f * 3600;
+                                        }
+                                    }*/
+                                }
+                                else
+                                {
+                                    if (Main.time >= 9 * 3600)
+                                    {
+                                        Main.time -= 9 * 3600;
+                                        Main.dayTime = true;
+                                    }
+                                    /*if (!Main.dayTime)
+                                    {
+                                        if (Main.bloodMoon)
+                                        {
+                                            Main.dayTime = true;
+                                            Main.time = Main.rand.Next(5, 15) * 0.1f * 3600;
+                                        }
+                                    }*/
                                 }
                             }
                         }
-                        //Add teleport script and else
-                        if (NearestGuardian > -1)
-                        {
-                            MainMod.ActiveGuardians[NearestGuardian].TeleportToPlayer(false, player);
-                            ReviveCooldown = -HelpCooldown * 60;
-                        }
                     }
                 }
-                if(ReviveBoost > 0 && ReviveCooldown > 0)
-                    ReviveCooldown = 0;
+                if(ReviveBoost > 0 && RescueTime > 0)
+                    RescueTime = 0;
             }
         }
 
@@ -960,13 +1042,13 @@ namespace giantsummon
             float HealthRestoreValue = 1f;
             if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
             {
-                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
+                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 180 * 60);
                 HealthRestoreValue = 0.5f;
             }
             else if (player.HasBuff(ModContent.BuffType<Buffs.Injury>()))
             {
                 player.DelBuff(player.FindBuffIndex(ModContent.BuffType<Buffs.Injury>()));
-                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 45 * 60);
+                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
                 HealthRestoreValue = 0.75f;
             }
             else
@@ -2084,6 +2166,15 @@ namespace giantsummon
                     ReverseMountedOne.Draw();
                 if (controlledOne != null)
                     controlledOne.Draw();*/
+                foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
+                {
+                    if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Player && gdm.DrawTargetID == player.whoAmI && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
+                    {
+                        MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
+                        Main.playerDrawData.InsertRange(0, TerraGuardian.GetDrawBehindData);
+                        Main.playerDrawData.AddRange(TerraGuardian.GetDrawFrontData);
+                    }
+                }
             });
             layers.Add(l);
             if (AlexRecruitScripts.AlexNPCPosition > -1)

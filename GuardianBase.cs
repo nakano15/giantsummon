@@ -25,6 +25,7 @@ namespace giantsummon
         public int Width = 32, Height = 82, DuckingHeight = 52;
         public int SpriteWidth = 96, SpriteHeight = 96, FramesInRows = 20;
         public float Mass = 0.5f, MaxSpeed = 4.5f, Acceleration = 0.1f, SlowDown = 0.3f;
+        public float TownNpcSlot = 1f;
         public bool Male = true;
         public int MaxJumpHeight = 15;
         public float Accuracy = 0.9f;

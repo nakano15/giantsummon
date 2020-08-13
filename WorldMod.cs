@@ -77,6 +77,14 @@ namespace giantsummon
             return false;
         }
 
+        public static void AddTownGuardianNpc(TerraGuardian tg)
+        {
+            if (!GuardianTownNPC.Any(x => x.MyID == tg.MyID))
+            {
+                GuardianTownNPC.Add(tg);
+            }
+        }
+
         public override void PreUpdate()
         {
             ProjMod.CheckForInactiveProjectiles();
@@ -118,7 +126,8 @@ namespace giantsummon
                     if (LeaveCooldown >= 10)
                     {
                         LeaveCooldown = 0;
-                        CheckIfSomeoneMustLeaveWorld();
+                        if(!Main.dayTime)
+                            CheckIfSomeoneMustLeaveWorld();
                     }
                 }
             }
@@ -196,9 +205,15 @@ namespace giantsummon
             {
                 progress.Message = "Spawning Starter Guardian";
                 MainMod.GetInitialCompanionsList();
-                int NpcID = MainMod.InitialGuardians[Main.rand.Next(MainMod.InitialGuardians.Count)];
-                int npc = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, NpcID);
-                ((GuardianNPC.GuardianNPCPrefab)Main.npc[npc].modNPC).UnlockGuardian();
+                GuardianID id = MainMod.InitialGuardians[Main.rand.Next(MainMod.InitialGuardians.Count)];
+                TerraGuardian tg = new TerraGuardian(id.ID, id.ModID);
+                tg.Active = true;
+                tg.Position.X = Main.spawnTileX * 16 + 8;
+                tg.Position.Y = Main.spawnTileY * 16 + 16;
+                GuardianTownNPC.Add(tg);
+                NpcMod.AddGuardianMet(id.ID, id.ModID);
+                AllowGuardianNPCToSpawn(id.ID, id.ModID);
+                SpawnGuardian = new KeyValuePair<int, string>(id.ID, id.ModID);
             }));
             tasks.Add(new PassLegacy("Spawning Tombstone.", delegate(GenerationProgress progress)
             {
@@ -210,6 +225,9 @@ namespace giantsummon
         {
             Terraria.ModLoader.IO.TagCompound tag = new Terraria.ModLoader.IO.TagCompound();
             tag.Add("ModVersion", MainMod.ModVersion);
+            tag.Add("SpawnGuardian_ID", SpawnGuardian.Key);
+            tag.Add("SpawnGuardian_ModID", SpawnGuardian.Value);
+            //Save spawn guardian
             tag.Add("GuardiansMet_Count", GuardiansMet.Count);
             for (int i = 0; i < GuardiansMet.Count; i++)
             {
@@ -253,6 +271,12 @@ namespace giantsummon
             if (!tag.ContainsKey("ModVersion"))
                 return;
             int Version = tag.GetInt("ModVersion");
+            if (Version >= 70)
+            {
+                int ID = tag.GetInt("SpawnGuardian_ID");
+                string ModID = tag.GetString("SpawnGuardian_ModID");
+                SpawnGuardian = new KeyValuePair<int, string>(ID, ModID);
+            }
             if (Version < 38)
             {
                 int[] Ids = tag.GetIntArray("GuardiansMet");
@@ -367,7 +391,7 @@ namespace giantsummon
                 Main.GameViewMatrix.TransformationMatrix);
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
-                if (tg.OwnerPos == -1)
+                if (tg.OwnerPos == -1 && !MainMod.DrawMoment.Any(x => x.GuardianWhoAmID == tg.WhoAmID))
                 {
                     tg.Draw();
                 }
@@ -405,6 +429,54 @@ namespace giantsummon
                     return true;
             }
             return false;
+        }
+
+        public static void TurnNpcIntoGuardianTownNpc(NPC npc, int GuardianID, string GuardianModID = "")
+        {
+            if (GuardianModID == "")
+                GuardianModID = MainMod.mod.Name;
+            TerraGuardian guardian = null;
+            if (IsGuardianNpcInWorld(GuardianID, GuardianModID))
+            {
+                foreach (TerraGuardian tg in GuardianTownNPC)
+                {
+                    if (tg.ID == GuardianID && tg.ModID == GuardianModID)
+                    {
+                        guardian = tg;
+                        break;
+                    }
+                }
+            }
+            else if (Main.netMode == 0)
+            {
+                foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                {
+                    if (tg.ID == GuardianID && tg.ModID == GuardianModID)
+                    {
+                        guardian = tg;
+                        break;
+                    }
+                }
+            }
+            if (guardian == null)
+            {
+                guardian = new TerraGuardian(GuardianID, GuardianModID);
+                guardian.Position = npc.Bottom;
+                guardian.SetFallStart();
+                guardian.Direction = npc.direction;
+                guardian.Active = true;
+                MainMod.AddActiveGuardian(guardian, true);
+            }
+            GuardianTownNPC.Add(guardian);
+            npc.active = false;
+            if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI)
+            {
+                Main.player[Main.myPlayer].talkNPC = -1;
+                GuardianMouseOverAndDialogueInterface.StartDialogue(guardian);
+                GuardianMouseOverAndDialogueInterface.SetDialogue(Main.npcChatText);
+                //Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian = true;
+                //Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition = guardian.WhoAmID;
+            }
         }
 
         public static int Housing_GetMaxNumberOfHabitants()
@@ -667,9 +739,6 @@ namespace giantsummon
                 if (CountHouseUsers >= TownNPCCounterForHouse)
                     return true;
             }
-            //if (CountHouseUsers > 0)
-            //    return true;
-            //Main.NewText("Room Users: " + CountHouseUsers + " Max: " + TownNPCCounterForHouse);
             return false;
         }
 

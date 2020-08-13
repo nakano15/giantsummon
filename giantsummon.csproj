@@ -97,6 +97,7 @@
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
     <Compile Include="GuardianDrawData.cs" />
+    <Compile Include="GuardianDrawMoment.cs" />
     <Compile Include="GuardianHouseManagementInterface.cs" />
     <Compile Include="GuardianID.cs" />
     <Compile Include="GuardianManagement.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="GuardianProjAI.cs" />
     <Compile Include="GuardianSchedule.cs" />
     <Compile Include="GuardianSkills.cs" />
+    <Compile Include="GuardianSpawningScripts.cs" />
     <Compile Include="Items\Accessories\FirstSymbol.cs" />
     <Compile Include="Items\Accessories\GoldenShowerPapyrus.cs" />
     <Compile Include="Items\Accessories\PackLeaderNecklace.cs" />

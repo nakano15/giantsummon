@@ -203,7 +203,8 @@ namespace giantsummon.Npcs
                 {
                     PlayerMod.AddPlayerGuardian(Main.player[npc.target], GuardianBase.Malisha);
                     NpcMod.AddGuardianMet(GuardianBase.Malisha);
-                    npc.Transform(ModContent.NPCType<GuardianNPC.List.PantherGuardian>());
+                    WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                    //npc.Transform(ModContent.NPCType<GuardianNPC.List.PantherGuardian>());
                 }
             }
             else
@@ -296,7 +297,8 @@ namespace giantsummon.Npcs
                         PlayerMod.AddPlayerGuardian(Main.player[npc.target], GuardianBase.Malisha);
                         PlayerMod.GetPlayerGuardian(Main.player[npc.target], GuardianBase.Malisha).IncreaseFriendshipProgress(1);
                         NpcMod.AddGuardianMet(GuardianBase.Malisha);
-                        npc.Transform(ModContent.NPCType<GuardianNPC.List.PantherGuardian>());
+                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                        //npc.Transform(ModContent.NPCType<GuardianNPC.List.PantherGuardian>());
                         return;
                 }
                 Main.npcChatText = GetStepMessage();

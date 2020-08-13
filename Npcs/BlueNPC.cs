@@ -110,7 +110,8 @@ namespace giantsummon.Npcs
             if (!PlayerHadBlue)
                 PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).IncreaseFriendshipProgress(1);
             NpcMod.AddGuardianMet(GuardianBase.Blue);
-            npc.Transform(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
+            WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Blue);
+            //npc.Transform(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
         }
 
         public override bool CheckActive()

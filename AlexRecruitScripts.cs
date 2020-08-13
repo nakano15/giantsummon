@@ -92,7 +92,7 @@ namespace giantsummon
                 {
                     for (int x = 0; x < TombstoneWidth; x++)
                     {
-                        if ((Main.tile[StartPosX + x, StartPosY + y].active() && Main.tile[StartPosX + x, StartPosY].frameX == 0 && Main.tile[StartPosX + x, StartPosY].frameY == 0) || 
+                        if (Main.tile[StartPosX + x, StartPosY + y].active() || 
                             Main.tile[StartPosX + x, StartPosY + y].liquid > 0)
                         {
                             SomeTileInTheWay = true;

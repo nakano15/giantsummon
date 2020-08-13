@@ -21,3 +21,31 @@ The mod will now try to update the companion animation when getting their sprite
 	That may be necessary depending on the companion, and the current situation of the world, or something else.
 Fixed a crash that caused bounty requests to crash, when you receive a bounty before facing any boss.
 Homeless companions will no longer have the urge of keeping using furnitures during the entire house, when they find a house to stay.
+Fixed a bug where starter guardian variable weren't being saved with the world.
+	If you tried talking to a guardian that spawned with the world, after you reloaded It at least once, that guardian would not be recognized as Starter Guardian anymore. The starter guardian variable is important, if a guardian that has friendship level requirement spawns with the world, because It flags them as starter, and allows you to call them regardless of friendship level.
+Companions will now close doors when they use a furniture.
+Companion town npcs will show death messages descriptible about their death, like the follower guardians does.
+Implemented the Rescue system to the mod, for those who really don't want their character to die in combat.
+	When your character gets knocked out cold, and there is no companion alive nearby to revive you, a countdown will begin.
+	While the countdown is running, the screen will get darker.
+	Once the countdown reaches 0, you will respawn either nearby a companion with a house nearby, a companion without a house which can help you, or at your character spawn point, without anyone to help you.
+	In case you are helped by a companion, your character will wake up with It trying to revive your character.
+	After respawning, your character and companions will be on Knocked Out state, able to restore conscience overtime.
+	The maximum health you respawns with greatly increases if there's an event happening, like a moon event, an eclipse or invasion in progress.
+	Do notice that this also causes the time to jump a few hours ahead. It takes time to bring you and your companions to a safe place.
+		The time jump isn't related to the distance from your character to the rescuer. Near or far away from the rescuer place, the time has the same jump distance range.
+	This is very ambitious, right? Wonder how much of a pain would be to make It work on Multiplayer, if It existed.
+Changes to how Companion Town Npcs works were implemented.
+	Now companions no longer requires a mask npc to exist in the world, there is now a different system which allows their existence in the world.
+	Due to the changes, I also had to make a npc spawning and housing system specially modified for them, due to that, they now allow:
+		Companions to share the same house, depending on how many chairs available there are.
+		Companions will be able to share house with a Terraria Town npc, this actually was partially not intended, but I made It be possible to avoid a bug that would cause problems with house assigning.
+			This may stay, maybe If I add a affinity checking with specific town npcs, where TerraGuardians may not mind to live with a town npc, like Mabel and the Angler kid.
+	Town npcs from older saves will be automatically converted into the new TerraGuardians companions.
+		They will be homeless at first, so be sure to assign their houses after you enter the world.
+There is now a different from Terraria dialogue interface and system, for when talking to the Companions.
+	This new dialogue interface will only be shown on dialogues with companions, and their options will show up depending on the moment, the companion and/or other reasons.
+	You can speak with the companions travelling with you.
+The following changes were done to Injury and Heavy Injury debuffs:
+	Upon leaving Knocked Out State, you will get 1 minute of Injury debuff, instead of 45 seconds.
+	If you leave Knocked Out State while with Injury, you will get 3 minutes of the Heavy Injury debuff, instead of 1 minute.

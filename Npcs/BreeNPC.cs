@@ -557,7 +557,8 @@ namespace giantsummon.Npcs
             NpcMod.AddGuardianMet(7);
             Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().AddNewGuardian(7);
             PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], 7).IncreaseFriendshipProgress(1);
-            npc.Transform(ModContent.NPCType<GuardianNPC.List.FemaleCatGuardian>());
+            WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Bree);
+            //npc.Transform(ModContent.NPCType<GuardianNPC.List.FemaleCatGuardian>());
         }
 
         public override bool CanChat()

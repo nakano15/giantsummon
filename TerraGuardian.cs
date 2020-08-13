@@ -88,6 +88,7 @@ namespace giantsummon
         public string GroupID { get { return Base.GetGroupID; } }
         public string ModID { get { return Data.ModID; } set { Data.ModID = value; } }
         public int ID { get { return Data.ID; } set { Data.ID = value; } }
+        public GuardianID MyID { get { return Data.MyID; } set { Data.MyID = value; } }
         public bool Active = false;
         public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
         public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false;
@@ -390,24 +391,23 @@ namespace giantsummon
         public int GetMeleeWeaponRangeX(int ItemPosition = -1, bool Kneeling = false)
         {
             int Range = 40;
-            int WeaponPosition = ItemPosition;
-            if (WeaponPosition > -1)
+            if (ItemPosition > -1)
             {
-                if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[WeaponPosition]))
+                if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[ItemPosition]))
                 {
-                    if (Main.itemTexture[this.Inventory[WeaponPosition].type].Height >= Main.itemTexture[this.Inventory[WeaponPosition].type].Width)
-                        Range = Main.itemTexture[this.Inventory[WeaponPosition].type].Height;
+                    if (Main.itemTexture[this.Inventory[ItemPosition].type].Height >= Main.itemTexture[this.Inventory[ItemPosition].type].Width)
+                        Range = Main.itemTexture[this.Inventory[ItemPosition].type].Height;
                     else
-                        Range = Main.itemTexture[this.Inventory[WeaponPosition].type].Width;
+                        Range = Main.itemTexture[this.Inventory[ItemPosition].type].Width;
                 }
                 else
                 {
-                    if (this.Inventory[WeaponPosition].height >= this.Inventory[WeaponPosition].width)
-                        Range = this.Inventory[WeaponPosition].height;
+                    if (this.Inventory[ItemPosition].height >= this.Inventory[ItemPosition].width)
+                        Range = this.Inventory[ItemPosition].height;
                     else
-                        Range = this.Inventory[WeaponPosition].width;
+                        Range = this.Inventory[ItemPosition].width;
                 }
-                Range = (int)(Range * Inventory[WeaponPosition].scale);
+                Range = (int)(Range * Inventory[ItemPosition].scale);
             }
             {
                 int AttackRangeX = 0;
@@ -1056,14 +1056,15 @@ namespace giantsummon
             EmotionDisplayTime = MaxEmotionDisplaytime;
         }
 
-        public void SaySomething(string Message, bool ChatDisplay = false)
+        public int SaySomething(string Message, bool ChatDisplay = false)
         {
             this.ChatMessage = Message;
             if (ChatDisplay)
             {
                 Main.NewText(Name + ": " + Message);
             }
-            MessageTime = Main.chatLength / 2;
+            MessageTime = MainMod.CalculateMessageTime(Message);
+            return MessageTime;
         }
 
         public void SetTargetNpc(NPC n)
@@ -1667,10 +1668,35 @@ namespace giantsummon
             }*/
         }
 
+        public void AddDrawMomentToPlayer(Player player)
+        {
+            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Player, player.whoAmI);
+            MainMod.DrawMoment.Add(gdm);
+        }
+
+        public void AddDrawMomentToNpc(NPC npc)
+        {
+            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Npc, npc.whoAmI);
+            MainMod.DrawMoment.Add(gdm);
+        }
+
+        public void AddDrawMomentToTerraGuardian(TerraGuardian tg)
+        {
+            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Guardian, tg.WhoAmID);
+            MainMod.DrawMoment.Add(gdm);
+        }
+
         public void Update(Player Owner = null)
         {
             if (!Active)
                 return;
+            for (int dm = 0; dm < MainMod.DrawMoment.Count; dm++)
+            {
+                if (MainMod.DrawMoment[dm].GuardianWhoAmID == WhoAmID)
+                {
+                    MainMod.DrawMoment.RemoveAt(dm);
+                }
+            }
             CollisionHeightDiscount = 0;
             FinalScale = ScaleMult;
             if (Owner != null)
@@ -4189,7 +4215,7 @@ namespace giantsummon
                 Item weapon = Inventory[WeaponPosition];
                 float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition, Kneeling) + TargetWidth * 0.5f, UpperY, LowerY;
                 GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY, Kneeling);
-                InRangeX = Math.Abs(Position.X + Velocity.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
+                InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
                 InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) || 
                     (UpperY + Position.Y - Height >= TargetPosition.Y && LowerY + Position.Y <= TargetPosition.Y + TargetHeight);
                 /*for (int x = -10; x <= 10; x++)
@@ -4452,7 +4478,7 @@ namespace giantsummon
                     TargetPosition.X += (Main.player[OwnerPos].Center.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
                 }*/
                 bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
-                if (false && !TargetOnSight)
+                if (!TargetOnSight)
                 {
                     float Distance = 16;
                     switch (tactic)
@@ -4468,11 +4494,11 @@ namespace giantsummon
                     {
                         Distance *= 2;
                     }
-                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X + Velocity.X) > Distance)
+                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) > Distance)
                     {
                         Approach = true;
                     }
-                    else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - CenterPosition.X + Velocity.X) < Distance * 0.5f)
+                    else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) <= Distance * 0.5f)
                     {
                         Retreat = true;
                     }
@@ -4489,7 +4515,7 @@ namespace giantsummon
                                 }
                                 else
                                 {
-                                    float DistanceX = (TargetPosition.X + TargetWidth * 0.5f) - (CenterPosition.X);
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                     float ApproachDistance = TargetWidth + Width + 20,
                                         RetreatDistance = TargetWidth + Width + 12;
                                     if (NearDeath)
@@ -4497,10 +4523,10 @@ namespace giantsummon
                                         ApproachDistance += 44;
                                         RetreatDistance += 20;
                                     }
-                                    if (Math.Abs(DistanceX) >= ApproachDistance)
-                                        Approach = true;
-                                    else if (Math.Abs(DistanceX) <= RetreatDistance)
+                                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X) <= RetreatDistance)
                                         Retreat = true;
+                                    else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
+                                        Approach = true;
                                     //if(TargetInAim)
                                     Attack = true;
                                 }
@@ -4519,10 +4545,10 @@ namespace giantsummon
                                 else
                                 {
                                     const float AssistDistance = 120f;
-                                    float DistanceX = (TargetPosition.X + TargetWidth * 0.5f) - (CenterPosition.X);
-                                    if (Math.Abs(DistanceX) >= TargetWidth + Width + AssistDistance)
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                                    if (DistanceX >= TargetWidth + Width + AssistDistance)
                                         Approach = true;
-                                    else if (Math.Abs(DistanceX) <= TargetWidth + Width + AssistDistance - 24)
+                                    else if (DistanceX <= TargetWidth + Width + AssistDistance - 24)
                                         Retreat = true;
                                     //if (TargetInAim)
                                     Attack = true;
@@ -4535,11 +4561,11 @@ namespace giantsummon
                                 {
                                     GoMelee = true;
                                 }
-                                float DistanceX = (TargetPosition.X + TargetWidth * 0.5f) - (CenterPosition.X);
+                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                 const float SnipeDistance = 260f;
-                                if (Math.Abs(DistanceX) >= TargetWidth + Width + SnipeDistance)
+                                if (DistanceX >= TargetWidth + Width + SnipeDistance)
                                     Approach = true;
-                                else if (Math.Abs(DistanceX) <= TargetWidth + Width + SnipeDistance - 24)
+                                else if (DistanceX <= TargetWidth + Width + SnipeDistance - 24)
                                     Retreat = true;
                                 //if (TargetInAim)
                                 Attack = true;
@@ -4569,16 +4595,16 @@ namespace giantsummon
                             }
                         }
                     }
-                    if (InRangeX && InRangeY)
+                    if ((InRangeX && InRangeY) || NearDeath)
                     {
                         Attack = true;
-                        if (NeedsDucking)
+                        if (NeedsDucking && !NearDeath)
                             Duck = true;
                     }
                     float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + TargetWidth * 0.5f,
                         DistanceAbs = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f);
                     //Main.NewText("Range X: " + AttackRange + "  Distance ABS: " + DistanceAbs + "  Target Width: " + TargetWidth + "  Target Height: " + TargetHeight);
-                    if (DistanceAbs < Width * 0.5f + 8)
+                    if (DistanceAbs < Width * 0.5f + 8 || NearDeath)
                         Retreat = true;
                     else if (DistanceAbs >= AttackRange)
                         Approach = true;
@@ -4592,14 +4618,14 @@ namespace giantsummon
             }
             if (Approach)
             {
-                if (TargetPosition.X + TargetWidth * 0.5f > CenterPosition.X)
+                if (TargetPosition.X + TargetWidth * 0.5f > Position.X)
                     MoveRight = true;
                 else
                     MoveLeft = true;
             }
             if (Retreat)
             {
-                if (TargetPosition.X + TargetWidth * 0.5f <= CenterPosition.X)
+                if (TargetPosition.X + TargetWidth * 0.5f <= Position.X)
                     MoveRight = true;
                 else
                     MoveLeft = true;
@@ -4619,12 +4645,6 @@ namespace giantsummon
                     {
                         MoveLeft = true;
                     }
-                    /*if (HasFlag(GuardianFlags.Confusion))
-                    {
-                        bool ml = MoveLeft, mr = MoveRight;
-                        MoveLeft = mr;
-                        MoveRight = ml;
-                    }*/
                 }
                 else if (Distance >= 368f - 32)
                 {
@@ -4638,19 +4658,13 @@ namespace giantsummon
                         if (MoveRight)
                             MoveRight = false;
                     }
-                    /*if (HasFlag(GuardianFlags.Confusion))
-                    {
-                        bool ml = MoveLeft, mr = MoveRight;
-                        MoveLeft = mr;
-                        MoveRight = ml;
-                    }*/
                 }
             }
             if (Jump && ((JumpHeight == 0 && Velocity.Y == 0) || (JumpHeight > 0)))
             {
                 this.Jump = true;
             }
-            if (Attack && TargetInAim && ItemAnimationTime == 0 && !Action && !LastAction)// || (SelectedItem > -1 && Inventory[SelectedItem].autoReuse)))
+            if (Attack && (TargetInAim || (SelectedItem == -1 || Inventory[SelectedItem].melee)) && ItemAnimationTime == 0 && !Action && !LastAction)// || (SelectedItem > -1 && Inventory[SelectedItem].autoReuse)))
             {
                 //if(TargetInAim)
                 this.Action = true;
@@ -5413,6 +5427,11 @@ namespace giantsummon
                 else
                 {
                     UsingFurniture = true;
+                    if (closeDoor && doorx > -1 && doory > -1)
+                    {
+                        WorldGen.CloseDoor(doorx, doory);
+                        closeDoor = false;
+                    }
                 }
                 if (UsingFurniture)
                 {
@@ -5421,7 +5440,7 @@ namespace giantsummon
                         UsingFurniture = false;
                         return;
                     }
-                    Velocity.X = Velocity.Y = 0;
+                    Velocity.X = Velocity.Y = 0; //TODO - Do changes here to implement the new offset positioning.
                     switch (tile.type)
                     {
                         default:
@@ -5447,7 +5466,6 @@ namespace giantsummon
                                     SittingOffset = Base.SpriteWidth - SittingOffset;
                                 SittingOffset -= Base.SpriteWidth * 0.5f;
                                 SittingPosition.X -= SittingOffset;
-                                //SittingPosition.Y += 32;
                                 SittingPosition.Y -= (Base.SittingPoint.Y - SpriteHeight) * Scale;
                                 Position = SittingPosition;
                             }
@@ -7173,13 +7191,13 @@ namespace giantsummon
             float HealthRegenValue = 1;
             if (HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
             {
-                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
+                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 180 * 60);
                 HealthRegenValue = 0.5f;
             }
             else if (HasBuff(ModContent.BuffType<Buffs.Injury>()))
             {
                 RemoveBuff(ModContent.BuffType<Buffs.Injury>());
-                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 45 * 60);
+                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
                 HealthRegenValue = 0.75f;
             }
             else
@@ -7248,7 +7266,7 @@ namespace giantsummon
             GrabbingPlayer = false;
             PlayerMounted = false;
             Base.DeadSound.PlaySound(CenterPosition);
-            if (OwnerPos > -1) Main.NewText(Message, Color.Red);
+            Main.NewText(Message, Color.Red);
             ItemAnimationTime = 0;
             JumpHeight = 0;
             KnockdownRotation = 0f;
@@ -14154,9 +14172,22 @@ namespace giantsummon
         public void Draw(bool IgnoreLighting = false)
         {
             DrawDataCreation(IgnoreLighting);
-            foreach (GuardianDrawData dd in DrawBehind)
+            List<GuardianDrawData> DrawBehindDone = DrawBehind,
+                DrawFrontDone = DrawFront;
+            DrawBehind = new List<GuardianDrawData>();
+            DrawFront = new List<GuardianDrawData>();
+            foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
+            {
+                if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.DrawTargetID == WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
+                {
+                    MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
+                    DrawBehindDone.InsertRange(0, DrawBehind);
+                    DrawFrontDone.AddRange(DrawBehind);
+                }
+            }
+            foreach (GuardianDrawData dd in DrawBehindDone)
                 dd.Draw(Main.spriteBatch);
-            foreach (GuardianDrawData dd in DrawFront)
+            foreach (GuardianDrawData dd in DrawFrontDone)
                 dd.Draw(Main.spriteBatch);
         }
 
@@ -14578,7 +14609,7 @@ namespace giantsummon
             DrawWofExtras();
             if (mount.Active)
                 DrawMount(NewPosition, c, seffect);
-            if ((SittingOnPlayerMount || PlayerMounted) && Base.sprites.BodyFrontSprite != null)
+            if (Base.sprites.BodyFrontSprite != null) // (SittingOnPlayerMount || PlayerMounted) && 
             {
                 if (Base.SpecificBodyFrontFramePositions)
                 {
@@ -14624,9 +14655,10 @@ namespace giantsummon
 
         public void DrawHead(Vector2 CenterPosition, float Scale = 1f)
         {
-            if (!Base.IsCustomSpriteCharacter)
+            if (Base.IsTerrarian)
             {
-                DrawTerrarianHeadData(Position, Scale);
+                CenterPosition.Y -= 16f;
+                DrawTerrarianHeadData(CenterPosition, Scale);
                 return;
             }
             Main.spriteBatch.Draw(Base.sprites.HeadSprite, CenterPosition + new Vector2(-Base.sprites.HeadSprite.Width * 0.5f, -Base.sprites.HeadSprite.Height * 0.5f),
@@ -14635,7 +14667,7 @@ namespace giantsummon
 
         public void DrawTerrarianHeadData(Vector2 Position, float Scale = 1f)
         {
-            if (Base.IsCustomSpriteCharacter)
+            if (!Base.IsTerrarian)
                 return;
             SpriteEffects seffect = SpriteEffects.None;
             GuardianDrawData dd;

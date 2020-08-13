@@ -328,11 +328,12 @@ namespace giantsummon.Creatures
             {
                 switch (action.ID)
                 {
-                    case 0: //Maybe in the future allow up to 2 players?
+                    case 0:
                         {
                             action.ProceedIdleAIDuringDialogue = true;
                             action.NpcCanFacePlayer = false;
                             Player player = action.Players[0];
+                            guardian.AddDrawMomentToPlayer(player);
                             const int BuffRefreshTime = 10 * 60;
                             if (action.Time >= BuffRefreshTime && action.Time % BuffRefreshTime == 0)
                             {

@@ -14,7 +14,7 @@ namespace giantsummon.Npcs
     public class AlexNPC : ModNPC
     {
         public const int AlexID = 5;
-        public GuardianBase AlexGuardianBase = GuardianBase.GetGuardianBase(AlexID);
+        public GuardianBase AlexGuardianBase { get { return GuardianBase.GetGuardianBase(AlexID); } }
         public int BodyAnimation = 0, LeftArmAnimation = 0;
         public float AnimationTime = 0;
         public const int AI_TYPE = 0, AI_TIMER = 1;
@@ -188,7 +188,8 @@ namespace giantsummon.Npcs
                                             break;
                                         case 3:
                                             NpcMod.AddGuardianMet(AlexID);
-                                            npc.Transform(ModContent.NPCType<GuardianNPC.List.GiantDogGuardian>());
+                                            WorldMod.TurnNpcIntoGuardianTownNpc(npc, AlexID);
+                                            //npc.Transform(ModContent.NPCType<GuardianNPC.List.GiantDogGuardian>());
                                             break;
                                     }
                                 }
@@ -216,7 +217,8 @@ namespace giantsummon.Npcs
                                             //Guardian GET!
                                             PlayerMod.AddPlayerGuardian(Main.player[npc.target], AlexID);
                                             PlayerMod.GetPlayerGuardian(Main.player[npc.target], AlexID).IncreaseFriendshipProgress(1);
-                                            npc.Transform(ModContent.NPCType<GuardianNPC.List.GiantDogGuardian>());
+                                            WorldMod.TurnNpcIntoGuardianTownNpc(npc, AlexID);
+                                            //npc.Transform(ModContent.NPCType<GuardianNPC.List.GiantDogGuardian>());
                                             break;
                                     }
                                 }

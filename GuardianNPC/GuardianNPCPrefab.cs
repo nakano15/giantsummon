@@ -546,7 +546,8 @@ namespace giantsummon.GuardianNPC
                 Message = "Booo....";
             }
             GuardianData data = modPlayer.GetGuardian(GuardianID, GuardianModID);
-            if(!Guardian.DoAction.InUse || Guardian.DoAction.NpcCanFacePlayer)Guardian.LookingLeft = player.Center.X < Guardian.CenterPosition.X;
+            if(!Guardian.DoAction.InUse || Guardian.DoAction.NpcCanFacePlayer)
+                Guardian.LookingLeft = player.Center.X < Guardian.CenterPosition.X;
             Guardian.LastFriendshipLevel = 255;
             Guardian.FriendshipLevel = data.FriendshipLevel;
             Guardian.FriendshipProgression = data.FriendshipProgression;
