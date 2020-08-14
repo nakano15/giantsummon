@@ -232,7 +232,7 @@ namespace giantsummon
             Guardian.DoAction.InUse = true;
         }
         
-        public void Update(TerraGuardian guardian)
+        public virtual void Update(TerraGuardian guardian)
         {
             if (!InUse) return;
             if (guardian.Downed || guardian.KnockedOut || guardian.KnockedOutCold)
@@ -292,7 +292,7 @@ namespace giantsummon
                             }
                             bool RepelingEnemies = false;
                             guardian.MoveLeft = guardian.MoveRight = false;
-                            if (guardian.IsAttackingSomething)
+                            if (guardian.TargetID > -1)
                             {
                                 Vector2 EnemyPosition;
                                 int EnemyWidth, EnemyHeight;
@@ -1818,7 +1818,7 @@ namespace giantsummon
                 Time++;
         }
 
-        public void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
+        public virtual void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
         {
             if (!InUse) return;
             if (IsGuardianSpecificAction)
@@ -2136,7 +2136,7 @@ namespace giantsummon
             }
         }
 
-        public void Draw(TerraGuardian guardian)
+        public virtual void Draw(TerraGuardian guardian)
         {
             if (!InUse) return;
             if (IsGuardianSpecificAction)

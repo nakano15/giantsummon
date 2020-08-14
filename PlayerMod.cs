@@ -781,7 +781,10 @@ namespace giantsummon
                 {
                     if (!GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed))
                     {
-                        RescueTime++;
+                        if (ReviveBoost == 0)
+                            RescueTime++;
+                        else if (RescueTime > 0)
+                            RescueTime--;
                         if (RescueTime >= MaxRescueTime * 60)
                         {
                             KnockedOutCold = false;
@@ -859,6 +862,7 @@ namespace giantsummon
                                     {
                                         Main.time -= 9 * 3600;
                                         Main.dayTime = true;
+                                        Main.AnglerQuestSwap();
                                     }
                                     /*if (!Main.dayTime)
                                     {
@@ -2202,7 +2206,7 @@ namespace giantsummon
                     layers.Add(l);
                 }
             }
-            if (NPC.AnyNPCs(ModContent.NPCType<GuardianNPC.List.BearNPC>()))
+            /*if (NPC.AnyNPCs(ModContent.NPCType<GuardianNPC.List.BearNPC>()))
             {
                 l = new PlayerLayer(mod.Name, "Vladimir Front Body Parts", delegate(PlayerDrawInfo pdi)
                 {
@@ -2235,7 +2239,7 @@ namespace giantsummon
                     }
                 });
                 layers.Add(l);
-            }
+            }*/
             /*if (NPC.AnyNPCs(ModContent.NPCType<Npcs.VladimirNPC>()))
             {
                 l = new PlayerLayer(mod.Name, "Vladimir Recruit Npc Front Body Parts", delegate(PlayerDrawInfo pdi)

@@ -33,6 +33,7 @@ namespace giantsummon.Creatures
             CanDuck = true;
             ReverseMount = false;
             DrinksBeverage = true;
+            IsNocturnal = true;
             SetTerraGuardian();
             CallUnlockLevel = 2;
             MountUnlockLevel = 6;

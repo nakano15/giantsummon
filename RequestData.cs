@@ -325,188 +325,170 @@ namespace giantsummon
                         }
                         else
                         {
-                            if (IsTalkQuest)
+                            bool CanCountObjective = CountObjective(gd, player.player);
+                            int ObjectivesCompleted = 0, ObjectiveCount = 0;
+                            RequestBase rb = GetRequestBase(gd);
+                            for (int o = 0; o < rb.Objectives.Count; o++)
                             {
-                                if (GetIntegerValue(0) == 0)
+                                ObjectiveCount++;
+                                switch (rb.Objectives[o].objectiveType)
                                 {
-                                    if (player.player.talkNPC > -1 && Main.npc[player.player.talkNPC].modNPC is GuardianNPC.GuardianNPCPrefab)
-                                    {
-                                        GuardianNPC.GuardianNPCPrefab gnpc = (GuardianNPC.GuardianNPCPrefab)Main.npc[player.player.talkNPC].modNPC;
-                                        if (gnpc.GuardianID == gd.ID && gnpc.GuardianModID == gd.ModID && CompleteRequest(gnpc.Guardian, gd, player))
+                                    default:
                                         {
-                                            SetIntegerValue(0, 1);
-                                            Main.npcChatText = gd.Base.TalkMessage(player.player, gnpc.Guardian);
+                                            ObjectivesCompleted++;
                                         }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                bool CanCountObjective = CountObjective(gd, player.player);
-                                int ObjectivesCompleted = 0, ObjectiveCount = 0;
-                                RequestBase rb = GetRequestBase(gd);
-                                for (int o = 0; o < rb.Objectives.Count; o++)
-                                {
-                                    ObjectiveCount++;
-                                    switch (rb.Objectives[o].objectiveType)
-                                    {
-                                        default:
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement:
+                                        {
+                                            RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)rb.Objectives[o];
+                                            if (player.GetAllGuardianFollowers.Any(x => x.Active && x.ID == req.CompanionID && x.ModID == req.CompanionModID))
                                             {
                                                 ObjectivesCompleted++;
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement:
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
+                                    case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
+                                        {
+                                            if (GetIntegerValue(o) <= 0)
                                             {
-                                                RequestBase.CompanionRequirementRequest req = (RequestBase.CompanionRequirementRequest)rb.Objectives[o];
-                                                if (player.GetAllGuardianFollowers.Any(x => x.Active && x.ID == req.CompanionID && x.ModID == req.CompanionModID))
+                                                ObjectivesCompleted++;
+                                            }
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.CollectItem:
+                                        {
+                                            RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)rb.Objectives[o];
+                                            int ItemStack = 0;
+                                            for (int i = 0; i < 58; i++)
+                                            {
+                                                if (player.player.inventory[i].type == req.ItemID)
                                                 {
-                                                    ObjectivesCompleted++;
+                                                    ItemStack += player.player.inventory[i].stack;
                                                 }
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.HuntMonster:
-                                        case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
+                                            if (ItemStack >= GetIntegerValue(o))
                                             {
-                                                if (GetIntegerValue(o) <= 0)
-                                                {
-                                                    ObjectivesCompleted++;
-                                                }
+                                                ObjectivesCompleted++;
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.CollectItem:
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.Explore:
+                                        {
+                                            RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)rb.Objectives[o];
+                                            float DistanceStack = GetFloatValue(o);
+                                            if (DistanceStack <= 0)
                                             {
-                                                RequestBase.CollectItemRequest req = (RequestBase.CollectItemRequest)rb.Objectives[o];
-                                                int ItemStack = 0;
-                                                for (int i = 0; i < 58; i++)
+                                                ObjectivesCompleted++;
+                                            }
+                                            else
+                                            {
+                                                foreach (TerraGuardian guardian in player.GetAllGuardianFollowers)
                                                 {
-                                                    if (player.player.inventory[i].type == req.ItemID)
+                                                    if (guardian.ID == gd.ID && guardian.ModID == gd.ModID)
                                                     {
-                                                        ItemStack += player.player.inventory[i].stack;
+                                                        float Speed = guardian.Velocity.X;
+                                                        if (guardian.MountedOnPlayer || guardian.SittingOnPlayerMount)
+                                                            Speed = player.player.velocity.X;
+                                                        DistanceStack -= Math.Abs(Speed) * 0.05f;
+                                                        SetFloatValue(o, DistanceStack);
+                                                        break;
                                                     }
                                                 }
-                                                if (ItemStack >= GetIntegerValue(o))
-                                                {
-                                                    ObjectivesCompleted++;
-                                                }
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.Explore:
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
+                                        {
+                                            if (GetIntegerValue(o) > 0)
                                             {
-                                                RequestBase.ExploreRequest req = (RequestBase.ExploreRequest)rb.Objectives[o];
-                                                float DistanceStack = GetFloatValue(o);
-                                                if (DistanceStack <= 0)
+                                                RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)rb.Objectives[o];
+                                                if (CanCountObjective && Main.invasionType == req.EventID && Main.invasionProgressWave != MainMod.LastEventWave && MainMod.LastEventWave > 0)
                                                 {
-                                                    ObjectivesCompleted++;
-                                                }
-                                                else
-                                                {
-                                                    foreach (TerraGuardian guardian in player.GetAllGuardianFollowers)
+                                                    switch ((EventList)req.EventID)
                                                     {
-                                                        if (guardian.ID == gd.ID && guardian.ModID == gd.ModID)
-                                                        {
-                                                            float Speed = guardian.Velocity.X;
-                                                            if (guardian.MountedOnPlayer || guardian.SittingOnPlayerMount)
-                                                                Speed = player.player.velocity.X;
-                                                            DistanceStack -= Math.Abs(Speed) * 0.05f;
-                                                            SetFloatValue(o, DistanceStack);
+                                                        case EventList.PumpkinMoon:
+                                                        case EventList.FrostMoon:
+                                                        case EventList.DD2Event:
+                                                            SetIntegerValue(0, GetIntegerValue(o) - 1);
                                                             break;
-                                                        }
                                                     }
                                                 }
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
-                                            {
-                                                if (GetIntegerValue(o) > 0)
-                                                {
-                                                    RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)rb.Objectives[o];
-                                                    if (CanCountObjective && Main.invasionType == req.EventID && Main.invasionProgressWave != MainMod.LastEventWave && MainMod.LastEventWave > 0)
-                                                    {
-                                                        switch ((EventList)req.EventID)
-                                                        {
-                                                            case EventList.PumpkinMoon:
-                                                            case EventList.FrostMoon:
-                                                            case EventList.DD2Event:
-                                                                SetIntegerValue(0, GetIntegerValue(o) - 1);
-                                                                break;
-                                                        }
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    ObjectivesCompleted++;
-                                                }
-                                            }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
-                                        case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
-                                            {
-                                                if (GetIntegerValue(o) <= 0)
-                                                {
-                                                    ObjectivesCompleted++;
-                                                }
-                                            }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.None:
+                                            else
                                             {
                                                 ObjectivesCompleted++;
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout:
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
+                                    case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
+                                        {
+                                            if (GetIntegerValue(o) <= 0)
                                             {
-                                                if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
-                                                {
-                                                    SetIntegerValue(o, 1);
-                                                    TerraGuardian tg = PlayerMod.GetPlayerSummonedGuardian(player.player, gd.ID, gd.ModID);
-                                                    if (tg.KnockedOutCold || tg.Downed)
-                                                    {
-                                                        if (!Failed && player.player.whoAmI == Main.myPlayer)
-                                                            Main.NewText("Requester was defeated, " + gd.Name + " request failed.", 255);
-                                                        Failed = true;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    SetIntegerValue(o, 0);
-                                                }
+                                                ObjectivesCompleted++;
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.None:
+                                        {
+                                            ObjectivesCompleted++;
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout:
+                                        {
+                                            if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
                                             {
-                                                if (player.KnockedOutCold || player.player.dead)
+                                                SetIntegerValue(o, 1);
+                                                TerraGuardian tg = PlayerMod.GetPlayerSummonedGuardian(player.player, gd.ID, gd.ModID);
+                                                if (tg.KnockedOutCold || tg.Downed)
                                                 {
                                                     if (!Failed && player.player.whoAmI == Main.myPlayer)
-                                                        Main.NewText("You were defeated, " + gd.Name + " request failed.", 255);
+                                                        Main.NewText("Requester was defeated, " + gd.Name + " request failed.", 255);
                                                     Failed = true;
                                                 }
-                                                foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
-                                                {
-                                                    if (!tg.Active) continue;
-                                                    if (tg.KnockedOutCold || tg.Downed)
-                                                    {
-                                                        if (!Failed && player.player.whoAmI == Main.myPlayer)
-                                                            Main.NewText("One of your companions was defeated, " + gd.Name + " request failed.", 255);
-                                                        Failed = true;
-                                                    }
-                                                }
                                             }
-                                            break;
-                                        case RequestBase.RequestObjective.ObjectiveTypes.TalkTo:
+                                            else
                                             {
-                                                if (GetIntegerValue(o) < 1)
+                                                SetIntegerValue(o, 0);
+                                            }
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
+                                        {
+                                            if (player.KnockedOutCold || player.player.dead)
+                                            {
+                                                if (!Failed && player.player.whoAmI == Main.myPlayer)
+                                                    Main.NewText("You were defeated, " + gd.Name + " request failed.", 255);
+                                                Failed = true;
+                                            }
+                                            foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
+                                            {
+                                                if (!tg.Active) continue;
+                                                if (tg.KnockedOutCold || tg.Downed)
                                                 {
-                                                    RequestBase.TalkRequestObjective req = (RequestBase.TalkRequestObjective)rb.Objectives[o];
-                                                    if (player.player.talkNPC > -1 && Main.npc[player.player.talkNPC].type == req.NpcID)
-                                                    {
-                                                        Main.npcChatText += "\n" + req.MessageText;
-                                                    }
+                                                    if (!Failed && player.player.whoAmI == Main.myPlayer)
+                                                        Main.NewText("One of your companions was defeated, " + gd.Name + " request failed.", 255);
+                                                    Failed = true;
                                                 }
                                             }
-                                            break;
-                                    }
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.TalkTo:
+                                        {
+                                            if (GetIntegerValue(o) < 1)
+                                            {
+                                                RequestBase.TalkRequestObjective req = (RequestBase.TalkRequestObjective)rb.Objectives[o];
+                                                if (player.player.talkNPC > -1 && Main.npc[player.player.talkNPC].type == req.NpcID)
+                                                {
+                                                    Main.npcChatText += "\n" + req.MessageText;
+                                                }
+                                            }
+                                        }
+                                        break;
                                 }
-                                RequestCompleted = ObjectivesCompleted >= ObjectiveCount;
                             }
+                            RequestCompleted = ObjectivesCompleted >= ObjectiveCount;
                         }
                     }
                     break;
@@ -536,8 +518,7 @@ namespace giantsummon
                         }
                         else
                         {
-                            guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(gd.Base.TalkMessage(player.player, guardian), guardian), true);
-                            //Main.NewText(guardian.Name + ": " + GuardianNPC.GuardianNPCPrefab.MessageParser(gd.Base.TalkMessage(player.player, guardian), guardian));
+                            guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(gd.Base.TalkMessage(player.player, guardian), guardian), true);
                         }
                     }
                     else
@@ -1234,6 +1215,29 @@ namespace giantsummon
             {
                 switch (rb.Objectives[o].objectiveType)
                 {
+                    case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
+                        {
+                            int Stack = GetIntegerValue(o);
+                            if (Stack > 0)
+                            {
+                                RequestBase.ObjectCollectionRequest req = (RequestBase.ObjectCollectionRequest)rb.Objectives[o];
+                                bool Drop = false;
+                                foreach (RequestBase.ObjectCollectionRequest.DropRateFromMonsters mon in req.DropFromMobs)
+                                {
+                                    if (IsRequiredMonster(npc, mon.MobID) && Main.rand.NextDouble() < mon.DropRate)
+                                    {
+                                        Drop = true;
+                                        break;
+                                    }
+                                }
+                                if (Drop)
+                                {
+                                    SetIntegerValue(o, Stack - 1);
+                                    Main.NewText("Found a " + req.ObjectName + ".");
+                                }
+                            }
+                        }
+                        break;
                     case RequestBase.RequestObjective.ObjectiveTypes.KillBoss:
                         {
                             int Stack = GetIntegerValue(o);

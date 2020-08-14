@@ -249,6 +249,10 @@ namespace giantsummon
                         InfoIcons.Add(10);
                     else
                         InfoIcons.Add(-10);
+                    if (!DisplayGuardian.Base.IsNocturnal)
+                        InfoIcons.Add(11);
+                    else
+                        InfoIcons.Add(12);
 
                     DisplayGuardian.Position = ElementPosition + Main.screenPosition;
                     DisplayGuardian.Position.Y -= 8f;
@@ -408,6 +412,12 @@ namespace giantsummon
                                         {
                                             MouseText = "Drinks Alcoholic Drinks";
                                         }
+                                        break;
+                                    case 11:
+                                        MouseText = "Diurnal";
+                                        break;
+                                    case 12:
+                                        MouseText = "Nocturnal";
                                         break;
                                 }
                             }

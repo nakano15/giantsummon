@@ -36,6 +36,7 @@ namespace giantsummon.Creatures
             DrinksBeverage = true;
             CanChangeGender = true;
             Effect = GuardianEffect.Wraith;
+            IsNocturnal = true;
             SetTerrarian();
             HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit54);
             DeadSound = new SoundData(Terraria.ID.SoundID.NPCDeath52);

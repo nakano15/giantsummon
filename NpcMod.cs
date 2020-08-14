@@ -405,32 +405,25 @@ namespace giantsummon
 
         public static int GetGuardianNPC(int GuardianID, string ModID = "")
         {
-            int Pos = -1;
             if (ModID == "")
                 ModID = MainMod.mod.Name;
-            for (int n = 0; n < 200; n++)
+            for (int i = 0; i < WorldMod.GuardianTownNPC.Count; i++ )
             {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).GuardianID == GuardianID &&
-                    ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).GuardianModID == ModID)
-                {
-                    Pos = n;
-                    break;
-                }
+                if (WorldMod.GuardianTownNPC[i].ID == GuardianID && WorldMod.GuardianTownNPC[i].ModID == ModID)
+                    return i;
             }
-            return Pos;
+            return -1;
         }
 
         public static bool IsGuardianPlayerRoomMate(Player player, int GuardianID, string ModID = "")
         {
-            int Pos = -1;
             if (ModID == "")
                 ModID = MainMod.mod.Name;
-            for (int n = 0; n < 200; n++)
+            for (int i = 0; i < WorldMod.GuardianTownNPC.Count; i++)
             {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).GuardianID == GuardianID &&
-                    ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).GuardianModID == ModID)
+                if (WorldMod.GuardianTownNPC[i].ID == GuardianID && WorldMod.GuardianTownNPC[i].ModID == ModID)
                 {
-                    return ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.IsPlayerRoomMate(player);
+                    return WorldMod.GuardianTownNPC[i].IsPlayerRoomMate(player);
                 }
             }
             return false;
@@ -480,7 +473,7 @@ namespace giantsummon
             }
             GuardianPostDrawData.Clear();
         }
-
+        
         public override bool CheckActive(NPC npc)
         {
             if (npc.target > -1)
@@ -524,12 +517,10 @@ namespace giantsummon
         public static int GetMaleCompanionNPCCount()
         {
             int Count = 0;
-            for (int n = 0; n < 200; n++)
+            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
             {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Male)
-                {
+                if (tg.Male)
                     Count++;
-                }
             }
             return Count;
         }
@@ -537,12 +528,10 @@ namespace giantsummon
         public static int GetFemaleCompanionNPCCount()
         {
             int Count = 0;
-            for (int n = 0; n < 200; n++)
+            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
             {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && !((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Male)
-                {
+                if (!tg.Male)
                     Count++;
-                }
             }
             return Count;
         }
@@ -550,12 +539,10 @@ namespace giantsummon
         public static int GetTerraGuardianNPCCount()
         {
             int Count = 0;
-            for (int n = 0; n < 200; n++)
+            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
             {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Base.IsTerraGuardian)
-                {
+                if (tg.Base.IsTerraGuardian)
                     Count++;
-                }
             }
             return Count;
         }
@@ -563,12 +550,10 @@ namespace giantsummon
         public static int GetTerrarianNPCCount()
         {
             int Count = 0;
-            for (int n = 0; n < 200; n++)
+            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
             {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.Base.IsTerrarian)
-                {
+                if (tg.Base.IsTerrarian)
                     Count++;
-                }
             }
             return Count;
         }
@@ -576,27 +561,17 @@ namespace giantsummon
         public static int GetGroupNPCCount(string GroupID)
         {
             int Count = 0;
-            for (int n = 0; n < 200; n++)
+            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
             {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab && ((GuardianNPC.GuardianNPCPrefab)Main.npc[n].modNPC).Guardian.GroupID == GroupID)
-                {
+                if (tg.GroupID == GroupID)
                     Count++;
-                }
             }
             return Count;
         }
 
         public static int GetCompanionNPCCount()
         {
-            int Count = 0;
-            for (int n = 0; n < 200; n++)
-            {
-                if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab)
-                {
-                    Count++;
-                }
-            }
-            return Count;
+            return WorldMod.GuardianTownNPC.Count;
         }
 
         public static string GetGuardianNPCName(int GuardianID, Mod mod)
@@ -606,10 +581,10 @@ namespace giantsummon
 
         public static string GetGuardianNPCName(int GuardianID, string ModID = "")
         {
-            int Pos = GetGuardianNPC(GuardianID, ModID);
-            if (Pos > -1)
+            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
             {
-                return ((GuardianNPC.GuardianNPCPrefab)Main.npc[Pos].modNPC).Guardian.Name;
+                if (tg.ID == GuardianID && tg.ModID == ModID)
+                    return tg.Name;
             }
             return "";
         }
@@ -723,23 +698,22 @@ namespace giantsummon
             if (npc.townNPC)
             {
                 //Try getting nearest Guardian to help repel the attacker.
-                int NearestGuardian = -1;
-                float NearestDistance = 768f;
-                for (int n = 0; n < 200; n++)
+                float NearestDistance = 270f;
+                TerraGuardian guardian = null;
+                foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
                 {
-                    if (n != npc.whoAmI && Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab)
+                    if (tg.OwnerPos == -1 && !tg.IsNpcHostile(target))
                     {
-                        float Distance = Main.npc[n].Distance(npc.Center);
+                        float Distance = npc.Distance(tg.CenterPosition);
                         if (NearestDistance < Distance)
                         {
-                            NearestGuardian = n;
+                            guardian = tg;
                             NearestDistance = Distance;
                         }
                     }
                 }
-                if (NearestGuardian > -1)
+                if (guardian != null)
                 {
-                    TerraGuardian guardian = ((GuardianNPC.GuardianNPCPrefab)Main.npc[NearestGuardian].modNPC).Guardian;
                     if (!guardian.IsAttackingSomething)
                     {
                         guardian.TargetID = npc.whoAmI;
@@ -870,7 +844,7 @@ namespace giantsummon
                         PossibleMessages.Add("I can heal try healing your companions too, but I will charge more for that.");
                         if (HasGuardianNPC(GuardianBase.Vladimir) && HasGuardianNPC(GuardianBase.Blue) && NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer))
                         {
-                            PossibleMessages.Add("I've got some good tips of things I could do on my date with " + NPC.firstNPCName(Terraria.ID.NPCID.ArmsDealer) + " from " + GetGuardianNPC(1) + ". She said that her boyfriend fell for her after she did that, so what could go wrong?! The only weird thing is the method she used.");
+                            PossibleMessages.Add("I've got some good tips of things I could do on my date with " + NPC.firstNPCName(Terraria.ID.NPCID.ArmsDealer) + " from " + WorldMod.GuardianTownNPC[GetGuardianNPC(1)].Name + ". She said that her boyfriend fell for her after she did that, so what could go wrong?! The only weird thing is the method she used.");
                         }
                     }
                     break;

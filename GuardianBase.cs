@@ -17,7 +17,7 @@ namespace giantsummon
         public delegate void GuardianModDel(TerraGuardian guardian);
         public delegate void GuardianBehaviorModDel(TerraGuardian guardian, ref bool AllowAIMovement);
         public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian";
-
+        
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
         public string Name = "", Description = "";
@@ -35,12 +35,17 @@ namespace giantsummon
         public int MaxBreath = 200, BreathCooldown = 7;
         public int BlockRate = 0, DodgeRate = 0;
         public float MountBurdenPercentage = 0.05f;
-        public bool DontUseRightHand = false, DontUseHeavyWeapons = false, CanChangeGender = false, OneHanded2HWeaponWield = false, IsWraith = false;
+        public bool DontUseRightHand = false;
+        public bool DontUseHeavyWeapons = false;
+        public bool CanChangeGender = false;
+        public bool OneHanded2HWeaponWield = false;
+        public bool IsWraith = false;
         public GuardianEffect Effect = GuardianEffect.None;
         public TerrarianCompanionInfos TerrarianInfo = null;
         public List<RequestBase> RequestDB = new List<RequestBase>();
         public List<Reward> RewardsList = new List<Reward>();
         public List<SkinReqStruct> SkinList = new List<SkinReqStruct>(), OutfitList = new List<SkinReqStruct>();
+        public bool IsNocturnal = false;
 
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;

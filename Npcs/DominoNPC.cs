@@ -294,7 +294,7 @@ namespace giantsummon.Npcs
                                     FacePlayer = true;
                                     if (Trigger)
                                     {
-                                        BrutusChat = "*Mark my words, slide just a little bit, and I will put you down!*";
+                                        BrutusChat = "*Mark my words, slide just a little bit, and I will put you behind bars!*";
                                     }
                                 }
                                 break;

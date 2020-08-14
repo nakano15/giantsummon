@@ -491,6 +491,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] apologizes, saying that she wasn't calling you at the moment.*");
                 Mes.Add("*[name] is staring at the moon.*");
             }
+            if (HasBunnyInInventory(guardian))
+            {
+                Mes.Add("*[name] asks how did you know, and tells you that she loved the pet you gave her.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -511,9 +515,9 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             if (PlayerMod.PlayerHasGuardianSummoned(player, 0))
                 Mes.Add("*[name] is asking me if she knows any good \"Naggicide\", why? Because she wants to use it on that guy following you.*");
-            if (NpcMod.HasGuardianNPC(0) && Main.npc[NpcMod.GetGuardianNPC(0)].Distance(player.Center) < 1024f)
+            if (NpcMod.HasGuardianNPC(0) && WorldMod.GuardianTownNPC[NpcMod.GetGuardianNPC(0)].Distance(player.Center) < 1024f)
                 Mes.Add("*[name] is asking if you could send [gn:0] some place far away from her.*");
-            if (NpcMod.HasGuardianNPC(3) && Main.npc[NpcMod.GetGuardianNPC(3)].Distance(player.Center) >= 768f)
+            if (NpcMod.HasGuardianNPC(3) && WorldMod.GuardianTownNPC[NpcMod.GetGuardianNPC(3)].Distance(player.Center) >= 768f)
                 Mes.Add("*[name] would like to move to somewhere closer to [gn:3].*");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.WitchDoctor))
                 Mes.Add("*[name] is asking you what is your favorite type of poison.*");
@@ -621,18 +625,30 @@ namespace giantsummon.Creatures
             return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
         }
 
-        public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
+        private static bool HasBunnyInInventory(TerraGuardian tg)
         {
-            bool HasBunnyInInventory = false;
+            bool IsGolden;
+            return HasBunnyInInventory(tg, out IsGolden);
+        }
+
+        private static bool HasBunnyInInventory(TerraGuardian tg, out bool IsGolden)
+        {
             for (int i = 0; i < 10; i++)
             {
-                if (guardian.Inventory[i].type == Terraria.ID.ItemID.Bunny || guardian.Inventory[i].type == Terraria.ID.ItemID.GoldBunny)
+                if (tg.Inventory[i].type == Terraria.ID.ItemID.Bunny || tg.Inventory[i].type == Terraria.ID.ItemID.GoldBunny)
                 {
-                    HasBunnyInInventory = true;
-                    break;
+                    IsGolden = tg.Inventory[i].type == Terraria.ID.ItemID.GoldBunny;
+                    return true;
                 }
             }
-            if (HasBunnyInInventory)
+            IsGolden = false;
+            return false;
+        }
+
+        public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
+        {
+            bool HasBunnyInInventory = BlueBase.HasBunnyInInventory(guardian);
+            if (HasBunnyInInventory && guardian.BodyAnimationFrame != DownedFrame)
             {
                 if (guardian.BodyAnimationFrame != DuckingFrame && guardian.BodyAnimationFrame != ThroneSittingFrame && guardian.BodyAnimationFrame != BedSleepingFrame)
                 {

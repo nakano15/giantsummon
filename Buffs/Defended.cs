@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace giantsummon.Buffs
 {
-    public class Defended : ModBuff
+    public class Defended : GuardianModBuff
     {
         public override void SetDefaults()
         {
@@ -20,6 +20,12 @@ namespace giantsummon.Buffs
         {
             player.immuneTime = 3;
             player.immuneNoBlink = true;
+        }
+
+        public override void Update(TerraGuardian guardian)
+        {
+            guardian.ImmuneTime = 3;
+            guardian.ImmuneNoBlink = true;
         }
     }
 }

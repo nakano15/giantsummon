@@ -1,27 +1,13 @@
-Fix the left arm of terrarian companions showing in front of the body on incorrect moments.
 Instead of adding dialogues to dismiss a companion when in their recruitment, instead make so the companion is added to the companion list, but not set to spawn on the world.
-Make companion npcs be able to share the same house, by making one of the companion npcs get the other companion data, and then removing It.
 Add a method that damages the ko'd health recovery, also halting health regen effect from allies, and can kill the one having the ko health damage when It reaches 0.
 Add a skin and outfit container to the game, so other mod skins and outfits can be added to the mod.
 	The container also should have a hook for the drawing scripts, if there isn't already in the mod.
-A flag checking if the companion is the player room mate.
-A script to check if the companion is in It's room.
-Companions sometimes dies off screen?
-	Generally happens with either Sardine and Bree?
 https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2063334
-The Pig Guardians needs the following frames for their cloud form:
-	Moving Backwards, Defeated and Reviving.
-	Is It necessary to add furniture usage animations? I guess so.
-	Chair Sitting, Throne sitting and Bed sleeping animations.
-Add an option that when the player is knocked out cold and there is nobody nearby to revive It:
-	A timer will start, darkening the screen.
-	When the timer reaches 0, It shows a message to everyone telling that the player blacked out.
-	The player is then sent to some nearby house, or the spawn point, where the player will wake up.
-	Possibly assisted by an awaken companion.
-	When the player wakes up, the companions should already be awaken.
 Companion grouping system.
 	The grouping system will be used by the house finder, to tell which guardians can share their room with the other guardian.
 	Should check if there's enough chairs for them to move in.
-Make so when you call a companion to follow you, check if the town npcs isn't already on the world, and then use It to call the companion.
-	Make sure to add a script on dismiss to remove the ownership from the town npcs, or else, you'll have an unintended follower.
-	This shouldn't be possible on multiplayer, on multiplayer there should be the companion npc, and the companions the players are carrying around.
+Add the possibility of companions that can't live in the world, come visit It to spend the day.
+	Add an option to allow turning It off, that may be helpful for low end players.
+Blue should get an animation for when she's knocked out, while having a bunny.
+Make companion npcs be able to share the same house, there should be some info on their Guardian Base that tells who they may share house with. Or a third info that tells who can live with who, to avoid bugs and confusion.
+

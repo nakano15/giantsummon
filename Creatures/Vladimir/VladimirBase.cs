@@ -521,7 +521,7 @@ namespace giantsummon.Creatures
                                             guardian.IncreaseFriendshipProgress(1);
                                         }
                                         action.SetIntegerValue(FriendshipPointsVar, FriendshipPoints);
-                                        string Message = GuardianNPC.GuardianNPCPrefab.MessageParser(Main.rand.Next(10) == 0 ? guardian.Base.TalkMessage(player, guardian) : guardian.Base.NormalMessage(player, guardian), guardian);
+                                        string Message = GuardianMouseOverAndDialogueInterface.MessageParser(Main.rand.Next(10) == 0 ? guardian.Base.TalkMessage(player, guardian) : guardian.Base.NormalMessage(player, guardian), guardian);
                                         if (player.talkNPC > -1 && Main.npc[player.talkNPC].type == ModContent.NPCType<GuardianNPC.List.BearNPC>())
                                         {
                                             Main.npcChatText = Message;
@@ -556,19 +556,8 @@ namespace giantsummon.Creatures
                                 if (!Main.bloodMoon)
                                 {
                                     guardian.BodyAnimationFrame++;
-                                }
-                                else
-                                {
-                                    if (!UsingLeftArm)
-                                    {
-                                        UsingLeftArm = true;
-                                        guardian.LeftArmAnimationFrame = guardian.BodyAnimationFrame++;
-                                    }
-                                    if (!UsingRightArm)
-                                    {
-                                        UsingRightArm = true;
-                                        guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame++;
-                                    }
+                                    guardian.LeftArmAnimationFrame = guardian.BodyAnimationFrame;
+                                    guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame;
                                 }
                             }
                             else if (guardian.BodyAnimationFrame == ThroneSittingFrame)

@@ -201,7 +201,7 @@ namespace giantsummon.Creatures
                 "*Yes, their jaws are really big, maybe I should try something smaller, like bats.*",
                 "*Wow! Look at all that Shark meat. I think I can turn all that in muscles in a few weeks.*");
             AddRequestRequirement(RequestBase.GetNightRequestRequirement);
-            AddObjectCollectionRequest("Shark Meat", 5, 0.2f);
+            AddObjectCollectionRequest("Shark Meat", 1, 0.2f);
             AddObjectDroppingMonster(Terraria.ID.NPCID.Shark, 0.8f);
             //
         }
@@ -738,28 +738,79 @@ namespace giantsummon.Creatures
                             float DefendX = defended.Center.X - Offset * defended.direction;
                             if (Action == 0)
                             {
-                                if (guardian.Position.X + guardian.Velocity.X > DefendX)
-                                    guardian.MoveLeft = true;
-                                else
-                                    guardian.MoveRight = true;
-                                if (Math.Abs(guardian.Position.X - DefendX) < 5 && Math.Abs(guardian.Velocity.X) < 3f)
+                                if (guardian.PlayerMounted || guardian.SittingOnPlayerMount)
                                 {
                                     Action = 1;
+                                }
+                                else
+                                {
+                                    guardian.MoveLeft = guardian.MoveRight = false;
+                                    if (guardian.Position.X + guardian.Velocity.X > DefendX)
+                                        guardian.MoveLeft = true;
+                                    else
+                                        guardian.MoveRight = true;
+                                    if (Math.Abs(guardian.Position.X - DefendX) < 5 && Math.Abs(guardian.Velocity.X) < 3f)
+                                    {
+                                        Action = 1;
+                                        if (defended.GetModPlayer<PlayerMod>().ControllingGuardian)
+                                        {
+                                            if (defended.GetModPlayer<PlayerMod>().Guardian.ModID == MainMod.mod.Name)
+                                            {
+                                                switch (defended.GetModPlayer<PlayerMod>().Guardian.ID)
+                                                {
+                                                    case GuardianBase.Domino:
+                                                        guardian.SaySomething("I'll protect you because of the Terrarian.");
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             else if (Action == 1)
                             {
-                                guardian.Position.X = DefendX;
-                                if (!guardian.IsAttackingSomething)
+                                if (!guardian.PlayerMounted && !guardian.SittingOnPlayerMount)
                                 {
-                                    guardian.LookingLeft = defended.direction == -1;
+                                    guardian.Position.X = DefendX;
+                                    if (!guardian.IsAttackingSomething)
+                                    {
+                                        guardian.LookingLeft = defended.direction == -1;
+                                    }
                                 }
                                 guardian.Jump = false;
-                                guardian.MoveDown = true;
+                                if (!guardian.SittingOnPlayerMount)
+                                    guardian.MoveDown = true;
                                 guardian.OffHandAction = true;
-                                defended.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                                if (defended.GetModPlayer<PlayerMod>().ControllingGuardian)
+                                {
+                                    defended.GetModPlayer<PlayerMod>().Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                                }
+                                else
+                                {
+                                    defended.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                                }
                             }
                             action.SetIntegerValue(CurrentActionID, Action);
+                        }
+                        break;
+                }
+            }
+        }
+
+        public override void GuardianActionUpdateAnimation(TerraGuardian guardian, GuardianActions action, ref bool UsingLeftArm, ref bool UsingRightArm)
+        {
+            if (action.IsGuardianSpecificAction)
+            {
+                switch (action.ID)
+                {
+                    case ProtectModeID:
+                        {
+                            const byte CurrentActionID = 0;
+                            int Action = action.GetIntegerValue(CurrentActionID);
+                            if (Action == 1 && guardian.SittingOnPlayerMount && !UsingRightArm)
+                            {
+                                guardian.RightArmAnimationFrame = 1;
+                            }
                         }
                         break;
                 }

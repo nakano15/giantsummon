@@ -43,9 +43,25 @@ Changes to how Companion Town Npcs works were implemented.
 			This may stay, maybe If I add a affinity checking with specific town npcs, where TerraGuardians may not mind to live with a town npc, like Mabel and the Angler kid.
 	Town npcs from older saves will be automatically converted into the new TerraGuardians companions.
 		They will be homeless at first, so be sure to assign their houses after you enter the world.
+	Due to the changes, here the few things you need to be aware of:
+		If you have the companion town npc in the world, and you want to call It to aid you on your battle, instead of creating a new version of that companion and hiding the older, It will now set that companion town npc as your active companion, and It will teleport to your position if you're far away.
+		The inverse also happens if you dismiss, wherever you are when you dismiss the companion, they will return to they will try returning to the town from there, or idle around. In other words, beware of when you dismiss the companion. Of prefference, do so in a safe place.
+		None of those are going to happen on multiplayer, if you are nuts and bolts to try doing so.
 There is now a different from Terraria dialogue interface and system, for when talking to the Companions.
 	This new dialogue interface will only be shown on dialogues with companions, and their options will show up depending on the moment, the companion and/or other reasons.
 	You can speak with the companions travelling with you.
 The following changes were done to Injury and Heavy Injury debuffs:
 	Upon leaving Knocked Out State, you will get 1 minute of Injury debuff, instead of 45 seconds.
 	If you leave Knocked Out State while with Injury, you will get 3 minutes of the Heavy Injury debuff, instead of 1 minute.
+Companion Town Npcs will no longer try dropping from platforms whenever their Wander AI begins.
+	This may solve their drowning compulsion problem.
+Companions now are distinguishable by Diurnal and Nocturnal.
+	Diurnal companions will behave still behave like the companions used to, when as town npcs.
+		They will move in their house when the night comes (7:30 PM), and will try going sleep 10 PM. They will only wake up around 5:30 AM.
+	Nocturnal companions will behave the complete opposite of Diurnal companions, they will move in their houses during the day, and even sleep at that moment, and will also be active during the night.
+		They will move in their house at 6 AM, and go sleep 10 AM. They will only wake up around 5:30 PM.
+	Raining, Eclipse and other things still makes the companions move inside their houses, regardless of wether they are Diurnal or Nocturnal.
+
+Companion town npcs will now... Somewhat correctly try defending nearby npcs, hurt by enemies.
+Made Domino and Brutus dialogue during Domino's request less "bloody", If the player allows him to move in the world.
+Vladimir recruit npc will now be able to comment when you try to move, jump or attack while being hugged. But will still not idle chat while you have the dialogue closed, and haven't passed the hug time.

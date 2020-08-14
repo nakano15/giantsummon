@@ -297,14 +297,7 @@ namespace giantsummon
             if (Version < 39)
             {
                 //Add existing guardians to the world.
-                for (int n = 0; n < 200; n++)
-                {
-                    if (Main.npc[n].active && Main.npc[n].modNPC is GuardianNPC.GuardianNPCPrefab)
-                    {
-                        GuardianNPC.GuardianNPCPrefab modnpc = Main.npc[n].modNPC as GuardianNPC.GuardianNPCPrefab;
-                        WorldMod.AllowGuardianNPCToSpawn(modnpc.GuardianID, modnpc.GuardianModID);
-                    }
-                }
+                //No longer necessary.
             }
             else
             {
@@ -527,7 +520,9 @@ namespace giantsummon
                         }
                         else if(!HasHomelessGuardian)
                         {
-                            PotentialGuardians.Add(new GuardianID(GuardianNPCsInWorld[g].CharID.ID, GuardianNPCsInWorld[g].CharID.ModID));
+                            GuardianBase gb = GuardianBase.GetGuardianBase(GuardianNPCsInWorld[g].CharID.ID, GuardianNPCsInWorld[g].CharID.ModID);
+                            if(gb.IsNocturnal == !Main.dayTime)
+                                PotentialGuardians.Add(new GuardianID(GuardianNPCsInWorld[g].CharID.ID, GuardianNPCsInWorld[g].CharID.ModID));
                         }
                     }
                 }

@@ -1534,6 +1534,18 @@ namespace giantsummon
             return null;
         }
 
+        public bool StartNewGuardianAction(GuardianActions action)
+        {
+            if (!DoAction.InUse)
+            {
+                action.IsGuardianSpecificAction = true;
+                action.InUse = true;
+                DoAction = action;
+                return true;
+            }
+            return false;
+        }
+
         public void AddInjury(byte Value)
         {
             if (!MainMod.UsingGuardianNecessitiesSystem)
@@ -4977,6 +4989,11 @@ namespace giantsummon
             }
         }
 
+        public float Distance(Vector2 OtherPosition)
+        {
+            return (CenterPosition - OtherPosition).Length();
+        }
+
         public bool HasSolidGroundUnder()
         {
             int FeetX = (int)Position.X / 16, FeetY = (int)Position.Y / 16;
@@ -5373,6 +5390,7 @@ namespace giantsummon
 
         public bool IsPlayerRoomMate(Player player)
         {
+            player.FindSpawn();
             if (player.SpawnX > -1 && player.SpawnY > -1)
             {
                 WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
@@ -5719,7 +5737,24 @@ namespace giantsummon
                 LookingLeft = Left;
         }
 
-        public bool MayTryGoingSleep { get { return !Main.eclipse && !Main.bloodMoon && ((!Main.dayTime && Main.time >= 9000) || (Main.dayTime && Main.time < 3600)); } }
+        public bool MayTryGoingSleep
+        {
+            get
+            {
+                if (!Main.eclipse && !Main.bloodMoon)
+                {
+                    if (!Base.IsNocturnal)
+                    {
+                        return (!Main.dayTime && Main.time >= 9000) || (Main.dayTime && Main.time < 3600);
+                    }
+                    else
+                    {
+                        return Main.dayTime && Main.time >= 19800 && Main.time < 48600;
+                    }
+                }
+                return false;
+            }
+        }
         public bool HasPlayerAFK { get { return (OwnerPos > -1 && ((!MainMod.GuardiansIdleEasierOnTowns && AfkCounter >= 180 * 60) || (MainMod.GuardiansIdleEasierOnTowns && TownNpcs >= 3 && AfkCounter >= 60 * 15))); } }
         
         public bool NewIdleBehavior()
@@ -5746,178 +5781,179 @@ namespace giantsummon
             int HouseX = -1, HouseY = -1;
             if (IsTownNpc)
             {
-                bool MoveIndoors = !Main.dayTime || (Main.dayTime && Main.time < 5400) || Main.raining || Main.eclipse;
+                bool MoveIndoors = Main.raining || Main.eclipse || Main.snowMoon || Main.pumpkinMoon;
+                if (!MoveIndoors)
+                {
+                    if (!Base.IsNocturnal)
+                    {
+                        MoveIndoors = !Main.dayTime || (Main.dayTime && Main.time < 5400);
+                    }
+                    else
+                    {
+                        MoveIndoors = (Main.dayTime && Main.time >= 5400 && Main.time < 46800);
+                    }
+                }
                 WorldMod.GuardianTownNpcState TownNpcInfo = GetTownNpcInfo;
                 if (TownNpcInfo != null)
                 {
-                    /*if (Main.player[Main.myPlayer].talkNPC == NpcPosition && (!DoAction.InUse || !DoAction.ProceedIdleAIDuringDialogue))
+                    if (MoveIndoors)
                     {
-                        if (!DoAction.InUse || DoAction.NpcCanFacePlayer) FaceDirection(Main.player[Main.myPlayer].Center.X < Position.X);
-                        if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture) || IdleActionTime < 5)
-                            ChangeIdleAction(IdleActions.Wait, 200);
-                        DoIdleMovement = false;
-                    }
-                    else*/
-                    {
-                        if (MoveIndoors)
+                        if ((!Base.IsNocturnal && !Main.dayTime && Main.time == 0) || (!Base.IsNocturnal && Main.dayTime && Main.time >= 5400 && WorldMod.LastTime < 5400))
                         {
-                            if (!Main.dayTime && Main.time == 0)
+                            if (UsingFurniture)
+                                LeaveFurniture();
+                            ChangeIdleAction(IdleActions.GoHome, 5);
+                        }
+                        if (!TownNpcInfo.Homeless)
+                        {
+                            HouseX = TownNpcInfo.HomeX;
+                            HouseY = TownNpcInfo.HomeY;
+                        }
+                        if (HouseX > -1 && HouseY > -1)
+                        {
+                            while (!Main.tile[HouseX, HouseY].active() || !Main.tileSolid[Main.tile[HouseX, HouseY].type])
                             {
-                                if(UsingFurniture)
-                                    LeaveFurniture();
-                                ChangeIdleAction(IdleActions.GoHome, 5);
+                                HouseY++;
+                                if (HouseY >= Main.maxTilesY - 20)
+                                    break;
                             }
-                            if (!TownNpcInfo.Homeless)
+                        }
+                        HouseX *= 16;
+                        HouseY *= 16;
+                        if (TownNpcInfo.Homeless)
+                        {
+                            HouseX = (int)Position.X;
+                            HouseY = (int)Position.Y;
+                            if (IdleActionTime <= 0)
                             {
-                                HouseX = TownNpcInfo.HomeX;
-                                HouseY = TownNpcInfo.HomeY;
-                            }
-                            if (HouseX > -1 && HouseY > -1)
-                            {
-                                while (!Main.tile[HouseX, HouseY].active() || !Main.tileSolid[Main.tile[HouseX, HouseY].type])
+                                int cx = HouseX / 16, cy = (int)((HouseY - CollisionHeight * 0.5f) / 16);
+                                Tile tile = Framing.GetTileSafely(cx, cy);
+                                if (tile != null)
                                 {
-                                    HouseY++;
-                                    if (HouseY >= Main.maxTilesY - 20)
-                                        break;
-                                }
-                            }
-                            HouseX *= 16;
-                            HouseY *= 16;
-                            if (TownNpcInfo.Homeless)
-                            {
-                                HouseX = (int)Position.X;
-                                HouseY = (int)Position.Y;
-                                if (IdleActionTime <= 0)
-                                {
-                                    int cx = HouseX / 16, cy = (int)((HouseY - CollisionHeight * 0.5f) / 16);
-                                    Tile tile = Framing.GetTileSafely(cx, cy);
-                                    if (tile != null)
+                                    if (!Main.wallHouse[tile.wall])
                                     {
-                                        if (!Main.wallHouse[tile.wall])
+                                        int NearestNpcPosition = -1;
+                                        float NearestDistance = float.MaxValue;
+                                        for (int n = 0; n < 200; n++)
                                         {
-                                            int NearestNpcPosition = -1;
-                                            float NearestDistance = float.MaxValue;
-                                            for (int n = 0; n < 200; n++)
+                                            if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
                                             {
-                                                if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
+                                                float Distance = Main.npc[n].Distance(CenterPosition);
+                                                if (Distance < NearestDistance)
                                                 {
-                                                    float Distance = Main.npc[n].Distance(CenterPosition);
-                                                    if (Distance < NearestDistance)
-                                                    {
-                                                        NearestNpcPosition = n;
-                                                        NearestDistance = Distance;
-                                                    }
+                                                    NearestNpcPosition = n;
+                                                    NearestDistance = Distance;
                                                 }
                                             }
-                                            if (NearestNpcPosition > -1)
+                                        }
+                                        if (NearestNpcPosition > -1)
+                                        {
+                                            if (Main.player[Main.myPlayer].Distance(CenterPosition) >= Main.screenWidth)
                                             {
-                                                if (Main.player[Main.myPlayer].Distance(CenterPosition) >= Main.screenWidth)
+                                                Position.X = Main.npc[NearestNpcPosition].position.X + Main.npc[NearestNpcPosition].width * 0.5f;
+                                                Position.Y = Main.npc[NearestNpcPosition].position.Y + Main.npc[NearestNpcPosition].height;
+                                                ChangeIdleAction(IdleActions.Wander, 10);
+                                            }
+                                            else
+                                            {
+                                                float NpcPosX = Main.npc[NearestNpcPosition].position.X + Main.npc[NearestNpcPosition].width * 0.5f;
+                                                if (Position.X < NpcPosX)
                                                 {
-                                                    Position.X = Main.npc[NearestNpcPosition].position.X + Main.npc[NearestNpcPosition].width * 0.5f;
-                                                    Position.Y = Main.npc[NearestNpcPosition].position.Y + Main.npc[NearestNpcPosition].height;
-                                                    ChangeIdleAction(IdleActions.Wander, 10);
+                                                    FaceDirection(false);
                                                 }
                                                 else
                                                 {
-                                                    float NpcPosX = Main.npc[NearestNpcPosition].position.X + Main.npc[NearestNpcPosition].width * 0.5f;
-                                                    if (Position.X < NpcPosX)
-                                                    {
-                                                        FaceDirection(false);
-                                                    }
-                                                    else
-                                                    {
-                                                        FaceDirection(true);
-                                                    }
-                                                    ChangeIdleAction(IdleActions.Wander, 60 + Main.rand.Next(30));
+                                                    FaceDirection(true);
                                                 }
-                                                DoIdleMovement = false;
-                                            }
-                                            else
-                                            {
-                                                DoIdleMovement = true;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (Main.rand.NextDouble() < 0.333f)
-                                            {
-                                                ChangeIdleAction(IdleActions.UseNearbyFurniture, 400 + Main.rand.Next(200));
-                                            }
-                                            else
-                                            {
-                                                ChangeIdleAction(IdleActions.Wait, 400 + Main.rand.Next(200));
-                                                FaceDirection(!LookingLeft);
+                                                ChangeIdleAction(IdleActions.Wander, 60 + Main.rand.Next(30));
                                             }
                                             DoIdleMovement = false;
-                                            //ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
-                                            //FaceDirection(!LookingLeft);
-                                        }
-                                    }
-                                }
-                            }
-                            else //Has House
-                            {
-                                float XDif = Position.X - HouseX, YDif = Position.Y - HouseY;
-                                if (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome && (Math.Abs(XDif) > 8 || Math.Abs(YDif) > 48))
-                                {
-                                    if (CurrentIdleAction != IdleActions.Wander || IdleActionTime <= 0)
-                                    {
-                                        ChangeIdleAction(IdleActions.Wander, 50);
-                                        if (XDif > 0)
-                                        {
-                                            FaceDirection(true);
                                         }
                                         else
                                         {
-                                            FaceDirection(false);
+                                            DoIdleMovement = true;
                                         }
-                                    }
-                                    if (LookingLeft)
-                                    {
-                                        MoveLeft = true;
                                     }
                                     else
                                     {
-                                        MoveRight = true;
+                                        if (Main.rand.NextDouble() < 0.333f)
+                                        {
+                                            ChangeIdleAction(IdleActions.UseNearbyFurniture, 400 + Main.rand.Next(200));
+                                        }
+                                        else
+                                        {
+                                            ChangeIdleAction(IdleActions.Wait, 400 + Main.rand.Next(200));
+                                            FaceDirection(!LookingLeft);
+                                        }
+                                        DoIdleMovement = false;
+                                        //ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
+                                        //FaceDirection(!LookingLeft);
                                     }
-                                    Player player = Main.player[Main.myPlayer];
-                                    if (player.Distance(Position) >= Main.screenWidth && player.Distance(new Vector2(HouseX, HouseY)) >= Main.screenWidth)
+                                }
+                            }
+                        }
+                        else //Has House
+                        {
+                            float XDif = Position.X - HouseX, YDif = Position.Y - HouseY;
+                            if (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome && (Math.Abs(XDif) > 8 || Math.Abs(YDif) > 48))
+                            {
+                                if (CurrentIdleAction != IdleActions.Wander || IdleActionTime <= 0)
+                                {
+                                    ChangeIdleAction(IdleActions.Wander, 50);
+                                    if (XDif > 0)
                                     {
-                                        Position.X = HouseX;
-                                        Position.Y = HouseY;
-                                        SetFallStart();
+                                        FaceDirection(true);
+                                    }
+                                    else
+                                    {
+                                        FaceDirection(false);
+                                    }
+                                }
+                                if (LookingLeft)
+                                {
+                                    MoveLeft = true;
+                                }
+                                else
+                                {
+                                    MoveRight = true;
+                                }
+                                Player player = Main.player[Main.myPlayer];
+                                if (player.Distance(Position) >= Main.screenWidth && player.Distance(new Vector2(HouseX, HouseY)) >= Main.screenWidth)
+                                {
+                                    Position.X = HouseX;
+                                    Position.Y = HouseY;
+                                    SetFallStart();
+                                }
+                            }
+                            else
+                            {
+                                if (MayTryGoingSleep)
+                                {
+                                    if (IdleActionTime == 0 || (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.Wait))
+                                        ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
+                                    if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
+                                    {
+                                        MoveDown = true;
                                     }
                                 }
                                 else
                                 {
-                                    if (MayTryGoingSleep)
+                                    if (CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome)
                                     {
-                                        if (IdleActionTime == 0 || (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.Wait))
-                                            ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
-                                        if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
+                                        if (CurrentIdleAction != IdleActions.Wait || IdleActionTime <= 0)
                                         {
-                                            MoveDown = true;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome)
-                                        {
-                                            if (CurrentIdleAction != IdleActions.Wait || IdleActionTime <= 0)
-                                            {
-                                                FaceDirection(!LookingLeft);
-                                                if (Main.rand.NextDouble() < 0.6f)
-                                                    ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 200 + Main.rand.Next(200));
-                                                else
-                                                    ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
-                                            }
+                                            FaceDirection(!LookingLeft);
+                                            if (Main.rand.NextDouble() < 0.6f)
+                                                ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 200 + Main.rand.Next(200));
+                                            else
+                                                ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
                                         }
                                     }
                                 }
-                                WalkMode = true;
                             }
-                            DoIdleMovement = false;
+                            WalkMode = true;
                         }
+                        DoIdleMovement = false;
                     }
                 }
             }
@@ -6167,7 +6203,7 @@ namespace giantsummon
                                 LeaveFurniture();
                             }
                         }
-                        if (action == IdleActions.Wander && IsStandingOnAPlatform)
+                        /*if (action == IdleActions.Wander && IsStandingOnAPlatform)
                         {
                             bool LeftEnd = false, RightEnd = false, LeftSolid = false, RightSolid = false;
                             int TileY = (int)Position.Y / 16 + 1;
@@ -6207,7 +6243,7 @@ namespace giantsummon
                             {
                                 MoveDown = true;
                             }
-                        }
+                        }*/
                     }
                     break;
                 case IdleActions.UseNearbyFurniture:

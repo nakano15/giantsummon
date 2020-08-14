@@ -616,6 +616,8 @@ namespace giantsummon
             //Add a script for when the player is controlling a guardian, instead.
             const int BarWidth = 360, BarHeight = 14;
             float BarSize = (float)Main.player[Main.myPlayer].statLife / Main.player[Main.myPlayer].statLifeMax2;
+            if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime > 0)
+                BarSize = 0f;
             if (BarSize > 1f)
                 BarSize = 1f;
             if (BarSize < 0)
@@ -1923,7 +1925,7 @@ namespace giantsummon
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
                                                 CheckingQuestBrief = true;
-                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestBrief(d, Guardian), Guardian), true);
+                                                Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestBrief(d, Guardian), Guardian), true);
                                                 //Companion says request text.
                                             }
                                         }
@@ -1959,7 +1961,7 @@ namespace giantsummon
                                                 else
                                                 {
                                                     CheckingQuestBrief = false;
-                                                    Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestAccept(d), Guardian), true);
+                                                    Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestAccept(d), Guardian), true);
                                                     d.request.UponAccepting();
                                                 }
                                             }
@@ -1976,7 +1978,7 @@ namespace giantsummon
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
                                                 CheckingQuestBrief = false;
-                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestDeny(d), Guardian), true);
+                                                Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestDeny(d), Guardian), true);
                                                 d.request.UponRejecting();
                                             }
                                         }
@@ -2001,11 +2003,11 @@ namespace giantsummon
                                                 CheckingQuestBrief = false;
                                                 if (d.request.Failed)
                                                 {
-                                                    Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestFailed(d, Guardian), Guardian), true);
+                                                    Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestFailed(d, Guardian), Guardian), true);
                                                 }
                                                 else
                                                 {
-                                                    Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestComplete(d, Guardian), Guardian), true);
+                                                    Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestComplete(d, Guardian), Guardian), true);
                                                 }
                                                 d.request.CompleteRequest(Guardian, d, player);
                                             }
@@ -2025,7 +2027,7 @@ namespace giantsummon
                                             if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
                                                 CheckingQuestBrief = false;
-                                                Guardian.SaySomething(GuardianNPC.GuardianNPCPrefab.MessageParser(d.request.GetRequestInfo(d), Guardian), true);
+                                                Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestInfo(d), Guardian), true);
                                             }
                                         }
                                         ButtonPosition.X -= 48;

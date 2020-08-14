@@ -16,6 +16,7 @@ namespace giantsummon.Npcs
         const int FishID = Terraria.ID.ItemID.Honeyfin;
         const string FishName = "Honeyfin";
         public byte ComplaintCooldown = 0;
+        public byte LastHoneySenseValue = 0;
 
         public VladimirNPC()
             : base(GuardianBase.Vladimir, "")
@@ -302,7 +303,7 @@ namespace giantsummon.Npcs
                                 npc.ai[0] = 1;
                             }
                         }
-                        else if (npc.ai[0] % (60 * 10) == 0)
+                        else if (player.talkNPC == npc.whoAmI && npc.ai[0] % (60 * 10) == 0)
                         {
                             switch (Main.rand.Next(5))
                             {
@@ -330,7 +331,7 @@ namespace giantsummon.Npcs
                         {
                             Main.npcChatText = Message;
                         }
-                        else if(HugPassed)
+                        else
                         {
                             SayMessage(Message);
                         }

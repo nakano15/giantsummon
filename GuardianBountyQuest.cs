@@ -691,7 +691,6 @@ namespace giantsummon
 
         public static void Update()
         {
-            int SardinePosition = NpcMod.GetGuardianNPC(SardineID);
             if (SignID > -1 && Main.player[Main.myPlayer].sign == SignID && PlayerRedeemReward(Main.player[Main.myPlayer]))
             {
                 string Dialogue = "";
