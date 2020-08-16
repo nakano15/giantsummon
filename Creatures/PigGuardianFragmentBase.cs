@@ -26,7 +26,7 @@ namespace giantsummon.Creatures
         
         public bool GetIfIsCloudForm(TerraGuardian guardian)
         {
-            return true; //Remove if you don't want to test It.
+            //return true; //Remove if you don't want to test It.
             if (guardian.OwnerPos > -1)
             {
                 return Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().PigGuardianCloudForm[PigID];
@@ -86,7 +86,19 @@ namespace giantsummon.Creatures
                 }
                 else
                 {
-                    Frame = 19;
+                    if (guardian.Velocity.Y != 0)
+                    {
+                        if ((AnimationID == 1 && !TerraGuardian.UsingLeftArmAnimation) || (AnimationID == 2 && !TerraGuardian.UsingRightArmAnimation))
+                        {
+                            Frame = JumpFrame;
+                        }
+                        else
+                        {
+                            Frame = 20;
+                        }
+                    }
+                    else
+                        Frame = 19;
                 }
             }
         }

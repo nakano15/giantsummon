@@ -146,6 +146,14 @@ namespace giantsummon
         public int LastFriendshipCount = -1;
         public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
         public bool[] PigGuardianCloudForm = new bool[5]; //Must be saved with the player. Last one is for the big form.
+        public bool TalkedToLeopoldAboutThePigs
+        {
+            get
+            {
+                return
+                    (HasGuardian(GuardianBase.Wrath) && GetGuardian(GuardianBase.Wrath).request.RequestsCompletedIDs.Contains(0)); //Add here the checking if requests giving ideas on how to solidify the pigs are complete.
+            }
+        }
         public int TalkingGuardianPosition = 0;
         public bool IsTalkingToAGuardian = false;
         public byte TerraGuardiansNearby = 0;
@@ -202,6 +210,10 @@ namespace giantsummon
             {
                 AssistGuardians[g] = new TerraGuardian();
                 SelectedAssistGuardians[g] = -1;
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                PigGuardianCloudForm[i] = true;
             }
         }
 
@@ -1550,6 +1562,17 @@ namespace giantsummon
             base.ModifyDrawHeadLayers(layers);
         }
 
+        public override void Initialize()
+        {
+            if (!MainMod.HasPlayerAwareOfContestMonthChange)
+            {
+                Main.NewText("The Popularity Contest Result is out.");
+                Main.NewText(MainMod.ContestResultLink);
+                Main.NewText("New month voting is now up, pick your favorite TerraGuardians.");
+                MainMod.HasPlayerAwareOfContestMonthChange = true;
+            }
+        }
+
         public override Terraria.ModLoader.IO.TagCompound Save()
         {
             Terraria.ModLoader.IO.TagCompound tag = new Terraria.ModLoader.IO.TagCompound();
@@ -1569,18 +1592,11 @@ namespace giantsummon
             {
                 tag.Add("SelectedAssistGuardian_" + i, SelectedAssistGuardians[i]);
             }
-            return tag;
-        }
-
-        public override void Initialize()
-        {
-            if (!MainMod.HasPlayerAwareOfContestMonthChange)
+            for (int i = 0; i < 5; i++)
             {
-                Main.NewText("The Popularity Contest Result is out.");
-                Main.NewText(MainMod.ContestResultLink);
-                Main.NewText("New month voting is now up, pick your favorite TerraGuardians.");
-                MainMod.HasPlayerAwareOfContestMonthChange = true;
+                tag.Add("PigForm_" + i, PigGuardianCloudForm[i]);
             }
+            return tag;
         }
 
         public override void Load(Terraria.ModLoader.IO.TagCompound tag)
@@ -1636,6 +1652,13 @@ namespace giantsummon
                     {
                         SelectedAssistGuardians[i] = tag.GetInt("SelectedAssistGuardian_" + i);
                     }
+                }
+            }
+            if (ModVersion >= 71)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    PigGuardianCloudForm[i] = tag.GetBool("PigForm_" + i);
                 }
             }
         }

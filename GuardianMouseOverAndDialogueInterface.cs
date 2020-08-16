@@ -72,17 +72,16 @@ namespace giantsummon
             Main.CancelHairWindow();
             Main.npcShop = 0;
             Main.InGuideCraftMenu = false;
-            Main.player[Main.myPlayer].dropItemCheck();
+            MainPlayer.dropItemCheck();
             Main.npcChatCornerItem = 0;
-            Main.player[Main.myPlayer].sign = -1;
+            MainPlayer.sign = -1;
             Main.editSign = false;
-            Main.player[Main.myPlayer].talkNPC = -1;
+            MainPlayer.talkNPC = -1;
             Main.playerInventory = false;
-            Main.player[Main.myPlayer].chest = -1;
+            MainPlayer.chest = -1;
             Recipe.FindRecipes();
             Main.PlaySound(24, -1, -1, 1, 1f, 0f);
-            Player player = MainPlayer;
-            PlayerMod modPlayer = player.GetModPlayer<PlayerMod>();
+            PlayerMod modPlayer = MainPlayer.GetModPlayer<PlayerMod>();
             modPlayer.IsTalkingToAGuardian = true;
             modPlayer.TalkingGuardianPosition = tg.WhoAmID;
             //GetCompanionDialogue
@@ -93,12 +92,12 @@ namespace giantsummon
                 modPlayer.AddNewGuardian(tg.ID, tg.ModID);
                 if (tg.ID == WorldMod.SpawnGuardian.Key && tg.ModID == WorldMod.SpawnGuardian.Value)
                     modPlayer.GetGuardian(tg.ID, tg.ModID).IsStarter = true;
-                Message = tg.Base.GreetMessage(player, tg);
+                Message = tg.Base.GreetMessage(MainPlayer, tg);
             }
             else
             {
-                if (PlayerMod.IsGuardianBirthday(player, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
-                    Message = tg.Base.BirthdayMessage(player, tg);
+                if (PlayerMod.IsGuardianBirthday(MainPlayer, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
+                    Message = tg.Base.BirthdayMessage(MainPlayer, tg);
                 else
                 {
                     string t;
@@ -107,19 +106,35 @@ namespace giantsummon
                         Message = t;
                     }
                     else if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless)
-                        Message = tg.Base.HomelessMessage(player, tg);
+                        Message = tg.Base.HomelessMessage(MainPlayer, tg);
                     else
-                        Message = tg.Base.NormalMessage(player, tg);
+                        Message = tg.Base.NormalMessage(MainPlayer, tg);
                 }
             }
             if (!NpcMod.HasMetGuardian(tg.ID, tg.ModID))
             {
-                Message = tg.Base.GreetMessage(player, tg);
+                Message = tg.Base.GreetMessage(MainPlayer, tg);
                 NpcMod.AddGuardianMet(tg.ID, tg.ModID);
                 if (WorldMod.HasEmptyGuardianNPCSlot())
                     WorldMod.AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
                 if (modPlayer.HasGuardian(tg.ID, tg.ModID))
                     modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);
+            }
+            if (tg.request.requestState == RequestData.RequestState.RequestActive && tg.request.GetRequestBase(tg.Data).Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian))
+            {
+                RequestBase rb = tg.request.GetRequestBase(tg.Data);
+                for (int obj = 0; obj < rb.Objectives.Count; obj++)
+                {
+                    if (rb.Objectives[obj].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian && tg.request.GetIntegerValue(obj) == 0)
+                    {
+                        RequestBase.TalkToGuardianRequestObjective to = (RequestBase.TalkToGuardianRequestObjective)rb.Objectives[obj];
+                        if (to.GuardianID == tg.ID && to.ModID == tg.ModID)
+                        {
+                            Message = to.MessageText;
+                            tg.request.SetIntegerValue(obj, 1);
+                        }
+                    }
+                }
             }
             SetDialogue(Message, tg);
         }

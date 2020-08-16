@@ -200,6 +200,11 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            if (player.GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
+            {
+                Mes.Add("*I can try changing the forms of the pig emotions between Cloud and Solid, but I will need all emotions to merge them together.*");
+                Mes.Add("*There is not exactly a penalty for them being in cloud form, but they may not like It.*");
+            }
             Mes.Add("*So, this is where the TerraGuardians have been moving to? I can see why.*");
             Mes.Add("*How many times I have to say that my tail is not made of cotton! Stop trying to touch it!*");
             Mes.Add("*I spend most of my time reading books, so I know of many things.*");
@@ -410,6 +415,40 @@ namespace giantsummon.Creatures
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Actions = base.GetGuardianExtraDialogueActions(guardian);
+            if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
+            {
+                if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Wrath))
+                {
+                    string Text = "";
+                    if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
+                        Text = "Solidify " + PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Wrath).Name + "'s Body";
+                    else
+                        Text = "Cloudify " + PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Wrath).Name + "'s Body";
+                    GuardianMouseOverAndDialogueInterface.DialogueOption action = new GuardianMouseOverAndDialogueInterface.DialogueOption(Text, delegate(TerraGuardian tg)
+                    {
+                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID] =
+                            !Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID];
+                        if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
+                        {
+                            GuardianMouseOverAndDialogueInterface.SetDialogue("*I've managed to revert his form back to Cloud Form. I'm not sure if he's happy about that.*");
+                            PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Wrath).SaySomething("Grrr. I hate this! I hate It!");
+                        }
+                        else
+                        {
+                            GuardianMouseOverAndDialogueInterface.SetDialogue("*He's now in flesh and bones now. Beware not to infuriate him on that state, who knows what his rage could do to you.*");
+                            PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Wrath).SaySomething("Amazing, now I can really hurt things.");
+                        }
+                        GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg);
+                    });
+                    Actions.Add(action);
+                }
+            }
+            return Actions;
         }
     }
 }

@@ -112,8 +112,17 @@ namespace giantsummon.Creatures
             AddObjectCollectionRequest("Snatcher Jaw", 5);
             AddObjectDroppingMonster(Terraria.ID.NPCID.Snatcher, 0.75f);
             //
-            AddNewRequest("", 260, 
-                "**");
+            AddNewRequest("Mysterious Package", 260, 
+                "*Terrarian, I have a delivery for you to make. I have to warn you, don't tell the target who sent It.*",
+                "*Good, send this to my personal annoyance, let's hope this makes him stop bothering me for some time.*",
+                "*I wont be doing this myself, so I guess I'll leave this on hold.*",
+                "*You did? Good. Now forget that this happened.*",
+                "*You don't know who's my personal annoyance? Is that guard-wanna-be who keeps trying to arrest me all the time. Now go, before I change my mind!*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                return PlayerMod.PlayerHasGuardian(player, GuardianBase.Brutus);
+            });
+            AddTalkToGuardianRequest("*You say that you have a delivery for me? Weird, nobody I know knows that I'm here. Well, let's see It....! Terrarian, where did you get this? Tell me! I mean, who gave you this? You can't tell me? ... Thanks... Anyway..*", GuardianBase.Brutus);
         }
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
@@ -266,6 +275,10 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(Michelle))
             {
                 Mes.Add("*Between you and [gn:" + Michelle + "] around, I preffer you. At least you don't bother me all the time.*");
+            }
+            if (PlayerMod.HasGuardianSummoned(player, Wrath) && player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
+            {
+                Mes.Add("*Hey Terrarian, what have you been eating latelly? Because you seems to have released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\", hahaha. Got It? Released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\"?*");
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
             {

@@ -482,6 +482,11 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("I've got a new friend, and the name is [gn:" + GuardianBase.Michelle + "]. What? I'm your buddy too.*");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Wrath))
+            {
+                Mes.Add("*Whine~whine* [gn:" + Wrath + "] is a mean guy, I try playing with him, and he's really rude to me.");
+                Mes.Add("I try making [gn:"+Wrath+"] feel better, but he aways yells at me.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("I'm trying hard to aim at the hole.");

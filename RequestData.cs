@@ -452,6 +452,8 @@ namespace giantsummon
                                             {
                                                 SetIntegerValue(o, 0);
                                             }
+                                            if (GetIntegerValue(o) == 0)
+                                                ObjectivesCompleted++;
                                         }
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
@@ -460,6 +462,7 @@ namespace giantsummon
                                             {
                                                 if (!Failed && player.player.whoAmI == Main.myPlayer)
                                                     Main.NewText("You were defeated, " + gd.Name + " request failed.", 255);
+                                                SetIntegerValue(o, 1);
                                                 Failed = true;
                                             }
                                             foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
@@ -469,9 +472,12 @@ namespace giantsummon
                                                 {
                                                     if (!Failed && player.player.whoAmI == Main.myPlayer)
                                                         Main.NewText("One of your companions was defeated, " + gd.Name + " request failed.", 255);
+                                                    SetIntegerValue(o, 1);
                                                     Failed = true;
                                                 }
                                             }
+                                            if (GetIntegerValue(o) == 0)
+                                                ObjectivesCompleted++;
                                         }
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.TalkTo:
@@ -484,6 +490,16 @@ namespace giantsummon
                                                     Main.npcChatText += "\n" + req.MessageText;
                                                 }
                                             }
+                                            else
+                                            {
+                                                ObjectivesCompleted++;
+                                            }
+                                        }
+                                        break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian:
+                                        {
+                                            if (GetIntegerValue(o) == 1)
+                                                ObjectivesCompleted++;
                                         }
                                         break;
                                 }
@@ -894,6 +910,25 @@ namespace giantsummon
                                             }
                                         }
                                         break;
+                                    case RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian:
+                                        {
+                                            RequestBase.TalkToGuardianRequestObjective req = (RequestBase.TalkToGuardianRequestObjective)rb.Objectives[o];
+                                            string Name = "";
+                                            if (PlayerMod.PlayerHasGuardian(player, req.GuardianID, req.ModID))
+                                                Name = PlayerMod.GetPlayerGuardian(player, req.GuardianID, req.ModID).Name;
+                                            else
+                                                Name = GuardianBase.GetGuardianBase(req.GuardianID, req.ModID).Name;
+                                            if (GetIntegerValue(o) == 0)
+                                            {
+                                                QuestObjectives.Add("Speak with " + Name + ".");
+                                                HasPendingObjective = true;
+                                            }
+                                            else
+                                            {
+                                                QuestObjectives.Add("Spoken with " + Name + ".");
+                                            }
+                                        }
+                                        break;
                                 }
                             }
                             if (!ForceShowObjective)
@@ -1233,7 +1268,10 @@ namespace giantsummon
                                 if (Drop)
                                 {
                                     SetIntegerValue(o, Stack - 1);
-                                    Main.NewText("Found a " + req.ObjectName + ".");
+                                    if (Stack == 1)
+                                        Main.NewText("You acquired all the necessary " + req.ObjectName + ".");
+                                    else
+                                        Main.NewText("You got a " + req.ObjectName + ".");
                                 }
                             }
                         }
@@ -1291,7 +1329,7 @@ namespace giantsummon
                                 if (Count)
                                 {
                                     SetIntegerValue(o, 0);
-                                    Main.NewText("Success!");
+                                    Main.NewText("You managed to overcome the challenge!");
                                 }
                             }
                         }

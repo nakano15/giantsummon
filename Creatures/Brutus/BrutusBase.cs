@@ -180,6 +180,7 @@ namespace giantsummon.Creatures
 
         public void RequestList()
         {
+            //0
             AddNewRequest("A Little Warm Up", 250,
                 "*Terrarian, I need your help to test my power. There is a creature you call Skeletron in this world, I want to face It alongside you, to see if I can try protecting you. Can you give me a help on this?*",
                 "*Thank you. Maybe there is some way of calling It again, I have no idea how you could do that.*",
@@ -194,7 +195,7 @@ namespace giantsummon.Creatures
             AddKillBossRequest(Terraria.ID.NPCID.SkeletronHead, 2);
             AddRequesterSummonedRequirement();
             AddNobodyKodRequirement();
-            //
+            //1
             AddNewRequest("Jaws Hunter", 270,
                 "*I need to get stronger, which means I need to eat more meat. No, I'm nothinking about you or your citizens. There isn't much variety of edible things in this world, but I think Sharks will help me with this matter. What do you think? Ready for some fishing?*",
                 "*Terrarian, allow me to assist you in this request. I want to get stronger, but I can't risk endangering my client with It.*",
@@ -203,12 +204,43 @@ namespace giantsummon.Creatures
             AddRequestRequirement(RequestBase.GetNightRequestRequirement);
             AddObjectCollectionRequest("Shark Meat", 1, 0.2f);
             AddObjectDroppingMonster(Terraria.ID.NPCID.Shark, 0.8f);
-            //
+            //2
+            AddNewRequest("Green Menace", 285,
+                "*The goblins may attempt to launch a full attack to your town any time in the future. We should make them to try attacking us now, so we can weaken them, and make them spend more time trying to resuply. What do you think, Terrarian?*",
+                "*I knew you would agree with my plan. We should create a Goblin Battle Standard to force them to show up. The Goblin Spies who appear in the Far Lands of the World can help us make that.*",
+                "*But Terrarian, the safety of the town is at stake here! Okay... We'll not try making them attack us then.*",
+                "*Haha! That was a good fight! This should make them spend a long time trying to gather supplies for another attack. We should be safe, for now.*",
+                "*We need to make a Goblin Battle Standard to lure them. Wood you know where to find, the clothings used for It can be acquired from Goblin Spies. They appear on the far lands of the world.*");
+            AddRequestRequirement(delegate(Player player){
+                return NPC.downedGoblins;
+            });
+            AddEventParticipationObjective(Terraria.ID.InvasionID.GoblinArmy, 1);
+            //3
+            AddNewRequest("A drink with a friend", 330,
+                "*Terrarian, would you like sharing a drink with me?*",
+                "*Great, let's meet at the pub, then.*",
+                "*Busy? Okay, let's try again another time.*",
+                "*Terrarian, ever since you gave me that package, I've been looking at It's content day and night, and I think It's time for me to put that outfit again. I want you to be the first person to see me use It, and tell me how I look. [Unlocked Royal Guard Outfit]*",
+                "*Let's go to a pub, I have something to talk about with you. The Bartender could give us some drinks.*");
+            AddRequestRequirement(delegate(Player player)
+            {
+                if (PlayerMod.PlayerHasGuardian(player, GuardianBase.Domino) && NPC.AnyNPCs(Terraria.ID.NPCID.DD2Bartender))
+                {
+                    GuardianData BrutusData = PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus),
+                        DominoData = PlayerMod.GetPlayerGuardian(player, GuardianBase.Domino);
+                    if (BrutusData.request.RequestsCompletedIDs.Contains(0) && BrutusData.request.RequestsCompletedIDs.Contains(1) && BrutusData.request.RequestsCompletedIDs.Contains(2) &&
+                        !BrutusData.request.RequestsCompletedIDs.Contains(3) && DominoData.request.RequestsCompletedIDs.Contains(1))
+                        return true;
+                }
+                return false;
+            });
+            AddItemCollectionObjective(Terraria.ID.ItemID.Ale, 1, 0);
+            AddRequesterSummonedRequirement();
         }
 
         public void SkinsAndOutfits()
         {
-            AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return true; });
+            AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus).request.RequestsCompletedIDs.Contains(3); });
         }
 
         public override string MountUnlockMessage
@@ -395,6 +427,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*I really like participating of [gn:" + Malisha + "]'s experiement, that way I can stay close to her for quite a long time.*");
                 Mes.Add("*[gn:" + Malisha + "] once casted a shrinking spell on me, I would normally have been scared of that, if It wasn't for the view of her I had. I mean... Wow! I hope she repeats that experiement in the future.*");
                 Mes.Add("*Do you think [gn"+Malisha+"] and I... No... Nevermind... Why am I talking about this to you?*");
+            }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Wrath))
+            {
+                Mes.Add("You're saying that [gn:"+Wrath +"]'s punches hurts? Funny, I didn't felt pain whenever he punched me.");
             }
             if (guardian.IsUsingToilet)
             {
@@ -759,7 +795,7 @@ namespace giantsummon.Creatures
                                                 switch (defended.GetModPlayer<PlayerMod>().Guardian.ID)
                                                 {
                                                     case GuardianBase.Domino:
-                                                        guardian.SaySomething("I'll protect you because of the Terrarian.");
+                                                        guardian.SaySomething("I'm only protecting him because of you, Terrarian.");
                                                         break;
                                                 }
                                             }

@@ -254,9 +254,9 @@ namespace giantsummon.Npcs
                 }
                 npc.frameCounter += AnimationSpeed / MaxTime;
                 if (npc.frameCounter < 0)
-                    npc.frameCounter += MaxTime;
-                if (npc.frameCounter >= MaxTime)
-                    npc.frameCounter -= MaxTime;
+                    npc.frameCounter += Base.WalkingFrames.Length;
+                if (npc.frameCounter >= Base.WalkingFrames.Length)
+                    npc.frameCounter -= Base.WalkingFrames.Length;
                 Frame = Base.WalkingFrames[(int)(npc.frameCounter / Base.WalkAnimationFrameTime)];
             }
             else

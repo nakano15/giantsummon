@@ -125,7 +125,8 @@ namespace giantsummon
             Leopold = 10,
             Vladimir = 11,
             Malisha = 12,
-            Michelle = 13;
+            Michelle = 13,
+            Wrath = 14;
 
         public void SetTerraGuardian()
         {
@@ -312,6 +313,14 @@ namespace giantsummon
             if (RequestDB.Count > 0)
             {
                 RequestDB[RequestDB.Count - 1].AddTalkToRequest(NpcID, Message);
+            }
+        }
+
+        public void AddTalkToGuardianRequest(string Message, int GuardianID, string GuardianModID = "")
+        {
+            if (RequestDB.Count > 0)
+            {
+                RequestDB[RequestDB.Count - 1].AddTalkToGuardianRequest(Message, GuardianID, GuardianModID);
             }
         }
 

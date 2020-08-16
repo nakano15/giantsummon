@@ -152,6 +152,17 @@ namespace giantsummon
             Objectives.Add(req);
         }
 
+        public void AddTalkToGuardianRequest(string Message, int GuardianID, string GuardianModID = "")
+        {
+            if (GuardianModID == "")
+                GuardianModID = MainMod.mod.Name;
+            TalkToGuardianRequestObjective req = new TalkToGuardianRequestObjective();
+            req.GuardianID = GuardianID;
+            req.ModID = GuardianModID;
+            req.MessageText = Message;
+            Objectives.Add(req);
+        }
+
         public void AddRequesterShouldNotBeKodRequirement()
         {
             RequesterShouldNotBeKodObjective req = new RequesterShouldNotBeKodObjective();
@@ -288,6 +299,19 @@ namespace giantsummon
             }
         }
 
+        public class TalkToGuardianRequestObjective : RequestObjective
+        {
+            public string MessageText = "";
+            public int GuardianID = 0;
+            public string ModID = "";
+
+            public TalkToGuardianRequestObjective()
+                : base(ObjectiveTypes.TalkToGuardian)
+            {
+
+            }
+        }
+
         public class RequesterShouldNotBeKodObjective : RequestObjective
         {
             public RequesterShouldNotBeKodObjective()
@@ -329,7 +353,8 @@ namespace giantsummon
                 KillBoss,
                 TalkTo,
                 RequesterCannotKnockout,
-                NobodyCanBeKod
+                NobodyCanBeKod,
+                TalkToGuardian
             }
         }
 

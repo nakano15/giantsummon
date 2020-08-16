@@ -5965,7 +5965,7 @@ namespace giantsummon
                     {
                         case IdleActions.TryGoingSleep:
                             {
-                                if (MayTryGoingSleep || IsUsingBed)
+                                if (MayTryGoingSleep)
                                     ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
                                 else
                                 {
@@ -9726,6 +9726,7 @@ namespace giantsummon
 
         public void GetLeftHandPosition(int Frame, bool IgnoreDirection, out int X, out int Y)
         {
+            UsingLeftArmAnimation = true;
             Base.GuardianAnimationOverride(this, 1, ref Frame);
             Base.LeftHandPoints.GetPositionFromFrame(Frame, out X, out Y);
             if (!IgnoreDirection && LookingLeft)
@@ -9759,6 +9760,7 @@ namespace giantsummon
 
         public void GetRightHandPosition(int Frame, bool IgnoreDirection, out int X, out int Y)
         {
+            UsingRightArmAnimation = true;
             Base.GuardianAnimationOverride(this, 2, ref Frame);
             Base.RightHandPoints.GetPositionFromFrame(Frame, out X, out Y);
             if (!IgnoreDirection && LookingLeft)

@@ -33,9 +33,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 70, LastModVersion = 65;
+        public const int ModVersion = 71, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -2251,6 +2251,28 @@ namespace giantsummon
                 }
                 return "Terraria: " + s;
             }
+        }
+
+        public override void PostDrawFullscreenMap(ref string mouseText)
+        {
+            /*foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+            {
+                if (tg.OwnerPos == -1 || tg.GuardingPosition.HasValue)
+                {
+                    Vector2 DotPosition = tg.CenterPosition / 16f * Main.mapFullscreenScale;
+                    DotPosition.Y -= tg.Height * 0.75f;
+                    DotPosition *= Main.mapFullscreenScale;
+                    float Scale = 1f;
+                    if (Main.mouseX >= DotPosition.X - 8 && Main.mouseX < DotPosition.X + 8 &&
+                        Main.mouseY >= DotPosition.Y - 8 && Main.mouseY < DotPosition.Y + 8)
+                    {
+                        mouseText = tg.ReferenceName;
+                        Scale = 2f;
+                    }
+                    tg.DrawHead(DotPosition, Scale);
+                    //
+                }
+            }*/
         }
 
         public override void Load()

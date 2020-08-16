@@ -458,17 +458,19 @@ namespace giantsummon
                 guardian.SetFallStart();
                 guardian.Direction = npc.direction;
                 guardian.Active = true;
+                guardian.ChangeIdleAction(TerraGuardian.IdleActions.Wait, 200);
                 MainMod.AddActiveGuardian(guardian, true);
             }
-            GuardianTownNPC.Add(guardian);
+            if (!IsGuardianNpcInWorld(GuardianID, GuardianModID))
+            {
+                GuardianTownNPC.Add(guardian);
+            }
             npc.active = false;
             if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI)
             {
-                Main.player[Main.myPlayer].talkNPC = -1;
                 GuardianMouseOverAndDialogueInterface.StartDialogue(guardian);
                 GuardianMouseOverAndDialogueInterface.SetDialogue(Main.npcChatText);
-                //Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian = true;
-                //Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition = guardian.WhoAmID;
+                Main.player[Main.myPlayer].talkNPC = npc.whoAmI;
             }
         }
 
@@ -712,7 +714,7 @@ namespace giantsummon
             {
                 if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
                 {
-                    if (Housing_IsInRoom(Main.npc[n].homeTileX, Main.npc[n].homeTileY))
+                    if (Housing_IsInRoom(Main.npc[n].homeTileX, Main.npc[n].homeTileY - 1))
                     {
                         TownNPC = true;
                         //CountHouseUsers++;
@@ -726,7 +728,7 @@ namespace giantsummon
             {
                 if (WorldMod.GuardianNPCsInWorld[g] != null && !WorldMod.GuardianNPCsInWorld[g].Homeless)
                 {
-                    if (Housing_IsInRoom(WorldMod.GuardianNPCsInWorld[g].HomeX, WorldMod.GuardianNPCsInWorld[g].HomeY))
+                    if (Housing_IsInRoom(WorldMod.GuardianNPCsInWorld[g].HomeX, WorldMod.GuardianNPCsInWorld[g].HomeY - 1))
                     {
                         CountHouseUsers++;
                     }

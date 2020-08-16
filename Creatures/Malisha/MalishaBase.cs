@@ -425,6 +425,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*Everytime [gn:" + Michelle + "] comes bother me, I transform her into a different critter.*");
                 Mes.Add("*[gn:" + Michelle + "] always arrives just in time I need someone to test my experiments.*");
             }
+            if (NpcMod.HasGuardianNPC(Wrath))
+            {
+                Mes.Add("*Hmph, [gn:"+Wrath+"] thinks he's safe from me, but my experimenting hunger will eventually reach him. Just he wait.*");
+            }
 
             if (guardian.IsUsingToilet)
             {

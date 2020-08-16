@@ -364,6 +364,10 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*I wonder if I'm not accepted into the Miss North Pole contest because I'm not a reindeer. Maybe [gn:"+Malisha+"] could help me solve that?*");
             }
+            if (NpcMod.HasGuardianNPC(Wrath))
+            {
+                Mes.Add("*I tried helping [gn:"+Wrath+"] getting less angry, until he yelled out loud, that made me leave the room very quickly. He's very scary.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
