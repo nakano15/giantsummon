@@ -81,8 +81,8 @@ namespace giantsummon
         [DefaultValue(true)]
         public bool UseSkillsSystem { get { return MainMod.UseSkillsSystem; } set { MainMod.UseSkillsSystem = value; } }
 
-        [Label("Guardians has Player Health and Mana status.")]
-        [Tooltip("Forces guardians to have the health and mana values like the player would.")]
+        [Label("Guardians Health and Mana status like the player.")]
+        [Tooltip("All companions will have their health and mana values base and incresed values like the player, regardless of size or anything else.")]
         public bool HealthAndManaPlayerStandards { get { return MainMod.SetGuardiansHealthAndManaToPlayerStandards; } set { MainMod.SetGuardiansHealthAndManaToPlayerStandards = value; } }
         
         //[Label("Tile Collision is the same as Hit Collision")]

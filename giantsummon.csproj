@@ -148,6 +148,7 @@
     <Compile Include="Npcs\MalishaNPC.cs" />
     <Compile Include="Npcs\RococoNPC.cs" />
     <Compile Include="Npcs\VladimirNPC.cs" />
+    <Compile Include="Npcs\WrathNPC.cs" />
     <Compile Include="Npcs\ZombieGuardian.cs" />
     <Compile Include="PathFinder.cs" />
     <Compile Include="PlayerDataBackup.cs" />

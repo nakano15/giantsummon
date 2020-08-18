@@ -558,7 +558,7 @@ namespace giantsummon.Npcs
                         }
                         break;
 
-                    case 8: //Devour defeated character
+                    case 8: //Devour/Revive defeated character
                         {
                             if (Target.IsKnockedOut && !Target.IsDefeated)
                             {

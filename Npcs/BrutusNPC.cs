@@ -49,9 +49,6 @@ namespace giantsummon.Npcs
             npc.knockBackResist = 0;
             npc.dontCountMe = true;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
-            if (npc.GetGlobalNPC<NpcMod>().mobType > MobTypes.Normal)
-                npc.GetGlobalNPC<NpcMod>().mobType = MobTypes.Normal;
-            NpcMod.LatestMobType = MobTypes.Normal;
         }
 
         public override void FindFrame(int frameHeight)

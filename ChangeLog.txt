@@ -61,7 +61,12 @@ Companions now are distinguishable by Diurnal and Nocturnal.
 	Nocturnal companions will behave the complete opposite of Diurnal companions, they will move in their houses during the day, and even sleep at that moment, and will also be active during the night.
 		They will move in their house at 6 AM, and go sleep 10 AM. They will only wake up around 5:30 PM.
 	Raining, Eclipse and other things still makes the companions move inside their houses, regardless of wether they are Diurnal or Nocturnal.
-
 Companion town npcs will now... Somewhat correctly try defending nearby npcs, hurt by enemies.
 Made Domino and Brutus dialogue during Domino's request less "bloody", If the player allows him to move in the world.
 Vladimir recruit npc will now be able to comment when you try to move, jump or attack while being hugged. But will still not idle chat while you have the dialogue closed, and haven't passed the hug time.
+Brutus Royal Guard skin is now available.
+	You need to unlock It by doing some guardian specific requests.
+Changed the name and description of the configuration option of setting the health and mana status of the guardians like the player. (Ex:. Brutus would have 400 Max Health If he had used 15 Life crystals, instead of 900).
+	Before this change, looked like the option of setting the life and mana items shared value between guardian/player and this option did the same thing, what wasn't the case.
+For companions to drop from Platforms, you now need to press Jump key while holding Down button.
+	This change was made, because many companions can crouch.

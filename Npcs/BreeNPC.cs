@@ -8,17 +8,8 @@ using Microsoft.Xna.Framework;
 
 namespace giantsummon.Npcs
 {
-    //[AutoloadHead]
     public class BreeNPC : GuardianActorNPC
     {
-        /*public override string HeadTexture
-        {
-            get
-            {
-                return "giantsummon/GuardianNPC/List/Bree_Head"; //Necessary
-            }
-        }*/
-
         public SceneIds SceneStep = SceneIds.NoScene;
         public int StepTime = 0, SceneRepeatTimes = 0;
         public bool InterruptedOnce = false;
@@ -27,7 +18,7 @@ namespace giantsummon.Npcs
         public DialogueChain dialogues = new DialogueChain();
 
         public BreeNPC()
-            : base(7, "")
+            : base(7, "White Cat Guardian")
         {
             dialogues.AddDialogue("Hello, have you seen a black cat around?", "Why are you looking for a black cat?", "No, I haven't.", true);
             dialogues.AddDialogue("The black cat is my husband, he's been missing for quite some time.", "I need to find that black cat, I looked everywhere and couldn't find him.", "I can help you find him.", "Have you looked on the other towns?", true);
@@ -68,8 +59,7 @@ namespace giantsummon.Npcs
             Player player = Main.player[Main.myPlayer];
             if (npc.ai[2] == 0)
             {
-                if ((Math.Abs(player.Center.X - npc.Center.X) >= NPC.sWidth * 0.5f + NPC.safeRangeX ||
-                    Math.Abs(player.Center.Y - npc.Center.Y) >= NPC.sHeight * 0.5f + NPC.safeRangeY))
+                if (IsInPerceptionRange(player))
                 {
                     Main.NewText("A White Cat appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - player.Center) + " of " + player.name + " position.");
                 }

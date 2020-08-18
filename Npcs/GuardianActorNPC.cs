@@ -35,6 +35,7 @@ namespace giantsummon.Npcs
         private byte IdleBehaviorType = 0;
         private int IdleBehaviorTime = 0;
         public List<int> DrawInFrontOfPlayers = new List<int>();
+        public float XOffSet = 0, YOffset = 0;
 
         public GuardianActorNPC(int ID, string ModID, string Alias = "")
         {
@@ -69,6 +70,7 @@ namespace giantsummon.Npcs
             npc.direction = 1;
             if (npc.GetGlobalNPC<NpcMod>().mobType > MobTypes.Normal)
                 npc.GetGlobalNPC<NpcMod>().mobType = MobTypes.Normal;
+            NpcMod.LatestMobType = MobTypes.Normal;
         }
 
         public override bool CheckActive()
@@ -80,6 +82,16 @@ namespace giantsummon.Npcs
         {
             DrawInFrontOfPlayers.Clear();
             return base.PreAI();
+        }
+
+        public bool IsInPerceptionRange(Player player, float CustomRangeX = -1, float CustomRangeY = -1)
+        {
+            if(CustomRangeX < 0)
+                CustomRangeX = NPC.sWidth * 0.5f + NPC.safeRangeX;
+            if(CustomRangeY < 0)
+                CustomRangeY = NPC.sHeight * 0.5f + NPC.safeRangeY;
+            return (Math.Abs(player.Center.X - npc.Center.X) < CustomRangeX &&
+                    Math.Abs(player.Center.Y - npc.Center.Y) < CustomRangeY);
         }
 
         public override void AI()
@@ -276,7 +288,7 @@ namespace giantsummon.Npcs
             LeftArmAnimationFrame = Frame;
             RightArmAnimationFrame = Frame;
         }
-
+        
         public virtual DrawData? DrawItem(Color drawColor)
         {
             return null;
@@ -298,7 +310,7 @@ namespace giantsummon.Npcs
                 Vector2 TextCenter = npc.position - Main.screenPosition;
                 TextCenter.X += npc.width * 0.5f;
                 TextCenter.Y -= 18f;
-                Utils.DrawBorderString(spriteBatch, MessageText, TextCenter, Color.White, 0.85f, 0.5f);
+                Utils.DrawBorderString(spriteBatch, MessageText, TextCenter, Color.White, 1f, 0.5f);
             }
         }
 
@@ -318,8 +330,10 @@ namespace giantsummon.Npcs
             Base.sprites.ResetCooldown();
             List<DrawData> dds = new List<DrawData>();
             Vector2 DrawPos = npc.position - Main.screenPosition;
+            DrawPos.X += XOffSet;
+            DrawPos.Y += YOffset;
             DrawPos.X += npc.width * 0.5f;
-            DrawPos.Y += npc.height - Base.SpriteHeight;
+            DrawPos.Y += npc.height;
             DrawPos.Y += 2;
             Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = (npc.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
             if (FlipVertically)
@@ -333,10 +347,19 @@ namespace giantsummon.Npcs
             Rectangle bodyrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
                 bodyfrontrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
                 leftarmrect = new Rectangle(LeftArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
-                rightarmrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight);
+                rightarmrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
+                rightarmfrontrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight);
             if (Base.SpecificBodyFrontFramePositions)
             {
-                bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X);
+                bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X) * Base.SpriteWidth;
+            }
+            if (Base.RightArmFrontFrameSwap.ContainsKey(RightArmAnimationFrame))
+            {
+                rightarmfrontrect.X = Base.RightArmFrontFrameSwap[RightArmAnimationFrame] * rightarmfrontrect.Width;
+            }
+            else
+            {
+                rightarmfrontrect.X = -1;
             }
             if (bodyfrontrect.X >= Base.FramesInRows)
             {
@@ -358,6 +381,11 @@ namespace giantsummon.Npcs
                 rightarmrect.Y += rightarmrect.X / Base.FramesInRows;
                 rightarmrect.X -= rightarmrect.Y * Base.FramesInRows;
             }
+            if (rightarmfrontrect.X >= Base.FramesInRows)
+            {
+                rightarmfrontrect.Y += rightarmfrontrect.X / Base.FramesInRows;
+                rightarmfrontrect.X -= rightarmfrontrect.Y * Base.FramesInRows;
+            }
             bodyrect.X *= bodyrect.Width;
             bodyrect.Y *= bodyrect.Height;
 
@@ -373,8 +401,10 @@ namespace giantsummon.Npcs
             rightarmrect.X *= rightarmrect.Width;
             rightarmrect.Y *= rightarmrect.Height;
 
+            rightarmfrontrect.X *= rightarmfrontrect.Width;
+            rightarmfrontrect.Y *= rightarmfrontrect.Height;
             DrawData dd;
-            Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, 0f);
+            Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, Base.SpriteHeight);
             if (GuardianID == GuardianBase.Malisha && GuardianModID == mod.Name)
             {
 
@@ -386,19 +416,25 @@ namespace giantsummon.Npcs
                 dd = new DrawData(Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
                 dds.Add(dd);
             }
-            {
+            /*{
                 DrawData? dd2 = DrawItem(drawColor);
                 if (dd2.HasValue)
                     dds.Add(dd2.Value);
-            }
+            }*/
             if (bodyfrontrect.X > -1)
             {
                 dd = new DrawData(Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
                 dds.Add(dd);
             }
+            if (rightarmfrontrect.X > -1)
+            {
+                dd = new DrawData(Base.sprites.RightArmFrontSprite, DrawPos, rightarmfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                dds.Add(dd);
+            }
             dd = new DrawData(Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
             dds.Add(dd);
             ModifyDrawDatas(dds, DrawPos, bodyrect, leftarmrect, rightarmrect, Origin, drawColor, seffects);
+            XOffSet = YOffset = 0f;
             return dds;
         }
     }

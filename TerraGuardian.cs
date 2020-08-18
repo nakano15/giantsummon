@@ -92,6 +92,8 @@ namespace giantsummon
         public bool Active = false;
         public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
         public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false;
+        public bool DropFromPlatform { get { return MoveDown && Jump; } set { MoveDown = Jump = value; } }
+        public bool LastDroppedFromPlatform { get { return LastMoveDown && LastJump; } }
         public bool Action = false, Jump = false, OffHandAction = false;
         public bool LastAction = false, LastJump = false, LastOffHandAction = false;
         public bool Channeling = false;
@@ -4147,7 +4149,7 @@ namespace giantsummon
                             {
                                 if (Velocity.Y == 0 && Position.Y < Y - 8)
                                 {
-                                    MoveDown = true;
+                                    DropFromPlatform = true;
                                 }
                                 else
                                 {
@@ -4178,7 +4180,7 @@ namespace giantsummon
                             float Y = path.Y * 16;
                             if (Position.Y < Y)
                             {
-                                MoveDown = true;
+                                DropFromPlatform = true;
                             }
                             else
                             {
@@ -5933,7 +5935,7 @@ namespace giantsummon
                                         ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
                                     if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
                                     {
-                                        MoveDown = true;
+                                        DropFromPlatform = true;
                                     }
                                 }
                                 else
@@ -8817,50 +8819,56 @@ namespace giantsummon
                 }
                 else if (PlayerState == 0)
                 {
-                    if (Owner.velocity.Y < 0 && Owner.controlJump)
+                    if (Owner.oldVelocity.Y == 0)
                     {
-                        PlayerState = PlayerMovementStateEnumerator.Jumped;
-                    }
-                    else if(Owner.velocity.Y > 0)
-                    {
-                        if (Owner.controlDown)
-                            PlayerState = PlayerMovementStateEnumerator.Drop;
-                        else
-                            PlayerState = PlayerMovementStateEnumerator.Falling;
+                        if (Owner.velocity.Y < 0 && Owner.controlJump)
+                        {
+                            PlayerState = PlayerMovementStateEnumerator.Jumped;
+                        }
+                        else if (Owner.velocity.Y > 0)
+                        {
+                            if (Owner.controlDown)
+                                PlayerState = PlayerMovementStateEnumerator.Drop;
+                            else
+                                PlayerState = PlayerMovementStateEnumerator.Falling;
+                        }
                     }
                 }
             }
-            if (false && !BeingPulledByPlayer)
+            float XDiscount = 0;
+            if (false && !BeingPulledByPlayer) //Analyze how will make this work with the scripts bellow.
             {
                 if (PlayerState != LastPlayerState)
                 {
-                    KeyValuePair<PlayerMovementStateEnumerator, Point> PlayerStatePosition = new KeyValuePair<PlayerMovementStateEnumerator, Point>(PlayerState, new Point((int)Position.X / 16, (int)Position.Y / 16));
+                    KeyValuePair<PlayerMovementStateEnumerator, Point> PlayerStatePosition = new KeyValuePair<PlayerMovementStateEnumerator, Point>(PlayerState, new Point((int)Owner.Center.X / 16, (int)Owner.Bottom.Y / 16));
                     LastLoggedPlayerState.Add(PlayerStatePosition);
                 }
                 if (LastLoggedPlayerState.Count > 0)
                 {
                     KeyValuePair<PlayerMovementStateEnumerator, Point> ActionPoint = LastLoggedPlayerState[0];
-                    PositionDifference.X = ActionPoint.Value.X * 16 + 16;
-                    PositionDifference.Y = ActionPoint.Value.Y * 16 + 56;
+                    PositionDifference.X = ActionPoint.Value.X * 16 + CollisionWidth * 0.5f;
+                    LeaderCenterX = PositionDifference.X;
+                    //PositionDifference.Y = ActionPoint.Value.Y * 16;
+                    XDiscount = (Position - PositionDifference).Length();
                     switch (ActionPoint.Key)
                     {
                         case PlayerMovementStateEnumerator.Jumped:
-                            if (ActionPoint.Value.X * 16 >= Position.X - CollisionWidth * 0.5f && ActionPoint.Value.X * 16 < Position.X + CollisionWidth * 0.5f)
-                            {                
+                            if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8)
+                            {
                                 Jump = true;
                                 LastLoggedPlayerState.RemoveAt(0);
                             }
                             break;
                         case PlayerMovementStateEnumerator.Drop:
-                            if (ActionPoint.Value.X * 16 >= Position.X - CollisionWidth * 0.5f && ActionPoint.Value.X * 16 < Position.X + CollisionWidth * 0.5f)
+                            if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8)
                             {
-                                MoveDown = true;
+                                DropFromPlatform = true;
                                 LastLoggedPlayerState.RemoveAt(0);
                             }
                             break;
                         case PlayerMovementStateEnumerator.Falling:
                             {
-                                if (ActionPoint.Value.X * 16 >= Position.X - CollisionWidth * 0.5f && ActionPoint.Value.X * 16 < Position.X + CollisionWidth * 0.5f)
+                                if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8)
                                 {
                                     LastLoggedPlayerState.RemoveAt(0);
                                 }
@@ -8868,8 +8876,10 @@ namespace giantsummon
                             break;
                         case PlayerMovementStateEnumerator.Normal:
                             {
-                                if (Velocity.Y == 0)
+                                if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8 && Velocity.Y == 0)
+                                {
                                     LastLoggedPlayerState.RemoveAt(0);
+                                }
                             }
                             break;
                     }
@@ -8888,14 +8898,15 @@ namespace giantsummon
                 PositionDifference.X += (96f + Math.Abs(Owner.velocity.X)) * Owner.direction * (Confused ? -1 : 1);
             }
             PositionDifference -= Position;
-            float DistanceMult = IsAttackingSomething ? 1.5f : 1f, DistanceBonus = 48 * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
+            float DistanceMult = IsAttackingSomething ? 1.5f : 1f, 
+                  DistanceBonus = 48 * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
             if (ChargeAhead)
                 PositionDifference.X += DistanceBonus * Owner.direction * (Confused ? -1 : 1);
             DistanceMult *= Scale;
             if (ProtectMode && IsAttackingSomething)
                 DistanceMult *= 0.2f;
             bool PlayerIsHooked = Owner.grapCount > 0;
-            if (!Downed && !PlayerMounted && !PlayerIsHooked && (((!IsAttackingSomething && Math.Abs(PositionDifference.Y) >= 320f * DistanceMult) || Math.Abs(PositionDifference.Y) >= 640f * DistanceMult) || Math.Abs(PositionDifference.X) >= 640f * DistanceMult))
+            if (!Downed && !PlayerIsHooked && (((!IsAttackingSomething && Math.Abs(PositionDifference.Y) >= 320f * DistanceMult) || Math.Abs(PositionDifference.Y) >= 640f * DistanceMult) || Math.Abs(PositionDifference.X) >= 640f * DistanceMult))
             {
                 IncreaseStuckTimer();
             }
@@ -8905,75 +8916,72 @@ namespace giantsummon
                 {
                     LeaveFurniture();
                 }
-                if (!PlayerMounted)
+                if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 48 + DistanceBonus - XDiscount)
                 {
-                    if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 48f + DistanceBonus)
+                    if (PositionDifference.X < 0)
+                        MoveLeft = true;
+                    else
+                        MoveRight = true;
+                }
+                else if (ChargeAhead && LeaderSpeedX != 0) //To try keeping up with the player when on charge AI.
+                {
+                    if (LeaderSpeedX < 0)
                     {
-                        if (PositionDifference.X < 0)
-                            MoveLeft = true;
-                        else
-                            MoveRight = true;
-                    }
-                    else if (ChargeAhead && LeaderSpeedX != 0) //To try keeping up with the player when on charge AI.
-                    {
-                        if (LeaderSpeedX < 0)
+                        if (Velocity.X >= LeaderSpeedX)
                         {
-                            if (Velocity.X >= LeaderSpeedX)
-                            {
-                                MoveLeft = true;
-                            }
+                            MoveLeft = true;
                         }
-                        else if (LeaderSpeedX > 0)
+                    }
+                    else if (LeaderSpeedX > 0)
+                    {
+                        if (Velocity.X <= LeaderSpeedX)
+                        {
+                            MoveRight = true;
+                        }
+                    }
+                    if (StuckTimer > 0)
+                        StuckTimer = 0;
+                }
+                else if (LeaderSpeedX != 0)
+                {
+                    if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 36 + DistanceBonus - XDiscount)
+                    {
+                        if (Position.X < LeaderCenterX)
                         {
                             if (Velocity.X <= LeaderSpeedX)
                             {
                                 MoveRight = true;
                             }
                         }
-                        if (StuckTimer > 0)
-                            StuckTimer = 0;
-                    }
-                    else if (LeaderSpeedX != 0)
-                    {
-                        if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 36f + DistanceBonus)
+                        else
                         {
-                            if (Position.X < LeaderCenterX)
+                            if (Velocity.X >= LeaderSpeedX)
                             {
-                                if (Velocity.X <= LeaderSpeedX)
-                                {
-                                    MoveRight = true;
-                                }
-                            }
-                            else
-                            {
-                                if (Velocity.X >= LeaderSpeedX)
-                                {
-                                    MoveLeft = true;
-                                }
+                                MoveLeft = true;
                             }
                         }
                     }
-                    bool TryFlying = WingType > 0,
-                        TrySwimming = Wet && (HasFlag(GuardianFlags.SwimmingAbility) || HasFlag(GuardianFlags.Merfolk));
-                    bool PlayerAboveMe = Owner.velocity.Y != 0 && (Velocity.Y == 0 ? LeaderBottom < Position.Y - (LeaderHeight * 2 + Height) : LeaderBottom < Position.Y - LeaderHeight * 0.5f),
-                        PlayerAboveMeSwim = TrySwimming && ((LeaderWet && LeaderBottom < Position.Y - 8) || (!LeaderWet && LeaderBottom < Position.Y + Height - 8));
-                    if (PlayerAboveMeSwim)
-                    {
-                        Jump = true;
-                    }
-                    else if (PlayerAboveMe && TryFlying)
-                    {
-                        Jump = true;
-                        WingFlightTime++;
-                    }
-                    else if (Breath < BreathMax && !TryFlying && !TrySwimming && Wet && !LeaderWet)
-                    {
-                        //Try leaving water when drowning by going to where the leader is, If the leader isn't at water.
-                        if (Position.X < LeaderCenterX)
-                            MoveRight = true;
-                        else
-                            MoveLeft = true;
-                    }
+                }
+                bool TryFlying = WingType > 0,
+                    TrySwimming = Wet && (HasFlag(GuardianFlags.SwimmingAbility) || HasFlag(GuardianFlags.Merfolk));
+                bool PlayerAboveMe = Owner.velocity.Y != 0 && (Velocity.Y == 0 ? LeaderBottom < Position.Y - (LeaderHeight * 2 + Height) : LeaderBottom < Position.Y - LeaderHeight * 0.5f),
+                    PlayerAboveMeSwim = TrySwimming && ((LeaderWet && LeaderBottom < Position.Y - 8) || (!LeaderWet && LeaderBottom < Position.Y + Height - 8));
+                if (PlayerAboveMeSwim)
+                {
+                    Jump = true;
+                }
+                else if (PlayerAboveMe && TryFlying)
+                {
+                    Jump = true;
+                    WingFlightTime++;
+                }
+                else if (Breath < BreathMax && !TryFlying && !TrySwimming && Wet && !LeaderWet)
+                {
+                    //Try leaving water when drowning by going to where the leader is, If the leader isn't at water.
+                    if (Position.X < LeaderCenterX)
+                        MoveRight = true;
+                    else
+                        MoveLeft = true;
                 }
                 //MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f));
                 //MoveCursorToPosition(Owner.position, Owner.width, Owner.height);
@@ -13044,7 +13052,7 @@ namespace giantsummon
             float LastPositionX = this.Position.X;
             int PositionX = (int)(this.Position.X / 16);
             float StepSpeed = 2f;
-            bool Fall = MoveDown && !MoveUp;
+            bool Fall = DropFromPlatform;
             Point[] TouchingTile = UpdateTouchingTiles();
             Collision_Water(Collision_Lava());
             Collision_WalkDownSlopes();

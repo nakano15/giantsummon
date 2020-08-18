@@ -35,7 +35,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 71, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -714,15 +714,13 @@ namespace giantsummon
             if(true)
             {
                 List<string> New = new List<string>();
-                New.Add("Comfort Points: " + guardian.ComfortPoints);
-                New.Add("Comfort Stack: " + guardian.ComfortStack + "/" + TerraGuardian.MaxComfortStack);
-                /*foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    New.Add(g.Name + ": " + g.Data.GetNecessityStatus);
-                    New.Add("Fatigue: " + g.Data.Fatigue);
-                    New.Add("Injury: " + g.Data.Injury);
-                }*/
+                    New.Add(g.Name + " actions: " + g.LastLoggedPlayerState.Count);
+                    if(g.LastLoggedPlayerState.Count > 0)
+                        New.Add("Action Type: " + g.LastLoggedPlayerState[0].Key.ToString() + " Pos: " + g.LastLoggedPlayerState[0].Value);
+                }
                 TextsToDraw = New.ToArray();
             }
             foreach (string s in TextsToDraw)

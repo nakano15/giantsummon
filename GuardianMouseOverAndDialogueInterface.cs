@@ -445,6 +445,8 @@ namespace giantsummon
             else
             {
                 tg.request.UponAccepting();
+                tg.request.UpdateRequest(tg.Data, MainPlayer.GetModPlayer<PlayerMod>());
+                tg.request.Time++;
                 string Mes = tg.request.GetRequestAccept(tg.Data);
                 if (Mes == "")
                     Mes = "(You accepted the request.)";
