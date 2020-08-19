@@ -13,6 +13,8 @@ namespace giantsummon
     {
         private static string[] Dialogue = new string[0];
         private static int DialogueLines = 0;
+        private static byte DialogueDelayTime = 0;
+        private const byte DialogueMaxDelayTime = 60;
         public static bool SomeoneMouseOver = false;
         public static int MouseOverGuardian = -1;
         public static List<DialogueOption> Options = new List<DialogueOption>();
@@ -142,6 +144,7 @@ namespace giantsummon
         public static void Update()
         {
             SomeoneMouseOver = false;
+            int LastMouseOverGuardian = MouseOverGuardian;
             MouseOverGuardian = -1;
             int[] Keys = MainMod.ActiveGuardians.Keys.ToArray();
             float MouseX = Main.mouseX + Main.screenPosition.X,
@@ -161,38 +164,47 @@ namespace giantsummon
                     }
                 }
             }
-            PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-            if (player.IsTalkingToAGuardian)
+            if (LastMouseOverGuardian != MouseOverGuardian)
             {
-                if (player.player.sign > -1 || player.player.talkNPC > -1 || !Keys.Contains(player.TalkingGuardianPosition))
-                {
-                    player.IsTalkingToAGuardian = false;
-                    return;
-                }
+                DialogueDelayTime = 0;
             }
-            else
+            PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            if (!player.IsTalkingToAGuardian)
             {
                 if (SomeoneMouseOver)
                 {
+                    if (DialogueDelayTime < DialogueMaxDelayTime)
+                        DialogueDelayTime++;
                     if (!player.IsTalkingToAGuardian || player.TalkingGuardianPosition != MouseOverGuardian)
                     {
                         if (Main.mouseRight && Main.mouseRightRelease)
                         {
                             TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
-                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg))
+                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg) && ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1))
                             {
                                 StartDialogue(tg);
                             }
                         }
                     }
                 }
+                else if (DialogueDelayTime > 0)
+                {
+                    DialogueDelayTime = 0;
+                }
             }
-            if (player.IsTalkingToAGuardian)
+            else
             {
-                TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || Main.playerInventory || MainPlayer.talkNPC > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
+                if (!MainMod.ActiveGuardians.ContainsKey(player.TalkingGuardianPosition))
                 {
                     player.IsTalkingToAGuardian = false;
+                    return;
+                }
+                TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
+                if (!IsInChattingRange(tg) || Main.playerInventory || MainPlayer.talkNPC > -1 || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
+                {
+                    player.IsTalkingToAGuardian = false;
+                    if (Main.playerInventory)
+                        Main.playerInventory = false;
                 }
                 else
                 {
@@ -230,10 +242,22 @@ namespace giantsummon
             if (SomeoneMouseOver && MainMod.ActiveGuardians.ContainsKey(MouseOverGuardian))
             {
                 TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
-                if(IsInChattingRange(tg) && !tg.Downed && !tg.KnockedOut)
-                    Main.spriteBatch.Draw(Main.chatTexture, new Vector2(tg.Position.X - Main.chatTexture.Width * 0.5f - (-tg.Width * 0.5f - 8) * tg.Direction, tg.Position.Y - tg.Height - Main.chatTexture.Height) - Main.screenPosition, null, Main.mouseTextColorReal, 0f, Vector2.Zero, 1f, (tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0f);
+                if (IsInChattingRange(tg) && !tg.Downed && !tg.KnockedOut)
+                {
+                    Vector2 DialogueBubblePosition = new Vector2(tg.Position.X - Main.chatTexture.Width * 0.5f - (-tg.Width * 0.5f - 8) * tg.Direction, tg.Position.Y - tg.Height - Main.chatTexture.Height) - Main.screenPosition;
+                    if ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1)
+                    {
+                        Main.spriteBatch.Draw(Main.chatTexture, DialogueBubblePosition, null, Main.mouseTextColorReal, 0f, Vector2.Zero, 1f, (tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0f);
+                    }
+                    else
+                    {
+                        Color color = Color.White * ((float)DialogueDelayTime / DialogueMaxDelayTime);
+                        Utils.DrawBorderString(Main.spriteBatch, "...", DialogueBubblePosition, color, 2);
+                    }
+                }
                 Vector2 TextPosition = tg.Position;
-                TextPosition.Y -= tg.Base.SpriteHeight - 22;
+                TextPosition.Y += 22;
+                //TextPosition.Y -= tg.Base.SpriteHeight - 22;
                 string Text = (tg.OwnerPos == MainPlayer.whoAmI ? tg.Name : tg.ReferenceName) + " " + tg.HP + "/" + tg.MHP;
                 Utils.DrawBorderString(Main.spriteBatch, Text, TextPosition - Main.screenPosition, Color.White * Main.cursorAlpha, 1f, 0.5f, 1f);
             }

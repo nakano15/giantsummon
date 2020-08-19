@@ -35,13 +35,13 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 71, LastModVersion = 65;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
-            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false;
+            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false;
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
         public const bool IndividualSkillLeveling = false;

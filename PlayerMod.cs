@@ -325,8 +325,13 @@ namespace giantsummon
 
         public override void NaturalLifeRegen(ref float regen)
         {
-            if (KnockedOutCold && ReviveBoost == 0)
-                player.bleed = true;
+            if (KnockedOutCold)
+            {
+                if (ReviveBoost == 0)
+                    player.bleed = true;
+                else
+                    regen *= 2;
+            }
         }
 
         public static bool AddPlayerGuardian(Player player, int ID, Mod mod)
@@ -669,6 +674,10 @@ namespace giantsummon
                 player.mouseInterface = true;
                 player.controlUseItem = false;
             }
+            else
+            {
+                MainMod.ToReviveID = -1;
+            }
         }
 
         public void UpdateKnockOut()
@@ -787,11 +796,11 @@ namespace giantsummon
                 if (Distance >= 3000)
                     ForceKill = true;
             }
-            if (KnockedOutCold) //Disabled for now, needs better planning
+            if (KnockedOutCold)
             {
                 if (player.whoAmI == Main.myPlayer)
                 {
-                    if (!GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed))
+                    if (MainMod.StartRescueCountdownWhenKnockedOutCold || !GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed))
                     {
                         if (ReviveBoost == 0)
                             RescueTime++;
@@ -908,11 +917,7 @@ namespace giantsummon
 
         public override void PreUpdate()
         {
-            if (player.whoAmI == Main.myPlayer)
-            {
-                MainMod.ToReviveID = -1;
-            }
-
+        
         }
 
         public override void PreUpdateMovement()

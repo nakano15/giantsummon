@@ -34,6 +34,7 @@ Implemented the Rescue system to the mod, for those who really don't want their 
 	The maximum health you respawns with greatly increases if there's an event happening, like a moon event, an eclipse or invasion in progress.
 	Do notice that this also causes the time to jump a few hours ahead. It takes time to bring you and your companions to a safe place.
 		The time jump isn't related to the distance from your character to the rescuer. Near or far away from the rescuer place, the time has the same jump distance range.
+	Added an option on the revive system configuration, to make so the rescue timer starts as soon as your character is knocked out cold, instead of when having no awaken companions nearby.
 	This is very ambitious, right? Wonder how much of a pain would be to make It work on Multiplayer, if It existed.
 Changes to how Companion Town Npcs works were implemented.
 	Now companions no longer requires a mask npc to exist in the world, there is now a different system which allows their existence in the world.
@@ -49,7 +50,7 @@ Changes to how Companion Town Npcs works were implemented.
 		None of those are going to happen on multiplayer, if you are nuts and bolts to try doing so.
 There is now a different from Terraria dialogue interface and system, for when talking to the Companions.
 	This new dialogue interface will only be shown on dialogues with companions, and their options will show up depending on the moment, the companion and/or other reasons.
-	You can speak with the companions travelling with you.
+	You can speak with the companions travelling with you, but to reduce the annoyance, there is a 1 second delay before you can speak with them.
 The following changes were done to Injury and Heavy Injury debuffs:
 	Upon leaving Knocked Out State, you will get 1 minute of Injury debuff, instead of 45 seconds.
 	If you leave Knocked Out State while with Injury, you will get 3 minutes of the Heavy Injury debuff, instead of 1 minute.

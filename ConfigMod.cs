@@ -120,6 +120,11 @@ namespace giantsummon
         public bool GuardianCanDie { get { return MainMod.GuardiansDontDiesAfterDownedDefeat; } set { MainMod.GuardiansDontDiesAfterDownedDefeat = value; } }
 
         [Label("Companions speaks while reviving someone?")]
+        [Tooltip("Regardless of wether or not there are companions alive near you, the rescue countdown will run while your character isn't revived by someone.")]
+        [DefaultValue(false)]
+        public bool StartReviveCountdownWhenKnockedOutCold { get { return MainMod.StartRescueCountdownWhenKnockedOutCold; } set { MainMod.StartRescueCountdownWhenKnockedOutCold = value; } }
+
+        [Label("Companions speaks while reviving someone?")]
         [Tooltip("Makes the companion stop talking to the ones they are trying to revive.")]
         [DefaultValue(true)]
         public bool GuardianCanReviveChatter { get { return MainMod.CompanionsSpeaksWhileReviving; } set { MainMod.CompanionsSpeaksWhileReviving = value; } }
