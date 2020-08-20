@@ -33,7 +33,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 71, LastModVersion = 65;
+        public const int ModVersion = 71, LastModVersion = 71;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -195,7 +195,7 @@ namespace giantsummon
                 }
             }
         }
-
+        
         public static void GetInitialCompanionsList()
         {
             InitialGuardians.Clear();
@@ -914,7 +914,7 @@ namespace giantsummon
                 if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + 98 &&
                     Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + 8)
                 {
-                    MouseOverText = "Life Crystals: " + Guardian.LifeCrystalHealth + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits: " + Guardian.LifeFruitHealth + "/" + TerraGuardian.MaxLifeFruit;
+                    MouseOverText = "Life Crystals: " + Guardian.Data.LifeCrystalHealth + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits: " + Guardian.Base.LifeFruitHPBonus + "/" + TerraGuardian.MaxLifeFruit;
                     if (Guardian.Data.Injury > 0)
                         MouseOverText += "  [Injury " + Guardian.Data.Injury + "%]";
                 }
@@ -937,10 +937,10 @@ namespace giantsummon
                                 BarScale = MaxHealthBarScale;
                                 break;
                             case 1:
-                                BarScale = (float)Guardian.LifeCrystalHealth / TerraGuardian.MaxLifeCrystals;
+                                BarScale = (float)Guardian.Data.LifeCrystalHealth / TerraGuardian.MaxLifeCrystals;
                                 break;
                             case 2:
-                                BarScale = (float)Guardian.LifeFruitHealth / TerraGuardian.MaxLifeFruit;
+                                BarScale = (float)Guardian.Data.LifeFruitHealth / TerraGuardian.MaxLifeFruit;
                                 break;
                         }
                         if (BarScale > MaxHealthBarScale)
@@ -970,7 +970,7 @@ namespace giantsummon
                     Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition, new Rectangle(122 * 3 + 22, 20, (int)(98 * ManaCrystalProgress), 8), Color.White);
                     if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + 98 &&
                         Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + 8)
-                        MouseOverText = "Mana: " + Guardian.MP + "/" + Guardian.MMP + "  Mana Crystals: " + Guardian.ManaCrystals + "/" + GuardianData.MaxManaCrystals;
+                        MouseOverText = "Mana: " + Guardian.MP + "/" + Guardian.MMP + "  Mana Crystals: " + Guardian.Data.ManaCrystals + "/" + GuardianData.MaxManaCrystals;
                 }
                 if (Guardian.Breath < Guardian.BreathMax && Guardian.BreathMax > 0)
                 {

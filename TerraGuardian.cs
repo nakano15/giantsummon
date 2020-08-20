@@ -5763,7 +5763,7 @@ namespace giantsummon
         {
             if (!IsAttackingSomething && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition == WhoAmID)
             {
-                if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome) || IdleActionTime < 5)
+                if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome) || IdleActionTime < 5)
                     ChangeIdleAction(IdleActions.Wait, 200);
                 if (Velocity.X == 0)
                 {
@@ -10546,29 +10546,39 @@ namespace giantsummon
                         }
                         if (Main.netMode >= 1 && this.OwnerPos != Main.myPlayer)
                             continue;
-                        if (t < 200 && Main.npc[t].active && !Main.npc[t].friendly && !Main.npc[t].dontTakeDamage && !NpcHasBeenHit(t) && Main.npc[t].getRect().Intersects(WeaponCollision) && (Main.npc[t].noTileCollide || CanHit(Main.npc[t].position, Main.npc[t].width, Main.npc[t].height)))
+                        if (t < 200 && Main.npc[t].active && !Main.npc[t].friendly && !NpcHasBeenHit(t) && Main.npc[t].getRect().Intersects(WeaponCollision) && (Main.npc[t].noTileCollide || CanHit(Main.npc[t].position, Main.npc[t].width, Main.npc[t].height)))
                         {
-                            int HitDirection = Direction;
-                            if ((HitDirection == -1 && CenterPosition.X < Main.npc[t].Center.X) ||
-                                (HitDirection == 1 && CenterPosition.X > Main.npc[t].Center.X))
+                            if (!Main.npc[t].dontTakeDamage)
                             {
-                                HitDirection *= -1;
+                                int HitDirection = Direction;
+                                if ((HitDirection == -1 && CenterPosition.X < Main.npc[t].Center.X) ||
+                                    (HitDirection == 1 && CenterPosition.X > Main.npc[t].Center.X))
+                                {
+                                    HitDirection *= -1;
+                                }
+                                bool Critical = (Main.rand.Next(100) < CriticalRate);
+                                double result = Main.npc[t].StrikeNPC(Damage, Knockback, HitDirection, Critical);
+                                Main.PlaySound(Main.npc[t].HitSound, Main.npc[t].Center);
+                                AddNpcHit(t);
+                                IncreaseDamageStacker((int)result, Main.npc[t].lifeMax);
+                                if (result > 0 && SelectedItem > -1)
+                                    TryApplyingWeaponDebuffsToNpc(Inventory[SelectedItem], Main.npc[t]);
+                                if (result > 0)
+                                {
+                                    if (HasFlag(GuardianFlags.BeetleOffenseEffect))
+                                        IncreaseCooldownValue(GuardianCooldownManager.CooldownType.BeetleCounter, (int)result);
+                                    OnHitSomething(Main.npc[t]);
+                                    AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength);
+                                    if (Critical)
+                                        AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck);
+                                }
                             }
-                            bool Critical = (Main.rand.Next(100) < CriticalRate);
-                            double result = Main.npc[t].StrikeNPC(Damage, Knockback, HitDirection, Critical);
-                            Main.PlaySound(Main.npc[t].HitSound, Main.npc[t].Center);
-                            AddNpcHit(t);
-                            IncreaseDamageStacker((int)result, Main.npc[t].lifeMax);
-                            if (result > 0 && SelectedItem > -1)
-                                TryApplyingWeaponDebuffsToNpc(Inventory[SelectedItem], Main.npc[t]);
-                            if (result > 0)
+                            else
                             {
-                                if (HasFlag(GuardianFlags.BeetleOffenseEffect))
-                                    IncreaseCooldownValue(GuardianCooldownManager.CooldownType.BeetleCounter, (int)result);
-                                OnHitSomething(Main.npc[t]);
-                                AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength);
-                                if (Critical)
-                                    AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck);
+                                if (Main.npc[t].type == 63 || Main.npc[t].type == 64 || Main.npc[t].type == 103 || Main.npc[t].type == 242)
+                                {
+                                    this.Hurt((int)(Main.npc[t].damage * 1.3f), -this.Direction, false, false, " couldn't endure " + Main.npc[t].GivenOrTypeName + " electricity.");
+                                }
                             }
                         }
                     }

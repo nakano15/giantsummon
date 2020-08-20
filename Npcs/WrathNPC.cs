@@ -390,7 +390,7 @@ namespace giantsummon.Npcs
                                         EndPosition += Direction * 16 * (Direction.X < 0 ? -1 : 1);
                                     }
                                     ChargeDashDestination = EndPosition;
-                                    float MaxDist = ChargeDashDestination.Length() / 10;
+                                    float MaxDist = ChargeDashDestination.Length() / 16;
                                     for (int dist = 0; dist < MaxDist; dist++)
                                     {
                                         float Percentage = (float)dist / MaxDist;

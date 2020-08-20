@@ -447,7 +447,8 @@ namespace giantsummon
             {
                 Main.ninjaTexture = MainMod.TrappedCatTexture;
             }
-            GuardianPostDrawData.Clear();
+            if(GuardianPostDrawData.Count > 0)
+                GuardianPostDrawData.Clear();
             foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
             {
                 if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Npc && gdm.DrawTargetID == npc.whoAmI && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))

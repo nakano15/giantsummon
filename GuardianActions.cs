@@ -314,10 +314,17 @@ namespace giantsummon
                                         byte ReviveBoost = 1;
                                         if (!guardian.IsAttackingSomething)
                                             ReviveBoost += 1;
+                                        bool IsMounted = guardian.PlayerMounted;
                                         if (IsPlayer)
+                                        {
                                             Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
+                                            if(!IsMounted) guardian.AddDrawMomentToPlayer(Players[0]);
+                                        }
                                         else
+                                        {
                                             Guardians[0].ReviveBoost += ReviveBoost;
+                                            if (!IsMounted) guardian.AddDrawMomentToTerraGuardian(Guardians[0]);
+                                        }
                                         guardian.StuckTimer = 0;
                                         guardian.OffHandAction = false;
                                         int TalkTime = GetIntegerValue(ITalkTime);
