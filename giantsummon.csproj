@@ -98,6 +98,7 @@
     <Compile Include="GuardianBountyQuest.cs" />
     <Compile Include="GuardianDrawData.cs" />
     <Compile Include="GuardianDrawMoment.cs" />
+    <Compile Include="GuardianHand.cs" />
     <Compile Include="GuardianHouseManagementInterface.cs" />
     <Compile Include="GuardianID.cs" />
     <Compile Include="GuardianManagement.cs" />
@@ -298,6 +299,7 @@
     <Content Include="Creatures\Wrath\left_arm.png" />
     <Content Include="Creatures\Wrath\right_arm.png" />
     <Content Include="Creatures\Wrath\right_arm_front.png" />
+    <Content Include="ExtraTextures\Eyes.png" />
     <Content Include="GuardianNPC\List\Domino_Head.png" />
     <Content Include="Creatures\Domino\left_arm.png" />
     <Content Include="Creatures\Domino\right_arm.png" />

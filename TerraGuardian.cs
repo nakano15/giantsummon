@@ -95,6 +95,8 @@ namespace giantsummon
         public bool DropFromPlatform { get { return MoveDown && Jump; } set { MoveDown = Jump = value; } }
         public bool LastDroppedFromPlatform { get { return LastMoveDown && LastJump; } }
         public bool Action = false, Jump = false, OffHandAction = false;
+        public bool IsDualWielding = false;
+        public bool CanDualWield { get { return HeldItemHand != HeldHand.Both && !OffHandAction && HasFlag(GuardianFlags.CanDualWield); } }
         public bool LastAction = false, LastJump = false, LastOffHandAction = false;
         public bool Channeling = false;
         public bool ShowOffHand = false;
@@ -1793,9 +1795,12 @@ namespace giantsummon
             }
             if (OffHandAction)
             {
-                int LastOffhandItem = -1;
-                if (SelectedOffhand > -1) LastOffhandItem = Inventory[SelectedOffhand].type;
-                PickOffhandForTheSituation(IsAttackingSomething);
+                if (ItemAnimationTime == 0 || !IsDualWielding)
+                {
+                    int LastOffhandItem = -1;
+                    if (SelectedOffhand > -1) LastOffhandItem = Inventory[SelectedOffhand].type;
+                    PickOffhandForTheSituation(IsAttackingSomething);
+                }
             }
             else if (LastOffHandAction)
             {
@@ -4797,7 +4802,7 @@ namespace giantsummon
                 {
                     //CheckIfCanSummon();
                     CheckIfCanDoAction();
-                    OffHandAction = true;
+                    //OffHandAction = true;
                     CheckForLifeCrystals();
                     TryJumpingTallTiles();
                     //TryLandingOnSafeSpot();
@@ -10046,6 +10051,11 @@ namespace giantsummon
                         {
                             Damage += (int)(Damage * 0.2f);
                         }
+                        if (CanDualWield && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.LightVerticalSwing))
+                        {
+                            IsDualWielding = true;
+                            Damage = (int)(Damage * 0.8f);
+                        }
                         Knockback = Inventory[SelectedItem].knockBack;
                         Main.PlaySound(Inventory[SelectedItem].UseSound, CenterPosition);
                         if (Damage < 1) Damage = 1;
@@ -10080,41 +10090,133 @@ namespace giantsummon
             WeaponCollision.Height = 0;
             HeldItemHand = HeldHand.Left;
             PickHandToUse(ref HeldItemHand);
-            if (ItemAnimationTime > 0)
+            ItemUseEffect(true, ref ItemAnimationTime, ref ItemUseTime, ref SelectedItem, ref HeldItemHand, ref ItemPositionX, ref ItemPositionY, ref ItemRotation, ref CriticalRate, ref Knockback, ref TriggerItem, ref ToolTrigger);
+            if (IsDualWielding)
             {
-                TriggerItem = ItemUseTime == 0;
-                if (SelectedItem > -1 && (Inventory[SelectedItem].pick > 0 || Inventory[SelectedItem].axe > 0 || Inventory[SelectedItem].hammer > 0))
+                HeldOffHand = HeldItemHand;
+                PickOffHandToUse(ref HeldOffHand);
+                ItemUseEffect(false, ref ItemAnimationTime, ref ItemUseTime, ref SelectedItem, ref HeldOffHand, ref OffHandPositionX, ref OffHandPositionY, ref OffhandRotation, ref CriticalRate, ref Knockback, ref TriggerItem, ref ToolTrigger);
+            }
+            if (SelectedOffhand > -1 && OffHandAction)
+            {
+                OffHandPositionX = 0;
+                OffHandPositionY = 0;
+                //if (HeldItemHand != GuardianItemExtraData.HeldHand.Both)
                 {
-                    ToolTrigger = ToolUseTime == 0;
-                }
-                ItemUseTime--;
-                if (ItemUseTime < 0)
-                {
-                    ItemUseTime += ItemMaxUseTime;
-                    if (SelectedItem > -1)
+                    HeldOffHand = HeldItemHand;
+                    if (HeldOffHand != HeldHand.Both)
+                        PickOffHandToUse(ref HeldOffHand);
+                    float AngleChecker = CalculateAimingUseAnimation(ItemRotation);
+                    OffhandRotation = 0;
+                    bool IsUmbrella = Inventory[SelectedOffhand].type == 946;
+                    int Frame = 0;
+                    /*if (Inventory[SelectedOffhand].type == 946)
                     {
-                        if (Inventory[SelectedItem].createTile >= 0) //Tile speed mult
-                        {
-                            ItemUseTime = (int)(ItemUseTime * 1f);
-                        }
-                        if (Inventory[SelectedItem].createWall >= 0) //Wall speed mult
-                        {
-                            ItemUseTime = (int)(ItemUseTime * 1f);
-                        }
+                        if (Ducking)
+                            Frame = Base.DuckingSwingFrames[1];
+                        else
+                            Frame = Base.ItemUseFrames[1];
                     }
-                }
-                ToolUseTime--;
-                if (ToolUseTime < 0)
-                {
-                    if (SelectedItem > -1)
+                    else*/
                     {
-                        if ((Inventory[SelectedItem].pick > 0 || Inventory[SelectedItem].axe > 0 || Inventory[SelectedItem].hammer > 0))
+                        if (Ducking)
                         {
-                            ToolUseTime += Inventory[SelectedItem].useTime;
+                            Frame = Base.DuckingSwingFrames[2];
                         }
                         else
                         {
-                            ToolUseTime += (int)(Inventory[SelectedItem].useTime); //Pickspeed mult
+                            Frame = Base.ItemUseFrames[2];
+                        }
+                    }
+                    if (HeldOffHand == HeldHand.Both)
+                    {
+                        GetBetweenHandsPosition(Frame, out OffHandPositionX, out OffHandPositionY);
+                    }
+                    if (HeldOffHand == HeldHand.Left)
+                    {
+                        GetLeftHandPosition(Frame, out OffHandPositionX, out OffHandPositionY);
+                    }
+                    if (HeldOffHand == HeldHand.Right)
+                    {
+                        GetRightHandPosition(Frame, out OffHandPositionX, out OffHandPositionY);
+                    }
+                }
+                if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.PeaceCandle)
+                {
+                    AddBuff(Terraria.ID.BuffID.PeaceCandle, 3);
+                    if (!this.Wet)
+                    {
+                        Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0.9f, 0.1f, 0.75f);
+                    }
+                }
+                if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.WaterCandle)
+                {
+                    AddBuff(Terraria.ID.BuffID.WaterCandle, 3);
+                    if (!this.Wet)
+                    {
+                        Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0, 0.5f, 1f);
+                    }
+                }
+                if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.UnicornonaStick)
+                {
+                    //OffHandPositionY += 38 / 2;
+                    OffHandPositionY -= 12;
+                    OffHandPositionX += 12 * Direction;
+                    //OffHandPositionX += 38 / 2 * Direction;
+                }
+                if (Inventory[SelectedOffhand].type == 946)
+                {
+                    //OffHandPositionX -= (int)(4 * Direction);
+                    OffHandPositionY -= 22;
+                }
+                else if (MainMod.IsGuardianItem(Inventory[SelectedOffhand]))
+                    ((Items.GuardianItemPrefab)Inventory[SelectedOffhand].modItem).ItemUpdateScript(this);
+                TorchLightingHandler(Inventory[SelectedOffhand], true);
+            }
+            if (ItemAnimationTime < 0)
+                ItemAnimationTime = 0;
+        }
+
+        private void ItemUseEffect(bool MainHand, ref int ItemAnimationTime, ref int ItemUseTime, ref int SelectedItem, ref HeldHand HeldItemHand, ref int ItemPositionX, ref int ItemPositionY, ref float ItemRotation, ref int CriticalRate, ref float Knockback, ref bool TriggerItem, ref bool ToolTrigger)
+        {
+            if (ItemAnimationTime > 0)
+            {
+                if (MainHand)
+                {
+                    TriggerItem = ItemUseTime == 0;
+                    if (SelectedItem > -1 && (Inventory[SelectedItem].pick > 0 || Inventory[SelectedItem].axe > 0 || Inventory[SelectedItem].hammer > 0))
+                    {
+                        ToolTrigger = ToolUseTime == 0;
+                    }
+                    ItemUseTime--;
+                    if (ItemUseTime < 0)
+                    {
+                        ItemUseTime += ItemMaxUseTime;
+                        if (SelectedItem > -1)
+                        {
+                            if (Inventory[SelectedItem].createTile >= 0) //Tile speed mult
+                            {
+                                ItemUseTime = (int)(ItemUseTime * 1f);
+                            }
+                            if (Inventory[SelectedItem].createWall >= 0) //Wall speed mult
+                            {
+                                ItemUseTime = (int)(ItemUseTime * 1f);
+                            }
+                        }
+                    }
+                    ToolUseTime--;
+                    if (ToolUseTime < 0)
+                    {
+                        if (SelectedItem > -1)
+                        {
+                            if ((Inventory[SelectedItem].pick > 0 || Inventory[SelectedItem].axe > 0 || Inventory[SelectedItem].hammer > 0))
+                            {
+                                ToolUseTime += Inventory[SelectedItem].useTime;
+                            }
+                            else
+                            {
+                                ToolUseTime += (int)(Inventory[SelectedItem].useTime); //Pickspeed mult
+                            }
                         }
                     }
                 }
@@ -10140,7 +10242,7 @@ namespace giantsummon
                 if (ItemUseType == ItemUseTypes.ClawAttack) //Claw
                 {
                     HeldItemHand = HeldHand.Both;
-                    if(!PlayerControl)
+                    if (!PlayerControl)
                         FaceDirection(CenterPosition.X - AimDirection.X >= 0);
                     if (AnimationPercentage >= 0.4f)
                     {
@@ -10361,6 +10463,14 @@ namespace giantsummon
                                 Frame = (Ducking ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[2]);
                             }
                             ArmOrientation = 1;
+                        }
+                        if (SelectedItem > -1)
+                        {
+                            if (Inventory[SelectedItem].type == Terraria.ID.ItemID.GoldenShower && HasFlag(GuardianFlags.GoldenShowerStance))
+                            {
+                                ArmOrientation = 2;
+                                HeldItemHand = HeldHand.Both;
+                            }
                         }
                         if (HeldItemHand == HeldHand.Both)
                         {
@@ -10590,7 +10700,7 @@ namespace giantsummon
                     {
                         DoShoot = false;
                     }
-                    if(DoShoot) ItemShotScript(ItemWidth, ItemHeight, ItemOrigin);
+                    if (DoShoot) ItemShotScript(ItemWidth, ItemHeight, ItemOrigin, ref SelectedItem, ref ItemPositionX, ref ItemPositionY, ref ItemRotation);
                 }
                 if (ToolTrigger)
                 {
@@ -10783,7 +10893,7 @@ namespace giantsummon
                     }
                 }
                 //Time reduce
-                ItemAnimationTime--;
+                if(MainHand) ItemAnimationTime--;
                 if (IsDelay)
                 {
                     if (ItemAnimationTime == 0)
@@ -10859,18 +10969,18 @@ namespace giantsummon
                         {
                             if (item.type == Terraria.ID.ItemID.LifeCrystal || item.type == ModContent.ItemType<Items.Consumable.EtherHeart>())
                             {
-                                if (LifeCrystalHealth < MaxLifeCrystals)
+                                if (Data.LifeCrystalHealth < MaxLifeCrystals)
                                 {
-                                    LifeCrystalHealth++;
+                                    Data.LifeCrystalHealth++;
                                     UpdateStatus = true;
                                 }
                                 else Failed = true;
                             }
                             if (item.type == Terraria.ID.ItemID.LifeFruit || item.type == ModContent.ItemType<Items.Consumable.EtherFruit>())
                             {
-                                if (LifeCrystalHealth == MaxLifeCrystals && LifeFruitHealth < MaxLifeFruit)
+                                if (Data.LifeCrystalHealth == MaxLifeCrystals && Data.LifeFruitHealth < MaxLifeFruit)
                                 {
-                                    LifeFruitHealth++;
+                                    Data.LifeFruitHealth++;
                                     UpdateStatus = true;
                                 }
                                 else Failed = true;
@@ -10878,9 +10988,9 @@ namespace giantsummon
                         }
                         if (item.type == Terraria.ID.ItemID.ManaCrystal)
                         {
-                            if (ManaCrystals < GuardianData.MaxManaCrystals)
+                            if (Data.ManaCrystals < GuardianData.MaxManaCrystals)
                             {
-                                ManaCrystals++;
+                                Data.ManaCrystals++;
                                 UpdateStatus = true;
                             }
                             else Failed = true;
@@ -10947,87 +11057,9 @@ namespace giantsummon
                     }
                 }
             }
-            if (SelectedOffhand > -1 && OffHandAction)
-            {
-                OffHandPositionX = 0;
-                OffHandPositionY = 0;
-                //if (HeldItemHand != GuardianItemExtraData.HeldHand.Both)
-                {
-                    HeldOffHand = HeldItemHand;
-                    if (HeldOffHand != HeldHand.Both)
-                        PickOffHandToUse(ref HeldOffHand);
-                    float AngleChecker = CalculateAimingUseAnimation(ItemRotation);
-                    OffhandRotation = 0;
-                    bool IsUmbrella = Inventory[SelectedOffhand].type == 946;
-                    int Frame = 0;
-                    /*if (Inventory[SelectedOffhand].type == 946)
-                    {
-                        if (Ducking)
-                            Frame = Base.DuckingSwingFrames[1];
-                        else
-                            Frame = Base.ItemUseFrames[1];
-                    }
-                    else*/
-                    {
-                        if (Ducking)
-                        {
-                            Frame = Base.DuckingSwingFrames[2];
-                        }
-                        else
-                        {
-                            Frame = Base.ItemUseFrames[2];
-                        }
-                    }
-                    if (HeldOffHand == HeldHand.Both)
-                    {
-                        GetBetweenHandsPosition(Frame, out OffHandPositionX, out OffHandPositionY);
-                    }
-                    if (HeldOffHand == HeldHand.Left)
-                    {
-                        GetLeftHandPosition(Frame, out OffHandPositionX, out OffHandPositionY);
-                    }
-                    if (HeldOffHand == HeldHand.Right)
-                    {
-                        GetRightHandPosition(Frame, out OffHandPositionX, out OffHandPositionY);
-                    }
-                }
-                if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.PeaceCandle)
-                {
-                    AddBuff(Terraria.ID.BuffID.PeaceCandle, 3);
-                    if (!this.Wet)
-                    {
-                        Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0.9f, 0.1f, 0.75f);
-                    }
-                }
-                if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.WaterCandle)
-                {
-                    AddBuff(Terraria.ID.BuffID.WaterCandle, 3);
-                    if (!this.Wet)
-                    {
-                        Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0, 0.5f, 1f);
-                    }
-                }
-                if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.UnicornonaStick)
-                {
-                    //OffHandPositionY += 38 / 2;
-                    OffHandPositionY -= 12;
-                    OffHandPositionX += 12 * Direction;
-                    //OffHandPositionX += 38 / 2 * Direction;
-                }
-                if (Inventory[SelectedOffhand].type == 946)
-                {
-                    //OffHandPositionX -= (int)(4 * Direction);
-                    OffHandPositionY -= 22;
-                }
-                else if (MainMod.IsGuardianItem(Inventory[SelectedOffhand]))
-                    ((Items.GuardianItemPrefab)Inventory[SelectedOffhand].modItem).ItemUpdateScript(this);
-                TorchLightingHandler(Inventory[SelectedOffhand], true);
-            }
-            if (ItemAnimationTime < 0)
-                ItemAnimationTime = 0;
         }
 
-        public void ItemShotScript(int ItemWidth, int ItemHeight, Vector2 ItemOrigin)
+        public void ItemShotScript(int ItemWidth, int ItemHeight, Vector2 ItemOrigin, ref int SelectedItem, ref int ItemPositionX, ref int ItemPositionY, ref float ItemRotation)
         {
             bool MayShot = true;
             Item i = this.Inventory[SelectedItem];
@@ -12300,22 +12332,72 @@ namespace giantsummon
                     UsingLeftArmAnimation = true;
                 }
             }
+            UpdateItemUseAnimationEffect(HeldItemHand);
+            if (IsDualWielding)
+            {
+                UpdateItemUseAnimationEffect(HeldOffHand);
+            }
+            else if (SelectedOffhand > -1 && OffHandAction)
+            {
+                //if (HeldItemHand != GuardianItemExtraData.HeldHand.Both)
+                {
+                    HeldHand hand = HeldOffHand;
+                    float AngleChecker = CalculateAimingUseAnimation(ItemRotation);
+                    bool IsUmbrella = Inventory[SelectedOffhand].type == 946;
+                    int Frame = 0;
+                    /*if (Inventory[SelectedOffhand].type == 946)
+                    {
+                        if (Ducking)
+                        {
+                            Frame = Base.DuckingSwingFrames[1];
+                        }
+                        else
+                        {
+                            Frame = Base.ItemUseFrames[1];
+                        }
+                    }
+                    else*/
+                    {
+                        if (Ducking)
+                        {
+                            Frame = Base.DuckingSwingFrames[2];
+                        }
+                        else
+                        {
+                            Frame = Base.ItemUseFrames[2];
+                        }
+                    }
+                    if (hand == HeldHand.Left)
+                    {
+                        LeftArmAnimationFrame = Frame;
+                        UsingLeftArmAnimation = true;
+                    }
+                    if (hand == HeldHand.Right)
+                    {
+                        RightArmAnimationFrame = Frame;
+                        UsingRightArmAnimation = true;
+                    }
+                }
+            }
+            ApplyFrameAnimationChangeScripts();
+        }
+
+        private void UpdateItemUseAnimationEffect(HeldHand Hand)
+        {
             if (ItemAnimationTime > 0 || FreezeItemUseAnimation)
             {
-                HeldHand PrefferedHand = HeldHand.Left;
-                PrefferedHand = HeldItemHand;
                 float AnimationPercentage = 1f - (float)ItemAnimationTime / ItemMaxAnimationTime;
                 if (ItemUseType == ItemUseTypes.CursedAttackAttempt)
                 {
                     int AnimationFrame = (Ducking ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[2]);
                     if (SittingOnPlayerMount && Base.SittingItemUseFrames != null)
                         AnimationFrame = Base.SittingItemUseFrames[1];
-                    if (HeldItemHand == HeldHand.Left)
+                    if (Hand == HeldHand.Left)
                     {
                         LeftArmAnimationFrame = AnimationFrame;
                         UsingLeftArmAnimation = true;
                     }
-                    else if (HeldItemHand == HeldHand.Right)
+                    else if (Hand == HeldHand.Right)
                     {
                         RightArmAnimationFrame = AnimationFrame;
                         UsingRightArmAnimation = true;
@@ -12344,7 +12426,6 @@ namespace giantsummon
                     }
                     LeftArmAnimationFrame = RightArmAnimationFrame = BodyAnimationFrame;
                     UsingLeftArmAnimation = UsingRightArmAnimation = true;
-                    PlayMovementAnimation = false;
                 }
                 else if (ItemUseType == ItemUseTypes.HeavyVerticalSwing)
                 {
@@ -12362,7 +12443,6 @@ namespace giantsummon
                     }
                     LeftArmAnimationFrame = RightArmAnimationFrame = BodyAnimationFrame;
                     UsingLeftArmAnimation = UsingRightArmAnimation = true;
-                    PlayMovementAnimation = false;
                 }
                 else if (ItemUseType == ItemUseTypes.LightVerticalSwing)
                 {
@@ -12416,12 +12496,12 @@ namespace giantsummon
                             AnimationFrame = Base.DuckingSwingFrames[2];
                         }
                     }
-                    if (PrefferedHand == HeldHand.Left)
+                    if (Hand == HeldHand.Left)
                     {
                         LeftArmAnimationFrame = AnimationFrame;
                         UsingLeftArmAnimation = true;
                     }
-                    else if (PrefferedHand == HeldHand.Right)
+                    else if (Hand == HeldHand.Right)
                     {
                         RightArmAnimationFrame = AnimationFrame;
                         UsingRightArmAnimation = true;
@@ -12430,17 +12510,8 @@ namespace giantsummon
                 else if (ItemUseType == ItemUseTypes.AimingUse)
                 {
                     float AngleChecker = CalculateAimingUseAnimation(ItemRotation);
-                    HeldHand hands = PrefferedHand;
                     int Frame = 0;
                     bool WeaponIsBlowpipe = SelectedItem > -1 && (Inventory[SelectedItem].type == Terraria.ID.ItemID.Blowpipe || Inventory[SelectedItem].type == Terraria.ID.ItemID.Blowgun);
-                    if (SelectedItem > -1)
-                    {
-                        if (Inventory[SelectedItem].type == Terraria.ID.ItemID.GoldenShower && HasFlag(GuardianFlags.GoldenShowerStance))
-                        {
-                            ArmOrientation = 2;
-                            hands = HeldHand.Both;
-                        }
-                    }
                     if (ArmOrientation == 0 || WeaponIsBlowpipe) //up
                     {
                         if (SittingOnPlayerMount && Base.SittingItemUseFrames != null)
@@ -12474,12 +12545,12 @@ namespace giantsummon
                             Frame = (Ducking ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[2]);
                         }
                     }
-                    if (hands == HeldHand.Both || hands == HeldHand.Left)
+                    if (Hand == HeldHand.Both || Hand == HeldHand.Left)
                     {
                         LeftArmAnimationFrame = Frame;
                         UsingLeftArmAnimation = true;
                     }
-                    if (hands == HeldHand.Both || hands == HeldHand.Right)
+                    if (Hand == HeldHand.Both || Hand == HeldHand.Right)
                     {
                         RightArmAnimationFrame = Frame;
                         UsingRightArmAnimation = true;
@@ -12533,12 +12604,12 @@ namespace giantsummon
                 {
                     if (SittingOnPlayerMount && Base.SittingItemUseFrames != null)
                     {
-                        if (PrefferedHand == HeldHand.Left)
+                        if (Hand == HeldHand.Left)
                         {
                             LeftArmAnimationFrame = Base.SittingItemUseFrames[0];
                             UsingLeftArmAnimation = true;
                         }
-                        else if (PrefferedHand == HeldHand.Right)
+                        else if (Hand == HeldHand.Right)
                         {
                             RightArmAnimationFrame = Base.SittingItemUseFrames[0];
                             UsingRightArmAnimation = true;
@@ -12546,12 +12617,12 @@ namespace giantsummon
                     }
                     else if (Ducking)
                     {
-                        if (PrefferedHand == HeldHand.Left)
+                        if (Hand == HeldHand.Left)
                         {
                             LeftArmAnimationFrame = Base.DuckingSwingFrames[1];
                             UsingLeftArmAnimation = true;
                         }
-                        else if (PrefferedHand == HeldHand.Right)
+                        else if (Hand == HeldHand.Right)
                         {
                             RightArmAnimationFrame = Base.DuckingSwingFrames[1];
                             UsingRightArmAnimation = true;
@@ -12559,12 +12630,12 @@ namespace giantsummon
                     }
                     else
                     {
-                        if (PrefferedHand == HeldHand.Left)
+                        if (Hand == HeldHand.Left)
                         {
                             LeftArmAnimationFrame = Base.ItemUseFrames[1];
                             UsingLeftArmAnimation = true;
                         }
-                        else if (PrefferedHand == HeldHand.Right)
+                        else if (Hand == HeldHand.Right)
                         {
                             RightArmAnimationFrame = Base.ItemUseFrames[1];
                             UsingRightArmAnimation = true;
@@ -12572,49 +12643,6 @@ namespace giantsummon
                     }
                 }
             }
-            if (SelectedOffhand > -1 && OffHandAction)
-            {
-                //if (HeldItemHand != GuardianItemExtraData.HeldHand.Both)
-                {
-                    HeldHand hand = HeldOffHand;
-                    float AngleChecker = CalculateAimingUseAnimation(ItemRotation);
-                    bool IsUmbrella = Inventory[SelectedOffhand].type == 946;
-                    int Frame = 0;
-                    /*if (Inventory[SelectedOffhand].type == 946)
-                    {
-                        if (Ducking)
-                        {
-                            Frame = Base.DuckingSwingFrames[1];
-                        }
-                        else
-                        {
-                            Frame = Base.ItemUseFrames[1];
-                        }
-                    }
-                    else*/
-                    {
-                        if (Ducking)
-                        {
-                            Frame = Base.DuckingSwingFrames[2];
-                        }
-                        else
-                        {
-                            Frame = Base.ItemUseFrames[2];
-                        }
-                    }
-                    if (hand == HeldHand.Left)
-                    {
-                        LeftArmAnimationFrame = Frame;
-                        UsingLeftArmAnimation = true;
-                    }
-                    if (hand == HeldHand.Right)
-                    {
-                        RightArmAnimationFrame = Frame;
-                        UsingRightArmAnimation = true;
-                    }
-                }
-            }
-            ApplyFrameAnimationChangeScripts();
         }
 
         public void ApplyFrameAnimationChangeScripts()
@@ -13648,19 +13676,19 @@ namespace giantsummon
             {
                 if (this.Inventory[i].newAndShiny)
                     continue;
-                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeCrystal || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherHeart>() && Base.IsTerraGuardian)) && this.LifeCrystalHealth < MaxLifeCrystals)
+                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeCrystal || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherHeart>() && Base.IsTerraGuardian)) && Data.LifeCrystalHealth < MaxLifeCrystals)
                 {
                     this.SelectedItem = i;
                     this.Action = true;
                     break;
                 }
-                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeFruit || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherFruit>() && Base.IsTerraGuardian)) && this.LifeCrystalHealth == MaxLifeCrystals && this.LifeFruitHealth < MaxLifeFruit)
+                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeFruit || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherFruit>() && Base.IsTerraGuardian)) && Data.LifeCrystalHealth == MaxLifeCrystals && Data.LifeFruitHealth < MaxLifeFruit)
                 {
                     this.SelectedItem = i;
                     this.Action = true;
                     break;
                 }
-                if (this.Inventory[i].type == Terraria.ID.ItemID.ManaCrystal && ManaCrystals < GuardianData.MaxManaCrystals)
+                if (this.Inventory[i].type == Terraria.ID.ItemID.ManaCrystal && Data.ManaCrystals < GuardianData.MaxManaCrystals)
                 {
                     SelectedItem = i;
                     Action = true;
@@ -15410,45 +15438,30 @@ namespace giantsummon
             GuardianDrawData dd;
             bool drawOnFront = (!RightArm && DrawLeftBodyPartsInFrontOfPlayer) || (RightArm && DrawRightBodyPartsInFrontOfPlayer);
             Vector2 ItemPosition = Position;
-            ItemPosition.X += ItemPositionX;
-            ItemPosition.Y += ItemPositionY;
-            bool CorrectHand = ((HeldItemHand == HeldHand.Both || HeldItemHand == HeldHand.Left) && !RightArm) || (HeldItemHand == HeldHand.Right && RightArm);
+            bool DualWield = false;
+            if (this.IsDualWielding && ((HeldOffHand == HeldHand.Right && RightArm) || (HeldOffHand == HeldHand.Left && !RightArm)))
+            {
+                DualWield = true;
+                ItemPosition.X += OffHandPositionX;
+                ItemPosition.Y += OffHandPositionY;
+            }
+            else
+            {
+                ItemPosition.X += ItemPositionX;
+                ItemPosition.Y += ItemPositionY;
+            }
+            bool CorrectHand = ((HeldItemHand == HeldHand.Both || HeldItemHand == HeldHand.Left) && !RightArm) || DualWield;
             if (CorrectHand)
             {
                 bool ShowItem = ItemAnimationTime > 0 || FreezeItemUseAnimation;
-                if (false && !ShowItem && SelectedItem > -1)
-                {
-                    float RotationSum = 0f;
-                    if (HeldItemHand == HeldHand.Left)
-                    {
-                        if (Base.LeftHandPoints.GetShowWeapon(LeftArmAnimationFrame))
-                        {
-                            ShowItem = true;
-                            RotationSum = Base.LeftHandPoints.GetItemRotation(LeftArmAnimationFrame);
-                            ItemPosition = GetLeftHandPosition(LeftArmAnimationFrame) + Position;
-                            ItemUseType = GetItemUseType(Inventory[SelectedItem]);
-                        }
-                    }
-                    else if (HeldItemHand == HeldHand.Right && !OffHandAction)
-                    {
-                        if (Base.RightHandPoints.GetShowWeapon(RightArmAnimationFrame))
-                        {
-                            ShowItem = true;
-                            RotationSum = Base.RightHandPoints.GetItemRotation(RightArmAnimationFrame);
-                            ItemPosition = GetRightHandPosition(LeftArmAnimationFrame) + Position;
-                            ItemUseType = GetItemUseType(Inventory[SelectedItem]);
-                        }
-                    }
-                    if (Inclined45Degrees(Inventory[SelectedItem]))
-                        RotationSum -= 0.7853981633974483f;
-
-                    ItemRotation = RotationSum * Direction;
-                }
                 if (ShowItem)
                 {
                     if (SelectedItem > -1)
                     {
                         Item Item = Inventory[SelectedItem];
+                        float ItemRotation = this.ItemRotation;
+                        if (DualWield)
+                            ItemRotation = OffhandRotation;
                         if (!Item.noUseGraphic)
                         {
                             bool Inclined = Inclined45Degrees(Item);
@@ -15519,7 +15532,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (SelectedOffhand > -1 && ShowOffHand && (((HeldOffHand == HeldHand.Both || HeldOffHand == HeldHand.Left) && !RightArm) || (HeldOffHand == HeldHand.Right && RightArm)))
+            if (SelectedOffhand > -1 && !DualWield && ShowOffHand && (((HeldOffHand == HeldHand.Both || HeldOffHand == HeldHand.Left) && !RightArm) || (HeldOffHand == HeldHand.Right && RightArm)))
             {
                 Item Item = Inventory[SelectedOffhand];
                 bool Inclined = Inclined45Degrees(Item);

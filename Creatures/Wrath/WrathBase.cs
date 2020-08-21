@@ -68,8 +68,9 @@ namespace giantsummon.Creatures
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(14, 0);
-            BodyFrontFrameSwap.Add(22, 1);
-            BodyFrontFrameSwap.Add(23, 2);
+            BodyFrontFrameSwap.Add(16, 1);
+            BodyFrontFrameSwap.Add(22, 2);
+            BodyFrontFrameSwap.Add(23, 3);
 
             //Left Arm
             LeftHandPoints.AddFramePoint2x(10, 10, 3);

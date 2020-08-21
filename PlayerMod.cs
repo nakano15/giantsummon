@@ -12,6 +12,7 @@ namespace giantsummon
     public class PlayerMod : ModPlayer
     {
         public static bool ForceKill = false;
+        public EyeState eye = EyeState.Open;
         public Dictionary<int, GuardianData> MyGuardians = new Dictionary<int, GuardianData>();
         public TerraGuardian Guardian = new TerraGuardian();
         public TerraGuardian[] AssistGuardians = new TerraGuardian[MainMod.MaxExtraGuardianFollowers];
@@ -2307,6 +2308,46 @@ namespace giantsummon
                 }
             });
             layers.Add(l);
+            /*eye = EyeState.Closed;
+            if (eye != EyeState.Open)
+            {
+                l = new PlayerLayer(mod.Name, "Player Eye", delegate(PlayerDrawInfo pdi)
+                {
+                    for (int t = 0; t < Main.playerDrawData.Count; t++)
+                    {
+                        if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.Eyes])
+                        {
+                            Vector2 Position = Main.playerDrawData[t].position;
+                            if ((player.headFrame.Y >= 7 * player.headFrame.Height && player.headFrame.Y < 11 * player.headFrame.Height) ||
+                                player.headFrame.Y >= 14 * player.headFrame.Height && player.headFrame.Y < 17 * player.headFrame.Height)
+                            {
+                                Position.Y -= 2;
+                            }
+                            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 0, 40, 56), (eye == EyeState.Closed ? pdi.bodyColor : Main.playerDrawData[t].color), Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
+                            Main.playerDrawData[t] = dd;
+                        }
+                        if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.EyeWhites])
+                        {
+                            Vector2 Position = Main.playerDrawData[t].position;
+                            if ((player.headFrame.Y >= 7 * player.headFrame.Height && player.headFrame.Y < 11 * player.headFrame.Height) ||
+                                player.headFrame.Y >= 14 * player.headFrame.Height && player.headFrame.Y < 17 * player.headFrame.Height)
+                            {
+                                Position.Y -= 2;
+                            }
+                            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 56, 40, 56), Main.playerDrawData[t].color, Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
+                            Main.playerDrawData[t] = dd;
+                        }
+                    }
+                });
+            }*/
+            layers.Add(l);
+        }
+
+        public enum EyeState
+        {
+            Open,
+            HalfOpen,
+            Closed
         }
     }
 }

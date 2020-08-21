@@ -201,7 +201,7 @@ namespace giantsummon.Npcs
                     if (npc.velocity.Y == 0)
                     {
                         JumpTime = MaxJumpHeight;
-                        npc.velocity.Y -= JumpSpeed;
+                        npc.velocity.Y = -JumpSpeed;
                     }
                 }
                 else
@@ -213,7 +213,7 @@ namespace giantsummon.Npcs
                     else
                     {
                         JumpTime--;
-                        npc.velocity.Y -= JumpSpeed;
+                        npc.velocity.Y = -JumpSpeed;
                     }
                 }
             }
@@ -352,6 +352,10 @@ namespace giantsummon.Npcs
             if (Base.SpecificBodyFrontFramePositions)
             {
                 bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X) * Base.SpriteWidth;
+            }
+            else
+            {
+
             }
             if (Base.RightArmFrontFrameSwap.ContainsKey(RightArmAnimationFrame))
             {

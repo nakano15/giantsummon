@@ -177,6 +177,7 @@ namespace giantsummon
         GoldenShowerStance,
         FirstSymbolEffect,
         NoGravity,
-        NoTileCollision
+        NoTileCollision,
+        CanDualWield
     }
 }

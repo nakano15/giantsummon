@@ -4,3 +4,9 @@ The mod will now show the correct amount of life crystals and life fruits used o
 	Before, let's say you have 5 life crystals used, but Rococo has only 2, It would show on the health bar that Rococo had used 5 life crystals.
 Removed some stray pixels from Blue left arm that were showing above her hair.
 Companions will no longer wake up after you finish talking with them.
+Guardians now revives others faster.
+Companions now have the ability of dual wielding.
+	Domino comes naturally with that ability.
+	Dual Wielding reduces the damage of the weapons by 20%.
+	Dual Wield will not work if the companion is holding an offhand item.
+Fixed a confusion that can happen when you give life/ether crystal/fruit to your companion when you have the option of sharing the max life with your companions.

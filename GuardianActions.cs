@@ -313,7 +313,7 @@ namespace giantsummon
                                         guardian.FaceDirection(TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0);
                                         byte ReviveBoost = 1;
                                         if (!guardian.IsAttackingSomething)
-                                            ReviveBoost += 1;
+                                            ReviveBoost += 2;
                                         bool IsMounted = guardian.PlayerMounted;
                                         if (IsPlayer)
                                         {

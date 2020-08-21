@@ -203,6 +203,7 @@ namespace giantsummon.Npcs
             }
             else
             {
+                PigStatus(out npc.lifeMax, out npc.damage, out npc.defense);
                 if (!IsInPerceptionRange(Target.Character))
                 {
                     if (PlayerLost)
@@ -239,11 +240,11 @@ namespace giantsummon.Npcs
                                     MoveLeft = true;
                                 else
                                     MoveRight = true;
-                                if (Math.Abs(Target.Position.X - npc.Center.Y) < 68)
+                                if (Math.Abs(Target.Position.Y - npc.Center.Y) < 68)
                                 {
-                                    if (Target.Velocity.Y < 0)
+                                    if (Target.Velocity.Y < 0 && npc.velocity.Y == 0)
                                     {
-                                        Jump = true;
+                                        npc.velocity.Y = -5f;
                                     }
                                 }
                                 ActionTime++;
@@ -387,7 +388,7 @@ namespace giantsummon.Npcs
                                     EndPosition = Target.Position + Direction * 32f;
                                     while (Collision.SolidCollision(EndPosition, npc.width, npc.height))
                                     {
-                                        EndPosition += Direction * 16 * (Direction.X < 0 ? -1 : 1);
+                                        EndPosition += Direction * -16;
                                     }
                                     ChargeDashDestination = EndPosition;
                                     float MaxDist = ChargeDashDestination.Length() / 16;
@@ -428,6 +429,10 @@ namespace giantsummon.Npcs
                             }
                             break;
                         case Behaviors.BulletReflectingBelly:
+                            if (ActionTime == 30)
+                            {
+                                SayMessage("*Go ahead, try shootting at me.*");
+                            }
                             if (ActionTime >= 30)
                             {
                                 npc.reflectingProjectiles = true;

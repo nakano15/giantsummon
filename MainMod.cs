@@ -14,6 +14,7 @@ namespace giantsummon
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
             GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture;
+        public static Texture2D EyeTexture;
         public static Texture2D TacticsBarTexture, TacticsIconsTexture;
         public static Texture2D TrappedCatTexture;
         public static Texture2D NinjaTextureBackup;
@@ -35,7 +36,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 71, LastModVersion = 71;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -717,9 +718,11 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    New.Add(g.Name + " actions: " + g.LastLoggedPlayerState.Count);
+                    /*New.Add(g.Name + " actions: " + g.LastLoggedPlayerState.Count);
                     if(g.LastLoggedPlayerState.Count > 0)
-                        New.Add("Action Type: " + g.LastLoggedPlayerState[0].Key.ToString() + " Pos: " + g.LastLoggedPlayerState[0].Value);
+                        New.Add("Action Type: " + g.LastLoggedPlayerState[0].Key.ToString() + " Pos: " + g.LastLoggedPlayerState[0].Value);*/
+                    New.Add("Main Hand Item Position: " + g.ItemPositionX + "~" + g.ItemPositionY);
+                    New.Add("Off Hand Item Position: " + g.OffHandPositionX + "~" + g.OffHandPositionY);
                 }
                 TextsToDraw = New.ToArray();
             }
@@ -914,7 +917,7 @@ namespace giantsummon
                 if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + 98 &&
                     Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + 8)
                 {
-                    MouseOverText = "Life Crystals: " + Guardian.Data.LifeCrystalHealth + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits: " + Guardian.Base.LifeFruitHPBonus + "/" + TerraGuardian.MaxLifeFruit;
+                    MouseOverText = "Life Crystals: " + Guardian.Data.LifeCrystalHealth + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits: " + Guardian.Data.LifeFruitHealth + "/" + TerraGuardian.MaxLifeFruit;
                     if (Guardian.Data.Injury > 0)
                         MouseOverText += "  [Injury " + Guardian.Data.Injury + "%]";
                 }
@@ -1727,7 +1730,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        const int TestGuardianID = 14;
+                                        const int TestGuardianID = GuardianBase.Domino;
                                         bool b = false;
                                         if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(TestGuardianID))
                                         {
@@ -2300,6 +2303,7 @@ namespace giantsummon
                 {
                     Main.instance.Window.Title = GetTitleText;
                 }
+                EyeTexture = GetTexture("ExtraTextures/Eyes");
             }
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);

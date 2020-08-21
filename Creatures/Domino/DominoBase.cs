@@ -101,6 +101,11 @@ namespace giantsummon.Creatures
             RequestList();
         }
 
+        public override void Attributes(TerraGuardian g)
+        {
+            g.AddFlag(GuardianFlags.CanDualWield);
+        }
+
         public void RequestList()
         {
             AddNewRequest("Pincer Bane", 220, 
