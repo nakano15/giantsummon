@@ -318,12 +318,12 @@ namespace giantsummon
                                         if (IsPlayer)
                                         {
                                             Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
-                                            if(!IsMounted) guardian.AddDrawMomentToPlayer(Players[0]);
+                                            //if(!IsMounted) guardian.AddDrawMomentToPlayer(Players[0]);
                                         }
                                         else
                                         {
                                             Guardians[0].ReviveBoost += ReviveBoost;
-                                            if (!IsMounted) guardian.AddDrawMomentToTerraGuardian(Guardians[0]);
+                                            //if (!IsMounted) guardian.AddDrawMomentToTerraGuardian(Guardians[0]);
                                         }
                                         guardian.StuckTimer = 0;
                                         guardian.OffHandAction = false;

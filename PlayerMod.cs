@@ -135,6 +135,7 @@ namespace giantsummon
             }
         }
         public byte ReviveBoost = 0;
+        public bool NegativeReviveBoost = false;
         public BitsByte TutorialFlags = new BitsByte();
         public bool TutorialCompanionIntroduction { get { return TutorialFlags[0]; } set { TutorialFlags[0] = value; } }
         public bool TutorialOrderIntroduction { get { return TutorialFlags[1]; } set { TutorialFlags[1] = value; } }
@@ -290,8 +291,11 @@ namespace giantsummon
             }
             if (KnockedOut)
             {
-                player.lifeRegen += ReviveBoost * 3;
-                if (ReviveBoost == 0 && KnockedOutCold)
+                if (!NegativeReviveBoost)
+                {
+                    player.lifeRegen += ReviveBoost * 3;
+                }
+                if ((ReviveBoost == 0 || NegativeReviveBoost) && KnockedOutCold)
                 {
                     player.lifeRegenTime = 0;
                     player.lifeRegenCount = 0;
@@ -305,7 +309,7 @@ namespace giantsummon
                         {
                             player.buffTime[b]++;
                         }
-                        else if (ReviveBoost > 0 && player.buffType[b] != Terraria.ID.BuffID.PotionSickness && Main.debuff[player.buffType[b]])
+                        else if (ReviveBoost > 0 && !NegativeReviveBoost && player.buffType[b] != Terraria.ID.BuffID.PotionSickness && Main.debuff[player.buffType[b]])
                         {
                             player.buffTime[b] -= ReviveBoost;
                             if (player.buffTime[b] <= 0)
@@ -321,14 +325,16 @@ namespace giantsummon
                 //player.height = player.width;
                 //player.position.Y += Player.defaultHeight - player.width;
             }
-            ReviveBoost = 0;
+            if(!NegativeReviveBoost)
+                ReviveBoost = 0;
+            NegativeReviveBoost = false;
         }
 
         public override void NaturalLifeRegen(ref float regen)
         {
             if (KnockedOutCold)
             {
-                if (ReviveBoost == 0)
+                if (ReviveBoost == 0 || NegativeReviveBoost)
                     player.bleed = true;
                 else
                     regen *= 2;
@@ -1101,15 +1107,16 @@ namespace giantsummon
             {
                 ForceKill = false;
                 player.statLife = 0;
+                KnockedOut = KnockedOutCold = false;
             }
-            else if (FriendlyDuelDefeat || (MainMod.PlayersGetKnockedOutUponDefeat && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.PlayersDontDiesAfterDownedDefeat)))
+            else if (FriendlyDuelDefeat || (MainMod.PlayersGetKnockedOutUponDefeat && !player.dead && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.PlayersDontDiesAfterDownedDefeat)))
             {
                 FriendlyDuelDefeat = false;
                 EnterDownedState();
                 TriggerHandler.FirePlayerDownedTrigger(player.Center, player, (int)damage, pvp);
                 return false;
             }
-            else if (MainMod.PlayersDontDiesAfterDownedDefeat && KnockedOut)
+            else if (MainMod.PlayersDontDiesAfterDownedDefeat && !player.dead && KnockedOut)
             {
                 KnockedOutCold = true;
                 player.statLife = 0;

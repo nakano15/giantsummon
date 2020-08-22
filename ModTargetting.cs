@@ -277,6 +277,66 @@ namespace giantsummon
             return Guardian.Hurt(Damage, HitDirection, false, false, HurtMessage);
         }
 
+        public void ReviveCharacter(byte Boost)
+        {
+            if (TargettingPlayer)
+            {
+                if (!Character.GetModPlayer<PlayerMod>().NegativeReviveBoost)
+                    Character.GetModPlayer<PlayerMod>().ReviveBoost += Boost;
+            }
+            else
+            {
+                if (!Guardian.NegativeReviveBoost)
+                    Guardian.ReviveBoost += Boost;
+            }
+        }
+
+        public int FinishCharacter(byte Boost, string DeathMessage = "")
+        {
+            int HealthLossValue = 0;
+            if (TargettingPlayer)
+            {
+                Character.GetModPlayer<PlayerMod>().NegativeReviveBoost = true;
+                if (Character.GetModPlayer<PlayerMod>().ReviveBoost + Boost >= 120)
+                {
+                    Character.GetModPlayer<PlayerMod>().ReviveBoost = 0;
+                    int LifeLoss = (int)(MaxLife * 0.1f);
+                    if (LifeLoss < 1)
+                        LifeLoss = 1;
+                    HealthLossValue = LifeLoss;
+                    Character.statLife -= LifeLoss;
+                    if (Character.statLife <= 0)
+                        Character.GetModPlayer<PlayerMod>().DoForceKill(Character.name + DeathMessage);
+                    CombatText.NewText(Character.getRect(), CombatText.DamagedFriendly, LifeLoss, false, true);
+                }
+                else
+                {
+                    Character.GetModPlayer<PlayerMod>().ReviveBoost += Boost;
+                }
+            }
+            else
+            {
+                Guardian.NegativeReviveBoost = true;
+                if (Guardian.ReviveBoost + Boost >= 120)
+                {
+                    Guardian.ReviveBoost = 0;
+                    int LifeLoss = (int)(MaxLife * 0.1f);
+                    if (LifeLoss < 1)
+                        LifeLoss = 1;
+                    HealthLossValue = LifeLoss;
+                    Guardian.HP -= LifeLoss;
+                    if (Guardian.HP <= 0)
+                        Guardian.DoForceKill(DeathMessage);
+                    CombatText.NewText(Guardian.HitBox, CombatText.DamagedFriendly, LifeLoss, false, true);
+                }
+                else
+                {
+                    Guardian.ReviveBoost += Boost;
+                }
+            }
+            return HealthLossValue;
+        }
+
         public void ForceKill(string DeathMessage = " was slain.")
         {
             if (TargettingPlayer)

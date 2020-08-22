@@ -10,3 +10,4 @@ Companions now have the ability of dual wielding.
 	Dual Wielding reduces the damage of the weapons by 20%.
 	Dual Wield will not work if the companion is holding an offhand item.
 Fixed a confusion that can happen when you give life/ether crystal/fruit to your companion when you have the option of sharing the max life with your companions.
+Companions will not dare to attack creatures in their reflect projectile state.

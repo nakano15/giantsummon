@@ -50,7 +50,7 @@ namespace giantsummon.Creatures
             ThroneSittingFrame = 16;
             BedSleepingFrame = 18;
             DownedFrame = 15;
-            ReviveFrame = 18;
+            ReviveFrame = 17;
 
             SittingPoint2x = new Microsoft.Xna.Framework.Point(15, 24);
 

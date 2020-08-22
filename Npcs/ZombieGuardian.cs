@@ -500,14 +500,17 @@ namespace giantsummon.Npcs
                                                 Main.player[i].AddBuff(Terraria.ID.BuffID.BrokenArmor, 30);
                                             }
                                         }
-                                        TerraGuardian Guardian = Main.player[i].GetModPlayer<PlayerMod>().Guardian;
-                                        if (Guardian.Active && !Guardian.Downed && Guardian.HitBox.Intersects(WeaponCollision))
+                                    }
+                                }
+                                foreach (int key in MainMod.ActiveGuardians.Keys)
+                                {
+                                    TerraGuardian Guardian = MainMod.ActiveGuardians[key];
+                                    if (Guardian.Active && !Guardian.Downed && Guardian.HitBox.Intersects(WeaponCollision))
+                                    {
+                                        Guardian.Hurt(SlashDamage, npc.direction, false, false, " was cutdown in half by a Zombie Guardian.");
+                                        if (Main.expertMode)
                                         {
-                                            Guardian.Hurt(SlashDamage, npc.direction, false, false, " was cutdown in half by a Zombie Guardian.");
-                                            if (Main.expertMode)
-                                            {
-                                                Guardian.AddBuff(Terraria.ID.BuffID.BrokenArmor, 30);
-                                            }
+                                            Guardian.AddBuff(Terraria.ID.BuffID.BrokenArmor, 30);
                                         }
                                     }
                                 }
@@ -563,6 +566,8 @@ namespace giantsummon.Npcs
                             if (Target.IsKnockedOut && !Target.IsDefeated)
                             {
                                 npc.damage = npc.defDamage = 0;
+                                if (Main.expertMode)
+                                    npc.defense *= 2;
                                 npc.knockBackResist = 0;
                                 if (!npc.getRect().Intersects(Target.GetCollision))
                                 {
@@ -576,22 +581,33 @@ namespace giantsummon.Npcs
                                         if (HasZacks)
                                         {
                                             npc.dontTakeDamage = true;
-                                            if (Target.TargettingPlayer)
-                                                Target.Character.GetModPlayer<PlayerMod>().ReviveBoost += 3;
-                                            else
-                                                Target.Guardian.ReviveBoost += 3;
+                                            Target.ReviveCharacter(3);
                                             AiValue++;
                                         }
                                         else
                                         {
                                             AiValue++;
-                                            if (AiValue >= (!Main.expertMode ? 10 : 5) * 60)
+                                            int HealthRestoreValue = Target.FinishCharacter(3, " was devoured by Zombie Guardian.");
+                                            //if (HealthRestoreValue > 1)
+                                            //    HealthRestoreValue /= 2;
+                                            if (HealthRestoreValue > 0)
+                                            {
+                                                CombatText.NewText(Target.GetCollision, Color.Red, "Chomp", false, true);
+                                            }
+                                            npc.life += HealthRestoreValue;
+                                            if (Target.IsDefeated)
+                                            {
+                                                AiValue = 0;
+                                                AiState = 1;
+                                                CombatText.NewText(npc.getRect(), Color.Red, "Buuuuuuuuurp");
+                                            }
+                                            /*if (AiValue >= (!Main.expertMode ? 10 : 5) * 60)
                                             {
                                                 Target.ForceKill(" was devoured by Zombie Guardian.");
                                                 npc.life += (int)(npc.lifeMax * 0.2f);
                                                 AiValue = 0;
                                                 AiState = 1;
-                                            }
+                                            }*/
                                         }
                                     }
                                 }
@@ -1051,7 +1067,11 @@ namespace giantsummon.Npcs
             int FrameY = npc.frame.Y;
             npc.frame.Width = Base.SpriteWidth;
             npc.frame.Height = Base.SpriteHeight;
-            if (npc.velocity.Y != 0)
+            if (AiState == 99)
+            {
+                FrameY = Base.DownedFrame;
+            }
+            else if (npc.velocity.Y != 0)
             {
                 FrameY = Base.JumpFrame;
                 //npc.frameCounter = 0;

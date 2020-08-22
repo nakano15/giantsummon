@@ -559,6 +559,7 @@ namespace giantsummon
         public bool WofFood { get { return Data.WofFood; } set { Data.WofFood = value; } }
         public bool FriendlyDuelDefeat = false;
         public byte ReviveBoost = 0;
+        public bool NegativeReviveBoost = false;
         public int WakeupTime = 0;
         public float KnockdownRotation = 0f;
         public int SeekingItem = -1;
@@ -1658,7 +1659,7 @@ namespace giantsummon
                 {
                     buff.Time++;
                 }
-                else if (ReviveBoost > 0 && buff.ID != Terraria.ID.BuffID.PotionSickness && Main.debuff[buff.ID])
+                else if (ReviveBoost > 0 && !NegativeReviveBoost && buff.ID != Terraria.ID.BuffID.PotionSickness && Main.debuff[buff.ID])
                 {
                     buff.Time -= ReviveBoost;
                 }
@@ -4277,7 +4278,7 @@ namespace giantsummon
             switch (TargetType)
             {
                 case TargetTypes.Npc:
-                    if (!Main.npc[TargetID].active || Main.npc[TargetID].friendly || Main.npc[TargetID].dontTakeDamage)
+                    if (!Main.npc[TargetID].active || Main.npc[TargetID].friendly || Main.npc[TargetID].dontTakeDamage || Main.npc[TargetID].reflectingProjectiles)
                     {
                         TargetID = -1;
                         AttackingTarget = false;
@@ -6856,8 +6857,9 @@ namespace giantsummon
 
         public void UpdateHealthRegen()
         {
-            if (KnockedOutCold && ReviveBoost == 0)
+            if (KnockedOutCold && ReviveBoost == 0 || NegativeReviveBoost)
             {
+                NegativeReviveBoost = false;
                 HealthRegenPower = HealthRegenTime = 0;
                 return;
             }
@@ -6918,6 +6920,7 @@ namespace giantsummon
             }
             HealthRegenPower += ReviveBoost * (Main.expertMode ? 2 : 3);
             ReviveBoost = 0;
+            NegativeReviveBoost = false;
             float HealthRegenValue = 0;
             if (HealthRegenTime >= 3000)
             {

@@ -244,18 +244,18 @@ namespace giantsummon.Npcs
                                 {
                                     if (Target.Velocity.Y < 0 && npc.velocity.Y == 0)
                                     {
-                                        npc.velocity.Y = -5f;
+                                        npc.velocity.Y = -15f;
                                     }
                                 }
                                 ActionTime++;
                                 if (ActionTime >= 360)
                                 {
-                                    if (Math.Abs(Target.Center.Y - npc.Center.Y) >= 120 || Math.Abs(Target.Center.X - npc.Center.X) >= 240 || Main.rand.Next(3) == 0)
+                                    /*if (Math.Abs(Target.Center.Y - npc.Center.Y) >= 120 || Math.Abs(Target.Center.X - npc.Center.X) >= 240 || Main.rand.Next(3) == 0)
                                     {
                                         behavior = Behaviors.DestructiveRush;
                                         ActionTime = 0;
                                     }
-                                    else
+                                    else*/
                                     {
                                         behavior = Behaviors.BodySlam;
                                         ActionTime = 0;
@@ -293,7 +293,7 @@ namespace giantsummon.Npcs
                                 {
                                     if (BodySlamResist == 0)
                                     {
-                                        if (Target.Position.X < npc.Center.X)
+                                        if (Target.Position.X + npc.velocity.X < npc.Center.X)
                                             MoveLeft = true;
                                         else
                                             MoveRight = true;
@@ -348,6 +348,15 @@ namespace giantsummon.Npcs
                                                         SayMessage("*Feel the weight of my fury!*");
                                                         break;
                                                 }
+                                                const int DustSpawnWidth = 32, DustSpawnHeight = 4;
+                                                Vector2 DustStartPos = npc.Bottom;
+                                                DustStartPos.X -= DustSpawnWidth / 2;
+                                                DustStartPos.Y -= DustSpawnHeight / 2;
+                                                for (int i = 0; i < 10; i++)
+                                                {
+                                                    Dust.NewDust(DustStartPos, DustSpawnWidth, DustSpawnHeight, Terraria.ID.DustID.Dirt, 0f, -2f);
+                                                }
+                                                Main.PlaySound(Terraria.ID.SoundID.Item11, npc.Bottom);
                                             }
                                             player.AddBuff(Terraria.ID.BuffID.Suffocation, 3);
                                             if (player.controlJump && !player.releaseJump)
@@ -377,7 +386,7 @@ namespace giantsummon.Npcs
                                 }
                             }
                             break;
-                        case Behaviors.DestructiveRush:
+                        case Behaviors.DestructiveRush: //Sometimes ends up going under the ground.
                             {
                                 npc.knockBackResist = 0;
                                 if (ActionTime == 10)
@@ -473,7 +482,7 @@ namespace giantsummon.Npcs
             {
                 BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = (CloudForm ? 25 : 17);
             }
-            else if (!WentBersek || ForceLeave)
+            else if (!WentBersek || ForceLeave || PlayerLost)
             {
                 if (CloudForm)
                 {
@@ -617,8 +626,9 @@ namespace giantsummon.Npcs
 
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
-            drawColor *= 0.8f;
-            if (!Defeated && npc.velocity.Y == 0 && BodySlamResist == 0 && BodyAnimationFrame != 25 && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
+            bool CloudForm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID];
+            if (CloudForm) drawColor *= 0.8f;
+            if (!Defeated && npc.velocity.Y == 0 && BodySlamResist == 0 && BodyAnimationFrame != 25 && CloudForm)
                 YOffset = ((float)Math.Sin(Main.GlobalTime * 2)) * 5;
             if (BodySlamResist > 0)
                 YOffset = 6;
@@ -661,7 +671,7 @@ namespace giantsummon.Npcs
                 {
                     if (DialogueStep == 3)
                     {
-                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                        RecruitGuardian();
                         return;
                     }
                 }
@@ -671,7 +681,7 @@ namespace giantsummon.Npcs
                     {
                         if (LastButtonWasAccept)
                         {
-                            WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                            RecruitGuardian();
                             return;
                         }
                         else
@@ -683,6 +693,13 @@ namespace giantsummon.Npcs
             }
             DialogueStep++;
             Main.npcChatText = GetDialogueMessages(DialogueStep);
+        }
+
+        public void RecruitGuardian()
+        {
+            PlayerMod.AddPlayerGuardian(Target.Character, GuardianID, GuardianModID);
+            NpcMod.AddGuardianMet(GuardianID, GuardianModID);
+            WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
         }
 
         public string GetDialogueMessages(byte DialogueStep)
@@ -742,7 +759,7 @@ namespace giantsummon.Npcs
                         return "*Arrgh!! That didn't helped! I'm even more furious now!*";
                     case 1:
                         Button1Text = "Unending rage?";
-                        return "*No! I didn't! I have this unending rage, so I wanted to see if I could end It by unleashing on someone.*";
+                        return "*I wasn't! I was trying to lose my unending rage by unleashing It on someone.*";
                     case 2:
                         Button1Text = "How could you have rage until since you woke up?";
                         return "*Yes! I have this unending rage since I woke up some time ago!*";
@@ -775,24 +792,28 @@ namespace giantsummon.Npcs
                 HP = 3000;
                 Damage = 150;
                 Defense = 50;
+                return;
             }
             else if (NPC.downedMechBossAny)
             {
                 HP = 1500;
                 Damage = 90;
                 Defense = 35;
+                return;
             }
             else if (Main.hardMode)
             {
                 HP = 1200;
                 Damage = 60;
                 Defense = 25;
+                return;
             }
             else if (NPC.downedBoss3)
             {
                 HP = 900;
                 Damage = 40;
                 Defense = 20;
+                return;
             }
             else
             {
