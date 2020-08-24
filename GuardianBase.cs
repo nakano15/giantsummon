@@ -871,6 +871,19 @@ namespace giantsummon
                 return 0;
             }
         }
+
+        public virtual string GetSpecialMessage(string MessageID)
+        {
+            return "";
+        }
+
+        public class MessageIDs
+        {
+            public const string LeopoldMessage1 = "Mes.LeopoldAnswer1";
+            public const string LeopoldMessage2 = "Mes.LeopoldAnswer2";
+            public const string LeopoldMessage3 = "Mes.LeopoldAnswer3";
+            public const string RescueMessage = "Mes.Rescue";
+        }
         
         public enum GuardianEffect
         {

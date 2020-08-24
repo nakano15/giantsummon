@@ -572,5 +572,15 @@ namespace giantsummon.Creatures
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "Hang on buddy, I'll help you.";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

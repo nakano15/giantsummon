@@ -169,7 +169,12 @@ namespace giantsummon
                 DialogueDelayTime = 0;
             }
             PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-            if (!player.IsTalkingToAGuardian)
+            if (player.KnockedOut)
+            {
+                if (player.IsTalkingToAGuardian)
+                    player.IsTalkingToAGuardian = false;
+            }
+            else if (!player.IsTalkingToAGuardian)
             {
                 if (SomeoneMouseOver)
                 {
@@ -200,7 +205,7 @@ namespace giantsummon
                     return;
                 }
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || Main.playerInventory || MainPlayer.talkNPC > -1 || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
+                if (!IsInChattingRange(tg) || Main.playerInventory || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
                 {
                     player.IsTalkingToAGuardian = false;
                     if (Main.playerInventory)
@@ -242,7 +247,7 @@ namespace giantsummon
             if (SomeoneMouseOver && MainMod.ActiveGuardians.ContainsKey(MouseOverGuardian))
             {
                 TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
-                if (IsInChattingRange(tg) && !tg.Downed && !tg.KnockedOut)
+                if (IsInChattingRange(tg) && !tg.Downed && !tg.KnockedOut && !MainPlayer.GetModPlayer<PlayerMod>().KnockedOut)
                 {
                     Vector2 DialogueBubblePosition = new Vector2(tg.Position.X - Main.chatTexture.Width * 0.5f - (-tg.Width * 0.5f - 8) * tg.Direction, tg.Position.Y - tg.Height - Main.chatTexture.Height) - Main.screenPosition;
                     if ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1)

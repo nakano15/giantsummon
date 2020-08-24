@@ -530,20 +530,20 @@ namespace giantsummon.Creatures
         {
             /*switch (trigger)
             {
-                case TriggerTypes.PlayerSpotted:
+                case TriggerTypes.PlayerDowned:
                     Player player = Main.player[Value];
                     if (!guardian.DoAction.InUse && !guardian.IsPlayerHostile(player))
                     {
-                        guardian.StartNewGuardianAction(new ZacksPullSomeoneAction(player));
+                        guardian.StartNewGuardianAction(new ZacksPullSomeoneAction(player), PullSomeoneID);
                     }
-                    break;
+                    return true;
                 case TriggerTypes.GuardianDowned:
                     TerraGuardian tg = MainMod.ActiveGuardians[Value];
                     if (!guardian.DoAction.InUse && !guardian.IsGuardianHostile(tg))
                     {
-                        guardian.StartNewGuardianAction(new ZacksPullSomeoneAction(tg));
+                        guardian.StartNewGuardianAction(new ZacksPullSomeoneAction(tg), PullSomeoneID);
                     }
-                    break;
+                    return true;
             }*/
             return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
         }
@@ -630,20 +630,26 @@ namespace giantsummon.Creatures
             }
         }
 
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*Sorry pal, but you're not dying today.*";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
+
         public class ZacksPullSomeoneAction : GuardianActions
         {
             public ZacksPullSomeoneAction(Player player)
             {
                 Players.Add(player);
-                this.ID = 1;
-                IsGuardianSpecificAction = true;
             }
 
             public ZacksPullSomeoneAction(TerraGuardian guardian)
             {
                 Guardians.Add(guardian);
-                this.ID = 1;
-                IsGuardianSpecificAction = true;
             }
 
             public Vector2 PullStartPosition = Vector2.Zero;
@@ -669,6 +675,7 @@ namespace giantsummon.Creatures
                         Player player = Players[0];
                         Vector2 MoveDirection = Me.CenterPosition - player.Center;
                         MoveDirection.Normalize();
+                        Me.LookingLeft = player.Center.X < Me.Position.X;
                         player.position += MoveDirection * 8f;
                         player.fallStart = (int)player.position.Y / 16;
                         if (player.getRect().Intersects(Me.HitBox))
@@ -682,6 +689,7 @@ namespace giantsummon.Creatures
                         TerraGuardian guardian = Guardians[0];
                         Vector2 MoveDirection = Me.CenterPosition - guardian.CenterPosition;
                         MoveDirection.Normalize();
+                        Me.LookingLeft = guardian.Position.X < Me.Position.X;
                         guardian.Position += MoveDirection * 8f;
                         guardian.SetFallStart();
                         if (guardian.HitBox.Intersects(Me.HitBox))

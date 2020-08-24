@@ -14,8 +14,20 @@ namespace giantsummon.Npcs
         public int AiStage { get { return (int)npc.ai[0]; } set { npc.ai[0] = value; } }
         public int AiValue { get { return (int)npc.ai[1]; } set { npc.ai[1] = value; } }
         public const int RefusalStep = 200;
+        private static readonly KeyValuePair<string, string>[] DialoguesAndAnswers = new KeyValuePair<string, string>[]{ //This should be turned into a method, instead.
+            new KeyValuePair<string, string>("*It asks if you're here for camping, too.*","Deny"),
+            new KeyValuePair<string, string>("*After you denied, she asked if you're an adventurer.*","Yes"),
+            new KeyValuePair<string, string>("*After you told her that, she looked very interessed.*","Continue"),
+            new KeyValuePair<string, string>("*She tells you that on truth, didn't came to your world for camping.*","Continue"),
+            new KeyValuePair<string, string>("*Said that she's looking for someone that looks like her. And asks If you saw someone like that.*","No, I didn't"),
+            new KeyValuePair<string, string>("*After you said that you didn't, she looked a bit sad.*","Continue"),
+            new KeyValuePair<string, string>("*She asked If you wouldn't mind if she followed you on your adventures.*","Follow me?"),
+            new KeyValuePair<string, string>("*Says that while helping you on your adventure, she may find who she's looking for.*","Hm.."),
+            new KeyValuePair<string, string>("*She asks you what you think.*","You can give me a hand:No way.")
+        };
+        private bool Rejected = false;
 
-        public BlueNPC() //TODO - Remake the entire recruitment method, changing how her recruitment works, to be less like what Zacks would like to do. 
+        public BlueNPC() //TODO - Change how the recruitment works, instead of a lengthy monologue from Blue, why not let the player speak with her instead? Do the same to Mabel aswell.
             : base(GuardianBase.Blue, "")
         {
 
@@ -36,7 +48,7 @@ namespace giantsummon.Npcs
 
         public override bool CanChat()
         {
-            return AiStage == 0 || AiStage == 10;
+            return true;//AiStage == 0 || AiStage == 10;
         }
 
         public override string GetChat()
@@ -66,7 +78,7 @@ namespace giantsummon.Npcs
                 }
                 return "*You startled her.*";
             }
-            else if (AiStage == 10)
+            /*else if (AiStage == 10)
             {
                 return "*She asks if you would mind having her follow you on your adventures.*";
             }
@@ -74,21 +86,23 @@ namespace giantsummon.Npcs
             {
                 return "*She tells you that she'll finish her marshmellow before leaving.*";
             }
-            return "*You startled her.*";
+            return "*You startled her.*";*/
+            return GetDialogueMessage(AiStage);
         }
 
         public override void SetChatButtons(ref string button, ref string button2)
         {
-            if (AiStage == 10)
+            /*if (AiStage == 10)
             {
                 button = "Yes";
                 button2 = "No";
-            }
+            }*/
+            GetDialogueMessage(AiStage, out button, out button2);
         }
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
-            if (AiStage == 10)
+            /*if (AiStage == 10)
             {
                 if (firstButton)
                 {
@@ -100,7 +114,13 @@ namespace giantsummon.Npcs
                     ChangeAIStage(RefusalStep);
                     Main.npcChatText = "*She looks disappointed, and said that she will pack up her things and leave soon.*";
                 }
-            }
+            }*/
+            if (!firstButton && AiStage == 9)
+                Rejected = true;
+            AiStage++;
+            Main.npcChatText = GetDialogueMessage(AiStage);
+            if (AiStage == 105)
+                ChangeAIStage(3);
         }
 
         private void RecruitmentScripts()
@@ -109,9 +129,8 @@ namespace giantsummon.Npcs
             PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Blue);
             if (!PlayerHadBlue)
                 PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).IncreaseFriendshipProgress(1);
-            NpcMod.AddGuardianMet(GuardianBase.Blue);
+            NpcMod.AddGuardianMet(GuardianBase.Blue, "", !Rejected);
             WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Blue);
-            //npc.Transform(ModContent.NPCType<GuardianNPC.List.WolfGuardian>());
         }
 
         public override bool CheckActive()
@@ -178,12 +197,12 @@ namespace giantsummon.Npcs
                         if (PlayerMod.PlayerHasGuardian(Main.player[p], GuardianBase.Blue))
                         {
                             ChangeAIStage(150);
-                            AiValue = SayMessage("*The wolf is calling you.*");
+                            AiValue = SayMessage("*You see " + PlayerMod.GetPlayerGuardian(Main.player[p], GuardianBase.Blue).Name + ", she waves and calls you.*");
                         }
                         else
                         {
                             ChangeAIStage(1);
-                            AiValue = SayMessage("*The wolf seems to be calling you.*");
+                            AiValue = SayMessage("*You heard a voice on your head calling you. Maybe It came from that creature?*");
                         }
                     }
                 }
@@ -198,12 +217,12 @@ namespace giantsummon.Npcs
                 {
                     if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) < 96)
                     {
-                        ChangeAIStage(2);
-                        AiValue = SayMessage("*It asks if you're here for camping, too.*");
+                        //ChangeAIStage(2);
+                        AiValue = SayMessage("*She asks if you're here for camping, too.*");
                     }
                 }
             }
-            else if (AiStage == 10)
+            /*else if (AiStage == 10)
             {
                 if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 300)
                 {
@@ -265,7 +284,7 @@ namespace giantsummon.Npcs
                             break;
                             //
                         case 100:
-                            AiValue = SayMessage("*The wolf tells you not to sneak upon other people from behind.*");
+                            AiValue = SayMessage("*She tells you not to sneak upon other people from behind.*");
                             break;
                         case 101:
                             AiValue = SayMessage("*Tells you that nearly sliced you in half with her sword.*");
@@ -312,11 +331,11 @@ namespace giantsummon.Npcs
                     if (AiValue == 0)
                         AiValue = DialogueDelay;
                 }
-                if ((!Main.player[npc.target].active || Main.player[npc.target].dead) || Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 300)
+            }*/
+                if (AiStage > 0 && ((!Main.player[npc.target].active || Main.player[npc.target].dead) || Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 300))
                 {
                     ChangeAIStage(0);
                 }
-            }
             base.AI();
             if (!Main.dayTime)
             {
@@ -337,6 +356,125 @@ namespace giantsummon.Npcs
                     npc.life = 0;
                 }
             }
+        }
+
+        public string GetDialogueMessage(int DialogueID)
+        {
+            string b1, b2;
+            return GetDialogueMessage(DialogueID, out b1, out b2);
+        }
+
+        public string GetDialogueMessage(int DialogueID, out string Button1, out string Button2)
+        {
+            Button1 = Button2 = "";
+            string Message = "";
+            switch (DialogueID)
+            {
+                case 1:
+                    Message = "*She asks if you're here for camping, too.*";
+                    Button1 = "Deny";
+                    break;
+                case 2:
+                    Message = ("*After you denied, she asked if you're an adventurer.*");
+                    Button1 = "Yes";
+                    break;
+                case 3:
+                    Message = ("*After you told her that, she looked very interessed.*");
+                    Button1 = "(Continue)";
+                    break;
+                case 4:
+                    Message = ("*She tells you that on truth, didn't came to your world for camping.*");
+                    Button1 = "Why didn't you came for, then?";
+                    break;
+                case 5:
+                    Message = ("*She tells you that she's looking for someone that looks like her. And asks If you saw someone like that.*");
+                    Button1 = "No, I didn't";
+                    break;
+                case 6:
+                    Message = ("*After you said that you didn't, she looked saddened.*");
+                    Button1 = "(Continue)";
+                    break;
+                case 7:
+                    Message = ("*She asked If you wouldn't mind if she followed you on your adventures.*");
+                    Button1 = "Why do you want to follow me?";
+                    break;
+                case 8:
+                    Message = ("*Says that while helping you on your adventure, she may find who she's looking for.*");
+                    Button1 = "Maybe";
+                    break;
+                case 9:
+                    Message = ("*She asks you what you think.*");
+                    Button1 = "Yes, I accept";
+                    Button2 = "No, sorry.";
+                    break;
+                case 10:
+                    if (!Rejected)
+                    {
+                        Message = "*She got very happy. She told you that her name is Blue, and that she's good at almost anything you may need in your adventure.*";
+                    }
+                    else
+                    {
+                        Message = "*She looks disappointed, but tells you that will give you her contact, in case you change your mind.*";
+                    }
+                    Message += " She then told you that her name is " + Base.Name + ".";
+                    Main.npcChatText = Message;
+                    RecruitmentScripts();
+                    break;
+                //
+                case 100:
+                    Message = ("*She tells you not to sneak upon other people from behind.*");
+                    Button1 = "I'm sorry.";
+                    break;
+                case 101:
+                    Message = ("*Tells you that nearly sliced you in half with her sword.*");
+                    Button1 = "I said that I'm sorry.";
+                    break;
+                case 102:
+                    Message = ("*Trying to calm down.*");
+                    Button1 = "(Continue)";
+                    break;
+                case 103:
+                    Message = ("*She tells you that you really scared her. And apologized for earlier.*");
+                    Button1 = "O.. Okay.";
+                    break;
+                case 104:
+                    Message = ("*She asks what are you doing here, If you're here for camping too.*");
+                    Button1 = "No, I'm exploring the world";
+                    break;
+                case 105:
+                    Message = ("*She got interessed after you said that.*");
+                    Button1 = "(Continue)";
+                    ChangeAIStage(3); //I hope nobody complains about me recicling part of the dialogue.
+                    break;
+                //
+                case 150:
+                    Message = "*She seems happy for seeing you again.*";
+                    Button1 = "Equally";
+                    break;
+                case 151:
+                    Message = "*She told you that If you need her, she will be here.*";
+                    Button1 = "Okay";
+                    Main.npcChatText = Message;
+                    RecruitmentScripts();
+                    break;
+                case 155:
+                    Message = ("*She told you to stop doing that to her.*");
+                    Button1 = "I'm sorry.";
+                    break;
+                case 156:
+                    Message = ("*She says that you nearly made her heart jump out of her mouth.*");
+                    Button1 = "Again, I said I'm sorry.";
+                    break;
+                case 157:
+                    Message = ("*She tells you that If you need her help, she will be here.*");
+                    Button1 = "Okay";
+                    break;
+                case 158:
+                    Message = ("*And asks you not to scare her again.*");
+                    RecruitmentScripts();
+                    break;
+            }
+            return Message;
         }
 
         public override Terraria.DataStructures.DrawData? DrawItem(Color drawColor)
@@ -403,6 +541,9 @@ namespace giantsummon.Npcs
                 {
                     Main.npc[NpcPos].direction = FacingLeft ? -1 : 1;
                     Main.npc[NpcPos].position.X -= 32 * Main.npc[NpcPos].direction;
+                    BlueNPC npc = (BlueNPC)Main.npc[NpcPos].modNPC;
+                    npc.BonfireX = BonfireX;
+                    npc.BonfireY = BonfireY;
                     //Main.npc[NpcPos].position.X -= Main.npc[NpcPos].width * 0.8f * Main.npc[NpcPos].direction;
                     //Main.NewText("There's something on the campfire.");
                 }

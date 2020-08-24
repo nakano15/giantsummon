@@ -44,6 +44,7 @@ namespace giantsummon
         public bool KnockedOut = false, KnockedOutCold = false, FriendlyDuelDefeat = false;
         public short RescueTime = 0;
         public const int MaxRescueTime = 10;
+        public bool RescueWakingUp = false;
         public int GuardianInventory = 0; //For messing with it's internal inventory or chest
         public int SelectedGuardian = -1;
         public int[] SelectedAssistGuardians = new int[MainMod.MaxExtraGuardianFollowers];
@@ -693,7 +694,7 @@ namespace giantsummon
                 return;
             if (KnockedOutCold)
             {
-                if (player.breath <= 0)
+                if (player.breath <= 0 && !MainMod.PlayersDontDiesAfterDownedDefeat)
                 {
                     bool Mermaid = player.head == Terraria.ID.ArmorIDs.Head.SeashellHairpin &&
                         player.body == Terraria.ID.ArmorIDs.Body.MermaidAdornment &&
@@ -807,7 +808,7 @@ namespace giantsummon
             {
                 if (player.whoAmI == Main.myPlayer)
                 {
-                    if (MainMod.StartRescueCountdownWhenKnockedOutCold || !GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed))
+                    if (MainMod.StartRescueCountdownWhenKnockedOutCold || !GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed) || player.controlHook)
                     {
                         if (ReviveBoost == 0)
                             RescueTime++;
@@ -818,6 +819,7 @@ namespace giantsummon
                             KnockedOutCold = false;
                             KnockedOut = true;
                             RescueTime = 0;
+                            RescueWakingUp = true;
                             TerraGuardian rescuer = null;
                             bool RescuerIsHomeless = true;
                             float NearestRescuerDistance = float.MaxValue;
@@ -840,8 +842,15 @@ namespace giantsummon
                             }
                             if (rescuer != null)
                             {
+                                string RescueMessage = rescuer.Base.GetSpecialMessage(GuardianBase.MessageIDs.RescueMessage);
                                 rescuer.Spawn();
-                                player.position = rescuer.CenterPosition;
+                                if (rescuer.furniturex > -1)
+                                    rescuer.LeaveFurniture(false);
+                                if(RescueMessage != "")
+                                    rescuer.SaySomething(RescueMessage);
+                                player.position = rescuer.Position;
+                                player.position.X -= player.width * 0.5f;
+                                player.position.Y -= player.height;
                                 GuardianActions.TryRevivingPlayer(rescuer, player);
                             }
                             else
@@ -1065,6 +1074,7 @@ namespace giantsummon
 
         public void LeaveDownedState()
         {
+            RescueWakingUp = false;
             KnockedOut = KnockedOutCold = false;
             player.fullRotation = player.headRotation = 0f;
             float HealthRestoreValue = 1f;
@@ -1096,6 +1106,10 @@ namespace giantsummon
 
         public void DoForceKill(string DeathMessage = "")
         {
+            if (DeathMessage == "")
+                DeathMessage = player.name + " has died...";
+            else
+                DeathMessage = player.name + DeathMessage;
             ForceKill = true;
             player.statLife = 0;
             player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(DeathMessage), 1, 1, false);
@@ -1419,7 +1433,7 @@ namespace giantsummon
                 UpdateReviveSystem();
             if (player.whoAmI == Main.myPlayer && KnockedOut)
             {
-                if (KnockedOutCold && player.controlHook)
+                if (KnockedOutCold && player.controlHook && !MainMod.PlayersDontDiesAfterDownedDefeat)
                 {
                     DoForceKill(player.name + (Main.rand.Next(2) == 1 ? " succumbed to injuries." : " couldn't get help to be revived."));
                     //player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " couldn't get help to revive."), 0, 0, false);
@@ -1791,6 +1805,8 @@ namespace giantsummon
                 {
                     guardian.Spawn();
                 }
+                if (guardian.furniturex > -1)
+                    guardian.LeaveFurniture();
                 guardian.DoUpdateGuardianStatus();
                 guardian.Scale = guardian.ScaleMult;
                 guardian.LastFriendshipLevel = guardian.FriendshipLevel;

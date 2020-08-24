@@ -1075,5 +1075,15 @@ namespace giantsummon.Creatures
             }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*Take a little rest, you're in a friendly place now.*";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

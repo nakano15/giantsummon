@@ -15,6 +15,8 @@ namespace giantsummon.Npcs
         public int AiTimer { get { return (int)npc.ai[1]; } set { npc.ai[1] = value; } }
         private const int DialogueTime = 300;
         public static int Cooldown = 0;
+        private bool Rejected = false;
+        public byte DialogueStep = 0;
 
         public MabelNPC()
             : base(8, "")
@@ -25,6 +27,7 @@ namespace giantsummon.Npcs
         public override void SetDefaults()
         {
             base.SetDefaults();
+            npc.townNPC = false;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
             npc.rarity = 5;
             if (npc.GetGlobalNPC<NpcMod>().mobType > MobTypes.Normal)
@@ -142,7 +145,7 @@ namespace giantsummon.Npcs
                         MoveLeft = true;
                 }
                 bool PlayerHasMabel = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 8);
-                if (AiTimer == 30)
+                /*if (AiTimer == 30)
                 {
                     SayMessage("*Thanks for helping me.*");
                 }
@@ -211,7 +214,7 @@ namespace giantsummon.Npcs
                         //npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
                     }
                 }
-                AiTimer++;
+                AiTimer++;*/
             }
             if (AiStage < 2 && AiTimer > 3000)
             {
@@ -225,13 +228,115 @@ namespace giantsummon.Npcs
             base.AI();
         }
 
+        private bool IsntXmasClose { get { return DateTime.Now.Month != 12 || DateTime.Now.Day >= 25; } }
+
+        public string GetDialogueMessage(int DialogueID)
+        {
+            string b1, b2;
+            return GetDialogueMessage(DialogueID, out b1, out b2);
+        }
+
+        public string GetDialogueMessage(int DialogueID, out string Button1, out string Button2)
+        {
+            Button1 = Button2 = "";
+            string Mes = "";
+            switch (DialogueID)
+            {
+                case 0:
+                    Mes = "*Thanks for helping me.*";
+                    Button1 = "Did you just fell from the sky?";
+                    break;
+                case 1:
+                    Mes = "*Yes, I tried to see If I could fly like a Reindeer. It didn't worked well...*";
+                    Button1 = "You doesn't look like a reindeer.";
+                    break;
+                case 2:
+                    Mes = "*And I'm not. My name is " + Base.Name + ", by the way.*";
+                    Button1 = "I'm " + Main.player[Main.myPlayer].name;
+                    break;
+                case 3:
+                    Mes = "*Hello. I have to practice for Miss North Pole, It's going to happen soon, close to when the Xmas you people celebrates happen.*";
+                    if (IsntXmasClose)
+                    {
+                        Button1 = "But the the holiday has passed";
+                    }
+                    else
+                    {
+                        Button1 = "The holiday will happen in some days.";
+                    }
+                    break;
+                case 4:
+                    if (IsntXmasClose)
+                    {
+                        Mes = "*What?! It has already passed? Nooooooooo!!! Well... I guess I can practice for next year?*";
+                    }
+                    else
+                    {
+                        Mes = "*It's close to that day?! Oh my... I have so much to practice.*";
+                    }
+                    Button1 = "(Continue)";
+                    break;
+                case 5:
+                    Mes = "*Do you mind If I stay on your world for a while, while I practice?*";
+                    Button1 = "Yes, you can stay.";
+                    Button2 = "This world? No.";
+                    break;
+                case 6:
+                    if (!Rejected)
+                    {
+                        Mes = "*Thank you! I wonder if the people here are nice like you, too.*";
+                    }
+                    else
+                    {
+                        Mes = "*Aww... By the way, If you change your mind, feel free to call me. Bye.*";
+                    }
+                    Main.npcChatText = Mes;
+                    PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], 8);
+                    PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], 8).IncreaseFriendshipProgress(1);
+                    NpcMod.AddGuardianMet(8, "", !Rejected);
+                    WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                    return "";
+
+                case 100:
+                    Mes = "*Oh, hello. It's you again.*";
+                    Button1 = "Still trying to fly?";
+                    break;
+                case 101:
+                    Mes = "*Yes, but I'm still trying to fly...*";
+                    Button1 = "Why don't you stop doing that?";
+                    break;
+                case 102:
+                    Mes = "*I just can't give up being a model.*";
+                    Button1 = "You can try being a model without flying";
+                    break;
+                case 103:
+                    Mes = "*I can try... Since I'm here, I guess I'll hang around.*";
+                    Button1 = "Be welcome";
+                    break;
+                case 104:
+                    NpcMod.AddGuardianMet(8);
+                    WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                    break;
+            }
+            return Mes;
+        }
+
         public override string GetChat()
         {
+            if (AiStage == 2)
+            {
+                GetDialogueMessage(DialogueStep);
+            }
             return "*Help! I'm stuck here!*";
         }
 
         public override void SetChatButtons(ref string button, ref string button2)
         {
+            if (AiStage == 2)
+            {
+                GetDialogueMessage(DialogueStep, out button, out button2);
+                return;
+            }
             button = "Help";
         }
 
@@ -239,18 +344,35 @@ namespace giantsummon.Npcs
         {
             if (firstButton)
             {
-                npc.position.Y -= 48;
-                AiStage = 2;
-                AiTimer = 0;
-                SayMessage("*Pull!*");
-                npc.velocity.Y -= 6.25f;
-                Main.player[Main.myPlayer].talkNPC = -1;
+                if (AiStage == 2)
+                {
+                    DialogueStep++;
+                }
+                else
+                {
+                    npc.position.Y -= 48;
+                    AiStage = 2;
+                    AiTimer = 0;
+                    SayMessage("*Pull!*");
+                    if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID))
+                    {
+                        DialogueStep = 100;
+                    }
+                    npc.velocity.Y -= 6.25f;
+                }
             }
+            else if (AiStage == 2) //Button 2
+            {
+                if (DialogueStep == 5)
+                    Rejected = true;
+                DialogueStep++;
+            }
+            Main.npcChatText = GetDialogueMessage(DialogueStep);
         }
 
         public override bool CanChat()
         {
-            return AiStage == 1;
+            return AiStage == 1 || AiStage == 2;
         }
 
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)

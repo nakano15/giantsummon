@@ -616,25 +616,30 @@ namespace giantsummon
         {
             //Add a script for when the player is controlling a guardian, instead.
             const int BarWidth = 360, BarHeight = 14;
+            PlayerMod playerMod = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
             float BarSize = (float)Main.player[Main.myPlayer].statLife / Main.player[Main.myPlayer].statLifeMax2;
-            if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime > 0)
+            if (playerMod.RescueTime > 0)
                 BarSize = 0f;
             if (BarSize > 1f)
                 BarSize = 1f;
             if (BarSize < 0)
                 BarSize = 0f;
+            if (playerMod.RescueWakingUp)
+                BarSize = 0;
             //
             int BarDimY = (int)(Main.screenHeight * (1f - BarSize) * 0.25f);
-            Color ClosingBarsColor = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOutCold ? new Color(0, 0, 0, (int)(255 * (1f - BarSize))) : new Color((byte)(128 * (1f - BarSize)), 0, 0, (int)(255 * (1f - BarSize)));
-            float ClosingBar2EffectPercentage = 0.5f + ((float)Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime / (PlayerMod.MaxRescueTime * 60)) * 1f;
+            Color ClosingBarsColor = playerMod.KnockedOutCold || playerMod.RescueWakingUp ? new Color(0, 0, 0, (int)(255 * (1f - BarSize))) : new Color((byte)(128 * (1f - BarSize)), 0, 0, (int)(255 * (1f - BarSize)));
+            float ClosingBar2EffectPercentage = 0.5f + ((float)playerMod.RescueTime / (PlayerMod.MaxRescueTime * 60)) * 1f;
             if (ClosingBar2EffectPercentage > 1f)
+                ClosingBar2EffectPercentage = 1f;
+            if (playerMod.RescueWakingUp)
                 ClosingBar2EffectPercentage = 1f;
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, BarDimY), ClosingBarsColor);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, BarDimY, Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY), Main.screenWidth, BarDimY), ClosingBarsColor);
             //
-            if (!Main.player[Main.myPlayer].dead && (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOutCold || Main.player[Main.myPlayer].statLife > 1))
+            if (!Main.player[Main.myPlayer].dead && (!playerMod.KnockedOutCold || Main.player[Main.myPlayer].statLife > 1))
             {
                 Vector2 BarPosition = new Vector2(Main.screenWidth * 0.5f - BarWidth * 0.5f - 2, Main.screenHeight * 0.8f - BarHeight * 0.5f - 2);
                 Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)BarPosition.X, (int)BarPosition.Y, BarWidth + 4, BarHeight + 4), Color.Black);
@@ -650,20 +655,19 @@ namespace giantsummon
             if (!Main.player[Main.myPlayer].dead)
             {
                 string Text = "Knocked Out";
-                if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReviveBoost > 0)
+                if (playerMod.ReviveBoost > 0)
                     Text = "Being Revived";
                 Utils.DrawBorderStringBig(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f), Color.OrangeRed, 1f, 0.5f, 0.5f);
-                if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOutCold)
+                if (playerMod.KnockedOutCold)
                 {
-                    Text = "Press '" + Main.cHook + "' to give up.";
+                    Text = (MainMod.PlayersDontDiesAfterDownedDefeat ? "Hold '" + Main.cHook + "' to call for help." : "Press '" + Main.cHook + "' to give up.");
                     Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28), Color.OrangeRed, 1f, 0.5f, 0.5f);
-                    if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime > 0)
+                    if (playerMod.RescueTime > 0)
                     {
-                        Text = "Rescue in " + Math.Round(PlayerMod.MaxRescueTime - (float)Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().RescueTime / 60, 1) + " seconds";
+                        Text = "Rescue in " + Math.Round(PlayerMod.MaxRescueTime - (float)playerMod.RescueTime / 60, 1) + " seconds";
                         Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28 + 26), Color.OrangeRed, 0.85f, 0.5f, 0.5f);
                     }
                 }
-
             }
             return true;
         }

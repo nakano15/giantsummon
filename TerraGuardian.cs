@@ -219,7 +219,9 @@ namespace giantsummon
             }
             return IsBeingAggroed;
         }
+        public List<string> MessageSchedule = new List<string>();
         public string ChatMessage = "";
+        public bool DisplayMessageOnChat = false;
         public int MessageTime = 0;
         public List<GuardianFlags> FlagList = new List<GuardianFlags>();
         public Vector2 Position = Vector2.Zero, Velocity = Vector2.Zero;
@@ -1040,8 +1042,8 @@ namespace giantsummon
 
         public bool InPerceptionRange(Vector2 Position, float DistanceBonus = 1f)
         {
-            return Position.X >= this.Position.X - 368f * DistanceBonus && Position.X < this.Position.X + 368f * DistanceBonus &&
-                Position.Y >= this.Position.Y - Height * 0.5f - 240f * DistanceBonus && Position.Y < this.Position.Y - Height * 0.5f + 240f * DistanceBonus;
+            return Position.X >= this.Position.X - 576f * DistanceBonus && Position.X < this.Position.X + 576f * DistanceBonus &&
+                Position.Y >= this.Position.Y - Height * 0.5f - 256f * DistanceBonus && Position.Y < this.Position.Y - Height * 0.5f + 256f * DistanceBonus;
         }
 
         public Vector2 AnimationPositionValueTranslator(Vector2 Pos)
@@ -1061,9 +1063,29 @@ namespace giantsummon
             EmotionDisplayTime = MaxEmotionDisplaytime;
         }
 
+        public int SaySomething(string[] Message, bool ChatDisplay = false)
+        {
+            return SaySomething(Message.ToList(), ChatDisplay);
+        }
+
+        public int SaySomething(List<string> Message, bool ChatDisplay = false)
+        {
+            this.ChatMessage = Message[0];
+            Message.RemoveAt(0);
+            MessageSchedule = Message;
+            DisplayMessageOnChat = ChatDisplay;
+            if (ChatDisplay)
+            {
+                Main.NewText(Name + ": " + Message);
+            }
+            MessageTime = MainMod.CalculateMessageTime(ChatMessage);
+            return MessageTime;
+        }
+
         public int SaySomething(string Message, bool ChatDisplay = false)
         {
             this.ChatMessage = Message;
+            DisplayMessageOnChat = ChatDisplay;
             if (ChatDisplay)
             {
                 Main.NewText(Name + ": " + Message);
@@ -1539,7 +1561,7 @@ namespace giantsummon
             return null;
         }
 
-        public bool StartNewGuardianAction(GuardianActions action)
+        public bool StartNewGuardianAction(GuardianActions action, int ID)
         {
             if (!DoAction.InUse)
             {
@@ -1666,7 +1688,7 @@ namespace giantsummon
             }
             if (KnockedOutCold)
             {
-                if (Breath <= 0)
+                if (Breath <= 0 && !MainMod.GuardiansDontDiesAfterDownedDefeat)
                 {
                     DoForceKill(" didn't had more air.");
                 }
@@ -1994,7 +2016,15 @@ namespace giantsummon
             TownNpcs = 0f;
             ActiveNpcs = 0f;
             if (MessageTime > 0)
+            {
                 MessageTime--;
+                if (MessageTime <= 0 && MessageSchedule.Count > 0)
+                {
+                    SaySomething(MessageSchedule[0], DisplayMessageOnChat);
+                    MessageSchedule.RemoveAt(0);
+                }
+            }
+
         }
 
         public void FloorVisual(bool Falling)
@@ -2890,7 +2920,6 @@ namespace giantsummon
                     }
                     Position += Velocity;// + p.velocity;
                     IgnoreCollisions = true;
-                    SetFallStart();
                 }
                 else
                 {
@@ -2904,6 +2933,7 @@ namespace giantsummon
                         SuspendedByChains = true;
                     }
                 }
+                SetFallStart();
                 if (Distance < Speed * 2 && !PlayerIsFlying && !PlayerInMinecart)
                 {
                     BeingPulledByPlayer = false;
@@ -3308,7 +3338,7 @@ namespace giantsummon
             }
         }
 
-        public void EtherRealmStatusShare()
+        public void EtherRealmStatusShare() //Initially, the ideas was that the player wasn't supposed to enter the Ether Realm without a TerraGuardian to be It's "shell". That idea changed, and this is obsolete.
         {
             if (OwnerPos != -1 && Main.player[OwnerPos].GetModPlayer<PlayerMod>().InEtherRealm)
             {
@@ -5407,7 +5437,7 @@ namespace giantsummon
                     WorldGen.StartRoomCheck(townnpc.HomeX, townnpc.HomeY);
                     for (int n = 0; n < WorldGen.numRoomTiles; n++)
                     {
-                        if (WorldGen.roomX[n] == player.SpawnX && WorldGen.roomY[n] == player.SpawnY)
+                        if (WorldGen.roomX[n] == player.SpawnX && (WorldGen.roomY[n] == player.SpawnY || WorldGen.roomY[n] == player.SpawnY - 1))
                         {
                             return true;
                         }
@@ -7261,6 +7291,8 @@ namespace giantsummon
 
         public void DoForceKill(string DeathMessage = "")
         {
+            if (DeathMessage != "")
+                DeathMessage = Name + DeathMessage;
             ForceKill = true;
             Knockout(DeathMessage);
         }
@@ -8495,7 +8527,7 @@ namespace giantsummon
             if (Scale > 1)
                 DistanceMod *= Scale;
             int SpotRangeX = 480;
-            int SpotRangeY = 360;
+            int SpotRangeY = 420;
             float NearestDistance = 480f;
             if (HurtPanic)
             {
@@ -15453,7 +15485,7 @@ namespace giantsummon
                 ItemPosition.X += ItemPositionX;
                 ItemPosition.Y += ItemPositionY;
             }
-            bool CorrectHand = ((HeldItemHand == HeldHand.Both || HeldItemHand == HeldHand.Left) && !RightArm) || DualWield;
+            bool CorrectHand = ((HeldItemHand == HeldHand.Both || HeldItemHand == HeldHand.Left) && !RightArm) || (HeldItemHand == HeldHand.Right && RightArm) || DualWield;
             if (CorrectHand)
             {
                 bool ShowItem = ItemAnimationTime > 0 || FreezeItemUseAnimation;

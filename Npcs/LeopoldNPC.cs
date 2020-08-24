@@ -595,8 +595,6 @@ namespace giantsummon.Npcs
             bool PlayerHasLeopold = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
             PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
             if (!PlayerHasLeopold) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
-            //npc.Transform(ModContent.NPCType<GuardianNPC.List.BunnyGuardian>());
-            //Transform into the town npc.
             string Mes = "";
             if (SceneID == SceneIDs.LeopoldFreeForRecruit)
             {
@@ -618,8 +616,9 @@ namespace giantsummon.Npcs
             {
                 Mes = "*You can understand what I say?! Wow! The book was right!!*";
             }
+            Main.npcChatText = Mes;
             WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
-            GuardianMouseOverAndDialogueInterface.SetDialogue(Mes);
+            //GuardianMouseOverAndDialogueInterface.SetDialogue(Mes);
             return Mes;
         }
 

@@ -262,5 +262,15 @@ namespace giantsummon.Creatures
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*When you wake up, tell me who did this to you.*";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

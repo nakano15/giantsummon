@@ -594,7 +594,7 @@ namespace giantsummon.Npcs
             BreeJoinsYou
         }
 
-        public static bool BreeMaySpawn { get { return NPC.downedBoss2 || NPC.downedBoss3; } }
+        public static bool BreeMaySpawn { get { return NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedSlimeKing; } }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {

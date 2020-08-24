@@ -195,6 +195,7 @@ namespace giantsummon
                 tg.Position.X = X;
                 tg.Position.Y = Y;
             }
+            tg.SetFallStart();
             WorldMod.AddTownGuardianNpc(tg);
             return tg;
         }
@@ -582,6 +583,8 @@ namespace giantsummon
 
         public static string GetGuardianNPCName(int GuardianID, string ModID = "")
         {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
             foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
             {
                 if (tg.ID == GuardianID && tg.ModID == ModID)
@@ -656,12 +659,13 @@ namespace giantsummon
             }
         }
 
-        public static void AddGuardianMet(int ID, string ModID = "")
+        public static void AddGuardianMet(int ID, string ModID = "", bool AllowToMoveIn = true)
         {
-            if (!WorldMod.GuardiansMet.Any(x => x.Key == ID && x.Value == ModID))
+            if (!WorldMod.GuardiansMet.Any(x => x.ID == ID && x.ModID == ModID))
             {
-                WorldMod.GuardiansMet.Add(new KeyValuePair<int, string>(ID, ModID));
-                WorldMod.AllowGuardianNPCToSpawn(ID, ModID);
+                WorldMod.GuardiansMet.Add(new GuardianID(ID, ModID));
+                if(AllowToMoveIn)
+                    WorldMod.AllowGuardianNPCToSpawn(ID, ModID);
                 //Not only send the info on multiplayer about the guardian met, but also tell everyone that it has been found.
             }
         }
@@ -692,7 +696,7 @@ namespace giantsummon
         {
             if (ModID == "")
                 ModID = MainMod.mod.Name;
-            return WorldMod.GuardiansMet.Any(x => x.Key == ID && x.Value == ModID);
+            return WorldMod.GuardiansMet.Any(x => x.ID == ID && x.ModID == ModID);
         }
 
         public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)

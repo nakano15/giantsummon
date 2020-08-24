@@ -321,125 +321,129 @@ namespace giantsummon.Npcs
 
         public List<DrawData> GetDrawDatas(Microsoft.Xna.Framework.Color drawColor, bool FrontPart = false)
         {
-            if (Base.sprites.HasErrorLoadingOccurred)
-                return new List<DrawData>();
-            else if (!Base.sprites.IsTextureLoaded)
+            try
             {
-                Base.sprites.LoadTextures();
-            }
-            Base.sprites.ResetCooldown();
-            List<DrawData> dds = new List<DrawData>();
-            Vector2 DrawPos = npc.position - Main.screenPosition;
-            DrawPos.X += XOffSet;
-            DrawPos.Y += YOffset;
-            DrawPos.X += npc.width * 0.5f;
-            DrawPos.Y += npc.height;
-            DrawPos.Y += 2;
-            Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = (npc.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
-            if (FlipVertically)
-            {
-                if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.None)
-                    seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
+                if (Base.sprites == null || Base.sprites.HasErrorLoadingOccurred)
+                    return new List<DrawData>();
+                else if (!Base.sprites.IsTextureLoaded)
+                {
+                    Base.sprites.LoadTextures();
+                }
+                Base.sprites.ResetCooldown();
+                List<DrawData> dds = new List<DrawData>();
+                Vector2 DrawPos = npc.position - Main.screenPosition;
+                DrawPos.X += XOffSet;
+                DrawPos.Y += YOffset;
+                DrawPos.X += npc.width * 0.5f;
+                DrawPos.Y += npc.height;
+                DrawPos.Y += 2;
+                Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = (npc.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
+                if (FlipVertically)
+                {
+                    if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.None)
+                        seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
+                    else
+                        seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically | Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+                    //DrawPos.Y -= Base.SpriteHeight;
+                }
+                Rectangle bodyrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
+                    bodyfrontrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
+                    leftarmrect = new Rectangle(LeftArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
+                    rightarmrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
+                    rightarmfrontrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight);
+                if (Base.SpecificBodyFrontFramePositions)
+                {
+                    bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X) * Base.SpriteWidth;
+                }
                 else
-                    seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically | Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
-                //DrawPos.Y -= Base.SpriteHeight;
-            }
-            Rectangle bodyrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
-                bodyfrontrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
-                leftarmrect = new Rectangle(LeftArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
-                rightarmrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
-                rightarmfrontrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight);
-            if (Base.SpecificBodyFrontFramePositions)
-            {
-                bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X) * Base.SpriteWidth;
-            }
-            else
-            {
+                {
 
-            }
-            if (Base.RightArmFrontFrameSwap.ContainsKey(RightArmAnimationFrame))
-            {
-                rightarmfrontrect.X = Base.RightArmFrontFrameSwap[RightArmAnimationFrame] * rightarmfrontrect.Width;
-            }
-            else
-            {
-                rightarmfrontrect.X = -1;
-            }
-            if (bodyfrontrect.X >= Base.FramesInRows)
-            {
-                bodyfrontrect.Y += bodyfrontrect.X / Base.FramesInRows;
-                bodyfrontrect.X -= bodyfrontrect.Y * Base.FramesInRows;
-            }
-            if (bodyrect.X >= Base.FramesInRows)
-            {
-                bodyrect.Y += bodyrect.X / Base.FramesInRows;
-                bodyrect.X -= bodyrect.Y * Base.FramesInRows;
-            }
-            if (leftarmrect.X >= Base.FramesInRows)
-            {
-                leftarmrect.Y += leftarmrect.X / Base.FramesInRows;
-                leftarmrect.X -= leftarmrect.Y * Base.FramesInRows;
-            }
-            if (rightarmrect.X >= Base.FramesInRows)
-            {
-                rightarmrect.Y += rightarmrect.X / Base.FramesInRows;
-                rightarmrect.X -= rightarmrect.Y * Base.FramesInRows;
-            }
-            if (rightarmfrontrect.X >= Base.FramesInRows)
-            {
-                rightarmfrontrect.Y += rightarmfrontrect.X / Base.FramesInRows;
-                rightarmfrontrect.X -= rightarmfrontrect.Y * Base.FramesInRows;
-            }
-            bodyrect.X *= bodyrect.Width;
-            bodyrect.Y *= bodyrect.Height;
+                }
+                if (Base.RightArmFrontFrameSwap.ContainsKey(RightArmAnimationFrame))
+                {
+                    rightarmfrontrect.X = Base.RightArmFrontFrameSwap[RightArmAnimationFrame] * rightarmfrontrect.Width;
+                }
+                else
+                {
+                    rightarmfrontrect.X = -1;
+                }
+                if (bodyfrontrect.X >= Base.FramesInRows)
+                {
+                    bodyfrontrect.Y += bodyfrontrect.X / Base.FramesInRows;
+                    bodyfrontrect.X -= bodyfrontrect.Y * Base.FramesInRows;
+                }
+                if (bodyrect.X >= Base.FramesInRows)
+                {
+                    bodyrect.Y += bodyrect.X / Base.FramesInRows;
+                    bodyrect.X -= bodyrect.Y * Base.FramesInRows;
+                }
+                if (leftarmrect.X >= Base.FramesInRows)
+                {
+                    leftarmrect.Y += leftarmrect.X / Base.FramesInRows;
+                    leftarmrect.X -= leftarmrect.Y * Base.FramesInRows;
+                }
+                if (rightarmrect.X >= Base.FramesInRows)
+                {
+                    rightarmrect.Y += rightarmrect.X / Base.FramesInRows;
+                    rightarmrect.X -= rightarmrect.Y * Base.FramesInRows;
+                }
+                if (rightarmfrontrect.X >= Base.FramesInRows)
+                {
+                    rightarmfrontrect.Y += rightarmfrontrect.X / Base.FramesInRows;
+                    rightarmfrontrect.X -= rightarmfrontrect.Y * Base.FramesInRows;
+                }
+                bodyrect.X *= bodyrect.Width;
+                bodyrect.Y *= bodyrect.Height;
 
-            if (bodyfrontrect.X > -1)
-            {
-                bodyfrontrect.X *= bodyfrontrect.Width;
-                bodyfrontrect.Y *= bodyfrontrect.Height;
-            }
+                if (bodyfrontrect.X > -1)
+                {
+                    bodyfrontrect.X *= bodyfrontrect.Width;
+                    bodyfrontrect.Y *= bodyfrontrect.Height;
+                }
 
-            leftarmrect.X *= leftarmrect.Width;
-            leftarmrect.Y *= leftarmrect.Height;
+                leftarmrect.X *= leftarmrect.Width;
+                leftarmrect.Y *= leftarmrect.Height;
 
-            rightarmrect.X *= rightarmrect.Width;
-            rightarmrect.Y *= rightarmrect.Height;
+                rightarmrect.X *= rightarmrect.Width;
+                rightarmrect.Y *= rightarmrect.Height;
 
-            rightarmfrontrect.X *= rightarmfrontrect.Width;
-            rightarmfrontrect.Y *= rightarmfrontrect.Height;
-            DrawData dd;
-            Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, Base.SpriteHeight);
-            if (GuardianID == GuardianBase.Malisha && GuardianModID == mod.Name)
-            {
-
-            }
-            if (!FrontPart)
-            {
-                dd = new DrawData(Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                rightarmfrontrect.X *= rightarmfrontrect.Width;
+                rightarmfrontrect.Y *= rightarmfrontrect.Height;
+                DrawData dd;
+                Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, Base.SpriteHeight);
+                if (!FrontPart)
+                {
+                    dd = new DrawData(Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dds.Add(dd);
+                    dd = new DrawData(Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dds.Add(dd);
+                }
+                /*{
+                    DrawData? dd2 = DrawItem(drawColor);
+                    if (dd2.HasValue)
+                        dds.Add(dd2.Value);
+                }*/
+                if (bodyfrontrect.X > -1 && Base.sprites.BodyFrontSprite != null)
+                {
+                    dd = new DrawData(Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dds.Add(dd);
+                }
+                if (rightarmfrontrect.X > -1 && Base.sprites.RightArmFrontSprite != null)
+                {
+                    dd = new DrawData(Base.sprites.RightArmFrontSprite, DrawPos, rightarmfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dds.Add(dd);
+                }
+                dd = new DrawData(Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
                 dds.Add(dd);
-                dd = new DrawData(Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
-                dds.Add(dd);
+                ModifyDrawDatas(dds, DrawPos, bodyrect, leftarmrect, rightarmrect, Origin, drawColor, seffects);
+                XOffSet = YOffset = 0f;
+                return dds;
             }
-            /*{
-                DrawData? dd2 = DrawItem(drawColor);
-                if (dd2.HasValue)
-                    dds.Add(dd2.Value);
-            }*/
-            if (bodyfrontrect.X > -1)
+            catch
             {
-                dd = new DrawData(Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
-                dds.Add(dd);
+                Main.NewText("The error happened with " + npc.GivenOrTypeName + ".", Color.Purple);
+                return new List<DrawData>();
             }
-            if (rightarmfrontrect.X > -1)
-            {
-                dd = new DrawData(Base.sprites.RightArmFrontSprite, DrawPos, rightarmfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
-                dds.Add(dd);
-            }
-            dd = new DrawData(Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
-            dds.Add(dd);
-            ModifyDrawDatas(dds, DrawPos, bodyrect, leftarmrect, rightarmrect, Origin, drawColor, seffects);
-            XOffSet = YOffset = 0f;
-            return dds;
         }
     }
 }

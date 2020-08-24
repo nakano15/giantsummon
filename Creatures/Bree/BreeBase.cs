@@ -501,5 +501,15 @@ namespace giantsummon.Creatures
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "I really hope you don't die, because I had trouble bringing you here.";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

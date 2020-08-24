@@ -10,4 +10,5 @@ Add the possibility of companions that can't live in the world, come visit It to
 	Add an option to allow turning It off, that may be helpful for low end players.
 Blue should get an animation for when she's knocked out, while having a bunny.
 Make companion npcs be able to share the same house, there should be some info on their Guardian Base that tells who they may share house with. Or a third info that tells who can live with who, to avoid bugs and confusion.
-
+Zacks seems to have a problem with his throne sitting animation, related to the outline of his right arm.
+	Where have I seen that before?

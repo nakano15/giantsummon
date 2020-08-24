@@ -622,5 +622,15 @@ namespace giantsummon.Creatures
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "I'm glad you called, It was fun trying to carry ou here.";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

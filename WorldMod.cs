@@ -14,7 +14,7 @@ namespace giantsummon
     public class WorldMod : ModWorld
     {
         public const int MaxGuardianNpcsInWorld = 10;
-        public static List<KeyValuePair<int, string>> GuardiansMet = new List<KeyValuePair<int, string>>();
+        public static List<GuardianID> GuardiansMet = new List<GuardianID>();
         public static bool LastWasDay = false, DelayedWasDay = false, DayChange = false, HourChange = false;
         public static double LastTime = 0;
         public static List<TerraGuardian> GuardianTownNPC = new List<TerraGuardian>(); //Companions you call to follow you could be the same as the town npcs. But when you dismiss them, they will try going home. 
@@ -126,8 +126,10 @@ namespace giantsummon
                     if (LeaveCooldown >= 10)
                     {
                         LeaveCooldown = 0;
-                        if(!Main.dayTime)
-                            CheckIfSomeoneMustLeaveWorld();
+                        if (!CheckIfSomeoneMustLeaveWorld())
+                        {
+                            CheckIfSomeoneCanVisit();
+                        }
                     }
                 }
             }
@@ -140,16 +142,116 @@ namespace giantsummon
             }
         }
 
-        public static void CheckIfSomeoneMustLeaveWorld()
+        public static void CheckIfSomeoneCanVisit()
         {
-            if (GuardianTownNPC.Count == 0)
+            if ((!Main.dayTime && Main.time >= 3f * 3600) || (Main.dayTime && (Main.time < 2 * 3600 || Main.time >= 4.5 * 3600)))
             {
                 return;
             }
-            //pick a random guardian to try leaving.
+            float VisitRate = 1f;
+            foreach (TerraGuardian tg in GuardianTownNPC)
+            {
+                if (tg.GetTownNpcInfo == null)
+                    VisitRate /= 2;
+            }
+            if (Main.rand.NextDouble() < VisitRate * 0.001f)
+            {
+                List<GuardianID> PossibleIDs = new List<GuardianID>();
+                foreach (GuardianID ids in GuardiansMet)
+                {
+                    if (!MainMod.IsGuardianInTheWorld(ids.ID, ids.ModID) && !GuardianNPCsInWorld.Any(x => x != null && x.IsID(ids.ID, ids.ModID)))
+                    {
+                        GuardianBase gb = GuardianBase.GetGuardianBase(ids.ID, ids.ModID);
+                        if (Main.dayTime && !gb.IsNocturnal)
+                        {
+                            PossibleIDs.Add(ids);
+                        }
+                    }
+                }
+                if (PossibleIDs.Count > 0)
+                {
+                    GuardianID WinnerID = PossibleIDs[Main.rand.Next(PossibleIDs.Count)];
+                    List<Vector2> PossibleSpawnPosition = new List<Vector2>();
+                    for (int n = 0; n < 200; n++)
+                    {
+                        if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless && Main.npc[n].type != Terraria.ID.NPCID.OldMan)
+                        {
+                            Vector2 npcPos = Main.npc[n].Center;
+                            bool PlayerNearby = false;
+                            for (int p = 0; p < 255; p++)
+                            {
+                                if (Main.player[p].active)
+                                {
+                                    if (Math.Abs(Main.player[p].Center.X - npcPos.X) < NPC.safeRangeX + NPC.sWidth * 0.5f &&
+                                        Math.Abs(Main.player[p].Center.Y - npcPos.Y) < NPC.safeRangeY + NPC.sHeight * 0.5f)
+                                    {
+                                        PlayerNearby = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!PlayerNearby)
+                            {
+                                npcPos.Y += Main.npc[n].height * 0.5f - 2f;
+                                PossibleSpawnPosition.Add(npcPos);
+                            }
+                        }
+                    }
+                    foreach (TerraGuardian tg in GuardianTownNPC)
+                    {
+                        if (tg.GetTownNpcInfo != null)
+                        {
+                            Vector2 guardianPos = tg.CenterPosition;
+                            bool PlayerNearby = false;
+                            for (int p = 0; p < 255; p++)
+                            {
+                                if (Main.player[p].active)
+                                {
+                                    if (Math.Abs(Main.player[p].Center.X - guardianPos.X) < NPC.safeRangeX + NPC.sWidth * 0.5f &&
+                                        Math.Abs(Main.player[p].Center.Y - guardianPos.Y) < NPC.safeRangeY + NPC.sHeight * 0.5f)
+                                    {
+                                        PlayerNearby = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!PlayerNearby)
+                            {
+                                guardianPos.Y += tg.Height * 0.5f - 2f;
+                                PossibleSpawnPosition.Add(guardianPos);
+                            }
+                        }
+                    }
+                    if (PossibleSpawnPosition.Count > 0)
+                    {
+                        Vector2 WinningPosition = PossibleSpawnPosition[Main.rand.Next(PossibleSpawnPosition.Count)];
+                        PossibleIDs.Clear();
+                        PossibleSpawnPosition.Clear();
+                        NpcMod.SpawnGuardianNPC(WinningPosition.X, WinningPosition.Y, WinnerID.ID, WinnerID.ModID, false);
+                        Main.NewText(NpcMod.GetGuardianNPCName(WinnerID.ID, WinnerID.ModID) + " came to visit.", Color.Aquamarine);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Returns true if someone left.</returns>
+        public static bool CheckIfSomeoneMustLeaveWorld()
+        {
+            if (GuardianTownNPC.Count == 0)
+            {
+                return false;
+            }
+            //pick a random guardian to try making leave.
             int Pos = Main.rand.Next(GuardianTownNPC.Count);
             if (GuardianTownNPC[Pos].GetTownNpcInfo == null)
             {
+                if ((!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && (!Main.dayTime || (Main.dayTime && Main.time < 3f * 3600))))
+                {
+                    return false;
+                }
                 bool HasPlayerNearby = false;
                 for (int p = 0; p < 255; p++)
                 {
@@ -171,8 +273,10 @@ namespace giantsummon
                         Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage);
                     }
                     GuardianTownNPC.RemoveAt(Pos);
+                    return true;
                 }
             }
+            return false;
         }
 
         public override void Initialize()
@@ -231,8 +335,8 @@ namespace giantsummon
             tag.Add("GuardiansMet_Count", GuardiansMet.Count);
             for (int i = 0; i < GuardiansMet.Count; i++)
             {
-                tag.Add("GuardiansMet_k" + i, GuardiansMet[i].Key);
-                tag.Add("GuardiansMet_v" + i, GuardiansMet[i].Value);
+                tag.Add("GuardiansMet_k" + i, GuardiansMet[i].ID);
+                tag.Add("GuardiansMet_v" + i, GuardiansMet[i].ModID);
             }
             for (int i = 0; i < MaxGuardianNpcsInWorld; i++)
             {
@@ -282,7 +386,7 @@ namespace giantsummon
                 int[] Ids = tag.GetIntArray("GuardiansMet");
                 string ModID = MainMod.mod.Name;
                 foreach(int i in Ids)
-                    GuardiansMet.Add(new KeyValuePair<int,string>(i, ModID));
+                    GuardiansMet.Add(new GuardianID(i, ModID));
             }
             else
             {
@@ -291,7 +395,7 @@ namespace giantsummon
                 {
                     int Key = tag.GetInt("GuardiansMet_k" + i);
                     string Mod = tag.GetString("GuardiansMet_v" + i);
-                    GuardiansMet.Add(new KeyValuePair<int,string>(Key, Mod));
+                    GuardiansMet.Add(new GuardianID(Key, Mod));
                 }
             }
             if (Version < 39)

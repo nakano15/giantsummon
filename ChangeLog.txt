@@ -11,3 +11,25 @@ Companions now have the ability of dual wielding.
 	Dual Wield will not work if the companion is holding an offhand item.
 Fixed a confusion that can happen when you give life/ether crystal/fruit to your companion when you have the option of sharing the max life with your companions.
 Companions will not dare to attack creatures in their reflect projectile state.
+Companions gained a boost in their view range.
+Did some changes to the Zombie Guardian AI.
+From the guardians you didn't allowed to move in your world, but their npcs is still present, they will leave the world at a time of day based on their daytime prefference.
+	Before, Diurnal and Nocturnal guardians could leave your world during the night.
+	Now, Diurnal guardians will only leave your world during the night, while Nocturnal guardians will leave during the day.
+Blue recruit npc now knows where the campfire is at, so she'll no longer try explore the west.
+Some guardian town npcs should no longer have the chance of spawning with a heavy fall damage received.
+Possibly now, being rescued by small companions will no longer mean that you will be revived while buried on the ground.
+Companions can no longer suffer fall damage when attached to a rope.
+You can no longer speak with your companions when knocked out.
+Bree recruit npc can also have a chance of appearing, if you've beaten the King Slime.
+	That increases the chances of seeing her scold Sardine.
+Your character and or companions will no longer die out of suffocation if their option of not dying upon being knocked out cold is on.
+If you have the option of making your character enter knocked out cold state, when health drops during knock out state, the Grappling Hook key will no longer force your character to die, but will instead start the rescue countdown while you hold It.
+Changed the effects that happens when your character is rescued.
+	After your character is taken to a safe place, the screen bars will still be dark, and leave the screen as your character health is regenerated.
+	A companion that has rescued you will say something, If they have a dialogue line for that.
+Improved companions vertical range of sight for hostile monsters.
+I may have fixed the problem where npcs that transforms from Terraria npc to Companion npcs would have their dialogue window closed.
+Blue and Mabel recruitment are now more verbal, and less emotive.
+	You didn't got It? Well, you'll need to speak with them, and then do their dialogues through a dialogue window, instead of waiting for them to say all they want, before you are able to recruit them.
+	I don't know you guys, but the old way was annoying and took quite too long.

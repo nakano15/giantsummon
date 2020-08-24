@@ -58,16 +58,16 @@ namespace giantsummon
                 bool AtLeastOnePositionFound = false, PassedSurface = false;
                 while (true)
                 {
-                    bool Blocked = false;
+                    byte Blocked = 0;
                     for (int x = 0; x < TombstoneWidth; x++)
                     {
                         if (Main.tile[StartPosX + x, StartPosY].active())
                         {
-                            Blocked = true;
+                            Blocked++;
                             break;
                         }
                     }
-                    if (!Blocked)
+                    if (Blocked == 0)
                     {
                         AtLeastOnePositionFound = true;
                     }

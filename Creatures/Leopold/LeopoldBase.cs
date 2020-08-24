@@ -450,5 +450,15 @@ namespace giantsummon.Creatures
             }
             return Actions;
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*Perfect, I'll try some healing spells.*";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

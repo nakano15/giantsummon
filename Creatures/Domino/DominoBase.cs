@@ -395,5 +395,15 @@ namespace giantsummon.Creatures
             Mes.Add("*Here, I wont charge for this though. Just wake up and let's go.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*The kind of things I do to protect my business...*";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

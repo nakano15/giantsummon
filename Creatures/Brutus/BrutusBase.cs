@@ -852,5 +852,15 @@ namespace giantsummon.Creatures
                 }
             }
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*I think this may be able to help you recover your senses.*";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }
