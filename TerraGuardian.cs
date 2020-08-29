@@ -12928,8 +12928,10 @@ namespace giantsummon
                         Velocity.X -= SlowDown;
                     else if (Velocity.X < -SlowDown)
                         Velocity.X += SlowDown;
-                    else
+                    else if(Velocity.X != 0)
+                    {
                         Velocity.X = 0;
+                    }
                 }
             }
         }

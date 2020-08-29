@@ -140,7 +140,7 @@ namespace giantsummon.Npcs
                 }
                 if (PlayerInRange)
                 {
-                    Main.NewText("The Raccoon vanished in the sunset.");
+                    Main.NewText("The Raccoon vanished in the sunset.", 225, 200, 0);
                     npc.active = false;
                     npc.life = 0;
                     return;

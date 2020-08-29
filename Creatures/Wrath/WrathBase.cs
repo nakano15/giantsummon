@@ -39,6 +39,9 @@ namespace giantsummon.Creatures
 
             MountUnlockLevel = 255;
 
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.RedPhaseblade, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.LesserHealingPotion, 10));
+
             //Animation Frames
             StandingFrame = 0;
             WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -87,6 +90,13 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(13, 23, 20);
 
             RightHandPoints.AddFramePoint2x(17, 26, 26);
+
+            //Headgear
+            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 11);
+            HeadVanityPosition.AddFramePoint2x(14, 16, 9);
+            HeadVanityPosition.AddFramePoint2x(17, 23, 18);
+            HeadVanityPosition.AddFramePoint2x(22, 16, 9);
+            HeadVanityPosition.AddFramePoint2x(25, 23, 18);
 
             GetRequests();
         }
@@ -260,6 +270,14 @@ namespace giantsummon.Creatures
                 Mes.Add("*I hope you aren't doing that on purpose.*");
                 Mes.Add("*This is already getting me furious.*");
             }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I need a house! Now!*");
+            Mes.Add("*This delay is really getting me angry. How long until you give me a house?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

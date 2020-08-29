@@ -2036,26 +2036,29 @@ namespace giantsummon
                                     SlotStartPosition.Y += 28f;
                                 }
                             }
-                            for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
+                            if (d.request.requestState == RequestData.RequestState.RequestActive)
                             {
-                                if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
+                                for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
                                 {
-                                    SlotStartPosition.Y += 26f;
-                                   // ButtonPosition.Y += 26;
-                                    RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
-                                    string ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
-                                    Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f);
-                                    if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
-                                        Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                    if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
                                     {
-                                        player.player.mouseInterface = true;
-                                        Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
-                                        if (Main.mouseLeft && Main.mouseLeftRelease)
+                                        SlotStartPosition.Y += 26f;
+                                        // ButtonPosition.Y += 26;
+                                        RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
+                                        string ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
+                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f);
+                                        if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
+                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
                                         {
-                                            CheckingQuestBrief = false;
-                                            if (!d.request.TrySpawningBoss(player.player.whoAmI, req.BossID, req.DifficultyBonus))
+                                            player.player.mouseInterface = true;
+                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
+                                            if (Main.mouseLeft && Main.mouseLeftRelease)
                                             {
-                                                Main.NewText("Failed. Did you tried calling It when It can appear?");
+                                                CheckingQuestBrief = false;
+                                                if (!d.request.TrySpawningBoss(player.player.whoAmI, req.BossID, req.DifficultyBonus))
+                                                {
+                                                    Main.NewText("Failed. Did you tried calling It when It can appear?");
+                                                }
                                             }
                                         }
                                     }

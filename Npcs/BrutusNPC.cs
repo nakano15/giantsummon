@@ -149,9 +149,11 @@ namespace giantsummon.Npcs
             int SpawnPosX = (int)Main.npc[PickedNPC].Center.X,
                 SpawnPosY = (int)(Main.npc[PickedNPC].position.Y + Main.npc[PickedNPC].height);
             int npcPos = NPC.NewNPC(SpawnPosX, SpawnPosY, ModContent.NPCType<BrutusNPC>());
-            Main.npc[npcPos].ai[2] = 1;
+            ((BrutusNPC)Main.npc[npcPos].modNPC).WarnedAboutBrutus = true;
             Main.NewText(Main.npc[npcPos].GivenOrTypeName + " has came from the Ether Realm looking for someone to hire him as bodyguard.");
         }
+
+        private bool WarnedAboutBrutus = false;
 
         public override void AI()
         {
@@ -160,10 +162,10 @@ namespace giantsummon.Npcs
             BodyFrame = -1;
             //AI Work here
             npc.homeTileX = npc.homeTileY = -1;
-            if (npc.ai[2] == 0)
+            if (!WarnedAboutBrutus)
             {
                 Main.NewText(npc.GivenOrTypeName + " is still visiting your world.");
-                npc.ai[2] = 1;
+                WarnedAboutBrutus = true;
             }
             if (SteelTestingTime > 0)
             {
@@ -238,10 +240,10 @@ namespace giantsummon.Npcs
                             if (SceneTime == 780)
                             {
                                 SayMessage("*I am " + NpcAlias + ", your body guard.*");
-                                NpcMod.AddGuardianMet(6);
                             }
                             if (SceneTime >= 1080)
                             {
+                                NpcMod.AddGuardianMet(6);
                                 Player player = Main.player[npc.target];
                                 PlayerMod.AddPlayerGuardian(player, GuardianBase.Brutus);
                                 PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus).IncreaseFriendshipProgress(1);
@@ -482,7 +484,7 @@ namespace giantsummon.Npcs
                 {
                     npc.target = Main.myPlayer;
                     StartDamageTest();
-                    Main.player[Main.myPlayer].talkNPC = -1;
+                    //Main.player[Main.myPlayer].talkNPC = -1;
                 }
             }
             else

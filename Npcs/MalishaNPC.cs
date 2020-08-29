@@ -364,10 +364,11 @@ namespace giantsummon.Npcs
             dds.Insert(0, dd);
         }
 
+        public static bool MalishaCanSpawn { get { return NPC.downedBoss3; } }
+
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            //return 0; //Let's finish the npc first before trying to spawn It in? :3
-            if (!spawnInfo.playerInTown && !Main.dayTime && NPC.downedBoss3 && !NpcMod.HasGuardianNPC(GuardianBase.Malisha) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Malisha) && Main.time > 19800 && !NPC.AnyNPCs(ModContent.NPCType<MalishaNPC>()))
+            if (!spawnInfo.playerInTown && !Main.dayTime && MalishaCanSpawn && !NpcMod.HasGuardianNPC(GuardianBase.Malisha) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Malisha) && Main.time > 19800 && !NPC.AnyNPCs(ModContent.NPCType<MalishaNPC>()))
             {
                 return (float)(Main.time - 19800) / 54000;
             }

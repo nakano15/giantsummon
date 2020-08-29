@@ -822,6 +822,95 @@ namespace giantsummon
             }
         }
 
+        public static void GetRecruitmentTipMessages(ref List<string> Messages)
+        {
+            if (!HasMetGuardian(0))
+            {
+                Messages.Add("I have seen a guardian earlier this day, he's looking for a town with friendly people to live with. It may still be around this world, he may show up anytime.");
+            }
+            if (!HasMetGuardian(1))
+            {
+                Messages.Add("I've once met a Guardian that liked camping, If you place a campfire somewhere, It may show up.");
+            }
+            if (!HasMetGuardian(2))
+            {
+                Messages.Add("There was that cat... I forgot his name... He told me that was going to pursue his biggest bounty: The King Slime. I wonder If he were successfull.");
+            }
+            if (!HasMetGuardian(3))
+            {
+                if (HasMetGuardian(1))
+                {
+                    Messages.Add("There was a Bloodmoon which I couldn't forget, I was on the far lands of the world, being attacked by zombies, until a big wolf zombie appeared. That zombie, looked a lot like " + GetGuardianNPCName(1) + ".");
+                }
+                else
+                {
+                    Messages.Add("There was a Bloodmoon which I couldn't forget, I was on the far lands of the world, being attacked by zombies, until a big wolf zombie appeared.");
+                }
+            }
+            if (!HasMetGuardian(4) && Main.hardMode)
+            {
+                Messages.Add("Do you think one of those troubled souls that roams in the world could help you on your quest? Your laugh really gives off how ridiculous this is.");
+            }
+            if (!HasMetGuardian(5))
+            {
+                Messages.Add("There is a story about a Giant Dog and a Terrarian Woman, they lived happy, went into adventures and played together everyday, until one day she died, legends says that the giant dog guards her tombstone since the day she was buried. I don't know if those legends are true, but nothing stops you from finding that out.");
+            }
+            if (!HasMetGuardian(6))
+            {
+                int TownNpcCount = 0;
+                for (int n = 0; n < 200; n++)
+                {
+                    if (Main.npc[n].active && Main.npc[n].townNPC)
+                        TownNpcCount++;
+                }
+                if (TownNpcCount >= 5)
+                {
+                    Messages.Add("I've heard stories of an old Royal Guard from the Ether Realm who lost his job, and is now roaming through worlds to work as a bodyguard for anyone who either is able to hurt him, or pay for his job. I think he may end up appearing in this world.");
+                }
+                else
+                {
+                    Messages.Add("I've heard stories of an old Royal Guard from the Ether Realm that lost his job, and now is now roaming through worlds to work as a bodyguard for someone. I think he may want to visit worlds with quite a number of humans living in.");
+                }
+            }
+            if (!HasMetGuardian(7))
+            {
+                Messages.Add("I've bumped with a cat during my travels who was looking for her husband. She's been travelling world by world looking for him, and she looked a bit worn out the last time I saw her. I tried to convince her to stay for a while, but she didn't wanted. Maybe you will be able to?");
+            }
+            if (!HasMetGuardian(8) && Npcs.MabelNPC.CanSpawnMabel)
+            {
+                Messages.Add("I've met a Guardian that was trying to fly like a reindeer, the problem is that she's not a reindeer. Please find her before she get hurt?");
+            }
+            if (!HasMetGuardian(9) && Npcs.DominoNPC.CanSpawnDomino(Main.player[Main.myPlayer]))
+            {
+                if (HasGuardianNPC(GuardianBase.Brutus))
+                {
+                    Messages.Add("There is a shady Guardian wandering around the world. It looks like he's running from something. I think It's a good idea to ask him what is he up to. Maybe you should bring " + GetGuardianNPCName(GuardianBase.Brutus) + " with you.");
+                }
+                else
+                {
+                    Messages.Add("There is a shady Guardian wandering around the world. It looks like he's running from something. I think It's a good idea to ask him what is he up to.");
+                }
+            }
+            if (!HasMetGuardian(10) && Npcs.LeopoldNPC.CanSpawnLeopold)
+            {
+                Messages.Add("Hey, did you hear? A sage from the Ether Realm is exploring the Terra Realm. You may bump into him anytime! If you're goign to look for him, can I go with you?! I'm kind of his fan.");
+            }
+            if (!HasMetGuardian(11) && Npcs.VladimirNPC.CanRecruitVladimir)
+            {
+                Messages.Add("I heard a rumor about a Bear creature travelling around this world. The person who found It, said that the bear were saying that was hungry and that wanting to give a hug, that made the person imediatelly ran away from the Underground Jungle. What could that bear be doing in the Underground Jungle? Maybe It were looking for honey?");
+            }
+            if (!HasMetGuardian(12) && Npcs.MalishaNPC.MalishaCanSpawn)
+            {
+                Messages.Add("I heard weird rumors about a TerraGuardian who's came here to take vacations. That wouldn't be weird, if wasn't for the fact that a Bunny told me that.");
+            }
+            if (!HasGuardianNPC(GuardianBase.Wrath) && Npcs.WrathNPC.WrathCanSpawn)
+            {
+                Messages.Add("One of your citizens told me that was attacked by a " +
+                    (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID] ? "kind of cloud in form of a red pig" :
+                    "angry red Pig TerraGuardian") + " in the forest last night. The person were carried to the town unconscious. You should investigate that issue.");
+            }
+        }
+
         public override void GetChat(NPC npc, ref string chat)
         {
             if (Main.rand.NextDouble() >= 0.25)
@@ -1016,77 +1105,7 @@ namespace giantsummon
                             PossibleMessages.Add("The TerraGuardians grows stronger when they travel with you, they may get stronger on many of their characteristics depending on what they do during your travels.");
                             break;
                     }
-                    if (true)
-                    {
-                        if (!HasMetGuardian(0) && NPC.downedBoss1)
-                        {
-                            PossibleMessages.Add("I have seen a guardian earlier this day, he's looking for a town with friendly people to live with. It may still be around this world, If you want to let him live here.");
-                        }
-                        if (!HasMetGuardian(3))
-                        {
-                            if (HasMetGuardian(1))
-                            {
-                                PossibleMessages.Add("There was a Bloodmoon which I couldn't forget, I was on the far lands of the world, being swarmed by zombies, until a big wolf zombie appeared. That zombie, looked a lot like " + GetGuardianNPCName(1) + ".");
-                            }
-                            else
-                            {
-                                PossibleMessages.Add("There was a Bloodmoon which I couldn't forget, I was on the far lands of the world, being swarmed by zombies, until a big wolf zombie appeared.");
-                            }
-                        }
-                        else if (!HasMetGuardian(2))
-                        {
-                            PossibleMessages.Add("There was that cat... I forgot his name... He told me that was going to pursue his biggest bounty: The King Slime. I wonder If he were successfull.");
-                        }
-                        else if (!HasMetGuardian(7))
-                        {
-                            PossibleMessages.Add("I've bumped during my travels with a cat who was looking for her husband. She's been travelling world by world looking for him, and she looked a bit worn out the last time I saw her. She could try getting some place to rest for a while before continuing her search. Would you help her, If you bump into her?");
-                        }
-                        if (!HasMetGuardian(1))
-                        {
-                            PossibleMessages.Add("I've once met a Guardian that liked camping, If you place a campfire somewhere, It may show up.");
-                        }
-                        if (!HasMetGuardian(0))
-                        {
-                            PossibleMessages.Add("There is a TerraGuardian looking for a town with people to live with. He may end up showing up here anytime.");
-                        }
-                        if (!HasMetGuardian(5))
-                        {
-                            PossibleMessages.Add("There is a story about a Giant Dog TerraGuardian and a Terrarian Woman, they lived happy and played together everyday, until one day she died, and that dog guards her tombstone since she was buried.\nI don't know if the legends are true, but nothing stops you from finding that out.");
-                        }
-                        if (!HasMetGuardian(6))
-                        {
-                            int TownNpcCount = 0;
-                            for (int n = 0; n < 200; n++)
-                            {
-                                if (Main.npc[n].active && Main.npc[n].townNPC)
-                                    TownNpcCount++;
-                            }
-                            if (TownNpcCount >= 5)
-                            {
-                                PossibleMessages.Add("I've heard stories of an old Royal Guard from the Ether Realm who lost his job, and is now roaming through worlds to work as a bodyguard for anyone who hurts him, or pay for his job. I think he may end up appearing in this world.");
-                            }
-                            else
-                            {
-                                PossibleMessages.Add("I've heard stories of an old Royal Guard from the Ether Realm that lost his job, and now is now roaming through worlds to work as a bodyguard for someone. I think he may want to visit worlds with quite a number of people he can get a job from.");
-                            }
-                        }
-                        if (!HasMetGuardian(8) && Npcs.MabelNPC.CanSpawnMabel)
-                        {
-                            PossibleMessages.Add("I've met a Guardian that was trying to fly like a reindeer. The problem is that she's not a reindeer. I don't think that It will end in a good thing.");
-                        }
-                        if (!HasMetGuardian(9) && Npcs.DominoNPC.CanSpawnDomino(Main.player[Main.myPlayer]))
-                        {
-                            PossibleMessages.Add("There is a shady Guardian wandering around the world. It looks like he's running from something. I think It's a good idea to ask him what is up.");
-                        }
-                        if (!HasMetGuardian(10) && Npcs.LeopoldNPC.CanSpawnLeopold)
-                        {
-                            PossibleMessages.Add("Hey, did you hear? A sage from the Ether Realm is exploring the Terra Realm. You may bump into him anytime! Can I go with you on your adventures?! I'm kind of his fan.");
-                        }
-                        if (!HasMetGuardian(11) && Npcs.VladimirNPC.CanRecruitVladimir)
-                        {
-                            PossibleMessages.Add("I heard a rummor about a Bear creature travelling around this world, I didn't believed at first because the one who told me about that, said that the bear were wanting to give her a hug. The person said that the bear was found in the Jungle, before running away in fear. Maybe It were looking for honey?");
-                        }
-                    }
+                    GetRecruitmentTipMessages(ref PossibleMessages);
                     if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], 3))
                     {
                         switch (Main.rand.Next(2))
