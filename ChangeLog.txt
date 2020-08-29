@@ -33,3 +33,31 @@ I may have fixed the problem where npcs that transforms from Terraria npc to Com
 Blue and Mabel recruitment are now more verbal, and less emotive.
 	You didn't got It? Well, you'll need to speak with them, and then do their dialogues through a dialogue window, instead of waiting for them to say all they want, before you are able to recruit them.
 	I don't know you guys, but the old way was annoying and took quite too long.
+Companions will now acquire more coins from killed monsters.
+Companions will no longer disregard the weapon shoot cooldown when using the weapon again.
+The mod will tell if Brutus is still in your world, when you re-enter the map.
+	He was still visiting when you left, right?
+Zacks is now diurnal.
+	For Blue.
+Bree recruit npc no longer related to Broken.
+	Her recruit npc will now get the correct mod ID.
+	She's no longer desperate enough to see Sardine as soon as she look at you, If you have already met Sardine, but he isn't in the party.
+	She will no longer reappear in the world after you reload the save.
+Guardian recruitable npcs will no longer slide when walking.
+	I were multiplying the wrong variable :/
+	Also fixed a few issues related to their frame calculation.
+Added an option to the guardian npc dialogue to allow you to postpone a request a guardian can give you.
+	The option will close the dialogue, but will cause no change to the quest Itself.
+Your guardian can no longer jump while holding Down key.
+Somewhat fixed a problem that caused the player to go higher or lower depending on your character position, when mounted on a companion.
+	The problem is that the items will still show a bit offset, but not that much.
+Companions you've already met on your other characters have a chance of appearing as a Starter Guardian when you enter a new world.
+	I think that may improve replay value.
+Talk requests will no longer force companions without enough friendship level to leave your party.
+Starter guardians will no longer be dismissed upon completting requests requiring them, if you don't have the friendship level to call them.
+	Starter guardians doesn't requires friendship level to call them.
+Made the Brutus damage test easier.
+	Before, the damage he received from attacks was reduced by 80%, now It only reduces 60%.
+You can no longer complete the Talk Request on the Guardian Requests tab.
+	You can now speak with your companions, right?
+You can now spawn the boss required for the guardian requests without the need of the companion who gave It summoned.

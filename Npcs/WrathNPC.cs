@@ -19,6 +19,8 @@ namespace giantsummon.Npcs
         public byte DialogueStep = 0;
         public bool LastButtonWasAccept = false;
         public bool ForceLeave = false;
+        private bool PlayerGot = false;
+        private bool LastWasReflect = false;
 
         public WrathNPC()
             : base(GuardianBase.Wrath, "", "Angry Pig Cloud")
@@ -43,8 +45,18 @@ namespace giantsummon.Npcs
 
         bool PlayerHasWrath { get { return npc.target < 255 && PlayerMod.PlayerHasGuardian(Main.player[npc.target], GuardianBase.Wrath); } }
 
+        public static bool WrathCanSpawn
+        {
+            get
+            {
+                return NPC.downedBoss1;
+            }
+        }
+
         public override void AI()
         {
+            npc.damage = npc.defDamage = 0;
+            npc.boss = false;
             if (ForceLeave)
             {
                 if (Target.Character.talkNPC != npc.whoAmI)
@@ -132,8 +144,8 @@ namespace giantsummon.Npcs
                 npc.dontTakeDamage = true;
                 npc.noTileCollide = false;
                 npc.noGravity = false;
-                if (BodySlamResist > 0)
-                    BodySlamResist = 0;
+                //if (BodySlamResist > 0)
+                //    BodySlamResist = 0;
                 if (ActionTime > 0)
                 {
                     ActionTime++;
@@ -143,6 +155,7 @@ namespace giantsummon.Npcs
                         {
                             Player player = Target.Character;
                             player.Center = npc.Center;
+                            BodySlamResist = 0;
                         }
                         if (PlayerHasWrath)
                         {
@@ -168,7 +181,7 @@ namespace giantsummon.Npcs
                             }
                         }
                     }
-                    else if(BodySlamResist > 0)
+                    if(BodySlamResist > 0)
                     {
                         Player player = Target.Character;
                         player.Center = npc.Bottom;
@@ -203,7 +216,11 @@ namespace giantsummon.Npcs
             }
             else
             {
+                music = Terraria.ID.MusicID.Boss1;
+                musicPriority = Terraria.ModLoader.MusicPriority.BossLow;
                 PigStatus(out npc.lifeMax, out npc.damage, out npc.defense);
+                npc.defDamage = npc.damage;
+                npc.defDefense = npc.defense;
                 if (!IsInPerceptionRange(Target.Character))
                 {
                     if (PlayerLost)
@@ -234,7 +251,7 @@ namespace giantsummon.Npcs
                     {
                         case Behaviors.Charge:
                             {
-                                npc.knockBackResist = 0.15f;
+                                npc.knockBackResist = (Main.expertMode ? 0.05f : 0.15f);
                                 npc.damage = npc.defDamage;
                                 if (Target.Position.X < npc.Center.X)
                                     MoveLeft = true;
@@ -244,18 +261,23 @@ namespace giantsummon.Npcs
                                 {
                                     if (Target.Velocity.Y < 0 && npc.velocity.Y == 0)
                                     {
-                                        npc.velocity.Y = -15f;
+                                        npc.velocity.Y = -6.5f;
                                     }
                                 }
                                 ActionTime++;
                                 if (ActionTime >= 360)
                                 {
-                                    /*if (Math.Abs(Target.Center.Y - npc.Center.Y) >= 120 || Math.Abs(Target.Center.X - npc.Center.X) >= 240 || Main.rand.Next(3) == 0)
+                                    if (Math.Abs(Target.Center.Y - npc.Center.Y) >= 120 || Math.Abs(Target.Center.X - npc.Center.X) >= 180 || !Collision.CanHitLine(Target.Position, Target.Width, Target.Height, npc.position, npc.width, npc.height) || Main.rand.NextDouble() < (Main.expertMode ? 0.3f : 0.1f))
+                                    {
+                                        behavior = Behaviors.ReachPlayer;
+                                        ActionTime = 0;
+                                    }
+                                    else if (Main.rand.Next(3) == 0)
                                     {
                                         behavior = Behaviors.DestructiveRush;
                                         ActionTime = 0;
                                     }
-                                    else*/
+                                    else
                                     {
                                         behavior = Behaviors.BodySlam;
                                         ActionTime = 0;
@@ -271,10 +293,11 @@ namespace giantsummon.Npcs
                                 ActionTime++;
                                 if (ActionTime >= 90)
                                 {
-                                    if (Main.rand.NextDouble() < 0.4)
+                                    if (!LastWasReflect && Main.rand.NextDouble() < 0.4)
                                         behavior = Behaviors.BulletReflectingBelly;
                                     else
                                         behavior = Behaviors.Charge;
+                                    LastWasReflect = false;
                                     ActionTime = 0;
                                 }
                             }
@@ -283,20 +306,28 @@ namespace giantsummon.Npcs
                             {
                                 npc.knockBackResist = 0;
                                 ActionTime++;
-                                npc.friendly = true;
+                                npc.damage = 0;
+                                //npc.friendly = true;
                                 if (ActionTime == 90)
                                 {
                                     FallHurt = false;
-                                    npc.velocity.Y = -20;
+                                    npc.velocity.Y = -15;
                                 }
                                 else if (ActionTime > 91)
                                 {
                                     if (BodySlamResist == 0)
                                     {
+                                        float Speed = Main.expertMode ? 0.5f : 0.3f;
                                         if (Target.Position.X + npc.velocity.X < npc.Center.X)
+                                        {
                                             MoveLeft = true;
+                                            npc.velocity.X -= Speed;
+                                        }
                                         else
+                                        {
                                             MoveRight = true;
+                                            npc.velocity.X += Speed;
+                                        }
                                     }
                                     if (npc.velocity.Y > 0 && Target.Position.Y > npc.Bottom.Y)
                                     {
@@ -391,6 +422,87 @@ namespace giantsummon.Npcs
                                 npc.knockBackResist = 0;
                                 if (ActionTime == 10)
                                 {
+                                    npc.direction = Target.Character.Center.X < npc.Center.X ? -1 : 1;
+                                    Vector2 EndPosition = npc.position;
+                                    bool MovingLeft = npc.Center.X > Target.Character.Center.X;
+                                    float MaxMoveX = Target.Character.Center.X;
+                                    if (MoveLeft)
+                                        MaxMoveX -= 48;
+                                    else
+                                        MaxMoveX += 48;
+                                    while (true)
+                                    {
+                                        if (!CanRushThrough(ref EndPosition, MovingLeft))
+                                        {
+                                            break;
+                                        }
+                                        if ((MovingLeft && EndPosition.X < MaxMoveX) || (!MovingLeft && EndPosition.X > MaxMoveX))
+                                        {
+                                            break;
+                                        }
+                                        for(int i = 0; i < 25; i++)
+                                            Dust.NewDust(EndPosition, 32, 48, Terraria.ID.DustID.SomethingRed, 1f - ((float)Main.rand.NextDouble() * 2), 1f - ((float)Main.rand.NextDouble() * 2));
+                                    }
+                                    ChargeDashDestination = EndPosition;
+                                }
+                                else if (ActionTime == 55)
+                                {
+                                    Vector2 EndPosition = npc.position;
+                                    bool MovingLeft = ChargeDashDestination.X + 20 > Target.Character.Center.X;
+                                    float MaxMoveX = ChargeDashDestination.X + 20;
+                                    if (MoveLeft)
+                                        MaxMoveX -= 48;
+                                    else
+                                        MaxMoveX += 48;
+                                    while (true)
+                                    {
+                                        if (!CanRushThrough(ref EndPosition, MovingLeft))
+                                        {
+                                            break;
+                                        }
+                                        if ((MovingLeft && EndPosition.X < MaxMoveX) || (!MovingLeft && EndPosition.X > MaxMoveX))
+                                        {
+                                            break;
+                                        }
+                                        Rectangle rect = new Rectangle((int)(EndPosition.X + 16 - npc.width * 0.5f), (int)(EndPosition.Y + 48 - npc.height), npc.width, npc.height);
+                                        int Damage = (int)(npc.damage * 2);
+                                        for (int p = 0; p < 255; p++)
+                                        {
+                                            Player player = Main.player[p];
+                                            if (player.active && !player.dead && player.getRect().Intersects(rect))
+                                            {
+                                                player.GetModPlayer<PlayerMod>().FriendlyDuelDefeat = true;
+                                                player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " couldn't endure the Destructive Rush."), Damage, npc.direction);
+                                            }
+                                        }
+                                        foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                                        {
+                                            if (!tg.Downed && tg.HitBox.Intersects(rect))
+                                            {
+                                                tg.FriendlyDuelDefeat = true;
+                                                tg.Hurt(Damage, npc.direction, false, false, " couldn't endure the Destructive Rush.");
+                                            }
+                                        }
+                                    }
+                                    npc.position = ChargeDashDestination;
+                                    if (MovingLeft)
+                                        npc.velocity.X = 8 * (!MovingLeft ? -1 : 1);
+                                }
+                                else if (ActionTime >= 100)
+                                {
+                                    if (Math.Abs(Target.Center.Y - npc.Center.Y) >= 120 || Math.Abs(Target.Center.X - npc.Center.X) >= 240 || !Collision.CanHitLine(Target.Position, Target.Width, Target.Height, npc.position, npc.width, npc.height) || Main.rand.NextDouble() < (Main.expertMode ? 0.4f : 0.2f))
+                                    {
+                                        behavior = Behaviors.ReachPlayer;
+                                        ActionTime = 0;
+                                    }
+                                    else
+                                    {
+                                        behavior = Behaviors.PosJumpCooldown;
+                                        ActionTime = 0;
+                                    }
+                                }
+                                /*if (ActionTime == 10)
+                                {
                                     Vector2 EndPosition = (npc.position - Target.Position) * 0.5f;
                                     Vector2 Direction = EndPosition;
                                     Direction.Normalize();
@@ -433,17 +545,23 @@ namespace giantsummon.Npcs
                                 {
                                     behavior = Behaviors.PosJumpCooldown;
                                     ActionTime = 0;
-                                }
+                                }*/
                                 ActionTime++;
                             }
                             break;
                         case Behaviors.BulletReflectingBelly:
+                            LastWasReflect = true;
+                            if (ActionTime == 15)
+                            {
+                                npc.direction = Target.Character.Center.X < npc.Center.X ? -1 : 1;
+                            }
                             if (ActionTime == 30)
                             {
                                 SayMessage("*Go ahead, try shootting at me.*");
                             }
                             if (ActionTime >= 30)
                             {
+                                npc.direction = Target.Character.Center.X < npc.Center.X ? -1 : 1;
                                 npc.reflectingProjectiles = true;
                                 npc.defense *= 2;
                             }
@@ -455,6 +573,79 @@ namespace giantsummon.Npcs
                             }
                             ActionTime++;
                             break;
+                        case Behaviors.ReachPlayer:
+                            npc.dontTakeDamage = true;
+                            npc.damage = 0;
+                            if (ActionTime == 0)
+                            {
+                                PlayerGot = false;
+                                npc.direction = Target.Character.Center.X < npc.Center.X ? -1 : 1;
+                            }
+                            if (ActionTime < 60)
+                            {
+                                ActionTime++;
+                            }
+                            else if (ActionTime == 60)
+                            {
+                                for (int Attempts = 1; Attempts >= -1; Attempts -= 2)
+                                {
+                                    Vector2 PlayerPosition = Target.Character.position;
+                                    PlayerPosition.X += (Target.Velocity.X < 0 ? -1 : 1) * Attempts * 32 + Target.Velocity.X;
+                                    if (CanRushThrough(ref PlayerPosition, -Target.Direction > 0))
+                                    {
+                                        if (npc.Center.X < Target.Character.Center.X)
+                                            npc.direction = -1;
+                                        else
+                                            npc.direction = 1;
+                                        npc.position = PlayerPosition;
+                                        ActionTime++;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if ((!PlayerGot && ActionTime < 120) || (PlayerGot && ActionTime < 120 + 120))
+                            {
+                                ActionTime++;
+                                if (Target.GetCollision.Intersects(npc.getRect()))
+                                {
+                                    if (!PlayerGot)
+                                    {
+                                        switch (Main.rand.Next(3))
+                                        {
+                                            case 0:
+                                                SayMessage("Going somewhere?");
+                                                break;
+                                            case 1:
+                                                SayMessage("You thought you could escape?");
+                                                break;
+                                            case 2:
+                                                SayMessage("Boo! Surprised?");
+                                                break;
+                                        }
+                                    }
+                                    PlayerGot = true;
+                                    Vector2 BindPosition = npc.position;
+                                    BindPosition.X += npc.width * 0.5f + (npc.width * 0.5f + 6) * npc.direction;
+                                    BindPosition.Y += 4;
+                                    Target.Character.Center = BindPosition;
+                                    if (Target.Character.itemAnimation == 0)
+                                        Target.Character.direction = -npc.direction;
+                                    DrawInFrontOfPlayers.Add(Target.Character.whoAmI);
+                                }
+                            }
+                            else
+                            {
+                                if (Main.rand.NextDouble() < (Main.expertMode ? 0.3 : 0.66))
+                                {
+                                    behavior = Behaviors.PosJumpCooldown;
+                                }
+                                else
+                                {
+                                    behavior = Behaviors.Charge;
+                                }
+                                ActionTime = 0;
+                            }
+                            break;
                     }
                 }
                 else
@@ -463,7 +654,59 @@ namespace giantsummon.Npcs
                     ActionTime = 0;
                 }
             }
+            npc.defDamage = npc.damage;
+            npc.defDefense = npc.defense;
             base.AI();
+        }
+
+        public bool CanRushThrough(ref Vector2 Position, bool MovingLeft)
+        {
+            int tx = (int)Position.X / 16 + (MovingLeft ? -1 : 1), ty = (int)Position.Y / 16;
+            bool FailedOnce = false;
+            byte VerticalMoveCount = 0;
+            for (int Attempt = 0; Attempt < 2; Attempt++)
+            {
+                bool Failed = false;
+                for (int y = 0; y < 3; y++)
+                {
+                    for (int x = 0; x < 2; x++)
+                    {
+                        if (MainMod.IsSolidTile(tx + x, ty + y))
+                        {
+                            if (y <= 1 || FailedOnce)
+                                return false;
+                            else
+                                ty++;
+                            FailedOnce = true;
+                            Failed = true;
+                        }
+                    }
+                }
+                if (!Failed)
+                {
+                    bool HasSolidGround = false;
+                    for (int x = 0; x < 2; x++)
+                    {
+                        if (MainMod.IsSolidTile(tx + x, ty + 3))
+                        {
+                            HasSolidGround = true;
+                            break;
+                        }
+                    }
+                    if (!HasSolidGround)
+                    {
+                        if (FailedOnce)
+                            return false;
+                        if (VerticalMoveCount >= 3)
+                            return false;
+                        ty++;
+                        VerticalMoveCount++;
+                    }
+                }
+            }
+            Position.X = tx * 16;
+            Position.Y = ty * 16;
+            return true;
         }
 
         public override void FindFrame(int frameHeight)
@@ -613,6 +856,12 @@ namespace giantsummon.Npcs
                             if (CloudForm) BodyAnimationFrame = 19;
                         }
                         break;
+                    case Behaviors.ReachPlayer:
+                        if (ActionTime > 60 && PlayerGot)
+                        {
+                            LeftArmAnimationFrame = RightArmAnimationFrame = 11;
+                        }
+                        break;
                 }
             }
         }
@@ -628,6 +877,24 @@ namespace giantsummon.Npcs
         {
             bool CloudForm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID];
             if (CloudForm) drawColor *= 0.8f;
+            if (!PlayerLost && !Defeated && behavior == Behaviors.ReachPlayer)
+            {
+                float Alpha = 0;
+                if (ActionTime > 60)
+                {
+                    Alpha = (float)(ActionTime - 60) / 60;
+                }
+                else if (ActionTime < 60)
+                {
+                    Alpha = (float)(60 - ActionTime) / 60;
+                }
+                drawColor *= Alpha;
+                if (ActionTime != 60 && ActionTime < 120)
+                {
+                    Gore cloud = Gore.NewGoreDirect(npc.Center, new Vector2(1f - (float)Main.rand.NextDouble() * 2, 1f - (float)Main.rand.NextDouble() * 2), Main.rand.Next(11, 14));
+                    cloud.alpha = 120;
+                }
+            }
             if (!Defeated && npc.velocity.Y == 0 && BodySlamResist == 0 && BodyAnimationFrame != 25 && CloudForm)
                 YOffset = ((float)Math.Sin(Main.GlobalTime * 2)) * 5;
             if (BodySlamResist > 0)
@@ -829,7 +1096,8 @@ namespace giantsummon.Npcs
             BodySlam,
             PosJumpCooldown,
             DestructiveRush,
-            BulletReflectingBelly
+            BulletReflectingBelly,
+            ReachPlayer
         }
     }
 }

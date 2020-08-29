@@ -48,7 +48,9 @@ namespace giantsummon
 
         public static bool PlayerHasRequestRequiringCompanion(Player p, GuardianData d)
         {
-            if (!d.request.IsTalkQuest && d.request.requestState == RequestState.RequestActive)
+            if (d.request.IsTalkQuest)
+                return false;
+            if (d.request.requestState == RequestState.RequestActive)
             {
                 RequestBase rb = d.request.GetRequestBase(d);
                 if (rb.Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester))
@@ -648,7 +650,7 @@ namespace giantsummon
                 Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
                 foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
                 {
-                    if (tg.Active && tg.FriendshipLevel < tg.Base.CallUnlockLevel && !PlayerHasRequestRequiringCompanion(player.player, tg.Data))
+                    if (tg.Active && !tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && !PlayerHasRequestRequiringCompanion(player.player, tg.Data))
                     {
                         Main.NewText(tg.Name + " was dismissed");
                         player.DismissGuardian(tg.AssistSlot);

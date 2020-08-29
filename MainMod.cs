@@ -1895,11 +1895,11 @@ namespace giantsummon
                             {
                                 SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, (d.request.Failed ? Color.Red : Color.White)).Y;
                             }
+                            Vector2 ButtonPosition = SlotStartPosition;
                             if (Guardian.Active && Guardian.ID == d.ID && Guardian.ModID == d.ModID)
                             {
-                                if (d.request.IsTalkQuest && d.request.requestState >= RequestData.RequestState.HasRequestReady)
+                                if (false && d.request.IsTalkQuest && d.request.requestState >= RequestData.RequestState.HasRequestReady)
                                 {
-                                    Vector2 ButtonPosition = SlotStartPosition;
                                     ButtonPosition.X += 48f;
                                     Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, "Talk", ButtonPosition, Color.White, 1f, 0.5f);
                                     if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
@@ -1918,7 +1918,6 @@ namespace giantsummon
                                 {
                                     if (!CheckingQuestBrief)
                                     {
-                                        Vector2 ButtonPosition = SlotStartPosition;
                                         ButtonPosition.X += 48f;
                                         string ButtonText = "Check Request";
                                         Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
@@ -1946,7 +1945,6 @@ namespace giantsummon
                                             }
                                             SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, "Will you do this request?", SlotStartPosition, Color.White).Y;
                                         }
-                                        Vector2 ButtonPosition = SlotStartPosition;
                                         ButtonPosition.X += 48f;
 
                                         ButtonPosition.X -= 5;
@@ -1994,7 +1992,6 @@ namespace giantsummon
                                 {
                                     if (d.request.RequestCompleted || d.request.Failed)
                                     {
-                                        Vector2 ButtonPosition = SlotStartPosition;
                                         ButtonPosition.X += 48f;
                                         string ButtonText = "Report";
                                         Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
@@ -2020,7 +2017,6 @@ namespace giantsummon
                                     }
                                     else
                                     {
-                                        Vector2 ButtonPosition = SlotStartPosition;
                                         ButtonPosition.X += 48f;
                                         string ButtonText = "Ask for Clues";
                                         Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
@@ -2036,33 +2032,33 @@ namespace giantsummon
                                             }
                                         }
                                         ButtonPosition.X -= 48;
-                                        for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
+                                    }
+                                    SlotStartPosition.Y += 28f;
+                                }
+                            }
+                            for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
+                            {
+                                if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
+                                {
+                                    //SlotStartPosition.Y += 26f;
+                                   // ButtonPosition.Y += 26;
+                                    RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
+                                    string ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
+                                    Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f);
+                                    if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
+                                        Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
+                                    {
+                                        player.player.mouseInterface = true;
+                                        Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
+                                        if (Main.mouseLeft && Main.mouseLeftRelease)
                                         {
-                                            if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
+                                            CheckingQuestBrief = false;
+                                            if (!d.request.TrySpawningBoss(player.player.whoAmI, req.BossID, req.DifficultyBonus))
                                             {
-                                                SlotStartPosition.Y += 26f;
-                                                ButtonPosition.Y += 26;
-                                                RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
-                                                ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
-                                                ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f);
-                                                if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
-                                                    Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                                {
-                                                    player.player.mouseInterface = true;
-                                                    Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
-                                                    if (Main.mouseLeft && Main.mouseLeftRelease)
-                                                    {
-                                                        CheckingQuestBrief = false;
-                                                        if (!d.request.TrySpawningBoss(player.player.whoAmI, req.BossID, req.DifficultyBonus))
-                                                        {
-                                                            Main.NewText("Failed. Did you tried calling It when It can appear?");
-                                                        }
-                                                    }
-                                                }
+                                                Main.NewText("Failed. Did you tried calling It when It can appear?");
                                             }
                                         }
                                     }
-                                    SlotStartPosition.Y += 28f;
                                 }
                             }
                             SlotStartPosition.Y += 8f;

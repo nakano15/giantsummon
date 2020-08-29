@@ -18,7 +18,7 @@ namespace giantsummon.Npcs
         public DialogueChain dialogues = new DialogueChain();
 
         public BreeNPC()
-            : base(7, "White Cat Guardian")
+            : base(7, "")
         {
             dialogues.AddDialogue("Hello, have you seen a black cat around?", "Why are you looking for a black cat?", "No, I haven't.", true);
             dialogues.AddDialogue("The black cat is my husband, he's been missing for quite some time.", "I need to find that black cat, I looked everywhere and couldn't find him.", "I can help you find him.", "Have you looked on the other towns?", true);
@@ -36,11 +36,17 @@ namespace giantsummon.Npcs
         {
             base.SetDefaults();
             //npc.townNPC = true;
+            npc.rarity = 1;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
             npc.dontCountMe = true;
             if (npc.GetGlobalNPC<NpcMod>().mobType > MobTypes.Normal)
                 npc.GetGlobalNPC<NpcMod>().mobType = MobTypes.Normal;
             NpcMod.LatestMobType = MobTypes.Normal;
+        }
+
+        public override bool CheckActive()
+        {
+            return false;
         }
 
         public override void FindFrame(int frameHeight)
@@ -75,7 +81,7 @@ namespace giantsummon.Npcs
                 {
                     ChangeScene(SceneIds.BreeSeesFriendlyFace);
                 }
-                else if (PlayerMod.PlayerHasGuardian(player, 2))
+                else if (PlayerMod.PlayerHasGuardianSummoned(player, 2))
                 {
                     ChangeScene(0);
                     SayMessage("Sardine! I finally found you!");

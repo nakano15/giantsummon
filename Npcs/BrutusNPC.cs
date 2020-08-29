@@ -149,8 +149,8 @@ namespace giantsummon.Npcs
             int SpawnPosX = (int)Main.npc[PickedNPC].Center.X,
                 SpawnPosY = (int)(Main.npc[PickedNPC].position.Y + Main.npc[PickedNPC].height);
             int npcPos = NPC.NewNPC(SpawnPosX, SpawnPosY, ModContent.NPCType<BrutusNPC>());
-            if(npcPos < 200 && npcPos > -1)
-                Main.NewText(Main.npc[npcPos].GivenOrTypeName + " has came from the Ether Realm looking for a bodyguard job.");
+            Main.npc[npcPos].ai[2] = 1;
+            Main.NewText(Main.npc[npcPos].GivenOrTypeName + " has came from the Ether Realm looking for someone to hire him as bodyguard.");
         }
 
         public override void AI()
@@ -160,6 +160,11 @@ namespace giantsummon.Npcs
             BodyFrame = -1;
             //AI Work here
             npc.homeTileX = npc.homeTileY = -1;
+            if (npc.ai[2] == 0)
+            {
+                Main.NewText(npc.GivenOrTypeName + " is still visiting your world.");
+                npc.ai[2] = 1;
+            }
             if (SteelTestingTime > 0)
             {
                 bool CaughtADebuff = false;
@@ -410,7 +415,7 @@ namespace giantsummon.Npcs
                 defense = 20;
             if (NPC.downedMoonlord)
                 defense = 30;
-            damage = (int)((damage - defense) * 0.2);
+            damage = (int)((damage - defense) * 0.4);
             crit = false;
             npc.FaceTarget();
             return SteelTestingTime > 0;

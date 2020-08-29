@@ -235,10 +235,10 @@ namespace giantsummon
 
         public static bool IsInChattingRange(TerraGuardian tg)
         {
-            Rectangle rect = new Rectangle((int)(MainPlayer.position.X + MainPlayer.width * 0.5f - Player.tileRangeX * 16),
-                (int)(MainPlayer.position.Y + MainPlayer.height * 0.5f - Player.tileRangeY * 16),
-                Player.tileRangeX * 32,
-                Player.tileRangeY * 32);
+            Rectangle rect = new Rectangle((int)(MainPlayer.position.X + MainPlayer.width * 0.5f - Player.tileRangeX * 16 - tg.Width * 0.5f),
+                (int)(MainPlayer.position.Y + MainPlayer.height * 0.5f - Player.tileRangeY * 16 - tg.Height * 0.5f),
+                Player.tileRangeX * 32 + tg.Width,
+                Player.tileRangeY * 32 + tg.Height);
             return tg.HitBox.Intersects(rect);
         }
 
@@ -424,6 +424,7 @@ namespace giantsummon
                         Options.Clear();
                         AddOption("Accept", AcceptRequestButtonAction);
                         AddOption("Reject", RejectRequestButtonAction);
+                        AddOption("Maybe later", PostponeRequestButtonAction);
                     }
                     break;
                 case RequestData.RequestState.RequestActive:
@@ -545,6 +546,11 @@ namespace giantsummon
                 }
             }
             return GiveGift;
+        }
+
+        public static void PostponeRequestButtonAction(TerraGuardian Guardian)
+        {
+            CloseDialogueButtonAction(Guardian);
         }
 
         public static string MessageParser(string Message, TerraGuardian guardian)

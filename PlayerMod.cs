@@ -1236,6 +1236,7 @@ namespace giantsummon
                     }
                     player.position.X -= player.width * 0.5f;
                     player.position.Y -= player.height * 0.5f * player.gravDir;
+                    player.gfxOffY = 0;
                     player.fallStart = player.fallStart2 = (int)player.position.Y / 16;
                     if (player.mount.Active)
                         player.mount.Dismount(player);
@@ -1255,6 +1256,7 @@ namespace giantsummon
                         player.position = guardian.GetGuardianShoulderPosition;
                         player.position.X -= player.width * 0.5f;
                         player.position.Y -= (player.height * 0.5f) + 8; //Bugs out when gravity is reverse
+                        player.gfxOffY = 0;
                         player.itemLocation += guardian.Velocity;
                         player.fallStart = player.fallStart2 = (int)player.position.Y / 16;
                         if (player.itemAnimation == 0 && player.direction != guardian.Direction)
@@ -1271,6 +1273,7 @@ namespace giantsummon
                         player.gravDir = guardian.GravityDirection;
                         player.position.X = guardian.Position.X - player.width * 0.5f;
                         player.position.Y = guardian.Position.Y - player.height * player.gravDir - Player.defaultGravity;
+                        player.gfxOffY = 0;
                         player.velocity = Microsoft.Xna.Framework.Vector2.Zero;
                         player.direction = guardian.Direction;
                         player.gills = true;

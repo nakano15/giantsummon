@@ -40,8 +40,10 @@ namespace giantsummon
             }
             set
             {
-                if (TargettingPlayer)
+                if (TargettingPlayer){
                     Character.position = value;
+                    Character.gfxOffY = 0;
+                }
                 else
                 {
                     Guardian.Position = value;
@@ -63,6 +65,7 @@ namespace giantsummon
                 if (TargettingPlayer)
                 {
                     Character.Center = value;
+                    Character.gfxOffY = 0;
                 }
                 else
                 {

@@ -223,8 +223,7 @@ namespace giantsummon.Npcs
                     JumpTime = 0;
             }
             MoveLeft = MoveRight = Jump = Action = Dash = Walk = Idle = false;
-            float StepSpeed = 2f, gfxOffY = 0f;
-            Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref StepSpeed, ref gfxOffY);
+            Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref npc.stepSpeed, ref npc.gfxOffY);
             Vector4 SlopedCollision = Collision.SlopeCollision(npc.position, npc.velocity, npc.width, npc.height, 1f, false);
             npc.position = SlopedCollision.XY();
             npc.velocity = SlopedCollision.ZW();
@@ -256,20 +255,20 @@ namespace giantsummon.Npcs
             }
             else if (npc.velocity.X != 0)
             {
-                float MaxTime = Base.MaxWalkSpeedTime;
-                if (Walk)
-                    MaxTime *= 3;
+                float MaxTime = Base.MaxWalkSpeedTime * npc.scale;
                 float AnimationSpeed = Math.Abs(npc.velocity.X);
+                if (Walk)
+                    AnimationSpeed *= 3;
                 if ((npc.velocity.X > 0 && npc.direction < 0) || (npc.velocity.X < 0 && npc.direction > 0))
                 {
                     AnimationSpeed *= -1;
                 }
-                npc.frameCounter += AnimationSpeed / MaxTime;
+                npc.frameCounter += AnimationSpeed / Base.MaxSpeed;
                 if (npc.frameCounter < 0)
-                    npc.frameCounter += Base.WalkingFrames.Length;
-                if (npc.frameCounter >= Base.WalkingFrames.Length)
-                    npc.frameCounter -= Base.WalkingFrames.Length;
-                Frame = Base.WalkingFrames[(int)(npc.frameCounter / Base.WalkAnimationFrameTime)];
+                    npc.frameCounter += MaxTime;
+                if (npc.frameCounter >= MaxTime)
+                    npc.frameCounter -= MaxTime;
+                Frame = Base.WalkingFrames[(int)(npc.frameCounter / (Base.WalkAnimationFrameTime * npc.scale))];
             }
             else
             {
@@ -353,15 +352,15 @@ namespace giantsummon.Npcs
                     rightarmfrontrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight);
                 if (Base.SpecificBodyFrontFramePositions)
                 {
-                    bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X) * Base.SpriteWidth;
+                    bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X);
                 }
                 else
                 {
-
+                    bodyfrontrect.X = -1;
                 }
                 if (Base.RightArmFrontFrameSwap.ContainsKey(RightArmAnimationFrame))
                 {
-                    rightarmfrontrect.X = Base.RightArmFrontFrameSwap[RightArmAnimationFrame] * rightarmfrontrect.Width;
+                    rightarmfrontrect.X = Base.RightArmFrontFrameSwap[RightArmAnimationFrame];
                 }
                 else
                 {
@@ -395,17 +394,14 @@ namespace giantsummon.Npcs
                 bodyrect.X *= bodyrect.Width;
                 bodyrect.Y *= bodyrect.Height;
 
-                if (bodyfrontrect.X > -1)
-                {
-                    bodyfrontrect.X *= bodyfrontrect.Width;
-                    bodyfrontrect.Y *= bodyfrontrect.Height;
-                }
-
                 leftarmrect.X *= leftarmrect.Width;
                 leftarmrect.Y *= leftarmrect.Height;
 
                 rightarmrect.X *= rightarmrect.Width;
                 rightarmrect.Y *= rightarmrect.Height;
+
+                bodyfrontrect.X *= bodyfrontrect.Width;
+                bodyfrontrect.Y *= bodyfrontrect.Height;
 
                 rightarmfrontrect.X *= rightarmfrontrect.Width;
                 rightarmfrontrect.Y *= rightarmfrontrect.Height;

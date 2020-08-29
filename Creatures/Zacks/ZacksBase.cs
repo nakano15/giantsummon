@@ -44,7 +44,7 @@ namespace giantsummon.Creatures
             CanDuck = false;
             ReverseMount = false;
             DrinksBeverage = true;
-            IsNocturnal = true;
+            IsNocturnal = false;
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit1);
             DeadSound = new SoundData(Terraria.ID.SoundID.ZombieMoan);

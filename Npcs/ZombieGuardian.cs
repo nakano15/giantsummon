@@ -1020,13 +1020,16 @@ namespace giantsummon.Npcs
                 npc.life = 1;
                 npc.StrikeNPCNoInteraction(9999, 0f, 0);
             }
-            Main.player[Main.myPlayer].talkNPC = -1;
+            //Main.player[Main.myPlayer].talkNPC = -1;
         }
 
         public override void SetChatButtons(ref string button, ref string button2)
         {
-            button = "Try talking";
-            button2 = "Finish it";
+            if (AiState == 99)
+            {
+                button = "Try talking";
+                button2 = "Finish it";
+            }
         }
 
         public override bool CheckDead()

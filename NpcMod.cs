@@ -593,6 +593,19 @@ namespace giantsummon
             return "";
         }
 
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            if (Npcs.WrathNPC.WrathCanSpawn && !Main.dayTime && !spawnInfo.playerSafe && !spawnInfo.playerInTown && spawnInfo.player.ZoneOverworldHeight && 
+                !NpcMod.HasMetGuardian(GuardianBase.Wrath) && !PlayerMod.PlayerHasGuardian(spawnInfo.player, GuardianBase.Wrath) && !NPC.AnyNPCs(ModContent.NPCType<Npcs.WrathNPC>()) && 
+                !Main.snowMoon && !Main.pumpkinMoon && !Main.bloodMoon)
+            {
+                if (Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY].wall == 0)
+                {
+                    pool.Add(ModContent.NPCType<Npcs.WrathNPC>(), 1f / 64);
+                }
+            }
+        }
+
         public static void MaskGuardianPositionToPlayers(NPC npc)
         {
             for (int p = 0; p < 255; p++)
@@ -1252,12 +1265,22 @@ namespace giantsummon
                         }
                         if (npc.value > 0)
                         {
-                            uint CoinReward = (uint)npc.value / 20;
+                            List<TerraGuardian> tgs = new List<TerraGuardian>();
                             foreach (TerraGuardian tg in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                             {
                                 if (tg.Active && !tg.KnockedOut && !tg.Downed)
                                 {
-                                    tg.Coins += CoinReward;
+                                    tgs.Add(tg);
+                                    //tg.Coins += CoinReward;
+                                }
+                            }
+                            if (tgs.Count > 0)
+                            {
+                                uint CoinReward = (uint)(npc.value * ((float)tgs.Count / 2));
+                                foreach (TerraGuardian tg in tgs)
+                                {
+                                    uint CoinValue = (uint)(CoinReward / tgs.Count);
+                                    tg.Coins += CoinValue;
                                 }
                             }
                         }
