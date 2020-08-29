@@ -166,6 +166,18 @@ namespace giantsummon
             return request.RequestsCompletedIDs.Contains(ID);
         }
 
+        public void SetStarterGuardian()
+        {
+            IsStarter = true;
+            for (int i = 0; i < Inventory.Length; i++)
+            {
+                Inventory[i] = new Item();
+            }
+            Inventory[0].SetDefaults(Terraria.ID.ItemID.WoodenSword);
+            Inventory[1].SetDefaults(Terraria.ID.ItemID.Mushroom);
+            Inventory[1].stack = 5;
+        }
+
         /*public T GetModGuardian<T>(Mod mod) where T : ModGuardianData
         {
             if (ModData.ContainsKey(mod.Name))
@@ -174,7 +186,7 @@ namespace giantsummon
             }
             ModData.Add(mod.Name, T);
         }*/
-        
+
         private Reward[] GetCommonAndBaseRewards(Player player)
         {
             List<Reward> RewardsToGet = new List<Reward>();

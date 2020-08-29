@@ -93,7 +93,7 @@ namespace giantsummon
             {
                 modPlayer.AddNewGuardian(tg.ID, tg.ModID);
                 if (tg.ID == WorldMod.SpawnGuardian.Key && tg.ModID == WorldMod.SpawnGuardian.Value)
-                    modPlayer.GetGuardian(tg.ID, tg.ModID).IsStarter = true;
+                    modPlayer.GetGuardian(tg.ID, tg.ModID).SetStarterGuardian();
                 Message = tg.Base.GreetMessage(MainPlayer, tg);
             }
             else

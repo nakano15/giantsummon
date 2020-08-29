@@ -61,3 +61,7 @@ Made the Brutus damage test easier.
 You can no longer complete the Talk Request on the Guardian Requests tab.
 	You can now speak with your companions, right?
 You can now spawn the boss required for the guardian requests without the need of the companion who gave It summoned.
+Starter Guardians will now only begin with a Wooden Sword and 5 Mushrooms in their inventory.
+	Yep, playing with the rng to try getting Brutus and get his Cobalt weapons will no longer work.
+Greatly nerfed the Eater of Worlds and Brain of Cthulhu extra rewards, for killing their 1 Gem level and above versions.
+	I killed BoC once, got about more than 10 stacks of 99 Tissue Samples, and 3 stacks of 999 Crimtane Ores. What the ...?

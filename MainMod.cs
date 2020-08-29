@@ -2040,7 +2040,7 @@ namespace giantsummon
                             {
                                 if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
                                 {
-                                    //SlotStartPosition.Y += 26f;
+                                    SlotStartPosition.Y += 26f;
                                    // ButtonPosition.Y += 26;
                                     RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
                                     string ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);

@@ -511,8 +511,8 @@ namespace giantsummon.GuardianNPC
             if (!modPlayer.HasGuardian(GuardianID, GuardianModID))
             {
                 modPlayer.AddNewGuardian(GuardianID, GuardianModID);
-                if(npc.type == WorldMod.SpawnGuardian.Key)
-                    modPlayer.GetGuardian(GuardianID, GuardianModID).IsStarter = true;
+                if (npc.type == WorldMod.SpawnGuardian.Key)
+                    modPlayer.GetGuardian(GuardianID, GuardianModID).SetStarterGuardian();
                 Message = Guardian.Base.GreetMessage(player, Guardian);
             }
             else

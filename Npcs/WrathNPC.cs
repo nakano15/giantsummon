@@ -1059,28 +1059,24 @@ namespace giantsummon.Npcs
                 HP = 3000;
                 Damage = 150;
                 Defense = 50;
-                return;
             }
             else if (NPC.downedMechBossAny)
             {
                 HP = 1500;
                 Damage = 90;
                 Defense = 35;
-                return;
             }
             else if (Main.hardMode)
             {
                 HP = 1200;
                 Damage = 60;
                 Defense = 25;
-                return;
             }
             else if (NPC.downedBoss3)
             {
                 HP = 900;
                 Damage = 40;
                 Defense = 20;
-                return;
             }
             else
             {
@@ -1088,6 +1084,7 @@ namespace giantsummon.Npcs
                 Damage = 20;
                 Defense = 10;
             }
+            HP *= 4;
         }
 
         public enum Behaviors : byte

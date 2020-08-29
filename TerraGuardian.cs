@@ -138,7 +138,25 @@ namespace giantsummon
         public float WingFlightTime = 0, WingMaxFlightTime = 0;
         public int RocketTime = 0, RocketMaxTime = 0;
         public float Stealth = 0f;
-        public uint Coins { get { return Data.Coins; } set { Data.Coins = value; } }
+        public uint Coins
+        {
+            get { return Data.Coins; }
+            set
+            {
+                if (value > 0 && unchecked(Data.Coins + value) < 0)
+                {
+                    Data.Coins = uint.MaxValue;
+                }
+                else if (value < 0 && unchecked(Data.Coins + value) > 0)
+                {
+                    Data.Coins = 0;
+                }
+                else
+                {
+                    Data.Coins = value;
+                }
+            }
+        }
         public List<BuffData> Buffs { get { return Data.Buffs; } set { Data.Buffs = value; } }
         public List<int> BuffImmunity = new List<int>();
         private bool FreezeItemUseAnimation = false;
@@ -4672,8 +4690,7 @@ namespace giantsummon
                     }
                     float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + TargetWidth * 0.5f,
                         DistanceAbs = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f);
-                    //Main.NewText("Range X: " + AttackRange + "  Distance ABS: " + DistanceAbs + "  Target Width: " + TargetWidth + "  Target Height: " + TargetHeight);
-                    if (DistanceAbs < Width * 0.5f + 8 || NearDeath)
+                    if (DistanceAbs < AttackRange + 8 || NearDeath)
                         Retreat = true;
                     else if (DistanceAbs >= AttackRange)
                         Approach = true;
