@@ -6005,7 +6005,7 @@ namespace giantsummon
                         }
                         else //Has House
                         {
-                            float XDif = Position.X - HouseX, YDif = Position.Y - HouseY;
+                            float XDif = Position.X - HouseX + 8, YDif = Position.Y - HouseY;
                             if (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome && (Math.Abs(XDif) > 8 || Math.Abs(YDif) > 48))
                             {
                                 if (CurrentIdleAction != IdleActions.Wander || IdleActionTime <= 0)
@@ -6402,7 +6402,12 @@ namespace giantsummon
                     return;
                 }
                 float DistanceFromDoor = Math.Abs(Position.X / 16 - doorx);
-                if (DistanceFromDoor > Width / 16 + 2)
+                bool ForceCloseDoor = false;
+                if (Velocity.X == 0 && Velocity.Y == 0 && (Position.X - CollisionWidth * 0.5f < doorx * 16 || Position.X + CollisionWidth * 0.5f > (doorx + 1) * 16))
+                {
+                    ForceCloseDoor = true;
+                }
+                if (ForceCloseDoor || DistanceFromDoor > Width / 16 + 2)
                 {
                     Tile doorTile = Framing.GetTileSafely(doorx, doory);
                     if (doorTile != null)

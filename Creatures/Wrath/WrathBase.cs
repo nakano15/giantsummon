@@ -12,6 +12,7 @@ namespace giantsummon.Creatures
             : base(AngerPigGuardianID)
         {
             Name = "Wrath";
+            PossibleNames = new string[] { "Wrath", "Rage", "Fury", "Irk" };
             Description = "One of the emotion pieces fragments\nof a TerraGuardian. Very volatile.";
             Size = GuardianSize.Medium;
             Width = 10 * 2;
@@ -98,12 +99,16 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(22, 16, 9);
             HeadVanityPosition.AddFramePoint2x(25, 23, 18);
 
+            HeadVanityPosition.AddFramePoint2x(23, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(24, -1000, -1000);
+            HeadVanityPosition.AddFramePoint2x(26, -1000, -1000);
+
             GetRequests();
         }
 
         public void GetRequests()
         {
-            AddNewRequest("Solidification", 350, 
+            AddNewRequest("Sublimation", 350, 
                 "*This form is revolting, I'm boiling out of rage due to this. There must be a way of making me solid again, maybe that nerdy guy can help me in this, let's talk to him.*",
                 "*Great, or else I would give you a beating.*",
                 "*Oh you...! (Insert several different insults here)*",

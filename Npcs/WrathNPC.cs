@@ -417,7 +417,7 @@ namespace giantsummon.Npcs
                                 }
                             }
                             break;
-                        case Behaviors.DestructiveRush: //Sometimes ends up going under the ground.
+                        case Behaviors.DestructiveRush:
                             {
                                 npc.knockBackResist = 0;
                                 if (ActionTime == 10)
@@ -860,6 +860,7 @@ namespace giantsummon.Npcs
                         if (ActionTime > 60 && PlayerGot)
                         {
                             LeftArmAnimationFrame = RightArmAnimationFrame = 11;
+                            if (CloudForm) BodyAnimationFrame = 19;
                         }
                         break;
                 }
@@ -967,6 +968,7 @@ namespace giantsummon.Npcs
             PlayerMod.AddPlayerGuardian(Target.Character, GuardianID, GuardianModID);
             NpcMod.AddGuardianMet(GuardianID, GuardianModID);
             WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+            GuardianMouseOverAndDialogueInterface.SetDialogue("*You can call me "+PlayerMod.GetPlayerGuardian(Target.Character, GuardianID, GuardianModID).Name+", you can call me to unleash my rage at anything that threatens you.*");
         }
 
         public string GetDialogueMessages(byte DialogueStep)
@@ -1052,6 +1054,18 @@ namespace giantsummon.Npcs
             return "";
         }
 
+        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        {
+            if (damage > 1)
+                damage = (int)(damage * 0.5f);
+        }
+
+        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (damage > 1)
+                damage = (int)(damage * 0.5f);
+        }
+
         public void PigStatus(out int HP, out int Damage, out int Defense)
         {
             if (NPC.downedGolemBoss)
@@ -1084,7 +1098,6 @@ namespace giantsummon.Npcs
                 Damage = 20;
                 Defense = 10;
             }
-            HP *= 4;
         }
 
         public enum Behaviors : byte

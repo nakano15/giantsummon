@@ -21,6 +21,7 @@ namespace giantsummon
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
         public string Name = "", Description = "";
+        public string[] PossibleNames = new string[0];
         public string GroupID = TerraGuardianGroupID;
         public int Width = 32, Height = 82, DuckingHeight = 52;
         public int SpriteWidth = 96, SpriteHeight = 96, FramesInRows = 20;

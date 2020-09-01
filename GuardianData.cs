@@ -17,10 +17,16 @@ namespace giantsummon
         {
             get
             {
-                if (_Name != null) 
+                if (_Name != null)
                     return _Name;
-                else 
+                else
+                {
+                    if (Base.PossibleNames.Length > 0 && PickedName < Base.PossibleNames.Length)
+                    {
+                        return Base.PossibleNames[PickedName];
+                    }
                     return Base.Name;
+                }
             }
             set
             {
@@ -31,6 +37,7 @@ namespace giantsummon
         public bool Male = true;
         public int ID { get { return MyID.ID; } set { MyID.ID = value; } }
         public string ModID { get { return MyID.ModID; } set { MyID.ModID = value; } } //To distinguish mod companions
+        public byte PickedName = 0;
         public GuardianID MyID = new GuardianID(0);
         public bool IsStarter = false;
         public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;
@@ -597,6 +604,7 @@ namespace giantsummon
                     ModID = MainMod.mod.Name;
                 }
                 this.ModID = ModID;
+                PickedName = (byte)Main.rand.Next(Base.PossibleNames.Length);
             }
             for (int e = 0; e < Equipments.Length; e++)
                 Equipments[e] = new Item();
@@ -885,6 +893,7 @@ namespace giantsummon
             tag.Add("GuardianID_"+UniqueID, ID);
             tag.Add("GuardianModID_" + UniqueID, ModID);
             if (_Name != null) tag.Add("Name_" + UniqueID, _Name);
+            tag.Add("NameID_" + UniqueID, PickedName);
             tag.Add("StarterFlag_" + UniqueID, IsStarter);
             tag.Add("FriendshipLevel_" + UniqueID, FriendshipLevel);
             tag.Add("FriendshipProgress_" + UniqueID, FriendshipProgression);
@@ -985,6 +994,10 @@ namespace giantsummon
                 _Name = tag.GetString("Name_" + UniqueID);
                 if (_Name == "")
                     _Name = null;
+            }
+            if (ModVersion >= 72)
+            {
+                PickedName = tag.GetByte("NameID_" + UniqueID);
             }
             if (ModVersion >= 52)
             {

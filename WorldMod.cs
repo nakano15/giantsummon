@@ -866,7 +866,6 @@ namespace giantsummon
 
         public static void Housing_TryGettingPlaceForCompanionToStay(ref int SpawnX, ref int SpawnY)
         {
-            return;
             List<Point> ImpossiblePoints = new List<Point>();
             for (int n = 0; n < 200; n++)
             {
@@ -886,14 +885,18 @@ namespace giantsummon
             for (int i = 0; i < WorldGen.numRoomTiles; i++)
             {
                 int x = WorldGen.roomX[i], y = WorldGen.roomY[i];
-                if (!ImpossiblePoints.Any(z => z.X == x && z.Y == y) && Housing_IsInRoom(x, y) && !Housing_CheckIfIsCeiling(x, y) && TileID.Sets.RoomNeeds.CountsAsChair.Any(t => t == Main.tile[x, y].type) && TileID.Sets.RoomNeeds.CountsAsChair.Any(t => t == Main.tile[x, y - 1].type))
+                //while (!Main.tile[x, y].active() && !Main.tileSolid[Main.tile[x, y].type] && y < Main.maxTilesY - 20)
+                //    y++;
+                if (y == Main.maxTilesY - 20)
+                    continue;
+                if (!ImpossiblePoints.Any(z => z.X == x && z.Y == y) && Housing_IsInRoom(x, y) && !Housing_CheckIfIsCeiling(x, y) && Main.tile[x, y].type == Terraria.ID.TileID.Chairs && Main.tile[x, y - 1].type == Terraria.ID.TileID.Chairs)//TileID.Sets.RoomNeeds.CountsAsChair.Any(t => t == Main.tile[x, y].type) && TileID.Sets.RoomNeeds.CountsAsChair.Any(t => t == Main.tile[x, y - 1].type))
                 {
                     SpawnX = x;
                     SpawnY = y;
-                    if (SpawnX < WorldGen.roomX1 + 3)
+                    /*if (SpawnX < WorldGen.roomX1 + 3)
                         SpawnX = WorldGen.roomX1 + 3;
                     if (SpawnX > WorldGen.roomX2 - 3)
-                        SpawnX = WorldGen.roomX2 - 3;
+                        SpawnX = WorldGen.roomX2 - 3;*/
                     break;
                 }
             }

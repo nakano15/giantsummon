@@ -69,3 +69,11 @@ Reviewed the text of a number of companions recruitment tip messages from the Dr
 Added Malisha's recruitmemt tip to the Dryad.
 Companions will now turn in the direction they will attack to when using melee weapons.
 	That wont happen if you're controlling the guardian (not counting mounts).
+Wrath arrives.
+	He actually have 4 different names, but once you recruit him, he'll pick one of them by default.
+Multiple companions can be assigned to the same house, and their banner will stay in the position of a chair.
+	The number of companions living in a house is defined by the number of chairs. Try not to make something ugly with this.
+	Their banner may end up way too near a door, so when they move to their house, they may end up leaving the door opened.
+	To try fixing the issue above, I made so when they are stopped, they check if they aren't in the area of a opened door, and then try to close It.
+Somehow, companions are able to recognize when you're their room mate again.
+

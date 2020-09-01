@@ -17,7 +17,7 @@ namespace giantsummon.Creatures
         /// -Female Terrarians keep touching his tail.
         /// -Spends most of his day reading books.
         /// -Rarelly leaves house, unless for a research.
-        /// -Fears Malisha killing him.
+        /// -Fears Malisha.
         /// </summary>
         public LeopoldBase()
         {
@@ -31,7 +31,7 @@ namespace giantsummon.Creatures
             SpriteHeight = 64;
             Age = 23;
             Male = true;
-            InitialMHP = 160; //1000
+            InitialMHP = 160; //640
             LifeCrystalHPBonus = 12;
             LifeFruitHPBonus = 15;
             InitialMP = 40;
