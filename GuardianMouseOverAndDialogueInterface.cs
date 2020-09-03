@@ -71,6 +71,7 @@ namespace giantsummon
 
         public static void StartDialogue(TerraGuardian tg)
         {
+            GuardianShopInterface.ShopOpen = false;
             Main.CancelHairWindow();
             Main.npcShop = 0;
             Main.InGuideCraftMenu = false;
@@ -205,7 +206,7 @@ namespace giantsummon
                     return;
                 }
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || Main.playerInventory || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
+                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
                 {
                     player.IsTalkingToAGuardian = false;
                     if (Main.playerInventory)
@@ -213,6 +214,11 @@ namespace giantsummon
                 }
                 else
                 {
+                    if (GuardianShopInterface.ShopOpen)
+                    {
+                        GuardianShopInterface.UpdateShop();
+                        return;
+                    }
                     MouseOverOptionNumber = -1;
                     bool DoAction = false;
                     for (int o = 0; o < Options.Count; o++)
@@ -311,6 +317,11 @@ namespace giantsummon
         {
             if (!MainPlayer.GetModPlayer<PlayerMod>().IsTalkingToAGuardian)
                 return;
+            if (GuardianShopInterface.ShopOpen)
+            {
+                GuardianShopInterface.DrawShop();
+                return;
+            }
             int WindowSizeX = DialogueWidth, WindowSizeY = DialogueHeight;
             Vector2 WindowStartPosition = new Vector2(DialogueStartX, DialogueStartY);
             if (Main.mouseX >= WindowStartPosition.X && Main.mouseX < WindowStartPosition.X + WindowSizeX &&
@@ -384,6 +395,36 @@ namespace giantsummon
             }
             Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             AddOption("Goodbye", CloseDialogueButtonAction);
+            //
+            /*AddOption("TestShopInterface", new Action<TerraGuardian>(delegate(TerraGuardian g)
+            {
+                if (!GuardianShopHandler.HasShop(g.MyID))
+                {
+                    GuardianShopHandler.GuardianShop shop = GuardianShopHandler.CreateShop(g.ID, g.ModID);
+                    for (int i = 0; i < 30; i++)
+                    {
+                        GuardianShopHandler.GuardianShopItem item = shop.AddNewItem(Main.rand.Next(1, 257));
+                        if (Main.rand.NextDouble() < 0.66)
+                        {
+                            item.SetLimitedDisponibility((GuardianShopHandler.GuardianShopItem.DisponibilityTime)Main.rand.Next((int)GuardianShopHandler.GuardianShopItem.DisponibilityTime.Count));
+                            if (item.disponibility == GuardianShopHandler.GuardianShopItem.DisponibilityTime.Timed)
+                            {
+                                item.SetToBeRandomlySold(0.15f);
+                                if (Main.rand.NextDouble() < 0.4)
+                                {
+                                    item.TimedSaleTime = Main.rand.Next(1, 999999);
+                                }
+                            }
+                        }
+                        if (Main.rand.NextDouble() > 0.4)
+                        {
+                            item.SaleTime = Main.rand.Next(1, 999999);
+                            item.SaleFactor = Main.rand.Next(1, 5) * 5 * 0.01f;
+                        }
+                    }
+                }
+                GuardianShopInterface.OpenShop();
+            }));*/
         }
 
         public static void AddOption(string Mes, Action<TerraGuardian> Action)

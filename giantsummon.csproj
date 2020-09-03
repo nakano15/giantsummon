@@ -118,6 +118,8 @@
     <Compile Include="GuardianOrderHudNew.cs" />
     <Compile Include="GuardianProjAI.cs" />
     <Compile Include="GuardianSchedule.cs" />
+    <Compile Include="GuardianShopHandler.cs" />
+    <Compile Include="GuardianShopInterface.cs" />
     <Compile Include="GuardianSkills.cs" />
     <Compile Include="GuardianSpawningScripts.cs" />
     <Compile Include="Items\Accessories\FirstSymbol.cs" />
@@ -259,6 +261,9 @@
     <Content Include="Creatures\Malisha\left_arm.png" />
     <Content Include="Creatures\Malisha\right_arm.png" />
     <Content Include="Creatures\Malisha\tails.png" />
+    <Content Include="Creatures\Rococo\shadedbody.png" />
+    <Content Include="Creatures\Rococo\shadedbodyfront.png" />
+    <Content Include="Creatures\Rococo\shadedhead.png" />
     <Content Include="Creatures\Sardine\caitsith_outfit.png" />
     <Content Include="Creatures\Vladimir\body.png" />
     <Content Include="Creatures\Vladimir\body_front.png" />

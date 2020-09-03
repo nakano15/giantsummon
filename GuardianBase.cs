@@ -17,7 +17,7 @@ namespace giantsummon
         public delegate void GuardianModDel(TerraGuardian guardian);
         public delegate void GuardianBehaviorModDel(TerraGuardian guardian, ref bool AllowAIMovement);
         public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian";
-        
+
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
         public string Name = "", Description = "";
@@ -378,7 +378,7 @@ namespace giantsummon
             rwd.MaxExtraStack = MaxExtraStack;
             RewardsList.Add(rwd);
         }
-
+        
         public int GetBodyFrontSprite(int Default)
         {
             if (BodyFrontFrameSwap.ContainsKey(Default))
@@ -427,6 +427,11 @@ namespace giantsummon
         }
 
         public virtual void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
+        {
+
+        }
+
+        public virtual void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdd)
         {
 
         }

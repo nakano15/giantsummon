@@ -604,6 +604,7 @@ namespace giantsummon
                     ModID = MainMod.mod.Name;
                 }
                 this.ModID = ModID;
+                MyID = new GuardianID(ID, ModID);
                 PickedName = (byte)Main.rand.Next(Base.PossibleNames.Length);
             }
             for (int e = 0; e < Equipments.Length; e++)

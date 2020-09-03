@@ -14666,8 +14666,13 @@ namespace giantsummon
                 DrawTerrarianHeadData(CenterPosition, Scale);
                 return;
             }
-            Main.spriteBatch.Draw(Base.sprites.HeadSprite, CenterPosition + new Vector2(-Base.sprites.HeadSprite.Width * 0.5f, -Base.sprites.HeadSprite.Height * 0.5f),
-                null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+            List<GuardianDrawData> gddlist = new List<GuardianDrawData>();
+            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, Base.sprites.HeadSprite, CenterPosition + new Vector2(-Base.sprites.HeadSprite.Width * 0.5f, -Base.sprites.HeadSprite.Height * 0.5f),
+                null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None);
+            gddlist.Add(gdd);
+            Base.GuardianModifyDrawHeadScript(this, CenterPosition, Color.White, Scale, SpriteEffects.None, ref gddlist);
+            foreach (GuardianDrawData d in gddlist)
+                d.Draw(Main.spriteBatch);
         }
 
         public void DrawTerrarianHeadData(Vector2 Position, float Scale = 1f)

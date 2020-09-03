@@ -486,6 +486,8 @@ namespace giantsummon
                     MainMod.DrawMoment.RemoveAt(dm);
                 }
             }
+            if (!Main.gameMenu && !Main.gamePaused)
+                GuardianShopHandler.UpdateShops();
         }
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
@@ -1112,7 +1114,7 @@ namespace giantsummon
 
         public bool DrawGuardianInventoryInterface()
         {
-            if (GuardianManagement.Active)
+            if (GuardianManagement.Active || GuardianShopInterface.ShopOpen)
                 return true;
             string MouseOverText = "";
             if (ToReviveID > -1)

@@ -17,6 +17,8 @@ namespace giantsummon.Creatures
         /// -Want to be Blue's friend.
         /// -Good friend of Sardine and Alex.
         /// </summary>
+        public const string ShadedBodyID = "alphapigshadedbody", ShadedHeadID = "alphapigshadedhead", ShadedBodyFrontID = "alphapigshadedbodyfront";
+        public const int AlphapigShadedBodySkinID = 1;
 
         public RococoBase()
         {
@@ -236,7 +238,7 @@ namespace giantsummon.Creatures
                 "*[name] is asking when you'll take him on your adventures.*");
             AddExploreObjective();
             //
-
+            AddSkin(AlphapigShadedBodySkinID, "AlphaPigDelta Shaded Skin", delegate(GuardianData gd, Player player) { return true; });
         }
 
         public void RewardList()
@@ -244,6 +246,55 @@ namespace giantsummon.Creatures
             AddReward(Terraria.ID.ItemID.SlimeStaff, 1, 1000, 0.001f);
             AddReward(Terraria.ID.ItemID.Daybloom, 2, 35, 0.6f, 3);
             AddReward(Terraria.ID.ItemID.BowlofSoup, 3, 40, 0.55f, 2);
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(ShadedBodyID, "shadedbody");
+            sprites.AddExtraTexture(ShadedHeadID, "shadedhead");
+            sprites.AddExtraTexture(ShadedBodyFrontID, "shadedbodyfront");
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
+        {
+            switch (guardian.SkinID)
+            {
+                case AlphapigShadedBodySkinID:
+                    foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
+                    {
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
+                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyID);
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGBodyFront)
+                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyFrontID);
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGHead)
+                            gdd.Texture = sprites.GetExtraTexture(ShadedHeadID);
+                    }
+                    foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
+                    {
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
+                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyID);
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGBodyFront)
+                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyFrontID);
+                        if (gdd.textureType == GuardianDrawData.TextureType.TGHead)
+                            gdd.Texture = sprites.GetExtraTexture(ShadedHeadID);
+                    }
+                    break;
+            }
+        }
+
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdd)
+        {
+            if (guardian.SkinID == 1)
+            {
+                foreach (GuardianDrawData data in gdd)
+                {
+                    if (data.textureType == GuardianDrawData.TextureType.TGHead)
+                    {
+                        data.Texture = sprites.GetExtraTexture(ShadedHeadID);
+                        break;
+                    }
+                }
+            }
         }
 
         public override string MountUnlockMessage
