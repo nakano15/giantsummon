@@ -50,6 +50,7 @@ namespace giantsummon
             Mod mod = ModLoader.GetMod(modid);
             GuardianBase gd = GuardianBase.GuardianDB(ID, mod);
             GuardianList.Add(ID, gd);
+            gd.SetupShop(ID, modid);
         }
 
         public void UpdateContainers()

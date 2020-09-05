@@ -84,11 +84,33 @@ namespace giantsummon
         [Label("Guardians Health and Mana status like the player.")]
         [Tooltip("All companions will have their health and mana values base and incresed values like the player, regardless of size or anything else.")]
         public bool HealthAndManaPlayerStandards { get { return MainMod.SetGuardiansHealthAndManaToPlayerStandards; } set { MainMod.SetGuardiansHealthAndManaToPlayerStandards = value; } }
-        
+
+        [Label("Dualwield able weapons.")]
+        [Tooltip("Here contains the list of items your companion will be able to dual wield, If It is possible for them to.")]
+
+        public List<ItemDefinition> DualwieldableItems { get { return MainMod.DualwieldWhitelist; } set { MainMod.DualwieldWhitelist = value; } }
+
         //[Label("Tile Collision is the same as Hit Collision")]
         //[Tooltip("When turned on, the game will no longer try using a player like collision detection on your companions. Will instead use their internal hitbox collision dimension.")]
         //[DefaultValue(false)]
         //public bool UseHitCollisionAsTileCollision { get { return MainMod.TileCollisionIsSameAsHitCollision; } set { MainMod.TileCollisionIsSameAsHitCollision = value; } }
+
+        private void SetDefaultDualwieldableItems()
+        {
+            DualwieldableItems = MainMod.GetDefaultDualwieldableItems();
+        }
+
+        public override void OnLoaded()
+        {
+            SetDefaultDualwieldableItems();
+        }
+
+        public override bool Autoload(ref string name)
+        {
+            if (DualwieldableItems.Count == 0)
+                SetDefaultDualwieldableItems();
+            return base.Autoload(ref name);
+        }
 
         public override void OnChanged()
         {

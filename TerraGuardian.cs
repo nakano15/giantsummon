@@ -592,7 +592,7 @@ namespace giantsummon
         public Item[] Equipments { get { return Data.Equipments; } set { Data.Equipments = value; } }
         public Item[] Inventory { get { return Data.Inventory; } set { Data.Inventory = value; } }
         public Item BodyDye { get { return Data.BodyDye; } set { Data.BodyDye = value; } }
-        public int SelectedItem = 0, SelectedOffhand = -1, LastSelectedItem = 0, LastSelectedOffhand = -1;
+        public int SelectedItem = 0, SelectedOffhand = -1, LastSelectedItem = -2, LastSelectedOffhand = -2;
         public float OffhandRotation = 0f;
         public ItemUseTypes ItemUseType = ItemUseTypes.HeavyVerticalSwing;
         public float MeleeDamageMultiplier = 1, RangedDamageMultiplier = 1, MagicDamageMultiplier = 1, SummonDamageMultiplier = 1;
@@ -9891,6 +9891,7 @@ namespace giantsummon
                 if (AllowItemUsage)
                 {
                     ItemScale = Scale;
+                    if(SelectedItem != LastSelectedItem) IsDualWielding = false;
                     if (HasFlag(GuardianFlags.Cursed))
                     {
                         ItemUseType = ItemUseTypes.CursedAttackAttempt;
@@ -9911,6 +9912,8 @@ namespace giantsummon
                             ItemUseType = ItemUseTypes.HeavyVerticalSwing;
                         CriticalRate = 5;
                         Knockback *= MeleeKnockback;
+                        LastSelectedItem = SelectedItem;
+                        LastSelectedOffhand = SelectedOffhand;
                     }
                     else
                     {
@@ -9965,8 +9968,14 @@ namespace giantsummon
                         }
                         if (CanDualWield && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.LightVerticalSwing))
                         {
-                            IsDualWielding = true;
-                            Damage = (int)(Damage * 0.8f);
+                            if (LastSelectedItem != SelectedItem)
+                            {
+                                if(MainMod.DualwieldWhitelist.Count == 0)
+                                    MainMod.GetDefaultDualwieldableItems();
+                                IsDualWielding = MainMod.DualwieldWhitelist.Any(x => x.Type == Inventory[SelectedItem].type);
+                                Damage = (int)(Damage * 0.8f);
+                            }
+                            //IsDualWielding = true;
                         }
                         Knockback = Inventory[SelectedItem].knockBack;
                         Main.PlaySound(Inventory[SelectedItem].UseSound, CenterPosition);
@@ -9976,6 +9985,8 @@ namespace giantsummon
                             Knockback *= MeleeKnockback;
                         if (Inventory[SelectedItem].ranged)
                             Knockback *= RangedKnockback;
+                        LastSelectedItem = SelectedItem;
+                        LastSelectedOffhand = SelectedOffhand;
                     }
                     if (ItemUseType == ItemUseTypes.HeavyVerticalSwing && MountedOnPlayer)
                         ItemUseType = ItemUseTypes.LightVerticalSwing;
@@ -9990,8 +10001,6 @@ namespace giantsummon
                         NetMod.SendGuardianItemUse(Main.player[OwnerPos], -1, OwnerPos);
                     }
                 }
-                LastSelectedItem = SelectedItem;
-                LastSelectedOffhand = SelectedOffhand;
             }
             if (FreezeItemUseAnimation)
             {

@@ -238,7 +238,7 @@ namespace giantsummon.Creatures
                 "*[name] is asking when you'll take him on your adventures.*");
             AddExploreObjective();
             //
-            AddSkin(AlphapigShadedBodySkinID, "AlphaPigDelta Shaded Skin", delegate(GuardianData gd, Player player) { return true; });
+            AddSkin(AlphapigShadedBodySkinID, "Pigman Delta Shaded Skin", delegate(GuardianData gd, Player player) { return true; });
         }
 
         public void RewardList()

@@ -34,15 +34,16 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 72, LastModVersion = 71;
+        public const int ModVersion = 73, LastModVersion = 71;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
             SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false;
+        public static List<Terraria.ModLoader.Config.ItemDefinition> DualwieldWhitelist = new List<Terraria.ModLoader.Config.ItemDefinition>();
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
         public const bool IndividualSkillLeveling = false;
@@ -213,6 +214,178 @@ namespace giantsummon
                     catch { }
                 }
             }
+        }
+
+        public static List<Terraria.ModLoader.Config.ItemDefinition> GetDefaultDualwieldableItems()
+        {
+            List<Terraria.ModLoader.Config.ItemDefinition> items = new List<Terraria.ModLoader.Config.ItemDefinition>();
+            //PHM melee weapons
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.WoodenSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BorealWoodSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.CopperBroadsword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PalmWoodSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.RichMahoganySword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.CactusSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.EbonwoodSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.IronBroadsword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ShadewoodSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.LeadBroadsword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BladedGlove));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TungstenBroadsword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ZombieArm));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.GoldBroadsword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.AntlionClaw)); //This is actually the Mandible Blade
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.StylistKilLaKillScissorsIWish));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PlatinumBroadsword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BoneSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Katana));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.IceBlade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Muramasa));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Arkhalis));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.DyeTradersScimitar));
+            //Phaseblades and Phasesabers
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BluePhaseblade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BluePhasesaber));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.GreenPhaseblade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.GreenPhasesaber));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PurplePhaseblade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PurplePhasesaber));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.RedPhaseblade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.RedPhasesaber));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.WhitePhaseblade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.WhitePhasesaber));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.YellowPhaseblade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.YellowPhasesaber));
+            //PHM melee weapons continue
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BloodButcherer));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Starfury));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.EnchantedSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BeeKeeper));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.FalconBlade));
+            //HM melee weapons
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PearlwoodSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TaxCollectorsStickOfDoom));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.SlapHand));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.CobaltSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PalladiumSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(3823)); //Brand of Inferno
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.MythrilSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.OrichalcumSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Cutlass));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Frostbrand));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.AdamantiteSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BeamSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TitaniumSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.FetidBaghnakhs));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Bladetongue));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Excalibur));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ChlorophyteSaber));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PsychoKnife));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Keybrand));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TheHorsemansBlade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ChristmasTreeSword));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Seedler));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TerraBlade));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.InfluxWaver));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.StarWrath));
+
+            //HM Repeaters
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.CobaltRepeater));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PalladiumRepeater));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.MythrilRepeater));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.OrichalcumRepeater));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.AdamantiteRepeater));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TitaniumRepeater));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.HallowedRepeater));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ChlorophyteShotbow));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.StakeLauncher));
+
+            //PHM guns
+            //items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.RedRyder));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.FlintlockPistol));
+            //items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Musket));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TheUndertaker));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Revolver));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Handgun));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PhoenixBlaster));
+
+            //HM guns
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Uzi));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.VenusMagnum));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.CandyCornRifle));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BorealWood));
+
+            //Other guns
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.SnowballCannon));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PainterPaintballGun));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.StarCannon));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Toxikarp));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.DartPistol));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Flamethrower));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.EldMelter));
+
+            //PHM magic weapons
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.AmethystStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.TopazStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.SapphireStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.EmeraldStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.RubyStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.DiamondStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.AmberStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Vilethorn));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.MagicMissile));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.AquaScepter));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Flamelash));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.FlowerofFire));
+
+            //HM magic weapons
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.FlowerofFrost));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.SkyFracture));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.CrystalSerpent));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.CrystalVileShard));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.MeteorStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.UnholyTrident));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PoisonStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.FrostStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.RainbowRod));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.VenomStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.NettleBurst));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ShadowbeamStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.InfernoFork));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.SpectreStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.StaffofEarth));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BatScepter));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Razorpine));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BlizzardStaff));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(3870)); //Betsy's Wrath
+
+            //PHM Magic guns
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.SpaceGun));
+            //HM Magic guns
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.LaserRifle));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.LeafBlower));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.HeatRay));
+
+            //HM other magic weapons
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.MagicDagger));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ToxicFlask));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.NebulaBlaze));
+
+            //PHM thrown weapons
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Shuriken));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.ThrowingKnife));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.PoisonedKnife));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Snowball));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.AleThrowingGlove));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Bone));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BoneGlove));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.RottenEgg));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.StarAnise));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.FrostDaggerfish));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Javelin));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BoneJavelin));
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BoneDagger));
+            return items;
         }
 
         /*public static double TimeToTerrariaTime(int Hours, int Minutes, out bool Daytime)
@@ -727,8 +900,8 @@ namespace giantsummon
                     /*New.Add(g.Name + " actions: " + g.LastLoggedPlayerState.Count);
                     if(g.LastLoggedPlayerState.Count > 0)
                         New.Add("Action Type: " + g.LastLoggedPlayerState[0].Key.ToString() + " Pos: " + g.LastLoggedPlayerState[0].Value);*/
-                    New.Add("Main Hand Item Position: " + g.ItemPositionX + "~" + g.ItemPositionY);
-                    New.Add("Off Hand Item Position: " + g.OffHandPositionX + "~" + g.OffHandPositionY);
+                    //New.Add("Main Hand Item Position: " + g.ItemPositionX + "~" + g.ItemPositionY);
+                    //New.Add("Off Hand Item Position: " + g.OffHandPositionX + "~" + g.OffHandPositionY);
                 }
                 TextsToDraw = New.ToArray();
             }

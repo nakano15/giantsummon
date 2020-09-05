@@ -31,6 +31,7 @@ namespace giantsummon
         }
         private static int Scroll = 0;
         private static int SelectedItem = -1;
+        private static string LastStoreMessage = "";
 
         public static void OpenShop()
         {
@@ -41,19 +42,28 @@ namespace giantsummon
                 Shop = GuardianShopHandler.GetShop(tg.MyID);
                 if (Shop != null)
                 {
-                    byte Count = 0;
+                    bool HasSale = false;
                     for (int i = 0; i < Shop.Items.Count; i++)
                     {
                         Shop.Items[i].ItemOnDisplay = false;
-                        if (Shop.Items[i].IsItemDisponible)
+                        Shop.Items[i].CheckForInvalidItemValues();
+                        if (Shop.Items[i].ItemID != 0 && Shop.Items[i].CanItemBeVisibleAtTheStore(MainPlayer))
                         {
                             Shop.Items[i].ItemOnDisplay = true;
+                            if (Shop.Items[i].SaleTime > 0)
+                                HasSale = true;
                         }
                     }
                     ShopOpen = true;
                     ShopStartPosition.X = 0;
                     ShopStartPosition.Y = 258;
                     Main.playerInventory = true;
+                    if (HasSale)
+                        LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreSaleHappeningMessage);
+                    if(LastStoreMessage == "")
+                        LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreOpenMessage);
+                    if (LastStoreMessage == "")
+                        LastStoreMessage = "*That is what I have for sale.*";
                 }
             }
             else
@@ -99,7 +109,7 @@ namespace giantsummon
             DrawPosition.Y += 16;
             tg.DrawHead(DrawPosition);
             DrawPosition.X += 16;
-            Utils.DrawBorderString(Main.spriteBatch, tg.Name + ": *That is what I have for sale.*", DrawPosition, Color.White * Main.cursorAlpha, 1f, 0, 0.5f);
+            Utils.DrawBorderString(Main.spriteBatch, LastStoreMessage, DrawPosition, Color.White * Main.cursorAlpha, 1f, 0, 0.5f);
             DrawPosition.Y += 16;
             DrawPosition.X -= 32;
             GuardianMouseOverAndDialogueInterface.DrawBackgroundPanel(DrawPosition, 464, 60 * 6, color);
@@ -133,11 +143,13 @@ namespace giantsummon
                         ItemPosition.Y += 28;
                         Main.spriteBatch.Draw(ItemTexture, ItemPosition, null, Color.White, 0f, new Vector2(ItemTexture.Width, ItemTexture.Height) * 0.5f, ItemScale, SpriteEffects.None, 0f);
                         SlotPosition.X += 56;
-                        bool CanBuy = Item.IsItemDisponible && Item.Stack != 0;
+                        bool CanBuy = Item.IsItemDisponible() && Item.Stack != 0;
                         Color itemcolor = CanBuy ? Color.White : Color.Red;
                         string ItemName = Item.ItemName;
+                        if (Item.SellStack > 1)
+                            ItemName += "x"+ Item.SellStack;
                         if (Item.Stack > -1)
-                            ItemName += " " + Item.Stack;
+                            ItemName += " (" + Item.Stack + " more)";
                         if (Item.disponibility == GuardianShopHandler.GuardianShopItem.DisponibilityTime.Timed)
                         {
                             int h = 0, m = 0, s = Item.TimedSaleTime / 60;
@@ -174,6 +186,8 @@ namespace giantsummon
                             IsSale = true;
                             Price -= (int)(Price * Item.SaleFactor);
                         }
+                        if (Item.SellStack > 0)
+                            Price *= Item.SellStack;
                         {
                             int p = 0, g = 0, s = 0, c = Price;
                             if (c >= 100)
@@ -260,21 +274,50 @@ namespace giantsummon
                         }
                         Utils.DrawBorderString(Main.spriteBatch, PriceText, SlotPosition, itemcolor, 1f, 0, 0);
                         SlotPosition.X += 336f;
-                        Vector2 Dim = Utils.DrawBorderString(Main.spriteBatch, (Item.Stack == 0 ? "Sold Out" : (CanBuy ? "Buy Item" : "Indisponible")), SlotPosition, SelectedItem == Index ? Color.Yellow : Color.White, 1f, 0, 0.5f);
+                        Vector2 Dim = Utils.DrawBorderString(Main.spriteBatch, (Item.Stack == 0 ? "Sold Out" : (CanBuy ? "Buy" : "Indisponible")), SlotPosition, SelectedItem == Index ? Color.Yellow : Color.White, 1f, 0, 0.5f);
                         if (Main.mouseX >= SlotPosition.X && Main.mouseX < SlotPosition.X + Dim.X &&
                             Main.mouseY >= SlotPosition.Y - Dim.Y * 0.5f && Main.mouseY < SlotPosition.Y + Dim.Y * 0.5f)
                         {
                             NewSelectedItem = Index;
                             if (CanBuy && Main.mouseLeft && Main.mouseLeftRelease)
                             {
-                                //Buy Item :D
-
+                                if (!MainPlayer.inventory.Take(50).Any(f => f.type == 0))
+                                {
+                                    LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreFullInventoryMessage);
+                                    if (LastStoreMessage == "")
+                                        LastStoreMessage = "*Your inventory is full.*";
+                                }
+                                else if (!MainPlayer.BuyItem(Price))
+                                {
+                                    LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreNoCoinsMessage);
+                                    if (LastStoreMessage == "")
+                                        LastStoreMessage = "*You don't have enough coins.*";
+                                }
+                                else
+                                {
+                                    //Buy Item :D
+                                    Terraria.Item item = new Item();
+                                    item.SetDefaults(Item.ItemID);
+                                    if (Item.SellStack > 0)
+                                        item.stack = Item.SellStack;
+                                    if (Item.ItemName != item.Name)
+                                        item.SetNameOverride(Item.ItemName);
+                                    MainPlayer.GetItem(MainPlayer.whoAmI, item);
+                                    LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreBuyMessage);
+                                    if (LastStoreMessage == "")
+                                        LastStoreMessage = "*Thank you.*";
+                                }
                             }
                         }
                     }
                 }
             }
             SelectedItem = NewSelectedItem;
+        }
+
+        private static void DrawScrollbar()
+        {
+
         }
     }
 }

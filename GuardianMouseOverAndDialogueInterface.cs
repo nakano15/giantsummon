@@ -170,6 +170,8 @@ namespace giantsummon
                 DialogueDelayTime = 0;
             }
             PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            if (!player.IsTalkingToAGuardian && GuardianShopInterface.ShopOpen)
+                GuardianShopInterface.ShopOpen = false;
             if (player.KnockedOut)
             {
                 if (player.IsTalkingToAGuardian)
@@ -389,6 +391,10 @@ namespace giantsummon
                 }
             }
             AddOption(OptionText, CheckRequestButtonAction);
+            if (GuardianShopHandler.HasShop(tg.MyID))
+            {
+                AddOption("What do you have for sale?", OpenShopButtonAction);
+            }
             if (MayGiveBirthdayGift(tg))
             {
                 AddOption("I have a gift for you", GiveGiftButtonAction);
@@ -592,6 +598,11 @@ namespace giantsummon
         public static void PostponeRequestButtonAction(TerraGuardian Guardian)
         {
             CloseDialogueButtonAction(Guardian);
+        }
+
+        public static void OpenShopButtonAction(TerraGuardian Guardian)
+        {
+            GuardianShopInterface.OpenShop();
         }
 
         public static string MessageParser(string Message, TerraGuardian guardian)

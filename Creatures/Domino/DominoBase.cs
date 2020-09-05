@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria;
+using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 
 namespace giantsummon.Creatures
@@ -99,6 +100,39 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(20, 34, 18);
 
             RequestList();
+        }
+
+        public override void SetupShop(int GuardianID, string GuardianModID)
+        {
+            GuardianShopHandler.GuardianShop shop = CreateShop(GuardianID, GuardianModID);
+            GuardianShopHandler.GuardianShopItem item = Shop_AddItem(shop, new FastItemDefiniton("IronCannon", MainMod.mod));
+            item = Shop_AddItem(shop, new FastItemDefiniton("CannonShell", MainMod.mod), -1, "", 25);
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.FlintlockPistol));
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.MusketBall), -1, "", 50);
+            item = Shop_AddItem(shop, new FastItemDefiniton("TwoHandedMastery", MainMod.mod));
+            item.SetToBeRandomlySold(0.05f);
+            item = Shop_AddItem(shop, new FastItemDefiniton("HermesSandals", MainMod.mod));
+            item.SetToBeRandomlySold(0.05f);
+            item = Shop_AddItem(shop, new FastItemDefiniton("FirstSymbol", MainMod.mod));
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.IllegalGunParts));
+            item.SetLimitedDisponibility(GuardianShopHandler.GuardianShopItem.DisponibilityTime.Night);
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Minishark));
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Shotgun));
+            item.GetIfItemIsDisponible = delegate(Player player) { return Main.hardMode; };
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.SilverBullet), -1, "", 50);
+            item.GetIfItemIsDisponible = delegate(Player player) { return Main.bloodMoon; };
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.EmptyBullet), -1, "", 50);
+            item.GetIfItemIsDisponible = delegate(Player player) { return Main.hardMode; };
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.StyngerBolt), -1, "", 50);
+            item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.Stinger); };
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Stake), -1, "", 50);
+            item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.StakeLauncher); };
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Nail), -1, "", 50);
+            item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.NailGun); };
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.CandyCorn), -1, "", 50);
+            item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.CandyCornRifle); };
+            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.ExplosiveJackOLantern), -1, "", 50);
+            item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.JackOLanternLauncher); };
         }
 
         public override void Attributes(TerraGuardian g)
@@ -402,6 +436,20 @@ namespace giantsummon.Creatures
             {
                 case MessageIDs.RescueMessage:
                     return "*The kind of things I do to protect my business...*";
+                case MessageIDs.StoreOpenMessage:
+                    if (!Main.dayTime)
+                        return "*Don't comment about this stock.*";
+                    return "*Everything is totally legal.*";
+                case MessageIDs.StoreSaleHappeningMessage:
+                    return "*Good timing, I think that may interest you.*";
+                case MessageIDs.StoreBuyMessage:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*Thank you. I will put your coins to good use.*";
+                    return "*I love the sound of coins.*";
+                case MessageIDs.StoreFullInventoryMessage:
+                    return "*I wont drop my merchandise. Clear your inventory.*";
+                case MessageIDs.StoreNoCoinsMessage:
+                    return "*I wont give you this for free.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

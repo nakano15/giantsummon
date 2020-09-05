@@ -387,6 +387,7 @@ namespace giantsummon
             GuardianBountyQuest.Save(tag);
             AlexRecruitScripts.Save(tag);
             tag.Add("DominoDismissed", Npcs.DominoNPC.DominoDismissed);
+            GuardianShopHandler.SaveShops(tag);
             return tag;
         }
 
@@ -496,6 +497,8 @@ namespace giantsummon
                 AlexRecruitScripts.Load(tag, Version);
             if(Version >= 54)
                 Npcs.DominoNPC.DominoDismissed = tag.GetBool("DominoDismissed");
+            if (Version >= 73)
+                GuardianShopHandler.LoadShops(tag, Version);
         }
 
         public override void PostDrawTiles()

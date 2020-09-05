@@ -401,6 +401,24 @@ namespace giantsummon
             return ContestThirdPlace;
         }
 
+        public virtual void SetupShop(int GuardianID, string GuardianModID)
+        {
+
+        }
+
+        /// <summary>
+        /// Only use this method on SetupShop().
+        /// </summary>
+        protected GuardianShopHandler.GuardianShop CreateShop(int GuardianID, string GuardianModID)
+        {
+            return GuardianShopHandler.CreateShop(GuardianID, GuardianModID);
+        }
+
+        protected GuardianShopHandler.GuardianShopItem Shop_AddItem(GuardianShopHandler.GuardianShop shop, Terraria.ModLoader.Config.ItemDefinition ItemID, int Price = -1, string Name = "", int FixedSellStack = 1)
+        {
+            return shop.AddNewItem(ItemID, Price, Name, FixedSellStack);
+        }
+        
         public virtual void Attributes(TerraGuardian g)
         {
 
@@ -889,6 +907,32 @@ namespace giantsummon
             public const string LeopoldMessage2 = "Mes.LeopoldAnswer2";
             public const string LeopoldMessage3 = "Mes.LeopoldAnswer3";
             public const string RescueMessage = "Mes.Rescue";
+            public const string StoreOpenMessage = "Mes.Store.BrowseStore",
+                StoreSaleHappeningMessage = "Mes.Store.SaleHappening",
+                StoreBuyMessage = "Mes.Store.BuyMessage",
+                StoreFullInventoryMessage = "Mes.Store.FullInvMessage",
+                StoreNoCoinsMessage = "Mes.Store.NotEnoughCoins";
+        }
+
+        public class FastItemDefiniton : Terraria.ModLoader.Config.ItemDefinition
+        {
+            public FastItemDefiniton(int Type)
+                : base(Type)
+            {
+
+            }
+
+            public FastItemDefiniton(string ModItemId, Mod mod)
+                : base(ModItemId, mod.Name)
+            {
+
+            }
+
+            public FastItemDefiniton(string ModItemId, string mod)
+                : base(ModItemId, mod)
+            {
+
+            }
         }
         
         public enum GuardianEffect
