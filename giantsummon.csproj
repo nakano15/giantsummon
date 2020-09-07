@@ -122,6 +122,7 @@
     <Compile Include="GuardianShopInterface.cs" />
     <Compile Include="GuardianSkills.cs" />
     <Compile Include="GuardianSpawningScripts.cs" />
+    <Compile Include="Items\Accessories\TwoHandedMastery.cs" />
     <Compile Include="Items\Accessories\FirstSymbol.cs" />
     <Compile Include="Items\Accessories\GoldenShowerPapyrus.cs" />
     <Compile Include="Items\Accessories\PackLeaderNecklace.cs" />
@@ -375,6 +376,7 @@
     <Content Include="Items\Accessories\ProvocationBadge.png" />
     <Content Include="Items\Accessories\RangedLeash.png" />
     <Content Include="Items\Accessories\SummonerLeash.png" />
+    <Content Include="Items\Accessories\TwoHandedMastery.png" />
     <Content Include="Items\Cannon\CannonShell.png" />
     <Content Include="Items\Cannon\CannonItem.png" />
     <Content Include="Items\Cannon\IronCannon.png" />

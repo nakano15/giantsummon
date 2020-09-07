@@ -33,19 +33,27 @@ namespace giantsummon
                 {
                     string ItemTag = ShopTag + "i" + i + ">";
                     GuardianShopItem item = shop.Items[i];
-                    Terraria.ModLoader.ModItem moditem = Terraria.ModLoader.ModContent.GetModItem(item.ItemID);
-                    tag.Add(ItemTag + "moditem", moditem != null);
-                    if (moditem == null)
+                    bool HasItem = item.ItemID != 0;
+                    tag.Add(ItemTag + "hasitem", HasItem);
+                    if (HasItem)
                     {
-                        tag.Add(ItemTag + "itemid", item.ItemID);
+                        Item dummyItem = new Item();
+                        dummyItem.SetDefaults(item.ItemID);
+                        bool IsModItem = dummyItem.modItem != null;
+                        tag.Add(ItemTag + "ismoditem", IsModItem);
+                        if (IsModItem)
+                        {
+                            tag.Add(ItemTag + "itemname", dummyItem.modItem.Name);
+                            tag.Add(ItemTag + "itemmodname", dummyItem.modItem.mod.Name);
+                        }
+                        else
+                        {
+                            tag.Add(ItemTag + "itemid", item.ItemID);
+                        }
+                        tag.Add(ItemTag + "saletime", item.SaleTime);
+                        tag.Add(ItemTag + "timedsaletime", item.TimedSaleTime);
+                        tag.Add(ItemTag + "stack", item.Stack);
                     }
-                    else
-                    {
-                        tag.Add(ItemTag + "itemid", moditem);
-                    }
-                    tag.Add(ItemTag + "saletime", item.SaleTime);
-                    tag.Add(ItemTag + "timedsaletime", item.TimedSaleTime);
-                    tag.Add(ItemTag + "stack", item.Stack);
                 }
             }
         }
@@ -72,22 +80,32 @@ namespace giantsummon
                     for (int i = 0; i < ItemCount; i++)
                     {
                         string ItemTag = ShopTag + "i" + i + ">";
-                        int Itemtype = 0;
-                        if (tag.GetBool(ItemTag + "moditem"))
+                        if (tag.GetBool(ItemTag + "hasitem"))
                         {
-                            Terraria.ModLoader.ModItem item = tag.Get<Terraria.ModLoader.ModItem>(ItemTag + "itemid");
-                            if(item.mod != null)
-                                Itemtype = item.mod.ItemType(item.Name);
-                        }
-                        else
-                        {
-                            Itemtype = tag.GetInt(ItemTag + "itemid");
-                        }
-                        if (Itemtype != 0)
-                        {
+                            bool IsModItem = tag.GetBool(ItemTag + "ismoditem");
+                            string ItemInternalName = null, ItemModInternalName = null;
+                            int ItemID = 0;
+                            if (IsModItem)
+                            {
+                                ItemInternalName = tag.GetString(ItemTag + "itemname");
+                                ItemModInternalName = tag.GetString(ItemTag + "itemmodname");
+                            }
+                            else
+                            {
+                                ItemID = tag.GetInt(ItemTag + "itemid");
+                            }
                             foreach (GuardianShopItem item in shop.Items)
                             {
-                                if (item.ItemID != Itemtype)
+                                if (item.ItemID == 0)
+                                    continue;
+                                if (ItemInternalName != null)
+                                {
+                                    Item anotheritem = new Item();
+                                    anotheritem.SetDefaults(item.ItemID);
+                                    if (anotheritem.modItem == null || anotheritem.modItem.Name != ItemInternalName || anotheritem.modItem.mod.Name != ItemModInternalName)
+                                        continue;
+                                }
+                                else if (ItemID != item.ItemID)
                                 {
                                     continue;
                                 }
@@ -216,7 +234,7 @@ namespace giantsummon
             public string OwnerModID = "";
             public List<GuardianShopItem> Items = new List<GuardianShopItem>();
 
-            public GuardianShopItem AddNewItem(Terraria.ModLoader.Config.ItemDefinition ItemID, int Price = -1, string Name = "", int FixedSellStack = 1)
+            public GuardianShopItem AddNewItem(int ItemID, int Price = -1, string Name = "", int FixedSellStack = 1)
             {
                 GuardianShopItem item = new GuardianShopItem();
                 item.SetItemForSale(ItemID, Price, Name, FixedSellStack);
@@ -228,8 +246,7 @@ namespace giantsummon
         public class GuardianShopItem
         {
             public string ItemName = "";
-            public Terraria.ModLoader.Config.ItemDefinition SoldItem;
-            public int ItemID { get { return SoldItem.Type; } }
+            public int ItemID = 0;
             public int Price = 0, Stack = -1, SellStack = 1;
             public DisponibilityTime disponibility = DisponibilityTime.Anytime;
             public float SaleFactor = 0, TimedSaleChance = 0;
@@ -245,20 +262,6 @@ namespace giantsummon
             public bool CanItemBeVisibleAtTheStore(Player player)
             {
                 return GetIfItemIsDisponible(player) && IsItemDisponible();
-            }
-
-            public void CheckForInvalidItemValues()
-            {
-                if (SoldItem.IsUnloaded)
-                {
-                    Item i = new Item();
-                    i.SetDefaults(ItemID);
-                    if(ItemName == "")
-                        ItemName = i.Name;
-                    if (Price == 0)
-                        Price = i.value;
-                    UniqueItem = i.maxStack == 1;
-                }
             }
 
             public bool IsItemDisponible()
@@ -299,15 +302,15 @@ namespace giantsummon
                 this.TimedSaleChance = TimedSaleChance;
             }
 
-            public void SetItemForSale(Terraria.ModLoader.Config.ItemDefinition ItemForSale, int Price = -1, string Name = "", int SellFixedStack = 1)
+            public void SetItemForSale(int ItemID, int Price = -1, string Name = "", int SellFixedStack = 1)
             {
-                this.SoldItem = ItemForSale;
-                Item i = new Item();
-                i.SetDefaults(ItemForSale.Type);
-                UniqueItem = i.maxStack == 1;
+                this.ItemID = ItemID;
+                Item SoldItem = new Item();
+                SoldItem.SetDefaults(ItemID);
+                UniqueItem = SoldItem.maxStack == 1;
                 if (Price == -1)
                 {
-                    this.Price = i.value;
+                    this.Price = SoldItem.value;
                 }
                 else
                 {
@@ -316,7 +319,7 @@ namespace giantsummon
                 if (Name != "")
                     this.ItemName = Name;
                 else
-                    this.ItemName = i.Name;
+                    this.ItemName = SoldItem.Name;
                 SellStack = SellFixedStack;
             }
 

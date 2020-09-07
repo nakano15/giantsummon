@@ -4761,7 +4761,7 @@ namespace giantsummon
 
         public void CheckIfSomeoneNeedsRevive(bool MountedEdition = false)
         {
-            if (!MountedEdition && (PlayerMounted || SittingOnPlayerMount))
+            if (!MountedEdition && OwnerPos > -1 && !Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut && (PlayerMounted || SittingOnPlayerMount))
                 return;
             if (!DoAction.InUse && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
@@ -4779,30 +4779,38 @@ namespace giantsummon
                 byte LowestReviveBoost = 255;
                 bool IsGuardian = false;
                 float PerceptionRange = 1f + TownNpcs * 0.1f;
-                for (int p = 0; p < 255; p++)
+                if (OwnerPos > -1 && Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut)
                 {
-                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && !IsPlayerHostile(Main.player[p]) && (!MountedEdition && InPerceptionRange(Main.player[p].Center, PerceptionRange) || Main.player[p].getRect().Intersects(HitBox)))
+                    Priority = OwnerPos;
+                    IsGuardian = false;
+                }
+                else
+                {
+                    for (int p = 0; p < 255; p++)
                     {
-                        byte ReviveBoost = Main.player[p].GetModPlayer<PlayerMod>().ReviveBoost;
-                        if (ReviveBoost < LowestReviveBoost)
+                        if (Main.player[p].active && !Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && !IsPlayerHostile(Main.player[p]) && (!MountedEdition && InPerceptionRange(Main.player[p].Center, PerceptionRange) || Main.player[p].getRect().Intersects(HitBox)))
                         {
-                            Priority = p;
-                            IsGuardian = false;
-                            LowestReviveBoost = ReviveBoost;
+                            byte ReviveBoost = Main.player[p].GetModPlayer<PlayerMod>().ReviveBoost;
+                            if (ReviveBoost < LowestReviveBoost)
+                            {
+                                Priority = p;
+                                IsGuardian = false;
+                                LowestReviveBoost = ReviveBoost;
+                            }
                         }
                     }
-                }
-                foreach (int key in MainMod.ActiveGuardians.Keys)
-                {
-                    TerraGuardian g = MainMod.ActiveGuardians[key];
-                    if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && ((!MountedEdition && InPerceptionRange(g.CenterPosition, PerceptionRange)) || g.HitBox.Intersects(HitBox)))
+                    foreach (int key in MainMod.ActiveGuardians.Keys)
                     {
-                        byte ReviveBoost = g.ReviveBoost;
-                        if (ReviveBoost < LowestReviveBoost)
+                        TerraGuardian g = MainMod.ActiveGuardians[key];
+                        if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && ((!MountedEdition && InPerceptionRange(g.CenterPosition, PerceptionRange)) || g.HitBox.Intersects(HitBox)))
                         {
-                            Priority = key;
-                            IsGuardian = true;
-                            LowestReviveBoost = ReviveBoost;
+                            byte ReviveBoost = g.ReviveBoost;
+                            if (ReviveBoost < LowestReviveBoost)
+                            {
+                                Priority = key;
+                                IsGuardian = true;
+                                LowestReviveBoost = ReviveBoost;
+                            }
                         }
                     }
                 }
@@ -12226,7 +12234,7 @@ namespace giantsummon
                         {
                             LeftArmAnimationFrame = Base.SittingFrame;
                         }
-                        else if (Base.PlayerMountedArmAnimation > -1)
+                        else if (Base.PlayerMountedArmAnimation > -1 && !Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut)
                         {
                             LeftArmAnimationFrame = Base.PlayerMountedArmAnimation;
                             UsingLeftArmAnimation = true;
@@ -14745,22 +14753,26 @@ namespace giantsummon
         {
             Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56), 
                 bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56), 
-                hairrect = new Rectangle(0, 56 * LeftArmAnimationFrame - 336, 40, 56);
+                hairrect = new Rectangle(0, 56 * LeftArmAnimationFrame - 336, 40, 56),
+                eyerect = new Rectangle(0, 0, hairrect.Width, hairrect.Height);
             if (hairrect.Y < 0)
                 hairrect.Y = 0;
             bool ShowHair = HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaFemale && HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaMale;
             bool LeftArmInFront = SittingOnPlayerMount;
             int SkinVariant = Base.TerrarianInfo.GetSkinVariant(Male);
             Vector2 Origin = new Vector2(20, 56);
+            byte EyeState = 0;
             if (KnockedOut && !Downed)
             {
                 Origin.Y *= 0.5f;
-                Position.Y -= 20 + 6;
+                Position.Y -= 20 - 6;
+                EyeState = 2;
             }
-            else if (BodyAnimationFrame == Base.BedSleepingFrame)
+            else if (IsUsingBed)
             {
                 Origin.Y *= 0.5f;
                 Position.Y -= 20 + 6;
+                EyeState = 2;
             }
             Color HairColor = Base.TerrarianInfo.HairColor,
                 EyesColor = Base.TerrarianInfo.EyeColor,
@@ -14854,10 +14866,22 @@ namespace giantsummon
             }
             dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, bodyrect, EyesColor, Rotation, Origin, Scale, seffect);
+            float EyePositionBonus = 0;
+            if ((hairrect.Y + 336 >= 7 * hairrect.Height && hairrect.Y + 336 < 10 * hairrect.Height) ||
+                hairrect.Y + 336 >= 14 * hairrect.Height && hairrect.Y + 336 < 17 * hairrect.Height)
+            {
+                EyePositionBonus -= 2;
+            }
+            Position.Y += EyePositionBonus;
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, MainMod.EyeTexture, Position, new Rectangle(40 * EyeState, 56, 40, 46), (EyeState == 2 ? SkinColor : EyesColor), Rotation, Origin, Scale, seffect);
+            AddDrawData(dd, false);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, MainMod.EyeTexture, Position, new Rectangle(40 * EyeState, 0, 40, 46), (EyeState == 2 ? SkinColor : EyesWhiteColor), Rotation, Origin, Scale, seffect);
+            AddDrawData(dd, false);
+            Position.Y -= EyePositionBonus;
+            /*dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, bodyrect, EyesColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);
             dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, bodyrect, EyesWhiteColor, Rotation, Origin, Scale, seffect);
-            AddDrawData(dd, false);
+            AddDrawData(dd, false);*/
             if (ShowHair && Base.TerrarianInfo.HairStyle >= 0)
             {
                 if (DrawNormalHair)

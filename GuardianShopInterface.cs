@@ -46,7 +46,6 @@ namespace giantsummon
                     for (int i = 0; i < Shop.Items.Count; i++)
                     {
                         Shop.Items[i].ItemOnDisplay = false;
-                        Shop.Items[i].CheckForInvalidItemValues();
                         if (Shop.Items[i].ItemID != 0 && Shop.Items[i].CanItemBeVisibleAtTheStore(MainPlayer))
                         {
                             Shop.Items[i].ItemOnDisplay = true;
@@ -127,6 +126,11 @@ namespace giantsummon
                     SlotPosition.Y += 60 * y;
                     if (Index < Items.Length)
                     {
+                        if (y > 0)
+                        {
+                            Rectangle rect = new Rectangle((int)SlotPosition.X + 4, (int)SlotPosition.Y - 1, 456, 2);
+                            Main.spriteBatch.Draw(Main.blackTileTexture, rect, null, Color.LightBlue);
+                        }
                         GuardianShopHandler.GuardianShopItem Item = Items[Index];
                         Texture2D ItemTexture = Main.itemTexture[Item.ItemID];
                         float ItemScale = 1f;

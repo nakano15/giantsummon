@@ -253,7 +253,7 @@ namespace giantsummon
                         {
                             if (guardian.furniturex > -1)
                                 guardian.LeaveFurniture(false);
-                            if (guardian.PlayerMounted || guardian.Is2PControlled)
+                            if ((guardian.PlayerMounted && (Players.Count == 0 || Players[0].whoAmI != guardian.OwnerPos)) || guardian.Is2PControlled)
                             {
                                 if (!guardian.MoveDown)
                                 {
@@ -268,6 +268,7 @@ namespace giantsummon
                             int TargetWidth = 0, TargetHeight = 0;
                             bool TryReaching = false;
                             bool IsPlayer = Players.Count > 0;
+                            bool IsMountedPlayer = false;
                             if (Players.Count > 0)
                             {
                                 TargetPosition = Players[0].position;
@@ -277,6 +278,10 @@ namespace giantsummon
                                 {
                                     InUse = false;
                                     return;
+                                }
+                                if (Players[0].whoAmI == guardian.OwnerPos && guardian.PlayerMounted)
+                                {
+                                    IsMountedPlayer = true;
                                 }
                             }
                             if (Guardians.Count > 0)
@@ -289,6 +294,10 @@ namespace giantsummon
                                     InUse = false;
                                     return;
                                 }
+                                if (Guardians[0].OwnerPos == guardian.OwnerPos && Guardians[0].PlayerControl && guardian.PlayerMounted)
+                                {
+                                    IsMountedPlayer = true;
+                                }
                             }
                             bool RepelingEnemies = false;
                             guardian.MoveLeft = guardian.MoveRight = false;
@@ -299,14 +308,14 @@ namespace giantsummon
                                 guardian.GetTargetInformation(out EnemyPosition, out EnemyWidth, out EnemyHeight);
                                 EnemyPosition.X += EnemyWidth * 0.5f;
                                 EnemyPosition.Y += EnemyHeight * 0.5f;
-                                if ((EnemyPosition - guardian.CenterPosition).Length() < 168f + EnemyWidth * 0.5f)
+                                if (IsMountedPlayer || (EnemyPosition - guardian.CenterPosition).Length() < 168f + EnemyWidth * 0.5f)
                                 {
                                     RepelingEnemies = true;
                                 }
                             }
                             if (!RepelingEnemies)
                             {
-                                if (new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))//(MainMod.RectangleIntersects(guardian.TopLeftPosition, guardian.Width, guardian.Height, TargetPosition, TargetWidth, TargetHeight))
+                                if (IsMountedPlayer || new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))//(MainMod.RectangleIntersects(guardian.TopLeftPosition, guardian.Width, guardian.Height, TargetPosition, TargetWidth, TargetHeight))
                                 {
                                     if (guardian.Velocity.X == 0)
                                     {
@@ -1848,7 +1857,7 @@ namespace giantsummon
                             TargetPosition = Players[0].position;
                             TargetWidth = Players[0].width;
                             TargetHeight = Players[0].height;
-                            if (Players[0].GetModPlayer<PlayerMod>().MountedOnGuardian)
+                            if ((guardian.OwnerPos != Players[0].whoAmI || (guardian.OwnerPos == Players[0].whoAmI && !guardian.PlayerMounted)) && Players[0].GetModPlayer<PlayerMod>().MountedOnGuardian)
                                 IsMounted = true;
                         }
                         if (Guardians.Count > 0)

@@ -1206,6 +1206,9 @@ namespace giantsummon
                     case 2:
                         i.SetDefaults(ModContent.ItemType<Items.Accessories.FirstSymbol>());
                         break;
+                    case 3:
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.TwoHandedMastery>());
+                        break;
                 }
                 Rewards.Add(i);
             }

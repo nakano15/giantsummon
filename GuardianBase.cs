@@ -414,7 +414,7 @@ namespace giantsummon
             return GuardianShopHandler.CreateShop(GuardianID, GuardianModID);
         }
 
-        protected GuardianShopHandler.GuardianShopItem Shop_AddItem(GuardianShopHandler.GuardianShop shop, Terraria.ModLoader.Config.ItemDefinition ItemID, int Price = -1, string Name = "", int FixedSellStack = 1)
+        protected GuardianShopHandler.GuardianShopItem Shop_AddItem(GuardianShopHandler.GuardianShop shop, int ItemID, int Price = -1, string Name = "", int FixedSellStack = 1)
         {
             return shop.AddNewItem(ItemID, Price, Name, FixedSellStack);
         }

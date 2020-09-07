@@ -105,33 +105,33 @@ namespace giantsummon.Creatures
         public override void SetupShop(int GuardianID, string GuardianModID)
         {
             GuardianShopHandler.GuardianShop shop = CreateShop(GuardianID, GuardianModID);
-            GuardianShopHandler.GuardianShopItem item = Shop_AddItem(shop, new FastItemDefiniton("IronCannon", MainMod.mod));
-            item = Shop_AddItem(shop, new FastItemDefiniton("CannonShell", MainMod.mod), -1, "", 25);
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.FlintlockPistol));
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.MusketBall), -1, "", 50);
-            item = Shop_AddItem(shop, new FastItemDefiniton("TwoHandedMastery", MainMod.mod));
+            GuardianShopHandler.GuardianShopItem item = Shop_AddItem(shop, ModContent.ItemType<Items.Cannon.IronCannon>()); //The modloader isn't being able to find those items, for some reason.
+            item = Shop_AddItem(shop, ModContent.ItemType<Items.Cannon.CannonShell>(), -1, "", 25);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.FlintlockPistol);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.MusketBall, -1, "", 50);
+            item = Shop_AddItem(shop, ModContent.ItemType<Items.Accessories.TwoHandedMastery>());
             item.SetToBeRandomlySold(0.05f);
-            item = Shop_AddItem(shop, new FastItemDefiniton("HermesSandals", MainMod.mod));
+            item = Shop_AddItem(shop, ModContent.ItemType<Items.Accessories.HermesSandals>());
             item.SetToBeRandomlySold(0.05f);
-            item = Shop_AddItem(shop, new FastItemDefiniton("FirstSymbol", MainMod.mod));
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.IllegalGunParts));
+            item = Shop_AddItem(shop, ModContent.ItemType<Items.Accessories.FirstSymbol>());
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.IllegalGunParts);
             item.SetLimitedDisponibility(GuardianShopHandler.GuardianShopItem.DisponibilityTime.Night);
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Minishark));
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Shotgun));
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.Minishark);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.Shotgun);
             item.GetIfItemIsDisponible = delegate(Player player) { return Main.hardMode; };
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.SilverBullet), -1, "", 50);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.SilverBullet, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return Main.bloodMoon; };
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.EmptyBullet), -1, "", 50);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.EmptyBullet, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return Main.hardMode; };
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.StyngerBolt), -1, "", 50);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.StyngerBolt, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.Stinger); };
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Stake), -1, "", 50);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.Stake, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.StakeLauncher); };
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.Nail), -1, "", 50);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.Nail, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.NailGun); };
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.CandyCorn), -1, "", 50);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.CandyCorn, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.CandyCornRifle); };
-            item = Shop_AddItem(shop, new FastItemDefiniton(Terraria.ID.ItemID.ExplosiveJackOLantern), -1, "", 50);
+            item = Shop_AddItem(shop, Terraria.ID.ItemID.ExplosiveJackOLantern, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.JackOLanternLauncher); };
         }
 
@@ -437,6 +437,8 @@ namespace giantsummon.Creatures
                 case MessageIDs.RescueMessage:
                     return "*The kind of things I do to protect my business...*";
                 case MessageIDs.StoreOpenMessage:
+                    if (Main.bloodMoon || Main.eclipse)
+                        return "*This is a bad time for shopping.*";
                     if (!Main.dayTime)
                         return "*Don't comment about this stock.*";
                     return "*Everything is totally legal.*";

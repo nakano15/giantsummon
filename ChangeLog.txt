@@ -1,2 +1,17 @@
 ﻿Added Shaded Body skin from AlphaPigDelta to Rococo.
 	The skin has no unlock requirement, so you can change It anytime.
+Having DPS debuffs afflicting your character will also trigger the rescue.
+	Normally, such buffs wouldn't last long enough for your character to need rescue, but Red Potion exists.
+When your character is mounted on a companion, and your character gets knocked out, the companion will try placing your character on the floor to help on the recovery, when there is no danger nearby.
+	Due to this, the 3 revive boost the guardian used to give when your character is ko'd while mounted, was reduced to 1.
+Having your character rescued, will remove debuffs afflicting It.
+Fixed a bug where after your character is rescued, the screen remains blacked out until your character wakes up.
+The character will now close their eyes when knocked out.
+Your character will spawn at the rescue spot with only 1 hp, but all your companions will be out of knocked out state.
+	Dead companions will respawn too.
+Added the Two Handed Mastery accessory to the mod.
+	It allows companions having It equipped to dual wield weapons.
+	Since Domino's shop is not showing mod items, Sardine's Bounty Quests will have a chance of having that item as one of the rewards.
+		I may not change that.
+The button of forcing rescue now works.
+Knocked out Terrarian companions will no longer levitate on the floor.

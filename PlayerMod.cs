@@ -715,6 +715,7 @@ namespace giantsummon
             }
             if (KnockedOut)
             {
+                eye = EyeState.Closed;
                 if (player.potionDelayTime < 5)
                 {
                     player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
@@ -744,10 +745,19 @@ namespace giantsummon
             }
             if (MountedOnGuardian)
             {
-                player.fullRotation = 0;
-                player.fullRotationOrigin.X = 0;
-                player.fullRotationOrigin.Y = 0;
-                ReviveBoost += 3;
+                if (!MountGuardian.IsAttackingSomething && MountGuardian.Velocity.X == 0)
+                {
+                    player.fullRotation = 1.570796326794897f * MountGuardian.Direction;
+                    player.fullRotationOrigin.X = player.width * 0.5f;
+                    player.fullRotationOrigin.Y = player.height * 0.5f;
+                }
+                else
+                {
+                    player.fullRotation = 0;
+                    player.fullRotationOrigin.X = 0;
+                    player.fullRotationOrigin.Y = 0;
+                }
+                ReviveBoost += 1;
             }
             else if (player.velocity.Y != 0)
             {
@@ -808,9 +818,10 @@ namespace giantsummon
             {
                 if (player.whoAmI == Main.myPlayer)
                 {
-                    if (MainMod.StartRescueCountdownWhenKnockedOutCold || !GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed) || player.controlHook)
+                    bool HasDPSDebuff = player.onFire || player.poisoned || player.suffocating;
+                    if (MainMod.StartRescueCountdownWhenKnockedOutCold || HasDPSDebuff || !GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed) || player.controlHook)
                     {
-                        if (ReviveBoost == 0)
+                        if (ReviveBoost == 0 || player.controlHook || HasDPSDebuff)
                             RescueTime++;
                         else if (RescueTime > 0)
                             RescueTime--;
@@ -850,29 +861,62 @@ namespace giantsummon
                                     rescuer.SaySomething(RescueMessage);
                                 player.position = rescuer.Position;
                                 player.position.X -= player.width * 0.5f;
-                                player.position.Y -= player.height;
+                                player.position.Y -= player.height + 8;
                                 GuardianActions.TryRevivingPlayer(rescuer, player);
                             }
                             else
                             {
                                 player.Spawn();
                             }
-                            player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
+                            if (MountedOnGuardian)
+                            {
+                                Guardian.TeleportToPlayer(true, player);
+                            }
+                            for (int b = player.buffType.Length - 1; b >= 0; b--)
+                            {
+                                if (player.buffTime[b] > 0 && Main.debuff[player.buffType[b]] && player.buffType[b] != Terraria.ID.BuffID.PotionSickness)
+                                {
+                                    player.DelBuff(b);
+                                }
+                            }
+                            //player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
+                            player.statLife = 1;
+                            //player.lifeRegen = 100;
                             //Send to some guardian house and then move It in.
                             //If the above isn't possible, send to spawn, and place some guardian nearby.
                             foreach (TerraGuardian tg in GetAllGuardianFollowers)
                             {
-                                if (tg.Active && (tg.KnockedOut || tg.KnockedOutCold))
+                                if (tg.Active)
                                 {
-                                    tg.TeleportToPlayer();
-                                    tg.KnockedOutCold = false;
-                                    //tg.ExitDownedState();
+                                    if (tg.Downed)
+                                        tg.Spawn();
+                                    if ((tg.KnockedOut || tg.KnockedOutCold))
+                                    {
+                                        tg.TeleportToPlayer();
+                                        tg.KnockedOutCold = false;
+                                        tg.ExitDownedState();
+                                    }
                                 }
                             }
                             if (player.whoAmI == Main.myPlayer)
                             {
                                 Main.BlackFadeIn = 255;
                                 Main.renderNow = true;
+                                /*if (Main.netMode == 0)
+                                {
+                                    player.active = false;
+                                    for (int n = 0; n < 200; n++)
+                                    {
+                                        if (Main.npc[n].active && !Main.npc[n].townNPC && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerNebula
+                                             && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerSolar && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerStardust
+                                             && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerVortex && Main.npc[n].type != Terraria.ID.NPCID.CultistTablet)
+                                        {
+                                            Main.npc[n].timeLeft = 0;
+                                            Main.npc[n].CheckActive();
+                                        }
+                                    }
+                                    player.active = true;
+                                }*/
                             }
                             if (Main.netMode == 0)
                             {
@@ -913,9 +957,9 @@ namespace giantsummon
                             }
                         }
                     }
+                    if (RescueTime > 0 && !HasDPSDebuff && !player.controlHook && ReviveBoost > 0)
+                        RescueTime = 0;
                 }
-                if(ReviveBoost > 0 && RescueTime > 0)
-                    RescueTime = 0;
             }
         }
 
@@ -933,7 +977,7 @@ namespace giantsummon
 
         public override void PreUpdate()
         {
-        
+            eye = EyeState.Open;
         }
 
         public override void PreUpdateMovement()
@@ -1253,19 +1297,32 @@ namespace giantsummon
                             player.mount.Dismount(player);
                         player.velocity = Microsoft.Xna.Framework.Vector2.Zero;
                         player.velocity.Y = 0;
-                        player.position = guardian.GetGuardianShoulderPosition;
-                        player.position.X -= player.width * 0.5f;
-                        player.position.Y -= (player.height * 0.5f) + 8; //Bugs out when gravity is reverse
-                        player.gfxOffY = 0;
-                        player.itemLocation += guardian.Velocity;
-                        player.fallStart = player.fallStart2 = (int)player.position.Y / 16;
-                        if (player.itemAnimation == 0 && player.direction != guardian.Direction)
-                            player.direction = guardian.Direction;
-                        if (player.stealth > 0 && guardian.Velocity.X * guardian.Direction > 0.1f)
+                        if (KnockedOut && !guardian.IsAttackingSomething && guardian.Velocity.X == 0)
                         {
-                            player.stealth += 0.2f;
-                            if (player.stealth > 1f)
-                                player.stealth = 1f;
+                            player.position = guardian.Position;
+                            player.position.X += player.width * 0.5f * guardian.Direction;
+                            player.position.Y -= player.height - 12;
+                            player.direction = -guardian.Direction;
+                            player.gfxOffY = 0;
+                            player.fallStart = player.fallStart2 = (int)player.position.Y / 16;
+                        }
+                        else
+                        {
+                            player.fullRotation = 0;
+                            player.position = guardian.GetGuardianShoulderPosition;
+                            player.position.X -= player.width * 0.5f;
+                            player.position.Y -= (player.height * 0.5f) + 8; //Bugs out when gravity is reverse
+                            player.gfxOffY = 0;
+                            player.itemLocation += guardian.Velocity;
+                            player.fallStart = player.fallStart2 = (int)player.position.Y / 16;
+                            if (player.itemAnimation == 0 && player.direction != guardian.Direction)
+                                player.direction = guardian.Direction;
+                            if (player.stealth > 0 && guardian.Velocity.X * guardian.Direction > 0.1f)
+                            {
+                                player.stealth += 0.2f;
+                                if (player.stealth > 1f)
+                                    player.stealth = 1f;
+                            }
                         }
                     }
                     if (guardian.PlayerControl)
@@ -2334,18 +2391,18 @@ namespace giantsummon
                 }
             });
             layers.Add(l);
-            /*eye = EyeState.Closed;
             if (eye != EyeState.Open)
             {
                 l = new PlayerLayer(mod.Name, "Player Eye", delegate(PlayerDrawInfo pdi)
                 {
+                    const int FrameYBonus = 336;
                     for (int t = 0; t < Main.playerDrawData.Count; t++)
                     {
                         if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.Eyes])
                         {
                             Vector2 Position = Main.playerDrawData[t].position;
-                            if ((player.headFrame.Y >= 7 * player.headFrame.Height && player.headFrame.Y < 11 * player.headFrame.Height) ||
-                                player.headFrame.Y >= 14 * player.headFrame.Height && player.headFrame.Y < 17 * player.headFrame.Height)
+                            if ((player.headFrame.Y + FrameYBonus >= 7 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 11 * player.headFrame.Height) ||
+                                player.headFrame.Y + FrameYBonus >= 14 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 17 * player.headFrame.Height)
                             {
                                 Position.Y -= 2;
                             }
@@ -2355,17 +2412,17 @@ namespace giantsummon
                         if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.EyeWhites])
                         {
                             Vector2 Position = Main.playerDrawData[t].position;
-                            if ((player.headFrame.Y >= 7 * player.headFrame.Height && player.headFrame.Y < 11 * player.headFrame.Height) ||
-                                player.headFrame.Y >= 14 * player.headFrame.Height && player.headFrame.Y < 17 * player.headFrame.Height)
+                            if ((player.headFrame.Y + FrameYBonus >= 7 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 11 * player.headFrame.Height) ||
+                                player.headFrame.Y + FrameYBonus >= 14 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 17 * player.headFrame.Height)
                             {
                                 Position.Y -= 2;
                             }
-                            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 56, 40, 56), Main.playerDrawData[t].color, Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
+                            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 56, 40, 56), (eye == EyeState.Closed ? pdi.bodyColor : Main.playerDrawData[t].color), Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
                             Main.playerDrawData[t] = dd;
                         }
                     }
                 });
-            }*/
+            }
             layers.Add(l);
         }
 

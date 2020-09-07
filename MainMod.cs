@@ -34,7 +34,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 73, LastModVersion = 71;
+        public const int ModVersion = 74, LastModVersion = 71;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = true;
         //Downed system configs
@@ -799,10 +799,10 @@ namespace giantsummon
                 BarSize = 1f;
             if (BarSize < 0)
                 BarSize = 0f;
-            if (playerMod.RescueWakingUp)
-                BarSize = 0;
             //
             int BarDimY = (int)(Main.screenHeight * (1f - BarSize) * 0.25f);
+            if (playerMod.RescueWakingUp)
+                BarSize = 0;
             Color ClosingBarsColor = playerMod.KnockedOutCold || playerMod.RescueWakingUp ? new Color(0, 0, 0, (int)(255 * (1f - BarSize))) : new Color((byte)(128 * (1f - BarSize)), 0, 0, (int)(255 * (1f - BarSize)));
             float ClosingBar2EffectPercentage = 0.5f + ((float)playerMod.RescueTime / (PlayerMod.MaxRescueTime * 60)) * 1f;
             if (ClosingBar2EffectPercentage > 1f)

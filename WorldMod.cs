@@ -497,7 +497,7 @@ namespace giantsummon
                 AlexRecruitScripts.Load(tag, Version);
             if(Version >= 54)
                 Npcs.DominoNPC.DominoDismissed = tag.GetBool("DominoDismissed");
-            if (Version >= 73)
+            if (Version >= 74)
                 GuardianShopHandler.LoadShops(tag, Version);
         }
 
