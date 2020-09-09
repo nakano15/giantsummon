@@ -3135,26 +3135,29 @@ namespace giantsummon
                 FriendshipProgression -= MaxFriendshipProgression;
                 FriendshipLevel++;
                 UpdateStatus = true;
-                if (FriendshipLevel == Base.CallUnlockLevel)
-                    Main.NewText("You can now call " + this.Name + " to help you.");
-                if (FriendshipLevel == Base.MountUnlockLevel)
-                    Main.NewText(this.Name + "'s Mounting ability unlocked.");
-                if (FriendshipLevel == Base.ControlUnlockLevel)
-                    Main.NewText(this.Name + "'s Control ability unlocked.");
-                if (FriendshipLevel == Base.StopMindingAFK)
-                    Main.NewText(this.Name + " no longer mind afk in combat.");
-                if (FriendshipLevel == Base.LootingUnlockLevel)
-                    Main.NewText(this.Name + " can now collect loot.");
-                if (FriendshipLevel == Base.FriendshipBondUnlockLevel)
-                    Main.NewText(this.Name + " now gained a status buff based on his best friend status.");
-                if (FriendshipLevel == Base.FallDamageReductionLevel)
-                    Main.NewText(this.Name + " now has received some fall damage tolerance, and the impact of it on you greatly reduces too.");
-                if (FriendshipLevel == Base.MountDamageReductionLevel)
-                    Main.NewText("You will receive less damage while mounted on " + this.Name + ".");
-                if (FriendshipLevel == Base.MaySellYourLoot)
-                    Main.NewText("You can now send " + this.Name + " to the town to sell your loot.");
-                if (FriendshipLevel == Base.KnownLevel || FriendshipLevel == Base.FriendsLevel || FriendshipLevel == Base.BestFriendLevel || FriendshipLevel == Base.BestFriendForeverLevel || FriendshipLevel == Base.BuddiesForLife)
-                    Main.NewText("Your friendship with " + this.Name + " has been improved.");
+                if (Main.netMode < 2 && OwnerPos == Main.myPlayer && (!PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]) || Main.player[OwnerPos].GetModPlayer<PlayerMod>().IsPlayerBuddy(MyID)))
+                {
+                    if (FriendshipLevel == Base.CallUnlockLevel && !PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
+                        Main.NewText("You can now call " + this.Name + " to help you.");
+                    if (FriendshipLevel == Base.MountUnlockLevel)
+                        Main.NewText(this.Name + "'s Mounting ability unlocked.");
+                    if (FriendshipLevel == Base.ControlUnlockLevel)
+                        Main.NewText(this.Name + "'s Control ability unlocked.");
+                    if (FriendshipLevel == Base.StopMindingAFK)
+                        Main.NewText(this.Name + " no longer mind afk in combat.");
+                    if (FriendshipLevel == Base.LootingUnlockLevel)
+                        Main.NewText(this.Name + " can now collect loot.");
+                    if (FriendshipLevel == Base.FriendshipBondUnlockLevel)
+                        Main.NewText(this.Name + " now gained a status buff based on his best friend status.");
+                    if (FriendshipLevel == Base.FallDamageReductionLevel)
+                        Main.NewText(this.Name + " now has received some fall damage tolerance, and the impact of it on you greatly reduces too.");
+                    if (FriendshipLevel == Base.MountDamageReductionLevel)
+                        Main.NewText("You will receive less damage while mounted on " + this.Name + ".");
+                    if (FriendshipLevel == Base.MaySellYourLoot)
+                        Main.NewText("You can now send " + this.Name + " to the town to sell your loot.");
+                    if (FriendshipLevel == Base.KnownLevel || FriendshipLevel == Base.FriendsLevel || FriendshipLevel == Base.BestFriendLevel || FriendshipLevel == Base.BestFriendForeverLevel || FriendshipLevel == Base.BuddiesForLife)
+                        Main.NewText("Your friendship with " + this.Name + " has been improved.");
+                }
             }
         }
 
@@ -7304,9 +7307,9 @@ namespace giantsummon
             TargetID = -1;
             GrabbingPlayer = false;
             UpdateStatus = true;
-            if (OwnerPos > -1 && AfkCounter >= 180 * 60 && !CreatureAllowsAFK)
+            if (OwnerPos == Main.myPlayer && OwnerPos > -1 && AfkCounter >= 180 * 60 && !CreatureAllowsAFK && !PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
             {
-                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().DismissGuardian();
+                Main.player[OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian();
                 Main.NewText(this.Name + " has left your battle.", Color.Red);
             }
         }

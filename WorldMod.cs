@@ -309,28 +309,8 @@ namespace giantsummon
             {
                 progress.Message = "Spawning Starter Guardian";
                 MainMod.GetInitialCompanionsList();
-                List<GuardianID> PossibleGuardians = new List<GuardianID>();
-                PossibleGuardians.AddRange(MainMod.InitialGuardians);
-                foreach (Terraria.IO.PlayerFileData pfd in Main.PlayerList)
-                {
-                    try
-                    {
-                        PlayerMod pm = pfd.Player.GetModPlayer<PlayerMod>();
-                        if (pm == null)
-                        {
-                            continue;
-                        }
-                        foreach (GuardianData gd in pm.MyGuardians.Values)
-                        {
-                            if (!PossibleGuardians.Any(x => x.ID == gd.ID && x.ModID == gd.ModID))
-                            {
-                                PossibleGuardians.Add(new GuardianID(gd.ID, gd.ModID));
-                            }
-                        }
-                    }
-                    catch { }
-                }
-                GuardianID id = PossibleGuardians[Main.rand.Next(PossibleGuardians.Count)];
+                GuardianID[] PossibleGuardians = MainMod.GetPossibleStarterGuardians();
+                GuardianID id = PossibleGuardians[Main.rand.Next(PossibleGuardians.Length)];
                 TerraGuardian tg = new TerraGuardian(id.ID, id.ModID);
                 tg.Active = true;
                 tg.Position.X = Main.spawnTileX * 16 + 8;

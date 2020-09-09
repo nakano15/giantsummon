@@ -102,10 +102,10 @@ namespace giantsummon
         public virtual string MountUnlockMessage { get { return "*It seems like I can mount this guardian whenever I want.*"; } }
         public virtual string ControlUnlockMessage { get { return "*It seems like I can control It's movement whenever I want.*"; } }
 
-        public virtual string FriendLevelMessage { get { return "*The guardian now considers you a friend.*"; } }
-        public virtual string BestFriendLevelMessage { get { return "*The guardian now considers you It's best friend.*"; } }
-        public virtual string BFFLevelMessage { get { return "*The guardian now considers you It's best friend forever.*"; } }
-        public virtual string BuddyForLifeLevelMessage { get { return "*The guardian now considers you It's buddy for life.*"; } }
+        public virtual string FriendLevelMessage { get { return ""; } }
+        public virtual string BestFriendLevelMessage { get { return ""; } }
+        public virtual string BFFLevelMessage { get { return ""; } }
+        public virtual string BuddyForLifeLevelMessage { get { return ""; } }
 
         public virtual string LeavingWorldMessageGuardianSummoned { get { return " things were packed out of the world."; } }
         public virtual string LeavingWorldMessage { get { return " has moved out of the world."; } }
@@ -912,6 +912,7 @@ namespace giantsummon
                 StoreBuyMessage = "Mes.Store.BuyMessage",
                 StoreFullInventoryMessage = "Mes.Store.FullInvMessage",
                 StoreNoCoinsMessage = "Mes.Store.NotEnoughCoins";
+            public const string BuddySelected = "Mes.BuddyPicked";
         }
 
         public class FastItemDefiniton : Terraria.ModLoader.Config.ItemDefinition

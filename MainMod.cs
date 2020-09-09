@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace giantsummon
 {
@@ -34,9 +35,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 74, LastModVersion = 71;
+        public const int ModVersion = 75, LastModVersion = 71;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -129,6 +130,36 @@ namespace giantsummon
             g.RecognizeAsTerraGuardian = RecognizeAsTerraGuardian;
             CompanionGroups.Add(ID, g);
             return g;
+        }
+
+        public static GuardianID[] GetPossibleStarterGuardians()
+        {
+            List<GuardianID> PossibleGuardians = new List<GuardianID>();
+            PossibleGuardians.AddRange(MainMod.InitialGuardians);
+            foreach (Terraria.IO.PlayerFileData pfd in Main.PlayerList)
+            {
+                try
+                {
+                    PlayerMod pm = pfd.Player.GetModPlayer<PlayerMod>();
+                    if (pm == null)
+                    {
+                        continue;
+                    }
+                    foreach (GuardianData gd in pm.MyGuardians.Values)
+                    {
+                        if (!PossibleGuardians.Any(x => x.ID == gd.ID && x.ModID == gd.ModID))
+                        {
+                            PossibleGuardians.Add(new GuardianID(gd.ID, gd.ModID));
+                        }
+                    }
+                }
+                catch { }
+            }
+            if (PossibleGuardians.Count == 0)
+            {
+                PossibleGuardians.Add(new GuardianID(0, ""));
+            }
+            return PossibleGuardians.ToArray();
         }
 
         public static int CalculateMessageTime(string s)
@@ -669,7 +700,7 @@ namespace giantsummon
             {
                 if (ShowDebugInfo)
                 {
-                    Terraria.UI.LegacyGameInterfaceLayer gi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, Terraria.UI.InterfaceScaleType.UI);
+                    Terraria.UI.LegacyGameInterfaceLayer gi = new LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, Terraria.UI.InterfaceScaleType.UI);
                     layers.Add(gi);
                 }
                 if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
@@ -686,7 +717,7 @@ namespace giantsummon
                     }*/
                     if (Main.playerInventory)
                         Main.playerInventory = false;
-                    Terraria.UI.LegacyGameInterfaceLayer downedInterface = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
+                    Terraria.UI.LegacyGameInterfaceLayer downedInterface = new LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
                     layers.Insert(0, downedInterface);
                     /*if (!Main.player[Main.myPlayer].dead)
                     {
@@ -712,15 +743,15 @@ namespace giantsummon
                             layers.RemoveAt(l);
                     }
                 }
-                Terraria.UI.LegacyGameInterfaceLayer dgi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Inventory Interface", DrawGuardianInventoryInterface, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer hsi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer gsi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Selection Interface", DrawGuardianSelectionInterface, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer goi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer gmi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer dnagd = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Chat Messages Interface", DrawNpcsAndGuardianChatMessages, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer dgdi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Dialogue Inteface", DrawGuardianDialogueInterface, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer dgmo = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, Terraria.UI.InterfaceScaleType.UI);
-                Terraria.UI.LegacyGameInterfaceLayer dghmi = new Terraria.UI.LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, Terraria.UI.InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer dgi = new LegacyGameInterfaceLayer("Terra Guardians: Inventory Interface", DrawGuardianInventoryInterface, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer hsi = new LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer gsi = new LegacyGameInterfaceLayer("Terra Guardians: Selection Interface", DrawGuardianSelectionInterface, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer goi = new LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer gmi = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer dnagd = new LegacyGameInterfaceLayer("Terra Guardians: Chat Messages Interface", DrawNpcsAndGuardianChatMessages, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer dgdi = new LegacyGameInterfaceLayer("Terra Guardians: Dialogue Inteface", DrawGuardianDialogueInterface, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer dgmo = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, InterfaceScaleType.UI);
+                Terraria.UI.LegacyGameInterfaceLayer dghmi = new LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, InterfaceScaleType.UI);
                 layers.Insert(0, dgmo);
                 if (PlayerChatPos > -1)
                 {
@@ -757,6 +788,15 @@ namespace giantsummon
                 }
                 else
                     layers.Add(hsi);
+                if (BuddyModeSetupInterface.WindowActive && MouseSlotPosition > -1)
+                {
+                    Terraria.UI.LegacyGameInterfaceLayer bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
+                    {
+                        BuddyModeSetupInterface.Draw();
+                        return true;
+                    }, InterfaceScaleType.UI);
+                    layers.Insert(MouseSlotPosition, bmsi);                
+                }
             }
             catch
             {
@@ -868,8 +908,9 @@ namespace giantsummon
                 return true;
             Vector2 DrawPos = new Vector2(0, 138f + 64 * 2);
             TerraGuardian guardian = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian;
-            if (!guardian.Active) return true;
-            string[] TextsToDraw = new string[]{
+            string[] TextsToDraw = new string[0];
+            /*if (!guardian.Active) return true;
+            TextsToDraw = new string[]{
                 "Selected Weapon Slot: " + guardian.SelectedItem,
                 "Selected Off-hand Slot: " + guardian.SelectedOffhand,
                 "Held Projectile: " + guardian.HeldProj,
@@ -890,11 +931,10 @@ namespace giantsummon
                 "Distance Travelled: " + (guardian.TravellingStacker * 0.5f) + "ft",
                 "Combat Damage Stacked: " + guardian.DamageStacker + "%",
                 "Afk Time: " + Math.Round((float)guardian.AfkCounter / 60, 1) + "s"
-            };
+            };*/
             if(true)
             {
-                List<string> New = new List<string>();
-                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                List<string> New = new List<string>();                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
                     /*New.Add(g.Name + " actions: " + g.LastLoggedPlayerState.Count);

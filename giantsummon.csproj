@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlexRecruitScripts.cs" />
+    <Compile Include="BuddyModeSetupInterface.cs" />
     <Compile Include="BuffData.cs" />
     <Compile Include="Buffs\Defended.cs" />
     <Compile Include="Buffs\HeavyInjury.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Items\Consumable\EtherFruit.cs" />
     <Compile Include="Items\Consumable\EtherHeart.cs" />
     <Compile Include="Items\Consumable\FirstAidKit.cs" />
+    <Compile Include="Items\Consumable\PortraitOfAFriend.cs" />
     <Compile Include="Items\Consumable\SkillResetPotion.cs" />
     <Compile Include="Items\Consumable\RenameCard.cs" />
     <Compile Include="Items\Misc\BirthdayPresent.cs" />
@@ -386,6 +388,7 @@
     <Content Include="Items\Consumable\GuardianGreatHealingPotion.png" />
     <Content Include="Items\Consumable\GuardianHealingPotion.png" />
     <Content Include="Items\Consumable\LesserGuardianPotion.png" />
+    <Content Include="Items\Consumable\PortraitOfAFriend.png" />
     <Content Include="Items\Consumable\RenameCard.png" />
     <Content Include="Items\Consumable\SkillResetPotion.png" />
     <Content Include="Items\Misc\BirthdayPresent.png" />

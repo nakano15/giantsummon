@@ -108,6 +108,7 @@ namespace giantsummon.Npcs
                         return;
                     }
                 }
+                npc.gfxOffY = 0;
                 if (npc.collideY || npc.velocity.Y == 0)
                 {
                     AiStage = 1;
@@ -118,6 +119,7 @@ namespace giantsummon.Npcs
             }
             else if (AiStage == 1)
             {
+                npc.gfxOffY = 0;
                 AiTimer += 1;
                 if (AiTimer % 300 == 0)
                     SayMessage("*Someone, help me!*");
@@ -137,84 +139,13 @@ namespace giantsummon.Npcs
                 else
                     npc.direction = -1;
                 MoveRight = MoveLeft = false;
-                if (Math.Abs(Distance) > 96f)
+                if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI && Math.Abs(Distance) > 96f)
                 {
                     if (Distance > 0)
                         MoveRight = true;
                     else
                         MoveLeft = true;
                 }
-                bool PlayerHasMabel = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 8);
-                /*if (AiTimer == 30)
-                {
-                    SayMessage("*Thanks for helping me.*");
-                }
-                if (PlayerHasMabel)
-                {
-                    if (AiTimer == 30 + DialogueTime)
-                    {
-                        SayMessage("*Oh, hello. It's you again.*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 2)
-                    {
-                        SayMessage("*I'm sorry, but I'm still trying to fly...*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 3)
-                    {
-                        SayMessage("*I just can't give up being a model.*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 4)
-                    {
-                        SayMessage("*Since I'm here, I guess I'll hang around.*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 5)
-                    {
-                        NpcMod.AddGuardianMet(8);
-                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
-                        //npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
-                    }
-                }
-                else
-                {
-                    if (AiTimer == 30 + DialogueTime)
-                    {
-                        SayMessage("*I tried to see If I could fly like a Reindeer. It didn't worked well...*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 2)
-                    {
-                        SayMessage("*My name is " + Base.Name + ", by the way.*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 3)
-                    {
-                        SayMessage("*I have to practice for Miss North Pole, It's going to happen soo, close to when the Xmas you people celebrates happen.*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 4)
-                    {
-                        if (DateTime.Now.Month != 12 || DateTime.Now.Day >= 25)
-                            SayMessage("*What?! It has already passed? Nooooooooo!!! Well... I guess I can practice for next year?*");
-                        else
-                        {
-                            SayMessage("*It's close to that day?! Oh my... I have so much to practice.*");
-                        }
-                    }
-                    if (AiTimer == 30 + DialogueTime * 5)
-                    {
-                        SayMessage("*Do you mind If I stay on your world for a while, while I practice?*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 6)
-                    {
-                        SayMessage("*I wonder if the people here are nice like you, too.*");
-                    }
-                    if (AiTimer == 30 + DialogueTime * 7)
-                    {
-                        PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], 8);
-                        PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], 8).IncreaseFriendshipProgress(1);
-                        NpcMod.AddGuardianMet(8);
-                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
-                        //npc.Transform(ModContent.NPCType<GuardianNPC.List.DeerGuardian>());
-                    }
-                }
-                AiTimer++;*/
             }
             if (AiStage < 2 && AiTimer > 3000)
             {

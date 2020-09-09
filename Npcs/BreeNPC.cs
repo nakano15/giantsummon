@@ -174,7 +174,7 @@ namespace giantsummon.Npcs
                     switch (SceneStep)
                     {
                         case SceneIds.SardineSpotted:
-                            if (guardian.FriendshipLevel < 5) //Tries to flee
+                            if (guardian.FriendshipLevel < 5 && !PlayerMod.HasBuddiesModeOn(player)) //Tries to flee
                             {
                                 ChangeScene(SceneIds.SardineFlees);
                                 guardian.SaySomething("Uh oh, I gotta go.");

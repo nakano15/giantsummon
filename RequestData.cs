@@ -650,7 +650,7 @@ namespace giantsummon
                 Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
                 foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
                 {
-                    if (tg.Active && !tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && !PlayerHasRequestRequiringCompanion(player.player, tg.Data))
+                    if (tg.Active && !tg.Data.IsStarter && !PlayerMod.HasBuddiesModeOn(player.player) && tg.FriendshipLevel < tg.Base.CallUnlockLevel && !PlayerHasRequestRequiringCompanion(player.player, tg.Data))
                     {
                         Main.NewText(tg.Name + " was dismissed");
                         player.DismissGuardian(tg.AssistSlot);

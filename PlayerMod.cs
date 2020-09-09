@@ -12,6 +12,9 @@ namespace giantsummon
     public class PlayerMod : ModPlayer
     {
         public static bool ForceKill = false;
+        public bool IsBuddiesMode { get { return BuddiesMode; } }
+        private bool BuddiesMode = false;
+        public GuardianID BuddiesModeBuddyID = null;
         public EyeState eye = EyeState.Open;
         public Dictionary<int, GuardianData> MyGuardians = new Dictionary<int, GuardianData>();
         public TerraGuardian Guardian = new TerraGuardian();
@@ -45,7 +48,6 @@ namespace giantsummon
         public short RescueTime = 0;
         public const int MaxRescueTime = 10;
         public bool RescueWakingUp = false;
-        public int GuardianInventory = 0; //For messing with it's internal inventory or chest
         public int SelectedGuardian = -1;
         public int[] SelectedAssistGuardians = new int[MainMod.MaxExtraGuardianFollowers];
         public int LastHealthValue = -1;
@@ -218,6 +220,63 @@ namespace giantsummon
             {
                 PigGuardianCloudForm[i] = true;
             }
+        }
+
+        public bool SetBuddyMode(int BuddyID, string BuddyModID = "")
+        {
+            if (BuddyModID == "")
+                BuddyModID = mod.Name;
+            GuardianBase gb = GuardianBase.GetGuardianBase(BuddyID, BuddyModID);
+            if (gb.InvalidGuardian)
+                return false;
+            if (!HasGuardian(BuddyID, BuddyModID))
+            {
+                AddNewGuardian(BuddyID, BuddyModID);
+            }
+            for (byte g = 0; g < GetAllGuardianFollowers.Length; g++)
+            {
+                if (GetAllGuardianFollowers[g].Active)
+                {
+                    DismissGuardian(g);
+                }
+            }
+            if (!HasGuardianSummoned(player, BuddyID, BuddyModID))
+            {
+                CallGuardian(BuddyID, BuddyModID, 0);
+            }
+            if (Guardian.Base.GetSpecialMessage(GuardianBase.MessageIDs.BuddySelected) != "")
+            {
+                Guardian.SaySomething(Guardian.Base.GetSpecialMessage(GuardianBase.MessageIDs.BuddySelected), true);
+            }
+            BuddiesModeBuddyID = new GuardianID(BuddyID, BuddyModID);
+            BuddiesMode = true;
+            int PortraitID = ModContent.ItemType<Items.Consumable.PortraitOfAFriend>();
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                if (player.inventory[i].type == PortraitID)
+                {
+                    player.inventory[i].SetDefaults(0);
+                }
+            }
+            if (Main.myPlayer == player.whoAmI && Main.mouseItem.type == PortraitID)
+                Main.mouseItem.SetDefaults(0);
+            if(player.whoAmI == Main.myPlayer)
+                Main.NewText("Buddies mode activated.");
+            return true;
+        }
+
+        public bool IsPlayerBuddy(GuardianID id)
+        {
+            if (BuddiesModeBuddyID != null)
+            {
+                return id == BuddiesModeBuddyID;
+            }
+            return false;
+        }
+
+        public static bool HasBuddiesModeOn(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().BuddiesMode;
         }
 
         public override bool CloneNewInstances
@@ -1658,6 +1717,21 @@ namespace giantsummon
                 Main.NewText("New month voting is now up, pick your favorite TerraGuardians.");
                 MainMod.HasPlayerAwareOfContestMonthChange = true;
             }
+            if (BuddiesMode)
+            {
+                if (!HasGuardianSummoned(player, BuddiesModeBuddyID.ID, BuddiesModeBuddyID.ModID))
+                    CallGuardian(BuddiesModeBuddyID.ID, BuddiesModeBuddyID.ModID);
+            }
+        }
+
+        public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
+        {
+            if (!mediumcoreDeath && Main.PlayerList.Count > 1)
+            {
+                Item i = new Item();
+                i.SetDefaults(ModContent.ItemType<Items.Consumable.PortraitOfAFriend>());
+                items.Add(i);
+            }
         }
 
         public override Terraria.ModLoader.IO.TagCompound Save()
@@ -1665,6 +1739,12 @@ namespace giantsummon
             Terraria.ModLoader.IO.TagCompound tag = new Terraria.ModLoader.IO.TagCompound();
             tag.Add("ModVersion", MainMod.ModVersion);
             tag.Add("TutorialStep", (byte)TutorialFlags);
+            tag.Add("BuddiesMode", BuddiesMode);
+            if (BuddiesMode)
+            {
+                tag.Add("BuddyID", BuddiesModeBuddyID.ID);
+                tag.Add("BuddyModID", BuddiesModeBuddyID.ModID);
+            }
             tag.Add("KnockedOut", KnockedOut);
             int[] Keys = MyGuardians.Keys.ToArray();
             tag.Add("GuardianUIDs", Keys);
@@ -1710,6 +1790,14 @@ namespace giantsummon
             }
             else
                 TutorialCompanionIntroduction = true;
+            if (ModVersion >= 75)
+            {
+                BuddiesMode = tag.GetBool("BuddiesMode");
+                if (BuddiesMode)
+                {
+                    BuddiesModeBuddyID = new GuardianID(tag.GetInt("BuddyID"), tag.GetString("BuddyModID"));
+                }
+            }
             if (ModVersion >= 59)
                 KnockedOut = tag.GetBool("KnockedOut");
             Guardian = new TerraGuardian();
@@ -1956,6 +2044,10 @@ namespace giantsummon
             }
             if (Guardian.Active)
             {
+                if (BuddiesMode && Guardian.MyID == BuddiesModeBuddyID) //Never remove the buddy. NEVER.
+                {
+                    return;
+                }
                 if (Main.netMode > 0)
                 {
                     Guardian.Active = false;
@@ -2026,7 +2118,7 @@ namespace giantsummon
                 {
                     if (player.whoAmI == Main.myPlayer && !TutorialCompanionIntroduction)
                     {
-                        Main.NewText("Looks like you've got yourself a TerraGuardian. You can call him by going in your inventory, on the lower part, and clicking the bulldog face.");
+                        Main.NewText("Looks like you've got yourself a follower. You can check It by going in your inventory, on the lower part, and clicking the bulldog face.");
                         TutorialCompanionIntroduction = true;
                     }
                 }
