@@ -1077,7 +1077,8 @@ namespace giantsummon
                         Vector2 HeadDrawPosition = HealthbarPosition;
                         HeadDrawPosition.X += 16;
                         HeadDrawPosition.Y += 16;
-                        Main.spriteBatch.Draw(HeadTexture, HeadDrawPosition, null, Color.White, 0f, new Vector2(HeadTexture.Width * 0.5f, HeadTexture.Height * 0.5f), 1f, SpriteEffects.None, 0f);
+                        Guardian.DrawHead(HeadDrawPosition);
+                        //Main.spriteBatch.Draw(HeadTexture, HeadDrawPosition, null, Color.White, 0f, new Vector2(HeadTexture.Width * 0.5f, HeadTexture.Height * 0.5f), 1f, SpriteEffects.None, 0f);
                         //HeadDrawPosition.X += 8f;
                         HeadDrawPosition.Y += 8f;
                         Guardian.DrawFriendshipHeart(HeadDrawPosition);
@@ -1433,7 +1434,8 @@ namespace giantsummon
                             else
                                 texture = guardian.Base.sprites.HeadSprite;
                             float ScaleMod = (texture.Width > texture.Height ? 32f / texture.Width : 32f / texture.Height);
-                            Main.spriteBatch.Draw(texture, ThisPosition, null, Color.White, 0f, Vector2.Zero, ScaleMod, SpriteEffects.None, 0f);
+                            guardian.DrawHead(ThisPosition, ScaleMod, 0, 0);
+                            //Main.spriteBatch.Draw(texture, ThisPosition, null, Color.White, 0f, Vector2.Zero, ScaleMod, SpriteEffects.None, 0f);
                             SelectionPosition.X += 32;
                         }
                         else

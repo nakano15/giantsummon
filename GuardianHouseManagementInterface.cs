@@ -167,9 +167,10 @@ namespace giantsummon
 
         public static void DrawBanner(TerraGuardian tg, Vector2 Position, Color color)
         {
-            Main.spriteBatch.Draw(Main.HouseBannerTexture[1],
+            byte BannerType = 1;
+            Main.spriteBatch.Draw(Main.HouseBannerTexture[BannerType],
                 Position, null,
-                color, 0f, new Vector2(Main.HouseBannerTexture[1].Width * 0.5f, Main.HouseBannerTexture[1].Height * 0.5f),
+                color, 0f, new Vector2(Main.HouseBannerTexture[BannerType].Width * 0.5f, Main.HouseBannerTexture[BannerType].Height * 0.5f),
                 1f, SpriteEffects.None, 0f);
             tg.DrawHead(Position, 1f);
         }

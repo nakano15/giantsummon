@@ -32,3 +32,5 @@ The companions health interface will now show the life crystal and life fruit va
 	The upper half of the health bar will show the life crystal/life fruits your companions used.
 	The lower half of the health bar will show the shared life crystal value the companion gained from your character.
 	Passing the mouse over the health bar will show the shared life crystal and fruit values.
+It's now possible to change the draw layers of the companion head, on their GuardianBase script.
+	This allows to changing the head sprite of the companion when there is a skin in use.

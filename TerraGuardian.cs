@@ -14708,19 +14708,20 @@ namespace giantsummon
             AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
         }
 
-        public void DrawHead(Vector2 CenterPosition, float Scale = 1f)
+        public void DrawHead(Vector2 Position, float Scale = 1f, float XOffset = 0.5f, float YOffset = 0.5f)
         {
             if (Base.IsTerrarian)
             {
-                CenterPosition.Y -= 16f;
-                DrawTerrarianHeadData(CenterPosition, Scale);
+                Position.Y -= 16f;
+                DrawTerrarianHeadData(Position, Scale);
                 return;
             }
+            Position -= new Vector2(Base.sprites.HeadSprite.Width * XOffset, Base.sprites.HeadSprite.Height * YOffset);
             List<GuardianDrawData> gddlist = new List<GuardianDrawData>();
-            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, Base.sprites.HeadSprite, CenterPosition + new Vector2(-Base.sprites.HeadSprite.Width * 0.5f, -Base.sprites.HeadSprite.Height * 0.5f),
+            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, Base.sprites.HeadSprite, Position,
                 null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None);
             gddlist.Add(gdd);
-            Base.GuardianModifyDrawHeadScript(this, CenterPosition, Color.White, Scale, SpriteEffects.None, ref gddlist);
+            Base.GuardianModifyDrawHeadScript(this, Position, Color.White, Scale, SpriteEffects.None, ref gddlist);
             foreach (GuardianDrawData d in gddlist)
                 d.Draw(Main.spriteBatch);
         }
@@ -14729,8 +14730,8 @@ namespace giantsummon
         {
             if (!Base.IsTerrarian)
                 return;
+            List<GuardianDrawData> gddlist = new List<GuardianDrawData>();
             SpriteEffects seffect = SpriteEffects.None;
-            GuardianDrawData dd;
             Rectangle headrect = new Rectangle(0, 0, 40, 56);
             Color HairColor = Base.TerrarianInfo.HairColor,
                 EyesColor = Base.TerrarianInfo.EyeColor,
@@ -14751,35 +14752,31 @@ namespace giantsummon
             if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28)
                 DrawNormalHair = true; 
             bool HideLegs = LegSlot == 143 || LegSlot == 106 || LegSlot == 140;
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, headrect, SkinColor, 0f, Origin, Scale, seffect);
-            dd.Draw(Main.spriteBatch);
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect);
-            dd.Draw(Main.spriteBatch);
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, headrect, EyesWhiteColor, 0f, Origin, Scale, seffect);
-            dd.Draw(Main.spriteBatch);
+            gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, headrect, SkinColor, 0f, Origin, Scale, seffect));
+            gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect));
+            gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, headrect, EyesWhiteColor, 0f, Origin, Scale, seffect));
             if (Base.TerrarianInfo.HairStyle >= 0 && Main.hairLoaded[Base.TerrarianInfo.HairStyle])
             {
                 if (DrawNormalHair)
                 {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, 0f, Origin, Scale, seffect);
-                    dd.Draw(Main.spriteBatch);
+                    gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, 0f, Origin, Scale, seffect));
                 }
                 else if (DrawAltHair)
                 {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, 0f, Origin, Scale, seffect);
-                    dd.Draw(Main.spriteBatch);
+                    gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairAltTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, 0f, Origin, Scale, seffect));
                 }
             }
             if (HeadSlot > 0 && Main.armorHeadLoaded[HeadSlot])
             {
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], Position, headrect, ArmorColor, 0f, Origin, Scale, seffect);
-                dd.Draw(Main.spriteBatch);
+                gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], Position, headrect, ArmorColor, 0f, Origin, Scale, seffect));
                 if (Base.Effect == GuardianBase.GuardianEffect.Wraith && HeadSlot == 38)
                 {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect);
-                    dd.Draw(Main.spriteBatch);
+                    gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect));
                 }
             }
+            Base.GuardianModifyDrawHeadScript(this, Position, SkinColor, Scale, seffect, ref gddlist);
+            foreach (GuardianDrawData gdd in gddlist)
+                gdd.Draw(Main.spriteBatch);
         }
 
         public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, Color color, Color armorColor, bool IgnoreLightingColor)
