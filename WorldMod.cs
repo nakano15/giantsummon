@@ -578,6 +578,7 @@ namespace giantsummon
             {
                 GuardianMouseOverAndDialogueInterface.StartDialogue(guardian);
                 GuardianMouseOverAndDialogueInterface.SetDialogue(Main.npcChatText);
+                GuardianMouseOverAndDialogueInterface.SetDialogueDistanceAutoCloseDelay();
                 Main.player[Main.myPlayer].talkNPC = npc.whoAmI;
             }
         }

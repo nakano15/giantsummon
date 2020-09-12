@@ -661,8 +661,8 @@ namespace giantsummon
             Vector2 Center = player.Center;
             foreach (TerraGuardian g in WorldMod.GuardianTownNPC)
             {
-                if (g.OwnerPos == -1 && g.Position.X >= Center.X - NPC.sWidth && g.Position.X < Center.X + NPC.sWidth &&
-                    g.CenterPosition.Y >= Center.Y - NPC.sHeight && g.CenterPosition.Y < Center.Y + NPC.sHeight)
+                if (g.OwnerPos == -1 && g.Position.X >= Center.X - NPC.sWidth * 0.5f && g.Position.X < Center.X + NPC.sWidth * 0.5f &&
+                    g.CenterPosition.Y >= Center.Y - NPC.sHeight * 0.5f && g.CenterPosition.Y < Center.Y + NPC.sHeight * 0.5f)
                 {
                     TerraGuardiansNearby++;
                     player.townNPCs += g.Base.TownNpcSlot;
@@ -1458,9 +1458,7 @@ namespace giantsummon
                 if (damage > 0)
                 {
                     tg.OnHitSomething(target);
-                    tg.IncreaseSkillByProjDamage(proj, damage);
-                    if (crit)
-                        tg.AddSkillProgress(damage, GuardianSkills.SkillTypes.Luck);
+                    tg.IncreaseSkillByProjDamage(proj, damage, crit);
                 }
             }
         }
@@ -1488,9 +1486,7 @@ namespace giantsummon
                 if (damage > 0)
                 {
                     tg.OnHitSomething(target);
-                    tg.IncreaseSkillByProjDamage(proj, damage);
-                    if (crit)
-                        tg.AddSkillProgress(damage, GuardianSkills.SkillTypes.Luck);
+                    tg.IncreaseSkillByProjDamage(proj, damage, crit);
                 }
             }
             base.OnHitPvpWithProj(proj, target, damage, crit);

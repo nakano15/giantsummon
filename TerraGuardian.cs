@@ -446,11 +446,6 @@ namespace giantsummon
                 {
                     GetLeftHandPosition((Kneeling && Base.CanDuck) ? Base.DuckingSwingFrames[2] : Base.ItemUseFrames[2], true, out AttackRangeX, out y);
                 }
-                /*int Frame = Base.ItemUseFrames[2];
-                if (Kneeling && Base.CanDuck)
-                    Frame = Base.DuckingSwingFrames[2];
-                GetLeftHandPosition(Frame, out AttackRangeX, out y);*/
-                //AttackRangeX = (int)(SpriteWidth * 0.5f) - AttackRangeX;
                 Range += (int)(AttackRangeX * Scale);
             }
             return Range;
@@ -1603,19 +1598,25 @@ namespace giantsummon
         public void CountNearbyNpcs()
         {
             TownNpcs = 0;
-            if (true || OwnerPos > -1)
+            Vector2 MyCenter = CenterPosition;
+            for (int n = 0; n < 200; n++)
             {
-                Vector2 MyCenter = CenterPosition;
-                for (int n = 0; n < 200; n++)
+                if (Main.npc[n].active && Main.npc[n].townNPC)
                 {
-                    if (Main.npc[n].active && Main.npc[n].townNPC)
+                    Vector2 NpcCenter = Main.npc[n].Center;
+                    if (MyCenter.X >= NpcCenter.X - NPC.sWidth && MyCenter.X < NpcCenter.X + NPC.sWidth && MyCenter.Y >= NpcCenter.Y - NPC.sHeight && MyCenter.Y < NpcCenter.Y + NPC.sHeight)
                     {
-                        Vector2 NpcCenter = Main.npc[n].Center;
-                        if (MyCenter.X >= NpcCenter.X - NPC.sWidth && MyCenter.X < NpcCenter.X + NPC.sWidth && MyCenter.Y >= NpcCenter.Y - NPC.sHeight && MyCenter.Y < NpcCenter.Y + NPC.sHeight)
-                        {
-                            TownNpcs += Main.npc[n].npcSlots;
-                        }
+                        TownNpcs += Main.npc[n].npcSlots;
                     }
+                }
+            }
+            foreach (TerraGuardian t in WorldMod.GuardianTownNPC)
+            {
+                Vector2 NpcCenter = t.CenterPosition;
+                if (t.WhoAmID != WhoAmID && MyCenter.X >= NpcCenter.X - NPC.sWidth && MyCenter.X < NpcCenter.X + NPC.sWidth && 
+                    MyCenter.Y >= NpcCenter.Y - NPC.sHeight && MyCenter.Y < NpcCenter.Y + NPC.sHeight)
+                {
+                    TownNpcs += t.Base.TownNpcSlot;
                 }
             }
         }
@@ -4691,11 +4692,12 @@ namespace giantsummon
                         if (NeedsDucking && !NearDeath)
                             Duck = true;
                     }
-                    float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + TargetWidth * 0.5f,
-                        DistanceAbs = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f);
+                    float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
+                        DistanceAbs = Math.Abs(Position.X - TargetPosition.X + (TargetWidth * 0.5f));
+                    Approach = Retreat = false;
                     if (DistanceAbs < AttackRange + 8 || NearDeath)
                         Retreat = true;
-                    else if (DistanceAbs >= AttackRange)
+                    else if (DistanceAbs > AttackRange)
                         Approach = true;
                 }
             }
@@ -4836,6 +4838,15 @@ namespace giantsummon
         {
             if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos != Main.myPlayer)
                 return;
+            if (Downed && OwnerPos == -1 && IsTownNpc)
+            {
+                WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
+                if (Math.Abs(Position.X - townnpc.HomeX * 16) > 64f || Math.Abs(Position.Y - townnpc.HomeY * 16) > 64)
+                {
+                    Position.X = townnpc.HomeX * 16;
+                    Position.Y = townnpc.HomeY * 16;
+                }
+            }
             if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified) || KnockedOut) return;
             if (!Is2PControlled)
             {
@@ -5457,6 +5468,14 @@ namespace giantsummon
                     }
                 }
                 return false;
+            }
+        }
+
+        public bool IsTownNpc
+        {
+            get
+            {
+                return GetTownNpcInfo != null;
             }
         }
 
@@ -9166,7 +9185,7 @@ namespace giantsummon
                     ImmuneTime *= 2;
                 if (HasFlag(GuardianFlags.PanicNecklace))
                     AddBuff(63, 300);
-                if (!EvadedAttack && Damage > 0) AddSkillProgress(Damage * 4, GuardianSkills.SkillTypes.Endurance);
+                if (!EvadedAttack && Damage > 0) AddSkillProgress(Damage * 2, GuardianSkills.SkillTypes.Endurance);
                 if (MP < MMP && HasFlag(GuardianFlags.MagicCuffs))
                 {
                     int RegenValue = Damage;
@@ -10579,9 +10598,9 @@ namespace giantsummon
                                     if (resultingDamage > 0)
                                     {
                                         OnHitSomething(Main.player[t]);
-                                        AddSkillProgress((float)resultingDamage, GuardianSkills.SkillTypes.Strength);
+                                        AddSkillProgress((float)resultingDamage, GuardianSkills.SkillTypes.Strength); //(float)resultingDamage
                                         if (Critical)
-                                            AddSkillProgress((float)resultingDamage, GuardianSkills.SkillTypes.Luck);
+                                            AddSkillProgress((float)resultingDamage, GuardianSkills.SkillTypes.Luck); //(float)resultingDamage
                                     }
                                 }
                             }
@@ -10610,9 +10629,9 @@ namespace giantsummon
                                     if (HasFlag(GuardianFlags.BeetleOffenseEffect))
                                         IncreaseCooldownValue(GuardianCooldownManager.CooldownType.BeetleCounter, (int)result);
                                     OnHitSomething(Main.npc[t]);
-                                    AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength);
+                                    AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength); //(float)result
                                     if (Critical)
-                                        AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck);
+                                        AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck); //(float)result
                                 }
                             }
                             else
@@ -12003,17 +12022,28 @@ namespace giantsummon
             }
         }
 
-        public void IncreaseSkillByProjDamage(Projectile proj, int Damage)
+        public void IncreaseSkillByProjDamage(Projectile proj, int Damage, bool crit)
         {
             if (proj.melee)
+            {
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Strength);
+                if (crit) AddSkillProgress(Damage, GuardianSkills.SkillTypes.Luck);
+            }
             if (proj.ranged || proj.thrown)
+            {
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Ballistic);
+                if (crit) AddSkillProgress(Damage, GuardianSkills.SkillTypes.Luck);
+            }
             if (proj.magic)
+            {
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Mysticism);
-            if (proj.minion || proj.type == 376 || proj.type == 374 || 
+                if (crit) AddSkillProgress(Damage, GuardianSkills.SkillTypes.Luck);
+            }
+            if (proj.minion || proj.type == 376 || proj.type == 374 ||
                 proj.type == Terraria.ID.ProjectileID.StardustCellMinionShot || proj.type == 389 || proj.type == 195 || proj.type == 408)
+            {
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Leadership);
+            }
         }
 
         public float CalculateAimingUseAnimation(float Rotation)

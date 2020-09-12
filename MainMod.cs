@@ -1136,9 +1136,13 @@ namespace giantsummon
                 if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + 98 &&
                     Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + 8)
                 {
-                    MouseOverText = "Life Crystals: " + Guardian.Data.LifeCrystalHealth + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits: " + Guardian.Data.LifeFruitHealth + "/" + TerraGuardian.MaxLifeFruit;
+                    MouseOverText = "Life Crystals used: " + Guardian.Data.LifeCrystalHealth + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits used: " + Guardian.Data.LifeFruitHealth + "/" + TerraGuardian.MaxLifeFruit;
                     if (Guardian.Data.Injury > 0)
                         MouseOverText += "  [Injury " + Guardian.Data.Injury + "%]";
+                    if (MainMod.SharedCrystalValues)
+                    {
+                        MouseOverText += "\nShared Life Crystal Value: " + Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeCrystalsUsed + "  Shared Life Fruit Value: " + Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeFruitsUsed;
+                    }
                 }
                 int MaxHealthBarSize = 98;
                 if(UsingGuardianNecessitiesSystem && Guardian.Data.Injury > 0 && !Downed)
@@ -1150,26 +1154,39 @@ namespace giantsummon
                 }
                 else
                 {
-                    for (int i = 0; i < 3; i++)
+                    for (int y = 0; y < 2; y++)
                     {
-                        float BarScale = 1f;
-                        switch (i)
+                        int LCValue = Guardian.Data.LifeCrystalHealth,
+                            LFValue = Guardian.Data.LifeFruitHealth;
+                        if (MainMod.SharedCrystalValues && y == 1)
                         {
-                            case 0: //Red health bar
-                                BarScale = MaxHealthBarScale;
-                                break;
-                            case 1:
-                                BarScale = (float)Guardian.Data.LifeCrystalHealth / TerraGuardian.MaxLifeCrystals;
-                                break;
-                            case 2:
-                                BarScale = (float)Guardian.Data.LifeFruitHealth / TerraGuardian.MaxLifeFruit;
-                                break;
+                            LCValue = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeCrystalsUsed;
+                            LFValue = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeFruitsUsed;
                         }
-                        if (BarScale > MaxHealthBarScale)
-                            BarScale = MaxHealthBarScale;
-                        //Draw bar
-                        int BarWidth = (int)(MaxHealthBarSize * BarScale);
-                        Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition, new Rectangle(22, 16 * (i + 1) + 4, BarWidth, 8), Color.White);
+                        Vector2 ThisHealthBarPosition = HealthbarPosition;
+                        if (y == 1)
+                            ThisHealthBarPosition.Y += 4;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            float BarScale = 1f;
+                            switch (i)
+                            {
+                                case 0: //Red health bar
+                                    BarScale = MaxHealthBarScale;
+                                    break;
+                                case 1:
+                                    BarScale = (float)LCValue / TerraGuardian.MaxLifeCrystals;
+                                    break;
+                                case 2:
+                                    BarScale = (float)LFValue / TerraGuardian.MaxLifeFruit;
+                                    break;
+                            }
+                            if (BarScale > MaxHealthBarScale)
+                                BarScale = MaxHealthBarScale;
+                            //Draw bar
+                            int BarWidth = (int)(MaxHealthBarSize * BarScale);
+                            Main.spriteBatch.Draw(GuardianHealthBar, ThisHealthBarPosition, new Rectangle(22, 16 * (i + 1) + 4 + y * 4, BarWidth, 4), Color.White);
+                        }
                     }
                 }
                 if (UsingGuardianNecessitiesSystem && Guardian.Data.Injury > 0)

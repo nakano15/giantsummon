@@ -15,6 +15,7 @@ namespace giantsummon
         private static int DialogueLines = 0;
         private static byte DialogueDelayTime = 0;
         private const byte DialogueMaxDelayTime = 60;
+        private static byte DialogueCloseCheckDelayTime = 0;
         public static bool SomeoneMouseOver = false;
         public static int MouseOverGuardian = -1;
         public static List<DialogueOption> Options = new List<DialogueOption>();
@@ -52,6 +53,11 @@ namespace giantsummon
         public static void SetDialogue(string Message) //And with auto parser :D
         {
             SetDialogue(Message, null);
+        }
+
+        public static void SetDialogueDistanceAutoCloseDelay()
+        {
+            DialogueCloseCheckDelayTime = 60;
         }
 
         public static void SetDialogue(string Message, TerraGuardian tg) //And with auto parser :D
@@ -243,6 +249,11 @@ namespace giantsummon
 
         public static bool IsInChattingRange(TerraGuardian tg)
         {
+            if (DialogueCloseCheckDelayTime > 0)
+            {
+                DialogueCloseCheckDelayTime--;
+                return true;
+            }
             Rectangle rect = new Rectangle((int)(MainPlayer.position.X + MainPlayer.width * 0.5f - Player.tileRangeX * 16 - tg.Width * 0.5f),
                 (int)(MainPlayer.position.Y + MainPlayer.height * 0.5f - Player.tileRangeY * 16 - tg.Height * 0.5f),
                 Player.tileRangeX * 32 + tg.Width,

@@ -23,3 +23,12 @@ Did some changes to Mabel recruit npc:
 The friendship advancement messages will now by default be empty, so guardians that doesn't have such messages, will never show them.
 	I was actually thinking about removing It entirelly, but who knows, someone must like to see a proof that friendship improved.
 Changed a bit the companion met tutorial message, to be less referent to TerraGuardians, and more about introducing their GSI.
+To avoid abrupt dialogue end between Guardian recruit npc > companion town npc, I added a 60 frames timer to ignore distancing of the companion.
+	This should make so dialogues aren't closed when the companion recruit npc transforms into town npc.
+Reduced the range the nearby companion town npcs will reduce the spawn rate of monsters.
+Companions will now recognize nearby companion town npcs as town npcs.
+Town npc companions will now be teleported to their houses when you are far away from them, and they are knocked out.
+The companions health interface will now show the life crystal and life fruit values shared from your character.
+	The upper half of the health bar will show the life crystal/life fruits your companions used.
+	The lower half of the health bar will show the shared life crystal value the companion gained from your character.
+	Passing the mouse over the health bar will show the shared life crystal and fruit values.

@@ -50,8 +50,144 @@ namespace giantsummon
             return Text;
         }
 
+        public StatusValues[] CalculateStatusBonus(TerraGuardian guardian)
+        {
+            List<StatusValues> FinalStatusCount = new List<StatusValues>();
+            float Percentage = (float)Level / 100;
+            switch (skillType)
+            {
+                case SkillTypes.Strength:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MeleeDamageMult, 0.3f * Percentage));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MeleeSpeedMult, 0.2f * Percentage));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MeleeKnockback, 2.5f * Percentage));
+                    }
+                    break;
+                case SkillTypes.Endurance:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MaxHealth, guardian.Base.InitialMHP * 1.5f * Percentage));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.DefenseRate, 5f * Percentage));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.DefenseBonus, 200f * Percentage));
+                        if (guardian.BlockRate > 0)
+                            FinalStatusCount.Add(new StatusValues(StatusTypes.BlockRate, 150f * Percentage));
+                    }
+                    break;
+                case SkillTypes.Athletic:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MoveSpeed, Percentage * 0.3f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MaxHealth, guardian.Base.InitialMHP * 1.5f * Percentage));
+                    }
+                    break;
+                case SkillTypes.Acrobatic:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.JumpSpeed, Percentage * 0.033f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.FallHeightTolerance, guardian.FallHeightTolerance * Percentage * 0.3f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.DodgeRate, Percentage * 150));
+                    }
+                    break;
+                case SkillTypes.Ballistic:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.RangedDamageMult, Percentage * 0.3f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.RangedBulletSpeed, Percentage * 0.2f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.Accuracy, Percentage * 2.5f));
+                    }
+                    break;
+                case SkillTypes.Mysticism:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MagicDamageMult, Percentage * 0.3f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MagicSpeed, Percentage * 0.2f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.Accuracy, Percentage * 2.5f));
+                    }
+                    break;
+                case SkillTypes.Leadership:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.SummonDamageMult, Percentage * 0.3f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MaxSummons, (int)(Percentage * 5)));
+                    }
+                    break;
+                case SkillTypes.Luck:
+                    {
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MeleeCritRate, Percentage * 15f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.RangedCritRate, Percentage * 15f));
+                        FinalStatusCount.Add(new StatusValues(StatusTypes.MagicCritRate, Percentage * 15f));
+                    }
+                    break;
+            }
+            return FinalStatusCount.ToArray();
+        }
+
         public void OnStatusUpdate(TerraGuardian guardian)
         {
+            /*StatusValues[] Values = CalculateStatusBonus(guardian);
+            foreach (StatusValues value in Values)
+            {
+                switch (value.status)
+                {
+                    case StatusTypes.MeleeDamageMult:
+                        guardian.MeleeDamageMultiplier += value.StatusValue;
+                        break;
+                    case StatusTypes.MeleeSpeedMult:
+                        guardian.MeleeSpeed += value.StatusValue;
+                        break;
+                    case StatusTypes.MeleeKnockback:
+                        guardian.MeleeKnockback += value.StatusValue;
+                        break;
+                    case StatusTypes.MaxHealth:
+                        guardian.MHP += (int)value.StatusValue;
+                        break;
+                    case StatusTypes.DefenseRate:
+                        guardian.DefenseRate += value.StatusValue;
+                        break;
+                    case StatusTypes.DefenseBonus:
+                        guardian.Defense += (int)value.StatusValue;
+                        break;
+                    case StatusTypes.BlockRate:
+                        guardian.BlockRate += value.StatusValue;
+                        break;
+                    case StatusTypes.MoveSpeed:
+                        guardian.MoveSpeed += value.StatusValue;
+                        break;
+                    case StatusTypes.JumpSpeed:
+                        guardian.JumpSpeed += value.StatusValue;
+                        break;
+                    case StatusTypes.FallHeightTolerance:
+                        guardian.FallHeightTolerance += (int)value.StatusValue;
+                        break;
+                    case StatusTypes.DodgeRate:
+                        guardian.DodgeRate += value.StatusValue;
+                        break;
+                    case StatusTypes.RangedDamageMult:
+                        guardian.RangedDamageMultiplier += value.StatusValue;
+                        break;
+                    case StatusTypes.RangedBulletSpeed:
+                        guardian.RangedSpeed += value.StatusValue;
+                        break;
+                    case StatusTypes.Accuracy:
+                        guardian.Accuracy += value.StatusValue;
+                        break;
+                    case StatusTypes.MagicDamageMult:
+                        guardian.MagicDamageMultiplier += value.StatusValue;
+                        break;
+                    case StatusTypes.MagicSpeed:
+                        guardian.MagicSpeed += value.StatusValue;
+                        break;
+                    case StatusTypes.SummonDamageMult:
+                        guardian.SummonDamageMultiplier += value.StatusValue;
+                        break;
+                    case StatusTypes.MaxSummons:
+                        guardian.MaxMinions += (int)value.StatusValue;
+                        break;
+                    case StatusTypes.MeleeCritRate:
+                        guardian.MeleeCriticalRate += (int)value.StatusValue;
+                        break;
+                    case StatusTypes.RangedCritRate:
+                        guardian.RangedCriticalRate += (int)value.StatusValue;
+                        break;
+                    case StatusTypes.MagicCritRate:
+                        guardian.MagicCriticalRate += (int)value.StatusValue;
+                        break;
+                }
+            }*/
             float LevelValue = (float)Math.Log(Level + 1);
             switch (skillType)
             {
@@ -64,7 +200,7 @@ namespace giantsummon
                     guardian.MHP += (int)(guardian.Base.InitialMHP * (LevelValue * 0.05f));
                     guardian.DefenseRate += (int)Math.Floor(LevelValue * 0.05f);
                     guardian.Defense += (int)(LevelValue * 2f);
-                    if(guardian.BlockRate > 0)guardian.BlockRate += LevelValue * 1.5f;
+                    if (guardian.BlockRate > 0) guardian.BlockRate += LevelValue * 1.5f;
                     break;
                 case SkillTypes.Athletic:
                     guardian.MoveSpeed += LevelValue * 0.01f;
@@ -138,17 +274,160 @@ namespace giantsummon
             }
         }
 
+        public string[] GetStatusBoost(StatusValues[] Values)
+        {
+            List<string> StatusText = new List<string>();
+            foreach (StatusValues sv in Values)
+            {
+                string Text = "";
+                switch (sv.status)
+                {
+                    case StatusTypes.MeleeDamageMult:
+                        Text = "Melee Damage Multiplier [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.MeleeSpeedMult:
+                        Text = "Melee Speed Multiplier [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.MeleeKnockback:
+                        Text = "Melee Knockback Multiplier [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.MaxHealth:
+                        Text = "Max Health Bonus [" + sv.StatusValue + "]";
+                        break;
+                    case StatusTypes.DefenseRate:
+                        Text = "Defense Rate Bonus [" + sv.StatusValue + "%]";
+                        break;
+                    case StatusTypes.DefenseBonus:
+                        Text = "Defense Bonus [" + sv.StatusValue + "]";
+                        break;
+                    case StatusTypes.BlockRate:
+                        Text = "Block Rate [" + sv.StatusValue + "%]";
+                        break;
+                    case StatusTypes.MoveSpeed:
+                        Text = "Movement Speed Bonus [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.JumpSpeed:
+                        Text = "Jump Speed Bonus [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.FallHeightTolerance:
+                        Text = "Fall Rate Tolerance [" + sv.StatusValue + " tiles]";
+                        break;
+                    case StatusTypes.DodgeRate:
+                        Text = "Dodge Rate [" + sv.StatusValue + "%]";
+                        break;
+                    case StatusTypes.RangedDamageMult:
+                        Text = "Ranged Damage Multiplier [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.RangedBulletSpeed:
+                        Text = "Bullet Speed Bonus [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.Accuracy:
+                        Text = "Accuracy Bonus [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.MagicDamageMult:
+                        Text = "Magic Damage Multiplier [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.MagicSpeed:
+                        Text = "Magic Speed Bonus [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.SummonDamageMult:
+                        Text = "Summon Damage Multiplier [" + sv.StatusValue + "x]";
+                        break;
+                    case StatusTypes.MaxSummons:
+                        Text = "Max Summon Bonus [" + sv.StatusValue + "]";
+                        break;
+                    case StatusTypes.MeleeCritRate:
+                        Text = "Melee Critical Rate [" + sv.StatusValue + "%]";
+                        break;
+                    case StatusTypes.RangedCritRate:
+                        Text = "Ranged Critical Rate [" + sv.StatusValue + "%]";
+                        break;
+                    case StatusTypes.MagicCritRate:
+                        Text = "Magic Critical Rate [" + sv.StatusValue + "%]";
+                        break;
+                }
+                if (Text != "")
+                    StatusText.Add(Text);
+            }
+            return StatusText.ToArray();
+        }
+
         public static float ReturnSkillMaxProgress(int StatusSum, bool IndividualSkill = false)
         {
-            float Value = 0;
-            if (IndividualSkill)
-                Value = 20 + StatusSum * 25 - (StatusSum - 1) * 12;
+            if (false && IndividualSkill)
+            {
+                float Value = 2000 + StatusSum * 250; //20 + x * 25
+                if (StatusSum >= 10)
+                {
+                    Value += Value * 0.1f;
+                }
+                if (StatusSum >= 20)
+                {
+                    Value += Value * 0.1f;
+                }
+                if (StatusSum >= 40)
+                {
+                    Value += Value * 0.25f;
+                }
+                if (StatusSum >= 60)
+                {
+                    Value += Value * 0.4f;
+                }
+                if (StatusSum >= 80)
+                {
+                    Value += Value * 0.6f;
+                }
+                return Value;
+            }
             else
-                Value = 20 + StatusSum * 15 - (StatusSum - 1) * 8;
-            const int MaxPossibleValue = 500000000;
-            if (Value > MaxPossibleValue || Value < 0) //To avoid overflow
-                Value = MaxPossibleValue;
-            return Value;
+            {
+                float Value = 0;
+                if (IndividualSkill)
+                    Value = 20 + StatusSum * 25 - (StatusSum - 1) * 12;
+                else
+                    Value = 20 + StatusSum * 15 - (StatusSum - 1) * 8;
+                const int MaxPossibleValue = 500000000;
+                if (Value > MaxPossibleValue || Value < 0) //To avoid overflow
+                    Value = MaxPossibleValue;
+                return Value;
+            }
+        }
+
+        public class StatusValues
+        {
+            public StatusTypes status = StatusTypes.MeleeDamageMult;
+            public float StatusValue = 0;
+
+            public StatusValues(StatusTypes status, float Value)
+            {
+                this.status = status;
+                this.StatusValue = Value;
+            }
+        }
+
+        public enum StatusTypes
+        {
+            MeleeDamageMult,
+            MeleeSpeedMult,
+            MeleeKnockback,
+            MaxHealth,
+            DefenseRate,
+            DefenseBonus,
+            BlockRate,
+            MoveSpeed,
+            JumpSpeed,
+            FallHeightTolerance,
+            DodgeRate,
+            RangedDamageMult,
+            RangedBulletSpeed,
+            Accuracy,
+            MagicDamageMult,
+            MagicSpeed,
+            SummonDamageMult,
+            MaxSummons,
+            MeleeCritRate,
+            RangedCritRate,
+            MagicCritRate
         }
 
         public enum SkillTypes : byte
