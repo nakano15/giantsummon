@@ -957,6 +957,21 @@ namespace giantsummon.Creatures
                     }
                 }
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                Mes.Add("(He seems to have whited out.)");
+                Mes.Add("(You don't see any sign of pain or sorrow on his face, It's like as if he was sleeping.)");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(Even when sleeping he seems happy)");
+                Mes.Add("*Brother, don't feel sad...* (He says when sleeping)");
+                Mes.Add("*Where are you going, brother...? * (He says when sleeping)");
+                Mes.Add("*I want to help everybody... Hug everyone... In need..* (He says when sleeping)");
+                Mes.Add("(He seems to be having nightmares)");
+            }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
 

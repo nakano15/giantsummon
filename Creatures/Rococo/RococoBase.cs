@@ -463,6 +463,28 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] is very happy for having you as his room mate.*");
                 Mes.Add("*[name] says that no longer fear sleeping at night, since you shared your room with him.*");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                if (!guardian.KnockedOutCold)
+                {
+                    Mes.Add("*[name] says that will still try protecting you.*");
+                    Mes.Add("*[name] is asking you to stay by his side for a while.*");
+                    Mes.Add("(He's trying to endure the pain, you can see a few tears rolling from his eyes.)");
+                }
+                else
+                {
+                    Mes.Add("(He whited out.)");
+                    Mes.Add("(He seems to be having pain while whited out.)");
+                }
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(He must be dreaming about playing with someone.)");
+                Mes.Add("(You got startled when he looked at your direction and smiled.)");
+                Mes.Add("(He seems to be sleeping fine.)");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

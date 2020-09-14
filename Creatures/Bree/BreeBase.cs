@@ -420,6 +420,25 @@ namespace giantsummon.Creatures
                 Mes.Add("Do you have to bother me, now?");
                 Mes.Add("You're annoying me!");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                Mes.Add("(She seems to be trying to stand up, but has no strength.)");
+                Mes.Add("(She's putting her paws in one of her wounds, trying to ease the bleeding.)");
+                Mes.Add("(She looks at you, in pain.)");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("It's not clean... yet... (She's sleeping.)");
+                Mes.Add("(She has a way more peaceful look when sleeping than awaken.)");
+                Mes.Add("(She's doing gestures, like as if was hitting something, or someone.)");
+                if (!NpcMod.HasMetGuardian(Sardine))
+                {
+                    Mes.Add("...Sardine... Where are you... (She spoke while sleeping)");
+                    Mes.Add("...My home... How are things... (She seems to be worried about her home.)");
+                }
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

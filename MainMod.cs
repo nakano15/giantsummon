@@ -1204,10 +1204,18 @@ namespace giantsummon
                     HealthbarPosition.X += 22;
                     HealthbarPosition.Y += 4;
                     Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition, new Rectangle(122 * 3 + 22, 20 + 16, (int)(98 * BarValue), 8), Color.White);
-                    float ManaCrystalProgress = (float)Guardian.Data.ManaCrystals / GuardianData.MaxManaCrystals;
-                    if (ManaCrystalProgress > BarValue)
-                        ManaCrystalProgress = BarValue;
-                    Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition, new Rectangle(122 * 3 + 22, 20, (int)(98 * ManaCrystalProgress), 8), Color.White);
+                    for (int y = 0; y < 2; y++)
+                    {
+                        int MCValue = Guardian.Data.ManaCrystals;
+                        if (MainMod.SharedCrystalValues && y == 1)
+                        {
+                            MCValue = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ManaCrystalsUsed;
+                        }
+                        float ManaCrystalProgress = (float)(MCValue) / GuardianData.MaxManaCrystals;
+                        if (ManaCrystalProgress > BarValue)
+                            ManaCrystalProgress = BarValue;
+                        Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition + new Vector2(0, 4 * y), new Rectangle(122 * 3 + 22, 20 + 4 * y, (int)(98 * ManaCrystalProgress), 4), Color.White);
+                    }
                     if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + 98 &&
                         Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + 8)
                         MouseOverText = "Mana: " + Guardian.MP + "/" + Guardian.MMP + "  Mana Crystals: " + Guardian.Data.ManaCrystals + "/" + GuardianData.MaxManaCrystals;

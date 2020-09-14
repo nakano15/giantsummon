@@ -443,6 +443,28 @@ namespace giantsummon.Creatures
                 Mes.Add("*If anything tries to attack you while sleeping, will never expect me to be here. You will be safe.*");
                 Mes.Add("*So, you need my protection during the night? I can help you with that.*");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                if (guardian.KnockedOutCold)
+                {
+                    Mes.Add("(He seems to be breathing quite hard.)");
+                }
+                else
+                {
+                    Mes.Add("*Terrarian... If things gets too hard, leave me here, and save yourself... Ngh... (He looks very wounded)*");
+                    Mes.Add("*Argh.. Ugh... I'm fine... Worry about yourself... I can hold them... Ugh...*");
+                    Mes.Add("*Terrarian... Listen to me... My contract is worth nothing... If you perish... If you must... Go... Argh!*");
+                }
+                Mes.Add("(He seems to be trying to endure the pain)");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(You wonder if the way he sleeps wont make him have pain all over the body, during the morning.)");
+                Mes.Add("(His bad breath from his snoring reaches your nose, making you plug It.)");
+                Mes.Add("(He's sleeping like a stone, you wonder if you could wake him up whenever something happens.)");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

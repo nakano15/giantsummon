@@ -547,6 +547,7 @@ namespace giantsummon
         public int FallHeightTolerance = 15;
         public float JumpSpeed = 7.08f;
         public float JumpHeight = 0;
+        public bool IgnoreMass = false;
         public bool WalkMode = false;
         public float JumpUntilHeight = -1;
         public int ExtraJump = 0;
@@ -4913,6 +4914,13 @@ namespace giantsummon
                     if (Position.Y <= JumpUntilHeight)
                         JumpUntilHeight = -1;
                 }
+                if (Velocity.Y > 0 && Position.Y / 16 - FallStart > FallHeightTolerance)
+                {
+                    if (!Jump && HasSolidGroundUnder())
+                    {
+                        Jump = true;
+                    }
+                }
             }
             else
             {
@@ -7336,6 +7344,7 @@ namespace giantsummon
         public void SetFallStart()
         {
             FallStart = (int)this.Position.Y / 16;
+            IgnoreMass = false;
         }
 
         public void EnterDownedState()
@@ -11885,6 +11894,8 @@ namespace giantsummon
                     ExtraJump++;
                     Velocity.Y = -JumpSpeed * GravityDirection;
                     FallStart = (int)(Position.Y / 16);
+                    if(CurrentJump > 0)
+                        IgnoreMass = true;
                     switch (CurrentJump)
                     {
                         case 1:
@@ -12850,7 +12861,7 @@ namespace giantsummon
         {
             if (!NoGravity && !WofTongued)
             {
-                float FallSpeed = Mass;
+                float FallSpeed = (IgnoreMass ? 0.3f : Mass);
                 if (HasFlag(GuardianFlags.FeatherfallPotion))
                 {
                     if (MoveUp)
@@ -13319,6 +13330,7 @@ namespace giantsummon
                 {
                     if (RocketTime > 0)
                     {
+                        IgnoreMass = true;
                         RocketTime--;
                         AddCooldown(GuardianCooldownManager.CooldownType.RocketDelay, 10);
                         if (!HasCooldown(GuardianCooldownManager.CooldownType.RocketSoundDelay))
@@ -14716,7 +14728,8 @@ namespace giantsummon
                 DrawTerrarianHeadData(Position, Scale);
                 return;
             }
-            Position -= new Vector2(Base.sprites.HeadSprite.Width * XOffset, Base.sprites.HeadSprite.Height * YOffset);
+            Position.X -= Base.sprites.HeadSprite.Width * XOffset;
+            Position.Y -= Base.sprites.HeadSprite.Height * YOffset;
             List<GuardianDrawData> gddlist = new List<GuardianDrawData>();
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, Base.sprites.HeadSprite, Position,
                 null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None);

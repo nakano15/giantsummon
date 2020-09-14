@@ -368,6 +368,31 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*I tried helping [gn:"+Wrath+"] getting less angry, until he yelled out loud, that made me leave the room very quickly. He's very scary.*");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                Mes.Add("(She's crying, while placing her paws on the chest.)");
+                Mes.Add("(She looks very scared.)");
+                if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
+                {
+                    Mes.Add("(While in pain, she said for a moment [n:"+Terraria.ID.NPCID.Angler+"] name.)");
+                }
+                Mes.Add("(She seems to be breathing hard, to try reducing the pain.)");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("*I won... I won! Yes...* (She must be dreaming about winning the contest)");
+                Mes.Add("*I will prove you wrong... I will be the best miss ever...* (She's speaks while she sleeps)");
+                Mes.Add("*I am like this... You can't change me... I'll try anyway...* (She's speaks while she sleeps)");
+                if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
+                {
+                    Mes.Add("*Am I... A good mother...Doing things right...?* (She's speaks while she sleeps)");
+                    Mes.Add("*I'm... A failure... Of mother...?* (She's speaks while she sleeps)");
+                    Mes.Add("*I'm trying... my best...* (She's speaks while she sleeps)");
+                }
+                Mes.Add("*" + player.name + "...* (Looked like she was going to ask something in her sleep)");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

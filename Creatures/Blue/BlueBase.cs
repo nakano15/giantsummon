@@ -350,7 +350,7 @@ namespace giantsummon.Creatures
 
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
-            bool ZacksRecruited = PlayerMod.PlayerHasGuardian(player, 3);
+            bool ZacksRecruited = PlayerMod.PlayerHasGuardian(player, 3) || NpcMod.HasMetGuardian(3);
             List<string> Mes = new List<string>();
             if (!Main.bloodMoon)
             {
@@ -494,6 +494,35 @@ namespace giantsummon.Creatures
             if (HasBunnyInInventory(guardian))
             {
                 Mes.Add("*[name] asks how did you know, and tells you that she loved the pet you gave her.*");
+            }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                Mes.Add("*[name] seems to be breathing hard, she must be feeling pain.*");
+                Mes.Add("*[name] seems to be unconscious.*");
+                if (!ZacksRecruited)
+                {
+                    Mes.Add("*[name] said a name, Za... Before passing out.*");
+                }
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                if (!ZacksRecruited)
+                {
+                    Mes.Add("*[name] seems to be looking for someone in her dreams.*");
+                    Mes.Add("*[name] is saying that wants someone to come back.*");
+                    Mes.Add("*You can see some tears on [name]'s face.*");
+                }
+                else
+                {
+                    Mes.Add("*[name] seems to be sleeping fine.*");
+                    Mes.Add("*[name] looks a bit worried, while in her sleep.*");
+                    Mes.Add("*[name] seems to be having a dream with [gn:"+3+"].*");
+                }
+                if(PlayerMod.PlayerHasGuardian(player, Sardine))
+                    Mes.Add("*[name] just said \"I'm going to catch you\", she must be dreaming that she's playing with [gn:" + Sardine + "].*");
+                Mes.Add("*[name] seems to be dreaming about camping with other people.*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

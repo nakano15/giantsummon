@@ -214,7 +214,28 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Vladimir))
             {
-                Mes.Add("The hugs [gn:"+GuardianBase.Vladimir+"] gives doesn't works either! I can't get less angry with them!");
+                Mes.Add("*The hugs [gn:"+GuardianBase.Vladimir+"] gives doesn't works either! I can't get less angry with them!*");
+            }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                if (!guardian.KnockedOutCold)
+                {
+                    Mes.Add("*Ngh... Just you wait... Until I stand up...* (He seems very furious to the one who have beaten him.)");
+                    Mes.Add("*Ugh... My blood is boiling right now... Pain is increasing... The rage rises... Cough...* (He seems very furious to the one who have beaten him.)");
+                }
+                else
+                {
+                    Mes.Add("(His body is trembling while he's passed out.)");
+                    Mes.Add("(You can hear loud breathing noises coming from his nose.)");
+                }
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(He growls while sleeping, like as if was going to bite someone.)");
+                Mes.Add("(He doesn't seems to be having a very peaceful sleep, because of the constant movements he does.)");
+                Mes.Add("(It looks like he's fighting against someone in his sleep.)");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

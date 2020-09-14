@@ -32,5 +32,13 @@ The companions health interface will now show the life crystal and life fruit va
 	The upper half of the health bar will show the life crystal/life fruits your companions used.
 	The lower half of the health bar will show the shared life crystal value the companion gained from your character.
 	Passing the mouse over the health bar will show the shared life crystal and fruit values.
+Shared mana crystals are displayed too.
 It's now possible to change the draw layers of the companion head, on their GuardianBase script.
 	This allows to changing the head sprite of the companion when there is a skin in use.
+Increased the chance of companions visiting your world.
+There is no perception range check when Bree recruit npc spawns, so the game will always tell when she spawns near your character.
+Companions will try jumping whenever they are about to reach the floor and receive fall damage.
+Companions will have their mass disregarded whenever they use a Rocket Boot or a Cloud in a Bottle type item.
+	That may cause the accessories to do their intended effects.
+Companions gained 2 extra situational dialogues:
+	They will speak something when knocked out, and when sleeping.

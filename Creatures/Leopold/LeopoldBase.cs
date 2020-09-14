@@ -328,6 +328,24 @@ namespace giantsummon.Creatures
                 Mes.Add("*You must either be courageous, or very stupid, for sharing your room with [gn:"+Malisha+"]. Who knows what she does to you while you sleep?*");
                 Mes.Add("*Stop sharing room with [gn:"+Malisha+"], you may wake up tied in a bed while she does wacky experiements on you.*");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                Mes.Add("(" + guardian.Name + " looks at you, wanting you to heal his wounds)");
+                Mes.Add("(He seems to be under heavy pain.)");
+                Mes.Add("(He's unnable to speak with you because of how much pain he's having.)");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(He's theorizing to himself, while sleeping.)");
+                Mes.Add("(Is he saying elements of the periodic table?)");
+                if (NpcMod.HasGuardianNPC(Malisha))
+                {
+                    Mes.Add("*No! Go away! Don't come closer! No! NOOOOOOOOOO!!!! (I think [gn:" + Malisha + "] appeared on his dream)*");
+                    Mes.Add("*Wait! What is in that flask! No! I wont drink it! NO! NOOOO!! (I think [gn:" + Malisha + "] appeared on his dream)*");
+                }
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

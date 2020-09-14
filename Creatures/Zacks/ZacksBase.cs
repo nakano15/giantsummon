@@ -407,6 +407,25 @@ namespace giantsummon.Creatures
                 Mes.Add("*So, you're sharing room with [gn:"+Blue+"], huh... I may wonder why she wouldn't want to share her room with me.*");
                 Mes.Add("*Say.. You're sharing room with [gn:"+Blue+"], right? How's she?*");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                Mes.Add("*I'm sorry Terrarian, I can't move. I think I pulled It up to It's limit.*");
+                Mes.Add("*I'm paralized, I can't move at all.*");
+                Mes.Add("*I can't move any part of my body.*");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("*I'm awaken. I can't sleep, ever since I turned into a zombie.*");
+                Mes.Add("*There isn't much I can do while in the bed, so I only watch the ceiling, and expect something interesting to happen.*");
+                Mes.Add("*There are all kinds of sounds that happens when people sleeps, you wouldn't believe If I told you them all.*");
+                if (NpcMod.HasGuardianNPC(Blue))
+                {
+                    Mes.Add("*Since I stay up all night, the least I could do is make sure that [gn:" + Blue + "] sleep safe and sound.*");
+                    Mes.Add("*It comforts me a bit to watch [gn:" + Blue + "] sleep, knowing that she's safe, and here with me.*");
+                }
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

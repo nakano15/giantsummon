@@ -459,44 +459,81 @@ namespace giantsummon.Creatures
                 Mes.Add("*How did you know that I needed someone for my experiment?*");
                 Mes.Add("*Good, I was needing someone for my brain transplant machine. Ready to turn into a Squirrel?*");
                 Mes.Add("*I got you! Now drink this potion!*");
-                
-                int BuffID = -1;
-                switch (Main.rand.Next(10))
+
+                if (!guardian.KnockedOut)
                 {
-                    case 0:
-                        BuffID = Terraria.ID.BuffID.Endurance;
-                        break;
-                    case 1:
-                        BuffID = Terraria.ID.BuffID.Inferno;
-                        break;
-                    case 2:
-                        BuffID = Terraria.ID.BuffID.Lifeforce;
-                        break;
-                    case 3:
-                        BuffID = Terraria.ID.BuffID.MagicPower;
-                        break;
-                    case 4:
-                        BuffID = Terraria.ID.BuffID.Titan;
-                        break;
-                    case 5:
-                        BuffID = Terraria.ID.BuffID.Darkness;
-                        break;
-                    case 6:
-                        BuffID = Terraria.ID.BuffID.Cursed;
-                        break;
-                    case 7:
-                        BuffID = Terraria.ID.BuffID.Confused;
-                        break;
-                    case 8:
-                        BuffID = Terraria.ID.BuffID.Weak;
-                        break;
-                    case 9:
-                        BuffID = 164; //Distorted
-                        break;
+                    int BuffID = -1;
+                    switch (Main.rand.Next(10))
+                    {
+                        case 0:
+                            BuffID = Terraria.ID.BuffID.Endurance;
+                            break;
+                        case 1:
+                            BuffID = Terraria.ID.BuffID.Inferno;
+                            break;
+                        case 2:
+                            BuffID = Terraria.ID.BuffID.Lifeforce;
+                            break;
+                        case 3:
+                            BuffID = Terraria.ID.BuffID.MagicPower;
+                            break;
+                        case 4:
+                            BuffID = Terraria.ID.BuffID.Titan;
+                            break;
+                        case 5:
+                            BuffID = Terraria.ID.BuffID.Darkness;
+                            break;
+                        case 6:
+                            BuffID = Terraria.ID.BuffID.Cursed;
+                            break;
+                        case 7:
+                            BuffID = Terraria.ID.BuffID.Confused;
+                            break;
+                        case 8:
+                            BuffID = Terraria.ID.BuffID.Weak;
+                            break;
+                        case 9:
+                            BuffID = 164; //Distorted
+                            break;
+                    }
+                    if (BuffID > -1)
+                    {
+                        player.AddBuff(BuffID, 10 * 60 * 60);
+                    }
                 }
-                if (BuffID > -1)
+            }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                if (!guardian.KnockedOutCold)
                 {
-                    player.AddBuff(BuffID, 10 * 60 * 60);
+                    Mes.Add("*" + player.name + "... Ugh... Please... Help.. me... Ugh....* (She's trying to stay awaken.)");
+                    Mes.Add("(She seems about to pass out.)");
+                    Mes.Add("*Ugh... I'm... Not okay... Argh...*");
+                    if (NpcMod.HasGuardianNPC(Leopold))
+                    {
+                        Mes.Add("*Urgh.... [gn:"+Leopold+"]... Ahrgh....*");
+                    }
+                }
+                else
+                {
+                    Mes.Add("(She seems to be having pain)");
+                    Mes.Add("(You can notice the wounds in her body)");
+                    Mes.Add("(She passed out in pain.)");
+                }
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(She's speaking about many different things, in a different language.)");
+                Mes.Add("(Is she saying elements of the periodic table?)");
+                Mes.Add("(She accidentally casted a spell while asleep, and turned the table nearby into a toad.)");
+                Mes.Add("(She accidentally casted a spell while asleep, and turned the chair nearby into a potato.)");
+                Mes.Add("(She's doing an evil laugh while sleeps)");
+                if (NpcMod.HasGuardianNPC(Leopold))
+                {
+                    Mes.Add("*Here's my newest invention, now time to drink It...* (That brings flashbacks...)");
+                    Mes.Add("*I've just learned this spell, I'm glad you offered yourself help me test It...* (Run [gn:" + Leopold + "], Run!)");
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];

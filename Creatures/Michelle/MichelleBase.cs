@@ -240,6 +240,18 @@ namespace giantsummon.Creatures
                     Mes.Add("I like having you as a room mate, but I would like having a TerraGuardian more.");
                 }
             }
+            if (guardian.Downed)
+            {
+                Mes.Clear();
+                Mes.Add("(She's motionless in the floor. She's still breathing.)");
+                Mes.Add("(You can notice her trying to endure the pain.)");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(She's moving her hands, like as if she was petting something.)");
+                Mes.Add("(You notice her blushing, and with a happy face, she must be in the middle of many TerraGuardians.)");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

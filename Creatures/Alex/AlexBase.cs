@@ -497,6 +497,20 @@ namespace giantsummon.Creatures
                 Mes.Add("You'll sleep on my bedroom? That's awesome! I will keep you protected while you sleep.");
                 Mes.Add("You'll share your bed with me? This is the best day ever!");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                Mes.Add("(He seems to be having pain.)");
+                Mes.Add("(His wounds aren't letting him rest.)");
+                Mes.Add("I have... To protec.t... " + player.name +"...");
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(He's moving his paws while sleeping, maybe he's dreaming that he's running?)");
+                Mes.Add("No... Don't go... No... (He seems to be having a nightmare)");
+                Mes.Add("(You can hear his silent snores.)");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

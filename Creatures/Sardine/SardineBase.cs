@@ -478,6 +478,35 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("Uh... So... Maybe [gn:"+Bree+"] should be sharing her room with me?");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                if (!guardian.KnockedOutCold)
+                {
+                    Mes.Add("(He's trying to lick his wound.)");
+                    Mes.Add("(You see him struggling on the floor, something must have happened to his arm.)");
+                    Mes.Add("(You notice him breathing from his mouth.)");
+                }
+                else
+                {
+                    Mes.Add("(He's unconscious, you tried shaking him but he didn't woke up.)");
+                }
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("Ha! Take that! And that! (He must be sleeping about facing some creature.)");
+                Mes.Add("(He's sleeping happily)");
+                Mes.Add("Yuck! Go away! Get off me! (He must be having nightmares with the King Slime)");
+                if (NpcMod.HasMetGuardian(Bree))
+                {
+                    Mes.Add("I'm home! I brought all those treasures for us. (He must be dreaming about returning home with [gn:" + Bree + "].)");
+                }
+                else
+                {
+                    Mes.Add("I'm home! I brought all those treasures for us. (He must be dreaming about returning home For someone.)");
+                }
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

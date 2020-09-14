@@ -112,7 +112,6 @@ namespace giantsummon
             DrawPosition.Y += 16;
             DrawPosition.X -= 32;
             GuardianMouseOverAndDialogueInterface.DrawBackgroundPanel(DrawPosition, 464, 60 * 6, color);
-            //Main.inventoryScale = 0.8f;
             GuardianShopHandler.GuardianShopItem[] Items = ItemsForSale;
             int NewSelectedItem = -1;
             for (int x = 0; x < 1; x++)
@@ -142,7 +141,11 @@ namespace giantsummon
                         {
                             ItemScale = 48 / (float)ItemTexture.Height;
                         }
+                        if (ItemScale > 1f)
+                            ItemScale = 1f;
                         Vector2 ItemPosition = SlotPosition;
+                        GuardianMouseOverAndDialogueInterface.DrawBackgroundPanel(ItemPosition - new Vector2(2, 2), 60, 60, Color.Black);
+                        GuardianMouseOverAndDialogueInterface.DrawBackgroundPanel(ItemPosition, 56, 56, Color.LightBlue);
                         ItemPosition.X += 28;
                         ItemPosition.Y += 28;
                         Main.spriteBatch.Draw(ItemTexture, ItemPosition, null, Color.White, 0f, new Vector2(ItemTexture.Width, ItemTexture.Height) * 0.5f, ItemScale, SpriteEffects.None, 0f);
@@ -295,12 +298,12 @@ namespace giantsummon
                                 {
                                     LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreNoCoinsMessage);
                                     if (LastStoreMessage == "")
-                                        LastStoreMessage = "*You don't have enough coins.*";
+                                        LastStoreMessage = "*You can't pay for that.*";
                                 }
                                 else
                                 {
                                     //Buy Item :D
-                                    Terraria.Item item = new Item();
+                                    Item item = new Item();
                                     item.SetDefaults(Item.ItemID);
                                     if (Item.SellStack > 0)
                                         item.stack = Item.SellStack;

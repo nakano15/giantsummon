@@ -235,7 +235,7 @@ namespace giantsummon
                         if (Main.mouseX >= Position.X && Main.mouseX < Position.X + DialogueWidth && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 30)
                         {
                             MouseOverOptionNumber = o;
-                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                            if (!DoAction && Main.mouseLeft && Main.mouseLeftRelease)
                                 DoAction = true;
                         }
                     }

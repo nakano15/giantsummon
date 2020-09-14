@@ -345,6 +345,29 @@ namespace giantsummon.Creatures
                 Mes.Add("*Alright, I can share my room with you, just don't try stealing my goods while I sleep.*");
                 Mes.Add("*Maybe It's a bad idea having you inside my room, because I'm known for snoring, really loud.*");
             }
+            if (guardian.KnockedOut)
+            {
+                Mes.Clear();
+                if (!guardian.KnockedOutCold)
+                {
+                    Mes.Add("*What are you looking at? Give me a hand, will you?* (He's trying to stop a open wound from bleeding)");
+                    Mes.Add("*Yes, that hurts, is that what you wanted to know?*");
+                    Mes.Add("*Argh... Terrarian... I wont be able to do business in your world if I die.*");
+                    Mes.Add("*Do you know a thing or two about first aid, buddy? Urf..*");
+                }
+                else
+                {
+                    Mes.Add("(He whited out.)");
+                    Mes.Add("(He's groaning of pain.)");
+                }
+            }
+            else if (guardian.IsUsingBed)
+            {
+                Mes.Clear();
+                Mes.Add("(His snores are extremelly loud.)");
+                Mes.Add("(He seems to be counting something.)");
+                Mes.Add("*A few more crates... Here the change...* (He's doing deals in his dreams)");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

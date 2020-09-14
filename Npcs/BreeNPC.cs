@@ -16,6 +16,7 @@ namespace giantsummon.Npcs
         public bool DialogueResultSuccess { get { return dialogues.Points >= 4; } }
         public bool EndDialogDone = false;
         public DialogueChain dialogues = new DialogueChain();
+        private bool JustSpawned = true;
 
         public BreeNPC()
             : base(7, "")
@@ -63,13 +64,29 @@ namespace giantsummon.Npcs
             if (Main.myPlayer == -1)
                 return;
             Player player = Main.player[Main.myPlayer];
-            if (npc.ai[2] == 0)
+            if (JustSpawned)
             {
-                if (IsInPerceptionRange(player))
+                //if (IsInPerceptionRange(player))
+                int NearestPlayer = Main.myPlayer;
+                float NearestDistance = float.MaxValue;
+                Vector2 NpcCenter = npc.Center;
+                for (int p = 0; p < 255; p++)
                 {
+                    if (Main.player[p].active)
+                    {
+                        float Distance = Main.player[p].Distance(NpcCenter);
+                        if (Distance < NearestDistance)
+                        {
+                            NearestDistance = Distance;
+                            NearestPlayer = p;
+                        }
+                    }
+                }
+                {
+                    player = Main.player[NearestPlayer];
                     Main.NewText("A White Cat appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - player.Center) + " of " + player.name + " position.");
                 }
-                npc.ai[2] = 1;
+                JustSpawned = false;
             }
             if (player.talkNPC == npc.whoAmI)
                 npc.direction = player.Center.X - npc.Center.X >= 0 ? 1 : -1;
