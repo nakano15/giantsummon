@@ -42,3 +42,18 @@ Companions will have their mass disregarded whenever they use a Rocket Boot or a
 	That may cause the accessories to do their intended effects.
 Companions gained 2 extra situational dialogues:
 	They will speak something when knocked out, and when sleeping.
+Did a few tweaks on some of Rococo Sprites.
+	Did some changes to the arm sprites on his attack animations.
+	Also did some changes to the body sprites on some of the attack animations.
+		Sorry PigmanDelta. Beside that wont break Rococo skin.
+	The heavy swing and kneeling animations had some changes on some of the arm sprites, and also the body and legs.
+		The body was made a bit more curved on the back, so Rococo no longer seems flat when his body is lowered.
+		I did some changes to the leg sprites of It too, making the animation look better, and make more sense.
+		Readjusted the position of the arms on some frames. That will of course affect weapon placement when attacking, but will be minimal. Probably.
+	I also changed his Throne Sitting animation sprites.
+		The arms positioning now makes sense.
+		Removed stray pixels from his head.
+		Did some changes to his legs sprites.
+Brutus will do comments whenever your character health reaches 30%.
+Brutus will activate protect mode whenever your character is knocked out while he's following you.
+	Due to him being unable to heal your character in this state, he'll give you a small revive boost.

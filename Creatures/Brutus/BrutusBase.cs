@@ -238,6 +238,116 @@ namespace giantsummon.Creatures
             AddRequesterSummonedRequirement();
         }
 
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        {
+            if (trigger == TriggerTypes.PlayerDowned)
+            {
+                if (Value == guardian.OwnerPos)
+                {
+                    bool GuardianJustWokeUp = false;
+                    if (guardian.KnockedOut)
+                    {
+                        guardian.ExitDownedState();
+                        guardian.HP = (int)(guardian.MHP * 0.2f);
+                        GuardianJustWokeUp = true;
+                    }
+                    if (!guardian.DoAction.InUse || !guardian.DoAction.IsGuardianSpecificAction || guardian.DoAction.ID != ProtectModeID)
+                    {
+                        guardian.StartNewGuardianAction(ProtectModeID).SetIntegerValue(99, Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut ? 1 : 0);
+                        if (!GuardianJustWokeUp)
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    guardian.SaySomething("*Hang on! I'm coming!*");
+                                    break;
+                                case 1:
+                                    guardian.SaySomething("*Terrarian!*");
+                                    break;
+                                case 2:
+                                    guardian.SaySomething("*No! Terrarian! I'm coming!*");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    guardian.SaySomething("*Ugh... Terrarian...*");
+                                    break;
+                                case 1:
+                                    guardian.SaySomething("*Terrarian... I'm... Coming...*");
+                                    break;
+                                case 2:
+                                    guardian.SaySomething("*... I... Can't fall... Yet...*");
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (trigger == TriggerTypes.PlayerHurt)
+            {
+                if (Value == guardian.OwnerPos)
+                {
+                    Player player = Main.player[Value];
+                    if (player.statLife < player.statLifeMax2 * 0.3f && player.statLife + Value2 >= player.statLifeMax2 * 0.3f)
+                    {
+                        if (guardian.KnockedOut && !guardian.KnockedOutCold)
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    guardian.SaySomething("*Terrarian! Go now! Save yourself!*");
+                                    break;
+                                case 1:
+                                    guardian.SaySomething("*I'll distract It Terrarian! Go! My contract is worth nothing if you die.*");
+                                    break;
+                                case 2:
+                                    guardian.SaySomething("*Terrarian, run! I'll try distracting that creature.*");
+                                    break;
+                            }
+                        }
+                        else if (!guardian.KnockedOutCold)
+                        {
+                            if (guardian.PlayerMounted)
+                            {
+                                switch (Main.rand.Next(3))
+                                {
+                                    case 0:
+                                        guardian.SaySomething("*Terrarian! Damn...*");
+                                        break;
+                                    case 1:
+                                        guardian.SaySomething("*Maybe placing you on my shoulder wasn't a good idea.*");
+                                        break;
+                                    case 2:
+                                        guardian.SaySomething("*Terrarian, are you okay?*");
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                switch (Main.rand.Next(3))
+                                {
+                                    case 0:
+                                        guardian.SaySomething("*Terrarian, move to behind me.*");
+                                        break;
+                                    case 1:
+                                        guardian.SaySomething("*Terrarian, let me lure that creature attention while you heal.*");
+                                        break;
+                                    case 2:
+                                        guardian.SaySomething("*Watch your health! Get yourself behind me before It's too late.*");
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+        }
+
         public void SkinsAndOutfits()
         {
             AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus).request.RequestsCompletedIDs.Contains(3); });
@@ -762,12 +872,13 @@ namespace giantsummon.Creatures
         }
 
         public const int ProtectModeID = 0;
+        public const int ProtectModeAutoTriggerTime = 3600;
 
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
-            if (!guardian.DoAction.InUse && guardian.OwnerPos > -1 && guardian.AfkCounter >= 60 * 60)
+            if (!guardian.DoAction.InUse && guardian.OwnerPos > -1 && (guardian.AfkCounter >= ProtectModeAutoTriggerTime || Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut))
             {
-                guardian.StartNewGuardianAction(ProtectModeID);
+                guardian.StartNewGuardianAction(ProtectModeID).SetIntegerValue(99, Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut ? 1 : 0);
             }
         }
 
@@ -784,7 +895,7 @@ namespace giantsummon.Creatures
                                 action.InUse = false;
                                 return;
                             }
-                            if (guardian.AfkCounter < 60)
+                            if (action.GetIntegerValue(99) == 0 && guardian.AfkCounter < 60)
                             {
                                 action.InUse = false;
                                 return;
@@ -817,7 +928,26 @@ namespace giantsummon.Creatures
                                                 switch (defended.GetModPlayer<PlayerMod>().Guardian.ID)
                                                 {
                                                     case GuardianBase.Domino:
-                                                        guardian.SaySomething("I'm only protecting him because of you, Terrarian.");
+                                                        {
+                                                            switch (Main.rand.Next(5))
+                                                            {
+                                                                case 0:
+                                                                    guardian.SaySomething("*I'm only protecting him because of you, Terrarian.*");
+                                                                    break;
+                                                                case 1:
+                                                                    guardian.SaySomething("*Of anyone you could take direct control, It had to be him?*");
+                                                                    break;
+                                                                case 2:
+                                                                    guardian.SaySomething("*Is this some kind of karma?*");
+                                                                    break;
+                                                                case 3:
+                                                                    guardian.SaySomething("*Okay, what have I done to you, Terrarian?*");
+                                                                    break;
+                                                                case 4:
+                                                                    guardian.SaySomething("*It's funny how I'm treating his wounds, instead of beating his face.*");
+                                                                    break;
+                                                            }
+                                                        }
                                                         break;
                                                 }
                                             }
@@ -839,13 +969,28 @@ namespace giantsummon.Creatures
                                 if (!guardian.SittingOnPlayerMount)
                                     guardian.MoveDown = true;
                                 guardian.OffHandAction = true;
-                                if (defended.GetModPlayer<PlayerMod>().ControllingGuardian)
+                                PlayerMod pm = defended.GetModPlayer<PlayerMod>();
+                                if (pm.ControllingGuardian)
                                 {
-                                    defended.GetModPlayer<PlayerMod>().Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                                    if (pm.Guardian.KnockedOut)
+                                        pm.Guardian.ReviveBoost++;
+                                    else
+                                    {
+                                        if (guardian.AfkCounter < ProtectModeAutoTriggerTime && action.GetIntegerValue(99) == 1)
+                                            action.InUse = false;
+                                    }
                                 }
                                 else
                                 {
                                     defended.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                                    if (pm.KnockedOut)
+                                        pm.ReviveBoost++;
+                                    else
+                                    {
+                                        if (guardian.AfkCounter < ProtectModeAutoTriggerTime && action.GetIntegerValue(99) == 1)
+                                            action.InUse = false;
+                                    }
                                 }
                             }
                             action.SetIntegerValue(CurrentActionID, Action);

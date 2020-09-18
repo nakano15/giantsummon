@@ -37,7 +37,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 75, LastModVersion = 71;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1976,7 +1976,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        const int TestGuardianID = GuardianBase.Domino;
+                                        const int TestGuardianID = GuardianBase.Brutus;
                                         bool b = false;
                                         if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(TestGuardianID))
                                         {

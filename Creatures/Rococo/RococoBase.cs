@@ -79,32 +79,32 @@ namespace giantsummon.Creatures
 
             //Left Hand
             LeftHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(17 * 2, 31 * 2);
-            LeftHandPoints.AddFramePoint2x(10, 6, 9);
-            LeftHandPoints.AddFramePoint2x(11, 32, 9);
-            LeftHandPoints.AddFramePoint2x(12, 43, 38);
+            LeftHandPoints.AddFramePoint2x(10, 7, 10);
+            LeftHandPoints.AddFramePoint2x(11, 31, 9);
+            LeftHandPoints.AddFramePoint2x(12, 43, 37);
 
-            LeftHandPoints.AddFramePoint2x(16, 14, 5);
+            LeftHandPoints.AddFramePoint2x(16, 14, 4);
             LeftHandPoints.AddFramePoint2x(17, 34, 7);
             LeftHandPoints.AddFramePoint2x(18, 39, 19);
             LeftHandPoints.AddFramePoint2x(19, 34, 31);
 
-            LeftHandPoints.AddFramePoint2x(21, 33, 16);
-            LeftHandPoints.AddFramePoint2x(22, 43, 27);
+            LeftHandPoints.AddFramePoint2x(21, 34, 16);
+            LeftHandPoints.AddFramePoint2x(22, 43, 29);
 
             LeftHandPoints.AddFramePoint2x(26, 33, 41);
             //Right Hand
             RightHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(31 * 2, 31 * 2);
-            RightHandPoints.AddFramePoint2x(10, 10, 9);
-            RightHandPoints.AddFramePoint2x(11, 34, 9);
-            RightHandPoints.AddFramePoint2x(12, 45, 38);
+            RightHandPoints.AddFramePoint2x(10, 9, 10);
+            RightHandPoints.AddFramePoint2x(11, 33, 9);
+            RightHandPoints.AddFramePoint2x(12, 45, 37);
 
-            RightHandPoints.AddFramePoint2x(16, 16, 5);
+            RightHandPoints.AddFramePoint2x(16, 16, 4);
             RightHandPoints.AddFramePoint2x(17, 36, 7);
             RightHandPoints.AddFramePoint2x(18, 41, 19);
             RightHandPoints.AddFramePoint2x(19, 37, 31);
 
             RightHandPoints.AddFramePoint2x(21, 36, 16);
-            RightHandPoints.AddFramePoint2x(22, 45, 27);
+            RightHandPoints.AddFramePoint2x(22, 45, 29);
             //Mount Position
             MountShoulderPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(18 * 2, 14 * 2);
             MountShoulderPoints.AddFramePoint2x(11, 22, 20);

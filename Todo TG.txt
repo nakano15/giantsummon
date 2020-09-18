@@ -13,3 +13,20 @@ Make companion npcs be able to share the same house, there should be some info o
 Zacks seems to have a problem with his throne sitting animation, related to the outline of his right arm.
 	Where have I seen that before?
 Starter guardians should use starter items, don't you think?
+Change the first stage of Knockout, to make so the character is sitting down on the floor, but still able to attack.
+	Of course, there should be an animation for that.
+Add an animation where the companion sits on the floor.
+	When the player is mounted on it, maybe the guardian could sit by pressing a key.
+	Please be Insert... Please be Insert...
+When the player has at least 5 companions following him, offer the possibility of giving the name to their company.
+	That doesn't means the player may end up going on a war in the future, but would be cool to name your group.
+	Who could offer that possibility? Brutus?
+Companions that are couple should not only be able to share the same bed, but have their own sleeping animation for that occasion.
+	I need to setup who is going to be drawn first too, would be weird if I make an animation where a character is hugging another, and the one who's hugging is drawn in front of the other.
+Split Bree's bag from the body sprite.
+	When I manage to add Bree's dress, It would be a waste of space making a sprite with and without the bag.
+If you speak with a companion that's sleeping, you will need to pick the option to wake It up before you can access It's options.
+	Would be a good idea to add dialogues for when you do so.
+Add a skin to Zacks where his body wounds have bandages, and he's wearing a cuff.
+	The skin should be unlocked with the help of Blue's requests.
+	The shirt should have "Meat Bag" written. There is no way of displaying that, so better add that to the skin description.
