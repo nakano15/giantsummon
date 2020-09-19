@@ -475,6 +475,30 @@ namespace giantsummon.Creatures
             {
                 case MessageIDs.RescueMessage:
                     return "*Perfect, I'll try some healing spells.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    if (Main.rand.Next(3) == 0 && MainMod.IsGuardianInTheWorld(Malisha))
+                    {
+                        return "*No! Please! Don't... Oh... You're not [gn:"+Malisha+"]. Whew..*";
+                    }
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return "*I can't process what I learned from the books without sleeping, Terrarian.*";
+                        case 1:
+                            return "*Huh? I was reading this book until I fell asleep. Well... I can try finishing reading It later.*";
+                        case 2:
+                            return "*Waah! You scared me, I was really having a not so pleasant dream. Need something from me?*";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*Tell me you completed my request, because I can't think of any other reason you would wake me up.*";
+                        case 1:
+                            return "*Uh? Oh, I fell asleep. By the way, did you do the task I gave you?*";
+                    }
+                    break;
             }
             return base.GetSpecialMessage(MessageID);
         }

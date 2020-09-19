@@ -1,1 +1,0 @@
-﻿Implement an alternative mount position, for when the player is inside blocks while mounted on the guardian shoulders.

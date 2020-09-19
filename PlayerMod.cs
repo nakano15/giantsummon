@@ -261,7 +261,7 @@ namespace giantsummon
             if (Main.myPlayer == player.whoAmI && Main.mouseItem.type == PortraitID)
                 Main.mouseItem.SetDefaults(0);
             if(player.whoAmI == Main.myPlayer)
-                Main.NewText("Buddies mode activated.");
+                Main.NewText("Buddy mode activated.");
             return true;
         }
 
@@ -388,6 +388,19 @@ namespace giantsummon
             if(!NegativeReviveBoost)
                 ReviveBoost = 0;
             NegativeReviveBoost = false;
+            if (BuddiesMode && Guardian.Active)
+            {
+                float HealthMod, DamageMod;
+                int DefenseMod;
+                Guardian.GetBuddyModeBenefits(out HealthMod, out DamageMod, out DefenseMod);
+                player.statLifeMax2 += (int)(player.statLifeMax * HealthMod);
+                player.meleeDamage += DamageMod;
+                player.rangedDamage += DamageMod;
+                player.magicDamage += DamageMod;
+                player.thrownDamage += DamageMod;
+                player.minionDamage += DamageMod;
+                player.statDefense += DefenseMod;
+            }
         }
 
         public override void NaturalLifeRegen(ref float regen)
@@ -884,7 +897,12 @@ namespace giantsummon
                             RescueTime++;
                         else if (RescueTime > 0)
                             RescueTime--;
-                        if (RescueTime >= MaxRescueTime * 60)
+                        if (player.controlHook && MainMod.DoNotUseRescue)
+                        {
+                            DoForceKill(" succumbed to It's injuries.");
+                            RescueTime = 0;
+                        }
+                        else if (RescueTime >= MaxRescueTime * 60)
                         {
                             KnockedOutCold = false;
                             KnockedOut = true;
@@ -927,6 +945,17 @@ namespace giantsummon
                             {
                                 player.Spawn();
                             }
+                            const float DistanceToTeleportNearbyGuardians = 336f;
+                            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
+                            {
+                                if (tg != rescuer && tg.OwnerPos == -1 && !tg.Downed && !tg.KnockedOut && tg.Distance(player.Center) < DistanceToTeleportNearbyGuardians)
+                                {
+                                    if(tg.furniturex > -1)
+                                        tg.LeaveFurniture();
+                                    tg.Position = rescuer.Position;
+                                    tg.SetFallStart();
+                                }
+                            }
                             if (MountedOnGuardian)
                             {
                                 Guardian.TeleportToPlayer(true, player);
@@ -943,6 +972,94 @@ namespace giantsummon
                             //player.lifeRegen = 100;
                             //Send to some guardian house and then move It in.
                             //If the above isn't possible, send to spawn, and place some guardian nearby.
+                            List<Point> ValidPositions = new List<Point>();
+                            bool BlockedLeft = false, BlockedRight = false;
+                            byte Tries = 0;
+                            while (ValidPositions.Count < GetAllGuardianFollowers.Count(x => x.Active) && Tries++ < 10)
+                            {
+                                for (int d = 0; d < 8; d++)
+                                {
+                                    for (int dir = -1; dir < 2; dir += 2)
+                                    {
+                                        if ((dir == -1 && BlockedLeft) || (dir == 1 && BlockedRight))
+                                        {
+                                            continue;
+                                        }
+                                        Point point = new Point((int)player.position.X / 16 + dir * d, (int)player.position.Y / 16);
+                                        byte MoveDist = 0;
+                                        while (true)
+                                        {
+                                            bool Blocked = false;
+                                            for (int x = 0; x < 2; x++)
+                                            {
+                                                Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2);
+                                                if (t.active() && Main.tileSolid[t.type])
+                                                {
+                                                    if (MoveDist == 2)
+                                                    {
+                                                        if (dir < 0)
+                                                            BlockedLeft = true;
+                                                        else
+                                                            BlockedRight = true;
+                                                    }
+                                                    point.Y--;
+                                                    MoveDist++;
+                                                    Blocked = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (!Blocked || MoveDist == 2)
+                                                break;
+                                        }
+                                        if (MoveDist == 0)
+                                        {
+                                            while (true)
+                                            {
+                                                bool Blocked = false;
+                                                for (int x = 0; x < 2; x++)
+                                                {
+                                                    Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2 + 1);
+                                                    if (t.active() && Main.tileSolid[t.type])
+                                                    {
+                                                        if (MoveDist == 2)
+                                                        {
+                                                            if (dir < 0)
+                                                                BlockedLeft = true;
+                                                            else
+                                                                BlockedRight = true;
+                                                        }
+                                                        point.Y++;
+                                                        MoveDist++;
+                                                        Blocked = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (!Blocked || MoveDist == 2)
+                                                    break;
+                                            }
+                                        }
+                                        bool HasTileBlocking = false;
+                                        for (int y = 0; y < 3; y++)
+                                        {
+                                            for (int x = 0; x < 2; x++)
+                                            {
+                                                if (HasTileBlocking)
+                                                    break;
+                                                Tile t = Framing.GetTileSafely(point.X + x, point.Y + y);
+                                                if (t.active() && Main.tileSolid[t.type])
+                                                {
+                                                    HasTileBlocking = true;
+                                                }
+                                            }
+                                        }
+                                        if (!HasTileBlocking)
+                                        {
+                                            point.X++;
+                                            ValidPositions.Add(point);
+                                        }
+                                    }
+                                }
+                            }
                             foreach (TerraGuardian tg in GetAllGuardianFollowers)
                             {
                                 if (tg.Active)
@@ -952,8 +1069,16 @@ namespace giantsummon
                                     if ((tg.KnockedOut || tg.KnockedOutCold))
                                     {
                                         tg.TeleportToPlayer();
+                                        if (ValidPositions.Count > 0)
+                                        {
+                                            Vector2 Position = new Vector2(ValidPositions[0].X * 16, ValidPositions[0].Y * 16 + 48 - 1);
+                                            ValidPositions.RemoveAt(0);
+                                            tg.Position = Position;
+                                            tg.SetFallStart();
+                                        }
                                         tg.KnockedOutCold = false;
-                                        tg.ExitDownedState();
+                                        tg.HP = (int)(1 + Main.rand.Next(tg.MHP - 1));
+                                        //tg.ExitDownedState();
                                     }
                                 }
                             }
@@ -1554,7 +1679,7 @@ namespace giantsummon
                     //player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " couldn't get help to revive."), 0, 0, false);
                     player.fullRotation = 0;
                 }
-                player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.controlHook = player.controlJump = player.controlMount =
+                player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.releaseHook = player.controlJump = player.controlMount =
                     player.controlQuickMana = player.controlSmart = player.controlThrow = player.controlUseItem = player.controlInv =
                     player.controlUseTile = false;
                 player.releaseQuickHeal = player.releaseQuickMana = false;

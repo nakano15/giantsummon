@@ -93,6 +93,7 @@ namespace giantsummon
             PlayerMod modPlayer = MainPlayer.GetModPlayer<PlayerMod>();
             modPlayer.IsTalkingToAGuardian = true;
             modPlayer.TalkingGuardianPosition = tg.WhoAmID;
+            tg.TalkPlayerID = MainPlayer.whoAmI;
             //GetCompanionDialogue
             GetDefaultOptions(tg);
             string Message = "";
@@ -385,69 +386,63 @@ namespace giantsummon
         public static void GetDefaultOptions(TerraGuardian tg)
         {
             Options.Clear();
-            string OptionText = "Check Request";
-            if (tg.request.RequestCompleted || tg.request.Failed)
+            if (tg.IsUsingBed)
             {
-                OptionText = "Report Request";
+                AddOption("Wake Up", WakeUpCompanionButtonAction);
             }
-            else if (tg.request.requestState == RequestData.RequestState.HasRequestReady)
+            else
             {
-                if (tg.request.IsTalkQuest)
+                string OptionText = "Check Request";
+                if (tg.request.RequestCompleted || tg.request.Failed)
                 {
-                    OptionText = "You wanted to talk to me?";
+                    OptionText = "Report Request";
                 }
-                else
+                else if (tg.request.requestState == RequestData.RequestState.HasRequestReady)
                 {
-                    OptionText = "Need Something?";
+                    if (tg.request.IsTalkQuest)
+                    {
+                        OptionText = "You wanted to talk to me?";
+                    }
+                    else
+                    {
+                        OptionText = "Need Something?";
+                    }
                 }
-            }
-            AddOption(OptionText, CheckRequestButtonAction);
-            if (GuardianShopHandler.HasShop(tg.MyID))
-            {
-                AddOption("What do you have for sale?", OpenShopButtonAction);
-            }
-            if (MayGiveBirthdayGift(tg))
-            {
-                AddOption("I have a gift for you", GiveGiftButtonAction);
+                AddOption(OptionText, CheckRequestButtonAction);
+                if (GuardianShopHandler.HasShop(tg.MyID))
+                {
+                    AddOption("What do you have for sale?", OpenShopButtonAction);
+                }
+                if (MayGiveBirthdayGift(tg))
+                {
+                    AddOption("I have a gift for you", GiveGiftButtonAction);
+                }
             }
             Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             AddOption("Goodbye", CloseDialogueButtonAction);
-            //
-            /*AddOption("TestShopInterface", new Action<TerraGuardian>(delegate(TerraGuardian g)
-            {
-                if (!GuardianShopHandler.HasShop(g.MyID))
-                {
-                    GuardianShopHandler.GuardianShop shop = GuardianShopHandler.CreateShop(g.ID, g.ModID);
-                    for (int i = 0; i < 30; i++)
-                    {
-                        GuardianShopHandler.GuardianShopItem item = shop.AddNewItem(Main.rand.Next(1, 257));
-                        if (Main.rand.NextDouble() < 0.66)
-                        {
-                            item.SetLimitedDisponibility((GuardianShopHandler.GuardianShopItem.DisponibilityTime)Main.rand.Next((int)GuardianShopHandler.GuardianShopItem.DisponibilityTime.Count));
-                            if (item.disponibility == GuardianShopHandler.GuardianShopItem.DisponibilityTime.Timed)
-                            {
-                                item.SetToBeRandomlySold(0.15f);
-                                if (Main.rand.NextDouble() < 0.4)
-                                {
-                                    item.TimedSaleTime = Main.rand.Next(1, 999999);
-                                }
-                            }
-                        }
-                        if (Main.rand.NextDouble() > 0.4)
-                        {
-                            item.SaleTime = Main.rand.Next(1, 999999);
-                            item.SaleFactor = Main.rand.Next(1, 5) * 5 * 0.01f;
-                        }
-                    }
-                }
-                GuardianShopInterface.OpenShop();
-            }));*/
         }
 
         public static void AddOption(string Mes, Action<TerraGuardian> Action)
         {
             DialogueOption option = new DialogueOption(Mes, Action);
             Options.Add(option);
+        }
+
+        public static void WakeUpCompanionButtonAction(TerraGuardian tg)
+        {
+            if (tg.IsUsingBed)
+            {
+                tg.LeaveFurniture(true);
+                string Message = "";
+                if (tg.HasRequestActive)
+                    Message = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage);
+                if (Message == "")
+                    Message = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerMessage);
+                if (Message == "")
+                    Message = tg.Base.NormalMessage(MainPlayer, tg);
+                SetDialogue(Message);
+            }
+            GetDefaultOptions(tg);
         }
 
         public static void CheckRequestButtonAction(TerraGuardian tg)

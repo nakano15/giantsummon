@@ -313,6 +313,26 @@ namespace giantsummon.Creatures
             {
                 case MessageIDs.RescueMessage:
                     return "*When you wake up, tell me who did this to you.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return "*You got the nerve of waking me up in the middle of the night. Do you want to be punched?*";
+                        case 1:
+                            return "*I'm not happy at all about you waking me up. Actually, I'm FURIOUS!*";
+                        case 2:
+                            return "*Grrr... I had several troubles getting to sleep. Why you woke me up?*";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*Please, tell me you did my request, tell me, because I really want to hit you hard.*";
+                        case 1:
+                            return "*You better have completed my request, because I'm even more furious now.*";
+                    }
+                    break;
             }
             return base.GetSpecialMessage(MessageID);
         }

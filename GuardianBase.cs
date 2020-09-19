@@ -913,6 +913,8 @@ namespace giantsummon
                 StoreFullInventoryMessage = "Mes.Store.FullInvMessage",
                 StoreNoCoinsMessage = "Mes.Store.NotEnoughCoins";
             public const string BuddySelected = "Mes.BuddyPicked";
+            public const string GuardianWokeUpByPlayerMessage = "Mes.WakeUpMessage",
+                GuardianWokeUpByPlayerRequestActiveMessage = "Mes.WakeUpMessageRequestActive";
         }
 
         public class FastItemDefiniton : Terraria.ModLoader.Config.ItemDefinition

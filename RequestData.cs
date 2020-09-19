@@ -319,7 +319,17 @@ namespace giantsummon
                     break;
                 case RequestState.RequestActive:
                     {
-                        Time--;
+                        if (WorldMod.IsGuardianNpcInWorld(gd.ID, gd.ModID))
+                        {
+                            if (!WorldMod.GuardianTownNPC.First(x => x.ID == gd.ID && x.ModID == gd.ModID).IsUsingBed)
+                            {
+                                Time--;
+                            }
+                        }
+                        else
+                        {
+                            Time--;
+                        }
                         if (Time <= 0)
                         {
                             requestState = RequestState.Cooldown;

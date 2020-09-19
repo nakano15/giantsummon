@@ -7,8 +7,9 @@ When your character is mounted on a companion, and your character gets knocked o
 Having your character rescued, will remove debuffs afflicting It.
 Fixed a bug where after your character is rescued, the screen remains blacked out until your character wakes up.
 The character will now close their eyes when knocked out.
-Your character will spawn at the rescue spot with only 1 hp, but all your companions will be out of knocked out state.
+Your character will spawn at the rescue spot with only 1 hp.
 	Dead companions will respawn too.
+	Knocked out companions will not only leave Knocked Out Cold state, but will have their health set to a random value upon respawning.
 Added the Two Handed Mastery accessory to the mod.
 	It allows companions having It equipped to dual wield weapons.
 	Since Domino's shop is not showing mod items, Sardine's Bounty Quests will have a chance of having that item as one of the rewards.
@@ -42,6 +43,7 @@ Companions will have their mass disregarded whenever they use a Rocket Boot or a
 	That may cause the accessories to do their intended effects.
 Companions gained 2 extra situational dialogues:
 	They will speak something when knocked out, and when sleeping.
+	The problem of the knocked out dialogue, is that It will never trigger, because you can't speak with knocked out companions.
 Did a few tweaks on some of Rococo Sprites.
 	Did some changes to the arm sprites on his attack animations.
 	Also did some changes to the body sprites on some of the attack animations.
@@ -57,3 +59,6 @@ Did a few tweaks on some of Rococo Sprites.
 Brutus will do comments whenever your character health reaches 30%.
 Brutus will activate protect mode whenever your character is knocked out while he's following you.
 	Due to him being unable to heal your character in this state, he'll give you a small revive boost.
+You will now need to wake up your companions before they can offer you their dialogue options.
+	Companions will have reaction dialogues for when waking up. After waking up, their normal interactions will be displayed.
+	Due to this change, request timer no longe runs when the companion is sleeping.

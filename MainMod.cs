@@ -43,7 +43,8 @@ namespace giantsummon
             GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
-            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false;
+            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false, 
+            DoNotUseRescue = false;
         public static List<Terraria.ModLoader.Config.ItemDefinition> DualwieldWhitelist = new List<Terraria.ModLoader.Config.ItemDefinition>();
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
@@ -875,11 +876,11 @@ namespace giantsummon
                 Utils.DrawBorderStringBig(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f), Color.OrangeRed, 1f, 0.5f, 0.5f);
                 if (playerMod.KnockedOutCold)
                 {
-                    Text = (MainMod.PlayersDontDiesAfterDownedDefeat ? "Hold '" + Main.cHook + "' to call for help." : "Press '" + Main.cHook + "' to give up.");
+                    Text = (MainMod.PlayersDontDiesAfterDownedDefeat && !DoNotUseRescue ? "Hold '" + Main.cHook + "' to call for help." : "Press '" + Main.cHook + "' to give up.");
                     Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28), Color.OrangeRed, 1f, 0.5f, 0.5f);
                     if (playerMod.RescueTime > 0)
                     {
-                        Text = "Rescue in " + Math.Round(PlayerMod.MaxRescueTime - (float)playerMod.RescueTime / 60, 1) + " seconds";
+                        Text = (DoNotUseRescue ? "Giving up in " : "Rescue in ") + Math.Round(PlayerMod.MaxRescueTime - (float)playerMod.RescueTime / 60, 1) + " seconds";
                         Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28 + 26), Color.OrangeRed, 0.85f, 0.5f, 0.5f);
                     }
                 }
@@ -2277,6 +2278,10 @@ namespace giantsummon
                                     }
                                     SlotStartPosition.Y += 28f;
                                 }
+                            }
+                            else
+                            {
+                                SlotStartPosition.Y += 28f;
                             }
                             if (d.request.requestState == RequestData.RequestState.RequestActive)
                             {

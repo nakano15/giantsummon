@@ -17,6 +17,7 @@ namespace giantsummon
         public int WhoAmID = 0;
         public static int IDStack = 0;
         public static bool ForceKill = false;
+        public int TalkPlayerID = -1;
         public byte AssistSlot = 0;
         public int SavedPosX = -1, SavedPosY = -1; //Redo the path finding if moving to it was interrupted by any way.
         public bool PathingInterrupted = false;
@@ -88,6 +89,7 @@ namespace giantsummon
         public string ModID { get { return Data.ModID; } set { Data.ModID = value; } }
         public int ID { get { return Data.ID; } set { Data.ID = value; } }
         public GuardianID MyID { get { return Data.MyID; } set { Data.MyID = value; } }
+        public bool HasRequestActive { get { return Data.request.Active; } }
         public bool Active = false;
         public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
         public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false;
@@ -1772,6 +1774,13 @@ namespace giantsummon
             {
                 OwnerPos = -1;
             }
+            if (TalkPlayerID > -1)
+            {
+                Player talkPlayer = Main.player[TalkPlayerID];
+                PlayerMod pm = talkPlayer.GetModPlayer<PlayerMod>();
+                if (!talkPlayer.active || talkPlayer.dead || !pm.IsTalkingToAGuardian || pm.TalkingGuardianPosition != WhoAmID)
+                    TalkPlayerID = -1;
+            }
             OffsetX = OffsetY = 0;
             MainMod.AddActiveGuardian(this);
             WalkMode = false;
@@ -3199,6 +3208,13 @@ namespace giantsummon
                 DisplayEmotion(Emotions.Sad);
         }
 
+        public void GetBuddyModeBenefits(out float HealthBonus, out float DamageBonus, out int DefenseBonus)
+        {
+            HealthBonus = FriendshipLevel * 0.01f;
+            DamageBonus = FriendshipLevel * 0.01f;
+            DefenseBonus = (int)(FriendshipLevel * 0.3334f);
+        }
+
         public void DoUpdateGuardianStatus()
         {
             UpdateStatus = false;
@@ -3279,6 +3295,18 @@ namespace giantsummon
             }
             //if (SelectedOffhand > -1 && giantsummon.IsGuardianItem(this.Inventory[SelectedOffhand]))
             //    giantsummon.GetGuardianItemData(this.Inventory[SelectedOffhand].type).ItemStatusScript(this);
+            if (OwnerPos > -1 && PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
+            {
+                float HealthMod, DamageMod;
+                int DefenseMod;
+                GetBuddyModeBenefits(out HealthMod, out DamageMod, out DefenseMod);
+                MHP += (int)(HealthMod);
+                MeleeDamageMultiplier += DamageMod;
+                RangedDamageMultiplier += DamageMod;
+                MagicDamageMultiplier += DamageMod;
+                SummonDamageMultiplier += DamageMod;
+                Defense += DefenseMod;
+            }
             GuardianArmorAndSetEffects.GetArmorSetEffect(this);
             if (Main.expertMode)
             {
@@ -5451,7 +5479,7 @@ namespace giantsummon
         {
             get
             {
-                if (furniturex > -1 && furniturey > -1)
+                if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
                     Tile tile = Framing.GetTileSafely(furniturex, furniturey);
                     if (tile.active() && tile.type == Terraria.ID.TileID.Thrones)
@@ -5467,7 +5495,7 @@ namespace giantsummon
         {
             get
             {
-                if (furniturex > -1 && furniturey > -1)
+                if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
                     Tile tile = Framing.GetTileSafely(furniturex, furniturey);
                     if (tile.active() && tile.type == Terraria.ID.TileID.Benches)
@@ -5491,7 +5519,7 @@ namespace giantsummon
         {
             get
             {
-                if (furniturex > -1 && furniturey > -1)
+                if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
                     Tile tile = Framing.GetTileSafely(furniturex, furniturey);
                     if (tile.active() && tile.type == Terraria.ID.TileID.Beds)
@@ -5528,6 +5556,10 @@ namespace giantsummon
         {
             if (furniturex != -1 && furniturey != -1)
             {
+                if (TalkPlayerID > -1)
+                {
+                    return;
+                }
                 if (IsAttackingSomething)
                 {
                     if (UsingFurniture)
@@ -5898,24 +5930,27 @@ namespace giantsummon
 
         public bool NewIdleBehavior()
         {
-            if (!IsAttackingSomething && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition == WhoAmID)
+            if (!IsAttackingSomething && TalkPlayerID > -1)
             {
                 if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome) || IdleActionTime < 5)
                     ChangeIdleAction(IdleActions.Listening, 200);
-                bool PlayerToTheLeft = Main.player[Main.myPlayer].Center.X < Position.X;
-                if (Math.Abs(Position.X - Main.player[Main.myPlayer].Center.X) >= Width + 12)
+                bool PlayerToTheLeft = Main.player[TalkPlayerID].Center.X < Position.X;
+                if (furniturex == -1 && furniturey == -1)
                 {
-                    if (PlayerToTheLeft)
-                        MoveLeft = true;
-                    else
-                        MoveRight = true;
-                }
-                else if (Velocity.X == 0)
-                {
-                    if (PlayerToTheLeft)
-                        LookingLeft = true;
-                    else
-                        LookingLeft = false;
+                    if (Math.Abs(Position.X - Main.player[TalkPlayerID].Center.X) >= Width + 12)
+                    {
+                        if (PlayerToTheLeft)
+                            MoveLeft = true;
+                        else
+                            MoveRight = true;
+                    }
+                    else if (Velocity.X == 0)
+                    {
+                        if (PlayerToTheLeft)
+                            LookingLeft = true;
+                        else
+                            LookingLeft = false;
+                    }
                 }
                 return true;
             }
@@ -5965,6 +6000,14 @@ namespace giantsummon
                                 HouseY++;
                                 if (HouseY >= Main.maxTilesY - 20)
                                     break;
+                            }
+                            if (Main.tile[HouseX - 1, HouseY].type == Terraria.ID.TileID.OpenDoor || Main.tile[HouseX - 1, HouseY].type == Terraria.ID.TileID.TallGateOpen)
+                            {
+                                HouseX++;
+                            }
+                            else if (Main.tile[HouseX, HouseY].type == Terraria.ID.TileID.OpenDoor || Main.tile[HouseX, HouseY].type == Terraria.ID.TileID.TallGateOpen)
+                            {
+                                HouseX--;
                             }
                         }
                         HouseX *= 16;

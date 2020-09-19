@@ -562,6 +562,26 @@ namespace giantsummon.Creatures
             {
                 case MessageIDs.RescueMessage:
                     return "*You heard someone saying that you'll be fine.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return "*[name] woke up, and smiled upon seeing you.*";
+                        case 1:
+                            return "*[name] looks at you after waking up, and asks what do you need.*";
+                        case 2:
+                            return "*[name] seems quite tired, but stood up to see what you want.*";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*[name] asks you if you did his request.*";
+                        case 1:
+                            return "*[name] smiles at you, and asks if you did his request.*";
+                    }
+                    break;
             }
             return base.GetSpecialMessage(MessageID);
         }

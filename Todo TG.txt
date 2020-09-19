@@ -30,3 +30,4 @@ If you speak with a companion that's sleeping, you will need to pick the option 
 Add a skin to Zacks where his body wounds have bandages, and he's wearing a cuff.
 	The skin should be unlocked with the help of Blue's requests.
 	The shirt should have "Meat Bag" written. There is no way of displaying that, so better add that to the skin description.
+Implement an alternative mount position, for when the player is inside blocks while mounted on the guardian shoulders.

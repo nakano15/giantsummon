@@ -475,6 +475,26 @@ namespace giantsummon.Creatures
                     return "*I wont drop my merchandise. Clear your inventory.*";
                 case MessageIDs.StoreNoCoinsMessage:
                     return "*I wont give you this for free.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return "*Huh? What? I snore very loud? Then go away.*";
+                        case 1:
+                            return "*Terrarian, one of the things I value is a well slept day.*";
+                        case 2:
+                            return "*If you want to trade, couldn't you wait until I open my shop?*";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*Yes, I'm very happy for seeing you too, so happy that I'm grinning. Is it about the request or what?*";
+                        case 1:
+                            return "*I hope you woke me up to say that completed my request, because I was really busy trying to sleep.*";
+                    }
+                    break;
             }
             return base.GetSpecialMessage(MessageID);
         }

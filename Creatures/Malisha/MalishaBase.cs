@@ -712,6 +712,26 @@ namespace giantsummon.Creatures
             {
                 case MessageIDs.RescueMessage:
                     return "*Oh ho ho, the many experiments I could do with you.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return "*I really should transform you into something for waking me up. Say It, what do you want?*";
+                        case 1:
+                            return "*Terrarian, one of the most dangerous things ever is waking me up. But right now I'm not in the mood of doing anything.*";
+                        case 2:
+                            return "*You! You woke me up. Tell me the reason, NOW.*";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*The only reason why you didn't turned into a toad, is because I'm really waiting for my request.*";
+                        case 1:
+                            return "*You woke me up. Is my request done?*";
+                    }
+                    break;
             }
             return base.GetSpecialMessage(MessageID);
         }

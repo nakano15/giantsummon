@@ -1096,7 +1096,27 @@ namespace giantsummon.Creatures
             switch (MessageID)
             {
                 case MessageIDs.RescueMessage:
-                    return "*Take a little rest, you're in a friendly place now.*";
+                    return "*Take as much rest you need, you're in a friendly place now.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return "*Yaaaaaawnn.... Oh.. Hello Terrarian... Do you need something?*";
+                        case 1:
+                            return "*Oh, hello Terrarian. Are you in need of a hug?";
+                        case 2:
+                            return "*You need something from me? I was having some sleep.*";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*Oh... Hello.. Just stretching a bit... Done. Did you do what I asked?*";
+                        case 1:
+                            return "*Hey Terrarian, you woke up because of my request, right? Did you finish It?*";
+                    }
+                    break;
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -526,7 +526,27 @@ namespace giantsummon.Creatures
             switch (MessageID)
             {
                 case MessageIDs.RescueMessage:
-                    return "I really hope you don't die, because I had trouble bringing you here.";
+                    return "I really hope you don't die, because I had trouble carrying you here.";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return "Whatever you want could have waited until I woke up, right?";
+                        case 1:
+                            return "Terrarian. For what reason did you woke me up? SAY IT!";
+                        case 2:
+                            return "What? Why did you woke me up? Let me sleep!";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "You woke me up! I hope It's about my request, or else...";
+                        case 1:
+                            return "I hope It's important, or about my request, because I really was enjoying my sleep.";
+                    }
+                    break;
             }
             return base.GetSpecialMessage(MessageID);
         }

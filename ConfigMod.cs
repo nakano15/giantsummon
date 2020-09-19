@@ -141,6 +141,11 @@ namespace giantsummon
         [Tooltip("Controls if the companions will either die when health reaches 0 on Knocked Out state, or will enter a Knocked Out Cold state. In Knocked Out Cold state, the companions health wont be restored naturally without the help of others. There is no other way of reviving them, without the help of others. Some kinds of defeats causes death anyway, like dying to lava.")]
         public bool GuardianCanDie { get { return MainMod.GuardiansDontDiesAfterDownedDefeat; } set { MainMod.GuardiansDontDiesAfterDownedDefeat = value; } }
 
+        [Label("Should the character be rescued by awaken guardians when knocked out cold?")]
+        [Tooltip("If this option is on, your character will always be rescued from wherever It is when knocked out cold by a living town companion. If no living companion is around, your character will be set to the spawn in Knocked Out state, with low health.")]
+        [DefaultValue(true)]
+        public bool UseRescue { get { return !MainMod.DoNotUseRescue; } set { MainMod.DoNotUseRescue = !value; } }
+
         [Label("Start rescue countdown when your character is knocked out cold?")]
         [Tooltip("Regardless of wether or not there are companions alive near you, the rescue countdown will run while your character isn't revived by someone.")]
         [DefaultValue(false)]
