@@ -62,3 +62,28 @@ Brutus will activate protect mode whenever your character is knocked out while h
 You will now need to wake up your companions before they can offer you their dialogue options.
 	Companions will have reaction dialogues for when waking up. After waking up, their normal interactions will be displayed.
 	Due to this change, request timer no longe runs when the companion is sleeping.
+There is now an option of disabling the rescue, when your character is knocked out cold.
+	That also allows you to suicide your character too, in case there is no possibility of rescue.
+Your companion will no longer mount/be mounted, controlled, wait or sharing your mount when you dismiss them.
+	Those actions will be disabled whenever you dismiss them, in a safe way to avoid bugs.
+Added an absurd amount of slimes that can count towards request objective.
+Increased the probability of gem monsters showing up.
+Boosted Wrath recruit npc health.
+Rejecting Rococo living in your world will still unlock him on your companions list, but he wont be set to live in the world.
+The Zombie Guardian has gained a max health boost.
+Revive health regen has been boosted for both the player and the companions.
+Implemented the Buddy Mode.
+	You can try Buddy Mode on a new character, once you have at least 1 character created on your computer.
+	The character will spawn with an item, that item will remain in the inventory for 12 in-game hours (12 real life minutes).
+	Upon using such item, It will open a window allowing you to pick the companion your character you will be bound with.
+		The companions in the list will be all the companions your other characters have met, or are starter companions. Doesn't matter their friendship level.
+	You will never be able to dismiss the picked companion.
+	Characters in this game mode will not be able to have any other companion following them, other than the one they picked.
+		You will still be able to find new companions, let them move in to your world, and do their requests normally. You can even give them equipments too.
+	Both the player and the picked companion will gain status bonus based on the companion friendship level.
+Grappling Hooks will now be destroyed when your character is knocked out.
+You can no longer check, accept, reject or complete request on the guardian request list.
+	You will have to speak with the companion having the request, instead.
+You can now open the companion inventory and equipment management through the companion dialogues.
+	That can only be done for companions you doesn't have summoned.
+You can also manage Skins and Outfits on the off party companion management interface.

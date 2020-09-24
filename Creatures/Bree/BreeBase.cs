@@ -220,7 +220,7 @@ namespace giantsummon.Creatures
             {
                 if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], 2))
                 {
-                    return "IWould you mind if I accompany my husband on your quest? In case he does something stupid, I mean.";
+                    return "Would you mind if I accompany my husband on your quest? In case he does something stupid, I mean.";
                 }
                 else if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 2))
                 {

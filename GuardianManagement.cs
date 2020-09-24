@@ -33,6 +33,11 @@ namespace giantsummon
             if (!Active)
                 return;
             PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            if (!Main.playerInventory)
+            {
+                Active = false;
+                return;
+            }
             if (!Main.playerInventory || !player.MyGuardians.ContainsKey(SelectedGuardian))
             {
                 Active = false;
@@ -211,6 +216,58 @@ namespace giantsummon
                         }
                     }
                     break;
+                case Tab.Skins:
+                    {
+                        Vector2 SlotPosition = new Vector2(HudStartX, HudStartY + 22f);
+                        bool HasSkin = false;
+                        foreach (SkinReqStruct skin in Guardian.Base.SkinList)
+                        {
+                            HasSkin = true;
+                            bool IsActive = Guardian.SkinID == skin.SkinID;
+                            bool LastActive = IsActive;
+                            bool RequirementBeaten = skin.Requirement(Guardian, player.player);
+                            MainMod.AddOnOffButton(SlotPosition.X, SlotPosition.Y, skin.Name, ref IsActive, RequirementBeaten, !RequirementBeaten);
+                            if (IsActive != LastActive)
+                            {
+                                if (Active)
+                                    Guardian.SkinID = skin.SkinID;
+                                else
+                                    Guardian.SkinID = 0;
+                            }
+                            SlotPosition.Y += 20;
+                        }
+                        if (!HasSkin)
+                        {
+                            Utils.DrawBorderString(Main.spriteBatch, "This companion has no skin right now.", SlotPosition, Color.White);
+                        }
+                    }
+                    break;
+                case Tab.Outfits:
+                    {
+                        Vector2 SlotPosition = new Vector2(HudStartX, HudStartY + 22f);
+                        bool HasOutfit = false;
+                        foreach (SkinReqStruct skin in Guardian.Base.OutfitList)
+                        {
+                            HasOutfit = true;
+                            bool IsActive = Guardian.OutfitID == skin.SkinID;
+                            bool LastActive = IsActive;
+                            bool RequirementBeaten = skin.Requirement(Guardian, player.player);
+                            MainMod.AddOnOffButton(SlotPosition.X, SlotPosition.Y, skin.Name, ref IsActive, RequirementBeaten, !RequirementBeaten);
+                            if (IsActive != LastActive)
+                            {
+                                if (Active)
+                                    Guardian.OutfitID = skin.SkinID;
+                                else
+                                    Guardian.OutfitID = 0;
+                            }
+                            SlotPosition.Y += 20;
+                        }
+                        if (!HasOutfit)
+                        {
+                            Utils.DrawBorderString(Main.spriteBatch, "This companion has no outfits right now.", SlotPosition, Color.White);
+                        }
+                    }
+                    break;
             }
             if (HoverItem != null)
             {
@@ -221,7 +278,9 @@ namespace giantsummon
         public enum Tab
         {
             Inventory,
-            Equipment
+            Equipment,
+            Skins,
+            Outfits
         }
     }
 }

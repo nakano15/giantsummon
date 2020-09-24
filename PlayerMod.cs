@@ -353,7 +353,7 @@ namespace giantsummon
             {
                 if (!NegativeReviveBoost)
                 {
-                    player.lifeRegen += ReviveBoost * 3;
+                    player.lifeRegen += ReviveBoost * 5;
                 }
                 if ((ReviveBoost == 0 || NegativeReviveBoost) && KnockedOutCold)
                 {
@@ -897,128 +897,103 @@ namespace giantsummon
                             RescueTime++;
                         else if (RescueTime > 0)
                             RescueTime--;
-                        if (player.controlHook && MainMod.DoNotUseRescue)
+                        if (RescueTime >= MaxRescueTime * 60)
                         {
-                            DoForceKill(" succumbed to It's injuries.");
-                            RescueTime = 0;
-                        }
-                        else if (RescueTime >= MaxRescueTime * 60)
-                        {
-                            KnockedOutCold = false;
-                            KnockedOut = true;
                             RescueTime = 0;
                             RescueWakingUp = true;
-                            TerraGuardian rescuer = null;
-                            bool RescuerIsHomeless = true;
-                            float NearestRescuerDistance = float.MaxValue;
-                            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
+                            if (MainMod.DoNotUseRescue)
                             {
-                                if (tg.OwnerPos == -1 && !tg.DoAction.InUse && !tg.Downed && !tg.KnockedOut && tg.GetTownNpcInfo != null)
-                                {
-                                    float Distance = player.Distance(tg.CenterPosition);
-                                    bool IsHomeless = tg.GetTownNpcInfo.Homeless;
-                                    if (Distance < NearestRescuerDistance)
-                                    {
-                                        if ((RescuerIsHomeless && IsHomeless) || !IsHomeless)
-                                        {
-                                            rescuer = tg;
-                                            NearestRescuerDistance = Distance;
-                                            RescuerIsHomeless = IsHomeless;
-                                        }
-                                    }
-                                }
-                            }
-                            if (rescuer != null)
-                            {
-                                string RescueMessage = rescuer.Base.GetSpecialMessage(GuardianBase.MessageIDs.RescueMessage);
-                                rescuer.Spawn();
-                                if (rescuer.furniturex > -1)
-                                    rescuer.LeaveFurniture(false);
-                                if(RescueMessage != "")
-                                    rescuer.SaySomething(RescueMessage);
-                                player.position = rescuer.Position;
-                                player.position.X -= player.width * 0.5f;
-                                player.position.Y -= player.height + 8;
-                                GuardianActions.TryRevivingPlayer(rescuer, player);
+                                DoForceKill(" succumbed to It's injuries.");
                             }
                             else
                             {
-                                player.Spawn();
-                            }
-                            const float DistanceToTeleportNearbyGuardians = 336f;
-                            foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
-                            {
-                                if (tg != rescuer && tg.OwnerPos == -1 && !tg.Downed && !tg.KnockedOut && tg.Distance(player.Center) < DistanceToTeleportNearbyGuardians)
+                                KnockedOutCold = false;
+                                KnockedOut = true;
+                                TerraGuardian rescuer = null;
+                                bool RescuerIsHomeless = true;
+                                float NearestRescuerDistance = float.MaxValue;
+                                foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                                 {
-                                    if(tg.furniturex > -1)
-                                        tg.LeaveFurniture();
-                                    tg.Position = rescuer.Position;
-                                    tg.SetFallStart();
-                                }
-                            }
-                            if (MountedOnGuardian)
-                            {
-                                Guardian.TeleportToPlayer(true, player);
-                            }
-                            for (int b = player.buffType.Length - 1; b >= 0; b--)
-                            {
-                                if (player.buffTime[b] > 0 && Main.debuff[player.buffType[b]] && player.buffType[b] != Terraria.ID.BuffID.PotionSickness)
-                                {
-                                    player.DelBuff(b);
-                                }
-                            }
-                            //player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
-                            player.statLife = 1;
-                            //player.lifeRegen = 100;
-                            //Send to some guardian house and then move It in.
-                            //If the above isn't possible, send to spawn, and place some guardian nearby.
-                            List<Point> ValidPositions = new List<Point>();
-                            bool BlockedLeft = false, BlockedRight = false;
-                            byte Tries = 0;
-                            while (ValidPositions.Count < GetAllGuardianFollowers.Count(x => x.Active) && Tries++ < 10)
-                            {
-                                for (int d = 0; d < 8; d++)
-                                {
-                                    for (int dir = -1; dir < 2; dir += 2)
+                                    if (tg.OwnerPos == -1 && !tg.DoAction.InUse && !tg.Downed && !tg.KnockedOut && tg.GetTownNpcInfo != null)
                                     {
-                                        if ((dir == -1 && BlockedLeft) || (dir == 1 && BlockedRight))
+                                        float Distance = player.Distance(tg.CenterPosition);
+                                        bool IsHomeless = tg.GetTownNpcInfo.Homeless;
+                                        if (Distance < NearestRescuerDistance)
                                         {
-                                            continue;
-                                        }
-                                        Point point = new Point((int)player.position.X / 16 + dir * d, (int)player.position.Y / 16);
-                                        byte MoveDist = 0;
-                                        while (true)
-                                        {
-                                            bool Blocked = false;
-                                            for (int x = 0; x < 2; x++)
+                                            if ((RescuerIsHomeless && IsHomeless) || !IsHomeless)
                                             {
-                                                Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2);
-                                                if (t.active() && Main.tileSolid[t.type])
-                                                {
-                                                    if (MoveDist == 2)
-                                                    {
-                                                        if (dir < 0)
-                                                            BlockedLeft = true;
-                                                        else
-                                                            BlockedRight = true;
-                                                    }
-                                                    point.Y--;
-                                                    MoveDist++;
-                                                    Blocked = true;
-                                                    break;
-                                                }
+                                                rescuer = tg;
+                                                NearestRescuerDistance = Distance;
+                                                RescuerIsHomeless = IsHomeless;
                                             }
-                                            if (!Blocked || MoveDist == 2)
-                                                break;
                                         }
-                                        if (MoveDist == 0)
+                                    }
+                                }
+                                if (rescuer != null)
+                                {
+                                    string RescueMessage = rescuer.Base.GetSpecialMessage(GuardianBase.MessageIDs.RescueMessage);
+                                    rescuer.Spawn();
+                                    if (rescuer.furniturex > -1)
+                                        rescuer.LeaveFurniture(false);
+                                    if (RescueMessage != "")
+                                        rescuer.SaySomething(RescueMessage);
+                                    player.position = rescuer.Position;
+                                    player.position.X -= player.width * 0.5f;
+                                    player.position.Y -= player.height + 8;
+                                    GuardianActions.TryRevivingPlayer(rescuer, player);
+                                }
+                                else
+                                {
+                                    player.Spawn();
+                                }
+                                const float DistanceToTeleportNearbyGuardians = 336f;
+                                foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
+                                {
+                                    if (tg != rescuer && tg.OwnerPos == -1 && !tg.Downed && !tg.KnockedOut && tg.Distance(player.Center) < DistanceToTeleportNearbyGuardians)
+                                    {
+                                        if (tg.furniturex > -1)
+                                            tg.LeaveFurniture();
+                                        tg.Position = rescuer.Position;
+                                        tg.SetFallStart();
+                                    }
+                                }
+                                if (MountedOnGuardian)
+                                {
+                                    Guardian.TeleportToPlayer(true, player);
+                                }
+                                for (int b = player.buffType.Length - 1; b >= 0; b--)
+                                {
+                                    if (player.buffTime[b] > 0 && Main.debuff[player.buffType[b]] && player.buffType[b] != Terraria.ID.BuffID.PotionSickness)
+                                    {
+                                        player.DelBuff(b);
+                                    }
+                                }
+                                //player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
+                                player.statLife = 1;
+                                //player.lifeRegen = 100;
+                                //Send to some guardian house and then move It in.
+                                //If the above isn't possible, send to spawn, and place some guardian nearby.
+                                List<Point> ValidPositions = new List<Point>();
+                                bool BlockedLeft = false, BlockedRight = false;
+                                byte Tries = 0;
+                                while (ValidPositions.Count < GetAllGuardianFollowers.Count(x => x.Active) && Tries++ < 10)
+                                {
+                                    for (int d = 0; d < 8; d++)
+                                    {
+                                        for (int dir = -1; dir < 2; dir += 2)
                                         {
+                                            if ((dir == -1 && BlockedLeft) || (dir == 1 && BlockedRight))
+                                            {
+                                                continue;
+                                            }
+                                            Point point = new Point((int)player.position.X / 16 + dir * d, (int)player.position.Y / 16);
+                                            byte MoveDist = 0;
                                             while (true)
                                             {
                                                 bool Blocked = false;
                                                 for (int x = 0; x < 2; x++)
                                                 {
-                                                    Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2 + 1);
+                                                    Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2);
                                                     if (t.active() && Main.tileSolid[t.type])
                                                     {
                                                         if (MoveDist == 2)
@@ -1028,7 +1003,7 @@ namespace giantsummon
                                                             else
                                                                 BlockedRight = true;
                                                         }
-                                                        point.Y++;
+                                                        point.Y--;
                                                         MoveDist++;
                                                         Blocked = true;
                                                         break;
@@ -1037,106 +1012,125 @@ namespace giantsummon
                                                 if (!Blocked || MoveDist == 2)
                                                     break;
                                             }
-                                        }
-                                        bool HasTileBlocking = false;
-                                        for (int y = 0; y < 3; y++)
-                                        {
-                                            for (int x = 0; x < 2; x++)
+                                            if (MoveDist == 0)
                                             {
-                                                if (HasTileBlocking)
-                                                    break;
-                                                Tile t = Framing.GetTileSafely(point.X + x, point.Y + y);
-                                                if (t.active() && Main.tileSolid[t.type])
+                                                while (true)
                                                 {
-                                                    HasTileBlocking = true;
+                                                    bool Blocked = false;
+                                                    for (int x = 0; x < 2; x++)
+                                                    {
+                                                        Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2 + 1);
+                                                        if (t.active() && Main.tileSolid[t.type])
+                                                        {
+                                                            if (MoveDist == 2)
+                                                            {
+                                                                if (dir < 0)
+                                                                    BlockedLeft = true;
+                                                                else
+                                                                    BlockedRight = true;
+                                                            }
+                                                            point.Y++;
+                                                            MoveDist++;
+                                                            Blocked = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (!Blocked || MoveDist == 2)
+                                                        break;
                                                 }
                                             }
-                                        }
-                                        if (!HasTileBlocking)
-                                        {
-                                            point.X++;
-                                            ValidPositions.Add(point);
+                                            bool HasTileBlocking = false;
+                                            for (int y = 0; y < 3; y++)
+                                            {
+                                                for (int x = 0; x < 2; x++)
+                                                {
+                                                    if (HasTileBlocking)
+                                                        break;
+                                                    Tile t = Framing.GetTileSafely(point.X + x, point.Y + y);
+                                                    if (t.active() && Main.tileSolid[t.type])
+                                                    {
+                                                        HasTileBlocking = true;
+                                                    }
+                                                }
+                                            }
+                                            if (!HasTileBlocking)
+                                            {
+                                                point.X++;
+                                                ValidPositions.Add(point);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            foreach (TerraGuardian tg in GetAllGuardianFollowers)
-                            {
-                                if (tg.Active)
+                                foreach (TerraGuardian tg in GetAllGuardianFollowers)
                                 {
-                                    if (tg.Downed)
-                                        tg.Spawn();
-                                    if ((tg.KnockedOut || tg.KnockedOutCold))
+                                    if (tg.Active)
                                     {
-                                        tg.TeleportToPlayer();
-                                        if (ValidPositions.Count > 0)
+                                        if (tg.Downed)
+                                            tg.Spawn();
+                                        if ((tg.KnockedOut || tg.KnockedOutCold))
                                         {
-                                            Vector2 Position = new Vector2(ValidPositions[0].X * 16, ValidPositions[0].Y * 16 + 48 - 1);
-                                            ValidPositions.RemoveAt(0);
-                                            tg.Position = Position;
-                                            tg.SetFallStart();
+                                            tg.TeleportToPlayer();
+                                            if (ValidPositions.Count > 0)
+                                            {
+                                                Vector2 Position = new Vector2(ValidPositions[0].X * 16, ValidPositions[0].Y * 16 + 48 - 1);
+                                                ValidPositions.RemoveAt(0);
+                                                tg.Position = Position;
+                                                tg.SetFallStart();
+                                            }
+                                            tg.KnockedOutCold = false;
+                                            tg.HP = (int)(1 + Main.rand.Next(tg.MHP - 1));
+                                            //tg.ExitDownedState();
                                         }
-                                        tg.KnockedOutCold = false;
-                                        tg.HP = (int)(1 + Main.rand.Next(tg.MHP - 1));
-                                        //tg.ExitDownedState();
                                     }
                                 }
-                            }
-                            if (player.whoAmI == Main.myPlayer)
-                            {
-                                Main.BlackFadeIn = 255;
-                                Main.renderNow = true;
-                                /*if (Main.netMode == 0)
+                                if (player.whoAmI == Main.myPlayer)
                                 {
-                                    player.active = false;
-                                    for (int n = 0; n < 200; n++)
+                                    Main.BlackFadeIn = 255;
+                                    Main.renderNow = true;
+                                    /*if (Main.netMode == 0)
                                     {
-                                        if (Main.npc[n].active && !Main.npc[n].townNPC && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerNebula
-                                             && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerSolar && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerStardust
-                                             && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerVortex && Main.npc[n].type != Terraria.ID.NPCID.CultistTablet)
+                                        player.active = false;
+                                        for (int n = 0; n < 200; n++)
                                         {
-                                            Main.npc[n].timeLeft = 0;
-                                            Main.npc[n].CheckActive();
+                                            if (Main.npc[n].active && !Main.npc[n].townNPC && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerNebula
+                                                 && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerSolar && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerStardust
+                                                 && Main.npc[n].type != Terraria.ID.NPCID.LunarTowerVortex && Main.npc[n].type != Terraria.ID.NPCID.CultistTablet)
+                                            {
+                                                Main.npc[n].timeLeft = 0;
+                                                Main.npc[n].CheckActive();
+                                            }
                                         }
-                                    }
-                                    player.active = true;
-                                }*/
-                            }
-                            if (Main.netMode == 0)
-                            {
-                                Main.time += Main.rand.Next(10, 35) * 0.1f * 3600;
-                                if (Main.dayTime)
-                                {
-                                    if (Main.time >= 15 * 3600)
-                                    {
-                                        Main.time -= 15 * 3600;
-                                        Main.dayTime = false;
-                                    }
-                                    /*if (Main.dayTime)
-                                    {
-                                        if (Main.eclipse)
-                                        {
-                                            Main.dayTime = true;
-                                            Main.time = Main.rand.Next(5, 15) * 0.1f * 3600;
-                                        }
+                                        player.active = true;
                                     }*/
                                 }
-                                else
+                                if (Main.netMode == 0)
                                 {
-                                    if (Main.time >= 9 * 3600)
+                                    Main.time += Main.rand.Next(10, 35) * 0.1f * 3600;
+                                    if (Main.dayTime)
                                     {
-                                        Main.time -= 9 * 3600;
-                                        Main.dayTime = true;
-                                        Main.AnglerQuestSwap();
-                                    }
-                                    /*if (!Main.dayTime)
-                                    {
-                                        if (Main.bloodMoon)
+                                        if (Main.time >= 15 * 3600)
                                         {
-                                            Main.dayTime = true;
-                                            Main.time = Main.rand.Next(5, 15) * 0.1f * 3600;
+                                            Main.time -= 15 * 3600;
+                                            Main.dayTime = false;
                                         }
-                                    }*/
+                                        /*if (Main.dayTime)
+                                        {
+                                            if (Main.eclipse)
+                                            {
+                                                Main.dayTime = true;
+                                                Main.time = Main.rand.Next(5, 15) * 0.1f * 3600;
+                                            }
+                                        }*/
+                                    }
+                                    else
+                                    {
+                                        if (Main.time >= 9 * 3600)
+                                        {
+                                            Main.time -= 9 * 3600;
+                                            Main.dayTime = true;
+                                            Main.AnglerQuestSwap();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -2169,6 +2163,14 @@ namespace giantsummon
                 {
                     return;
                 }
+                if (Guardian.PlayerMounted)
+                    Guardian.ToggleMount();
+                if (Guardian.SittingOnPlayerMount)
+                    Guardian.DoSitOnPlayerMount(false);
+                if (Guardian.PlayerControl)
+                    Guardian.TogglePlayerControl(true);
+                if (Guardian.GuardingPosition.HasValue)
+                    Guardian.ToggleWait(false);
                 if (Main.netMode > 0)
                 {
                     Guardian.Active = false;

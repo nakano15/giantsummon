@@ -50,15 +50,15 @@ namespace giantsummon.Npcs
                 else
                 {
                     RejectedOnce = true;
-                    Main.npcChatText = "*It got saddened after hearing my refusal. But says that wont feel bad for that.*";
+                    Main.npcChatText = "*It got saddened after hearing my refusal. But says that wont feel bad for that. He told you that you can call him anytime, if you change your mind, and that his name is "+Base.Name+"*";
                 }
+                PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+                PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
+                NpcMod.AddGuardianMet(GuardianID, GuardianModID, firstButton);
+                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
             }
             else if (AcceptedOnce)
             {
-                PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
-                PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
-                NpcMod.AddGuardianMet(GuardianID, GuardianModID);
-                WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
                 //npc.Transform(ModContent.NPCType<GuardianNPC.List.RaccoonGuardian>());
             }
         }

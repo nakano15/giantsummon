@@ -1070,31 +1070,31 @@ namespace giantsummon.Npcs
         {
             if (NPC.downedGolemBoss)
             {
-                HP = 3000;
+                HP = 16000;
                 Damage = 150;
                 Defense = 50;
             }
             else if (NPC.downedMechBossAny)
             {
-                HP = 1500;
+                HP = 30000;
                 Damage = 90;
                 Defense = 35;
             }
             else if (Main.hardMode)
             {
-                HP = 1200;
+                HP = 10000;
                 Damage = 60;
                 Defense = 25;
             }
             else if (NPC.downedBoss3)
             {
-                HP = 900;
+                HP = 6000;
                 Damage = 40;
                 Defense = 20;
             }
             else
             {
-                HP = 400;
+                HP = 2000;
                 Damage = 20;
                 Defense = 10;
             }

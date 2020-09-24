@@ -29,25 +29,36 @@ namespace giantsummon
         {
             get
             {
-                if (OwnerPos > -1)
+                try
                 {
-                    int MyGuardianIndex = (AssistSlot == 0 ? Main.player[OwnerPos].GetModPlayer<PlayerMod>().SelectedGuardian : Main.player[OwnerPos].GetModPlayer<PlayerMod>().SelectedAssistGuardians[AssistSlot - 1]);
-                    if (!Main.player[OwnerPos].GetModPlayer<PlayerMod>().MyGuardians.ContainsKey(MyGuardianIndex))
+                    if (OwnerPos > -1)
                     {
-                        Active = false;
+                        if (AssistSlot >= MainMod.MaxExtraGuardianFollowers + 1)
+                        {
+                            Active = false;
+                        }
+                        else
+                        {
+                            int MyGuardianIndex = (AssistSlot == 0 ? Main.player[OwnerPos].GetModPlayer<PlayerMod>().SelectedGuardian : Main.player[OwnerPos].GetModPlayer<PlayerMod>().SelectedAssistGuardians[AssistSlot - 1]);
+                            if (!Main.player[OwnerPos].GetModPlayer<PlayerMod>().MyGuardians.ContainsKey(MyGuardianIndex))
+                            {
+                                Active = false;
+                            }
+                            else
+                            {
+                                return Main.player[OwnerPos].GetModPlayer<PlayerMod>().MyGuardians[MyGuardianIndex];
+                            }
+                        }
                     }
                     else
                     {
-                        return Main.player[OwnerPos].GetModPlayer<PlayerMod>().MyGuardians[MyGuardianIndex];
+                        if (_Data != null && Main.netMode == 0 && !Main.gameMenu && Main.player[Main.myPlayer].active && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(_Data.ID))
+                        {
+                            return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetGuardian(_Data.ID, _Data.ModID);
+                        }
                     }
                 }
-                else
-                {
-                    if (_Data != null && Main.netMode == 0 && !Main.gameMenu && Main.player[Main.myPlayer].active && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(_Data.ID))
-                    {
-                        return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetGuardian(_Data.ID, _Data.ModID);
-                    }
-                }
+                catch { }
                 if (_Data == null)
                     _Data = new GuardianData();
                 return _Data;
@@ -5556,7 +5567,7 @@ namespace giantsummon
         {
             if (furniturex != -1 && furniturey != -1)
             {
-                if (TalkPlayerID > -1)
+                if (TalkPlayerID > -1 && !UsingFurniture)
                 {
                     return;
                 }
@@ -7114,7 +7125,7 @@ namespace giantsummon
             {
                 HealthRegenTime = 0;
             }
-            HealthRegenPower += ReviveBoost * (Main.expertMode ? 2 : 3);
+            HealthRegenPower += ReviveBoost * 5;
             ReviveBoost = 0;
             NegativeReviveBoost = false;
             float HealthRegenValue = 0;

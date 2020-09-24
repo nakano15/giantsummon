@@ -154,7 +154,7 @@ namespace giantsummon
                 if (tg.GetTownNpcInfo == null)
                     VisitRate /= 2;
             }
-            if (Main.rand.NextDouble() < VisitRate * 0.005f)
+            if (Main.rand.NextDouble() < VisitRate * 0.05f)
             {
                 List<GuardianID> PossibleIDs = new List<GuardianID>();
                 foreach (GuardianID ids in GuardiansMet)

@@ -37,7 +37,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 75, LastModVersion = 71;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -876,7 +876,7 @@ namespace giantsummon
                 Utils.DrawBorderStringBig(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f), Color.OrangeRed, 1f, 0.5f, 0.5f);
                 if (playerMod.KnockedOutCold)
                 {
-                    Text = (MainMod.PlayersDontDiesAfterDownedDefeat && !DoNotUseRescue ? "Hold '" + Main.cHook + "' to call for help." : "Press '" + Main.cHook + "' to give up.");
+                    Text = (MainMod.PlayersDontDiesAfterDownedDefeat && !DoNotUseRescue ? "Hold '" + Main.cHook + "' to call for help." : "Hold '" + Main.cHook + "' to give up.");
                     Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28), Color.OrangeRed, 1f, 0.5f, 0.5f);
                     if (playerMod.RescueTime > 0)
                     {
@@ -2159,83 +2159,13 @@ namespace giantsummon
                                 }
                                 else if (d.request.requestState == RequestData.RequestState.HasRequestReady)
                                 {
-                                    if (!CheckingQuestBrief)
-                                    {
-                                        ButtonPosition.X += 48f;
-                                        string ButtonText = "Check Request";
-                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
-                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
-                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                        {
-                                            player.player.mouseInterface = true;
-                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
-                                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                            {
-                                                CheckingQuestBrief = true;
-                                                Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestBrief(d, Guardian), Guardian), true);
-                                                //Companion says request text.
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (d.request.IsCommonRequest)
-                                        {
-                                            SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, d.Name + " asks you to:", SlotStartPosition, Color.White).Y;
-                                            foreach (string t in d.request.GetRequestText(player.player, d, true))
-                                            {
-                                                SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, t, SlotStartPosition, Color.White).Y;
-                                            }
-                                            SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, "Will you do this request?", SlotStartPosition, Color.White).Y;
-                                        }
-                                        ButtonPosition.X += 48f;
 
-                                        ButtonPosition.X -= 5;
-                                        string ButtonText = "Accept";
-                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 1f);
-                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X && Main.mouseX < ButtonPosition.X &&
-                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                        {
-                                            player.player.mouseInterface = true;
-                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 1);
-                                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                            {
-                                                if (PlayerMod.GetPlayerAcceptedRequestCount(player.player) >= RequestData.MaxRequestCount)
-                                                {
-                                                    Main.NewText("You have too many requests active.");
-                                                }
-                                                else
-                                                {
-                                                    CheckingQuestBrief = false;
-                                                    Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestAccept(d), Guardian), true);
-                                                    d.request.UponAccepting();
-                                                }
-                                            }
-                                        }
-
-                                        ButtonPosition.X += 10;
-                                        ButtonText = "Reject";
-                                        ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1);
-                                        if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
-                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                        {
-                                            player.player.mouseInterface = true;
-                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
-                                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                            {
-                                                CheckingQuestBrief = false;
-                                                Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestDeny(d), Guardian), true);
-                                                d.request.UponRejecting();
-                                            }
-                                        }
-                                    }
-                                    SlotStartPosition.Y += 28f;
                                 }
                                 else if (d.request.requestState == RequestData.RequestState.RequestActive)
                                 {
                                     if (d.request.RequestCompleted || d.request.Failed)
                                     {
-                                        ButtonPosition.X += 48f;
+                                        /*ButtonPosition.X += 48f;
                                         string ButtonText = "Report";
                                         Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
                                         if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
@@ -2256,7 +2186,7 @@ namespace giantsummon
                                                 }
                                                 d.request.CompleteRequest(Guardian, d, player);
                                             }
-                                        }
+                                        }*/
                                     }
                                     else
                                     {
@@ -2279,18 +2209,12 @@ namespace giantsummon
                                     SlotStartPosition.Y += 28f;
                                 }
                             }
-                            else
-                            {
-                                SlotStartPosition.Y += 28f;
-                            }
                             if (d.request.requestState == RequestData.RequestState.RequestActive)
                             {
                                 for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
                                 {
                                     if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
                                     {
-                                        SlotStartPosition.Y += 26f;
-                                        // ButtonPosition.Y += 26;
                                         RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
                                         string ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
                                         Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f);
@@ -2308,6 +2232,7 @@ namespace giantsummon
                                                 }
                                             }
                                         }
+                                        SlotStartPosition.Y += 26f;
                                     }
                                 }
                             }

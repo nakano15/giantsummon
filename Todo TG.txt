@@ -6,12 +6,7 @@ https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companion
 Companion grouping system.
 	The grouping system will be used by the house finder, to tell which guardians can share their room with the other guardian.
 	Should check if there's enough chairs for them to move in.
-Add the possibility of companions that can't live in the world, come visit It to spend the day.
-	Add an option to allow turning It off, that may be helpful for low end players.
 Blue should get an animation for when she's knocked out, while having a bunny.
-Make companion npcs be able to share the same house, there should be some info on their Guardian Base that tells who they may share house with. Or a third info that tells who can live with who, to avoid bugs and confusion.
-Zacks seems to have a problem with his throne sitting animation, related to the outline of his right arm.
-	Where have I seen that before?
 Starter guardians should use starter items, don't you think?
 Change the first stage of Knockout, to make so the character is sitting down on the floor, but still able to attack.
 	Of course, there should be an animation for that.
@@ -25,8 +20,6 @@ Companions that are couple should not only be able to share the same bed, but ha
 	I need to setup who is going to be drawn first too, would be weird if I make an animation where a character is hugging another, and the one who's hugging is drawn in front of the other.
 Split Bree's bag from the body sprite.
 	When I manage to add Bree's dress, It would be a waste of space making a sprite with and without the bag.
-If you speak with a companion that's sleeping, you will need to pick the option to wake It up before you can access It's options.
-	Would be a good idea to add dialogues for when you do so.
 Add a skin to Zacks where his body wounds have bandages, and he's wearing a cuff.
 	The skin should be unlocked with the help of Blue's requests.
 	The shirt should have "Meat Bag" written. There is no way of displaying that, so better add that to the skin description.

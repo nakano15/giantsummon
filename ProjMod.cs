@@ -42,9 +42,33 @@ namespace giantsummon
                     break;
             }
         }
+
+        public bool IsHook(Projectile proj)
+        {
+            return proj.aiStyle == 7;
+        }
         
         public override bool PreAI(Projectile projectile)
         {
+            if (IsHook(projectile))
+            {
+                if (IsGuardianProjectile(projectile.whoAmI))
+                {
+                    if (GuardianProj[projectile.whoAmI].KnockedOut)
+                    {
+                        projectile.Kill();
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (Main.player[projectile.owner].GetModPlayer<PlayerMod>().KnockedOut)
+                    {
+                        projectile.Kill();
+                        return false;
+                    }
+                }
+            }
             ProjParent = projectile.whoAmI;
             if (IsGuardianProjectile(projectile.whoAmI))
             {

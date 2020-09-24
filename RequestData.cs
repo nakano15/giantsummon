@@ -15,7 +15,7 @@ namespace giantsummon
         
         public int Time = 30 * 60;
         public RequestState requestState = RequestState.Cooldown;
-        public const int MinRequestTimer = 1800, MaxRequestTimer = 3600, MinRequestSpawnTime = 600, MaxRequestSpawnTime = 1200;
+        public const int MinRequestTimer = 1800 * 60, MaxRequestTimer = 3600 * 60, MinRequestSpawnTime = 600 * 60, MaxRequestSpawnTime = 1200 * 60;
         public bool RequestCompleted = false, Failed = false;
         public Dictionary<int, int> IntegerVars = new Dictionary<int, int>();
         public Dictionary<int, float> FloatVars = new Dictionary<int, float>();
@@ -118,13 +118,13 @@ namespace giantsummon
 
         public void UponAccepting()
         {
-            Time = Main.rand.Next(MinRequestTimer, MaxRequestTimer) * 60;
+            Time = Main.rand.Next(MinRequestTimer, MaxRequestTimer);
             requestState = RequestState.RequestActive;
         }
 
         public void UponRejecting()
         {
-            Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+            Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime);
             requestState = RequestState.Cooldown;
         }
 
@@ -209,6 +209,20 @@ namespace giantsummon
                     RequestsCompletedIDs.Add(tag.GetInt("RequestsCompleteID_" + i + IDText));
                 }
             }
+            if (IsCommonRequest)
+            {
+                if (RequestID < 0 || RequestID >= RequestBase.CommonRequests.Length)
+                {
+                    requestState = RequestState.Cooldown;
+                }
+            }
+            else
+            {
+                if (RequestID < 0 || RequestID >= gd.Base.RequestDB.Count)
+                {
+                    requestState = RequestState.Cooldown;
+                }
+            }
         }
 
         public bool CountObjective(GuardianData gd, Player player)
@@ -264,6 +278,7 @@ namespace giantsummon
             }
             if (MakeCommonRequest)
             {
+                Requests.Clear();
                 for (int req = 0; req < RequestBase.CommonRequests.Length; req++)
                 {
                     if (RequestBase.CommonRequests[req].IsRequestDoable(player.player, gd))
@@ -290,7 +305,7 @@ namespace giantsummon
             }
             else
             {
-                Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+                Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime);
             }
             if (GotRequest && !player.TutorialRequestIntroduction) //got to move this
             {
@@ -333,7 +348,7 @@ namespace giantsummon
                         if (Time <= 0)
                         {
                             requestState = RequestState.Cooldown;
-                            Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+                            Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime);
                         }
                         else
                         {
@@ -530,7 +545,7 @@ namespace giantsummon
                 RequestCompleted = false;
                 Failed = false;
                 requestState = RequestState.Cooldown;
-                Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+                Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime);
                 return true;
             }
             if (RequestCompleted || IsTalkQuest)
@@ -657,7 +672,7 @@ namespace giantsummon
                 RequestCompleted = false;
                 gd.IncreaseFriendshipProgress(1);
                 requestState = RequestState.Cooldown;
-                Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime) * 60;
+                Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime);
                 foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
                 {
                     if (tg.Active && !tg.Data.IsStarter && !PlayerMod.HasBuddiesModeOn(player.player) && tg.FriendshipLevel < tg.Base.CallUnlockLevel && !PlayerHasRequestRequiringCompanion(player.player, tg.Data))
@@ -1247,7 +1262,11 @@ namespace giantsummon
                         IsQuestMob = m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
                         break;
                     case NPCID.BlueSlime:
-                        IsQuestMob = m == NPCID.SlimeRibbonGreen || m == NPCID.SlimeRibbonRed || m == NPCID.SlimeRibbonWhite || m == NPCID.SlimeRibbonYellow || m == 302; //302 is Bunny Slime
+                        IsQuestMob = m == NPCID.SlimeRibbonGreen || m == NPCID.SlimeRibbonRed || m == NPCID.SlimeRibbonWhite || m == NPCID.SlimeRibbonYellow || m == 302 || 
+                            m == NPCID.SandSlime || m == NPCID.IceSlime || m == NPCID.SpikedIceSlime || m == NPCID.SlimedZombie || m == NPCID.ArmedZombieSlimed || 
+                            m == NPCID.LavaSlime || m == NPCID.RainbowSlime || m == NPCID.KingSlime || m == NPCID.IlluminantSlime || m == NPCID.DungeonSlime || 
+                            m == NPCID.MotherSlime || m == NPCID.Slimeling || m == NPCID.SlimeMasked || m == NPCID.SlimeSpiked || m == NPCID.SpikedJungleSlime || 
+                            m == NPCID.UmbrellaSlime; //302 is Bunny Slime
                         break;
                 }
             }

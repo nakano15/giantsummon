@@ -215,7 +215,7 @@ namespace giantsummon
                     return;
                 }
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
+                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
                 {
                     player.IsTalkingToAGuardian = false;
                     if (Main.playerInventory)
@@ -229,20 +229,23 @@ namespace giantsummon
                         return;
                     }
                     MouseOverOptionNumber = -1;
-                    bool DoAction = false;
-                    for (int o = 0; o < Options.Count; o++)
+                    if (!GuardianManagement.Active)
                     {
-                        Vector2 Position = new Vector2(DialogueStartX + 8, DialogueStartY + DialogueHeight + 48 + o * 30 + 8);
-                        if (Main.mouseX >= Position.X && Main.mouseX < Position.X + DialogueWidth && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 30)
+                        bool DoAction = false;
+                        for (int o = 0; o < Options.Count; o++)
                         {
-                            MouseOverOptionNumber = o;
-                            if (!DoAction && Main.mouseLeft && Main.mouseLeftRelease)
-                                DoAction = true;
+                            Vector2 Position = new Vector2(DialogueStartX + 8, DialogueStartY + DialogueHeight + 48 + o * 30 + 8);
+                            if (Main.mouseX >= Position.X && Main.mouseX < Position.X + DialogueWidth && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 30)
+                            {
+                                MouseOverOptionNumber = o;
+                                if (!DoAction && Main.mouseLeft && Main.mouseLeftRelease)
+                                    DoAction = true;
+                            }
                         }
-                    }
-                    if (DoAction && MouseOverOptionNumber > -1)
-                    {
-                        Options[MouseOverOptionNumber].Action(tg);
+                        if (DoAction && MouseOverOptionNumber > -1)
+                        {
+                            Options[MouseOverOptionNumber].Action(tg);
+                        }
                     }
                 }
             }
@@ -329,7 +332,7 @@ namespace giantsummon
 
         public static void DrawDialogue()
         {
-            if (!MainPlayer.GetModPlayer<PlayerMod>().IsTalkingToAGuardian)
+            if (!MainPlayer.GetModPlayer<PlayerMod>().IsTalkingToAGuardian || GuardianManagement.Active)
                 return;
             if (GuardianShopInterface.ShopOpen)
             {
@@ -417,6 +420,8 @@ namespace giantsummon
                 {
                     AddOption("I have a gift for you", GiveGiftButtonAction);
                 }
+                if(tg.OwnerPos == -1)
+                    AddOption("Let me see your inventory.", OpenInventoryManagementButtonAction);
             }
             Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             AddOption("Goodbye", CloseDialogueButtonAction);
@@ -609,6 +614,19 @@ namespace giantsummon
         public static void OpenShopButtonAction(TerraGuardian Guardian)
         {
             GuardianShopInterface.OpenShop();
+        }
+
+        public static void OpenInventoryManagementButtonAction(TerraGuardian Guardian)
+        {
+            PlayerMod pm = MainPlayer.GetModPlayer<PlayerMod>();
+            foreach (int Key in pm.MyGuardians.Keys)
+            {
+                if (pm.MyGuardians[Key].ID == Guardian.ID && pm.MyGuardians[Key].ModID == Guardian.ModID)
+                {
+                    GuardianManagement.OpenInterfaceForGuardian(Key);
+                    break;
+                }
+            }
         }
 
         public static string MessageParser(string Message, TerraGuardian guardian)

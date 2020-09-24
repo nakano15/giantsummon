@@ -83,32 +83,32 @@ namespace giantsummon.Npcs
             switch (BossLevel)
             {
                 default:
-                    npc.lifeMax = 500;
+                    npc.lifeMax = 3000;
                     npc.damage = 15;
                     npc.defense = 5;
                     break;
                 case 1:
-                    npc.lifeMax = 600;
+                    npc.lifeMax = 4500;
                     npc.damage = 45;
                     npc.defense = 20;
                     break;
                 case 2:
-                    npc.lifeMax = 900 * 2;
+                    npc.lifeMax = 9000;
                     npc.damage = 56;
                     npc.defense = 24;
                     break;
                 case 3:
-                    npc.lifeMax = 1800 * 3;
+                    npc.lifeMax = 18000;
                     npc.damage = 64;
                     npc.defense = 28;
                     break;
                 case 4:
-                    npc.lifeMax = 3600 * 4;
+                    npc.lifeMax = 36000;
                     npc.damage = 78;
                     npc.defense = 32;
                     break;
                 case 5:
-                    npc.lifeMax = 4200 * 5;
+                    npc.lifeMax = 42000;
                     npc.damage = 106;
                     npc.defense = 36;
                     break;

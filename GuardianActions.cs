@@ -315,6 +315,40 @@ namespace giantsummon
                             }
                             if (!RepelingEnemies)
                             {
+                                bool OffSetToTheLeft = TargetPosition.X + TargetWidth * 0.5f < guardian.Position.X;
+                                {
+                                    int Animation = guardian.Base.StandingFrame;
+                                    int ArmAnimation = -1;
+                                    if (IsMountedPlayer)
+                                    {
+                                        ArmAnimation = guardian.Base.ItemUseFrames[2];
+                                    }
+                                    else
+                                    {
+                                        if (guardian.Base.ReviveFrame > -1)
+                                        {
+                                            Animation = guardian.Base.ReviveFrame;
+                                        }
+                                        else if (guardian.Base.DuckingFrame > -1)
+                                        {
+                                            Animation = guardian.Base.DuckingFrame;
+                                            ArmAnimation = guardian.Base.DuckingSwingFrames[2];
+                                        }
+                                    }
+                                    if (ArmAnimation == -1)
+                                        ArmAnimation = Animation;
+                                    int x, y;
+                                    guardian.Base.GetBetweenHandsPosition(ArmAnimation, out x, out y);
+                                    float ArmXDistance = (x - guardian.SpriteWidth * 0.5f) * guardian.Scale;
+                                    if (ArmXDistance > 0)
+                                    {
+                                        TargetWidth += (int)ArmXDistance;
+                                        if (OffSetToTheLeft)
+                                        {
+                                            TargetPosition.X -= ArmXDistance;
+                                        }
+                                    }
+                                }
                                 if (IsMountedPlayer || new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))//(MainMod.RectangleIntersects(guardian.TopLeftPosition, guardian.Width, guardian.Height, TargetPosition, TargetWidth, TargetHeight))
                                 {
                                     if (guardian.Velocity.X == 0)

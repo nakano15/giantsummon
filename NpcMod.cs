@@ -263,7 +263,17 @@ namespace giantsummon
                     float HealthBonus = this.HealthBonus;
                     if (Terraria.ID.NPCID.Sets.TechnicallyABoss[npc.type])
                         HealthBonus *= 0.5f;
-                    if(npc.lifeMax > 5 && npc.type != Terraria.ID.NPCID.MothronEgg) npc.lifeMax = (int)(npc.lifeMax * HealthBonus);
+                    if (npc.lifeMax > 5 && npc.type != Terraria.ID.NPCID.MothronEgg)
+                    {
+                        try
+                        {
+                            npc.lifeMax = checked((int)(npc.lifeMax * HealthBonus));
+                        }
+                        catch
+                        {
+                            npc.lifeMax = int.MaxValue;
+                        }
+                    }
                     if (npc.damage > 0) npc.damage += DamageBonus;
                     npc.defense += DefenseBonus;
                     npc.value *= CoinBonus;
@@ -318,25 +328,28 @@ namespace giantsummon
                 }
             }
             LatestMobType = MobTypes.Normal;
-            if (HighestLevelMobType < MobTypes.Epic && SpawnDifficulty >= TotalHealthBoost * 5 && (SpawnChanceBooster - 5) * 0.01f >= Main.rand.Next(32)) // && Main.rand.Next(3600) < SpawnDifficulty - TotalHealthBoost * 5)
+            if (GuardianCount > 1 || HasTitan)
             {
-                LatestMobType = MobTypes.Epic;
-            }
-            else if (HighestLevelMobType < MobTypes.Legendary && SpawnDifficulty >= TotalHealthBoost * 4 && (SpawnChanceBooster - 4) * 0.125f >= Main.rand.NextDouble() * (18))
-            {
-                LatestMobType = MobTypes.Legendary;
-            }
-            else if (HighestLevelMobType < MobTypes.Champion && SpawnDifficulty >= TotalHealthBoost * 3 && (SpawnChanceBooster - 3) * 0.25f >= Main.rand.NextDouble() * (12))
-            {
-                LatestMobType = MobTypes.Champion;
-            }
-            else if (SpawnDifficulty >= TotalHealthBoost * 2 && (SpawnChanceBooster - 2) * 0.5f >= Main.rand.NextDouble() * (8))
-            {
-                LatestMobType = MobTypes.Elite;
-            }
-            else if ((GuardianCount > 1 || HasTitan) && SpawnDifficulty >= MaxLifeCrystalBoost * 0.3f && SpawnChanceBooster >= Main.rand.NextDouble() * (4))
-            {
-                LatestMobType = MobTypes.Veteran;
+                if (HighestLevelMobType < MobTypes.Epic && SpawnDifficulty >= TotalHealthBoost * 5 && SpawnChanceBooster * 0.01f >= Main.rand.NextDouble() * (32)) // && Main.rand.Next(3600) < SpawnDifficulty - TotalHealthBoost * 5)
+                {
+                    LatestMobType = MobTypes.Epic;
+                }
+                else if (HighestLevelMobType < MobTypes.Legendary && SpawnDifficulty >= TotalHealthBoost * 4 && SpawnChanceBooster * 0.125f >= Main.rand.NextDouble() * (18))
+                {
+                    LatestMobType = MobTypes.Legendary;
+                }
+                else if (HighestLevelMobType < MobTypes.Champion && SpawnDifficulty >= TotalHealthBoost * 3 && SpawnChanceBooster * 0.25f >= Main.rand.NextDouble() * (12))
+                {
+                    LatestMobType = MobTypes.Champion;
+                }
+                else if (SpawnDifficulty >= TotalHealthBoost * 2 && SpawnChanceBooster * 0.5f >= Main.rand.NextDouble() * 4)
+                {
+                    LatestMobType = MobTypes.Elite;
+                }
+                else if (SpawnDifficulty >= MaxLifeCrystalBoost * 0.3f && SpawnChanceBooster >= Main.rand.NextDouble() * 2)
+                {
+                    LatestMobType = MobTypes.Veteran;
+                }
             }
         }
 
@@ -363,23 +376,23 @@ namespace giantsummon
             }*/
             //float SpawnChanceBooster = (float)SpawnDifficulty / TotalHealthBoost;
             MobTypes mobType = MobTypes.Normal;
-            if (SpawnDifficulty >= TotalHealthBoost * 10) // && Main.rand.Next(3600) < SpawnDifficulty - TotalHealthBoost * 5)
+            if (SpawnDifficulty >= TotalHealthBoost * 8) // && Main.rand.Next(3600) < SpawnDifficulty - TotalHealthBoost * 5)
             {
                 mobType = MobTypes.Epic;
             }
-            else if (SpawnDifficulty >= TotalHealthBoost * 8)
+            else if (SpawnDifficulty >= TotalHealthBoost * 6)
             {
                 mobType = MobTypes.Legendary;
             }
-            else if (SpawnDifficulty >= TotalHealthBoost * 6)
+            else if (SpawnDifficulty >= TotalHealthBoost * 4)
             {
                 mobType = MobTypes.Champion;
             }
-            else if (SpawnDifficulty >= TotalHealthBoost * 4)
+            else if (SpawnDifficulty >= TotalHealthBoost * 2)
             {
                 mobType = MobTypes.Elite;
             }
-            else if (SpawnDifficulty >= MaxLifeCrystalBoost * 2)
+            else if (SpawnDifficulty >= MaxLifeCrystalBoost)
             {
                 mobType = MobTypes.Veteran;
             }
