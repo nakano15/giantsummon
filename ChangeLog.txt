@@ -87,3 +87,6 @@ You can no longer check, accept, reject or complete request on the guardian requ
 You can now open the companion inventory and equipment management through the companion dialogues.
 	That can only be done for companions you doesn't have summoned.
 You can also manage Skins and Outfits on the off party companion management interface.
+Fixed a number of order bugs on the old order interface, which allowed certain commands to affect companions who shouldn't obbey to the order at the moment.
+Companions whose house banner is near a door will no longer stay in the door position.
+	They will also try closing the door whenever they are stopped, if they opened It.

@@ -269,7 +269,7 @@ namespace giantsummon
                         }
                         else
                         {
-                            if (GuardianActions.GuardianPutPlayerOnShoulderCommand(g))
+                            if (g.HasFlag(GuardianFlags.AllowMount) && GuardianActions.GuardianPutPlayerOnShoulderCommand(g))
                                 SomeoneExecutedAction = true;
                         }
                     };
@@ -308,7 +308,8 @@ namespace giantsummon
 				case Orders.PlayerControl:
                     action = delegate(TerraGuardian g)
                     {
-                        g.TogglePlayerControl();
+                        if (g.HasFlag(GuardianFlags.PlayerControl))
+                            g.TogglePlayerControl();
                     };
                     break;
                 case Orders.LaunchMe:
@@ -334,7 +335,8 @@ namespace giantsummon
                 case Orders.GoSellLoot:
                     action = delegate(TerraGuardian g)
                     {
-                        GuardianActions.SellLootCommand(g);
+                        if(g.HasFlag(GuardianFlags.MayGoSellLoot))
+                            GuardianActions.SellLootCommand(g);
                     };
                     break;
                 case Orders.JoinMyMount:
@@ -383,7 +385,8 @@ namespace giantsummon
                 case Orders.GiveGuardianControl:
                     action = delegate(TerraGuardian g)
                     {
-                        g.ToggleGuardianFullControl(!g.GuardianHasControlWhenMounted);
+                        if(g.HasFlag(GuardianFlags.StopMindingAfk))
+                            g.ToggleGuardianFullControl(!g.GuardianHasControlWhenMounted);
                     };
                     break;
                 case Orders.UseStatusIncreaseItems:

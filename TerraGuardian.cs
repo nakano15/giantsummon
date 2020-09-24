@@ -6020,6 +6020,10 @@ namespace giantsummon
                             {
                                 HouseX--;
                             }
+                            else if (Main.tile[HouseX + 1, HouseY].type == Terraria.ID.TileID.OpenDoor || Main.tile[HouseX + 1, HouseY].type == Terraria.ID.TileID.TallGateOpen)
+                            {
+                                HouseX--;
+                            }
                         }
                         HouseX *= 16;
                         HouseY *= 16;
@@ -6097,7 +6101,7 @@ namespace giantsummon
                         }
                         else //Has House
                         {
-                            float XDif = Position.X - HouseX + 8, YDif = Position.Y - HouseY;
+                            float XDif = Position.X - HouseX - 16, YDif = Position.Y - HouseY;
                             if (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome && (Math.Abs(XDif) > 8 || Math.Abs(YDif) > 48))
                             {
                                 if (CurrentIdleAction != IdleActions.Wander || IdleActionTime <= 0)
@@ -6152,6 +6156,16 @@ namespace giantsummon
                                                 ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
                                         }
                                     }
+                                }
+                            }
+                            if (Velocity.X == 0 && closeDoor && doorx > -1 && doory > -1)
+                            {
+                                int x = (int)(Position.X - CollisionWidth * 0.5f) / 16;
+                                if (x != doorx && x + 1 != doorx)
+                                {
+                                    if (WorldGen.CloseDoor(doorx, doory))
+                                        closeDoor = false;
+
                                 }
                             }
                             WalkMode = true;
