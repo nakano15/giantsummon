@@ -229,7 +229,7 @@ namespace giantsummon
                             MainMod.AddOnOffButton(SlotPosition.X, SlotPosition.Y, skin.Name, ref IsActive, RequirementBeaten, !RequirementBeaten);
                             if (IsActive != LastActive)
                             {
-                                if (Active)
+                                if (IsActive)
                                     Guardian.SkinID = skin.SkinID;
                                 else
                                     Guardian.SkinID = 0;
@@ -255,7 +255,7 @@ namespace giantsummon
                             MainMod.AddOnOffButton(SlotPosition.X, SlotPosition.Y, skin.Name, ref IsActive, RequirementBeaten, !RequirementBeaten);
                             if (IsActive != LastActive)
                             {
-                                if (Active)
+                                if (IsActive)
                                     Guardian.OutfitID = skin.SkinID;
                                 else
                                     Guardian.OutfitID = 0;
