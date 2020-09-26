@@ -429,7 +429,6 @@
     <Content Include="Items\Weapons\WoodenCrossbow.png" />
     <Content Include="Items\Weapons\WoodenGreathammer.png" />
     <Content Include="ModCompatibilityDLLs\NExperience.XNA.dll" />
-    <Content Include="Notes.txt" />
     <Content Include="Npcs\AlexNPC.png" />
     <Content Include="Npcs\BreeNPC.png" />
     <Content Include="Npcs\BrutusNPC.png" />
@@ -437,7 +436,6 @@
     <Content Include="PlayerItems\StaffOfRenew.png" />
     <Content Include="Projectiles\BloodVomit.png" />
     <Content Include="Projectiles\ZombieFart.png" />
-    <Content Include="todo.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

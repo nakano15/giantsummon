@@ -1673,7 +1673,7 @@ namespace giantsummon
                     //player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " couldn't get help to revive."), 0, 0, false);
                     player.fullRotation = 0;
                 }
-                player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.releaseHook = player.controlJump = player.controlMount =
+                player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.controlJump = player.controlMount =
                     player.controlQuickMana = player.controlSmart = player.controlThrow = player.controlUseItem = player.controlInv =
                     player.controlUseTile = false;
                 player.releaseQuickHeal = player.releaseQuickMana = false;

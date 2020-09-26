@@ -1,1 +1,1 @@
-﻿Fixed a bug on the guardian npc inventory management, which the mod used the incorrect flag to set outfit and skins.
+﻿Fixed the give up hotkey not working.
