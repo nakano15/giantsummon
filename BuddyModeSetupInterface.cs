@@ -85,7 +85,7 @@ namespace giantsummon
             float ElementStartPosY = DrawPosition.Y;
             int MenuWidth = 228, MenuHeight = (int)(WindowPosition.Y - DrawPosition.Y + WindowHeight - 2);
             DrawRectangle(DrawPosition.X, DrawPosition.Y, MenuWidth, MenuHeight, Color.LightBlue);
-            int MaxElements = MenuHeight / 24;
+            int MaxElements = MenuHeight / 30;
             bool PreviouslyPickedSomeone = false;
             for (int i = 0; i < MaxElements; i++)
             {
@@ -95,7 +95,7 @@ namespace giantsummon
                 {
                     MenuElement = 0;
                 }
-                if (index + MaxElements < PossibleGuardianIDs.Length && i == MaxElements - 1)
+                if (MenuScroll + MaxElements < PossibleGuardianIDs.Length && i == MaxElements - 1)
                 {
                     MenuElement = 2;
                 }
@@ -103,7 +103,7 @@ namespace giantsummon
                     continue;
                 Vector2 OptionPosition = DrawPosition;
                 OptionPosition.X += MenuWidth * 0.5f;
-                OptionPosition.Y += 24 * i;
+                OptionPosition.Y += 30 * i;
                 string Text = "";
                 if (MenuElement == 0)
                     Text = "= Up =";

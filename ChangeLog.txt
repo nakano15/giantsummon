@@ -1,1 +1,2 @@
-﻿Fixed the give up hotkey not working.
+﻿Fixed the "Down" button not appearing on the buddy list, on the buddy mode setup interface.
+Increased the space between the companion names on the buddy mode companion list.
