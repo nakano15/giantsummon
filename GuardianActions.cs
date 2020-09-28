@@ -1786,12 +1786,13 @@ namespace giantsummon
                     case ActionIDs.OpenGiftBox:
                         IgnoreCombat = true;
                         AvoidItemUsage = true;
+                        if (guardian.UsingFurniture)
+                            guardian.LeaveFurniture();
                         switch (Step)
                         {
                             case 0:
                                 if (StepStart)
                                 {
-                                    guardian.LeaveFurniture();
                                     if (Main.rand.NextDouble() < 0.01f)
                                         Main.PlaySound(29, (int)guardian.CenterPosition.X, (int)guardian.CenterPosition.Y, 89);
                                     guardian.DisplayEmotion(TerraGuardian.Emotions.Question);

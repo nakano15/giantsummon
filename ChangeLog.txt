@@ -14,4 +14,8 @@ Leopold got a revamp on some of his animations:
 	Added a frame for when he's sitting on a chair.
 	The books he read are now bigger.
 	Moved a pixel down the third frame of the attack animation.
+Fixed the talk quests not working correctly, when you speak with a companion npc.
+Ensured that companions will no longer try opening gift boxes when using furnitures.
+The number of town npcs will now influence on the appearance rate of Brutus.
+	If you have more town npcs, Brutus will most likelly show up.
 

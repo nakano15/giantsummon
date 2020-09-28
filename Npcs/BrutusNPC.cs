@@ -122,7 +122,7 @@ namespace giantsummon.Npcs
             if (NpcCount < 5)
                 return;
             int SpawnChance = 20 - ChanceCounter() / 2;
-            if (SpawnChance > 0 && Main.rand.Next(SpawnChance) > 0)
+            if (SpawnChance > 0 && Main.rand.Next(SpawnChance) > (float)(NpcCount - 5) / 2)
             {
                 return;
             }

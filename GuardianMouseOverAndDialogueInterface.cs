@@ -131,20 +131,30 @@ namespace giantsummon
                 if (modPlayer.HasGuardian(tg.ID, tg.ModID))
                     modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);
             }
-            if (tg.request.requestState == RequestData.RequestState.RequestActive && tg.request.GetRequestBase(tg.Data).Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian))
+            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            foreach (int gid in pm.MyGuardians.Keys)
             {
-                RequestBase rb = tg.request.GetRequestBase(tg.Data);
-                for (int obj = 0; obj < rb.Objectives.Count; obj++)
+                GuardianData gd = pm.MyGuardians[gid];
+                if (gd.request.requestState == RequestData.RequestState.RequestActive && gd.request.GetRequestBase(gd).Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian))
                 {
-                    if (rb.Objectives[obj].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian && tg.request.GetIntegerValue(obj) == 0)
+                    RequestBase rb = gd.request.GetRequestBase(gd);
+                    bool HasObjective = false;
+                    for (int obj = 0; obj < rb.Objectives.Count; obj++)
                     {
-                        RequestBase.TalkToGuardianRequestObjective to = (RequestBase.TalkToGuardianRequestObjective)rb.Objectives[obj];
-                        if (to.GuardianID == tg.ID && to.ModID == tg.ModID)
+                        if (rb.Objectives[obj].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian && gd.request.GetIntegerValue(obj) == 0)
                         {
-                            Message = to.MessageText;
-                            tg.request.SetIntegerValue(obj, 1);
+                            RequestBase.TalkToGuardianRequestObjective to = (RequestBase.TalkToGuardianRequestObjective)rb.Objectives[obj];
+                            if (to.GuardianID == tg.ID && to.ModID == tg.ModID)
+                            {
+                                HasObjective = true;
+                                Message = to.MessageText;
+                                gd.request.SetIntegerValue(obj, 1);
+                                break;
+                            }
                         }
                     }
+                    if (HasObjective)
+                        break;
                 }
             }
             SetDialogue(Message, tg);
