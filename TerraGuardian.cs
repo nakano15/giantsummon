@@ -4953,7 +4953,7 @@ namespace giantsummon
                     if (Position.Y <= JumpUntilHeight)
                         JumpUntilHeight = -1;
                 }
-                if (Velocity.Y > 0 && Position.Y / 16 - FallStart > FallHeightTolerance)
+                if (!PlayerMounted && Velocity.Y > 0 && Position.Y / 16 - FallStart > FallHeightTolerance)
                 {
                     if (!Jump && HasSolidGroundUnder())
                     {
@@ -10695,7 +10695,13 @@ namespace giantsummon
                                     HitDirection *= -1;
                                 }
                                 bool Critical = (Main.rand.Next(100) < CriticalRate);
-                                double result = Main.npc[t].StrikeNPC(Damage, Knockback, HitDirection, Critical);
+                                int NewDamage = Damage;
+                                if (OwnerPos > -1)
+                                {
+                                    float DamageMult = Main.player[OwnerPos].GetModPlayer<PlayerMod>().DamageMod;
+                                    NewDamage = (int)(NewDamage * DamageMult);
+                                }
+                                double result = Main.npc[t].StrikeNPC(NewDamage, Knockback, HitDirection, Critical);
                                 Main.PlaySound(Main.npc[t].HitSound, Main.npc[t].Center);
                                 AddNpcHit(t);
                                 IncreaseDamageStacker((int)result, Main.npc[t].lifeMax);

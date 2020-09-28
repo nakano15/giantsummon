@@ -773,6 +773,21 @@ namespace giantsummon
                 maxSpawns = 0;
         }
 
+        public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        {
+            float DamageMod = player.GetModPlayer<PlayerMod>().DamageMod;
+            damage = (int)(damage * DamageMod);
+        }
+
+        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            if (!projectile.hostile)
+            {
+                float DamageMod = Main.player[projectile.owner].GetModPlayer<PlayerMod>().DamageMod;
+                damage = (int)(damage * DamageMod);
+            }
+        }
+
         public override void OnChatButtonClicked(NPC npc, bool firstButton)
         {
             if (npc.type == 22 && firstButton && Main.rand.NextDouble() < 0.333)

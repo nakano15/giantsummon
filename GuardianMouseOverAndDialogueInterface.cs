@@ -17,6 +17,7 @@ namespace giantsummon
         private const byte DialogueMaxDelayTime = 60;
         private static byte DialogueCloseCheckDelayTime = 0;
         public static bool SomeoneMouseOver = false;
+        private static bool ClickedOnce = false;
         public static int MouseOverGuardian = -1;
         public static List<DialogueOption> Options = new List<DialogueOption>();
         public static Player MainPlayer { get { return Main.player[Main.myPlayer]; } }
@@ -238,8 +239,11 @@ namespace giantsummon
                             if (Main.mouseX >= Position.X && Main.mouseX < Position.X + DialogueWidth && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 30)
                             {
                                 MouseOverOptionNumber = o;
-                                if (!DoAction && Main.mouseLeft && Main.mouseLeftRelease)
+                                if (!ClickedOnce && !DoAction && Main.mouseLeft && Main.mouseLeftRelease)
+                                {
+                                    ClickedOnce = true;
                                     DoAction = true;
+                                }
                             }
                         }
                         if (DoAction && MouseOverOptionNumber > -1)
@@ -249,6 +253,8 @@ namespace giantsummon
                     }
                 }
             }
+            if (ClickedOnce && !Main.mouseLeft)
+                ClickedOnce = false;
         }
 
         public static bool IsInChattingRange(TerraGuardian tg)

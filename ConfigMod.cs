@@ -85,9 +85,13 @@ namespace giantsummon
         [Tooltip("All companions will have their health and mana values base and incresed values like the player, regardless of size or anything else.")]
         public bool HealthAndManaPlayerStandards { get { return MainMod.SetGuardiansHealthAndManaToPlayerStandards; } set { MainMod.SetGuardiansHealthAndManaToPlayerStandards = value; } }
 
+        [Label("Companions can visit your world sometimes?")]
+        [Tooltip("When turned on, companions you didn't allowed to move in your world, can end up coming to visit you.")]
+        [DefaultValue(true)]
+        public bool CompanionsCanVisitWorld { get { return MainMod.CompanionsCanVisitWorld; } set { MainMod.CompanionsCanVisitWorld = value; } }
+
         [Label("Dualwield able weapons.")]
         [Tooltip("Here contains the list of items your companion will be able to dual wield, If It is possible for them to.")]
-
         public List<ItemDefinition> DualwieldableItems { get { return MainMod.DualwieldWhitelist; } set { MainMod.DualwieldWhitelist = value; } }
 
         //[Label("Tile Collision is the same as Hit Collision")]

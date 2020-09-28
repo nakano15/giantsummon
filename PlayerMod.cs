@@ -162,6 +162,7 @@ namespace giantsummon
         public int TalkingGuardianPosition = 0;
         public bool IsTalkingToAGuardian = false;
         public byte TerraGuardiansNearby = 0;
+        public float DamageMod = 1f;
 
         public static int GetPlayerAcceptedRequestCount(Player player)
         {
@@ -1381,6 +1382,7 @@ namespace giantsummon
 
         public void UpdateGuardian()
         {
+            DamageMod = 1f;
             if (player.whoAmI == Main.myPlayer)
             {
                 int NewFriendshipCount = 0;
@@ -1521,6 +1523,22 @@ namespace giantsummon
                 //player.maxMinions += guardian.NumMinions;
                 AssistSlot++;
                 GuardianSlot++;
+            }
+            if (GuardianSlot > 0)
+            {
+                DamageMod = 0f;
+                for (byte c = 0; c < GuardianSlot; c++)
+                {
+                    if (c == 0)
+                    {
+                        DamageMod = 0.1f;
+                    }
+                    else
+                    {
+                        DamageMod += DamageMod * 0.2f;
+                    }
+                }
+                DamageMod = 1f - DamageMod;
             }
             if (!FoundFirstTitanGuardian)
                 TitanGuardian = 255;

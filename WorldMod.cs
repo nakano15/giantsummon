@@ -128,7 +128,10 @@ namespace giantsummon
                         LeaveCooldown = 0;
                         if (!CheckIfSomeoneMustLeaveWorld())
                         {
-                            CheckIfSomeoneCanVisit();
+                            if (MainMod.CompanionsCanVisitWorld)
+                            {
+                                CheckIfSomeoneCanVisit();
+                            }
                         }
                     }
                 }
@@ -154,7 +157,7 @@ namespace giantsummon
                 if (tg.GetTownNpcInfo == null)
                     VisitRate /= 2;
             }
-            if (Main.rand.NextDouble() < VisitRate * 0.05f)
+            if (Main.rand.NextDouble() < VisitRate * 0.01f)
             {
                 List<GuardianID> PossibleIDs = new List<GuardianID>();
                 foreach (GuardianID ids in GuardiansMet)
