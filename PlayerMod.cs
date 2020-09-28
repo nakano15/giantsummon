@@ -675,18 +675,14 @@ namespace giantsummon
             Vector2 Center = player.Center;
             foreach (TerraGuardian g in WorldMod.GuardianTownNPC)
             {
-                if (g.OwnerPos == -1 && g.Position.X >= Center.X - NPC.sWidth * 0.5f && g.Position.X < Center.X + NPC.sWidth * 0.5f &&
+                if (g.Position.X >= Center.X - NPC.sWidth * 0.5f && g.Position.X < Center.X + NPC.sWidth * 0.5f &&
                     g.CenterPosition.Y >= Center.Y - NPC.sHeight * 0.5f && g.CenterPosition.Y < Center.Y + NPC.sHeight * 0.5f)
                 {
                     TerraGuardiansNearby++;
-                    player.townNPCs += g.Base.TownNpcSlot;
+                    if(g.OwnerPos == -1)
+                        player.townNPCs += g.Base.TownNpcSlot;
                 }
             }
-            /*foreach (TerraGuardian g in MainMod.ActiveGuardians.Values)
-            {
-                if (g.InPerceptionRange(player.Center))
-                    TerraGuardiansNearby++;
-            }*/
         }
 
         public void UpdateReviveSystem()
@@ -788,7 +784,10 @@ namespace giantsummon
             }
             if (KnockedOut)
             {
-                eye = EyeState.Closed;
+                if (true || KnockedOutCold)
+                    eye = EyeState.Closed;
+                else
+                    eye = EyeState.HalfOpen;
                 if (player.potionDelayTime < 5)
                 {
                     player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
@@ -840,10 +839,27 @@ namespace giantsummon
             }
             else
             {
-                player.fullRotation = -1.570796326794897f * player.direction;
-                //player.headRotation = -1.570796326794897f * player.direction;
-                player.fullRotationOrigin.X = player.width * 0.5f;
-                player.fullRotationOrigin.Y = player.height * 0.5f + 12;
+                if (true || KnockedOutCold)
+                {
+                    player.fullRotation = -1.570796326794897f * player.direction;
+                    //player.headRotation = -1.570796326794897f * player.direction;
+                    player.fullRotationOrigin.X = player.width * 0.5f;
+                    player.fullRotationOrigin.Y = player.height * 0.5f + 12;
+                    player.legRotation = 0f;
+                }
+                else
+                {
+                    player.fullRotation = 0;
+                    player.legRotation = -1.570796326794897f * player.direction;
+                    player.gfxOffY = 12;
+                    player.legPosition.Y += 20 - (40 * player.direction);
+                    player.legPosition.X -= 10 * player.direction;
+                }
+                /*if (!KnockedOutCold)
+                {
+                    player.bodyRotation = 1.570796326794897f * player.direction;
+                    player.headRotation = 1.570796326794897f * player.direction;
+                }*/
             }
             if (player.statLife >= player.statLifeMax2)
             {
@@ -1299,7 +1315,7 @@ namespace giantsummon
         {
             RescueWakingUp = false;
             KnockedOut = KnockedOutCold = false;
-            player.fullRotation = player.headRotation = 0f;
+            player.fullRotation = player.headRotation = player.bodyRotation = player.legRotation = 0f;
             float HealthRestoreValue = 1f;
             if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
             {
@@ -1683,7 +1699,7 @@ namespace giantsummon
         {
             if (player.whoAmI == Main.myPlayer && !player.dead && !KnockedOut)
                 UpdateReviveSystem();
-            if (player.whoAmI == Main.myPlayer && KnockedOut)
+            if (player.whoAmI == Main.myPlayer && KnockedOut) //Controls
             {
                 if (KnockedOutCold && player.controlHook && !MainMod.PlayersDontDiesAfterDownedDefeat)
                 {
@@ -1692,8 +1708,12 @@ namespace giantsummon
                     player.fullRotation = 0;
                 }
                 player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.controlJump = player.controlMount =
-                    player.controlQuickMana = player.controlSmart = player.controlThrow = player.controlUseItem = player.controlInv =
+                    player.controlQuickMana = player.controlSmart = player.controlThrow = player.controlInv =
                     player.controlUseTile = false;
+                if (true || KnockedOutCold)
+                {
+                    player.controlUseItem = false;
+                }
                 player.releaseQuickHeal = player.releaseQuickMana = false;
             }
             if (player.whoAmI == Main.myPlayer && MainMod.TestNewOrderHud)

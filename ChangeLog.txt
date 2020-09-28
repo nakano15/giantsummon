@@ -18,4 +18,7 @@ Fixed the talk quests not working correctly, when you speak with a companion npc
 Ensured that companions will no longer try opening gift boxes when using furnitures.
 The number of town npcs will now influence on the appearance rate of Brutus.
 	If you have more town npcs, Brutus will most likelly show up.
-
+Changed the sprite of Vladimir arms when jumping.
+	No longer a falling cactus.
+I did some changes to the companions melee combat AI, to try fixing some issues related to It.
+Removed gender reference on the message of friendship buff unlocked.

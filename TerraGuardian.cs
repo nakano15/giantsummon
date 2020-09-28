@@ -3170,7 +3170,7 @@ namespace giantsummon
                     if (FriendshipLevel == Base.LootingUnlockLevel)
                         Main.NewText(this.Name + " can now collect loot.");
                     if (FriendshipLevel == Base.FriendshipBondUnlockLevel)
-                        Main.NewText(this.Name + " now gained a status buff based on his best friend status.");
+                        Main.NewText(this.Name + " now gained a status buff based on their best friend status.");
                     if (FriendshipLevel == Base.FallDamageReductionLevel)
                         Main.NewText(this.Name + " now has received some fall damage tolerance, and the impact of it on you greatly reduces too.");
                     if (FriendshipLevel == Base.MountDamageReductionLevel)
@@ -4375,6 +4375,7 @@ namespace giantsummon
         }
 
         public const int NormalTargetMemoryTime = 5 * 60, BossTargetMemoryTime = 30 * 60;
+        public sbyte MeleePosition = -1, RangedPosition = -1, MagicPosition = -1; 
 
         public void NewCombatScript()
         {
@@ -4503,7 +4504,10 @@ namespace giantsummon
                 {
                     if (TargetOnSight) //Check weapons
                     {
-                        int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
+                        MeleePosition = -1;
+                        RangedPosition = -1;
+                        MagicPosition = -1;
+                        //int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
                         int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
                         bool MagicItemNeedsRecharge = false, NoManaMagicItem = false;
                         bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
@@ -4516,7 +4520,7 @@ namespace giantsummon
                                 if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || MayUseHeavyWeapon))
                                 {
                                     HighestMeleeDamage = Inventory[i].damage;
-                                    MeleePosition = i;
+                                    MeleePosition = (sbyte)i;
                                 }
                             }
                             if ((Inventory[i].ranged && Inventory[i].ammo == 0) || Inventory[i].thrown)
@@ -4524,7 +4528,7 @@ namespace giantsummon
                                 if (Inventory[i].damage > HighestRangedDamage && (!UseWeaponsByInventoryOrder || RangedPosition == -1))
                                 {
                                     HighestRangedDamage = Inventory[i].damage;
-                                    RangedPosition = i;
+                                    RangedPosition = (sbyte)i;
                                 }
                             }
                             if (Inventory[i].magic)
@@ -4535,21 +4539,21 @@ namespace giantsummon
                                     if (Inventory[i].type == Terraria.ID.ItemID.SpaceGun && HasFlag(GuardianFlags.MeteorSetEffect))
                                     {
                                         HighestMagicDamage = Inventory[i].damage;
-                                        MagicPosition = i;
+                                        MagicPosition = (sbyte)i;
                                         ManaCost = 0;
                                         NoManaMagicItem = true;
                                     }
                                     else if (MP >= Inventory[i].mana * ManaCostMult)
                                     {
                                         HighestMagicDamage = Inventory[i].damage;
-                                        MagicPosition = i;
+                                        MagicPosition = (sbyte)i;
                                         MagicItemNeedsRecharge = false;
                                         NoManaMagicItem = false;
                                     }
                                     else if (MagicPosition == -1)
                                     {
                                         HighestMagicDamage = Inventory[i].damage;
-                                        MagicPosition = i;
+                                        MagicPosition = (sbyte)i;
                                         MagicItemNeedsRecharge = true;
                                         NoManaMagicItem = false;
                                     }
@@ -4591,12 +4595,13 @@ namespace giantsummon
                     else
                     {
                         SelectedItem = -1;
-                        int HighestDamage = 0, MeleePosition = -1;
+                        int HighestDamage = 0;
+                        MeleePosition = -1;
                         for (int m = 0; m < 10; m++)
                         {
                             if (Inventory[m].type > 0 && Inventory[m].melee && Inventory[m].damage > HighestDamage)
                             {
-                                MeleePosition = m;
+                                MeleePosition = (sbyte)m;
                                 HighestDamage = Inventory[m].damage;
                             }
                         }
@@ -4608,6 +4613,8 @@ namespace giantsummon
                 {
                     TargetPosition.X += (Main.player[OwnerPos].Center.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
                 }*/
+                bool InRangeX, InRangeY;
+                CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
                 bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
                 if (!TargetOnSight)
                 {
@@ -4638,17 +4645,17 @@ namespace giantsummon
                 {
                     switch (tactic)
                     {
-                        case CombatTactic.Charge:
+                        case CombatTactic.Charge: //This AI is clashing against GoMelee AI.
                             {
-                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                                float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false) + TargetWidth * 0.5f,
+                                    RetreatDistance = ApproachDistance - 8;
+                                if (DistanceX <= ApproachDistance + 8)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                 {
                                     GoMelee = true;
                                 }
                                 else
                                 {
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                    float ApproachDistance = TargetWidth + Width + 20,
-                                        RetreatDistance = TargetWidth + Width + 12;
                                     if (NearDeath)
                                     {
                                         ApproachDistance += 44;
@@ -4706,8 +4713,6 @@ namespace giantsummon
                 }
                 if (GoMelee)
                 {
-                    bool InRangeX, InRangeY;
-                    CheckAttackRange(SelectedItem, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
                     if (InRangeX)
                     {
                         if (!InRangeY)
@@ -4733,7 +4738,7 @@ namespace giantsummon
                             Duck = true;
                     }
                     float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
-                        DistanceAbs = Math.Abs(Position.X - TargetPosition.X + (TargetWidth * 0.5f));
+                        DistanceAbs = Math.Abs(Position.X + Velocity.X * 0.5f - TargetPosition.X + (TargetWidth * 0.5f));
                     Approach = Retreat = false;
                     if (DistanceAbs < AttackRange + 8 || NearDeath)
                         Retreat = true;
