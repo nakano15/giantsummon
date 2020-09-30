@@ -59,6 +59,10 @@ namespace giantsummon
         [Tooltip("Requests no longer give Ether Heart and Ether Fruit when turned on.")]
         public bool ClassicMode { get { return MainMod.NoEtherItems; } set { MainMod.NoEtherItems = value; } }
 
+        [Label("Disable damage reduction by companion count?")]
+        [Tooltip("To make the mod still be fun to play, there is a minor damage reduction applied to everyone when having multiple companions. Disable this if the mod gets unbearable or way too harder for you to play.")]
+        public bool DisableDamageReduction { get { return MainMod.DisableDamageReductionByNumberOfCompanions; } set { MainMod.DisableDamageReductionByNumberOfCompanions = value; } }
+
         [Label("Increase all monsters health based on number of guardians following?")]
         [Tooltip("Only available on singleplayer. Having more than 1 guardian following you, increases monsters health by 5% per guardian.")]
         public bool MobHealthBoost { get { return MainMod.MobHealthBoost; } set { MainMod.MobHealthBoost = value; } }

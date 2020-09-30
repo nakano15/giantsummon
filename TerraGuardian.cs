@@ -4349,23 +4349,10 @@ namespace giantsummon
                 InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
                 InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) || 
                     (UpperY + Position.Y - Height >= TargetPosition.Y && LowerY + Position.Y <= TargetPosition.Y + TargetHeight);
-                /*for (int x = -10; x <= 10; x++)
-                {
-                    Vector2 DustPos = new Vector2(Position.X + (AttackWidth * 0.1f * x), UpperY + Position.Y);
-                    Dust d = Dust.NewDustDirect(DustPos, 3, 3, Terraria.ID.DustID.GreenBlood, 0, 0);
-                    d.noGravity = true;
-                    d.velocity.X = d.velocity.Y = 0;
-                    DustPos.Y = LowerY + Position.Y;
-                    d = Dust.NewDustDirect(DustPos, 3, 3, Terraria.ID.DustID.GreenBlood, 0, 0);
-                    d.velocity.X = d.velocity.Y = 0;
-                    d.noGravity = true;
-                }*/
             }
             else
             {
                 InRangeX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f;
-                //if (TopLeftCollision.X + Width >= TargetPosition.X && TopLeftCollision.X < TargetPosition.X + TargetWidth)
-                //    InRangeX = true;
                 float UpperY, LowerY;
                 GetMeleeWeaponRangeY(-1, out UpperY, out LowerY, false);
                 InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) ||
@@ -4649,8 +4636,8 @@ namespace giantsummon
                             {
                                 float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                 float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false) + TargetWidth * 0.5f,
-                                    RetreatDistance = ApproachDistance - 8;
-                                if (DistanceX <= ApproachDistance + 8)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                    RetreatDistance = Width * 0.5f + 8;
+                                if (DistanceX <= ApproachDistance + 8 && InRangeY)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                 {
                                     GoMelee = true;
                                 }
@@ -4740,7 +4727,7 @@ namespace giantsummon
                     float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
                         DistanceAbs = Math.Abs(Position.X + Velocity.X * 0.5f - TargetPosition.X + (TargetWidth * 0.5f));
                     Approach = Retreat = false;
-                    if (DistanceAbs < AttackRange + 8 || NearDeath)
+                    if (DistanceAbs < Width * 0.5f + 8 || NearDeath)
                         Retreat = true;
                     else if (DistanceAbs > AttackRange)
                         Approach = true;
@@ -10701,7 +10688,7 @@ namespace giantsummon
                                 }
                                 bool Critical = (Main.rand.Next(100) < CriticalRate);
                                 int NewDamage = Damage;
-                                if (OwnerPos > -1)
+                                if (OwnerPos > -1 && !MainMod.DisableDamageReductionByNumberOfCompanions)
                                 {
                                     float DamageMult = Main.player[OwnerPos].GetModPlayer<PlayerMod>().DamageMod;
                                     NewDamage = (int)(NewDamage * DamageMult);

@@ -775,13 +775,16 @@ namespace giantsummon
 
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {
-            float DamageMod = player.GetModPlayer<PlayerMod>().DamageMod;
-            damage = (int)(damage * DamageMod);
+            if (!MainMod.DisableDamageReductionByNumberOfCompanions)
+            {
+                float DamageMod = player.GetModPlayer<PlayerMod>().DamageMod;
+                damage = (int)(damage * DamageMod);
+            }
         }
 
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
-            if (!projectile.hostile)
+            if (!projectile.hostile && !MainMod.DisableDamageReductionByNumberOfCompanions)
             {
                 float DamageMod = Main.player[projectile.owner].GetModPlayer<PlayerMod>().DamageMod;
                 damage = (int)(damage * DamageMod);

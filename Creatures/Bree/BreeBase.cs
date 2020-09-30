@@ -9,7 +9,7 @@ namespace giantsummon.Creatures
 {
     public class BreeBase : GuardianBase
     {
-        public const string BaglessTextureID = "bagless_body";
+        public const string BagTextureID = "bag";
 
         /// <summary>
         /// -A bit grumpy.
@@ -188,12 +188,44 @@ namespace giantsummon.Creatures
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
-            sprites.AddExtraTexture(BaglessTextureID, "body_no_bag");
+            sprites.AddExtraTexture(BagTextureID, "bags");
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
         {
-            switch (guardian.Data.SkinID) //Todo - Add some way of activating skins.
+            if (guardian.Data.SkinID == 0)
+            {
+                Microsoft.Xna.Framework.Graphics.Texture2D BagTexture = sprites.GetExtraTexture(BagTextureID);
+                for (int i = 0; i < TerraGuardian.DrawBehind.Count; i++)
+                {
+                    if (TerraGuardian.DrawBehind[i].textureType == GuardianDrawData.TextureType.TGBody)
+                    {
+                        Rectangle backrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
+                            frontrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                        backrect.Y += backrect.Height;
+                        GuardianDrawData bagback = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, backrect, color, Rotation, Origin, Scale, seffect),
+                            bagfront = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, frontrect, color, Rotation, Origin, Scale, seffect);
+                        TerraGuardian.DrawBehind.Insert(i + 1, bagfront);
+                        TerraGuardian.DrawBehind.Insert(i, bagback);
+                        i++;
+                    }
+                }
+                for (int i = 0; i < TerraGuardian.DrawFront.Count; i++)
+                {
+                    if (TerraGuardian.DrawFront[i].textureType == GuardianDrawData.TextureType.TGBody)
+                    {
+                        Rectangle backrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
+                            frontrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                        backrect.Y += backrect.Height;
+                        GuardianDrawData bagback = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, backrect, color, Rotation, Origin, Scale, seffect),
+                            bagfront = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, frontrect, color, Rotation, Origin, Scale, seffect);
+                        TerraGuardian.DrawFront.Insert(i + 1, bagfront);
+                        TerraGuardian.DrawFront.Insert(i, bagback);
+                        i++;
+                    }
+                }
+            }
+            /*switch (guardian.Data.SkinID) //Todo - Add some way of activating skins.
             {
                 case 1:
                     foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
@@ -211,7 +243,7 @@ namespace giantsummon.Creatures
                         }
                     }
                     break;
-            }
+            }*/
         }
 
         public override string CallUnlockMessage

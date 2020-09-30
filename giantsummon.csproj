@@ -77,6 +77,7 @@
     <Compile Include="ConfigMod.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
+    <Compile Include="Creatures\DogGuardian\DogGuardianBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
@@ -255,9 +256,15 @@
     <Content Include="Buffs\WellBeing.png" />
     <Content Include="ChangeLog.txt" />
     <Content Include="Creatures\Alex\right_arm_front.png" />
+    <Content Include="Creatures\Bree\bags.png" />
     <Content Include="Creatures\Bree\body_no_bag.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit_f.png" />
+    <Content Include="Creatures\DogGuardian\body.png" />
+    <Content Include="Creatures\DogGuardian\body_front.png" />
+    <Content Include="Creatures\DogGuardian\head.png" />
+    <Content Include="Creatures\DogGuardian\left_arm.png" />
+    <Content Include="Creatures\DogGuardian\right_arm.png" />
     <Content Include="Creatures\Malisha\body.png" />
     <Content Include="Creatures\Malisha\body_front.png" />
     <Content Include="Creatures\Malisha\head.png" />

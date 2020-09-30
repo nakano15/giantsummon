@@ -108,7 +108,7 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(23, 32, 58);
             LeftHandPoints.AddFramePoint2x(25, 23, 72);
 
-            LeftHandPoints.AddFramePoint2x(27, 52, 71);
+            LeftHandPoints.AddFramePoint2x(27, 44, 71);
 
             //Right Arm
             RightHandPoints.AddFramePoint2x(13, 35, 14);
@@ -122,6 +122,8 @@ namespace giantsummon.Creatures
 
             RightHandPoints.AddFramePoint2x(23, 32, 58);
             RightHandPoints.AddFramePoint2x(25, 40, 72);
+
+            RightHandPoints.AddFramePoint2x(27, 51, 71);
 
             //Hat Position
             HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(30, 28);

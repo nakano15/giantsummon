@@ -13,7 +13,7 @@ namespace giantsummon
 {
     public class WorldMod : ModWorld
     {
-        public const int MaxGuardianNpcsInWorld = 10;
+        public const int MaxGuardianNpcsInWorld = 30;
         public static List<GuardianID> GuardiansMet = new List<GuardianID>();
         public static bool LastWasDay = false, DelayedWasDay = false, DayChange = false, HourChange = false;
         public static double LastTime = 0;
@@ -144,7 +144,7 @@ namespace giantsummon
                 }
             }
         }
-
+        
         public static void CheckIfSomeoneCanVisit()
         {
             if ((!Main.dayTime && Main.time >= 3f * 3600) || (Main.dayTime && (Main.time < 2 * 3600 || Main.time >= 4.5 * 3600)))
@@ -413,6 +413,8 @@ namespace giantsummon
                 int MaxGuardianSpawnCount = MaxGuardianNpcsInWorld;
                 if (Version == 39)
                     MaxGuardianSpawnCount = 5;
+                else if (Version < 76)
+                    MaxGuardianSpawnCount = 10;
                 for (int i = 0; i < MaxGuardianSpawnCount; i++)
                 {
                     bool Exists = tag.GetBool("GuardiansCanSpawn_HasValue" + i);
@@ -701,7 +703,6 @@ namespace giantsummon
                     return;
                 }
             }
-            Main.NewText("Spawn chance for " + gb.Name + "! Evil biome? " + RoomEvil + " Score: " + RoomScore + " Occupied: " + RoomOccupied);
             int SpawnX = WorldGen.bestX, SpawnY = WorldGen.bestY;
             Housing_TryGettingPlaceForCompanionToStay(ref SpawnX, ref SpawnY);
             int SpawnXBackup = SpawnX, SpawnYBackup = SpawnY;

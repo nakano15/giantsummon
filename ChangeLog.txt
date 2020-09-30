@@ -1,24 +1,13 @@
-﻿Monsters will get a damage received reduction when you're travelling with companions.
-	The initial damage reduction is of 10% damage.
-	If you have more than 1 companion, the damage reduction stacks increases by 20% of the current damage reduction, for each companion.
-Reduced the visit rate of companions.
-Added a configuration option to turn on/off the companions that doesn't live in your world, to visit It sometimes.
-	If you don't have another reason why they shouldn't visit, this can also be useful if your computer has low memory.
-Your companion will no longer try jumping when your character is mounted, the companion is falling and about to hit the ground, taking fall damage.
-Added a flag to to avoid multiple option clicks on dialogues.
-Leopold got a revamp on some of his animations:
-	His right arm position on several frames were changed.
-	Changed his arm animations when walking and hopping.
-	Did changes to the arm position when when sitting.
-	Changed his revive animation.
-	Added a frame for when he's sitting on a chair.
-	The books he read are now bigger.
-	Moved a pixel down the third frame of the attack animation.
-Fixed the talk quests not working correctly, when you speak with a companion npc.
-Ensured that companions will no longer try opening gift boxes when using furnitures.
-The number of town npcs will now influence on the appearance rate of Brutus.
-	If you have more town npcs, Brutus will most likelly show up.
-Changed the sprite of Vladimir arms when jumping.
-	No longer a falling cactus.
-I did some changes to the companions melee combat AI, to try fixing some issues related to It.
-Removed gender reference on the message of friendship buff unlocked.
+﻿Added option to disable the damage reduction based on companion count.
+Increased the number of companions living in the world from 10 to 30.
+	Since the companions no longer uses town npc mask to exist, there isn't really a problem in rising this cap, other than your computer capabilities.
+Removed sneaky debug message when companion spawns.
+Changed Bree's reviving animation.
+	She will no longer... Whatever was that.
+Changed how the bag Bree wears is drawn.
+	Will be helpful when I add outfits to her, but may be a problem if I add more skins, and someone actually likes the bag.
+Made Bree's chest attract less attention.
+Companions with charge AI will no longer behave like being in a trampoline, when they are trying to attack a monster that is above them, and they are in horizontal range.
+Fixed Domino's Max Health, nerfed It from 1420 to the 1000, which was the original intention codewise.
+	He had more health than Brutus himself.
+Changed Vladimir's Revive animation.

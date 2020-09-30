@@ -21,9 +21,9 @@ namespace giantsummon.Creatures
             SpriteHeight = 96;
             Age = 26;
             Male = true;
-            InitialMHP = 800; //1000
-            LifeCrystalHPBonus = 32;
-            LifeFruitHPBonus = 7;
+            InitialMHP = 200; //1000
+            LifeCrystalHPBonus = 20;
+            LifeFruitHPBonus = 25;
             Accuracy = 0.97f;
             Mass = 0.5f;
             MaxSpeed = 5.6f;

@@ -746,6 +746,9 @@ namespace giantsummon
                     case 14:
                         gb = new WrathBase();
                         break;
+                    case 15:
+                        gb = new DogGuardianBase();
+                        break;
                 }
             }
             if (gb == null)

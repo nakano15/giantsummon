@@ -457,30 +457,21 @@ namespace giantsummon
                                             }
                                         }
                                         break;
-                                    case RequestBase.RequestObjective.ObjectiveTypes.None:
-                                        {
-                                            ObjectivesCompleted++;
-                                        }
-                                        break;
-                                    case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout:
+                                    case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout: //Either RequiresRequester, or this, are causing the request to not be completeable.
                                         {
                                             if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
                                             {
-                                                SetIntegerValue(o, 1);
                                                 TerraGuardian tg = PlayerMod.GetPlayerSummonedGuardian(player.player, gd.ID, gd.ModID);
                                                 if (tg.KnockedOutCold || tg.Downed)
                                                 {
+                                                    SetIntegerValue(o, 1);
                                                     if (!Failed && player.player.whoAmI == Main.myPlayer)
                                                         Main.NewText("Requester was defeated, " + gd.Name + " request failed.", 255);
                                                     Failed = true;
                                                 }
+                                                if (GetIntegerValue(o) == 0)
+                                                    ObjectivesCompleted++;
                                             }
-                                            else
-                                            {
-                                                SetIntegerValue(o, 0);
-                                            }
-                                            if (GetIntegerValue(o) == 0)
-                                                ObjectivesCompleted++;
                                         }
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
