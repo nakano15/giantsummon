@@ -234,11 +234,14 @@ namespace giantsummon
                 RequestBase.RequestObjective[] objs = rb.Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement).ToArray();
                 foreach (RequestBase.RequestObjective obj in objs)
                 {
-                    RequestBase.CompanionRequirementRequest comp = (RequestBase.CompanionRequirementRequest)obj;
-                    if (!PlayerMod.HasGuardianSummoned(player, comp.CompanionID, comp.CompanionModID))
+                    if (obj.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement)
                     {
-                        Count = false;
-                        break;
+                        RequestBase.CompanionRequirementRequest comp = (RequestBase.CompanionRequirementRequest)obj;
+                        if (!PlayerMod.HasGuardianSummoned(player, comp.CompanionID, comp.CompanionModID))
+                        {
+                            Count = false;
+                            break;
+                        }
                     }
                 }
             }
@@ -471,7 +474,11 @@ namespace giantsummon
                                                 }
                                                 if (GetIntegerValue(o) == 0)
                                                     ObjectivesCompleted++;
+                                                else
+                                                    Failed = true;
                                             }
+                                            else if (GetIntegerValue(o) == 1)
+                                                Failed = true;
                                         }
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
@@ -496,6 +503,8 @@ namespace giantsummon
                                             }
                                             if (GetIntegerValue(o) == 0)
                                                 ObjectivesCompleted++;
+                                            else
+                                                Failed = true;
                                         }
                                         break;
                                     case RequestBase.RequestObjective.ObjectiveTypes.TalkTo:
@@ -958,7 +967,7 @@ namespace giantsummon
                                 }
                                 else
                                 {
-                                    if (!IsCommonRequest) QuestObjectives.Add("[" + rb.Name + "]");
+                                    if (!IsCommonRequest) QuestObjectives.Insert(0, "[" + rb.Name + "]");
                                     if(rb.Objectives.Count == 0)
                                         QuestObjectives.Add("Empty Request ID: " + RequestID + " Common? " + IsCommonRequest + " Talk? " + IsTalkQuest);
                                     QuestObjectives.Add(" Report success to " + gd.Name + ".");
@@ -1374,148 +1383,20 @@ namespace giantsummon
                         {
                             if (GetIntegerValue(o) > 0)
                             {
-                                int EventID = ((RequestBase.EventParticipationRequest)rb.Objectives[o]).EventID;
-                                int MobID = npc.type;
-                                bool EventMobKilled = false;
-                                switch ((EventList)EventID)
+                                int EventID = ((RequestBase.EventKillRequest)rb.Objectives[o]).EventID;
+                                if (IsEventMob(npc.type, EventID))
                                 {
-                                    case EventList.GoblinArmy:
-                                        switch (MobID)
-                                        {
-                                            case 26:
-                                            case 29:
-                                            case 27:
-                                            case 28:
-                                            case 111:
-                                            case 417:
-                                                EventMobKilled = true;
-                                                break;
-                                        }
-                                        break;
-                                    case EventList.PirateArmy:
-                                        switch (MobID)
-                                        {
-                                            case 216:
-                                            case 213:
-                                            case 215:
-                                            case 214:
-                                            case 212:
-                                            case 252:
-                                            case 491:
-                                                EventMobKilled = true;
-                                                break;
-                                        }
-                                        break;
-                                    case EventList.FrostArmy:
-                                        switch (MobID)
-                                        {
-                                            case 381:
-                                            case 385:
-                                            case 382:
-                                            case 383:
-                                            case 386:
-                                            case 389:
-                                            case 520:
-                                            case 390:
-                                            case 395:
-                                                EventMobKilled = true;
-                                                break;
-                                        }
-                                        break;
-                                    case EventList.MartianArmy:
-                                        switch (MobID)
-                                        {
-                                            case 144:
-                                            case 143:
-                                            case 145:
-                                                EventMobKilled = true;
-                                                break;
-                                        }
-                                        break;
-                                    case EventList.DD2Event:
-                                        switch (MobID)
-                                        {
-                                            case Terraria.ID.NPCID.DD2GoblinT1:
-                                            case Terraria.ID.NPCID.DD2GoblinT2:
-                                            case Terraria.ID.NPCID.DD2GoblinT3:
-                                            case Terraria.ID.NPCID.DD2GoblinBomberT1:
-                                            case Terraria.ID.NPCID.DD2GoblinBomberT2:
-                                            case Terraria.ID.NPCID.DD2GoblinBomberT3:
-                                            case Terraria.ID.NPCID.DD2Betsy:
-                                            case Terraria.ID.NPCID.DD2DarkMageT1:
-                                            case Terraria.ID.NPCID.DD2DarkMageT3:
-                                            case Terraria.ID.NPCID.DD2DrakinT2:
-                                            case Terraria.ID.NPCID.DD2DrakinT3:
-                                            case Terraria.ID.NPCID.DD2JavelinstT1:
-                                            case Terraria.ID.NPCID.DD2JavelinstT2:
-                                            case Terraria.ID.NPCID.DD2JavelinstT3:
-                                            case Terraria.ID.NPCID.DD2KoboldFlyerT2:
-                                            case Terraria.ID.NPCID.DD2KoboldFlyerT3:
-                                            case Terraria.ID.NPCID.DD2KoboldWalkerT2:
-                                            case Terraria.ID.NPCID.DD2KoboldWalkerT3:
-                                            case Terraria.ID.NPCID.DD2LightningBugT3:
-                                            case Terraria.ID.NPCID.DD2OgreT2:
-                                            case Terraria.ID.NPCID.DD2OgreT3:
-                                            case Terraria.ID.NPCID.DD2SkeletonT1:
-                                            case Terraria.ID.NPCID.DD2SkeletonT3:
-                                            case Terraria.ID.NPCID.DD2WitherBeastT2:
-                                            case Terraria.ID.NPCID.DD2WitherBeastT3:
-                                            case Terraria.ID.NPCID.DD2WyvernT1:
-                                            case Terraria.ID.NPCID.DD2WyvernT2:
-                                            case Terraria.ID.NPCID.DD2WyvernT3:
-                                                EventMobKilled = true;
-                                                break;
-                                        }
-                                        break;
-
-                                    case EventList.PumpkinMoon:
-                                        switch (MobID)
-                                        {
-                                            case Terraria.ID.NPCID.Scarecrow1:
-                                            case Terraria.ID.NPCID.Scarecrow2:
-                                            case Terraria.ID.NPCID.Scarecrow3:
-                                            case Terraria.ID.NPCID.Scarecrow4:
-                                            case Terraria.ID.NPCID.Scarecrow5:
-                                            case Terraria.ID.NPCID.Scarecrow6:
-                                            case Terraria.ID.NPCID.Scarecrow7:
-                                            case Terraria.ID.NPCID.Scarecrow8:
-                                            case Terraria.ID.NPCID.Scarecrow9:
-                                            case Terraria.ID.NPCID.Scarecrow10:
-                                            case Terraria.ID.NPCID.Splinterling:
-                                            case Terraria.ID.NPCID.Hellhound:
-                                            case Terraria.ID.NPCID.Poltergeist:
-                                            case Terraria.ID.NPCID.HeadlessHorseman:
-                                            case Terraria.ID.NPCID.MourningWood:
-                                            case Terraria.ID.NPCID.Pumpking:
-                                                EventMobKilled = true;
-                                                break;
-                                        }
-                                        break;
-
-                                    case EventList.FrostMoon:
-                                        switch (MobID)
-                                        {
-                                            case Terraria.ID.NPCID.PresentMimic:
-                                            case Terraria.ID.NPCID.Flocko:
-                                            case Terraria.ID.NPCID.GingerbreadMan:
-                                            case Terraria.ID.NPCID.ZombieElf:
-                                            case Terraria.ID.NPCID.ZombieElfBeard:
-                                            case Terraria.ID.NPCID.ZombieElfGirl:
-                                            case Terraria.ID.NPCID.ElfArcher:
-                                            case Terraria.ID.NPCID.Nutcracker:
-                                            case Terraria.ID.NPCID.NutcrackerSpinning:
-                                            case Terraria.ID.NPCID.Yeti:
-                                            case Terraria.ID.NPCID.ElfCopter:
-                                            case Terraria.ID.NPCID.Krampus:
-                                            case Terraria.ID.NPCID.Everscream:
-                                            case Terraria.ID.NPCID.SantaNK1:
-                                            case Terraria.ID.NPCID.IceQueen:
-                                                EventMobKilled = true;
-                                                break;
-                                        }
-                                        break;
+                                    SetIntegerValue(o, GetIntegerValue(o) - 1);
                                 }
-                                if (EventMobKilled)
+                            }
+                        }
+                        break;
+                    case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
+                        {
+                            if (GetIntegerValue(o) > 0)
+                            {
+                                int EventID = ((RequestBase.EventParticipationRequest)rb.Objectives[o]).EventID;
+                                if (IsEventMob(npc.type, EventID) && Main.invasionType == EventID && Main.invasionSize <= 0)
                                 {
                                     SetIntegerValue(o, GetIntegerValue(o) - 1);
                                 }
@@ -1524,6 +1405,142 @@ namespace giantsummon
                         break;
                 }
             }
+        }
+
+        public bool IsEventMob(int MobID, int EventID)
+        {
+            switch ((EventList)EventID)
+            {
+                case EventList.GoblinArmy:
+                    switch (MobID)
+                    {
+                        case 26:
+                        case 29:
+                        case 27:
+                        case 28:
+                        case 111:
+                        case 417:
+                            return true;
+                    }
+                    break;
+                case EventList.PirateArmy:
+                    switch (MobID)
+                    {
+                        case 216:
+                        case 213:
+                        case 215:
+                        case 214:
+                        case 212:
+                        case 252:
+                        case 491:
+                            return true;
+                    }
+                    break;
+                case EventList.FrostArmy:
+                    switch (MobID)
+                    {
+                        case 381:
+                        case 385:
+                        case 382:
+                        case 383:
+                        case 386:
+                        case 389:
+                        case 520:
+                        case 390:
+                        case 395:
+                            return true;
+                    }
+                    break;
+                case EventList.MartianArmy:
+                    switch (MobID)
+                    {
+                        case 144:
+                        case 143:
+                        case 145:
+                            return true;
+                    }
+                    break;
+                case EventList.DD2Event:
+                    switch (MobID)
+                    {
+                        case Terraria.ID.NPCID.DD2GoblinT1:
+                        case Terraria.ID.NPCID.DD2GoblinT2:
+                        case Terraria.ID.NPCID.DD2GoblinT3:
+                        case Terraria.ID.NPCID.DD2GoblinBomberT1:
+                        case Terraria.ID.NPCID.DD2GoblinBomberT2:
+                        case Terraria.ID.NPCID.DD2GoblinBomberT3:
+                        case Terraria.ID.NPCID.DD2Betsy:
+                        case Terraria.ID.NPCID.DD2DarkMageT1:
+                        case Terraria.ID.NPCID.DD2DarkMageT3:
+                        case Terraria.ID.NPCID.DD2DrakinT2:
+                        case Terraria.ID.NPCID.DD2DrakinT3:
+                        case Terraria.ID.NPCID.DD2JavelinstT1:
+                        case Terraria.ID.NPCID.DD2JavelinstT2:
+                        case Terraria.ID.NPCID.DD2JavelinstT3:
+                        case Terraria.ID.NPCID.DD2KoboldFlyerT2:
+                        case Terraria.ID.NPCID.DD2KoboldFlyerT3:
+                        case Terraria.ID.NPCID.DD2KoboldWalkerT2:
+                        case Terraria.ID.NPCID.DD2KoboldWalkerT3:
+                        case Terraria.ID.NPCID.DD2LightningBugT3:
+                        case Terraria.ID.NPCID.DD2OgreT2:
+                        case Terraria.ID.NPCID.DD2OgreT3:
+                        case Terraria.ID.NPCID.DD2SkeletonT1:
+                        case Terraria.ID.NPCID.DD2SkeletonT3:
+                        case Terraria.ID.NPCID.DD2WitherBeastT2:
+                        case Terraria.ID.NPCID.DD2WitherBeastT3:
+                        case Terraria.ID.NPCID.DD2WyvernT1:
+                        case Terraria.ID.NPCID.DD2WyvernT2:
+                        case Terraria.ID.NPCID.DD2WyvernT3:
+                            return true;
+                    }
+                    break;
+
+                case EventList.PumpkinMoon:
+                    switch (MobID)
+                    {
+                        case Terraria.ID.NPCID.Scarecrow1:
+                        case Terraria.ID.NPCID.Scarecrow2:
+                        case Terraria.ID.NPCID.Scarecrow3:
+                        case Terraria.ID.NPCID.Scarecrow4:
+                        case Terraria.ID.NPCID.Scarecrow5:
+                        case Terraria.ID.NPCID.Scarecrow6:
+                        case Terraria.ID.NPCID.Scarecrow7:
+                        case Terraria.ID.NPCID.Scarecrow8:
+                        case Terraria.ID.NPCID.Scarecrow9:
+                        case Terraria.ID.NPCID.Scarecrow10:
+                        case Terraria.ID.NPCID.Splinterling:
+                        case Terraria.ID.NPCID.Hellhound:
+                        case Terraria.ID.NPCID.Poltergeist:
+                        case Terraria.ID.NPCID.HeadlessHorseman:
+                        case Terraria.ID.NPCID.MourningWood:
+                        case Terraria.ID.NPCID.Pumpking:
+                            return true;
+                    }
+                    break;
+
+                case EventList.FrostMoon:
+                    switch (MobID)
+                    {
+                        case Terraria.ID.NPCID.PresentMimic:
+                        case Terraria.ID.NPCID.Flocko:
+                        case Terraria.ID.NPCID.GingerbreadMan:
+                        case Terraria.ID.NPCID.ZombieElf:
+                        case Terraria.ID.NPCID.ZombieElfBeard:
+                        case Terraria.ID.NPCID.ZombieElfGirl:
+                        case Terraria.ID.NPCID.ElfArcher:
+                        case Terraria.ID.NPCID.Nutcracker:
+                        case Terraria.ID.NPCID.NutcrackerSpinning:
+                        case Terraria.ID.NPCID.Yeti:
+                        case Terraria.ID.NPCID.ElfCopter:
+                        case Terraria.ID.NPCID.Krampus:
+                        case Terraria.ID.NPCID.Everscream:
+                        case Terraria.ID.NPCID.SantaNK1:
+                        case Terraria.ID.NPCID.IceQueen:
+                            return true;
+                    }
+                    break;
+            }
+            return false;
         }
 
         public enum RequestState : byte
@@ -1535,6 +1552,7 @@ namespace giantsummon
 
         public enum EventList : byte
         {
+            NotANumber,
             GoblinArmy,
             PirateArmy,
             MartianArmy,

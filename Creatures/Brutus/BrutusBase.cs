@@ -914,7 +914,7 @@ namespace giantsummon.Creatures
                                 else
                                 {
                                     guardian.MoveLeft = guardian.MoveRight = false;
-                                    if (guardian.Position.X + guardian.Velocity.X > DefendX)
+                                    if (guardian.Position.X - guardian.Velocity.X * 0.5f > DefendX)
                                         guardian.MoveLeft = true;
                                     else
                                         guardian.MoveRight = true;

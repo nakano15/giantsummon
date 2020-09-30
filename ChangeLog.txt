@@ -11,3 +11,7 @@ Companions with charge AI will no longer behave like being in a trampoline, when
 Fixed Domino's Max Health, nerfed It from 1420 to the 1000, which was the original intention codewise.
 	He had more health than Brutus himself.
 Changed Vladimir's Revive animation.
+Fixed a bug where you couldn't report requests that failed because someone was defeated, when shouldn't.
+Made Malisha's chest attract less attention, too.
+Fixed Brutus feet sprites.
+	Also changed his leg sprites for some animations.
