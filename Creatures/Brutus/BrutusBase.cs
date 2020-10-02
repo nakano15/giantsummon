@@ -214,7 +214,7 @@ namespace giantsummon.Creatures
             AddRequestRequirement(delegate(Player player){
                 return NPC.downedGoblins;
             });
-            AddEventParticipationObjective(Terraria.ID.InvasionID.GoblinArmy, 1);
+            AddEventParticipationObjective(Terraria.ID.InvasionID.GoblinArmy);
             //3
             AddNewRequest("A drink with a friend", 330,
                 "*Terrarian, would you like sharing a drink with me?*",

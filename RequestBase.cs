@@ -81,12 +81,10 @@ namespace giantsummon
             Objectives.Add(req);
         }
 
-        public void AddEventParticipationRequest(int EventID, int WavesToSurvive, float ExtraWavesPerFriendshipLevel = 0.02f)
+        public void AddEventParticipationRequest(int EventID)
         {
             EventParticipationRequest req = new EventParticipationRequest();
             req.EventID = EventID;
-            req.EventWaves = WavesToSurvive;
-            req.ExtraWavesPerFriendshipLevel = ExtraWavesPerFriendshipLevel;
             Objectives.Add(req);
         }
 
@@ -240,8 +238,6 @@ namespace giantsummon
         public class EventParticipationRequest : RequestObjective
         {
             public int EventID = 0;
-            public int EventWaves = 1;
-            public float ExtraWavesPerFriendshipLevel = 0.02f;
 
             public EventParticipationRequest()
                 : base(ObjectiveTypes.EventParticipation)

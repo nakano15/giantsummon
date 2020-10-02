@@ -631,7 +631,7 @@ namespace giantsummon
                             case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
                                 {
                                     RequestBase.EventParticipationRequest req = ((RequestBase.EventParticipationRequest)rb.Objectives[o]);
-                                    RewardScore += (int)(req.EventWaves + req.ExtraWavesPerFriendshipLevel * gd.FriendshipLevel) * 80;
+                                    RewardScore += 200;
                                 }
                                 break;
                             case RequestBase.RequestObjective.ObjectiveTypes.ObjectCollection:
@@ -825,7 +825,7 @@ namespace giantsummon
                                                 }
                                                 else
                                                 {
-                                                    QuestObjectives.Add(" Face " + EventName + " " + GetIntegerValue(o) + " times.");
+                                                    QuestObjectives.Add(" Face " + EventName + ".");
                                                 }
                                             }
                                         }
@@ -1173,7 +1173,7 @@ namespace giantsummon
                     case RequestBase.RequestObjective.ObjectiveTypes.EventParticipation:
                         {
                             RequestBase.EventParticipationRequest req = (RequestBase.EventParticipationRequest)rb.Objectives[o];
-                            SetIntegerValue(o, req.EventWaves + (int)(req.ExtraWavesPerFriendshipLevel * gd.FriendshipLevel));
+                            SetIntegerValue(o, 1);
                         }
                         break;
                     case RequestBase.RequestObjective.ObjectiveTypes.EventKills:
@@ -1396,9 +1396,9 @@ namespace giantsummon
                             if (GetIntegerValue(o) > 0)
                             {
                                 int EventID = ((RequestBase.EventParticipationRequest)rb.Objectives[o]).EventID;
-                                if (IsEventMob(npc.type, EventID) && Main.invasionType == EventID && Main.invasionSize <= 0)
+                                if (IsEventMob(npc.type, EventID) && Main.invasionType == 0)
                                 {
-                                    SetIntegerValue(o, GetIntegerValue(o) - 1);
+                                    SetIntegerValue(o, 0);
                                 }
                             }
                         }

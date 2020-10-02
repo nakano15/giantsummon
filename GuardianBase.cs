@@ -277,11 +277,11 @@ namespace giantsummon
             }
         }
 
-        public void AddEventParticipationObjective(int EventID, int Waves, float ExtraWaves = 0f)
+        public void AddEventParticipationObjective(int EventID)
         {
             if (RequestDB.Count > 0)
             {
-                RequestDB[RequestDB.Count - 1].AddEventParticipationRequest(EventID, Waves, ExtraWaves);
+                RequestDB[RequestDB.Count - 1].AddEventParticipationRequest(EventID);
             }
         }
 

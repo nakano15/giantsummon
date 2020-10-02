@@ -15,3 +15,5 @@ Fixed a bug where you couldn't report requests that failed because someone was d
 Made Malisha's chest attract less attention, too.
 Fixed Brutus feet sprites.
 	Also changed his leg sprites for some animations.
+Fixed a problem with requests asking to participate of an event.
+	Due to that, requests needing you to participate of an event will now only ask you to do that once.
