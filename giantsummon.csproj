@@ -78,6 +78,7 @@
     <Compile Include="Creatures\Alex\AlexBase.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\DogGuardian\DogGuardianBase.cs" />
+    <Compile Include="Creatures\GhostFoxGuardian\GhostFoxGuardianBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
@@ -265,6 +266,11 @@
     <Content Include="Creatures\DogGuardian\head.png" />
     <Content Include="Creatures\DogGuardian\left_arm.png" />
     <Content Include="Creatures\DogGuardian\right_arm.png" />
+    <Content Include="Creatures\GhostFoxGuardian\body.png" />
+    <Content Include="Creatures\GhostFoxGuardian\body_front.png" />
+    <Content Include="Creatures\GhostFoxGuardian\head.png" />
+    <Content Include="Creatures\GhostFoxGuardian\left_arm.png" />
+    <Content Include="Creatures\GhostFoxGuardian\right_arm.png" />
     <Content Include="Creatures\Malisha\body.png" />
     <Content Include="Creatures\Malisha\body_front.png" />
     <Content Include="Creatures\Malisha\head.png" />

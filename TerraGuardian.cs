@@ -12371,7 +12371,14 @@ namespace giantsummon
             }
             if (MountedOnPlayer)
             {
-                BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.SittingFrame;
+                if (PlayerMounted && Base.ReverseMount && Base.PlayerMountedArmAnimation > -1)
+                {
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.PlayerMountedArmAnimation;
+                }
+                else
+                {
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.SittingFrame;
+                }
                 if (Base.IsTerrarian && ItemAnimationTime == 0)
                 {
                     LeftArmAnimationFrame = 3;
@@ -12850,15 +12857,23 @@ namespace giantsummon
                 MountPosition.Y = SpriteHeight - MountPosition.Y;
                 if (!Owner.mount.Active || (PlayerMounted && Base.ReverseMount && !SittingOnPlayerMount && !InMineCart))
                 {
-                    MountPosition.X += Owner.Center.X - (12 + 2) * Direction;
-                    //if (Base.ReverseMount)
+                    Point PositionFrame = Base.LeftHandPoints.GetPositionFromFramePoint(Base.PlayerMountedArmAnimation);
+                    if (PositionFrame == Base.LeftHandPoints.DefaultCoordinate)
                     {
+                        PositionFrame = Base.LeftHandPoints.GetPositionFromFramePoint(Base.ItemUseFrames[2]);
                         MountPosition.Y = Owner.position.Y + Owner.height + 6;// -12;
-                        MountPosition.Y += -SpriteHeight + Base.LeftHandPoints.GetPositionFromFramePoint(Base.ItemUseFrames[2]).Y;
+                        MountPosition.X += Owner.Center.X - (12 + 2) * Direction;
+                        MountPosition.Y += -SpriteHeight + PositionFrame.Y;
                     }
-                    if (Owner.mount.Active)
+                    else
                     {
-                        MountPosition.Y += -Owner.mount.PlayerOffset - Owner.mount.YOffset + 6;
+                        MountPosition.X = Owner.Center.X - 10 * Direction;
+                        MountPosition.X += (PositionFrame.X - (int)(Base.SpriteWidth * 0.5f)) * Direction;
+                        MountPosition.Y = Owner.position.Y + 56 - 30 - (PositionFrame.Y - Base.SpriteHeight) * Scale - 12; // -12;
+                    }
+                    if (Owner.mount.Active && !PlayerMounted)
+                    {
+                        MountPosition.Y += (-Owner.mount.PlayerOffset - Owner.mount.YOffset);// +6;
                     }
                     /*else
                     {

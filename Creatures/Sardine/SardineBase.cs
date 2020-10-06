@@ -60,7 +60,7 @@ namespace giantsummon.Creatures
             //Animation Frames
             StandingFrame = 0;
             WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-            PlayerMountedArmAnimation = JumpFrame = 9;
+            JumpFrame = 9;
             HeavySwingFrames = new int[] { 10, 11, 12 };
             ItemUseFrames = new int[] { 13, 14, 15, 16 };
             SittingFrame = 17;

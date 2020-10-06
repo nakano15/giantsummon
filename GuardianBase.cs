@@ -749,6 +749,9 @@ namespace giantsummon
                     case 15:
                         gb = new DogGuardianBase();
                         break;
+                    case 16:
+                        gb = new GhostFoxGuardianBase();
+                        break;
                 }
             }
             if (gb == null)
