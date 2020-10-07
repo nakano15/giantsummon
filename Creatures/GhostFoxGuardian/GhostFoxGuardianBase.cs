@@ -142,7 +142,7 @@ namespace giantsummon.Creatures
 
         public override void GuardianBehaviorModScript(TerraGuardian guardian)
         {
-            if (!guardian.KnockedOut && !guardian.MountedOnPlayer && !guardian.UsingFurniture && guardian.Velocity.Y == 0 && guardian.BodyAnimationFrame != ReviveFrame)
+            if (!guardian.KnockedOut && !guardian.MountedOnPlayer && !guardian.UsingFurniture && guardian.Velocity.Y == 0) //guardian.BodyAnimationFrame != ReviveFrame
                 guardian.OffsetY -= ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
         }
     }
