@@ -178,6 +178,12 @@ namespace giantsummon
         FirstSymbolEffect,
         NoGravity,
         NoTileCollision,
-        CanDualWield
+        CanDualWield,
+        CantBeKnockedOutCold,
+        CantReceiveHelpOnReviving,
+        DontTakeAggro,
+        CantBeHurt,
+        HealthGoesToZeroWhenKod,
+        HideKOBar
     }
 }

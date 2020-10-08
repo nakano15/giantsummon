@@ -127,34 +127,20 @@ namespace giantsummon.Creatures
             }
         }
 
-        public override void GuardianBehaviorModScript(TerraGuardian guardian)
+        public override void GuardianUpdateScript(TerraGuardian guardian)
         {
             if (GetIfIsCloudForm(guardian))
             {
-                /*if (guardian.Jump)
+                if (guardian.Velocity.Y >= 2.3f)
                 {
-                    if (guardian.Velocity.Y < -3f)
-                    {
-                        guardian.Velocity.Y = -3f;
-                    }
-                    else
-                    {
-                        guardian.Velocity.Y += -0.05f;
-                    }
+                    guardian.Velocity.Y = 2.3f;
+                    guardian.SetFallStart();
                 }
-                else*/
+                else
                 {
-                    if (guardian.Velocity.Y >= 2.3f)
-                    {
-                        guardian.Velocity.Y = 2.3f;
-                        guardian.SetFallStart();
-                    }
-                    else
-                    {
-                        //guardian.Velocity.Y += 0.05f;
-                    }
+                    //guardian.Velocity.Y += 0.05f;
                 }
-                if(!guardian.KnockedOut && !guardian.MountedOnPlayer && !guardian.UsingFurniture && guardian.Velocity.Y == 0 && guardian.BodyAnimationFrame != CloudFormRevive)
+                if (!guardian.KnockedOut && !guardian.MountedOnPlayer && !guardian.UsingFurniture && guardian.Velocity.Y == 0 && guardian.BodyAnimationFrame != CloudFormRevive)
                     guardian.OffsetY -= ((float)Math.Sin(Main.GlobalTime * 2)) * 5;
             }
         }

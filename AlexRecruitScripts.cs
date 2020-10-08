@@ -15,14 +15,14 @@ namespace giantsummon
             {'T','T'},
             {'T','T'}
         };
-            
-            /*new char[,]{
+        /*    new char[,]{
             {' ',' ',' ',' '},
             {' ','T','T',' '},
             {' ','T','T',' '},
             {' ','B','B',' '},
             {'B','B','B','B'}
         };*/
+        const int TombstoneWidth = 2, TombstoneHeight = 2;
         public const string TombstoneText = "Here lies "+AlexOldPartner+".\n\'Brave adventurer and Alex's best friend.\'\n\n\"Take good care of Alex.\"";
         public static int TombstoneTileX = 0, TombstoneTileY = 0;
         public static bool SpawnedTombstone = false;
@@ -45,13 +45,13 @@ namespace giantsummon
 
         public static void TrySpawningTombstone(Terraria.World.Generation.GenerationProgress status)
         {
-            const int TombstoneWidth = 2, TombstoneHeight = 2;
             int StartPosX = 0, StartPosY = 0;
         retry:
             int Attempt = 0;
             while (true)
             {
-                status.Message = "Trying to spawn a tombstone. (" + (Attempt++) + ")";
+                Attempt++;
+                status.Message = "Trying to spawn a tombstone.";
                 StartPosX = Main.rand.Next((int)Main.leftWorld / 16, (int)Main.rightWorld / 16 - TombstoneWidth);
                 StartPosY = Main.rand.Next((int)(Main.worldSurface * 0.35f), (int)Main.worldSurface - TombstoneHeight);
                 //StartPosY = (int)Main.topWorld / 16;
@@ -92,7 +92,7 @@ namespace giantsummon
                 {
                     for (int x = 0; x < TombstoneWidth; x++)
                     {
-                        if (Main.tile[StartPosX + x, StartPosY + y].active() || 
+                        if (Main.tile[StartPosX + x, StartPosY + y].active() ||
                             Main.tile[StartPosX + x, StartPosY + y].liquid > 0)
                         {
                             SomeTileInTheWay = true;
@@ -106,27 +106,49 @@ namespace giantsummon
                     }
                 }
                 bool NonSolidTileBellow = false;
-                for (int x = 0; x < TombstoneWidth; x++)
+                while (!NonSolidTileBellow)
                 {
                     int TileY = StartPosY + TombstoneHeight + 1;
-                    if (Main.tile[StartPosX + x, TileY].nactive() || !Main.tileSolid[Main.tile[StartPosX + x, TileY].type])
+                    for (int x = 0; x < TombstoneWidth; x++)
                     {
-                        NonSolidTileBellow = true;
-                        break;
+                        if (Main.tile[StartPosX + x, TileY].nactive() || !Main.tileSolid[Main.tile[StartPosX + x, TileY].type])
+                        {
+                            NonSolidTileBellow = true;
+                            break;
+                        }
+                        if (Main.tile[StartPosX + x, TileY].halfBrick() || Main.tile[StartPosX + x, TileY].slope() > 0)
+                        {
+                            NonSolidTileBellow = true;
+                            break;
+                        }
+                        if (Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.Cloud || Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.RainCloud ||
+                            Terraria.ID.TileID.Sets.Corrupt[Main.tile[StartPosX + x, TileY].type])
+                        {
+                            NonSolidTileBellow = true;
+                            break;
+                        }
                     }
-                    if (Main.tile[StartPosX + x, TileY].halfBrick() || Main.tile[StartPosX + x, TileY].slope() > 0)
+                    if (!NonSolidTileBellow)
+                        StartPosY++;
+                }
+                for (int y = 0; y < TombstoneHeight; y++)
+                {
+                    for (int x = 0; x < TombstoneWidth; x++)
                     {
-                        NonSolidTileBellow = true;
-                        break;
-                    }
-                    if (Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.Cloud || Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.RainCloud || 
-                        Terraria.ID.TileID.Sets.Corrupt[Main.tile[StartPosX + x, TileY].type])
-                    {
-                        NonSolidTileBellow = true;
-                        break;
+                        if (Main.tile[StartPosX + x, StartPosY + y].active() ||
+                            Main.tile[StartPosX + x, StartPosY + y].liquid > 0)
+                        {
+                            SomeTileInTheWay = true;
+                            break;
+                        }
+                        if (Main.tile[StartPosX + x, StartPosY + y].wall > 0)
+                        {
+                            SomeTileInTheWay = true;
+                            break;
+                        }
                     }
                 }
-                if (!SomeTileInTheWay && !NonSolidTileBellow)
+                if (!SomeTileInTheWay && NonSolidTileBellow)
                 {
                     break;
                 }
@@ -134,10 +156,11 @@ namespace giantsummon
                 {
                     status.Message = "Unable to spawn Tombstone.";
                     Attempt = 0;
-                    while (Attempt++ < 300)
+                    while (Attempt++ < 600)
                     {
 
                     }
+                    return;
                 }
                 //status.Message = "Failed at PosX = " + StartPosX + "  PosY = " + StartPosY + ".";
             }
@@ -188,6 +211,7 @@ namespace giantsummon
             {
                 goto retry;
             }
+
             int signpos = Sign.ReadSign(TombstonePosX, TombstonePosY);
             if (signpos > -1)
                 Sign.TextSign(signpos, TombstoneText);

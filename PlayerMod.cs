@@ -696,7 +696,7 @@ namespace giantsummon
             {
                 foreach (TerraGuardian tg in GetAllGuardianFollowers)
                 {
-                    if (tg.Active && tg.PlayerMounted && !tg.Base.ReverseMount)
+                    if (tg.Active && tg.PlayerMounted && !tg.Base.ReverseMount && !tg.HasFlag(GuardianFlags.CantReceiveHelpOnReviving))
                         rect = tg.HitBox;
                 }
             }

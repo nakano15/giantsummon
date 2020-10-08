@@ -225,6 +225,8 @@ namespace giantsummon
         }
         public bool TakesAggro(Vector2 AttackerPosition)
         {
+            if (HasFlag(GuardianFlags.DontTakeAggro))
+                return false;
             bool IsBeingAggroed = false;
             if (OwnerPos == -1)
                 IsBeingAggroed = true;
@@ -1722,6 +1724,10 @@ namespace giantsummon
             }
             if (KnockedOutCold)
             {
+                if (HasFlag(GuardianFlags.CantBeKnockedOutCold))
+                {
+                    KnockedOutCold = false;
+                }
                 if (Breath <= 0 && !MainMod.GuardiansDontDiesAfterDownedDefeat)
                 {
                     DoForceKill(" didn't had more air.");
@@ -4839,7 +4845,7 @@ namespace giantsummon
                     foreach (int key in MainMod.ActiveGuardians.Keys)
                     {
                         TerraGuardian g = MainMod.ActiveGuardians[key];
-                        if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && ((!MountedEdition && InPerceptionRange(g.CenterPosition, PerceptionRange)) || g.HitBox.Intersects(HitBox)))
+                        if (!g.Downed && g.KnockedOut && !IsGuardianHostile(g) && !g.HasFlag(GuardianFlags.CantReceiveHelpOnReviving) && ((!MountedEdition && InPerceptionRange(g.CenterPosition, PerceptionRange)) || g.HitBox.Intersects(HitBox)))
                         {
                             byte ReviveBoost = g.ReviveBoost;
                             if (ReviveBoost < LowestReviveBoost)
@@ -7410,13 +7416,20 @@ namespace giantsummon
         public void EnterDownedState()
         {
             KnockedOut = true;
-            HP += MHP / 2;
-            if (HP <= 0)
+            if (HasFlag(GuardianFlags.HealthGoesToZeroWhenKod))
             {
-                if (MainMod.GuardiansDontDiesAfterDownedDefeat)
-                    KnockedOutCold = true;
-                else
-                    Knockout(" wasn't able to endure the damage.");
+                HP = 0;
+            }
+            else
+            {
+                HP += MHP / 2;
+                if (HP <= 0)
+                {
+                    if (MainMod.GuardiansDontDiesAfterDownedDefeat)
+                        KnockedOutCold = true;
+                    else
+                        Knockout(" wasn't able to endure the damage.");
+                }
             }
             if (PlayerMounted)
                 ToggleMount(true, false);
@@ -9169,7 +9182,7 @@ namespace giantsummon
 
         public int Hurt(int Damage, int HitDirection, bool Critical = false, bool ForceHurt = false, string DeathMessage = "")
         {
-            if (!ForceHurt && ImmuneTime > 0 || Downed || (DoAction.InUse && DoAction.Immune) || KnockedOutCold)
+            if (!ForceHurt && ImmuneTime > 0 || Downed || (DoAction.InUse && DoAction.Immune) || KnockedOutCold || HasFlag(GuardianFlags.CantBeHurt))
                 return 0;
             bool EvadedAttack = false;
             if (!ForceHurt)
@@ -14699,7 +14712,7 @@ namespace giantsummon
 
         public void DrawReviveBar()
         {
-            if (KnockedOut)
+            if (KnockedOut && !HasFlag(GuardianFlags.HideKOBar))
             {
                 Vector2 BarPosition = Position - Main.screenPosition;
                 BarPosition.Y += 22f;

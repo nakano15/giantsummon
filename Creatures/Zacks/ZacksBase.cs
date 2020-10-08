@@ -203,6 +203,13 @@ namespace giantsummon.Creatures
         public override void Attributes(TerraGuardian g)
         {
             g.DefenseRate += 0.1f;
+            g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
+            g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
+            if (g.KnockedOut)
+            {
+                g.AddFlag(GuardianFlags.CantBeHurt);
+                g.AddFlag(GuardianFlags.DontTakeAggro);
+            }
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)

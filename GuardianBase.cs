@@ -750,7 +750,7 @@ namespace giantsummon
                         gb = new DogGuardianBase();
                         break;
                     case 16:
-                        gb = new GhostFoxGuardianBase();
+                        gb = new FluffelsBase();
                         break;
                 }
             }

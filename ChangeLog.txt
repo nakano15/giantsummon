@@ -1,1 +1,8 @@
-﻿
+﻿Zacks can no longer enter Knocked Out Cold state.
+	Due to this change, his health will go to 0 when knocked out.
+	While Knocked out, he can't attract aggro, or be hurt by monsters.
+Fixed Wrath's floating effect not working when being controlled by the player.
+Irene's tombstone will no longer spawn above trees.
+	That also caused the tombstone spawning system to have their old bugs, but It's better than being in a tree.
+The tombstone spawning step on the world generation will no longer show the attempts.
+	Also increased the time it takes for the generation failed text to remain shown.
