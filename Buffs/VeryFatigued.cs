@@ -14,6 +14,7 @@ namespace giantsummon.Buffs
             Description.SetDefault("Guardian needs rest. \nPerformance lower. \nMay fall asleep sometimes.");
             Main.debuff[Type] = Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[this.Type] = true;
             longerExpertDebuff = false;
         }
 

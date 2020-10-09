@@ -631,7 +631,7 @@ namespace giantsummon
                     PlayerDeadStatusBackup[p] = Main.player[p].dead;
                     PlayerWetBackup[p] = Main.player[p].wet;
                     if (npc.type != ModContent.NPCType<Npcs.ZombieGuardian>() && npc.type != ModContent.NPCType<Npcs.BlueNPC>() && npc.type != ModContent.NPCType<Npcs.BrutusNPC>() && npc.type != ModContent.NPCType<Npcs.AlexNPC>() && npc.type != ModContent.NPCType<Npcs.VladimirNPC>() && npc.type != ModContent.NPCType<GuardianNPC.List.BearNPC>()
-                         && npc.type != ModContent.NPCType<Npcs.WrathNPC>())
+                         && npc.type != ModContent.NPCType<Npcs.WrathNPC>() && npc.type != ModContent.NPCType<Npcs.GhostFoxGuardianNPC>())
                     {
                         TerraGuardian PlayerGuardian = null;
                         float LowestAggroCount = (Main.player[p].Center - npc.Center).Length() - Main.player[p].aggro;
@@ -1271,9 +1271,9 @@ namespace giantsummon
 
         public override void NPCLoot(NPC npc)
         {
+            Npcs.GhostFoxGuardianNPC.OnMobKill(npc.type);
             if (npc.type == Terraria.ID.NPCID.PossessedArmor && !NpcMod.HasMetGuardian(4) && Main.rand.Next(100) == 0)
             {
-                //int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<GuardianNPC.List.ArmorWraith>());
                 SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Nemesis);
                 Main.NewText("There's something over there.");
                 NpcMod.AddGuardianMet(4);

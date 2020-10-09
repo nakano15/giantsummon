@@ -14,6 +14,7 @@ namespace giantsummon.Buffs
             Description.SetDefault("Showing signs of being tired, no penalty right now.");
             Main.debuff[Type] = Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[this.Type] = true;
             longerExpertDebuff = false;
         }
     }

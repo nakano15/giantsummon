@@ -12,7 +12,7 @@ namespace giantsummon.Buffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault("In Love");
-            Description.SetDefault("Damage inflicted reduced.");
+            Description.SetDefault("Damage you cause reduced.");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = true;
             Main.buffNoSave[Type] = true;

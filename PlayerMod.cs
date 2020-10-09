@@ -163,6 +163,17 @@ namespace giantsummon
         public bool IsTalkingToAGuardian = false;
         public byte TerraGuardiansNearby = 0;
         public float DamageMod = 1f;
+        public bool HasGhostFoxHauntDebuff
+        {
+            get
+            {
+                return player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.SkullHaunt>()) ||
+                    player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.BeeHaunt>()) ||
+                    player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.MeatHaunt>()) ||
+                    player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.SawHaunt>()) ||
+                    player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>());
+            }
+        }
 
         public static int GetPlayerAcceptedRequestCount(Player player)
         {
@@ -953,7 +964,7 @@ namespace giantsummon
                                     if (rescuer.furniturex > -1)
                                         rescuer.LeaveFurniture(false);
                                     if (RescueMessage != "")
-                                        rescuer.SaySomething(RescueMessage);
+                                        rescuer.SaySomething(RescueMessage, true);
                                     player.position = rescuer.Position;
                                     player.position.X -= player.width * 0.5f;
                                     player.position.Y -= player.height + 8;
@@ -1122,7 +1133,8 @@ namespace giantsummon
                                 }
                                 if (Main.netMode == 0)
                                 {
-                                    Main.time += Main.rand.Next(10, 35) * 0.1f * 3600;
+                                    WorldMod.SkipTime(Main.rand.Next(10, 36) * 0.1f);
+                                    /*Main.time += Main.rand.Next(10, 35) * 0.1f * 3600;
                                     if (Main.dayTime)
                                     {
                                         if (Main.time >= 15 * 3600)
@@ -1130,14 +1142,6 @@ namespace giantsummon
                                             Main.time -= 15 * 3600;
                                             Main.dayTime = false;
                                         }
-                                        /*if (Main.dayTime)
-                                        {
-                                            if (Main.eclipse)
-                                            {
-                                                Main.dayTime = true;
-                                                Main.time = Main.rand.Next(5, 15) * 0.1f * 3600;
-                                            }
-                                        }*/
                                     }
                                     else
                                     {
@@ -1147,7 +1151,7 @@ namespace giantsummon
                                             Main.dayTime = true;
                                             Main.AnglerQuestSwap();
                                         }
-                                    }
+                                    }*/
                                 }
                             }
                         }
@@ -1173,6 +1177,27 @@ namespace giantsummon
         public override void PreUpdate()
         {
             eye = EyeState.Open;
+            if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
+            {
+                if (player.dead)
+                {
+                    if (MainMod.FlufflesHauntOpacity > 0)
+                    {
+                        MainMod.FlufflesHauntOpacity -= 0.00333f;
+                        if (MainMod.FlufflesHauntOpacity < 0)
+                            MainMod.FlufflesHauntOpacity = 0;
+                    }
+                }
+                else
+                {
+                    if (MainMod.FlufflesHauntOpacity < 1)
+                    {
+                        MainMod.FlufflesHauntOpacity += 0.00333f;
+                        if (MainMod.FlufflesHauntOpacity > 1)
+                            MainMod.FlufflesHauntOpacity = 1;
+                    }
+                }
+            }
         }
 
         public override void PreUpdateMovement()
@@ -2489,7 +2514,59 @@ namespace giantsummon
         {
             if (ControllingGuardian)
                 layers.Clear();
-            PlayerLayer l = new PlayerLayer(mod.Name, "TerraGuardians: Player Buff Effects", delegate(PlayerDrawInfo pdi)
+            PlayerLayer l;
+            if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
+            {
+                l = new PlayerLayer(mod.Name, "Ghost Fox Guardian Haunt", delegate(PlayerDrawInfo pdi)
+                {
+                    bool PlayerKOd = !pdi.drawPlayer.dead && pdi.drawPlayer.GetModPlayer<PlayerMod>().KnockedOut;
+                    const int Frame = 10, ReviveFrame = 15;
+                    GuardianBase gb = GuardianBase.GetGuardianBase(16);
+                    float DirectionFace = pdi.drawPlayer.direction;
+                    if (!gb.sprites.IsTextureLoaded)
+                        gb.sprites.LoadTextures();
+                    Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = pdi.spriteEffects;
+                    Vector2 FluffelPosition = gb.LeftHandPoints.GetPositionFromFrameVector((PlayerKOd ? ReviveFrame : Frame));
+                    FluffelPosition.X = FluffelPosition.X - gb.SpriteWidth * 0.5f;
+                    if (DirectionFace > 0)
+                    {
+                        FluffelPosition.X *= -1;
+                    }
+                    Vector2 HauntPosition = pdi.position;
+                    HauntPosition.X += player.width * 0.5f - 6 * DirectionFace;
+                    if (PlayerKOd)
+                    {
+                        HauntPosition.Y += player.height * 0.35f;
+                        DirectionFace *= -1;
+                        if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.None)
+                            seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+                        else if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally)
+                            seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.None;
+                        FluffelPosition.X *= -1f;
+                    }
+                    HauntPosition.Y += player.height + gb.SpriteHeight - FluffelPosition.Y - 30;
+                    HauntPosition.X += FluffelPosition.X;
+                    //HauntPosition.Y += ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
+                    Vector2 Origin = new Vector2(gb.SpriteWidth * 0.5f, gb.SpriteHeight);
+                    Rectangle DrawFrame = new Rectangle((PlayerKOd ? ReviveFrame : Frame) * gb.SpriteWidth, 0, gb.SpriteWidth, gb.SpriteHeight);
+                    float Opacity = MainMod.FlufflesHauntOpacity;
+                    if (Opacity < 0)
+                        Opacity = 0;
+                    Color color = Creatures.FlufflesBase.GhostfyColor(Color.White, Opacity, Creatures.FlufflesBase.GetColorMod);
+                    bool IgnoreRotation = PlayerKOd;
+                    Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(gb.sprites.BodySprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
+                    dd.ignorePlayerRotation = IgnoreRotation;
+                    Main.playerDrawData.Insert(0, dd);
+                    dd = new Terraria.DataStructures.DrawData(gb.sprites.RightArmSprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
+                    dd.ignorePlayerRotation = IgnoreRotation;
+                    Main.playerDrawData.Insert(0, dd);
+                    dd = new Terraria.DataStructures.DrawData(gb.sprites.LeftArmSprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
+                    dd.ignorePlayerRotation = IgnoreRotation;
+                    Main.playerDrawData.Add(dd);
+                });
+                layers.Add(l);
+            }
+            l = new PlayerLayer(mod.Name, "TerraGuardians: Player Buff Effects", delegate(PlayerDrawInfo pdi)
             {
                 if (player.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
                 {
@@ -2571,60 +2648,6 @@ namespace giantsummon
                     layers.Add(l);
                 }
             }
-            /*if (NPC.AnyNPCs(ModContent.NPCType<GuardianNPC.List.BearNPC>()))
-            {
-                l = new PlayerLayer(mod.Name, "Vladimir Front Body Parts", delegate(PlayerDrawInfo pdi)
-                {
-                    NPC npc = Main.npc[NPC.FindFirstNPC(ModContent.NPCType<GuardianNPC.List.BearNPC>())];
-                    TerraGuardian g = ((GuardianNPC.GuardianNPCPrefab)npc.modNPC).Guardian;
-                    if (g.DoAction.InUse && g.DoAction.IsGuardianSpecificAction && g.DoAction.ID == 0 && g.DoAction.Players[0] == player)
-                    {
-                        Rectangle left = g.GetAnimationFrameRectangle(g.LeftArmAnimationFrame),
-                            right = g.GetAnimationFrameRectangle(g.RightArmAnimationFrame);
-                        Vector2 DrawPosition = g.Position - Main.screenPosition;
-                        Terraria.DataStructures.DrawData dd;
-                        Vector2 origin = new Vector2(g.SpriteWidth * 0.5f, g.SpriteHeight);
-                        Color color = Lighting.GetColor((int)g.CenterPosition.X / 16, (int)g.CenterPosition.Y / 16);
-                        DrawPosition.Y += 2;
-                        if (g.Base.BodyFrontFrameSwap.ContainsKey(g.BodyAnimationFrame))
-                        {
-                            dd = new Terraria.DataStructures.DrawData(g.Base.sprites.BodyFrontSprite, DrawPosition, g.GetAnimationFrameRectangle(g.Base.BodyFrontFrameSwap[g.BodyAnimationFrame]), color, g.Rotation, origin, g.Scale, (g.LookingLeft ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
-                            dd.ignorePlayerRotation = true;
-                            Main.playerDrawData.Add(dd);
-                        }
-                        if (g.Base.RightArmFrontFrameSwap.ContainsKey(g.RightArmAnimationFrame))
-                        {
-                            dd = new Terraria.DataStructures.DrawData(g.Base.sprites.RightArmFrontSprite, DrawPosition, g.GetAnimationFrameRectangle(g.Base.RightArmFrontFrameSwap[g.RightArmAnimationFrame]), color, g.Rotation, origin, g.Scale, (g.LookingLeft ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
-                            dd.ignorePlayerRotation = true;
-                            Main.playerDrawData.Add(dd);
-                        }
-                        dd = new Terraria.DataStructures.DrawData(g.Base.sprites.LeftArmSprite, DrawPosition, g.GetAnimationFrameRectangle(g.LeftArmAnimationFrame), color, g.Rotation, origin, g.Scale, (g.LookingLeft ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
-                        dd.ignorePlayerRotation = true;
-                        Main.playerDrawData.Add(dd);
-                    }
-                });
-                layers.Add(l);
-            }*/
-            /*if (NPC.AnyNPCs(ModContent.NPCType<Npcs.VladimirNPC>()))
-            {
-                l = new PlayerLayer(mod.Name, "Vladimir Recruit Npc Front Body Parts", delegate(PlayerDrawInfo pdi)
-                {
-                    NPC npc = Main.npc[NPC.FindFirstNPC(ModContent.NPCType<Npcs.VladimirNPC>())];
-                    Npcs.VladimirNPC g = (Npcs.VladimirNPC)npc.modNPC;
-                    if (g.HuggingPlayer == player.whoAmI)
-                    {
-                        Color color = Lighting.GetColor((int)g.npc.Center.X / 16, (int)g.npc.Center.Y / 16);
-                        Terraria.DataStructures.DrawData[] dds = g.GetDrawDatas(color, true);
-                        for (int x = 0; x < dds.Length; x++)
-                        {
-                            Terraria.DataStructures.DrawData dd = dds[x];
-                            dd.ignorePlayerRotation = true;
-                            Main.playerDrawData.Add(dd);
-                        }
-                    }
-                });
-                layers.Add(l);
-            }*/
             l = new PlayerLayer(mod.Name, "Guardian NPCs Front Body Parts", delegate(PlayerDrawInfo pdi)
             {
                 for (int n = 0; n < 200; n++)

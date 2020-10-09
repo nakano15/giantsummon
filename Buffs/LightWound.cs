@@ -14,6 +14,7 @@ namespace giantsummon.Buffs
             Description.SetDefault("The guardian has a few wounds on the body.");
             Main.debuff[Type] = Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[this.Type] = true;
             longerExpertDebuff = false;
         }
     }

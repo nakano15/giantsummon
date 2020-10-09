@@ -114,6 +114,7 @@ namespace giantsummon
         private static Dictionary<string, Group> CompanionGroups = new Dictionary<string, Group>();
         public static float TimeTranslated = 0;
         public static List<GuardianDrawMoment> DrawMoment = new List<GuardianDrawMoment>();
+        public static float FlufflesHauntOpacity = -1f;
 
         public static Group AddNewGroup(string ID, string Name, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
         {
@@ -148,7 +149,7 @@ namespace giantsummon
                     }
                     foreach (GuardianData gd in pm.MyGuardians.Values)
                     {
-                        if (!PossibleGuardians.Any(x => x.ID == gd.ID && x.ModID == gd.ModID))
+                        if (!PossibleGuardians.Any(x => x.ID == gd.ID && x.ModID == gd.ModID) && !gd.Base.InvalidGuardian)
                         {
                             PossibleGuardians.Add(new GuardianID(gd.ID, gd.ModID));
                         }

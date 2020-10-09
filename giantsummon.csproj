@@ -56,6 +56,11 @@
     <Compile Include="BuddyModeSetupInterface.cs" />
     <Compile Include="BuffData.cs" />
     <Compile Include="Buffs\Defended.cs" />
+    <Compile Include="Buffs\GhostFoxHaunts\BeeHaunt.cs" />
+    <Compile Include="Buffs\GhostFoxHaunts\ConstructHaunt.cs" />
+    <Compile Include="Buffs\GhostFoxHaunts\SawHaunt.cs" />
+    <Compile Include="Buffs\GhostFoxHaunts\MeatHaunt.cs" />
+    <Compile Include="Buffs\GhostFoxHaunts\SkullHaunt.cs" />
     <Compile Include="Buffs\HeavyInjury.cs" />
     <Compile Include="Buffs\Injury.cs" />
     <Compile Include="Buffs\Obstruction.cs" />
@@ -78,7 +83,7 @@
     <Compile Include="Creatures\Alex\AlexBase.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\DogGuardian\DogGuardianBase.cs" />
-    <Compile Include="Creatures\Fluffels\FluffelsBase.cs" />
+    <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
@@ -150,6 +155,7 @@
     <Compile Include="Npcs\BreeNPC.cs" />
     <Compile Include="Npcs\BrutusNPC.cs" />
     <Compile Include="Npcs\DominoNPC.cs" />
+    <Compile Include="Npcs\GhostFoxGuardianNPC.cs" />
     <Compile Include="Npcs\GuardianActorNPC.cs" />
     <Compile Include="Npcs\LeopoldNPC.cs" />
     <Compile Include="Npcs\MabelNPC.cs" />
@@ -242,6 +248,11 @@
   <ItemGroup>
     <Content Include="Buffs\Defended.png" />
     <Content Include="Buffs\FirstAidCooldown.png" />
+    <Content Include="Buffs\GhostFoxHaunts\BeeHaunt.png" />
+    <Content Include="Buffs\GhostFoxHaunts\ConstructHaunt.png" />
+    <Content Include="Buffs\GhostFoxHaunts\SawHaunt.png" />
+    <Content Include="Buffs\GhostFoxHaunts\MeatHaunt.png" />
+    <Content Include="Buffs\GhostFoxHaunts\SkullHaunt.png" />
     <Content Include="Buffs\GuardianModBuff.png" />
     <Content Include="Buffs\HeavyInjury.png" />
     <Content Include="Buffs\Hug.png" />
@@ -266,11 +277,11 @@
     <Content Include="Creatures\DogGuardian\head.png" />
     <Content Include="Creatures\DogGuardian\left_arm.png" />
     <Content Include="Creatures\DogGuardian\right_arm.png" />
-    <Content Include="Creatures\Fluffels\body.png" />
-    <Content Include="Creatures\Fluffels\body_front.png" />
-    <Content Include="Creatures\Fluffels\head.png" />
-    <Content Include="Creatures\Fluffels\left_arm.png" />
-    <Content Include="Creatures\Fluffels\right_arm.png" />
+    <Content Include="Creatures\Fluffles\body.png" />
+    <Content Include="Creatures\Fluffles\body_front.png" />
+    <Content Include="Creatures\Fluffles\head.png" />
+    <Content Include="Creatures\Fluffles\left_arm.png" />
+    <Content Include="Creatures\Fluffles\right_arm.png" />
     <Content Include="Creatures\Malisha\body.png" />
     <Content Include="Creatures\Malisha\body_front.png" />
     <Content Include="Creatures\Malisha\head.png" />

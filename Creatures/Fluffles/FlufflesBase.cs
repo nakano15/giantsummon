@@ -7,15 +7,15 @@ using Terraria;
 
 namespace giantsummon.Creatures
 {
-    public class FluffelsBase : GuardianBase
+    public class FlufflesBase : GuardianBase
     {
         private static Dictionary<int, float> KnockoutAlpha = new Dictionary<int, float>();
 
-        public FluffelsBase()
+        public FlufflesBase()
         {
-            Name = "Fluffels";
-            PossibleNames = new string[] { "Fluffels", "Krümel" }; //Thank BentoFox for the names.
-            Description = "";
+            Name = "Fluffles";
+            PossibleNames = new string[] { "Fluffles", "Krümel" }; //Thank BentoFox for the names.
+            Description = "She was an experienced adventurer, part of a\ngroup of Terrarians and TerraGuardians.\nA traumatic experience unallows her to speak.";
             Size = GuardianSize.Large;
             Width = 26;
             Height = 92;
@@ -214,10 +214,6 @@ namespace giantsummon.Creatures
                     }
                 }
             }
-            /*if ((!guardian.KnockedOut && guardian.HasFlag(GuardianFlags.CantBeHurt)) || (guardian.KnockedOut && !guardian.HasFlag(GuardianFlags.CantBeHurt)))
-            {
-                guardian.UpdateStatus = true;
-            }*/
         }
     }
 }

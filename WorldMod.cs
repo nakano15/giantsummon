@@ -85,6 +85,45 @@ namespace giantsummon
             }
         }
 
+        public static void SkipTime(float Time)
+        {
+            Main.time += Time * 3600;
+            bool CheckDayPhaseChange = true;
+            while (CheckDayPhaseChange)
+            {
+                if (Main.dayTime)
+                {
+                    if (Main.time >= 15 * 3600)
+                    {
+                        Main.time -= 15 * 3600;
+                        Main.dayTime = false;
+                    }
+                    else if (Main.time < 0)
+                    {
+                        Main.time += 15 * 3600;
+                        Main.dayTime = false;
+                        Main.AnglerQuestSwap();
+                    }
+                    else { CheckDayPhaseChange = false; }
+                }
+                else
+                {
+                    if (Main.time >= 9 * 3600)
+                    {
+                        Main.time -= 9 * 3600;
+                        Main.dayTime = true;
+                        Main.AnglerQuestSwap();
+                    }
+                    else if (Main.time < 0)
+                    {
+                        Main.time += 9 * 3600;
+                        Main.dayTime = true;
+                    }
+                    else { CheckDayPhaseChange = false; }
+                }
+            }
+        }
+
         public override void PreUpdate()
         {
             ProjMod.CheckForInactiveProjectiles();
@@ -294,6 +333,7 @@ namespace giantsummon
             GuardianBountyQuest.Reset();
             AlexRecruitScripts.SpawnedTombstone = false;
             LastTime = -1;
+            MainMod.FlufflesHauntOpacity = -1f;
         }
 
         public override void NetSend(System.IO.BinaryWriter writer)
@@ -822,14 +862,14 @@ namespace giantsummon
         {
             int TownNPCCounterForHouse = Housing_GetMaxNumberOfHabitants();
             int CountHouseUsers = 0;
-            bool TownNPC = false;
+            //bool TownNPC = false;
             for (int n = 0; n < 200; n++)
             {
                 if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
                 {
                     if (Housing_IsInRoom(Main.npc[n].homeTileX, Main.npc[n].homeTileY - 1))
                     {
-                        TownNPC = true;
+                        //TownNPC = true;
                         //CountHouseUsers++;
                         break;
                     }

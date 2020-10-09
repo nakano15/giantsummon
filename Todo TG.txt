@@ -26,3 +26,6 @@ Add a skin to Zacks where his body wounds have bandages, and he's wearing a cuff
 Implement an alternative mount position, for when the player is inside blocks while mounted on the guardian shoulders.
 Add an option to turn off the damage downscaling when using multiple companions.
 Fix Irene tombstone spawn place.
+Add Rest option to the companions dialogue.
+	The option should only appear, either if the player is inside a valid house, or if the player is near It's bed.
+	This option not only allows you to skip part of the day, but also rests the companions on the team, if you have the necessities system on.

@@ -27,7 +27,7 @@ namespace giantsummon.Npcs
         public string MessageText = "";
         public int MessageTime = 0;
         public bool FlipVertically = false;
-        public bool MoveLeft = false, MoveRight = false, Action = false, Jump = false, Walk = false, Dash = false, Idle = false;
+        public bool MoveLeft = false, MoveRight = false, DropFromPlatform = false, Action = false, Jump = false, Walk = false, Dash = false, Idle = false;
         public GuardianBase Base
         {
             get { return GuardianBase.GetGuardianBase(GuardianID, GuardianModID); }
@@ -222,7 +222,7 @@ namespace giantsummon.Npcs
                 if (JumpTime != 0)
                     JumpTime = 0;
             }
-            MoveLeft = MoveRight = Jump = Action = Dash = Walk = Idle = false;
+            MoveLeft = MoveRight = DropFromPlatform = Jump = Action = Dash = Walk = Idle = false;
             Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref npc.stepSpeed, ref npc.gfxOffY);
             Vector4 SlopedCollision = Collision.SlopeCollision(npc.position, npc.velocity, npc.width, npc.height, 1f, false);
             npc.position = SlopedCollision.XY();

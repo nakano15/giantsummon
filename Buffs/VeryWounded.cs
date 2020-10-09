@@ -14,6 +14,7 @@ namespace giantsummon.Buffs
             Description.SetDefault("Guardian needs to recover from wounds. \nDefense rate dropped. \nMovement speed drops. \nPain.\n Fall Tolerance drops.");
             Main.debuff[Type] = Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[this.Type] = true;
             longerExpertDebuff = false;
         }
 

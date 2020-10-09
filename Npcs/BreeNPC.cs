@@ -30,7 +30,7 @@ namespace giantsummon.Npcs
 
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("WhiteCat");
+            DisplayName.SetDefault("White Cat");
         }
 
         public override void SetDefaults()

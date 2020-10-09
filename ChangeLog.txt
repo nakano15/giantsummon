@@ -6,3 +6,6 @@ Irene's tombstone will no longer spawn above trees.
 	That also caused the tombstone spawning system to have their old bugs, but It's better than being in a tree.
 The tombstone spawning step on the world generation will no longer show the attempts.
 	Also increased the time it takes for the generation failed text to remain shown.
+The mod will no longer try spawning invalid guardians on a new world.
+	That would only be a issue if you played with custom companions, but had disabled their mod for some reason.
+
