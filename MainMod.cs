@@ -35,9 +35,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 76, LastModVersion = 75;
+        public const int ModVersion = 77, LastModVersion = 75;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -115,7 +115,9 @@ namespace giantsummon
         public static float TimeTranslated = 0;
         public static List<GuardianDrawMoment> DrawMoment = new List<GuardianDrawMoment>();
         public static float FlufflesHauntOpacity = -1f;
-
+        public static Color ScreenColor = Color.Black;
+        public static float ScreenColorAlpha = 0f;
+        
         public static Group AddNewGroup(string ID, string Name, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
         {
             Group g;
@@ -696,11 +698,13 @@ namespace giantsummon
                 GuardianShopHandler.UpdateShops();
         }
 
-        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi;
+        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
         {
+            const int TownNpcHeadBannersLayer = 7, EntityHealthBarLayer = 14, NpcSignDialogueLayer = 23, HealthBarLayer = 25, InventoryLayer = 27, HotbatLayer = 30, 
+                MouseTextLayer = 33, PlayerChatLayer = 34, PlayerDeathLayer = 35, MouseOverLayer = 39;
             try
             {
                 if (!InterfacesSetup)
@@ -713,9 +717,11 @@ namespace giantsummon
                     goi = new LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, InterfaceScaleType.UI);
                     gmi = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, InterfaceScaleType.UI);
                     dnagd = new LegacyGameInterfaceLayer("Terra Guardians: Chat Messages Interface", DrawNpcsAndGuardianChatMessages, InterfaceScaleType.UI);
+                    dgrb = new LegacyGameInterfaceLayer("Terra Guardians: Revive Bar Interface", DrawGuardianReviveBar, InterfaceScaleType.UI);
                     dgdi = new LegacyGameInterfaceLayer("Terra Guardians: Dialogue Inteface", DrawGuardianDialogueInterface, InterfaceScaleType.UI);
                     dgmo = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, InterfaceScaleType.UI);
                     dghmi = new LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, InterfaceScaleType.UI);
+                    dcs = new LegacyGameInterfaceLayer("Terra Guardians: Colored Screen", DrawColoredScreen, InterfaceScaleType.UI);
                     bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
                     {
                         BuddyModeSetupInterface.Draw();
@@ -727,90 +733,53 @@ namespace giantsummon
                 {
                     layers.Add(gi);
                 }
+                layers.Insert(MouseOverLayer, dcs);
+                layers.Insert(MouseOverLayer, dgmo);
                 if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
                 {
-                    /*if (!Main.player[Main.myPlayer].dead)
-                    {
-                        for (int l = 0; l < layers.Count; l++)
-                        {
-                            if (!layers[l].Name.Contains("Mouse"))
-                            {
-                                layers.RemoveAt(l);
-                            }
-                        }
-                    }*/
                     if (Main.playerInventory)
                         Main.playerInventory = false;
-                    layers.Insert(0, downedInterface);
-                    /*if (!Main.player[Main.myPlayer].dead)
-                    {
-                        return;
-                    }*/
+                    layers.Insert(PlayerDeathLayer, downedInterface);
                 }
-                int MouseSlotPosition = -1, InventorySlotPosition = -1, ResourceBarPosition = -1, PlayerChatPos = -1;
-                bool RemoveInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
+                layers.Insert(PlayerChatLayer, dnagd);
+                layers.Insert(HotbatLayer, goi);
+                layers.Insert(MouseOverLayer, gmi);
+                layers.Insert(InventoryLayer, dgi);
+                layers.Insert(NpcSignDialogueLayer, dgdi);
+                layers.Insert(NpcSignDialogueLayer, gsi);
+                if (BuddyModeSetupInterface.WindowActive)
+                {
+                    layers.Insert(NpcSignDialogueLayer, bmsi);
+                }
+                layers.Insert(HealthBarLayer - 1, hsi);
+                layers.Insert(EntityHealthBarLayer, dgrb);
+                layers.Insert(TownNpcHeadBannersLayer, dghmi);
+                bool RemoveHealthBarAndInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
                 for (int l = 0; l < layers.Count; l++)
                 {
-                    if (MouseSlotPosition == -1 && layers[l].Name.Contains("Mouse"))
-                        MouseSlotPosition = l - 1;
-                    if (PlayerChatPos == -1 && layers[l].Name.Contains("Player Chat"))
-                        PlayerChatPos = l - 1;
-                    if (InventorySlotPosition == -1 && layers[l].Name.Contains("Inventory"))
+                    if (RemoveHealthBarAndInventory && layers[l].Name.Contains("Resource Bars"))
                     {
-                        InventorySlotPosition = l - 1;
+                        layers.RemoveAt(l);
                     }
-                    if (ResourceBarPosition == -1 && layers[l].Name.Contains("Resource Bar"))
+                    if (RemoveHealthBarAndInventory && layers[l].Name.Contains("Inventory") && !layers[l].Name.Contains("Terra Guardians"))
                     {
-                        ResourceBarPosition = l;
-                        if (RemoveInventory)
-                            layers.RemoveAt(l);
+                        layers.RemoveAt(l);
                     }
-                }
-                layers.Insert(0, dgmo);
-                if (PlayerChatPos > -1)
-                {
-                    layers.Insert(PlayerChatPos, dnagd);
-                }
-                else if (MouseSlotPosition > -1)
-                {
-                    layers.Insert(MouseSlotPosition, dnagd);
-                }
-                if (MouseSlotPosition > -1)
-                {
-                    layers.Insert(MouseSlotPosition, dghmi);
-                    layers.Insert(MouseSlotPosition, goi);
-                    layers.Insert(MouseSlotPosition, gmi);
-                    layers.Insert(MouseSlotPosition, dgdi);
-                }
-                else
-                {
-                    layers.Add(dghmi);
-                    layers.Add(goi);
-                    layers.Add(gmi);
-                    layers.Add(dgdi);
-                }
-                if (InventorySlotPosition > -1)
-                    layers.Insert(InventorySlotPosition, dgi);
-                else if (MouseSlotPosition > -1)
-                    layers.Insert(MouseSlotPosition, dgi);
-                else
-                    layers.Add(dgi);
-                if (MouseSlotPosition > -1)
-                {
-                    layers.Insert(MouseSlotPosition, hsi);
-                    layers.Insert(MouseSlotPosition, gsi);
-                }
-                else
-                    layers.Add(hsi);
-                if (BuddyModeSetupInterface.WindowActive && MouseSlotPosition > -1)
-                {
-                    layers.Insert(MouseSlotPosition, bmsi);                
                 }
             }
             catch
             {
 
             }
+        }
+
+        public static bool DrawColoredScreen()
+        {
+            if (ScreenColorAlpha > 0)
+            {
+                Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), ScreenColor * ScreenColorAlpha);
+            }
+            return true;
         }
 
         public static bool DrawGuardianHouseManagementInterface()
@@ -904,7 +873,7 @@ namespace giantsummon
         public bool DrawGuardianMouse()
         {
             TerraGuardian guardian = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian;
-            if (guardian.Active && (ShowDebugInfo || Gameplay2PMode))
+            if (guardian.Active && !guardian.PlayerControl && (ShowDebugInfo || Gameplay2PMode))
             {
                 Main.spriteBatch.Draw(GuardianMouseTexture, new Vector2(guardian.AimDirection.X, guardian.AimDirection.Y) - Main.screenPosition, Main.mouseColor);
             }
@@ -992,18 +961,21 @@ namespace giantsummon
                     {
                         if (g.Active && !g.WofFood)
                         {
-                            g.DrawReviveBar();
                             g.DrawSocialMessages();
                         }
                     }
                 }
             }
+            return true;
+        }
+
+        public bool DrawGuardianReviveBar()
+        {
             foreach (int key in ActiveGuardians.Keys)
             {
                 if (!ActiveGuardians[key].WofFood)
                 {
                     ActiveGuardians[key].DrawReviveBar();
-                    ActiveGuardians[key].DrawSocialMessages();
                 }
             }
             return true;
@@ -2128,6 +2100,8 @@ namespace giantsummon
                         bool HasUnsummonedGuardianRequest = false;
                         foreach (GuardianData d in RequestCount)
                         {
+                            if (d.Base.InvalidGuardian)
+                                continue;
                             if (!HasRequest)
                             {
                                 Utils.DrawBorderString(Main.spriteBatch, "Guardian Requests", SlotStartPosition, Color.White);

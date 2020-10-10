@@ -77,6 +77,11 @@ namespace giantsummon.Npcs
             Target.TargettingPlayer = !Guardian;
         }
 
+        private bool PlayerHasBlueHairpin(Player player)
+        {
+            return player.armor.Any(x => x.type == ModContent.ItemType<Items.Accessories.BlueHairclip>());
+        }
+
         public override void AI()
         {
             byte BossLevel = GetBossLevel();
@@ -180,9 +185,10 @@ namespace giantsummon.Npcs
                             Target = mt;
                         }
                     }
-                    if (Target.IsKnockedOut && AiState != 99)
+                    if (Target.IsKnockedOut && AiState != 99 && AiState != 8)
                     {
                         AiState = 8;
+                        AiValue = 0;
                     }
                 }
                 if (Target.IsActive && !Target.IsDefeated)
@@ -572,7 +578,7 @@ namespace giantsummon.Npcs
                                 if (!npc.getRect().Intersects(Target.GetCollision))
                                 {
                                     MoveForward = true;
-                                    AiValue = 0;
+                                    //AiValue = 0;
                                 }
                                 else
                                 {
@@ -588,11 +594,16 @@ namespace giantsummon.Npcs
                                         {
                                             AiValue++;
                                             int HealthRestoreValue = Target.FinishCharacter(3, " was devoured by Zombie Guardian.");
-                                            //if (HealthRestoreValue > 1)
-                                            //    HealthRestoreValue /= 2;
                                             if (HealthRestoreValue > 0)
                                             {
                                                 CombatText.NewText(Target.GetCollision, Color.Red, "Chomp", false, true);
+                                                for (int i = 0; i < 5; i++)
+                                                {
+                                                    Vector2 BloodPos = Target.Position;
+                                                    BloodPos.X += Target.Width - 2 + Main.rand.Next(6);
+                                                    BloodPos.Y += Target.Height - 2 + Main.rand.Next(6);
+                                                    Dust.NewDust(BloodPos, 1, 1, Terraria.ID.DustID.Blood, Main.rand.Next(20, 31) * 0.1f * npc.direction, -Main.rand.Next(10, 26) * 0.1f);
+                                                }
                                             }
                                             npc.life += HealthRestoreValue;
                                             if (Target.IsDefeated)
@@ -601,13 +612,6 @@ namespace giantsummon.Npcs
                                                 AiState = 1;
                                                 CombatText.NewText(npc.getRect(), Color.Red, "Buuuuuuuuurp");
                                             }
-                                            /*if (AiValue >= (!Main.expertMode ? 10 : 5) * 60)
-                                            {
-                                                Target.ForceKill(" was devoured by Zombie Guardian.");
-                                                npc.life += (int)(npc.lifeMax * 0.2f);
-                                                AiValue = 0;
-                                                AiState = 1;
-                                            }*/
                                         }
                                     }
                                 }
@@ -646,6 +650,7 @@ namespace giantsummon.Npcs
                             NpcPosCenter.Y += npc.height;
                             //Player Target = Main.player[npc.target];
                             TerraGuardian Guardian = Main.player[Target.TargetPosition].GetModPlayer<PlayerMod>().Guardian;
+                            bool PlayerHasBlueHairpin = this.PlayerHasBlueHairpin(Main.player[Target.TargetPosition]) && Target.TargettingPlayer;
                             if (PlayerMod.HasGuardianSummoned(Main.player[Target.TargetPosition], 1))
                             {
                                 foreach (TerraGuardian g in Main.player[Target.TargetPosition].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
@@ -656,7 +661,7 @@ namespace giantsummon.Npcs
                             }
                             bool TargetIsBlue = Guardian.ID == 1 && Guardian.Active && !Target.TargettingPlayer,
                                 PlayerHasBlue = PlayerMod.PlayerHasGuardianSummoned(Target.Character, 1);
-                            if (!PlayerHasBlue)
+                            if (!PlayerHasBlue && !PlayerHasBlueHairpin)
                             {
                                 npc.npcSlots = 1;
                                 string Text = "*The zombie got enraged.*";
@@ -713,7 +718,15 @@ namespace giantsummon.Npcs
                             }
                             if (AiValue == 30)
                             {
-                                string Text = (TargetIsBlue ? "*"+ PlayerMod.GetPlayerGuardian(Target.Character, 1).Name +" told the zombie to stop and look at her face, then asked if It didn't recognize her.*" : "*" + NpcMod.GetGuardianNPCName(1) + " told the zombie to stop that at once, asked if he forgot about her.*");
+                                string Text = "";
+                                if (PlayerHasBlueHairpin && !PlayerHasBlue)
+                                {
+                                    Text = "*When the zombie tried biting you, It suddenly stopped after smelling some kind of scent.*";
+                                }
+                                else
+                                {
+                                    Text = (TargetIsBlue ? "*" + PlayerMod.GetPlayerGuardian(Target.Character, 1).Name + " told the zombie to stop and look at her face, then asked if It didn't recognize her.*" : "*" + NpcMod.GetGuardianNPCName(1) + " told the zombie to stop that at once, asked if he forgot about her.*");
+                                }
                                 if (Main.netMode == 0)
                                     Main.NewText(Text);
                                 else
@@ -723,7 +736,15 @@ namespace giantsummon.Npcs
                             }
                             else if (AiValue == DialogueLineTime + 30)
                             {
-                                string Text = "*The zombie ended up tame after seeing " + PlayerMod.GetPlayerGuardian(Target.Character, 1).Name + ".*";
+                                string Text = "";
+                                if (PlayerHasBlueHairpin && !PlayerHasBlue)
+                                {
+                                    Text = "*The zombie started sleuthing your character, until It started smelling [gn:" + PlayerMod.GetPlayerGuardian(Target.Character, 1).Name + "]'s Hairpin.*";
+                                }
+                                else
+                                {
+                                    Text = "*The zombie ended up tame after seeing " + PlayerMod.GetPlayerGuardian(Target.Character, 1).Name + ".*";
+                                }
                                 if (Main.netMode == 0)
                                     Main.NewText(Text);
                                 else
@@ -733,7 +754,15 @@ namespace giantsummon.Npcs
                             }
                             else if (AiValue == DialogueLineTime * 2 + 30)
                             {
-                                string Text = "*The zombie thanked you for bringing back his old self, and said that want to help you on your quest, so he can stay with "+NpcMod.GetGuardianNPCName(1)+". He told you that his name is "+Base.Name+".*";
+                                string Text = "";
+                                if (PlayerHasBlueHairpin && !PlayerHasBlue)
+                                {
+                                    Text = "*The zombie asked you about the person who gave you the hairpin. After you told him about [gn:"+GuardianBase.Blue+"], he said that he wants to return to her side, and that his name is "+Base.Name+". And thanked you for making him thinking rationally again.*";
+                                }
+                                else
+                                {
+                                    Text = "*The zombie thanked you for bringing back his old self, and said that want to help you on your quest, so he can stay with " + NpcMod.GetGuardianNPCName(1) + ". He told you that his name is " + Base.Name + ".*";
+                                }
                                 if (Main.netMode == 0)
                                     Main.NewText(Text);
                                 else
@@ -747,10 +776,7 @@ namespace giantsummon.Npcs
                                 Main.player[Target.TargetPosition].GetModPlayer<PlayerMod>().AddNewGuardian(3);
                                 PlayerMod.GetPlayerGuardian(Main.player[Target.TargetPosition], 3).IncreaseFriendshipProgress(1);
                                 WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Zacks);
-                                //npc.Transform(ModContent.NPCType<GuardianNPC.List.ZombieWolfGuardian>());
                                 return;
-                                //NPC.NewNPC((int)npc.position.X, (int)npc.position.Y, mod.NPCType<GuardianNPC.List.ZombieWolfGuardian>());
-                                //npc.active = false;
                             }
                             AiValue++;
                         }
@@ -998,12 +1024,15 @@ namespace giantsummon.Npcs
             //
             if (firstButton)
             {
-                if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], 1))
+                bool HasHairpin = false, HasBlue = false;
+                if ((HasBlue = PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], 1)) || (HasHairpin = PlayerHasBlueHairpin(Main.player[Main.myPlayer])))
                 {
                     //Trigger animation that results in it being recruited.
                     AiState = 100;
                     AiValue = 0;
                     Target.SetTargetToPlayer(Main.player[Main.myPlayer]);
+                    if (HasHairpin && !HasBlue)
+                        Target.TargettingPlayer = true;
                 }
                 else
                 {
@@ -1272,9 +1301,14 @@ namespace giantsummon.Npcs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             float Chance = 0;
+            bool HasZacks = false;
             if (!NpcMod.HasMetGuardian(3) && !NPC.AnyNPCs(ModContent.NPCType<ZombieGuardian>()) && !NPC.AnyNPCs(ModContent.NPCType<GuardianNPC.List.ZombieWolfGuardian>()) && (Main.bloodMoon || (!Main.dayTime && PlayerMod.PlayerHasGuardian(spawnInfo.player, 3))) && Math.Abs(spawnInfo.player.Center.X / 16 - Main.spawnTileX) >= Main.maxTilesX / 3 && !spawnInfo.player.ZoneUnderworldHeight && !spawnInfo.player.ZoneDirtLayerHeight && !spawnInfo.player.ZoneRockLayerHeight)
             {
                 Chance = 0.03f;
+                if (spawnInfo.player.GetModPlayer<PlayerMod>().KnockedOut)
+                {
+                    Chance *= 5;
+                }
             }
             return Chance;
         }

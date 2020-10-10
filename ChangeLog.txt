@@ -8,4 +8,30 @@ The tombstone spawning step on the world generation will no longer show the atte
 	Also increased the time it takes for the generation failed text to remain shown.
 The mod will no longer try spawning invalid guardians on a new world.
 	That would only be a issue if you played with custom companions, but had disabled their mod for some reason.
-
+Fixed a number of crashes and issues that could happen due to having companions from a disabled mod in your world/character.
+	Having a companion with request on your character will no longer crash your player character, because their original request doesn't exists.
+	Talking to a Losangle of Unknown will no longer crash the game because It didn't had a head.
+	Requests from unloaded companions will no longer be updated, neither will be visible on quest log, nor will count towards the cap of requests you can have active.
+Increased the companions view range:
+	Spot distance increased from 480x420 to 580x520.
+Rearranged the layering of the mod interfaces.
+You can no longer start dialogue with Alex's recruit npc.
+The Gift you give to your companions will now give you less goods.
+The mod will no longer taunt you, telling that you can have more companions following you, even though you are playing on Buddies Mode.
+Added dialogue message for Domino recruit npc, for when you don't have Brutus following you.
+You can now bribe Domino to recruit him on Buddies Mode, If you don't have Brutus as a companion.
+Added also an alternative way of recruiting Zacks.
+	Maybe Blue can give you something to help with that.
+Fixed a bug where recruiting Alex without speaking to him afterwards, didn't counted as having him met.
+	That caused his recruit npc to appear again.
+Your character will no longer do a high jump when Alex gets off It.
+Wings now follows offset.
+Wrath's headgear will no longer be translucent as him.
+Fluffles arrives!
+Rest companion dialogue has been unlocked.
+	When inside a safe place, the "Rest" option will appear on the companion dialogue.
+	You can ask to rest for 4, 8, until dawn, or until night. Time will pass depending on the time you pick.
+	Companions will feel less tired when you let them rest, and they will feel somewhat less injured too.
+Fixed a bug where the Zombie Guardian will no longer have It's finisher count resetted, when the one It's devouring is knocked away from him.
+Blood will now come out of the Zombie Guardian victim when It bites It.
+The Zombie Guardian will now have 5 times the spawn rate if the player is knocked out.

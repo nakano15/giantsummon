@@ -111,7 +111,8 @@ namespace giantsummon.Creatures
                 foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
                 {
                     if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
-                        gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
+                        gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
+                        gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
                     {
                         gdd.color *= Opacity;
                     }
@@ -119,7 +120,8 @@ namespace giantsummon.Creatures
                 foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
                 {
                     if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
-                        gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
+                        gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
+                        gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
                     {
                         gdd.color *= Opacity;
                     }

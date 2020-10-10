@@ -29,3 +29,5 @@ Fix Irene tombstone spawn place.
 Add Rest option to the companions dialogue.
 	The option should only appear, either if the player is inside a valid house, or if the player is near It's bed.
 	This option not only allows you to skip part of the day, but also rests the companions on the team, if you have the necessities system on.
+Those companions needs an alternative recruitment method for those who are playing on Buddy Mode.
+	Zacks, Domino.

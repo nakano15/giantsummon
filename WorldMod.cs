@@ -334,6 +334,7 @@ namespace giantsummon
             AlexRecruitScripts.SpawnedTombstone = false;
             LastTime = -1;
             MainMod.FlufflesHauntOpacity = -1f;
+            Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = false;
         }
 
         public override void NetSend(System.IO.BinaryWriter writer)
@@ -410,6 +411,7 @@ namespace giantsummon
             GuardianBountyQuest.Save(tag);
             AlexRecruitScripts.Save(tag);
             tag.Add("DominoDismissed", Npcs.DominoNPC.DominoDismissed);
+            tag.Add("GhostFoxHauntLifted", Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted);
             GuardianShopHandler.SaveShops(tag);
             return tag;
         }
@@ -522,6 +524,8 @@ namespace giantsummon
                 AlexRecruitScripts.Load(tag, Version);
             if(Version >= 54)
                 Npcs.DominoNPC.DominoDismissed = tag.GetBool("DominoDismissed");
+            if (Version >= 77)
+                Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = tag.GetBool("GhostFoxHauntLifted");
             if (Version >= 74)
                 GuardianShopHandler.LoadShops(tag, Version);
         }

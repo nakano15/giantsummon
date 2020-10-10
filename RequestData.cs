@@ -320,6 +320,8 @@ namespace giantsummon
 
         public void UpdateRequest(GuardianData gd, PlayerMod player)
         {
+            if (gd.Base.InvalidGuardian)
+                return;
             switch (requestState)
             {
                 case RequestState.Cooldown:
@@ -540,6 +542,8 @@ namespace giantsummon
 
         public bool CompleteRequest(TerraGuardian guardian, GuardianData gd, PlayerMod player)
         {
+            if (gd.Base.InvalidGuardian)
+                return false;
             if (Failed)
             {
                 RequestCompleted = false;
@@ -739,6 +743,8 @@ namespace giantsummon
 
         public string[] GetRequestText(Player player, GuardianData gd, bool ForceShowObjective = false)
         {
+            if (gd.Base.InvalidGuardian)
+                return new string[] { "Fragmented request memory." };
             List<string> QuestObjectives = new List<string>();
             bool ShowDuration = false;
             RequestState reqstate = requestState;
@@ -1147,6 +1153,8 @@ namespace giantsummon
             IsTalkQuest = false;
             requestState = RequestState.HasRequestReady;
             this.IsCommonRequest = CommonRequest;
+            if (gd.Base.InvalidGuardian)
+                return;
             RequestBase rb = GetRequestBase(gd);
             for (int o = 0; o < rb.Objectives.Count; o++)
             {

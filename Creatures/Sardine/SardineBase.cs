@@ -460,6 +460,22 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("Whenever I tell stories about my adventures, [gn:" + GuardianBase.Michelle + "] listen attentiously to every details of it. I think I got a fan.");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
+            {
+                bool HasBlue = NpcMod.HasGuardianNPC(GuardianBase.Blue),
+                    HasZacks = NpcMod.HasGuardianNPC(GuardianBase.Zacks);
+                if (HasBlue && HasZacks)
+                {
+                    Mes.Add("Great, now I have a narcisistic wolf, a rotting wolf and a hair rising ghost fox trying to have a piece of me. You have some kind of grudge against me?");
+                    Mes.Add("If you see [gn:"+GuardianBase.Blue+"], [gn:"+GuardianBase.Zacks+"] and [gn:"+GuardianBase.Fluffles+"] looking like they are biting something on the floor, that must be me.");
+                }
+                else if (HasBlue)
+                {
+                    Mes.Add("I really hate having [gn:" + GuardianBase.Fluffles + "] around, because there are now TWO to bite me on [gn:" + GuardianBase.Blue + "]'s stupid game.");
+                    Mes.Add(".");
+                }
+                Mes.Add("I have to tell you what happened to me the other day. I was on the toilet doing my things, having a hard time, until [gn:"+GuardianBase.Fluffles+"] surged from nowhere. She spooked me really hard! But at least solved my constipation issue.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("Do you humans always visits bathrooms when others are using it?");

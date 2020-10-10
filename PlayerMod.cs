@@ -149,7 +149,7 @@ namespace giantsummon
         public byte FriendshipLevel = 0, FriendshipExp = 0;
         public byte FriendshipMaxExp { get { return FriendshipLevel == 0 ? (byte)2 : (byte)(3 + FriendshipLevel / 5); } }
         public int LastFriendshipCount = -1;
-        public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
+        public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => !x.Base.InvalidGuardian && x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
         public bool[] PigGuardianCloudForm = new bool[5]; //Must be saved with the player. Last one is for the big form.
         public bool TalkedToLeopoldAboutThePigs
         {
@@ -173,6 +173,33 @@ namespace giantsummon
                     player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.SawHaunt>()) ||
                     player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>());
             }
+        }
+
+        public static int GetPlayerDefenseCount(Player player)
+        {
+            int Def = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                Def += player.armor[i].defense;
+            }
+            return Def;
+        }
+
+        public static bool IsInASafePlace(Player player, bool ShowWarnMessages = false)
+        {
+            int PlayerX = (int)player.Center.X / 16, PlayerY = (int)player.Center.Y / 16;
+            Tile CenterTile = Framing.GetTileSafely(PlayerX, PlayerY);
+            if (CenterTile == null || !Main.wallHouse[CenterTile.wall])
+            {
+                if(ShowWarnMessages) Main.NewText("You are not in a house.");
+                return false;
+            }
+            if (!WorldGen.StartRoomCheck(PlayerX, PlayerY))
+            {
+                if (ShowWarnMessages) Main.NewText("This is not a safe house.");
+                return false;
+            }
+            return true;
         }
 
         public static int GetPlayerAcceptedRequestCount(Player player)
@@ -1179,11 +1206,12 @@ namespace giantsummon
             eye = EyeState.Open;
             if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
             {
-                if (player.dead)
+                bool ReduceOpacity = Main.dayTime && !Main.eclipse && player.position.Y < Main.worldSurface * 16 && Main.tile[(int)(player.Center.X) / 16, (int)(player.Center.Y / 16)].wall == 0;
+                if (player.dead || ReduceOpacity)
                 {
                     if (MainMod.FlufflesHauntOpacity > 0)
                     {
-                        MainMod.FlufflesHauntOpacity -= 0.00333f;
+                        MainMod.FlufflesHauntOpacity -= 0.005f;
                         if (MainMod.FlufflesHauntOpacity < 0)
                             MainMod.FlufflesHauntOpacity = 0;
                     }
@@ -1192,7 +1220,7 @@ namespace giantsummon
                 {
                     if (MainMod.FlufflesHauntOpacity < 1)
                     {
-                        MainMod.FlufflesHauntOpacity += 0.00333f;
+                        MainMod.FlufflesHauntOpacity += 0.005f;
                         if (MainMod.FlufflesHauntOpacity > 1)
                             MainMod.FlufflesHauntOpacity = 1;
                     }
@@ -1415,9 +1443,12 @@ namespace giantsummon
         public void FriendshipLevelNotification()
         {
             Main.NewText("You reached Friendship Rank " + FriendshipLevel + ".");
-            if (FriendshipLevel == 2 || FriendshipLevel == 5 || FriendshipLevel == 8 || FriendshipLevel == 10 || FriendshipLevel == 14)
+            if (!BuddiesMode)
             {
-                Main.NewText("You can now have " + (MaxExtraGuardiansAllowed + 1) + " companions following you.");
+                if (FriendshipLevel == 2 || FriendshipLevel == 5 || FriendshipLevel == 8 || FriendshipLevel == 10 || FriendshipLevel == 14)
+                {
+                    Main.NewText("You can now have " + (MaxExtraGuardiansAllowed + 1) + " companions following you.");
+                }
             }
         }
 

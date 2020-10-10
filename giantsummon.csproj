@@ -130,6 +130,7 @@
     <Compile Include="GuardianShopInterface.cs" />
     <Compile Include="GuardianSkills.cs" />
     <Compile Include="GuardianSpawningScripts.cs" />
+    <Compile Include="Items\Accessories\BlueHairclip.cs" />
     <Compile Include="Items\Accessories\TwoHandedMastery.cs" />
     <Compile Include="Items\Accessories\FirstSymbol.cs" />
     <Compile Include="Items\Accessories\GoldenShowerPapyrus.cs" />
@@ -392,6 +393,7 @@
     <Content Include="Interface\GuardianEquipButtons.png" />
     <Content Include="Interface\GuardianHealthBar.png" />
     <Content Include="Interface\TacticsIcons.png" />
+    <Content Include="Items\Accessories\BlueHairclip.png" />
     <Content Include="Items\Accessories\BunnyFoot.png" />
     <Content Include="Items\Accessories\FirstSymbol.png" />
     <Content Include="Items\Accessories\GoldenShowerPapyrus.png" />

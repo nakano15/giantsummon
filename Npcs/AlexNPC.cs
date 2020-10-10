@@ -54,6 +54,11 @@ namespace giantsummon.Npcs
             return false;
         }
 
+        public override bool CanChat()
+        {
+            return false;
+        }
+
         public override void AI()
         {
             AlexRecruitScripts.AlexNPCPosition = npc.whoAmI;
@@ -162,9 +167,13 @@ namespace giantsummon.Npcs
                             int DialogueTimer = (int)npc.ai[AI_TIMER] / 30;
                             bool Trigger = npc.ai[AI_TIMER] % 30 == 15;
                             bool HasAlreadyGuardian = false;
+                            if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID))
+                            {
+                                HasAlreadyGuardian = true;
+                            }
                             if (Trigger)
                             {
-                                if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID))
+                                if (HasAlreadyGuardian)
                                 {
                                     float XDifference = Main.player[Main.myPlayer].Center.X - npc.Center.X;
                                     if (Math.Abs(XDifference) > AlexGuardianBase.Width)
@@ -174,7 +183,6 @@ namespace giantsummon.Npcs
                                         else
                                             MoveLeft = true;
                                     }
-                                    HasAlreadyGuardian = true;
                                     switch (DialogueTimer / 5)
                                     {
                                         case 0:
@@ -218,7 +226,7 @@ namespace giantsummon.Npcs
                                             PlayerMod.AddPlayerGuardian(Main.player[npc.target], AlexID);
                                             PlayerMod.GetPlayerGuardian(Main.player[npc.target], AlexID).IncreaseFriendshipProgress(1);
                                             WorldMod.TurnNpcIntoGuardianTownNpc(npc, AlexID);
-                                            //npc.Transform(ModContent.NPCType<GuardianNPC.List.GiantDogGuardian>());
+                                            NpcMod.AddGuardianMet(AlexID);
                                             break;
                                     }
                                 }
@@ -298,7 +306,7 @@ namespace giantsummon.Npcs
                 else if (LastOnFloor)
                 {
                     player.fullRotation = 0;
-                    player.velocity.Y -= 14.5f;
+                    player.velocity.Y -= 6.5f;
                     player.direction = -npc.direction;
                     player.fullRotationOrigin = Vector2.Zero;
                     if (guardian.Active)

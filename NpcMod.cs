@@ -940,6 +940,10 @@ namespace giantsummon
                     (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID] ? "kind of cloud in form of a red pig" :
                     "angry red Pig TerraGuardian") + " in the forest last night. The person were carried to the town unconscious. You should investigate that issue.");
             }
+            if (!HasMetGuardian(GuardianBase.Fluffles) && Npcs.GhostFoxGuardianNPC.CanGhostFoxSpawn(Main.player[Main.myPlayer]))
+            {
+                Messages.Add("Watch out, I've heard that there's a ghost TerraGuardian who chases people in the forest.");
+            }
         }
 
         public override void GetChat(NPC npc, ref string chat)
@@ -1183,6 +1187,11 @@ namespace giantsummon
                     if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
                     {
                         PossibleMessages.Add("I know trouble when I see one, and that one is named " + NpcMod.GetGuardianNPCName(GuardianBase.Malisha) + ".");
+                    }
+                    if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGhostFoxHauntDebuff)
+                    {
+                        PossibleMessages.Add("You seems to be haunted by a ghost, gladly that one only needs your help. If you ask for It to show you visions of what is haunting It, you can find clues on how to lift the haunt.");
+                        PossibleMessages.Add("I don't know if you know, but there is a giant guardian ghost on your back. That one seems to be wanting your help, if you ask about what's haunting It, you will know how to lift the haunt.");
                     }
                     break;
                 case Terraria.ID.NPCID.Angler:

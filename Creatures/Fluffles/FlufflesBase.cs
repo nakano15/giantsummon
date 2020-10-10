@@ -38,6 +38,9 @@ namespace giantsummon.Creatures
             ReverseMount = true;
             DrinksBeverage = true;
             SetTerraGuardian();
+            IsNocturnal = true;
+
+            CallUnlockLevel = MountUnlockLevel = 0;
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
@@ -45,7 +48,7 @@ namespace giantsummon.Creatures
 
             AddInitialItem(Terraria.ID.ItemID.BoneSword, 1);
             AddInitialItem(Terraria.ID.ItemID.GoldBow, 1);
-            AddInitialItem(Terraria.ID.ItemID.HolyArrow, 250);
+            AddInitialItem(Terraria.ID.ItemID.BoneArrow, 250);
             AddInitialItem(Terraria.ID.ItemID.LesserHealingPotion, 5);
 
             //Animation Frames
@@ -89,7 +92,218 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(9, 34, 29);
 
             RightHandPoints.AddFramePoint2x(15, 42, 48);
-            //
+            
+            //Headgear
+            HeadVanityPosition.DefaultCoordinate2x = new Point(22, 13);
+            HeadVanityPosition.AddFramePoint2x(15, 38, 39);
+            HeadVanityPosition.AddFramePoint2x(17, 10, 38);
+            HeadVanityPosition.AddFramePoint2x(18, 33, 33);
+
+            //WingPosition
+        }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("(It looks like she's greeting you.)");
+            Mes.Add("(She smiled as she met you.)");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            if (guardian.IsUsingBed)
+            {
+                Mes.Add("(She's snoring gently.)");
+                Mes.Add("(She seems to be having a peaceful rest.)");
+                Mes.Add("(You wonder what she may be dreaming of, to make her sleep so calmly.)");
+            }
+            else if (Main.bloodMoon)
+            {
+                Mes.Add("(She looks really annoyed, growling at you.)");
+                Mes.Add("(She seems to be wanting this night to end as soon as possible.)");
+                Mes.Add("(Her face is full of anger, maybe I shouldn't try speaking to her.)");
+            }
+            else
+            {
+                Mes.Add("(She's asking if you're okay.)");
+                Mes.Add("(She softly hits her paw on her chest a few times after she saw you.)");
+                Mes.Add("(She looks relieved for seeing you.)");
+                if (Main.raining)
+                {
+                    Mes.Add("(She looks at the sky, as the rain drops pass through her body.)");
+                    Mes.Add("(Everytime It's raining, she has a sorrow look. Maybe she liked that?)");
+                }
+                if (Main.eclipse)
+                {
+                    Mes.Add("(She looks to be on alert.)");
+                    Mes.Add("(She seems to be scared for the people around, more than herself.)");
+                }
+                if (Main.moonPhase == 0)
+                {
+                    Mes.Add("(She shows you a portrait she carries with her. In It you see a male and a female Terrarian, a TerraGuardian and her.)");
+                }
+                if (guardian.IsUsingToilet)
+                {
+                    Mes.Add("(She seems embarrassed. I think she wants you to leave the room.)");
+                    Mes.Add("(As she notices you, she puts one of her paws on her hip, while with the other she signals for you to leave the room.)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Rococo))
+                {
+                    Mes.Add("(She's looking at [gn:" + Rococo + "] with a puzzled face. It's like as if she has seen him before.)");
+                    Mes.Add("(She seems to be trying to recall something, after looking at [gn:" + Rococo + "].)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Blue))
+                {
+                    if (PlayerMod.HasGuardianSummoned(player, Sardine))
+                    {
+                        Mes.Add("(She seems to be asking [gn:" + Blue + "] if they're going to play again.)");
+                        Mes.Add("([gn:" + Sardine + "] begun panicking as [gn:" + Blue + "] and [gn:" + Fluffles + "] stares at him, with a grim smile.)");
+                    }
+                    else if (NpcMod.HasGuardianNPC(Sardine))
+                    {
+                        Mes.Add("([gn:" + Blue + "] and her must be scheming something. I wonder if that's related to [gn:"+Sardine+"].)");
+                    }
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Sardine))
+                {
+                    Mes.Add("(She's looking at [gn:" + Sardine + "] while pretending to be biting something. He starting backing off after noticing that.)");
+                    Mes.Add("([gn:" + Sardine + "] seems to be wanting to run away.)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Zacks))
+                {
+                    Mes.Add("(She's staring at [gn:" + Zacks + "]. She seems to be full of thoughts after looking at him. What could she be thinking about?)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Nemesis))
+                {
+                    Mes.Add("([gn:" + Nemesis + "] stares at her, while she stares at [gn:"+Nemesis+"]. I don't think anything will come out of this.)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Alex))
+                {
+                    Mes.Add("(She's petting [gn:" + Alex + "] in the head. He seems to be enjoying It.)");
+                    Mes.Add("(She threw a bone for [gn:" + Alex + "] to pick. After brought It back, she petted him.)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Leopold))
+                {
+                    Mes.Add("(She gave a scare on [gn:" + Leopold + "]. Now I should be trying to find some leaves.)");
+                    Mes.Add("([gn:" + Leopold + "] seems to be trying to avoid being surprised by her.)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Mabel))
+                {
+                    Mes.Add("(She looks at [gn:" + Mabel + "] up and down, then she looked at her own body. Is she trying to compare them?)");
+                    Mes.Add("(She tries posing like [gn:" + Mabel + "], but by the way she shook her head, It seems like she didn't liked the idea.)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Vladimir))
+                {
+                    Mes.Add("(As she looke at [gn:" + Vladimir + "], he opened his arms, which made her go hug him. She seems to be crying.)");
+                }
+                if (PlayerMod.HasGuardianSummoned(player, Michelle))
+                {
+                    Mes.Add("([gn:" + Michelle + "] is playing with her. They seems to be liking It.)");
+                    Mes.Add("([gn:" + Michelle + "] tried petting her, but the hand passed through her body.)");
+                }
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("(She seems to be telling that likes having your company.)");
+            Mes.Add("(She shows you a portrait she carries with her, having a male and a female terrarian, a terraguardian, and her. She seems to be pointing at the terraguardian in the image. Maybe that was her boyfriend, or husband?)");
+            Mes.Add("(She looks thoughtful.)");
+            Mes.Add("(She touched your heart, then smiled at you, and then pulled the paw.)");
+            Mes.Add("(She gave you a hug, which your felt, as she smiled while having her eyes closed.)");
+            Mes.Add("(She kneels on the floor and stares at you for a while.)");
+            Mes.Add("(She leaned on your shoulder for a while.)");
+            Mes.Add("(She seems to be thanking you for breaking her haunt.)");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("(After you asked, she shook her head.)");
+            Mes.Add("(She waves the pointing finger left and right.)");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("(After you asked if she had a request, she pulled a list of things she wants you to do.)");
+            Mes.Add("(She seems to be happy after you asked that, then gave you a list of things she needs.)");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("(After you reported the progress, she looked very joyful.)");
+            Mes.Add("(Upon receiving what she asked, she gave you a thankful hug.)");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            if (Main.bloodMoon)
+            {
+                Mes.Add("(She stares at you with a menacing look, doesn't looks happy for not having a house to stay.)");
+            }
+            else
+            {
+                Mes.Add("(She sketches a house in the air using her fingers, she seems to want a place to live.)");
+                Mes.Add("(She seems to be wanting a place to stay.)");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("(She seems very happy because of the surprise party that was prepared for her.)");
+            Mes.Add("(She seems eager to return to the party.)");
+            if (!PlayerMod.HasGuardianBeenGifted(player, guardian.ID, guardian.ModID))
+            {
+                Mes.Add("(She seems to be expecting you to give her something, but is trying to pretend not.)");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            if (IsPlayer && RevivePlayer.whoAmI == RevivePlayer.whoAmI)
+            {
+                Mes.Add("(Tear drops are falling on your body.)");
+                Mes.Add("(She's trying to ease your pain.)");
+                Mes.Add("(She's trying to make you comfortable on the floor.)");
+            }
+            else
+            {
+                Mes.Add("(She's trying to soothe the one she's tending.)");
+                Mes.Add("(She's trying to reduce the pain.)");
+                Mes.Add("(She seems to be tending the wounds.)");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "(You feel a friendly presence tending you.)";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    return "(She woke up, then yawned, and is looking at you with a sleepy face.)";
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    return "(She jumped out of the bed, and is now looking at you excited, wanting to know if you did what she asked for.)";
+                case MessageIDs.BuddySelected:
+                    return "(She doesn't knows how to react for you to choosing her as buddy, she looks happy for the choice.)";
+            }
+            return base.GetSpecialMessage(MessageID);
         }
 
         public override void Attributes(TerraGuardian g)
@@ -128,7 +342,8 @@ namespace giantsummon.Creatures
             foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
             {
                 if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
-                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
+                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
+                    gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
                 {
                     gdd.color = GhostfyColor(gdd.color, KoAlpha, ColorMod);
                 }
@@ -136,7 +351,8 @@ namespace giantsummon.Creatures
             foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
             {
                 if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
-                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
+                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
+                    gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
                 {
                     gdd.color = GhostfyColor(gdd.color, KoAlpha, ColorMod);
                 }
@@ -206,7 +422,18 @@ namespace giantsummon.Creatures
                 }
                 else
                 {
-                    if (KnockoutAlpha[guardian.WhoAmID] < 1)
+                    bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && Main.tile[(int)(guardian.CenterPosition.X) / 16, (int)(guardian.CenterPosition.Y / 16)].wall == 0;
+                    if (ReduceOpacity)
+                    {
+                        const float MinOpacity = 0.2f;
+                        if (KnockoutAlpha[guardian.WhoAmID] > MinOpacity)
+                        {
+                            KnockoutAlpha[guardian.WhoAmID] -= 0.005f;
+                            if (KnockoutAlpha[guardian.WhoAmID] < MinOpacity)
+                                KnockoutAlpha[guardian.WhoAmID] = MinOpacity;
+                        }
+                    }
+                    else if (KnockoutAlpha[guardian.WhoAmID] < 1)
                     {
                         KnockoutAlpha[guardian.WhoAmID] += 0.005f;
                         if (KnockoutAlpha[guardian.WhoAmID] > 1)

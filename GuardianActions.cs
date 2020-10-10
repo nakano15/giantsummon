@@ -231,11 +231,20 @@ namespace giantsummon
             Guardian.DoAction.ID = (int)ActionIDs.UseSkillResetPotion;
             Guardian.DoAction.InUse = true;
         }
+
+        public static void RestCommand(TerraGuardian Guardian, byte RestTime)
+        {
+            if (Guardian.OwnerPos == -1) return;
+            Guardian.DoAction = new GuardianActions();
+            Guardian.DoAction.ID = (int)ActionIDs.GoSleep;
+            Guardian.DoAction.InUse = true;
+            Guardian.DoAction.SetIntegerValue(0, RestTime);
+        }
         
         public virtual void Update(TerraGuardian guardian)
         {
             if (!InUse) return;
-            if (guardian.Downed || guardian.KnockedOut || guardian.KnockedOutCold)
+            if (guardian.Downed || guardian.KnockedOut)
             {
                 InUse = false;
                 return;
@@ -249,6 +258,175 @@ namespace giantsummon
             {
                 switch ((ActionIDs)ID)
                 {
+                    case ActionIDs.GoSleep:
+                        {
+                            IgnoreCombat = true;
+                            if (guardian.Downed || guardian.KnockedOut)
+                            {
+                                MainMod.ScreenColorAlpha = 0;
+                                InUse = false;
+                                return;
+                            }
+                            bool SetPlayerToGuardianBed = false;
+                            const bool UseBedSharing = false;
+                            switch (Step)
+                            {
+                                case 0:
+                                    {
+                                        if (UseBedSharing && guardian.Base.Size >= GuardianBase.GuardianSize.Large)
+                                        {
+                                            if (guardian.AttemptToGrabPlayer())
+                                            {
+                                                ChangeStep();
+                                            }
+                                            guardian.WalkMode = true;
+                                        }
+                                        else
+                                        {
+                                            ChangeStep();
+                                        }
+                                    }
+                                    break;
+
+                                case 1:
+                                    {
+                                        if (Time == 0)
+                                        {
+                                            if (guardian.furniturex > -1)
+                                            {
+                                                guardian.LeaveFurniture(false);
+                                            }
+                                            guardian.TryFindingNearbyBed();
+                                        }
+                                        if (guardian.furniturex == -1 || guardian.UsingFurniture)
+                                            ChangeStep();
+                                        if (guardian.furniturex > -1)
+                                            guardian.WalkMode = true;
+                                    }
+                                    break;
+
+                                case 2:
+                                    {
+                                        MainMod.ScreenColor.R = MainMod.ScreenColor.G = MainMod.ScreenColor.B = 0;
+                                        MainMod.ScreenColorAlpha = (float)Time / (5 * 60);
+                                        if (MainMod.ScreenColorAlpha > 1)
+                                            MainMod.ScreenColorAlpha = 1f;
+                                        if (UseBedSharing && guardian.IsUsingBed && guardian.GrabbingPlayer)
+                                        {
+                                            SetPlayerToGuardianBed = true;
+                                        }
+                                        if (Time >= 5 * 60)
+                                        {
+                                            //Do time change
+                                            if (guardian.OwnerPos > -1)
+                                            {
+                                                Main.player[guardian.OwnerPos].position.X = guardian.Position.X - Main.player[guardian.OwnerPos].width * 0.5f;
+                                                Main.player[guardian.OwnerPos].position.Y = guardian.Position.Y - Main.player[guardian.OwnerPos].height;
+                                                Main.player[guardian.OwnerPos].velocity = Vector2.Zero;
+                                                int RestValue = 4;
+                                                switch (GetIntegerValue(0))
+                                                {
+                                                    case 0:
+                                                        RestValue = 4;
+                                                        break;
+                                                    case 1:
+                                                        RestValue = 8;
+                                                        break;
+                                                    case 2: //UntilDawn
+                                                        RestValue = 0;
+                                                        if (Main.dayTime)
+                                                        {
+                                                            RestValue += (int)(24 * 3600 - Main.time) / 3600 + 1;
+                                                        }
+                                                        else
+                                                        {
+                                                            RestValue += (int)(9 * 3600 - Main.time) / 3600 + 1;
+                                                        }
+                                                        break;
+                                                    case 3: //UntilNight
+                                                        RestValue = 0;
+                                                        if (Main.dayTime)
+                                                        {
+                                                            RestValue += (int)(15 * 3600 - Main.time) / 3600 + 1;
+                                                        }
+                                                        else
+                                                        {
+                                                            RestValue += (int)(24 * 3600 - Main.time) / 3600 + 1;
+                                                        }
+                                                        break;
+                                                }
+                                                WorldMod.SkipTime(RestValue);
+                                                foreach (TerraGuardian g in Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                                                {
+                                                    float RestBonus = 1.5f;
+                                                    if (g.Base.IsNocturnal)
+                                                    {
+                                                        if (!Main.dayTime)
+                                                            RestBonus = 2f;
+                                                    }
+                                                    else
+                                                    {
+                                                        if (Main.dayTime)
+                                                            RestBonus = 2f;
+                                                    }
+                                                    RestBonus *= RestValue;
+                                                    if ((int)g.Data.Fatigue - RestBonus < 0)
+                                                        g.Data.Fatigue = 0;
+                                                    else
+                                                        g.Data.Fatigue -= (sbyte)RestBonus;
+                                                    float InjuryValue = RestBonus * 0.5f;
+                                                    if ((int)g.Data.Injury - RestBonus < 0)
+                                                        g.Data.Injury = 0;
+                                                    else
+                                                        g.Data.Injury -= (sbyte)InjuryValue;
+                                                }
+                                            }
+                                            guardian.GrabbingPlayer = false;
+                                            ChangeStep();
+                                        }
+                                    }
+                                    break;
+
+                                case 3:
+                                    {
+                                        Player player = Main.player[guardian.OwnerPos];
+                                        if (Time >= 5 * 60)
+                                        {
+                                            InUse = false;
+                                            MainMod.ScreenColorAlpha = 0;
+                                            if (guardian.IsUsingBed)
+                                            {
+                                                player.fullRotation = 0;
+                                                guardian.LeaveFurniture();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MainMod.ScreenColor.R = MainMod.ScreenColor.G = MainMod.ScreenColor.B = 0;
+                                            MainMod.ScreenColorAlpha = 1f - (float)Time / (5 * 60);
+                                            if (guardian.IsUsingBed)
+                                            {
+                                                SetPlayerToGuardianBed = true;
+                                            }
+                                        }
+                                    }
+                                    break;
+                            }
+                            if (UseBedSharing && SetPlayerToGuardianBed)
+                            {
+                                Player player = Main.player[guardian.OwnerPos];
+                                player.direction = guardian.Direction;
+                                player.fullRotation = -1.570796326794897f * player.direction;
+                                player.position.X = guardian.Position.X - player.width * 0.5f - guardian.Base.SleepingOffset.X;
+                                player.position.Y = guardian.Position.Y - player.height - guardian.Base.SleepingOffset.Y;
+                                player.velocity = Vector2.Zero;
+                                player.fullRotationOrigin.X = player.width * 0.5f;
+                                player.fullRotationOrigin.Y = player.height * 0.5f;
+                                guardian.GrabbingPlayer = false;
+                            }
+                        }
+                        break;
+
                     case ActionIDs.ReviveSomeone:
                         {
                             if (guardian.furniturex > -1)
@@ -448,7 +626,7 @@ namespace giantsummon
                         break;
                     case ActionIDs.TeleportWithPlayerToTown:
                         {
-                            bool CanPickupPlayer = guardian.Base.MountUnlockLevel != 255 && !guardian.Base.ReverseMount && !guardian.PlayerMounted && !guardian.SittingOnPlayerMount;
+                            bool CanPickupPlayer = guardian.Base.MountUnlockLevel != 255 && guardian.Base.Size >= GuardianBase.GuardianSize.Large && !guardian.PlayerMounted && !guardian.SittingOnPlayerMount;
                             AvoidItemUsage = true;
                             bool HoldingPlayer = false;
                             FocusCameraOnGuardian = false;
@@ -656,7 +834,7 @@ namespace giantsummon
                             {
                                 guardian.ToggleMount(false, false);
                             }
-                            if (guardian.Base.ReverseMount || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
+                            if (guardian.Base.Size < GuardianBase.GuardianSize.Large || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
                             {
                                 InUse = false;
                             }
@@ -744,7 +922,7 @@ namespace giantsummon
                             else //Pickup Player animation.
                             {
                                 //guardian.PlayerMounted = true;
-                                if (guardian.Base.ReverseMount || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
+                                if (guardian.Base.Size < GuardianBase.GuardianSize.Large || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
                                 {
                                     guardian.ToggleMount(false, false);
                                     InUse = false;
@@ -1806,10 +1984,10 @@ namespace giantsummon
                             case 1:
                                 if (StepStart)
                                     guardian.DisplayEmotion(TerraGuardian.Emotions.Alarmed);
-                                if (Time % 5 == 0)
+                                if (Time % 20 == 0)
                                 {
                                     //Spawn item every 5 ticks;
-                                    int ItemID = Terraria.ID.ItemID.CopperCoin, Stack = Main.rand.Next(40, 81);
+                                    int ItemID = Terraria.ID.ItemID.CopperCoin, Stack = Main.rand.Next(10, 26);
                                     if (Main.rand.Next(100) == 0)
                                     {
                                         ItemID = Terraria.ID.ItemID.PlatinumCoin;
@@ -2304,7 +2482,8 @@ namespace giantsummon
             MountPutPlayerDown,
             TeleportWithPlayerToTown,
             UseSkillResetPotion,
-            ReviveSomeone
+            ReviveSomeone,
+            GoSleep
         }
     }
 }

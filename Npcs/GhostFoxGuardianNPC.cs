@@ -9,9 +9,12 @@ namespace giantsummon.Npcs
 {
     public class GhostFoxGuardianNPC : GuardianActorNPC
     {
+        public static bool GhostFoxHauntLifted = false;
         public byte PlayerChaseTime = 0;
         private bool PostBossKillDialogue = false;
         private bool RevivingSomeone = false;
+        private bool PassiveAI = false;
+        private float Opacity = 1f;
 
         public GhostFoxGuardianNPC()
             : base(16, "")
@@ -19,8 +22,14 @@ namespace giantsummon.Npcs
 
         }
 
+        public void SetPassive()
+        {
+            PassiveAI = true;
+        }
+
         public void SetPostBossKill(float ImpactDirection)
         {
+            GhostFoxHauntLifted = true;
             PostBossKillDialogue = true;
             npc.velocity.Y = -8f;
             npc.velocity.X = 6f * ImpactDirection;
@@ -185,9 +194,39 @@ namespace giantsummon.Npcs
 
         public override void AI()
         {
+            if (GhostFoxHauntLifted)
+                SetPassive();
             RevivingSomeone = false;
             YOffset = ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
-            if (PostBossKillDialogue)
+            if (Main.dayTime)
+            {
+                if (Opacity > 0)
+                {
+                    Opacity -= 0.005f;
+                    if (Opacity <= 0)
+                    {
+                        npc.active = false;
+                        return;
+                    }
+                }
+            }
+            else if (!Main.eclipse)
+            {
+                if (Opacity < 1)
+                {
+                    Opacity += 0.005f;
+                    if (Opacity > 1)
+                    {
+                        Opacity = 1;
+                        return;
+                    }
+                }
+            }
+            if (PassiveAI)
+            {
+                Idle = true;
+            }
+            else if (PostBossKillDialogue)
             {
                 if (Math.Abs(npc.Center.X - Main.player[npc.target].Center.X) > 48)
                 {
@@ -254,39 +293,63 @@ namespace giantsummon.Npcs
                     rect.Y -= rect.Height;
                     if (player.getRect().Intersects(rect))
                     {
-                        List<int> CurseIDs = new List<int>();
-                        CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.SkullHaunt>());
-                        if (NPC.downedBoss2)
-                            CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.BeeHaunt>());
-                        if (NPC.downedBoss3 || NPC.downedQueenBee || Main.hardMode)
-                            CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.MeatHaunt>());
-                        if (Main.hardMode)
-                            CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.SawHaunt>());
-                        if (NPC.downedPlantBoss)
-                            CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>());
-                        player.AddBuff(CurseIDs[Main.rand.Next(CurseIDs.Count)], 5);
-                        WorldMod.SkipTime(Main.rand.Next(40, 85) * 0.1f);
-                        //player.GetModPlayer<PlayerMod>().EnterDownedState(true);
-                        if (player.statLife == 1)
-                            player.statLife++;
-                        player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" didn't survived the haunt..."), 1, 0, false, true, false);
-                        /*for (int n = 0; n < 200; n++)
+                        if (PlayerMod.PlayerHasGuardian(player, GuardianBase.Fluffles))
                         {
-                            if (Main.npc[n].active && !Main.npc[n].friendly)
+                            npc.active = false;
+                            Main.NewText(PlayerMod.GetPlayerGuardian(player, GuardianBase.Fluffles).Name + " fades away.");
+                            return;
+                        }
+                        else
+                        {
+                            List<int> CurseIDs = new List<int>();
+                            CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.SkullHaunt>());
+                            if (NPC.downedBoss2)
+                                CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.BeeHaunt>());
+                            if (NPC.downedBoss3 || NPC.downedQueenBee || Main.hardMode)
+                                CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.MeatHaunt>());
+                            if (Main.hardMode)
+                                CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.SawHaunt>());
+                            if (NPC.downedPlantBoss)
+                                CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>());
+                            player.AddBuff(CurseIDs[Main.rand.Next(CurseIDs.Count)], 5);
+                            WorldMod.SkipTime(Main.rand.Next(40, 85) * 0.1f);
+                            //player.GetModPlayer<PlayerMod>().EnterDownedState(true);
+                            if (player.statLife == 1)
+                                player.statLife++;
+                            player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" didn't survived the haunt..."), 1, 0, false, true, false);
+                            /*for (int n = 0; n < 200; n++)
                             {
-                                Main.npc[n].active = false;
-                            }
-                        }*/
-                        WorldGen.SaveAndQuit();
+                                if (Main.npc[n].active && !Main.npc[n].friendly)
+                                {
+                                    Main.npc[n].active = false;
+                                }
+                            }*/
+                            WorldGen.SaveAndQuit();
+                        }
                     }
                 }
             }
             base.AI();
         }
 
+        public static bool CanGhostFoxSpawn(Player player)
+        {
+            return !player.GetModPlayer<PlayerMod>().HasGhostFoxHauntDebuff && ((PlayerMod.GetPlayerDefenseCount(player) >= 10 && Main.halloween) || NPC.downedHalloweenTree);
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (!Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0 && !spawnInfo.playerSafe && !spawnInfo.playerInTown && 
+                CanGhostFoxSpawn(spawnInfo.player) && !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type) && Main.rand.NextDouble() < 0.02f)
+            {
+                return 1f;
+            }
+            return 0f;
+        }
+
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Microsoft.Xna.Framework.Color drawColor)
         {
-            drawColor = Creatures.FlufflesBase.GhostfyColor(drawColor, 0.5f, Creatures.FlufflesBase.GetColorMod);
+            drawColor = Creatures.FlufflesBase.GhostfyColor(drawColor, 0.5f * Opacity, Creatures.FlufflesBase.GetColorMod);
             return base.PreDraw(spriteBatch, drawColor);
         }
     }

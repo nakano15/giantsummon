@@ -98,7 +98,11 @@ namespace giantsummon
             //GetCompanionDialogue
             GetDefaultOptions(tg);
             string Message = "";
-            if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
+            if (tg.Base.InvalidGuardian)
+            {
+                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to help you.)";
+            }
+            else if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
             {
                 modPlayer.AddNewGuardian(tg.ID, tg.ModID);
                 if (tg.ID == WorldMod.SpawnGuardian.Key && tg.ModID == WorldMod.SpawnGuardian.Value)
@@ -411,30 +415,37 @@ namespace giantsummon
             }
             else
             {
-                string OptionText = "Check Request";
-                if (tg.request.RequestCompleted || tg.request.Failed)
+                if (!tg.Base.InvalidGuardian)
                 {
-                    OptionText = "Report Request";
-                }
-                else if (tg.request.requestState == RequestData.RequestState.HasRequestReady)
-                {
-                    if (tg.request.IsTalkQuest)
+                    string OptionText = "Check Request";
+                    if (tg.request.RequestCompleted || tg.request.Failed)
                     {
-                        OptionText = "You wanted to talk to me?";
+                        OptionText = "Report Request";
                     }
-                    else
+                    else if (tg.request.requestState == RequestData.RequestState.HasRequestReady)
                     {
-                        OptionText = "Need Something?";
+                        if (tg.request.IsTalkQuest)
+                        {
+                            OptionText = "You wanted to talk to me?";
+                        }
+                        else
+                        {
+                            OptionText = "Need Something?";
+                        }
                     }
-                }
-                AddOption(OptionText, CheckRequestButtonAction);
-                if (GuardianShopHandler.HasShop(tg.MyID))
-                {
-                    AddOption("What do you have for sale?", OpenShopButtonAction);
-                }
-                if (MayGiveBirthdayGift(tg))
-                {
-                    AddOption("I have a gift for you", GiveGiftButtonAction);
+                    AddOption(OptionText, CheckRequestButtonAction);
+                    if (GuardianShopHandler.HasShop(tg.MyID))
+                    {
+                        AddOption("What do you have for sale?", OpenShopButtonAction);
+                    }
+                    if (MayGiveBirthdayGift(tg))
+                    {
+                        AddOption("I have a gift for you", GiveGiftButtonAction);
+                    }
+                    if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                    {
+                        AddOption("Let's get some rest.", RestButtonAction);
+                    }
                 }
                 if(tg.OwnerPos == -1)
                     AddOption("Let me see your inventory.", OpenInventoryManagementButtonAction);
@@ -538,6 +549,54 @@ namespace giantsummon
                     }
                     break;
             }
+        }
+
+        public static void RestButtonAction(TerraGuardian tg)
+        {
+            Options.Clear();
+            SetDialogue("(How long should we rest?)");
+            AddOption("4 Hours", delegate(TerraGuardian tg2)
+            {
+                if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                {
+                    GuardianActions.RestCommand(tg2, 0);
+                    CloseDialogueButtonAction(tg2);
+                }
+            });
+            AddOption("8 Hours", delegate(TerraGuardian tg2)
+            {
+                if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                {
+                    GuardianActions.RestCommand(tg2, 1);
+                    CloseDialogueButtonAction(tg2);
+                }
+            });
+            if (!Main.dayTime)
+            {
+                AddOption("Until Dawn", delegate(TerraGuardian tg2)
+                {
+                    if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                    {
+                        GuardianActions.RestCommand(tg2, 2);
+                        CloseDialogueButtonAction(tg2);
+                    }
+                });
+            }
+            else
+            {
+                AddOption("Until Night", delegate(TerraGuardian tg2)
+                {
+                    if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                    {
+                        GuardianActions.RestCommand(tg2, 3);
+                        CloseDialogueButtonAction(tg2);
+                    }
+                });
+            }
+            AddOption("Nevermind", delegate(TerraGuardian tg2)
+            {
+                GetDefaultOptions(tg2);
+            });
         }
 
         public static void AcceptRequestButtonAction(TerraGuardian tg)

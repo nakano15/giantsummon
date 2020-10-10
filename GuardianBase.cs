@@ -127,7 +127,8 @@ namespace giantsummon
             Vladimir = 11,
             Malisha = 12,
             Michelle = 13,
-            Wrath = 14;
+            Wrath = 14,
+            Fluffles = 16;
 
         public void SetTerraGuardian()
         {

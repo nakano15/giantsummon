@@ -108,31 +108,57 @@ namespace giantsummon.Npcs
                         case 1:
                             if (Trigger)
                             {
-                                BrutusChat = "*You have the audacity of showing up again.*";
+                                if (PlayerHasBrutusSummoned)
+                                {
+                                    BrutusChat = "*You have the audacity of showing up again.*";
+                                }
+                                else
+                                {
+                                    SayMessage("*Ah, you're not with him... Good.*");
+                                }
                             }
                             break;
                         case 2:
                             if (Trigger)
                             {
-                                SayMessage("*Yeah right, like as If I'm happy for seeing you again.*");
+                                if (PlayerHasBrutusSummoned)
+                                {
+                                    SayMessage("*Yeah right, like as If I'm happy for seeing you again.*");
+                                }
+                                else
+                                {
+                                    SayMessage("*Since you're here too, I don't think you'll mind if I open my business here too.*");
+                                }
                             }
                             break;
                         case 3:
                             if (Trigger)
                             {
-                                SayMessage("*Terrarian, you know the drill. Need me for anything, I will be here.*");
+                                if (PlayerHasBrutusSummoned)
+                                {
+                                    SayMessage("*Terrarian, you know the drill. Need me for anything, I will be here.*");
+                                }
+                                else
+                                {
+                                    SayMessage("*Or if you need my help for anything, you know where to find me.*");
+                                }
                             }
                             break;
                         case 4:
                             if (Trigger)
                             {
-                                BrutusChat = "*Ugh...*";
+                                if(PlayerHasBrutusSummoned)
+                                    BrutusChat = "*Ugh...*";
                                 NpcMod.AddGuardianMet(GuardianID, GuardianModID);
                                 WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
                                 //npc.Transform(ModContent.NPCType<GuardianNPC.List.DogGuardian>());
                             }
                             break;
                     }
+                }
+                else if (!PlayerHasBrutusSummoned)
+                {
+                    Idle = true;
                 }
                 else
                 {
@@ -409,12 +435,33 @@ namespace giantsummon.Npcs
             return 0;
         }
 
+        public int RecruitGoldFee()
+        {
+            if (NPC.downedMoonlord)
+                return 400;
+            if (NPC.downedGolemBoss)
+                return 210;
+            if (NPC.downedPlantBoss)
+                return 130;
+            if (NPC.downedMechBossAny)
+                return 60;
+            if (Main.hardMode)
+                return 35;
+            if (NPC.downedBoss3)
+                return 20;
+            return 10;
+        }
+        
         public override string GetChat()
         {
             bool PlayerHasDomino = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Domino);
             if (PlayerHasDomino)
             {
                 return "*Hey there again. Mind If I extend my shop to this world too?*";
+            }
+            else if (PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
+            {
+                return "*I don't really feel like moving to this world, but you can persuade me into staying.*";
             }
             else if (DominoDismissed)
             {
@@ -442,6 +489,10 @@ namespace giantsummon.Npcs
             {
                 button = "Sure.";
             }
+            else if (PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
+            {
+                button = "Pay " + RecruitGoldFee() + " Gold Coins.";
+            }
             else if (DialogueStep == 10 || (DominoDismissed && !PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID)))
             {
                 button = "Feel free to.";
@@ -452,7 +503,23 @@ namespace giantsummon.Npcs
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
             bool PlayerHasDomino = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Domino);
-            if (PlayerHasDomino || (DominoDismissed && !PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID)))
+            if (!PlayerHasDomino && PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
+            {
+                if (Main.player[Main.myPlayer].SellItem(RecruitGoldFee() * 10000, 1))
+                {
+                    Main.npcChatText = "*It was good to do business with you.*";
+                    PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+                    if (!PlayerHasDomino) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
+                    NpcMod.AddGuardianMet(GuardianID, GuardianModID);
+                    WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                }
+                else
+                {
+                    Main.npcChatText = "*You seems to be lacking the golds. I'll come back when you get more.*";
+                }
+                return;
+            }
+            else if (PlayerHasDomino || (DominoDismissed && !PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID)))
             {
                 Main.npcChatText = "*Thanks mate.*";
                 PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);

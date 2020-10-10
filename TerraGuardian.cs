@@ -3398,7 +3398,8 @@ namespace giantsummon
             UpdateBuffEffects();
             MeleeSpeed -= 0.05f * HeavyArmorPieces;
             MoveSpeed -= 0.05f * HeavyArmorPieces;
-            if (Compatibility.NExperienceCompatibility.IsModActive) Compatibility.NExperienceCompatibility.ScaleStatus(this);
+            if (Compatibility.NExperienceCompatibility.IsModActive)
+                Compatibility.NExperienceCompatibility.ScaleStatus(this);
             if (MainMod.UseSkillsSystem)
             {
                 for (int s = 0; s < Data.SkillList.Count; s++)
@@ -8514,9 +8515,9 @@ namespace giantsummon
                 DistanceMod *= 1.5f;
             if (Scale > 1)
                 DistanceMod *= Scale;
-            int SpotRangeX = 480;
-            int SpotRangeY = 420;
-            float NearestDistance = 480f;
+            int SpotRangeX = 580;
+            int SpotRangeY = 520;
+            float NearestDistance = float.MaxValue;
             if (HurtPanic)
             {
                 NearestDistance *= 2;
@@ -14816,6 +14817,15 @@ namespace giantsummon
 
         public void DrawHead(Vector2 Position, float Scale = 1f, float XOffset = 0.5f, float YOffset = 0.5f)
         {
+            if (Base.InvalidGuardian)
+            {
+                Position.X -= MainMod.LosangleOfUnnown.Width * XOffset;
+                Position.Y -= MainMod.LosangleOfUnnown.Height * XOffset;
+                GuardianDrawData losangle = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, MainMod.LosangleOfUnnown, Position,
+                 null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None);
+                losangle.Draw(Main.spriteBatch);
+                return;
+            }
             if (Base.IsTerrarian)
             {
                 Position.Y -= 16f;
@@ -15418,8 +15428,8 @@ namespace giantsummon
             if (Ducking || BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame
                 || BodyAnimationFrame == Base.ReviveFrame || BodyAnimationFrame == Base.PetrifiedFrame || WingType < 1 || !Main.wingsLoaded[WingType]) return;
             Vector2 WingCenter = Vector2.Zero;//CenterPosition - Main.screenPosition;
-            WingCenter.X = Position.X - Main.screenPosition.X;
-            WingCenter.Y = Position.Y - Main.screenPosition.Y;
+            WingCenter.X = PositionWithOffset.X - Main.screenPosition.X;
+            WingCenter.Y = PositionWithOffset.Y - Main.screenPosition.Y;
             int WingFramePosX, WingFramePosY;
             Base.WingPosition.GetPositionFromFrame(BodyAnimationFrame, out WingFramePosX, out WingFramePosY);
             if (WingFramePosX <= -1000 || WingFramePosY <= -1000)
