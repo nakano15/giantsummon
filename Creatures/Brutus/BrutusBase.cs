@@ -542,6 +542,20 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("You're saying that [gn:"+Wrath +"]'s punches hurts? Funny, I didn't felt pain whenever he punched me.");
             }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("*A ghost now? Your life seems full of weird frienship.*");
+                Mes.Add("*I was alerted at first by [gn:" + Fluffles + "], until I noticed that she doesn't seems like a bad ghost... Err... Person.*");
+                Mes.Add("*I kind of would like seeing [gn:"+Fluffles+"]... Float... In front of me.*");
+                if (NpcMod.HasGuardianNPC(Sardine) && NpcMod.HasGuardianNPC(Blue))
+                {
+                    if (NpcMod.HasGuardianNPC(Zacks))
+                    {
+                        Mes.Add("*Sometimes I have to stop [gn:" + Blue + "] and their friends game on [gn:" + Sardine + "] because things goes way too far.*");
+                    }
+                    Mes.Add("*It seems like [gn:" + Sardine + "] is in a even bigger problem now that [gn:"+Fluffles+"] joined [gn:"+Blue+"]'s game.*");
+                }
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");

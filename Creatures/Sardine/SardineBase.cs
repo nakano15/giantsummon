@@ -447,6 +447,10 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("[gn:7] keeps asking me if there is something happening between me and [gn:8]. No matter how many times I say no, she still remains furious.");
                 }
+                if (NpcMod.HasGuardianNPC(Fluffles) && NpcMod.HasGuardianNPC(Blue))
+                {
+                    Mes.Add("I have to tell you something bizarre that happened to me the other day. I managed to run away from [gn:" + Blue + "] and [gn:" + Fluffles + "] game, or so I thought, and managed to return home. When [gn:" + Bree + "] looked at me, she saw [gn:" + Fluffles + "] hanging on my shoulder. [gn:"+Bree+"] screamed so loud that scared her off.");
+                }
             }
             if (NpcMod.HasGuardianNPC(Domino))
             {
@@ -467,12 +471,12 @@ namespace giantsummon.Creatures
                 if (HasBlue && HasZacks)
                 {
                     Mes.Add("Great, now I have a narcisistic wolf, a rotting wolf and a hair rising ghost fox trying to have a piece of me. You have some kind of grudge against me?");
-                    Mes.Add("If you see [gn:"+GuardianBase.Blue+"], [gn:"+GuardianBase.Zacks+"] and [gn:"+GuardianBase.Fluffles+"] looking like they are biting something on the floor, that must be me.");
+                    Mes.Add("If you see [gn:"+GuardianBase.Blue+"], [gn:"+GuardianBase.Zacks+"] and [gn:"+GuardianBase.Fluffles+"] looking like they are biting something on the floor, that must be me. Help me if you can?");
                 }
                 else if (HasBlue)
                 {
                     Mes.Add("I really hate having [gn:" + GuardianBase.Fluffles + "] around, because there are now TWO to bite me on [gn:" + GuardianBase.Blue + "]'s stupid game.");
-                    Mes.Add(".");
+                    Mes.Add("How can you escape from something you can't even see? [gn:"+GuardianBase.Fluffles+"] always catches me because she's nearly invisible during day!");
                 }
                 Mes.Add("I have to tell you what happened to me the other day. I was on the toilet doing my things, having a hard time, until [gn:"+GuardianBase.Fluffles+"] surged from nowhere. She spooked me really hard! But at least solved my constipation issue.");
             }

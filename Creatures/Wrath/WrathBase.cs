@@ -150,7 +150,8 @@ namespace giantsummon.Creatures
             Mes.Add("*Grrr! I'm so furious!*");
             Mes.Add("*Whaaaaaaaat?!*");
             Mes.Add("*I'm trying my best to be less angry, but I can't!*");
-            if (player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
+            bool CloudForm = player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID];
+            if (CloudForm)
             {
                 Mes.Add("*Don't you dare doing any joke about my current form. DON'T. YOU. DARE!*");
                 Mes.Add("*I really hate being a cloud, and don't you dare breath near me.*");
@@ -215,6 +216,11 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(GuardianBase.Vladimir))
             {
                 Mes.Add("*The hugs [gn:"+GuardianBase.Vladimir+"] gives doesn't works either! I can't get less angry with them!*");
+            }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
+            {
+                if(CloudForm)
+                    Mes.Add("*I already said that I'm not a ghost. Don't compare me to [gn:"+Fluffles+"].*");
             }
             if (guardian.KnockedOut)
             {

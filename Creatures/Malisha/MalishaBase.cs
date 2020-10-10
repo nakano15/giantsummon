@@ -429,6 +429,11 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*Hmph, [gn:"+Wrath+"] thinks he's safe from me, but my experimenting hunger will eventually reach him. Just he wait.*");
             }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("*Hmph. It looks like I got concorrence. I got to work harder on making my mentor's life not be easy.*");
+                Mes.Add("*I wonder if [gn:"+Fluffles+"] would mind If I tested a vaccuum I've created on her.*");
+            }
 
             if (guardian.IsUsingToilet)
             {

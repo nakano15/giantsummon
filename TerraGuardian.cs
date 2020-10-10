@@ -4457,6 +4457,10 @@ namespace giantsummon
                     TargetOnSight = true;
                 }
             }
+            if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= 1080 || Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) >= 760)
+            {
+                TargetOnSight = false;
+            }
             if (TargetOnSight)
             {
                 SetCooldownValue(GuardianCooldownManager.CooldownType.TargetMemoryCooldown, (TargetType == TargetTypes.Npc && Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[TargetID].type]) ? BossTargetMemoryTime : NormalTargetMemoryTime);
@@ -4484,6 +4488,7 @@ namespace giantsummon
             }
             //AimDirection.X = (int)(TargetPosition.X + TargetVelocity.X + TargetWidth * 0.5f);
             //AimDirection.Y = (int)(TargetPosition.Y + TargetVelocity.Y + TargetHeight * 0.5f);
+            float DistanceDiscount = -32 + 8f * AssistSlot;
             if (AvoidCombat)
             {
                 float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
@@ -4678,7 +4683,7 @@ namespace giantsummon
                                 {
                                     const float AssistDistance = 120f;
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                    if (DistanceX >= TargetWidth + Width + AssistDistance)
+                                    if (DistanceX >= TargetWidth + Width + AssistDistance + DistanceDiscount)
                                         Approach = true;
                                     else if (DistanceX <= TargetWidth + Width + AssistDistance - 24)
                                         Retreat = true;
@@ -4695,7 +4700,7 @@ namespace giantsummon
                                 }
                                 float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                 const float SnipeDistance = 260f;
-                                if (DistanceX >= TargetWidth + Width + SnipeDistance)
+                                if (DistanceX >= TargetWidth + Width + SnipeDistance + DistanceDiscount)
                                     Approach = true;
                                 else if (DistanceX <= TargetWidth + Width + SnipeDistance - 24)
                                     Retreat = true;
@@ -8515,16 +8520,19 @@ namespace giantsummon
                 DistanceMod *= 1.5f;
             if (Scale > 1)
                 DistanceMod *= Scale;
-            int SpotRangeX = 580;
-            int SpotRangeY = 520;
+            int SpotRangeX = 520;
+            int SpotRangeY = 480;
             float NearestDistance = float.MaxValue;
             if (HurtPanic)
             {
-                NearestDistance *= 2;
+                SpotRangeX += (int)(SpotRangeX * 1.5f);
+                SpotRangeY += (int)(SpotRangeY * 1.5f);
                 HurtPanic = false;
             }
             else if (Passive)
+            {
                 NearestDistance = 96f;
+            }
             NearestDistance *= DistanceMod;
             List<byte> NpcsSpotted = new List<byte>(), PlayersSpotted = new List<byte>();
             List<int> GuardiansSpotted = new List<int>();

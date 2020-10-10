@@ -766,6 +766,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*I'm glad that [gn:"+Malisha+"] noticed that I'm not much into chatting while hugging.*");
                 Mes.Add("*How did [gn:"+Malisha+"] knew of my family? I hope she doesn't tell them that I'm here. It could bring trouble to this realm.*");
             }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("*It's a bit hard to help [gn:" + Fluffles + "], because I can't touch her, so I kind of pretend to be hugging her. It seems to be working.*");
+                Mes.Add("*I question myself why [gn:" + Fluffles + "] can't talk. I don't mind the silence when hugging, but It bothers me that she can't speak at all. Can you help her solve that problem?*");
+            }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
             {

@@ -704,7 +704,7 @@ namespace giantsummon
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
         {
             const int TownNpcHeadBannersLayer = 7, EntityHealthBarLayer = 14, NpcSignDialogueLayer = 23, HealthBarLayer = 25, InventoryLayer = 27, HotbatLayer = 30, 
-                MouseTextLayer = 33, PlayerChatLayer = 34, PlayerDeathLayer = 35, MouseOverLayer = 39;
+                MouseTextLayer = 33, PlayerChatLayer = 34, PlayerDeathLayer = 35, CursorLayer = 36, MouseOverLayer = 39;
             try
             {
                 if (!InterfacesSetup)
@@ -735,6 +735,11 @@ namespace giantsummon
                 }
                 layers.Insert(MouseOverLayer, dcs);
                 layers.Insert(MouseOverLayer, dgmo);
+                layers.Insert(CursorLayer, gsi);
+                if (BuddyModeSetupInterface.WindowActive)
+                {
+                    layers.Insert(CursorLayer, bmsi);
+                }
                 if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
                 {
                     if (Main.playerInventory)
@@ -746,11 +751,6 @@ namespace giantsummon
                 layers.Insert(MouseOverLayer, gmi);
                 layers.Insert(InventoryLayer, dgi);
                 layers.Insert(NpcSignDialogueLayer, dgdi);
-                layers.Insert(NpcSignDialogueLayer, gsi);
-                if (BuddyModeSetupInterface.WindowActive)
-                {
-                    layers.Insert(NpcSignDialogueLayer, bmsi);
-                }
                 layers.Insert(HealthBarLayer - 1, hsi);
                 layers.Insert(EntityHealthBarLayer, dgrb);
                 layers.Insert(TownNpcHeadBannersLayer, dghmi);

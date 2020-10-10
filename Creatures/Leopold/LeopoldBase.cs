@@ -288,9 +288,17 @@ namespace giantsummon.Creatures
                 Mes.Add("*A...Aa.... Uh.... Could... You please... Go away... With.. Her...*");
                 Mes.Add("*Ah... Uh... I.... Have to... Go... To the toilet... Yes. The Toilet...*");
             }
-            if (NpcMod.HasGuardianNPC(GuardianBase.Mabel))
+            else if (NpcMod.HasGuardianNPC(GuardianBase.Mabel))
             {
                 Mes.Add("*I get reactionless when [gn:" + GuardianBase.Mabel + "] is nearby.*");
+            }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("*D-d-did y-you l-let a g-g-ghost l-live here? A-are you out of your mind?*");
+                Mes.Add("*Terrarian, one of the things that mostly scares me are ghosts. Why did you let one live here?*");
+                Mes.Add("*I think [gn:" + Fluffles + "] knows I'm scared of her. She always catches me off guard to spook me out.*");
+                Mes.Add("*I look distacted? I'm checking out if [gn:" + Fluffles + "] wont surge from somewhere to give me a scare.*");
+                //Mes.Add("*You need to speak with [gn:" + Fluffles + "]. The other day she made me faint out of a scare, when I woke up she was over me. I've never been so scared in my life!*"); //That would give a bad impression of what happened.
             }
             if (!Main.dayTime && !Main.bloodMoon)
             {

@@ -453,6 +453,15 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*[name] hugs you. It feels a bit weird. He never hugged you without a reason.*");
             }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("*[name] says that sometimes he feels weird when [gn:" + Fluffles + "] stares at him for too long.*");
+                Mes.Add("*[name] is asking you if you know why [gn:" + Fluffles + "] looks at him, with her paw on the chin.*");
+                if (NpcMod.HasGuardianNPC(Alex))
+                {
+                    Mes.Add("*[name] says that playing with [gn:"+Alex+"] and [gn:"+Fluffles+"] has been one of the most enjoyable things he has done, and asks you to join too.*");
+                }
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is telling me to plug my nose.*");

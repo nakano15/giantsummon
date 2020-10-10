@@ -13,7 +13,7 @@ Fixed a number of crashes and issues that could happen due to having companions 
 	Talking to a Losangle of Unknown will no longer crash the game because It didn't had a head.
 	Requests from unloaded companions will no longer be updated, neither will be visible on quest log, nor will count towards the cap of requests you can have active.
 Increased the companions view range:
-	Spot distance increased from 480x420 to 580x520.
+	Spot distance increased from 480x420 to 520x480.
 Rearranged the layering of the mod interfaces.
 You can no longer start dialogue with Alex's recruit npc.
 The Gift you give to your companions will now give you less goods.
@@ -35,3 +35,6 @@ Rest companion dialogue has been unlocked.
 Fixed a bug where the Zombie Guardian will no longer have It's finisher count resetted, when the one It's devouring is knocked away from him.
 Blood will now come out of the Zombie Guardian victim when It bites It.
 The Zombie Guardian will now have 5 times the spawn rate if the player is knocked out.
+Companions will less likelly stack together when they are attacking something too far away from you, on the Assist and Snipe AI styles.
+Companions will now forget npcs that are way too far away from them.
+Companions will now correctly look for targets 50% more far away from their position when they get hurt.

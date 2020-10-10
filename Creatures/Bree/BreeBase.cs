@@ -422,6 +422,26 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("If [gn:" + Malisha + "] cause one more explosion, I will go have some serious talking with her.");
             }
+            if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
+            {
+                Mes.Add("I don't really have something bad to say about [gn:" + GuardianBase.Fluffles + "], maybe It's because she doesn't speaks.");
+                Mes.Add("Sometimes [gn:" + GuardianBase.Fluffles + "] presence makes my hair rise. You find really unusual people to live in your world.");
+                bool HasBlue = NpcMod.HasGuardianNPC(GuardianBase.Blue), HasZacks = NpcMod.HasGuardianNPC(GuardianBase.Zacks), HasSardine = NpcMod.HasGuardianNPC(Sardine);
+                if (HasSardine)
+                {
+                    if (HasBlue && HasZacks)
+                    {
+                        Mes.Add("Tell me, will [gn:" + GuardianBase.Sardine + "] even survive one of [gn:" + GuardianBase.Blue + "]'s bullying? Even I am having bad times trying to get all those guardians out of him.");
+                        Mes.Add("The other day I had to help my husband get some bath, because he came home all slobbered, and with some bite marks on his body.");
+                    }
+                    else if (HasBlue)
+                    {
+                        Mes.Add("After [gn:" + Fluffles + "] arrived, I had to stop [gn:" + Blue + "] and her from chasing [gn:" + Sardine + "] more frequently.");
+                        Mes.Add("Do you have something that repells ghosts? I think [gn:"+Sardine+"] might need something like that.");
+                    }
+                    Mes.Add("There was one time when [gn:"+Sardine+"] returned home, and I got spooked after I saw [gn:"+Fluffles+"] on his shoulder. I screamed so loud that she ran away, and I nearly dirtied the floor too.");
+                }
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("Eek!! Turn the other side!");

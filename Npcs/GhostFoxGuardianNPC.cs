@@ -251,7 +251,8 @@ namespace giantsummon.Npcs
             {
                 Idle = true;
                 npc.TargetClosest(false);
-                if (IsInPerceptionRange(Main.player[npc.target]))
+                Player player = Main.player[npc.target];
+                if (IsInPerceptionRange(player) && Collision.CanHitLine(npc.position, npc.width, npc.height, player.position, player.width, player.height))
                 {
                     PlayerChaseTime = 200;
                 }
@@ -331,16 +332,27 @@ namespace giantsummon.Npcs
             }
             base.AI();
         }
-
+        
         public static bool CanGhostFoxSpawn(Player player)
         {
-            return !player.GetModPlayer<PlayerMod>().HasGhostFoxHauntDebuff && ((PlayerMod.GetPlayerDefenseCount(player) >= 10 && Main.halloween) || NPC.downedHalloweenTree);
+            return !player.GetModPlayer<PlayerMod>().HasGhostFoxHauntDebuff && ((PlayerMod.GetPlayerDefenseCount(player) >= 10 && (Main.halloween || NPC.downedBoss2)) || NPC.downedHalloweenTree);
+        }
+
+        public float GetSpawnRate
+        {
+            get
+            {
+                if (Main.halloween || NPC.downedHalloweenTree)
+                    return 0.02f;
+                return 0.0025f;
+            }
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0 && !spawnInfo.playerSafe && !spawnInfo.playerInTown && 
-                CanGhostFoxSpawn(spawnInfo.player) && !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type) && Main.rand.NextDouble() < 0.02f)
+            if (((spawnInfo.player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0) ||
+                (spawnInfo.player.position.Y >= Main.worldSurface * 16)) && !spawnInfo.playerSafe && !spawnInfo.playerInTown && CanGhostFoxSpawn(spawnInfo.player) && 
+                !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type) && Main.rand.NextDouble() < GetSpawnRate)
             {
                 return 1f;
             }

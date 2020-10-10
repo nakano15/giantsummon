@@ -333,7 +333,7 @@ namespace giantsummon
             GuardianBountyQuest.Reset();
             AlexRecruitScripts.SpawnedTombstone = false;
             LastTime = -1;
-            MainMod.FlufflesHauntOpacity = -1f;
+            MainMod.FlufflesHauntOpacity = -0.5f;
             Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = false;
         }
 

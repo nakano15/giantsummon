@@ -368,6 +368,10 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*I tried helping [gn:"+Wrath+"] getting less angry, until he yelled out loud, that made me leave the room very quickly. He's very scary.*");
             }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("*What's with [gn:"+Fluffles+"]? Sometimes when she looks at me, she looks me from the head to the feet.*");
+            }
             if (guardian.KnockedOut)
             {
                 Mes.Clear();

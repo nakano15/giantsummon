@@ -465,6 +465,15 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] seems to have casted some kind of spell on you, but It didn't seem to work. With a disappointment look, she tells herself that needs to research some more.*");
                 Mes.Add("*[name] seems to be reading some kind of magic book.*");
             }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("*[name] seems to be enjoying having [gn:" + Fluffles + "] around. They seems to be get along very well.*");
+                Mes.Add("*[name] told you that she's sharing some beauty tips with [gn:" + Fluffles + "]. She said that learned something new with that.*");
+                if (NpcMod.HasGuardianNPC(Sardine))
+                {
+                    Mes.Add("*[name] says that always teams up with [gn:"+Fluffles+"] to catch [gn:"+Sardine+"] on Cat and Wolf. [gn:"+Fluffles+"] catches him off guard more easier than her, but she also said that the game got easier too.*");
+                }
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is saying that you're making her embarrassed.*");

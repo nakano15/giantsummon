@@ -487,6 +487,15 @@ namespace giantsummon.Creatures
                 Mes.Add("*Whine~whine* [gn:" + Wrath + "] is a mean guy, I try playing with him, and he's really rude to me.");
                 Mes.Add("I try making [gn:"+Wrath+"] feel better, but he aways yells at me.");
             }
+            if (NpcMod.HasGuardianNPC(Fluffles))
+            {
+                Mes.Add("I don't know why some people are scared of [gn:" + Fluffles + "], she's a good person. I like her.");
+                Mes.Add("I love playing with [gn:" + Fluffles + "]. She always knows my favorite petting spot.");
+                if (NpcMod.HasGuardianNPC(Rococo))
+                {
+                    Mes.Add("Sometimes [gn:"+Rococo+"] and [gn:"+Fluffles+"] plays with me. It's like a dream came true, they could do that more often.");
+                }
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("I'm trying hard to aim at the hole.");
