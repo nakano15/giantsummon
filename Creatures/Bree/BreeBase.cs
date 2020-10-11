@@ -83,7 +83,7 @@ namespace giantsummon.Creatures
             JumpFrame = 9;
             //HeavySwingFrames = new int[] { 10, 11, 12 };
             ItemUseFrames = new int[] { 10, 11, 12, 13 };
-            SittingFrame = 14;
+            SittingFrame = PlayerMountedArmAnimation = 14;
             ChairSittingFrame = 15;
             //DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12, 16, 17, 18, 19 });
             ThroneSittingFrame = 16;
@@ -101,7 +101,7 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(12, 21, 23);
             LeftHandPoints.AddFramePoint2x(13, 19, 26);
 
-            LeftHandPoints.AddFramePoint2x(13, 19, 29);
+            LeftHandPoints.AddFramePoint2x(14, 20 - 6, 23);
 
             //Right Arm
             RightHandPoints.AddFramePoint2x(10, 14, 14);

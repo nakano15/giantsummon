@@ -442,7 +442,7 @@ namespace giantsummon
                     {
                         AddOption("I have a gift for you", GiveGiftButtonAction);
                     }
-                    if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                    if (tg.OwnerPos == Main.myPlayer && PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
                         AddOption("Let's get some rest.", RestButtonAction);
                     }

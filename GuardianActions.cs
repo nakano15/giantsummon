@@ -834,7 +834,7 @@ namespace giantsummon
                             {
                                 guardian.ToggleMount(false, false);
                             }
-                            if (guardian.Base.Size < GuardianBase.GuardianSize.Large || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
+                            if (guardian.Base.ReverseMount || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
                             {
                                 InUse = false;
                             }
@@ -922,7 +922,7 @@ namespace giantsummon
                             else //Pickup Player animation.
                             {
                                 //guardian.PlayerMounted = true;
-                                if (guardian.Base.Size < GuardianBase.GuardianSize.Large || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
+                                if (guardian.Base.ReverseMount || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
                                 {
                                     guardian.ToggleMount(false, false);
                                     InUse = false;
