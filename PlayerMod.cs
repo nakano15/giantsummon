@@ -1857,6 +1857,16 @@ namespace giantsummon
                 }
             }
             bool AdjascentTileChange = false;
+            bool SomeoneQuickMounted = false;
+            bool MountKeyPressed = false;
+            if (player.controlMount)
+            {
+                if (!LastMountButtonPressed)
+                {
+                    MountKeyPressed = true;
+                }
+            }
+            LastMountButtonPressed = player.controlMount;
             foreach (TerraGuardian guardian in GetAllGuardianFollowers)
             {
                 if (!guardian.Active)
@@ -1868,7 +1878,8 @@ namespace giantsummon
                 }
                 if (player.controlJump && player.releaseJump)
                     guardian.TryToDisableAfkPunishment();
-                if (player.controlMount && !guardian.SittingOnPlayerMount && !LastMountButtonPressed && !ControllingGuardian && guardian.HasFlag(GuardianFlags.AllowMount) && guardian.OverrideQuickMountToMountGuardianInstead)
+                bool MountbuttonPressed = false;
+                if (!SomeoneQuickMounted && MountKeyPressed && !guardian.SittingOnPlayerMount && !ControllingGuardian && guardian.HasFlag(GuardianFlags.AllowMount) && guardian.OverrideQuickMountToMountGuardianInstead)
                 {
                     bool LastMountState = guardian.PlayerMounted;
                     if (!guardian.PlayerMounted && !MountedOnGuardian && !GuardianMountingOnPlayer)
@@ -1876,17 +1887,14 @@ namespace giantsummon
                         if (player.getRect().Intersects(guardian.HitBox))//Guardian.ToggleMount())
                         {
                             GuardianActions.GuardianPutPlayerOnShoulderCommand(guardian);
+                            SomeoneQuickMounted = true;
                         }
                     }
                     else if (guardian.PlayerMounted)
                     {
                         GuardianActions.GuardianPutPlayerOnTheFloorCommand(guardian);
+                        SomeoneQuickMounted = true;
                     }
-                    if (LastMountState != guardian.PlayerMounted)
-                    {
-                        player.controlMount = false;
-                    }
-                    LastMountButtonPressed = true;
                 }
                 if (MountedOnGuardian)
                 {
@@ -1902,6 +1910,10 @@ namespace giantsummon
                     player.controlRight = guardian.LastMoveRight;
                     player.controlJump = guardian.LastJump;
                 }
+            }
+            if (SomeoneQuickMounted)
+            {
+                player.controlMount = false;
             }
             if (ResetPlayerControls)
                 player.controlLeft = player.controlRight = player.controlUp = player.controlDown = player.controlJump = player.controlUseItem = player.controlHook = player.controlMount = false;

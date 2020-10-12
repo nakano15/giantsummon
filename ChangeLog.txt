@@ -1,3 +1,8 @@
 ﻿You can now only ask companions following you if they want to rest.
-Rococo got a sprite update.
+Rococo, Blue and Sardine got a sprite update.
+	The sprite updates may have also changed some of their animations too, either slightly or severelly.
 Large companions that mounts on your character will no longer do the animation of putting your character on their shoulder, or putting them on the floor.
+You can now be hugged by Vladimir when he's following you.
+Terraria's offset will no longer mess up your position when being hugged by Vladimir, while he's at player size.
+Fixed a bug where quick mount wouldn't work due to key checking issues.
+Reduced the rate which companions that doesn't live in your world will come visit.

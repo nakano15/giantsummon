@@ -96,28 +96,28 @@ namespace giantsummon.Creatures
             BodyFrontFrameSwap.Add(14, 0);
 
             //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 10, 14);
-            LeftHandPoints.AddFramePoint2x(11, 17, 17);
-            LeftHandPoints.AddFramePoint2x(12, 21, 23);
-            LeftHandPoints.AddFramePoint2x(13, 19, 26);
+            LeftHandPoints.AddFramePoint2x(10, 10, 13);
+            LeftHandPoints.AddFramePoint2x(11, 19, 16);
+            LeftHandPoints.AddFramePoint2x(12, 23, 22);
+            LeftHandPoints.AddFramePoint2x(13, 21, 28);
 
-            LeftHandPoints.AddFramePoint2x(14, 20 - 6, 23);
+            LeftHandPoints.AddFramePoint2x(14, 21 - 6, 23);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 14, 14);
-            RightHandPoints.AddFramePoint2x(11, 21, 17);
-            RightHandPoints.AddFramePoint2x(12, 25, 23);
-            RightHandPoints.AddFramePoint2x(13, 23, 26);
+            RightHandPoints.AddFramePoint2x(10, 13, 13);
+            RightHandPoints.AddFramePoint2x(11, 22, 16);
+            RightHandPoints.AddFramePoint2x(12, 26, 22);
+            RightHandPoints.AddFramePoint2x(13, 24, 28);
 
             //Mount Sitting Point
-            SittingPoint = new Point(15 * 2, 29 * 2);
+            SittingPoint = new Point(16 * 2, 29 * 2);
             MountShoulderPoints.DefaultCoordinate = SittingPoint;
 
             //Headgear Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(16, 20);
-            HeadVanityPosition.AddFramePoint2x(16, 14, 13);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(17, 20);
+            HeadVanityPosition.AddFramePoint2x(16, 15, 13);
 
-            HeadVanityPosition.AddFramePoint2x(18, 16, 22);
+            HeadVanityPosition.AddFramePoint2x(18, 17, 22);
 
             RequestList();
             LoadSkinList();

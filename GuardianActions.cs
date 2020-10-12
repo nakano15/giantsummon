@@ -206,7 +206,7 @@ namespace giantsummon
 
         public static void GuardianPutPlayerOnTheFloorCommand(TerraGuardian Guardian)
         {
-            if (Guardian.OwnerPos == -1)
+            if (Guardian.OwnerPos == -1 || Guardian.DoAction.InUse)
                 return;
             Guardian.DoAction = new GuardianActions();
             Guardian.DoAction.ID = (int)ActionIDs.MountPutPlayerDown;

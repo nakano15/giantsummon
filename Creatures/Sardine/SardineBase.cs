@@ -83,11 +83,11 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(12, 31, 26);
 
             LeftHandPoints.AddFramePoint2x(13, 12, 9);
-            LeftHandPoints.AddFramePoint2x(14, 23, 12);
-            LeftHandPoints.AddFramePoint2x(15, 24, 18);
+            LeftHandPoints.AddFramePoint2x(14, 22, 12);
+            LeftHandPoints.AddFramePoint2x(15, 25, 18);
             LeftHandPoints.AddFramePoint2x(16, 21, 23);
 
-            LeftHandPoints.AddFramePoint2x(17, 21 - 6, 18);
+            LeftHandPoints.AddFramePoint2x(17, 22 - 6, 18);
 
             LeftHandPoints.AddFramePoint2x(22, 21, 23);
 
@@ -97,22 +97,22 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(12, 33, 26);
 
             RightHandPoints.AddFramePoint2x(13, 14, 9);
-            RightHandPoints.AddFramePoint2x(14, 25, 12);
-            RightHandPoints.AddFramePoint2x(15, 26, 18);
+            RightHandPoints.AddFramePoint2x(14, 24, 12);
+            RightHandPoints.AddFramePoint2x(15, 27, 18);
             RightHandPoints.AddFramePoint2x(16, 23, 23);
 
             //Mount
             MountShoulderPoints.DefaultCoordinate = new Point(16 * 2, 25 * 2);
-            SittingPoint = new Point(16 * 2, 25 * 2);
+            SittingPoint = new Point(17 * 2, 25 * 2);
 
             //Head Vanity Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(16, 13);
-            HeadVanityPosition.AddFramePoint2x(11, 22, 16);
-            HeadVanityPosition.AddFramePoint2x(12, 28, 24);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(17, 13);
+            HeadVanityPosition.AddFramePoint2x(11, 23, 16);
+            HeadVanityPosition.AddFramePoint2x(12, 29, 24);
 
-            HeadVanityPosition.AddFramePoint2x(19, 16, 13 - 7);
+            HeadVanityPosition.AddFramePoint2x(19, 17, 13 - 7);
 
-            HeadVanityPosition.AddFramePoint2x(22, 16, 15);
+            HeadVanityPosition.AddFramePoint2x(22, 17, 15);
 
             //Wing Position
             WingPosition.DefaultCoordinate2x = new Point(16, 19);

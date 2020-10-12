@@ -326,151 +326,128 @@ namespace giantsummon.Creatures
 
         public override void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)
         {
-            if (guardian.OwnerPos == -1)
+            switch (action.ID)
             {
-                switch (action.ID)
-                {
-                    case 0:
+                case 0:
+                    {
+                        action.ProceedIdleAIDuringDialogue = true;
+                        action.NpcCanFacePlayer = false;
+                        Player player = action.Players[0];
+                        guardian.AddDrawMomentToPlayer(player);
+                        const int BuffRefreshTime = 10 * 60;
+                        if (action.Time >= BuffRefreshTime && action.Time % BuffRefreshTime == 0)
                         {
-                            action.ProceedIdleAIDuringDialogue = true;
-                            action.NpcCanFacePlayer = false;
-                            Player player = action.Players[0];
-                            guardian.AddDrawMomentToPlayer(player);
-                            const int BuffRefreshTime = 10 * 60;
-                            if (action.Time >= BuffRefreshTime && action.Time % BuffRefreshTime == 0)
+                            int Stack = action.Time / BuffRefreshTime;
+                            if (Stack > 3)
+                                Stack = 3;
+                            player.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * Stack);
+                            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                            if (pm.ControllingGuardian)
                             {
-                                int Stack = action.Time / BuffRefreshTime;
-                                if (Stack > 3)
-                                    Stack = 3;
-                                player.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * Stack);
-                                PlayerMod pm = player.GetModPlayer<PlayerMod>();
-                                if (pm.ControllingGuardian)
-                                {
-                                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * Stack);
-                                }
+                                pm.Guardian.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * Stack);
                             }
-                            bool End = player.controlJump;
-                            if (PlayerMod.PlayerHasGuardianSummoned(player, guardian.ID, guardian.ModID))
-                                End = true;
-                            if (Main.bloodMoon)
-                                End = false;
-                            if (End)
+                        }
+                        bool End = player.controlJump;
+                        if (PlayerMod.PlayerHasGuardianSummoned(player, guardian.ID, guardian.ModID))
+                            End = true;
+                        if (Main.bloodMoon)
+                            End = false;
+                        if (End)
+                        {
+                            action.InUse = false;
+                            player.Bottom = guardian.Position;
+                            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                            if (pm.ControllingGuardian)
                             {
-                                action.InUse = false;
-                                player.Bottom = guardian.Position;
-                                PlayerMod pm = player.GetModPlayer<PlayerMod>();
-                                if (pm.ControllingGuardian)
+                                pm.Guardian.Position = guardian.Position;
+                            }
+                            guardian.SaySomething(GetEndHugMessage(guardian));
+                        }
+                        else
+                        {
+                            if (player.mount.Active)
+                                player.mount.Dismount(player);
+                            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                            bool FaceBear = (guardian.BodyAnimationFrame != 20 && guardian.BodyAnimationFrame != 21) || guardian.BodyAnimationFrame == 25;
+                            if (pm.ControllingGuardian)
+                            {
+                                pm.Guardian.Position = guardian.GetGuardianShoulderPosition;
+                                pm.Guardian.Position.Y += guardian.Height * 0.5f;
+                                pm.Guardian.Velocity.Y = -pm.Guardian.Mass;
+                                pm.Guardian.FallStart = (int)pm.Guardian.Position.Y / 16;
+                                if (pm.Guardian.ItemAnimationTime == 0 && !pm.Guardian.MoveLeft && !pm.Guardian.MoveRight)
+                                    pm.Guardian.FaceDirection((guardian.Direction * (FaceBear ? -1 : 1)) == -1);
+                                pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                                if (pm.Guardian.KnockedOut)
                                 {
-                                    pm.Guardian.Position = guardian.Position;
+                                    pm.Guardian.ReviveBoost += 3;
                                 }
-                                guardian.SaySomething(GetEndHugMessage(guardian));
+                                if (!Main.bloodMoon)
+                                {
+                                    pm.Guardian.ImmuneTime = 3;
+                                    pm.Guardian.ImmuneNoBlink = true;
+                                }
                             }
                             else
                             {
-                                if (player.mount.Active)
-                                    player.mount.Dismount(player);
-                                PlayerMod pm = player.GetModPlayer<PlayerMod>();
-                                bool FaceBear = (guardian.BodyAnimationFrame != 20 && guardian.BodyAnimationFrame != 21) || guardian.BodyAnimationFrame == 25;
-                                if (pm.ControllingGuardian)
+                                player.gfxOffY = 0;
+                                player.Center = guardian.GetGuardianShoulderPosition;
+                                player.velocity.Y = -Player.defaultGravity;
+                                player.fallStart = (int)player.Center.Y / 16;
+                                if (player.itemAnimation == 0 && !player.controlLeft && !player.controlRight)
+                                    player.ChangeDir(guardian.Direction * (FaceBear ? -1 : 1));
+                                player.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                                if (pm.KnockedOut)
+                                    pm.ReviveBoost += 3;
+                                if (!Main.bloodMoon)
                                 {
-                                    pm.Guardian.Position = guardian.GetGuardianShoulderPosition;
-                                    pm.Guardian.Position.Y += guardian.Height * 0.5f;
-                                    pm.Guardian.Velocity.Y = -pm.Guardian.Mass;
-                                    pm.Guardian.FallStart = (int)pm.Guardian.Position.Y / 16;
-                                    if (pm.Guardian.ItemAnimationTime == 0 && !pm.Guardian.MoveLeft && !pm.Guardian.MoveRight)
-                                        pm.Guardian.FaceDirection((guardian.Direction * (FaceBear ? -1 : 1)) == -1);
-                                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
-                                    if (pm.Guardian.KnockedOut)
-                                    {
-                                        pm.Guardian.ReviveBoost += 3;
-                                    }
-                                    if (!Main.bloodMoon)
-                                    {
-                                        pm.Guardian.ImmuneTime = 3;
-                                        pm.Guardian.ImmuneNoBlink = true;
-                                    }
+                                    player.immuneTime = 3;
+                                    player.immuneNoBlink = true;
                                 }
-                                else
+                            }
+                            if ((guardian.MessageTime == 0 || Main.bloodMoon) && (player.controlLeft || player.controlRight || player.controlUp || player.controlDown || (Main.bloodMoon && player.controlJump)))
+                            {
+                                if (Main.bloodMoon)
                                 {
-                                    player.Center = guardian.GetGuardianShoulderPosition;
-                                    player.velocity.Y = -Player.defaultGravity;
-                                    player.fallStart = (int)player.Center.Y / 16;
-                                    if (player.itemAnimation == 0 && !player.controlLeft && !player.controlRight)
-                                        player.ChangeDir(guardian.Direction * (FaceBear ? -1 : 1));
-                                    player.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
-                                    if (pm.KnockedOut)
-                                        pm.ReviveBoost += 3;
-                                    if (!Main.bloodMoon)
+                                    player.controlJump = false;
+                                    bool Defeated = false, Hurt = false;
+                                    if (pm.ControllingGuardian)
                                     {
-                                        player.immuneTime = 3;
-                                        player.immuneNoBlink = true;
+                                        pm.Guardian.FriendlyDuelDefeat = true;
+                                        Hurt = 0 != pm.Guardian.Hurt((int)(pm.Guardian.MHP * 0.22f), guardian.Direction, false, true, " were crushed by " + guardian.Name + "'s arms.");
+                                        if (pm.Guardian.Downed)
+                                            Defeated = true;
                                     }
-                                }
-                                if ((guardian.MessageTime == 0 || Main.bloodMoon) && (player.controlLeft || player.controlRight || player.controlUp || player.controlDown || (Main.bloodMoon && player.controlJump)))
-                                {
-                                    if (Main.bloodMoon)
+                                    else
                                     {
-                                        player.controlJump = false;
-                                        bool Defeated = false, Hurt = false;
-                                        if (pm.ControllingGuardian)
+                                        player.GetModPlayer<PlayerMod>().FriendlyDuelDefeat = true;
+                                        Hurt = 0 != player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " were crushed by " + guardian.Name + "'s arms."), (int)(player.statLifeMax2 * 0.22f), guardian.Direction);
+                                        if (player.dead)
+                                            Defeated = true;
+                                    }
+                                    if (Hurt)
+                                    {
+                                        if (!Defeated)
                                         {
-                                            pm.Guardian.FriendlyDuelDefeat = true;
-                                            Hurt = 0 != pm.Guardian.Hurt((int)(pm.Guardian.MHP * 0.22f), guardian.Direction, false, true, " were crushed by " + guardian.Name + "'s arms.");
-                                            if (pm.Guardian.Downed)
-                                                Defeated = true;
-                                        }
-                                        else
-                                        {
-                                            player.GetModPlayer<PlayerMod>().FriendlyDuelDefeat = true;
-                                            Hurt = 0 != player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(player.name + " were crushed by " + guardian.Name + "'s arms."), (int)(player.statLifeMax2 * 0.22f), guardian.Direction);
-                                            if (player.dead)
-                                                Defeated = true;
-                                        }
-                                        if (Hurt)
-                                        {
-                                            if (!Defeated)
+                                            if (guardian.BodyAnimationFrame == guardian.Base.ChairSittingFrame)
                                             {
-                                                if (guardian.BodyAnimationFrame == guardian.Base.ChairSittingFrame)
+                                                switch (Main.rand.Next(5))
                                                 {
-                                                    switch (Main.rand.Next(5))
-                                                    {
-                                                        case 0:
-                                                            guardian.SaySomething("*I'll crush you if you move again!*");
-                                                            break;
-                                                        case 1:
-                                                            guardian.SaySomething("*I'll hurt you worser than those monsters would If you keep moving!*");
-                                                            break;
-                                                        case 2:
-                                                            guardian.SaySomething("*I can crush you with my arms or my legs, you pick!*");
-                                                            break;
-                                                        case 3:
-                                                            guardian.SaySomething("*Want me to turn your bones to dust?*");
-                                                            break;
-                                                        case 4:
-                                                            guardian.SaySomething("*You are angering me, more than this night does!*");
-                                                            break;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    switch (Main.rand.Next(5))
-                                                    {
-                                                        case 0:
-                                                            guardian.SaySomething("*Stay quiet!*");
-                                                            break;
-                                                        case 1:
-                                                            guardian.SaySomething("*I'll crush your bones If you continue doing that!*");
-                                                            break;
-                                                        case 2:
-                                                            guardian.SaySomething("*I have my arms around you, I can pull them against my body, and you wont like it!*");
-                                                            break;
-                                                        case 3:
-                                                            guardian.SaySomething("*Want to try that again?*");
-                                                            break;
-                                                        case 4:
-                                                            guardian.SaySomething("*This is what you want?*");
-                                                            break;
-                                                    }
+                                                    case 0:
+                                                        guardian.SaySomething("*I'll crush you if you move again!*");
+                                                        break;
+                                                    case 1:
+                                                        guardian.SaySomething("*I'll hurt you worser than those monsters would If you keep moving!*");
+                                                        break;
+                                                    case 2:
+                                                        guardian.SaySomething("*I can crush you with my arms or my legs, you pick!*");
+                                                        break;
+                                                    case 3:
+                                                        guardian.SaySomething("*Want me to turn your bones to dust?*");
+                                                        break;
+                                                    case 4:
+                                                        guardian.SaySomething("*You are angering me, more than this night does!*");
+                                                        break;
                                                 }
                                             }
                                             else
@@ -478,70 +455,91 @@ namespace giantsummon.Creatures
                                                 switch (Main.rand.Next(5))
                                                 {
                                                     case 0:
-                                                        guardian.SaySomething("*Finally! You got quiet!*");
+                                                        guardian.SaySomething("*Stay quiet!*");
                                                         break;
                                                     case 1:
-                                                        guardian.SaySomething("*See what you made me do?!*");
+                                                        guardian.SaySomething("*I'll crush your bones If you continue doing that!*");
                                                         break;
                                                     case 2:
-                                                        guardian.SaySomething("*My mood is already bad, you didn't helped either!*");
+                                                        guardian.SaySomething("*I have my arms around you, I can pull them against my body, and you wont like it!*");
                                                         break;
                                                     case 3:
-                                                        guardian.SaySomething("*At least you stopped moving around!*");
+                                                        guardian.SaySomething("*Want to try that again?*");
                                                         break;
                                                     case 4:
-                                                        guardian.SaySomething("*You behave better when unconscious!*");
+                                                        guardian.SaySomething("*This is what you want?*");
                                                         break;
                                                 }
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        guardian.SaySomething("*Press Jump button If that's enough.*");
-                                    }
-                                }
-                                if (player.whoAmI == Main.myPlayer)
-                                {
-                                    MainMod.FocusCameraPosition = guardian.CenterPosition;
-                                    MainMod.FocusCameraPosition.X -= Main.screenWidth * 0.5f;
-                                    MainMod.FocusCameraPosition.Y -= Main.screenHeight * 0.5f;
-                                    const byte ChatTimeVar = 0, FriendshipPointsVar = 1;
-                                    int Timer = action.GetIntegerValue(ChatTimeVar) - 1, FriendshipPoints = action.GetIntegerValue(FriendshipPointsVar);
-                                    const int InitialTime = 300;
-                                    if (Timer == -1)
-                                    {
-                                        action.SetIntegerValue(ChatTimeVar, InitialTime);
-                                    }
-                                    else if (Timer < 1)
-                                    {
-                                        action.SetIntegerValue(ChatTimeVar, 60 * 10); // + Main.rand.Next(InitialTime)
-                                        FriendshipPoints++;
-                                        if (FriendshipPoints >= 10 + guardian.FriendshipLevel / 3)
-                                        {
-                                            FriendshipPoints = 0;
-                                            guardian.IncreaseFriendshipProgress(1);
-                                        }
-                                        action.SetIntegerValue(FriendshipPointsVar, FriendshipPoints);
-                                        string Message = GuardianMouseOverAndDialogueInterface.MessageParser(Main.rand.Next(10) == 0 ? guardian.Base.TalkMessage(player, guardian) : guardian.Base.NormalMessage(player, guardian), guardian);
-                                        if (player.talkNPC > -1 && Main.npc[player.talkNPC].type == ModContent.NPCType<GuardianNPC.List.BearNPC>())
-                                        {
-                                            Main.npcChatText = Message;
-                                        }
                                         else
                                         {
-                                            //guardian.SaySomething(Message);
+                                            switch (Main.rand.Next(5))
+                                            {
+                                                case 0:
+                                                    guardian.SaySomething("*Finally! You got quiet!*");
+                                                    break;
+                                                case 1:
+                                                    guardian.SaySomething("*See what you made me do?!*");
+                                                    break;
+                                                case 2:
+                                                    guardian.SaySomething("*My mood is already bad, you didn't helped either!*");
+                                                    break;
+                                                case 3:
+                                                    guardian.SaySomething("*At least you stopped moving around!*");
+                                                    break;
+                                                case 4:
+                                                    guardian.SaySomething("*You behave better when unconscious!*");
+                                                    break;
+                                            }
                                         }
+                                    }
+                                }
+                                else
+                                {
+                                    guardian.SaySomething("*Press Jump button If that's enough.*");
+                                }
+                            }
+                            if (player.whoAmI == Main.myPlayer)
+                            {
+                                MainMod.FocusCameraPosition = guardian.CenterPosition;
+                                MainMod.FocusCameraPosition.X -= Main.screenWidth * 0.5f;
+                                MainMod.FocusCameraPosition.Y -= Main.screenHeight * 0.5f;
+                                const byte ChatTimeVar = 0, FriendshipPointsVar = 1;
+                                int Timer = action.GetIntegerValue(ChatTimeVar) - 1, FriendshipPoints = action.GetIntegerValue(FriendshipPointsVar);
+                                const int InitialTime = 300;
+                                if (Timer == -1)
+                                {
+                                    action.SetIntegerValue(ChatTimeVar, InitialTime);
+                                }
+                                else if (Timer < 1)
+                                {
+                                    action.SetIntegerValue(ChatTimeVar, 60 * 10); // + Main.rand.Next(InitialTime)
+                                    FriendshipPoints++;
+                                    if (FriendshipPoints >= 10 + guardian.FriendshipLevel / 3)
+                                    {
+                                        FriendshipPoints = 0;
+                                        guardian.IncreaseFriendshipProgress(1);
+                                    }
+                                    action.SetIntegerValue(FriendshipPointsVar, FriendshipPoints);
+                                    string Message = GuardianMouseOverAndDialogueInterface.MessageParser(Main.rand.Next(10) == 0 ? guardian.Base.TalkMessage(player, guardian) : guardian.Base.NormalMessage(player, guardian), guardian);
+                                    if (player.talkNPC > -1 && Main.npc[player.talkNPC].type == ModContent.NPCType<GuardianNPC.List.BearNPC>())
+                                    {
+                                        Main.npcChatText = Message;
                                     }
                                     else
                                     {
-                                        action.SetIntegerValue(ChatTimeVar, Timer);
+                                        //guardian.SaySomething(Message);
                                     }
+                                }
+                                else
+                                {
+                                    action.SetIntegerValue(ChatTimeVar, Timer);
                                 }
                             }
                         }
-                        break;
-                }
+                    }
+                    break;
             }
         }
 

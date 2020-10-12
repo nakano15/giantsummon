@@ -84,7 +84,7 @@ namespace giantsummon.Creatures
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(24, 0);
-            //BodyFrontFrameSwap.Add(26, 1);
+            //BodyFrontFrameSwap.Add(26, 0);
 
             //Left Hand Position
             LeftHandPoints.AddFramePoint2x(10, 6, 14);
@@ -94,11 +94,11 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(16, 14, 4);
             LeftHandPoints.AddFramePoint2x(17, 32, 4);
             LeftHandPoints.AddFramePoint2x(18, 39, 19);
-            LeftHandPoints.AddFramePoint2x(19, 33, 31);
+            LeftHandPoints.AddFramePoint2x(19, 33, 32);
 
-            LeftHandPoints.AddFramePoint2x(21, 35, 16);
-            LeftHandPoints.AddFramePoint2x(22, 40, 23);
-            LeftHandPoints.AddFramePoint2x(23, 43, 33);
+            LeftHandPoints.AddFramePoint2x(21, 42, 22);
+            LeftHandPoints.AddFramePoint2x(22, 43, 31);
+            LeftHandPoints.AddFramePoint2x(23, 40, 42);
 
             LeftHandPoints.AddFramePoint2x(33, 43, 43);
 
@@ -110,11 +110,11 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(16, 16, 4);
             RightHandPoints.AddFramePoint2x(17, 34, 4);
             RightHandPoints.AddFramePoint2x(18, 41, 19);
-            RightHandPoints.AddFramePoint2x(19, 35, 31);
+            RightHandPoints.AddFramePoint2x(19, 35, 32);
 
-            RightHandPoints.AddFramePoint2x(21, 37, 16);
-            RightHandPoints.AddFramePoint2x(22, 42, 23);
-            RightHandPoints.AddFramePoint2x(23, 45, 33);
+            RightHandPoints.AddFramePoint2x(21, 44, 22);
+            RightHandPoints.AddFramePoint2x(22, 45, 31);
+            RightHandPoints.AddFramePoint2x(23, 43, 42);
 
             RightArmFrontFrameSwap.Add(29, 0);
 
