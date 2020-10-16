@@ -331,6 +331,9 @@
     <Content Include="Creatures\Wrath\left_arm.png" />
     <Content Include="Creatures\Wrath\right_arm.png" />
     <Content Include="Creatures\Wrath\right_arm_front.png" />
+    <Content Include="Creatures\Zacks\body_old.png" />
+    <Content Include="Creatures\Zacks\head.png" />
+    <Content Include="Creatures\Zacks\left_arm_old.png" />
     <Content Include="ExtraTextures\Eyes.png" />
     <Content Include="GuardianNPC\List\Domino_Head.png" />
     <Content Include="Creatures\Domino\left_arm.png" />
@@ -355,7 +358,7 @@
     <Content Include="Creatures\Nemesis\right_arm.png" />
     <Content Include="Creatures\Zacks\body.png" />
     <Content Include="Creatures\Zacks\body_front.png" />
-    <Content Include="Creatures\Zacks\head.png" />
+    <Content Include="Creatures\Zacks\head_old.png" />
     <Content Include="Creatures\Zacks\left_arm.png" />
     <Content Include="Creatures\Zacks\right_arm.png" />
     <Content Include="Extra\TrappedCat.png" />

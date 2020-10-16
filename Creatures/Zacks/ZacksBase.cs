@@ -9,6 +9,9 @@ namespace giantsummon.Creatures
 {
     public class ZacksBase : GuardianBase
     {
+        public const string OldHeadID = "oldhead", OldBodyID = "oldbody", OldLeftArmID = "oldleftarm";
+        public const byte OldBodyTextureID = 1;
+
         /// <summary>
         /// -Blue's Boyfriend.
         /// -Doesn't fears cheating on his relationship with Blue.
@@ -80,33 +83,33 @@ namespace giantsummon.Creatures
             BodyFrontFrameSwap.Add(18, 0);
 
             //Left Hand
-            LeftHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(17 * 2, 31 * 2);
-            LeftHandPoints.AddFramePoint2x(11, 14, 6);
-            LeftHandPoints.AddFramePoint2x(12, 38, 9);
-            LeftHandPoints.AddFramePoint2x(13, 42, 37);
+            LeftHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(17 * 2, 32 * 2);
+            LeftHandPoints.AddFramePoint2x(11, 27, 2);
+            LeftHandPoints.AddFramePoint2x(12, 38, 15);
+            LeftHandPoints.AddFramePoint2x(13, 40, 37);
 
-            LeftHandPoints.AddFramePoint2x(14, 7, 3);
-            LeftHandPoints.AddFramePoint2x(15, 32, 3);
-            LeftHandPoints.AddFramePoint2x(16, 39, 17);
-            LeftHandPoints.AddFramePoint2x(17, 35, 30);
+            LeftHandPoints.AddFramePoint2x(14, 21, 2);
+            LeftHandPoints.AddFramePoint2x(15, 33, 12);
+            LeftHandPoints.AddFramePoint2x(16, 37, 22);
+            LeftHandPoints.AddFramePoint2x(17, 32, 30);
 
-            LeftHandPoints.AddFramePoint2x(22, 39, 44);
+            LeftHandPoints.AddFramePoint2x(22, 38, 43);
 
             //Right Hand
-            RightHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(31 * 2, 31 * 2);
-            RightHandPoints.AddFramePoint2x(11, 16, 6);
-            RightHandPoints.AddFramePoint2x(12, 40, 9);
-            RightHandPoints.AddFramePoint2x(13, 44, 37);
+            RightHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(30 * 2, 32 * 2);
+            RightHandPoints.AddFramePoint2x(11, 30, 2);
+            RightHandPoints.AddFramePoint2x(12, 41, 15);
+            RightHandPoints.AddFramePoint2x(13, 42, 37);
 
-            RightHandPoints.AddFramePoint2x(14, 16, 3);
-            RightHandPoints.AddFramePoint2x(15, 36, 3);
-            RightHandPoints.AddFramePoint2x(16, 45, 17);
-            RightHandPoints.AddFramePoint2x(17, 41, 30);
+            RightHandPoints.AddFramePoint2x(14, 23, 2);
+            RightHandPoints.AddFramePoint2x(15, 36, 12);
+            RightHandPoints.AddFramePoint2x(16, 39, 22);
+            RightHandPoints.AddFramePoint2x(17, 35, 30);
 
             //Mount Position
-            MountShoulderPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(16 * 2, 14 * 2);
-            MountShoulderPoints.AddFramePoint2x(12, 24, 20);
-            MountShoulderPoints.AddFramePoint2x(13, 27, 26);
+            MountShoulderPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(16 * 2, 13 * 2);
+            MountShoulderPoints.AddFramePoint2x(12, 24, 19);
+            MountShoulderPoints.AddFramePoint2x(13, 27, 25);
 
             //Sitting Position
             SittingPoint = new Point(22 * 2, 36 * 2);
@@ -122,6 +125,58 @@ namespace giantsummon.Creatures
 
             //Wing
             WingPosition.DefaultCoordinate2x = new Point(22, 21);
+
+            //Skins
+            AddSkin(OldBodyTextureID, "Old Body", delegate(GuardianData gd, Player pl) { return true; });
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(OldHeadID, "head_old");
+            sprites.AddExtraTexture(OldBodyID, "body_old");
+            sprites.AddExtraTexture(OldLeftArmID, "left_arm_old");
+        }
+
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdd)
+        {
+            if (guardian.SkinID == OldBodyTextureID)
+            {
+                foreach (GuardianDrawData gdd2 in gdd)
+                {
+                    ReplaceTexturesForOldTexture(gdd2);
+                }
+            }
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
+        {
+            if (guardian.SkinID == OldBodyTextureID)
+            {
+                foreach (GuardianDrawData gdd2 in TerraGuardian.DrawFront)
+                {
+                    ReplaceTexturesForOldTexture(gdd2);
+                }
+                foreach (GuardianDrawData gdd2 in TerraGuardian.DrawBehind)
+                {
+                    ReplaceTexturesForOldTexture(gdd2);
+                }
+            }
+        }
+
+        public void ReplaceTexturesForOldTexture(GuardianDrawData gdd)
+        {
+            switch (gdd.textureType)
+            {
+                case GuardianDrawData.TextureType.TGHead:
+                    gdd.Texture = sprites.GetExtraTexture(OldHeadID);
+                    break;
+                case GuardianDrawData.TextureType.TGBody:
+                    gdd.Texture = sprites.GetExtraTexture(OldBodyID);
+                    break;
+                case GuardianDrawData.TextureType.TGLeftArm:
+                    gdd.Texture = sprites.GetExtraTexture(OldLeftArmID);
+                    break;
+            }
         }
 
         public override void GuardianUpdateScript(TerraGuardian guardian)

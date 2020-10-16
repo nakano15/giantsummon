@@ -83,7 +83,7 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(12, 37, 20);
             LeftHandPoints.AddFramePoint2x(13, 33, 32);
 
-            LeftHandPoints.AddFramePoint2x(14, 42, 17);
+            LeftHandPoints.AddFramePoint2x(14, 43, 20);
             LeftHandPoints.AddFramePoint2x(15, 42, 37);
 
             LeftHandPoints.AddFramePoint2x(18, 12, 4 + 6);
@@ -98,7 +98,7 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(12, 40, 20);
             RightHandPoints.AddFramePoint2x(13, 36, 32);
 
-            RightHandPoints.AddFramePoint2x(14, 45, 17);
+            RightHandPoints.AddFramePoint2x(14, 46, 20);
             RightHandPoints.AddFramePoint2x(15, 45, 37);
 
             RightHandPoints.AddFramePoint2x(18, 15, 4 + 6);
