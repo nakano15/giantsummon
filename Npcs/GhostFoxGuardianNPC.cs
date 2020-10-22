@@ -198,9 +198,11 @@ namespace giantsummon.Npcs
                 SetPassive();
             RevivingSomeone = false;
             YOffset = ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
-            if (Main.dayTime)
+            bool ReduceOpacity = Main.dayTime && !Main.eclipse && npc.position.Y < Main.worldSurface * 16 && Main.tile[(int)(npc.Center.X) / 16, (int)(npc.Center.Y / 16)].wall == 0;
+            if (ReduceOpacity)
             {
-                if (Opacity > 0)
+                float MinOpacity = !PostBossKillDialogue ? 0 : 0.2f;
+                if (Opacity > MinOpacity)
                 {
                     Opacity -= 0.005f;
                     if (Opacity <= 0)
@@ -208,9 +210,11 @@ namespace giantsummon.Npcs
                         npc.active = false;
                         return;
                     }
+                    if (Opacity > 0 && Opacity < MinOpacity)
+                        Opacity = MinOpacity;
                 }
             }
-            else if (!Main.eclipse)
+            else
             {
                 if (Opacity < 1)
                 {
@@ -306,10 +310,11 @@ namespace giantsummon.Npcs
                             CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.SkullHaunt>());
                             if (NPC.downedBoss2)
                                 CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.BeeHaunt>());
-                            if (NPC.downedBoss3 || NPC.downedQueenBee || Main.hardMode)
-                                CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.MeatHaunt>());
                             if (Main.hardMode)
+                            {
+                                CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.MeatHaunt>());
                                 CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.SawHaunt>());
+                            }
                             if (NPC.downedPlantBoss)
                                 CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>());
                             player.AddBuff(CurseIDs[Main.rand.Next(CurseIDs.Count)], 5);

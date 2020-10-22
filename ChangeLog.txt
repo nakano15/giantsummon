@@ -8,3 +8,14 @@ Terraria's offset will no longer mess up your position when being hugged by Vlad
 Fixed a bug where quick mount wouldn't work due to key checking issues.
 Reduced the rate which companions that doesn't live in your world will come visit.
 Minor readjustment on Fluffles body.
+Ghost Fox Guardian will no longer despawn in the following circunstances:
+	Eclipse is happening.
+	You just lifted the haunt.
+	She's underground or lower.
+	She's behind a wall.
+The ghost fox guardian will have their opacity reduced up to 20% when It's exposed to the day light, if she spawns post haunt lifting.
+The Ghost Fox Guardian will now only inflict the Haunt requiring facing the Wall of Flesh when you're on a hardmode world.
+	This is to avoid making you rush your game just to unlock her, even more since hardmode changes a lot of things.
+Your companions will now correctly use summons and invoke them.
+Leadership skill will no longer increase the maximum summon count.
+Malisha now has an extra summon slot.

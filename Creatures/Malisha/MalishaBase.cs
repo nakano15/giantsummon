@@ -155,6 +155,11 @@ namespace giantsummon.Creatures
             WingPosition.AddFramePoint2x(25, 28, 33);
         }
 
+        public override void Attributes(TerraGuardian g)
+        {
+            g.MaxMinions++;
+        }
+
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
             sprites.AddExtraTexture("tails", "tails");

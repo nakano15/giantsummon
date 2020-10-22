@@ -13,6 +13,23 @@ namespace giantsummon
         public static int ProjParent = -1;
         public static PlayerDataBackup backup, drawBackup;
         public static bool BackupUsed = false, drawBackupUsed = false;
+        private int MyParent = -1;
+
+        public override bool InstancePerEntity
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override bool CloneNewInstances
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         public static void CheckForInactiveProjectiles()
         {
@@ -26,13 +43,7 @@ namespace giantsummon
 
         public override void SetDefaults(Projectile projectile)
         {
-            /*if (ProjParent > -1)
-            {
-                if (GuardianProj.ContainsKey(ProjParent))
-                {
-                    GuardianProj.Add(projectile.whoAmI, GuardianProj[ProjParent]);
-                }
-            }*/
+            MyParent = ProjParent;
             switch (projectile.type)
             {
                 case Terraria.ID.ProjectileID.BoneJavelin:
@@ -50,6 +61,18 @@ namespace giantsummon
         
         public override bool PreAI(Projectile projectile)
         {
+            if (MyParent > -1 && GuardianProj.ContainsKey(MyParent))
+            {
+                if (GuardianProj.ContainsKey(projectile.whoAmI))
+                {
+                    GuardianProj[projectile.whoAmI] = GuardianProj[MyParent];
+                }
+                else
+                {
+                    GuardianProj.Add(projectile.whoAmI, GuardianProj[MyParent]);
+                }
+                MyParent = -1;
+            }
             if (IsHook(projectile))
             {
                 if (IsGuardianProjectile(projectile.whoAmI))
@@ -75,6 +98,7 @@ namespace giantsummon
                 TerraGuardian g = GuardianProj[projectile.whoAmI];
                 if (projectile.minion)
                 {
+                    Main.player[projectile.owner].slotsMinions += -projectile.minionSlots;
                     if (!g.Active || (g.MinionSlotCount + projectile.minionSlots > g.MaxMinions && projectile.owner == Main.myPlayer))
                     {
                         if (projectile.type == 627 || projectile.type == 628)
@@ -99,7 +123,7 @@ namespace giantsummon
                     {
                         projectile.minionPos = g.NumMinions;
                         g.NumMinions++;
-                        g.MinionSlotCount += projectile.minionSlots;
+                        g.MinionSlotCount += -projectile.minionSlots;
                     }
                 }
                 if (projectile.aiStyle == 62)

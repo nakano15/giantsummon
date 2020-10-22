@@ -4935,7 +4935,7 @@ namespace giantsummon
                     MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f) * Scale);
                 if (!PlayerControl)
                 {
-                    //CheckIfCanSummon();
+                    CheckIfCanSummon();
                     CheckIfCanDoAction();
                     if(!CanDualWield)
                         OffHandAction = true;
@@ -11702,9 +11702,12 @@ namespace giantsummon
         {
             if (!ProjMod.GuardianProj.ContainsKey(projPos))
                 ProjMod.GuardianProj.Add(projPos, this);
+            else
+                ProjMod.GuardianProj[projPos] = this;
             Main.projectile[projPos].noDropItem = true;
             Main.projectile[projPos].noEnchantments = true;
             if (OwnerPos > -1) Main.projectile[projPos].playerImmune[OwnerPos] = int.MaxValue;
+            Main.projectile[projPos].minionSlots *= -1;
         }
 
         public void PickOffHandToUse(ref HeldHand hand)
@@ -12138,7 +12141,7 @@ namespace giantsummon
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Mysticism);
                 if (crit) AddSkillProgress(Damage, GuardianSkills.SkillTypes.Luck);
             }
-            if (proj.minion || proj.type == 376 || proj.type == 374 ||
+            if (proj.minion || proj.type == 376 || proj.type == 374 || proj.type == 378 || proj.type == 379 ||
                 proj.type == Terraria.ID.ProjectileID.StardustCellMinionShot || proj.type == 389 || proj.type == 195 || proj.type == 408)
             {
                 AddSkillProgress(Damage, GuardianSkills.SkillTypes.Leadership);
