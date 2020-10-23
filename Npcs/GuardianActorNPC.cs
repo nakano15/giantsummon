@@ -295,7 +295,7 @@ namespace giantsummon.Npcs
 
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
-            foreach (DrawData dd in GetDrawDatas(drawColor, false))
+            foreach (GuardianDrawData dd in GetDrawDatas(drawColor, false))
             {
                 dd.Draw(spriteBatch);
             }
@@ -313,23 +313,23 @@ namespace giantsummon.Npcs
             }
         }
 
-        public virtual void ModifyDrawDatas(List<DrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)
+        public virtual void ModifyDrawDatas(List<GuardianDrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)
         {
 
         }
 
-        public List<DrawData> GetDrawDatas(Microsoft.Xna.Framework.Color drawColor, bool FrontPart = false)
+        public List<GuardianDrawData> GetDrawDatas(Microsoft.Xna.Framework.Color drawColor, bool FrontPart = false)
         {
             try
             {
                 if (Base.sprites == null || Base.sprites.HasErrorLoadingOccurred)
-                    return new List<DrawData>();
+                    return new List<GuardianDrawData>();
                 else if (!Base.sprites.IsTextureLoaded)
                 {
                     Base.sprites.LoadTextures();
                 }
                 Base.sprites.ResetCooldown();
-                List<DrawData> dds = new List<DrawData>();
+                List<GuardianDrawData> dds = new List<GuardianDrawData>();
                 Vector2 DrawPos = npc.position - Main.screenPosition;
                 DrawPos.X += XOffSet;
                 DrawPos.Y += YOffset;
@@ -405,13 +405,13 @@ namespace giantsummon.Npcs
 
                 rightarmfrontrect.X *= rightarmfrontrect.Width;
                 rightarmfrontrect.Y *= rightarmfrontrect.Height;
-                DrawData dd;
+                GuardianDrawData dd;
                 Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, Base.SpriteHeight);
                 if (!FrontPart)
                 {
-                    dd = new DrawData(Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
                     dds.Add(dd);
-                    dd = new DrawData(Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
                     dds.Add(dd);
                 }
                 /*{
@@ -421,15 +421,15 @@ namespace giantsummon.Npcs
                 }*/
                 if (bodyfrontrect.X > -1 && Base.sprites.BodyFrontSprite != null)
                 {
-                    dd = new DrawData(Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
                     dds.Add(dd);
                 }
                 if (rightarmfrontrect.X > -1 && Base.sprites.RightArmFrontSprite != null)
                 {
-                    dd = new DrawData(Base.sprites.RightArmFrontSprite, DrawPos, rightarmfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArmFront, Base.sprites.RightArmFrontSprite, DrawPos, rightarmfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
                     dds.Add(dd);
                 }
-                dd = new DrawData(Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects, 0);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
                 dds.Add(dd);
                 ModifyDrawDatas(dds, DrawPos, bodyrect, leftarmrect, rightarmrect, Origin, drawColor, seffects);
                 XOffSet = YOffset = 0f;
@@ -438,7 +438,7 @@ namespace giantsummon.Npcs
             catch
             {
                 Main.NewText("The error happened with " + npc.GivenOrTypeName + ".", Color.Purple);
-                return new List<DrawData>();
+                return new List<GuardianDrawData>();
             }
         }
     }

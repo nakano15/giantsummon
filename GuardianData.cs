@@ -1208,7 +1208,7 @@ namespace giantsummon
         public bool CheckForImportantMessages(out string Text)
         {
             Text = "";
-            if (Base.CallUnlockLevel > 0 && !CallMessageUnlocked && FriendshipLevel >= Base.CallUnlockLevel)
+            if (Base.CallUnlockLevel > 0 && !CallMessageUnlocked && !IsStarter && FriendshipLevel >= Base.CallUnlockLevel)
             {
                 Text = Base.CallUnlockMessage + "\n[You can now call this companion]";
                 CallMessageUnlocked = true;

@@ -581,6 +581,35 @@ namespace giantsummon.Npcs
             return SceneStep == SceneIds.NoScene;
         }
 
+        public static bool BreeMaySpawn { get { return NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedSlimeKing; } }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
+            {
+                return (float)(Main.time - 27000) / 432000;
+            }
+            return 0;
+        }
+
+        public override void ModifyDrawDatas(List<GuardianDrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)
+        {
+            Microsoft.Xna.Framework.Graphics.Texture2D BagTexture = Base.sprites.GetExtraTexture(Creatures.BreeBase.BagTextureID);
+            Rectangle backrect = BodyRect,
+                frontrect = BodyRect;
+            backrect.Y += backrect.Height;
+            GuardianDrawData bagback = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, Position, backrect, color, npc.rotation, Origin, npc.scale, seffects),
+                bagfront = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, Position, frontrect, color, npc.rotation, Origin, npc.scale, seffects);
+            for (int i = dds.Count - 1; i >= 0; i--)
+            {
+                if (dds[i].textureType == GuardianDrawData.TextureType.TGBody)
+                {
+                    dds.Insert(i + 1, bagfront);
+                    dds.Insert(i, bagback);
+                }
+            }
+        }
+
         public enum SceneIds : short
         {
             NoScene = -1,
@@ -617,17 +646,6 @@ namespace giantsummon.Npcs
             BreeSeesFriendlyFace,
             BreeSaysHowSheAppearedThere,
             BreeJoinsYou
-        }
-
-        public static bool BreeMaySpawn { get { return NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedSlimeKing; } }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            if (Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
-            {
-                return (float)(Main.time - 27000) / 432000;
-            }
-            return 0;
         }
     }
 }

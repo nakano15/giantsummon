@@ -150,6 +150,7 @@ namespace giantsummon
             TGBodyFront,
             TGLeftArm,
             TGRightArm,
+            TGRightArmFront,
             TGExtra,
 
             MainHandItem,

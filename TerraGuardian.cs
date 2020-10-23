@@ -1859,7 +1859,7 @@ namespace giantsummon
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = false;
             }
-            if (BodyAnimationFrame == Base.BedSleepingFrame || BodyAnimationFrame == Base.ThroneSittingFrame || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0))
+            if (IsUsingBed || IsUsingThrone || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0))
             {
                 OffHandAction = false;
             }
@@ -8289,7 +8289,10 @@ namespace giantsummon
             {
                 if (this.Inventory[j].ammo == i.useAmmo)
                 {
-                    ProjID = i.shoot;
+                    if (this.Inventory[j].type == Terraria.ID.ItemID.FallenStar)
+                        ProjID = 12;
+                    else
+                        ProjID = i.shoot;
                     HasAmmo = true;
                     ShotSpeed += this.Inventory[j].shootSpeed;
                     Damage += this.Inventory[j].damage;
@@ -8450,7 +8453,7 @@ namespace giantsummon
                     if (i.useAmmo == Terraria.ID.AmmoID.Bullet)
                         ProjID = Terraria.ID.ProjectileID.Bullet;
                     if (i.useAmmo == Terraria.ID.AmmoID.FallenStar)
-                        ProjID = Terraria.ID.ProjectileID.FallingStar;
+                        ProjID = 12;
                     if (i.useAmmo == Terraria.ID.AmmoID.Sand)
                         ProjID = Terraria.ID.ProjectileID.SandBallGun;
                     if (i.useAmmo == Terraria.ID.AmmoID.Dart)
@@ -14813,7 +14816,7 @@ namespace giantsummon
                 if (Frame >= 0)
                 {
                     rect = GetAnimationFrameRectangle(Frame);
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, Base.sprites.RightArmFrontSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArmFront, Base.sprites.RightArmFrontSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
                     dd.Shader = Shader;
                     AddDrawData(dd, DrawRightBodyPartsInFrontOfPlayer);
                     DrawItem(NewPosition, seffect, true);

@@ -1607,7 +1607,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        DamageMod += DamageMod * 0.2f;
+                        DamageMod += DamageMod * 0.2f; //0.2f
                     }
                 }
                 DamageMod = 1f - DamageMod;
@@ -2699,10 +2699,10 @@ namespace giantsummon
                     {
                         Npcs.GuardianActorNPC ganpc = ((Npcs.GuardianActorNPC)Main.npc[n].modNPC);
                         Color color = Lighting.GetColor((int)ganpc.npc.Center.X / 16, (int)ganpc.npc.Center.Y / 16);
-                        List<Terraria.DataStructures.DrawData> dds = ganpc.GetDrawDatas(color, true);
+                        List<GuardianDrawData> dds = ganpc.GetDrawDatas(color, true);
                         for (int x = 0; x < dds.Count; x++)
                         {
-                            Terraria.DataStructures.DrawData dd = dds[x];
+                            Terraria.DataStructures.DrawData dd = dds[x].GetDrawData();
                             dd.ignorePlayerRotation = true;
                             Main.playerDrawData.Add(dd);
                         }

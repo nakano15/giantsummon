@@ -358,9 +358,9 @@ namespace giantsummon.Npcs
             return "*?*";
         }
 
-        public override void  ModifyDrawDatas(List<Terraria.DataStructures.DrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)
+        public override void  ModifyDrawDatas(List<GuardianDrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)
         {
-            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(Base.sprites.GetExtraTexture("tails"), Position, BodyRect, color, 0f, Origin, 1f, seffects, 0);
+            GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra,Base.sprites.GetExtraTexture("tails"), Position, BodyRect, color, 0f, Origin, 1f, seffects);
             dds.Insert(0, dd);
         }
 

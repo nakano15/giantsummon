@@ -19,3 +19,8 @@ The Ghost Fox Guardian will now only inflict the Haunt requiring facing the Wall
 Your companions will now correctly use summons and invoke them.
 Leadership skill will no longer increase the maximum summon count.
 Malisha now has an extra summon slot.
+Terrarian companions will no longer refuse to hold offhand items when stopped.
+Bree's recruit npc will no longer forget her bag.
+Fixed a minor horizontal bad allignment on the companions dialogue interface.
+You can now see the companion friendship level on the dialogue interface.
+Starter Guardians will no longer show a message saying that you can call them when you reach the usual friendship level to unlock It.

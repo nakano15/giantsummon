@@ -373,7 +373,8 @@ namespace giantsummon
                 DrawBackgroundPanel(WindowStartPosition, WindowSizeX - 48, 48, Color.White);
                 WindowStartPosition.X += 4;
                 Utils.DrawBorderStringBig(Main.spriteBatch, tg.Name, WindowStartPosition, Color.White);
-                WindowStartPosition.X -= 48;
+                WindowStartPosition.X -= 52;
+                tg.DrawFriendshipHeart(WindowStartPosition + new Vector2(-24,24));
                 WindowStartPosition.Y += 48;
             }
             Color color = new Color(200, 200, 200, 200);
