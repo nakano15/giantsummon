@@ -14,7 +14,7 @@ namespace giantsummon
     {
         private void GroundPetsAndBabySlimeAI(Projectile proj)
         {
-            if (!MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID))
+            if (!MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID) || !GuardianProj.ContainsKey(proj.whoAmI))
             {
                 proj.active = false;
                 return;
@@ -2885,50 +2885,12 @@ namespace giantsummon
 
         private void HornetSummonAI(Projectile proj)
         {
-            if (!MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID))
+            if (!MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID) || !GuardianProj.ContainsKey(proj.whoAmI))
             {
                 proj.active = false;
                 return;
             }
             TerraGuardian guardian = GuardianProj[proj.whoAmI];
-            /*if (proj.type == 373)
-            {
-                if (Main.player[proj.owner].dead)
-                    Main.player[proj.owner].hornetMinion = false;
-                if (Main.player[proj.owner].hornetMinion)
-                    proj.timeLeft = 2;
-            }
-            if (proj.type == 375)
-            {
-                if (Main.player[proj.owner].dead)
-                    Main.player[proj.owner].impMinion = false;
-                if (Main.player[proj.owner].impMinion)
-                    proj.timeLeft = 2;
-            }
-            if (proj.type == 407)
-            {
-                if (Main.player[proj.owner].dead)
-                    Main.player[proj.owner].sharknadoMinion = false;
-                if (Main.player[proj.owner].sharknadoMinion)
-                    proj.timeLeft = 2;
-            }
-            if (proj.type == 423)
-            {
-                if (Main.player[proj.owner].dead)
-                    Main.player[proj.owner].UFOMinion = false;
-                if (Main.player[proj.owner].UFOMinion)
-                    proj.timeLeft = 2;
-            }
-            if (proj.type == 613)
-            {
-                if (Main.player[proj.owner].dead)
-                    Main.player[proj.owner].stardustMinion = false;
-                if (Main.player[proj.owner].stardustMinion)
-                    proj.timeLeft = 2;
-                Lighting.AddLight(proj.Center, 0.2f, 0.6f, 0.7f);
-                if ((double)proj.localAI[1] > 0.0)
-                    --proj.localAI[1];
-            }*/
             if (proj.type == 423)
             {
                 if ((double)proj.ai[0] == 2.0)
