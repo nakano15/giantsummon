@@ -22,7 +22,7 @@ namespace giantsummon.Buffs.GhostFoxHaunts
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.buffTime[buffIndex] = 5;
+            player.buffTime[buffIndex] = 60;
             if (player.GetModPlayer<PlayerMod>().KnockedOut)
             {
                 player.GetModPlayer<PlayerMod>().ReviveBoost += 1;
