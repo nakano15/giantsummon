@@ -1,5 +1,5 @@
 ﻿You can now only ask companions following you if they want to rest.
-Rococo, Blue, Bree, Sardine, Zacks, Mabel and Brutus got a sprite update.
+Rococo, Blue, Bree, Sardine, Zacks, Mabel (partial) and Brutus got a sprite update.
 	The sprite updates may have also changed some of their animations too, either slightly or severelly.
 	Zacks old sprite is disponible as a already unlocked skin.
 Large companions that mounts on your character will no longer do the animation of putting your character on their shoulder, or putting them on the floor.

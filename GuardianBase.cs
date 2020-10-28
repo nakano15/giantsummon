@@ -923,27 +923,6 @@ namespace giantsummon
             public const string GuardianWokeUpByPlayerMessage = "Mes.WakeUpMessage",
                 GuardianWokeUpByPlayerRequestActiveMessage = "Mes.WakeUpMessageRequestActive";
         }
-
-        public class FastItemDefiniton : Terraria.ModLoader.Config.ItemDefinition
-        {
-            public FastItemDefiniton(int Type)
-                : base(Type)
-            {
-
-            }
-
-            public FastItemDefiniton(string ModItemId, Mod mod)
-                : base(ModItemId, mod.Name)
-            {
-
-            }
-
-            public FastItemDefiniton(string ModItemId, string mod)
-                : base(ModItemId, mod)
-            {
-
-            }
-        }
         
         public enum GuardianEffect
         {
