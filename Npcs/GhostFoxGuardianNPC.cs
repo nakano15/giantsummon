@@ -156,12 +156,12 @@ namespace giantsummon.Npcs
 
         public override bool CanChat()
         {
-            return PostBossKillDialogue;
+            return PostBossKillDialogue || PassiveAI;
         }
 
         public override string GetChat()
         {
-            return "(She seems to be happy with you, but can't speak a single word. She also a bit sad for what she made you pass through, tries to find ways of apologizing, but can't find out how. She seems to be wanting to go with you on your adventures.)";
+            return PassiveAI ? "(She greets you, but seems unable to speak. She seems to be asking of could join your adventures.)" : "(She seems to be happy with you, but can't speak a single word. She also a bit sad for what she made you pass through, tries to find ways of apologizing, but can't find out how. She seems to be wanting to go with you on your adventures.)";
         }
 
         public override void SetChatButtons(ref string button, ref string button2)
