@@ -98,6 +98,11 @@ namespace giantsummon
         [Tooltip("Here contains the list of items your companion will be able to dual wield, If It is possible for them to.")]
         public List<ItemDefinition> DualwieldableItems { get { return MainMod.DualwieldWhitelist; } set { MainMod.DualwieldWhitelist = value; } }
 
+        [Label("Item Attack Range.")]
+        [Tooltip("Here contains a list of maximum range to use items. Add a row to items that have limited flight range, and set a pixel distance to It.\nIf the item is not here, then the mod will use default AI setting for range.")]
+        [Range(0, 99999)]
+        public Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> ItemAttackRange { get { return MainMod.ItemAttackRange; } set { MainMod.ItemAttackRange = value; } }
+
         //[Label("Tile Collision is the same as Hit Collision")]
         //[Tooltip("When turned on, the game will no longer try using a player like collision detection on your companions. Will instead use their internal hitbox collision dimension.")]
         //[DefaultValue(false)]
@@ -106,6 +111,7 @@ namespace giantsummon
         private void SetDefaultDualwieldableItems()
         {
             DualwieldableItems = MainMod.GetDefaultDualwieldableItems();
+            ItemAttackRange = MainMod.GetDefaultItemRanges();
         }
 
         public override void OnLoaded()

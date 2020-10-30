@@ -4381,6 +4381,11 @@ namespace giantsummon
             int TargetWidth = 0, TargetHeight = 0;
             bool TargetIsBoss = false;
             bool ThroughWall = false;
+            float MaxAttackRange = -1;
+            if (SelectedItem > -1 && MainMod.ItemAttackRange.Any(x => x.Key.Type == Inventory[SelectedItem].type))
+            {
+                MaxAttackRange = MainMod.ItemAttackRange.First(x => x.Key.Type == Inventory[SelectedItem].type).Value;
+            }
             switch (TargetType)
             {
                 case TargetTypes.Npc:
@@ -4649,6 +4654,10 @@ namespace giantsummon
                                 float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                 float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false) + TargetWidth * 0.5f,
                                     RetreatDistance = Width * 0.5f + 8;
+                                if (MaxAttackRange > -1)
+                                {
+                                    ApproachDistance = MaxAttackRange;
+                                }
                                 if (DistanceX <= ApproachDistance + 8 && InRangeY)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                 {
                                     GoMelee = true;
@@ -4683,9 +4692,16 @@ namespace giantsummon
                                 {
                                     const float AssistDistance = 120f;
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                    if (DistanceX >= TargetWidth + Width + AssistDistance + DistanceDiscount)
+                                    float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
+                                        RetreatDistance = TargetWidth + Width + AssistDistance - 24;
+                                    if (MaxAttackRange > -1)
+                                    {
+                                        ApproachDistance = MaxAttackRange + TargetWidth;
+                                        RetreatDistance = MaxAttackRange - 24;
+                                    }
+                                    if (DistanceX >= ApproachDistance)
                                         Approach = true;
-                                    else if (DistanceX <= TargetWidth + Width + AssistDistance - 24)
+                                    else if (DistanceX <= RetreatDistance)
                                         Retreat = true;
                                     //if (TargetInAim)
                                     Attack = true;
@@ -4700,9 +4716,16 @@ namespace giantsummon
                                 }
                                 float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                 const float SnipeDistance = 260f;
-                                if (DistanceX >= TargetWidth + Width + SnipeDistance + DistanceDiscount)
+                                float ApproachDistance = TargetWidth + Width + SnipeDistance + DistanceDiscount,
+                                    RetreatDistance = TargetWidth + Width + SnipeDistance - 24;
+                                if (MaxAttackRange > -1)
+                                {
+                                    ApproachDistance = MaxAttackRange + TargetWidth;
+                                    RetreatDistance = MaxAttackRange - 24;
+                                }
+                                if (DistanceX >= ApproachDistance)
                                     Approach = true;
-                                else if (DistanceX <= TargetWidth + Width + SnipeDistance - 24)
+                                else if (DistanceX <= RetreatDistance)
                                     Retreat = true;
                                 //if (TargetInAim)
                                 Attack = true;
@@ -8523,8 +8546,8 @@ namespace giantsummon
                 DistanceMod *= 1.5f;
             if (Scale > 1)
                 DistanceMod *= Scale;
-            int SpotRangeX = 520;
-            int SpotRangeY = 480;
+            int SpotRangeX = 420;
+            int SpotRangeY = 360;
             float NearestDistance = float.MaxValue;
             if (HurtPanic)
             {

@@ -352,10 +352,6 @@
     <Content Include="Creatures\Sardine\head.png" />
     <Content Include="Creatures\Sardine\left_arm.png" />
     <Content Include="Creatures\Sardine\right_arm.png" />
-    <Content Include="Creatures\Nemesis\body.png" />
-    <Content Include="Creatures\Nemesis\head.png" />
-    <Content Include="Creatures\Nemesis\left_arm.png" />
-    <Content Include="Creatures\Nemesis\right_arm.png" />
     <Content Include="Creatures\Zacks\body.png" />
     <Content Include="Creatures\Zacks\body_front.png" />
     <Content Include="Creatures\Zacks\head_old.png" />

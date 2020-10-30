@@ -51,7 +51,7 @@ namespace giantsummon.Creatures
             ContestSecondPlace = 1;
             ContestThirdPlace = 1;
 
-            AddInitialItem(Terraria.ID.ItemID.EnchantedBoomerang, 1);
+            AddInitialItem(Terraria.ID.ItemID.BeeKeeper, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
             SpecificBodyFrontFramePositions = true;
 
@@ -78,38 +78,38 @@ namespace giantsummon.Creatures
             SittingPoint = new Point(24 * 2, 37 * 2);
 
             //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 12, 4);
-            LeftHandPoints.AddFramePoint2x(11, 35, 7);
-            LeftHandPoints.AddFramePoint2x(12, 37, 20);
-            LeftHandPoints.AddFramePoint2x(13, 33, 32);
+            LeftHandPoints.AddFramePoint2x(10, 14, 5);
+            LeftHandPoints.AddFramePoint2x(11, 37, 8);
+            LeftHandPoints.AddFramePoint2x(12, 39, 20);
+            LeftHandPoints.AddFramePoint2x(13, 35, 33);
 
-            LeftHandPoints.AddFramePoint2x(14, 43, 20);
-            LeftHandPoints.AddFramePoint2x(15, 42, 37);
+            LeftHandPoints.AddFramePoint2x(14, 42, 20);
+            LeftHandPoints.AddFramePoint2x(15, 42, 39);
 
-            LeftHandPoints.AddFramePoint2x(18, 12, 4 + 6);
-            LeftHandPoints.AddFramePoint2x(19, 35, 9 + 6);
-            LeftHandPoints.AddFramePoint2x(20, 37, 20 + 6);
+            LeftHandPoints.AddFramePoint2x(18, 14, 11);
+            LeftHandPoints.AddFramePoint2x(19, 37, 14);
+            LeftHandPoints.AddFramePoint2x(20, 39, 27);
 
-            LeftHandPoints.AddFramePoint2x(23, 39, 41);
+            LeftHandPoints.AddFramePoint2x(23, 36, 40);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 15, 4);
-            RightHandPoints.AddFramePoint2x(11, 38, 7);
-            RightHandPoints.AddFramePoint2x(12, 40, 20);
-            RightHandPoints.AddFramePoint2x(13, 36, 32);
+            RightHandPoints.AddFramePoint2x(10, 17, 5);
+            RightHandPoints.AddFramePoint2x(11, 40, 8);
+            RightHandPoints.AddFramePoint2x(12, 42, 20);
+            RightHandPoints.AddFramePoint2x(13, 38, 33);
 
-            RightHandPoints.AddFramePoint2x(14, 46, 20);
-            RightHandPoints.AddFramePoint2x(15, 45, 37);
+            RightHandPoints.AddFramePoint2x(14, 45, 20);
+            RightHandPoints.AddFramePoint2x(15, 45, 39);
 
-            RightHandPoints.AddFramePoint2x(18, 15, 4 + 6);
-            RightHandPoints.AddFramePoint2x(19, 38, 9 + 6);
-            RightHandPoints.AddFramePoint2x(20, 40, 20 + 6);
+            RightHandPoints.AddFramePoint2x(18, 17, 11);
+            RightHandPoints.AddFramePoint2x(19, 40, 14);
+            RightHandPoints.AddFramePoint2x(20, 43, 40);
 
             //Headgear Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(22, 12);
-            HeadVanityPosition.AddFramePoint2x(14 - 1, 37, 17 + 3);
-            HeadVanityPosition.AddFramePoint2x(15 - 1, 39, 25 + 3);
-            HeadVanityPosition.AddFramePoint2x(17, 23 - 1, 9 + 7 + 3);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(23, 12);
+            HeadVanityPosition.AddFramePoint2x(14, 36, 21);
+            HeadVanityPosition.AddFramePoint2x(15, 38, 31);
+            HeadVanityPosition.AddFramePoint2x(17, 23, 18);
 
             HeadVanityPosition.AddFramePoint2x(23, 34, 28);
         }

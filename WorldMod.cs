@@ -904,6 +904,7 @@ namespace giantsummon
                 if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
                 {
                     ImpossiblePoints.Add(new Point(Main.npc[n].homeTileX, Main.npc[n].homeTileY));
+                    //ImpossiblePoints.Add(new Point(Main.npc[n].homeTileX - 1, Main.npc[n].homeTileY));
                 }
             }
             for (int g = 0; g < WorldMod.MaxGuardianNpcsInWorld; g++)
@@ -911,6 +912,7 @@ namespace giantsummon
                 if (WorldMod.GuardianNPCsInWorld[g] != null && !WorldMod.GuardianNPCsInWorld[g].Homeless)
                 {
                     ImpossiblePoints.Add(new Point(WorldMod.GuardianNPCsInWorld[g].HomeX, WorldMod.GuardianNPCsInWorld[g].HomeY));
+                    //ImpossiblePoints.Add(new Point(WorldMod.GuardianNPCsInWorld[g].HomeX - 1, WorldMod.GuardianNPCsInWorld[g].HomeY));
                 }
             }
             List<Point> PossiblePlaces = new List<Point>();

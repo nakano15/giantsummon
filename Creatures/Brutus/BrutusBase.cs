@@ -439,6 +439,7 @@ namespace giantsummon.Creatures
             Mes.Add("*I have trained my left arm with several kinds of swords, so I can even wield two handed swords with it only.*");
             Mes.Add("*My right arm helps on my protection, so I can shield myself from a number of attacks.*");
             Mes.Add("*My job as a Royal Guard on the Ether Realm... Wasn't good...*");
+            Mes.Add("*Many Terrarians usually get shocked when I showed them my weapons, so I'll tell you why I have them. Those are the weapons the guards on my world uses. The day I lost my job, they at least let me keep my weapons.*");
             if (Main.bloodMoon)
                 Mes.Add("*Hey, let's go outside? That's the perfect occasion to hone our combat skills.*");
             if (Main.bloodMoon || Main.eclipse)
@@ -928,7 +929,7 @@ namespace giantsummon.Creatures
                                 else
                                 {
                                     guardian.MoveLeft = guardian.MoveRight = false;
-                                    if (guardian.Position.X - guardian.Velocity.X * 0.5f > DefendX)
+                                    if (guardian.Position.X + guardian.Velocity.X * 0.5f > DefendX)
                                         guardian.MoveLeft = true;
                                     else
                                         guardian.MoveRight = true;

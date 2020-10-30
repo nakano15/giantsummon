@@ -43,9 +43,10 @@ namespace giantsummon
             GuardiansDontDiesAfterDownedDefeat = false;
         //
         public static bool PlayableOnMultiplayer = false, TestNewCombatAI = true, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
-            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false, 
+            SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false,
             DoNotUseRescue = false, CompanionsCanVisitWorld = true, DisableDamageReductionByNumberOfCompanions = false;
         public static List<Terraria.ModLoader.Config.ItemDefinition> DualwieldWhitelist = new List<Terraria.ModLoader.Config.ItemDefinition>();
+        public static Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> ItemAttackRange = new Dictionary<Terraria.ModLoader.Config.ItemDefinition, int>();
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
         public const bool IndividualSkillLeveling = false;
@@ -420,6 +421,97 @@ namespace giantsummon
             items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.Javelin));
             items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BoneJavelin));
             items.Add(new Terraria.ModLoader.Config.ItemDefinition(ItemID.BoneDagger));
+            return items;
+        }
+
+        public static Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> GetDefaultItemRanges()
+        {
+            Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> items = new Dictionary<Terraria.ModLoader.Config.ItemDefinition, int>();
+            //Sickle
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.IceSickle), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.DeathSickle), 160);
+            //Boomerang
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.WoodenBoomerang), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.IceBoomerang), 240);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.EnchantedBoomerang), 240);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.FruitcakeChakram), 240);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.BloodyMachete), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.ThornChakram), 240);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Wrench), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Flamarang), 240);
+
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.FlyingKnife), 320);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.LightDisc), 320);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Bananarang), 320);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.PossessedHatchet), 320);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.PaladinsHammer), 320);
+
+            //Flails
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.ChainKnife), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.BallOHurt), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.TheMeatball), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.BlueMoon), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Sunfury), 160);
+
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Anchor), 320);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.KOCannon), 17 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.ChainGuillotines), 22 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.DaoofPow), 240);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.FlowerPow), 240);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.GolemFist), 20 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Flairon), 240);
+
+            //Other(Melee)
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.ShadowFlameKnife), 160);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.VampireKnives), 320);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.DayBreak), 320);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.SolarEruption), 320);
+
+            //Throwing Weapons
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Shuriken), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.ThrowingKnife), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.PoisonedKnife), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Snowball), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.AleThrowingGlove), 10 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.SpikyBall), 3 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Bone), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.RottenEgg), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.StarAnise), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.MolotovCocktail), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.FrostDaggerfish), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Javelin), 16 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.BoneJavelin), 16 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.BoneDagger), 12 * 16);
+
+            //Grenades
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Grenade), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.StickyGrenade), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.BouncyGrenade), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Beenade), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.PartyGirlGrenade), 8 * 16);
+
+            //Others(Ranged)
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.SnowballCannon), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Harpoon), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Blowpipe), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Blowgun), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Flamethrower), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.EldMelter), 12 * 16);
+
+            //Wands
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.Vilethorn), 14 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.AquaScepter), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.FlowerofFire), 8 * 16);
+
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.FlowerofFrost), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.CrystalVileShard), 14 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.NettleBurst), 23 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.RainbowGun), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.GoldenShower), 20 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.MagicDagger), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.MedusaHead), 8 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.ToxicFlask), 12 * 16);
+            items.Add(new Terraria.ModLoader.Config.ItemDefinition(Terraria.ID.ItemID.ShadowFlameHexDoll), 12 * 16);
             return items;
         }
 

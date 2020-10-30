@@ -1,1 +1,6 @@
-﻿Ghost Fox Guardian is now speakable, if you manage to spawn her a second time, sometime after you've lifted her haunt.
+﻿Mabel gained a sprite revamp.
+Mabel also got a change on her default weapon: She will now use Bee Keeper, instead of Enchanted Boomerang.
+Removed Nemesis unused sprites.
+Nerfed companions view range:
+	It went from 520x480 to 420x360.
+Recipes will no longer spoil your shopping on Domino's store.

@@ -78,6 +78,8 @@ namespace giantsummon
             {
                 return;
             }
+            for (int r = 0; r < Main.numAvailableRecipes; r++)
+                Main.availableRecipeY[r] = 2000;
             PlayerMod pm = MainPlayer.GetModPlayer<PlayerMod>();
             if (!Main.playerInventory)
             {
