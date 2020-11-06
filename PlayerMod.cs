@@ -174,6 +174,8 @@ namespace giantsummon
                     player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>());
             }
         }
+        private string Nickname = null;
+        public string GetNickname { get { if (Nickname == null) return "Terrarian"; return Nickname; } set { Nickname = value; } }
 
         public static int GetPlayerDefenseCount(Player player)
         {
@@ -1607,7 +1609,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        DamageMod += DamageMod * 0.2f; //0.2f
+                        DamageMod += DamageMod * 0.1f; //0.2f
                     }
                 }
                 DamageMod = 1f - DamageMod;

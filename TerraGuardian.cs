@@ -100,6 +100,7 @@ namespace giantsummon
         public string ModID { get { return Data.ModID; } set { Data.ModID = value; } }
         public int ID { get { return Data.ID; } set { Data.ID = value; } }
         public GuardianID MyID { get { return Data.MyID; } set { Data.MyID = value; } }
+        public string PersonalNicknameToPlayer { get { return Data.PersonalNicknameToPlayer; } set { Data.PersonalNicknameToPlayer = value; } }
         public bool HasRequestActive { get { return Data.request.Active; } }
         public bool Active = false;
         public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
@@ -3169,7 +3170,7 @@ namespace giantsummon
                         Main.NewText("You can now call " + this.Name + " to help you.");
                     if (FriendshipLevel == Base.MountUnlockLevel)
                         Main.NewText(this.Name + "'s Mounting ability unlocked.");
-                    if (FriendshipLevel == Base.ControlUnlockLevel)
+                    if (FriendshipLevel == Base.ControlUnlockLevel && !Base.IsTerrarian)
                         Main.NewText(this.Name + "'s Control ability unlocked.");
                     if (FriendshipLevel == Base.StopMindingAFK)
                         Main.NewText(this.Name + " no longer mind afk in combat.");
@@ -4698,6 +4699,8 @@ namespace giantsummon
                                     {
                                         ApproachDistance = MaxAttackRange + TargetWidth;
                                         RetreatDistance = MaxAttackRange - 24;
+                                        if (RetreatDistance < Width * 0.5f + 8)
+                                            RetreatDistance = Width * 0.5f + 8;
                                     }
                                     if (DistanceX >= ApproachDistance)
                                         Approach = true;
@@ -4717,11 +4720,13 @@ namespace giantsummon
                                 float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                 const float SnipeDistance = 260f;
                                 float ApproachDistance = TargetWidth + Width + SnipeDistance + DistanceDiscount,
-                                    RetreatDistance = TargetWidth + Width + SnipeDistance - 24;
+                                    RetreatDistance = TargetWidth + Width + SnipeDistance - 50;
                                 if (MaxAttackRange > -1)
                                 {
                                     ApproachDistance = MaxAttackRange + TargetWidth;
-                                    RetreatDistance = MaxAttackRange - 24;
+                                    RetreatDistance = MaxAttackRange - 50;
+                                    if (RetreatDistance < Width * 0.5f + 8)
+                                        RetreatDistance = Width * 0.5f + 8;
                                 }
                                 if (DistanceX >= ApproachDistance)
                                     Approach = true;
@@ -7809,6 +7814,11 @@ namespace giantsummon
 		
 		public void TogglePlayerControl(bool Forced = false)
 		{
+            if (Base.IsTerrarian)
+            {
+                Main.NewText("You can't control human companions.");
+                return;
+            }
 			if(OwnerPos > -1)
             {
                 if (!Forced && (HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified)))

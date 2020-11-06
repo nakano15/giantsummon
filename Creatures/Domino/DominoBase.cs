@@ -72,32 +72,32 @@ namespace giantsummon.Creatures
             SittingPoint = new Point(25 * 2, 36 * 2);
 
             //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 15, 5);
-            LeftHandPoints.AddFramePoint2x(11, 31, 10);
-            LeftHandPoints.AddFramePoint2x(12, 35, 20);
-            LeftHandPoints.AddFramePoint2x(13, 32, 28);
+            LeftHandPoints.AddFramePoint2x(10, 14, 5);
+            LeftHandPoints.AddFramePoint2x(11, 32, 11);
+            LeftHandPoints.AddFramePoint2x(12, 35, 19);
+            LeftHandPoints.AddFramePoint2x(13, 31, 28);
 
             LeftHandPoints.AddFramePoint2x(14, 39, 30);
-            LeftHandPoints.AddFramePoint2x(15, 29, 8);
+            LeftHandPoints.AddFramePoint2x(15, 30, 11);
             LeftHandPoints.AddFramePoint2x(16, 42, 16);
 
             LeftHandPoints.AddFramePoint2x(20, 43, 40);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 18, 5);
-            RightHandPoints.AddFramePoint2x(11, 34, 10);
-            RightHandPoints.AddFramePoint2x(12, 38, 20);
+            RightHandPoints.AddFramePoint2x(10, 17, 5);
+            RightHandPoints.AddFramePoint2x(11, 34, 11);
+            RightHandPoints.AddFramePoint2x(12, 39, 19);
             RightHandPoints.AddFramePoint2x(13, 35, 28);
 
             RightHandPoints.AddFramePoint2x(14, 41, 30);
-            RightHandPoints.AddFramePoint2x(15, 31, 8);
+            RightHandPoints.AddFramePoint2x(15, 33, 11);
             RightHandPoints.AddFramePoint2x(16, 44, 16);
 
             //Head Vanity Pos
-            HeadVanityPosition.DefaultCoordinate2x = new Point(22, 12);
-            HeadVanityPosition.AddFramePoint2x(14, 34, 18);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(23, 11);
+            HeadVanityPosition.AddFramePoint2x(14, 35, 17);
 
-            HeadVanityPosition.AddFramePoint2x(20, 34, 18);
+            HeadVanityPosition.AddFramePoint2x(20, 35, 17);
 
             RequestList();
         }
@@ -143,7 +143,7 @@ namespace giantsummon.Creatures
         public void RequestList()
         {
             AddNewRequest("Pincer Bane", 220, 
-                "*Hey Terrarian, I have a client looking for Snatcher Jaws for some reason, would you like to help me with this? I can share the profit with you.*",
+                "*Hey [nickname], I have a client looking for Snatcher Jaws for some reason, would you like to help me with this? I can share the profit with you.*",
                 "*Perfect. Snatchers can be found in the Jungle. Don't get too close to them, in other words, use guns. Also, try not to damage the jaws too much, I get more profit if they are intact.*",
                 "*Psh. Go away.*",
                 "*Good job, here is your share. If someone asks, we didn't see each other.*",
@@ -152,7 +152,7 @@ namespace giantsummon.Creatures
             AddObjectDroppingMonster(Terraria.ID.NPCID.Snatcher, 0.75f);
             //
             AddNewRequest("Mysterious Package", 260, 
-                "*Terrarian, I have a delivery for you to make. I have to warn you, don't tell the target who sent It.*",
+                "*[nickname], I have a delivery for you to make. I have to warn you, don't tell the target who sent It.*",
                 "*Good, send this to my personal annoyance, let's hope this makes him stop bothering me for some time.*",
                 "*I wont be doing this myself, so I guess I'll leave this on hold.*",
                 "*You did? Good. Now forget that this happened.*",
@@ -161,7 +161,7 @@ namespace giantsummon.Creatures
             {
                 return PlayerMod.PlayerHasGuardian(player, GuardianBase.Brutus);
             });
-            AddTalkToGuardianRequest("*You say that you have a delivery for me? Weird, nobody I know knows that I'm here. Well, let's see It....! Terrarian, where did you get this? Tell me! I mean, who gave you this? You can't tell me? ... Thanks... Anyway..*", GuardianBase.Brutus);
+            AddTalkToGuardianRequest("*You say that you have a delivery for me? Weird, nobody I know knows that I'm here. Well, let's see It....! [nickname], where did you get this? Tell me! I mean, who gave you this? You can't tell me? ... Thanks... Anyway..*", GuardianBase.Brutus);
         }
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
@@ -317,7 +317,7 @@ namespace giantsummon.Creatures
             }
             if (PlayerMod.HasGuardianSummoned(player, Wrath) && player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
             {
-                Mes.Add("*Hey Terrarian, what have you been eating latelly? Because you seems to have released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\", hahaha. Got It? Released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\"?*");
+                Mes.Add("*Hey [nickname], what have you been eating latelly? Because you seems to have released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\", hahaha. Got It? Released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\"?*");
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
             {
@@ -352,7 +352,7 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("*What are you looking at? Give me a hand, will you?* (He's trying to stop a open wound from bleeding)");
                     Mes.Add("*Yes, that hurts, is that what you wanted to know?*");
-                    Mes.Add("*Argh... Terrarian... I wont be able to do business in your world if I die.*");
+                    Mes.Add("*Argh... [nickname]... I wont be able to do business in your world if I die.*");
                     Mes.Add("*Do you know a thing or two about first aid, buddy? Urf..*");
                 }
                 else
@@ -481,7 +481,7 @@ namespace giantsummon.Creatures
                         case 0:
                             return "*Huh? What? I snore very loud? Then go away.*";
                         case 1:
-                            return "*Terrarian, one of the things I value is a well slept day.*";
+                            return "*[nickname], one of the things I value is a well slept day.*";
                         case 2:
                             return "*If you want to trade, couldn't you wait until I open my shop?*";
                     }

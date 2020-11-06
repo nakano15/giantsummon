@@ -860,7 +860,7 @@ namespace giantsummon.Creatures
                         case 0:
                             return "*You woke me up... I hope It's important... Yawn...*";
                         case 1:
-                            return "*Terrarian, whatever you want from me, couldn't wait?*";
+                            return "*[nickname], whatever you want from me, couldn't wait?*";
                         case 2:
                             return "*Yawn... Yes, what do you want..?*";
                     }

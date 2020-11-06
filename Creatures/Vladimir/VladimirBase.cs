@@ -1106,9 +1106,9 @@ namespace giantsummon.Creatures
                     switch (Main.rand.Next(3))
                     {
                         case 0:
-                            return "*Yaaaaaawnn.... Oh.. Hello Terrarian... Do you need something?*";
+                            return "*Yaaaaaawnn.... Oh.. Hello [nickname]... Do you need something?*";
                         case 1:
-                            return "*Oh, hello Terrarian. Are you in need of a hug?";
+                            return "*Oh, hello [nickname]. Are you in need of a hug?";
                         case 2:
                             return "*You need something from me? I was having some sleep.*";
                     }
@@ -1119,7 +1119,7 @@ namespace giantsummon.Creatures
                         case 0:
                             return "*Oh... Hello.. Just stretching a bit... Done. Did you do what I asked?*";
                         case 1:
-                            return "*Hey Terrarian, you woke up because of my request, right? Did you finish It?*";
+                            return "*Hey [nickname], you woke up because of my request, right? Did you finish It?*";
                     }
                     break;
             }

@@ -182,7 +182,7 @@ namespace giantsummon.Creatures
         {
             //0
             AddNewRequest("A Little Warm Up", 250,
-                "*Terrarian, I need your help to test my power. There is a creature you call Skeletron in this world, I want to face It alongside you, to see if I can try protecting you. Can you give me a help on this?*",
+                "*[nickname], I need your help to test my power. There is a creature you call Skeletron in this world, I want to face It alongside you, to see if I can try protecting you. Can you give me a help on this?*",
                 "*Thank you. Maybe there is some way of calling It again, I have no idea how you could do that.*",
                 "*Oh, you're not ready to face It again? Don't worry about that, I'm okay.*",
                 "*I think we did good on this fight, but I feel bad about the Clothier's death. I can't really feel any sense of victory in this fight.*",
@@ -198,7 +198,7 @@ namespace giantsummon.Creatures
             //1
             AddNewRequest("Jaws Hunter", 270,
                 "*I need to get stronger, which means I need to eat more meat. No, I'm nothinking about you or your citizens. There isn't much variety of edible things in this world, but I think Sharks will help me with this matter. What do you think? Ready for some fishing?*",
-                "*Terrarian, allow me to assist you in this request. I want to get stronger, but I can't risk endangering my client with It.*",
+                "*[nickname], allow me to assist you in this request. I want to get stronger, but I can't risk endangering my client with It.*",
                 "*Yes, their jaws are really big, maybe I should try something smaller, like bats.*",
                 "*Wow! Look at all that Shark meat. I think I can turn all that in muscles in a few weeks.*");
             AddRequestRequirement(RequestBase.GetNightRequestRequirement);
@@ -206,9 +206,9 @@ namespace giantsummon.Creatures
             AddObjectDroppingMonster(Terraria.ID.NPCID.Shark, 0.8f);
             //2
             AddNewRequest("Green Menace", 285,
-                "*The goblins may attempt to launch a full attack to your town any time in the future. We should make them to try attacking us now, so we can weaken them, and make them spend more time trying to resuply. What do you think, Terrarian?*",
+                "*The goblins may attempt to launch a full attack to your town any time in the future. We should make them to try attacking us now, so we can weaken them, and make them spend more time trying to resuply. What do you think, [nickname]?*",
                 "*I knew you would agree with my plan. We should create a Goblin Battle Standard to force them to show up. The Goblin Spies who appear in the Far Lands of the World can help us make that.*",
-                "*But Terrarian, the safety of the town is at stake here! Okay... We'll not try making them attack us then.*",
+                "*But [nickname], the safety of the town is at stake here! Okay... We'll not try making them attack us then.*",
                 "*Haha! That was a good fight! This should make them spend a long time trying to gather supplies for another attack. We should be safe, for now.*",
                 "*We need to make a Goblin Battle Standard to lure them. Wood you know where to find, the clothings used for It can be acquired from Goblin Spies. They appear on the far lands of the world.*");
             AddRequestRequirement(delegate(Player player){
@@ -217,10 +217,10 @@ namespace giantsummon.Creatures
             AddEventParticipationObjective(Terraria.ID.InvasionID.GoblinArmy);
             //3
             AddNewRequest("A drink with a friend", 330,
-                "*Terrarian, would you like sharing a drink with me?*",
+                "*[nickname], would you like sharing a drink with me?*",
                 "*Great, let's meet at the pub, then.*",
                 "*Busy? Okay, let's try again another time.*",
-                "*Terrarian, ever since you gave me that package, I've been looking at It's content day and night, and I think It's time for me to put that outfit again. I want you to be the first person to see me use It, and tell me how I look. [Unlocked Royal Guard Outfit]*",
+                "*[nickname], ever since you gave me that package, I've been looking at It's content day and night, and I think It's time for me to put that outfit again. I want you to be the first person to see me use It, and tell me how I look. [Unlocked Royal Guard Outfit]*",
                 "*Let's go to a pub, I have something to talk about with you. The Bartender could give us some drinks.*");
             AddRequestRequirement(delegate(Player player)
             {
@@ -262,10 +262,10 @@ namespace giantsummon.Creatures
                                     guardian.SaySomething("*Hang on! I'm coming!*");
                                     break;
                                 case 1:
-                                    guardian.SaySomething("*Terrarian!*");
+                                    guardian.SaySomething("*[nickname]!*");
                                     break;
                                 case 2:
-                                    guardian.SaySomething("*No! Terrarian! I'm coming!*");
+                                    guardian.SaySomething("*No! [nickname]! I'm coming!*");
                                     break;
                             }
                         }
@@ -274,10 +274,10 @@ namespace giantsummon.Creatures
                             switch (Main.rand.Next(3))
                             {
                                 case 0:
-                                    guardian.SaySomething("*Ugh... Terrarian...*");
+                                    guardian.SaySomething("*Ugh... [nickname]...*");
                                     break;
                                 case 1:
-                                    guardian.SaySomething("*Terrarian... I'm... Coming...*");
+                                    guardian.SaySomething("*[nickname]... I'm... Coming...*");
                                     break;
                                 case 2:
                                     guardian.SaySomething("*... I... Can't fall... Yet...*");
@@ -299,13 +299,13 @@ namespace giantsummon.Creatures
                             switch (Main.rand.Next(3))
                             {
                                 case 0:
-                                    guardian.SaySomething("*Terrarian! Go now! Save yourself!*");
+                                    guardian.SaySomething("*[nickname]! Go now! Save yourself!*");
                                     break;
                                 case 1:
-                                    guardian.SaySomething("*I'll distract It Terrarian! Go! My contract is worth nothing if you die.*");
+                                    guardian.SaySomething("*I'll distract It [nickname]! Go! My contract is worth nothing if you die.*");
                                     break;
                                 case 2:
-                                    guardian.SaySomething("*Terrarian, run! I'll try distracting that creature.*");
+                                    guardian.SaySomething("*[nickname], run! I'll try distracting that creature.*");
                                     break;
                             }
                         }
@@ -316,13 +316,13 @@ namespace giantsummon.Creatures
                                 switch (Main.rand.Next(3))
                                 {
                                     case 0:
-                                        guardian.SaySomething("*Terrarian! Damn...*");
+                                        guardian.SaySomething("*[nickname]! Damn...*");
                                         break;
                                     case 1:
                                         guardian.SaySomething("*Maybe placing you on my shoulder wasn't a good idea.*");
                                         break;
                                     case 2:
-                                        guardian.SaySomething("*Terrarian, are you okay?*");
+                                        guardian.SaySomething("*[nickname], are you okay?*");
                                         break;
                                 }
                             }
@@ -331,10 +331,10 @@ namespace giantsummon.Creatures
                                 switch (Main.rand.Next(3))
                                 {
                                     case 0:
-                                        guardian.SaySomething("*Terrarian, move to behind me.*");
+                                        guardian.SaySomething("*[nickname], move to behind me.*");
                                         break;
                                     case 1:
-                                        guardian.SaySomething("*Terrarian, let me lure that creature attention while you heal.*");
+                                        guardian.SaySomething("*[nickname], let me lure that creature attention while you heal.*");
                                         break;
                                     case 2:
                                         guardian.SaySomething("*Watch your health! Get yourself behind me before It's too late.*");
@@ -577,9 +577,9 @@ namespace giantsummon.Creatures
                 }
                 else
                 {
-                    Mes.Add("*Terrarian... If things gets too hard, leave me here, and save yourself... Ngh... (He looks very wounded)*");
+                    Mes.Add("*[nickname]... If things gets too hard, leave me here, and save yourself... Ngh... (He looks very wounded)*");
                     Mes.Add("*Argh.. Ugh... I'm fine... Worry about yourself... I can hold them... Ugh...*");
-                    Mes.Add("*Terrarian... Listen to me... My contract is worth nothing... If you perish... If you must... Go... Argh!*");
+                    Mes.Add("*[nickname]... Listen to me... My contract is worth nothing... If you perish... If you must... Go... Argh!*");
                 }
                 Mes.Add("(He seems to be trying to endure the pain)");
             }
@@ -947,7 +947,7 @@ namespace giantsummon.Creatures
                                                             switch (Main.rand.Next(5))
                                                             {
                                                                 case 0:
-                                                                    guardian.SaySomething("*I'm only protecting him because of you, Terrarian.*");
+                                                                    guardian.SaySomething("*I'm only protecting him because of you, [nickname].*");
                                                                     break;
                                                                 case 1:
                                                                     guardian.SaySomething("*Of anyone you could take direct control, It had to be him?*");
@@ -956,7 +956,7 @@ namespace giantsummon.Creatures
                                                                     guardian.SaySomething("*Is this some kind of karma?*");
                                                                     break;
                                                                 case 3:
-                                                                    guardian.SaySomething("*Okay, what have I done to you, Terrarian?*");
+                                                                    guardian.SaySomething("*Okay, what have I done to you, [nickname]?*");
                                                                     break;
                                                                 case 4:
                                                                     guardian.SaySomething("*It's funny how I'm treating his wounds, instead of beating his face.*");
@@ -1047,7 +1047,7 @@ namespace giantsummon.Creatures
                         case 0:
                             return "*W-Wha?! No, I wasn't sleeping, I was just... Reflecting!*";
                         case 1:
-                            return "*Terrarian! It's not what you're thinking, I didn't closed my eyes a second.*";
+                            return "*[nickname]! It's not what you're thinking, I didn't closed my eyes a second.*";
                         case 2:
                             return "*What am I doing in this bed? I was watching the town for troubles.*";
                     }

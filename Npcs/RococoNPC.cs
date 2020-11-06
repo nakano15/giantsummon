@@ -131,12 +131,20 @@ namespace giantsummon.Npcs
                             Math.Abs(pl.Center.Y - npc.Center.Y) >= NPC.sHeight * 0.5f + NPC.safeRangeY))
                         {
                             PlayerInRange = true;
+                            if (pl.Center.X < npc.Center.X)
+                                npc.direction = -1;
+                            else
+                                npc.direction = 1;
                         }
                     }
                 }
                 if (!TalkingWithMe)
                 {
                     Idle = true;
+                }
+                else
+                {
+
                 }
                 if (PlayerInRange)
                 {

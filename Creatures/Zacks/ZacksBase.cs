@@ -472,7 +472,7 @@ namespace giantsummon.Creatures
             if (guardian.KnockedOut)
             {
                 Mes.Clear();
-                Mes.Add("*I'm sorry Terrarian, I can't move. I think I pulled It up to It's limit.*");
+                Mes.Add("*I'm sorry [nickname], I can't move. I think I pulled It up to It's limit.*");
                 Mes.Add("*I'm paralized, I can't move at all.*");
                 Mes.Add("*I can't move any part of my body.*");
             }

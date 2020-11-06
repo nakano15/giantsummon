@@ -75,6 +75,7 @@
     <Compile Include="Buffs\VeryFatigued.cs" />
     <Compile Include="Buffs\VeryWounded.cs" />
     <Compile Include="Buffs\WellBeing.cs" />
+    <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
     <Compile Include="CommonRequestsDB.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />

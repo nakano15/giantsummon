@@ -221,7 +221,7 @@ namespace giantsummon.Npcs
                                         case 15:
                                             TextToSay = "By the way, I'm " + AlexGuardianBase.Name + ", let's go on an adventure.";
                                             break;
-                                        case 18:
+                                        case 20:
                                             //Guardian GET!
                                             PlayerMod.AddPlayerGuardian(Main.player[npc.target], AlexID);
                                             PlayerMod.GetPlayerGuardian(Main.player[npc.target], AlexID).IncreaseFriendshipProgress(1);

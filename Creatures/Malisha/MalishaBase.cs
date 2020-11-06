@@ -634,7 +634,7 @@ namespace giantsummon.Creatures
         {
             List<string> Mes = new List<string>();
             Mes.Add("*You guys did all that for me? I think I can be off researching for today.*");
-            Mes.Add("*Want to dance, Terrarian?*");
+            Mes.Add("*Want to dance, [nickname]?*");
             Mes.Add("*Nobody knows, but I'm the best when It's about dancing. Just watch me.*");
             if (!PlayerMod.HasGuardianBeenGifted(player, guardian.ID))
             {
@@ -728,7 +728,7 @@ namespace giantsummon.Creatures
                         case 0:
                             return "*I really should transform you into something for waking me up. Say It, what do you want?*";
                         case 1:
-                            return "*Terrarian, one of the most dangerous things ever is waking me up. But right now I'm not in the mood of doing anything.*";
+                            return "*[nickname], one of the most dangerous things ever is waking me up. But right now I'm not in the mood of doing anything.*";
                         case 2:
                             return "*You! You woke me up. Tell me the reason, NOW.*";
                     }

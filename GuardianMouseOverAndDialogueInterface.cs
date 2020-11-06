@@ -443,6 +443,7 @@ namespace giantsummon
                     {
                         AddOption("I have a gift for you", GiveGiftButtonAction);
                     }
+                    AddOption("Let's talk about something else.", SomethingElseButtonPressed);
                     if (tg.OwnerPos == Main.myPlayer && PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
                         AddOption("Let's get some rest.", RestButtonAction);
@@ -459,6 +460,19 @@ namespace giantsummon
         {
             DialogueOption option = new DialogueOption(Mes, Action);
             Options.Add(option);
+        }
+
+        public static void SomethingElseButtonPressed(TerraGuardian tg)
+        {
+            AddOption("Change my Nickname.", ChangeNicknameButtonPressed);
+            AddOption("Nevermind.", GetDefaultOptions);
+        }
+
+        public static void ChangeNicknameButtonPressed(TerraGuardian tg)
+        {
+            Main.chatText = "/changenickname ";
+            Main.drawingPlayerChat = true;
+            CloseDialogueButtonAction(tg);
         }
 
         public static void WakeUpCompanionButtonAction(TerraGuardian tg)
@@ -708,6 +722,7 @@ namespace giantsummon
         public static string MessageParser(string Message, TerraGuardian guardian)
         {
             Message = Message.Replace("[name]", guardian.Name);
+            Message = Message.Replace("[nickname]", guardian.PersonalNicknameToPlayer != null ? guardian.PersonalNicknameToPlayer : Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetNickname);
             //Message += "[gn:1:""]";
             string FinalMessage = "";
             string CommandType = "";

@@ -38,6 +38,7 @@ namespace giantsummon
         public int ID { get { return MyID.ID; } set { MyID.ID = value; } }
         public string ModID { get { return MyID.ModID; } set { MyID.ModID = value; } } //To distinguish mod companions
         public byte PickedName = 0;
+        public string PersonalNicknameToPlayer = null;
         public GuardianID MyID = new GuardianID(0);
         public bool IsStarter = false;
         public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;

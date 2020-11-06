@@ -10,7 +10,7 @@ namespace giantsummon.Npcs
 {
     public class VladimirNPC : GuardianActorNPC
     {
-        public bool RequestTaken = false, RequestComplete = false, HugPassed = false;
+        public bool SpottedPlayer = false, RequestTaken = false, RequestComplete = false, HugPassed = false;
         public byte FishsTaken = 0, FishsToTake = 0;
         public int HuggingPlayer = -1;
         const int FishID = Terraria.ID.ItemID.Honeyfin;
@@ -57,37 +57,68 @@ namespace giantsummon.Npcs
             }
             if (npc.direction == 0)
                 npc.direction = 1;
+            bool JustSpottedPlayer = false;
+            if (!SpottedPlayer)
+            {
+                Rectangle rect = new Rectangle((int)npc.Center.X, (int)npc.Center.Y, 300, 300);
+                rect.Y -= rect.Height / 2;
+                if (npc.direction < 0)
+                    rect.X -= rect.Width;
+                for (int p = 0; p < 255; p++)
+                {
+                    if (Main.player[p].active && Main.player[p].getRect().Intersects(rect) &&
+                        Collision.CanHitLine(npc.position, npc.width, npc.height, Main.player[p].position, Main.player[p].width, Main.player[p].height))
+                    {
+                        SpottedPlayer = true;
+                        JustSpottedPlayer = true;
+                        npc.target = p;
+                        if (Main.player[p].Center.X < npc.Center.X)
+                            npc.direction = -1;
+                        else
+                            npc.direction = 1;
+                        break;
+                    }
+                }
+            }
             if (!RequestTaken)
             {
                 this.Idle = true;
                 npc.ai[0]++;
-                if (npc.ai[0] >= (300 + 60 * npc.ai[1]))
+                if (SpottedPlayer)
                 {
-                    npc.ai[1] = 3 + Main.rand.Next(4);
-                    npc.ai[0] = 0;
-                    string Message = "";
-                    switch (Main.rand.Next(5))
-                    {
-                        case 0:
-                            Message = "*Is there really a town around here?*";
-                            break;
-                        case 1:
-                            Message = "*I'm so hungry... I've been walking for days...*";
-                            break;
-                        case 2:
-                            Message = "*I need to take some rest...*";
-                            break;
-                        case 3:
-                            Message = "*Why are all the creatures here so aggressive?*";
-                            break;
-                        case 4:
-                            Message = "*I wonder if there is someone nearby...*";
-                            break;
-                    }
-                    SayMessage(Message);
+                    if (JustSpottedPlayer)
+                        SayMessage("*Hey! Can you hear me? Come closer so we can talk, please.*");
                 }
-                npc.TargetClosest(false);
-                if (Main.player[npc.target].talkNPC == npc.whoAmI)
+                else
+                {
+                    if (npc.ai[0] >= (300 + 60 * npc.ai[1]))
+                    {
+                        npc.ai[1] = 3 + Main.rand.Next(4);
+                        npc.ai[0] = 0;
+                        string Message = "";
+                        switch (Main.rand.Next(5))
+                        {
+                            case 0:
+                                Message = "*Is there really a town around here?*";
+                                break;
+                            case 1:
+                                Message = "*I'm so hungry... I've been walking for days...*";
+                                break;
+                            case 2:
+                                Message = "*I need to take some rest...*";
+                                break;
+                            case 3:
+                                Message = "*Why are all the creatures here so aggressive?*";
+                                break;
+                            case 4:
+                                Message = "*I wonder if there is someone nearby...*";
+                                break;
+                        }
+                        SayMessage(Message);
+                    }
+                    npc.TargetClosest(false);
+                }
+                if (Main.player[npc.target].talkNPC == npc.whoAmI || SpottedPlayer)
                 {
                     Idle = false;
                     if (Main.player[npc.target].Center.X < npc.Center.X)

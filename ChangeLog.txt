@@ -4,3 +4,12 @@ Removed Nemesis unused sprites.
 Nerfed companions view range:
 	It went from 520x480 to 420x360.
 Recipes will no longer spoil your shopping on Domino's store.
+Nerfed damage penalty for having more than 1 companion.
+	Damage penalty went from 20% to 10% of the previous damage reduction.
+Alex recruit npc now gives you some more time to read his final recruitment line.
+Rococo recruit npc will now face the one he's speaking with.
+Vladimir recruit npc will now be able to spot players in his view range.
+	That will stop him from wandering around, and speaking random lines.
+You can now change how the companions will call you.
+	Not all dialogues have the companions call you a Terrarian, but... That's a change.
+You can no longer control Terrarian characters.

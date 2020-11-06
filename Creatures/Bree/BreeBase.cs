@@ -585,7 +585,7 @@ namespace giantsummon.Creatures
                         case 0:
                             return "Whatever you want could have waited until I woke up, right?";
                         case 1:
-                            return "Terrarian. For what reason did you woke me up? SAY IT!";
+                            return "[nickname]. For what reason did you woke me up? SAY IT!";
                         case 2:
                             return "What? Why did you woke me up? Let me sleep!";
                     }

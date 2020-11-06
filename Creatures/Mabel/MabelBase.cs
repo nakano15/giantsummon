@@ -509,7 +509,7 @@ namespace giantsummon.Creatures
                     switch (Main.rand.Next(3))
                     {
                         case 0:
-                            return "*Yawn... Oh, hello Terrarian. I really need some sleep to keep my beauty for the contest. What do you need?*";
+                            return "*Yawn... Oh, hello [nickname]. I really need some sleep to keep my beauty for the contest. What do you need?*";
                         case 1:
                             return "*Aaaah! Oh, sorry, you scared me. I wasn't having a good dream...*";
                         case 2:
@@ -520,7 +520,7 @@ namespace giantsummon.Creatures
                     switch (Main.rand.Next(2))
                     {
                         case 0:
-                            return "*Oh, hi Terrarian. Did you do what I asked you?*";
+                            return "*Oh, hi [nickname]. Did you do what I asked you?*";
                         case 1:
                             return "*I'm so sleepy, did you woke me up to tell that did what I asked?*";
                     }
