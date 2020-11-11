@@ -842,6 +842,27 @@ namespace giantsummon.Creatures
                             return "*Huh? You have done what I asked? I really wanted some more sleep right now.*";
                     }
                     break;
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*She's telling that was feeling bored of staying at home, and joins your adventure.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*She said that dislikes crowd.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*She tells you that is not interessed in going on an adventure right now.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*She asks if you really want to leave her here.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    if (!NpcMod.HasMetGuardian(Zacks))
+                    {
+                        return "*She gives you a farewell, and reminds you to find the other wolf she's looking for.*";
+                    }
+                    else
+                    {
+                        return "*She gives you a farewell, and wishes you a good adventure.*";
+                    }
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*She says that may be entertaining slashing her way back home.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*She sounds relieved.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

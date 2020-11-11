@@ -150,39 +150,7 @@ namespace giantsummon.Creatures
                 return "I care so much for you, I don't want to see any harm come to you. If you need to do something dangerous, let me go do it instead.";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "You're back! You're back! Yay!! *He's jumping around in circles, out of happiness, after seeing you.*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "You're one of the best pack members I ever had! You're the best!";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "Hey, look what I found! It's for you! Just for my best friend! *He gave you a bone.*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "I had " + AlexRecruitScripts.AlexOldPartner + ", now I have you. I had the best friends I could have ask for!";
-            }
-        }
-
+        
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
         {
             if (AnimationID == 2)
@@ -620,6 +588,21 @@ namespace giantsummon.Creatures
                             return "You want something? I have asked for something? Did you completed It?";
                     }
                     break;
+                    //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "You're taking me out for a walk? Cool! I'll get the leash.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "Uh... There's too many people with you right now...";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "I don't want to go out for a walk right now...";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "You're going to leave me here? All alone?";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "Okay! I'll be waiting for you.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "Alright... I'll try going home...";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "Woof! Amazing!";
             }
             return base.GetSpecialMessage(MessageID);
         }

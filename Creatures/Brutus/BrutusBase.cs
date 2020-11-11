@@ -1029,6 +1029,21 @@ namespace giantsummon.Creatures
                             return "*Where did you... I mean... Yes, I was totally expecting you, did you do what I asked?*";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*I will protect you during your adventures!*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*It will be very difficulty protecting you, when I wont even be able to walk due to so many people.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*I'm not in the mood right now...*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*I think It would be better if I leaved the company in a safe place. Not that anything out there could hurt me, you know.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*Okay, call me whenever you get into a dangerous mission.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*Okay then, I'll return to the town. Take care of yourself, [nickname].*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*I shall guard your life some more then.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

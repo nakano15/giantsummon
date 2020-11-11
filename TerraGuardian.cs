@@ -8590,8 +8590,8 @@ namespace giantsummon
                 DistanceMod *= 1.5f;
             if (Scale > 1)
                 DistanceMod *= Scale;
-            int SpotRangeX = 380;
-            int SpotRangeY = 360;
+            int SpotRangeX = 360;
+            int SpotRangeY = 320;
             float NearestDistance = float.MaxValue;
             if (HurtPanic)
             {

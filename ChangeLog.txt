@@ -2,7 +2,7 @@
 Mabel also got a change on her default weapon: She will now use Bee Keeper, instead of Enchanted Boomerang.
 Removed Nemesis unused sprites.
 Nerfed companions view range:
-	It went from 520x480 to 380x360.
+	It went from 520x480 to 360x320.
 Recipes will no longer spoil your shopping on Domino's store.
 Nerfed damage penalty for having more than 1 companion.
 	Damage penalty went from 20% to 10% of the previous damage reduction.
@@ -22,6 +22,8 @@ The Portrait of a Friend will now correctly disappear from the inventory when yo
 Fixed two bugs related to player reviving a companion:
 	One is the bug where the text flickers, the other is not being able to revive companion when there's no town npc nearby.
 You can now ask companions to join your team, or leave your team through their dialogues.
+	Due to this change, the Call and Dismiss button on the Guardian Selection Interface will still be disponible for you to use.
+		Did I scare you right now?
 Added a fail safe checking on the companion dialogue update script. If the game manages to generate a dialogue without option, It will add the "Close" option to It.
 Removed the friendship level related messages from the companions.
 	Ever since I added them, I felt very awkward, and were unable to add an actually fitting message for a friendship level up. There are better approaches for friendship level up.

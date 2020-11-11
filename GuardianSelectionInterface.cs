@@ -520,9 +520,25 @@ namespace giantsummon
                             if (IsCallButton)
                             {
                                 player.CallGuardian(GuardianList[Selected], SummonSlot);
+                                foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
+                                {
+                                    if (tg.ID == DisplayGuardian.ID && tg.ModID == DisplayGuardian.ModID)
+                                    {
+                                        string mes = tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess);
+                                        if (mes != "")
+                                        {
+                                            tg.SaySomething(mes);
+                                        }
+                                        break;
+                                    }
+                                }
                             }
                             else
                             {
+                                TerraGuardian tg = player.GetAllGuardianFollowers.First(x => x.ID == DisplayGuardian.ID && x.ModID == DisplayGuardian.ModID);
+                                string Mes = tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer);
+                                if (Mes != "")
+                                    Main.NewText(tg.Name += ": " + Mes);
                                 player.DismissGuardian(player.GetGuardianSlot(GuardianList[Selected]));
                             }
                         }

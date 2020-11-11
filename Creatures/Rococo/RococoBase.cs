@@ -559,6 +559,21 @@ namespace giantsummon.Creatures
                             return "*[name] smiles at you, and asks if you did his request.*";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*[name] seems happy, and follows you.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*[name] says that is worried about the number of people in your group. He sees no way of fitting in It.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*[name] doesn't feels okay into joining your group right now.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*[name] seems worried about leaving the group outside of a safe place.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*[name] gives you a farewell, and tells you that had fun on the adventure.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*[name] tells you to becareful on your travel, and that will see you back at home.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*[name] seems relieved when you changed your mind.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

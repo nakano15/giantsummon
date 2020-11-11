@@ -668,6 +668,21 @@ namespace giantsummon.Creatures
                             return "Woah! Oh, It's you. Did you do my request?";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "I'm always ready for a new adventure.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "There's way too many people in your group. There is no way I can join.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "I can't go on an adventure right now...";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "Yes, I can leave the group but... Here?";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "Awww... I were having so much fun. Let's adventure some more in the future.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "Okay, okay. I wont judge your decision. I see you back at home. Be safe.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "Yes, let's look for a town so I can leave the group.";
             }
             return base.GetSpecialMessage(MessageID);
         }

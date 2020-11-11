@@ -330,6 +330,21 @@ namespace giantsummon.Creatures
                             return "Hey! I was trying to sleep. What? Request? Did you do It?";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "Yes! I love being around with TerraGuardians, but I love adventuring too.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "There is no way I can join the group right now. Too many people.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "I don't want to go on an adventure right now.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "Are you sure? I don't really like being left in this place.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "Okay. Come see me again whenever you go into another adventure.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "I think I know the way home. It's that way, right?";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "Let's try getting into a safe place before leaving the group.";
             }
             return base.GetSpecialMessage(MessageID);
         }

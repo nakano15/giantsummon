@@ -567,6 +567,28 @@ namespace giantsummon.Creatures
                             return "I hope It's important, or about my request, because I really was enjoying my sleep.";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "I really needed a break from housekeeping, anyway. I hope you don't make me miss that.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "I may be small, but I don't think I will fit in that group of yours.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    if (!NpcMod.HasMetGuardian(Sardine))
+                    {
+                        return "I can't right now, I'm looking for clues about my husband.";
+                    }
+                    else
+                    {
+                        return "No way, I have many things to do in my house.";
+                    }
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "Here?! Right here?! You want to leave me here all alone?! Are you nuts?";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "I need to rest my legs anyway.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "Yes, fine. Leave a damsel fight her way back to home all alone...";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "Okay, let's find a safe place for me before we leave, then.";
             }
             return base.GetSpecialMessage(MessageID);
         }

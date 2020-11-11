@@ -340,6 +340,21 @@ namespace giantsummon.Creatures
                             return "*You better have completed my request, because I'm even more furious now.*";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*Good, I could use discounting my rage on our opposition.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*There's too many people! I hate mobs! They make me furious!*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*Not now!*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*You're crazy?! You plan on leaving me here?!*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*Grr... Fine.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*Grrr.... Alright... Do It your way then...*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*I thought so.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

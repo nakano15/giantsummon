@@ -302,6 +302,21 @@ namespace giantsummon.Creatures
                     return "(She jumped out of the bed, and is now looking at you excited, wanting to know if you did what she asked for.)";
                 case MessageIDs.BuddySelected:
                     return "(She doesn't knows how to react for you to choosing her as buddy, she looks happy for the choice.)";
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "(She jumps out of excitement.)";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "(She looks at the size of your group, and then denies.)";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "(She doesn't seems very interessed in joining your group right now.)";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "(She seems to be worried about the place you want her to leave the group. Are you sure you want to do that?)";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "(She nods and then gives you a farewell.)";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "(She leaves your team with a sad look in her face.)";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "(She smiled after you said no.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

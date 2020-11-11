@@ -921,7 +921,7 @@ namespace giantsummon
                 AfterAskingCompanionToJoinYourGroupFullParty = "Mes.Follower.FullParty", 
                 AfterAskingCompanionToJoinYourGroupFail = "Mes.Follower.JoinResponseFail";
             public const string AfterAskingCompanionToLeaveYourGroupAskIfYoureSure = "Mes.Follower.LeavePartyAskIfSure",
-                AfterAskingCompanionToLeaveYourGroupYesAnswer = "Mes.Follower.LeavePartyYesAnswer",
+                AfterAskingCompanionToLeaveYourGroupSuccessAnswer = "Mes.Follower.LeavePartyYesAnswer",
                 AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace = "Mes.Follower.LeavePartyYesAnswerDangerous",
                 AfterAskingCompanionToLeaveYourGroupNoAnswer = "Mes.Follower.LeavePartyNoAnswer";
         }

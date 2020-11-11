@@ -463,6 +463,21 @@ namespace giantsummon.Creatures
                             return "*I hope you woke me up to say that completed my request, because I was really busy trying to sleep.*";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*Yes, but I'll take half of the loot.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*I don't think you can carry more people right now.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*No, I preffer to stay here and make lucre selling my merchandise.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*You're planning on leaving me here, all alone, in the wilds?*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*I think I got enough loot from our trip, [nickname]. I'll go back to my store.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*Okay... Don't you come asking for discount if I find something cool to sell.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*I thought so. Let's go to a town before you decide to remove me from the team.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

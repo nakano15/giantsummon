@@ -705,6 +705,21 @@ namespace giantsummon.Creatures
                             return "*I remember that I gave you a request. Is It done?*";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*I can help you on your travels, just don't leave me behind.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*I think you have way too many people with you.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*Sorry, but I don't feel like I can follow you right now.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*Are you sure? I don't really like this place. I can't really die but... Being incapacitated isn't cool.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*Oh, okay. I'm going back home then.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*Then I'll try returning home. Be sure to visit me safe and sound.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*Great choice, [nickname].*";
             }
             return base.GetSpecialMessage(MessageID);
         }

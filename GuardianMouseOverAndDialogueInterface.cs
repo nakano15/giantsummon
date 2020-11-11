@@ -50,6 +50,7 @@ namespace giantsummon
                 return (int)(DialogueLines * 30 + 60);
             }
         }
+        private static bool HideCallDismissButton = false;
 
         public static void SetDialogue(string Message) //And with auto parser :D
         {
@@ -78,6 +79,7 @@ namespace giantsummon
 
         public static void StartDialogue(TerraGuardian tg)
         {
+            HideCallDismissButton = false;
             GuardianShopInterface.ShopOpen = false;
             Main.CancelHairWindow();
             Main.npcShop = 0;
@@ -422,13 +424,16 @@ namespace giantsummon
             {
                 if (!tg.Base.InvalidGuardian)
                 {
-                    if (tg.OwnerPos == Main.myPlayer)
+                    if (!HideCallDismissButton)
                     {
-                        AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
-                    }
-                    else
-                    {
-                        AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
+                        if (tg.OwnerPos == Main.myPlayer)
+                        {
+                            AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
+                        }
+                        else
+                        {
+                            AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
+                        }
                     }
                     string OptionText = "Check Request";
                     if (tg.request.RequestCompleted || tg.request.Failed)
@@ -481,7 +486,8 @@ namespace giantsummon
         {
             if (!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel)
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"));
+                SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), tg));
+                HideCallDismissButton = true;
                 GetDefaultOptions(tg);
             }
             else
@@ -489,13 +495,14 @@ namespace giantsummon
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
                 if (pm.GetEmptyGuardianSlot() == 255)
                 {
-                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for your companion in the group.)"));
+                    SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for your companion in the group.)"), tg));
                 }
                 else
                 {
-                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess, "(It seems happy to follow you.)"));
+                    SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess, "(It seems happy to follow you.)"), tg));
                     pm.CallGuardian(tg.ID, tg.ModID);
                 }
+                HideCallDismissButton = true;
                 GetDefaultOptions(tg);
             }
         }
@@ -508,7 +515,7 @@ namespace giantsummon
                 AskGuardianToLeaveGroupYesButtonPressed(tg);
             else
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure, "(It asks if It's really okay to leave It alone in this place.)"));
+                SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure, "(It asks if It's really okay to leave It alone in this place.)"), tg));
                 AddOption("Yes", AskGuardianToLeaveGroupYesButtonPressed);
                 AddOption("No", AskGuardianToLeaveGroupNoButtonPressed);
             }
@@ -520,18 +527,19 @@ namespace giantsummon
             pm.DismissGuardian(tg.ID, tg.ModID);
             if (tg.TownNpcs < 3)
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace, "(They say that will try getting to the town safelly.)"));
+                SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace, "(They say that will try getting to the town safelly.)"), tg));
             }
             else
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswer, "(They give you a farewell, and wishes you a good journey.)"));
+                SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer, "(They give you a farewell, and wishes you a good journey.)"), tg));
             }
+            HideCallDismissButton = true;
             GetDefaultOptions(tg);
         }
 
         public static void AskGuardianToLeaveGroupNoButtonPressed(TerraGuardian tg)
         {
-            SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer, "(They say that didn't wanted to leave the group, anyway.)"));
+            SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer, "(They say that didn't wanted to leave the group, anyway.)"), tg));
             GetDefaultOptions(tg);
         }
 

@@ -710,6 +710,25 @@ namespace giantsummon.Creatures
                             return "*You woke me up. Is my request done?*";
                     }
                     break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*Yes, I may end up finding guinea pigs for my experiments on the way.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*I hate mobs.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    if (NpcMod.HasGuardianNPC(Leopold) && Main.rand.NextDouble() < 0.5)
+                    {
+                        return "*Not right now, I have scheduled testing some potions on [gn:"+Leopold+"].*";
+                    }
+                    return "*No. I have many experiments to do.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*You want to leave me here in the wilds? Are you out of your mind?*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*I found the walking pleasant. Please call me again in the future, I may find new guinea pigs on the trip.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*You're going to regret that when I see you at the town.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*Okay, I think you are able to think rationally sometimes.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
