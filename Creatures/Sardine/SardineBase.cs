@@ -306,39 +306,7 @@ namespace giantsummon.Creatures
                 return "If you need someone fast for some dangerous thing, don't think twice about sending me there.";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-               return "Hey, let's find some monsters to kill, friend!";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "If I even manage to find something cool, I will give it to you.";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "There are so many things to find in this world. With you leading the way, I guess we will end up rich!";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "There is nobody I would go adventuring with other than you. You are a great partner!";
-            }
-        }
-
+        
         public override void Attributes(TerraGuardian g)
         {
             g.MeleeSpeed += 0.15f;

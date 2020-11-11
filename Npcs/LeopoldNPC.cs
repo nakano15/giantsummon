@@ -366,7 +366,7 @@ namespace giantsummon.Npcs
                                     switch (Guardian.ID) //What about moving those dialogues to a separate method, so It's easier to find them.
                                     {
                                         default:
-                                            Message = "*"+Guardian.Name+" is saying that you're It's friend.*";
+                                            Message = Guardian.GetMessage(GuardianBase.MessageIDs.LeopoldMessage1, "*"+Guardian.Name+" is saying that you're It's friend.*");
                                             break;
                                         case GuardianBase.Rococo:
                                             Message = "*"+Guardian.Name+" looks very confused.*";
@@ -416,7 +416,7 @@ namespace giantsummon.Npcs
                                     switch (Guardian.ID)
                                     {
                                         default:
-                                            Message = "*You're friends of that Terrarian?*";
+                                            Message = Guardian.GetMessage(GuardianBase.MessageIDs.LeopoldMessage2, "*You're friends of that Terrarian?*");
                                             break;
                                         case GuardianBase.Rococo:
                                             Message = "*Uh... What is it with the look in your face?*";
@@ -466,7 +466,7 @@ namespace giantsummon.Npcs
                                     switch (Guardian.ID)
                                     {
                                         default:
-                                            Message = "*" + Guardian.Name + " also said that you heard everything he said.*";
+                                            Message = Guardian.GetMessage(GuardianBase.MessageIDs.LeopoldMessage3, "*" + Guardian.Name + " also said that you heard everything he said.*");
                                             break;
                                         case GuardianBase.Rococo:
                                             Message = "*" + Guardian.Name + " is asking you what is his problem.*";

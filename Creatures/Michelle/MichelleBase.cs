@@ -44,39 +44,7 @@ namespace giantsummon.Creatures
             AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 10);
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "Oh hi! Came to call me to an adventure?";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "This world got so much more fun after the TerraGuardians arrived.";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "The people of the world seems to be getting along very well, no worries.";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "Say, we're adventuring too much, right? Let's take a few days of vacation with some of our friends, and spend some time just having fun around?";
-            }
-        }
-
+        
         public override string LeavingWorldMessage
         {
             get

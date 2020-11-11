@@ -249,7 +249,8 @@ namespace giantsummon.Creatures
         public override string TalkMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Sometimes I shake out of rage. If you ever see me in that state, don't get close.*");
+            Mes.Add("*Sometimes I temble out of rage. If you ever see me in that state, don't get close.*");
+            Mes.Add("*I still don't remember anything from before I woke up. I wonder who was I before what ever made me unconscious.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

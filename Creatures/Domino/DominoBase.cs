@@ -195,39 +195,7 @@ namespace giantsummon.Creatures
                 return "*If there's some place you can't go by yourself, just let me go instead.*";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*I had quite some profit here, I can stay doing deals here for longer, If you don't mind.*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*I've got quite a number of clients here. I wonder If I can start selling different things too...*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*So many things sold, I guess I can pay you to build me a mansion soon? Hahaha.*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*Hey there, thanks for letting me build my shop here. You don't know how much I mean it.*";
-            }
-        }
-
+        
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();

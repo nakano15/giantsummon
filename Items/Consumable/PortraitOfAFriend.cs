@@ -18,7 +18,7 @@ namespace giantsummon.Items.Consumable
             item.useTime = 30;
             item.maxStack = 1;
             item.consumable = true;
-            item.value = Item.buyPrice(0, 75);
+            item.value = 0;
             item.width = 24;            //Weapon's texture's width
             item.height = 16;           //Weapon's texture's height
             item.rare = 7;
@@ -26,9 +26,10 @@ namespace giantsummon.Items.Consumable
 
         public override void UpdateInventory(Player player)
         {
-            if (Main.ActivePlayerFileData.GetPlayTime() >= TimeSpan.FromMinutes(12))
+            if (player.whoAmI == Main.myPlayer && Main.ActivePlayerFileData.GetPlayTime() >= TimeSpan.FromMinutes(12))
             {
-                this.SetDefaults();
+                item.SetDefaults(0);
+                Main.NewText("Portrait of a Friend has suddenly disappeared from your inventory.");
             }
         }
 

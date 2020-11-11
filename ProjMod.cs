@@ -195,6 +195,42 @@ namespace giantsummon
                     }
                 }
             }
+            if (projectile.active)
+            {
+                if (projectile.aiStyle == 111)
+                {
+                    DryadBuffScript(projectile);
+                }
+            }
+        }
+
+        private void DryadBuffScript(Projectile proj)
+        {
+            float num1 = 300f;
+            if ((double)proj.ai[0] >= 100.0)
+                num1 = Microsoft.Xna.Framework.MathHelper.Lerp(300f, 600f, (float)(((double)proj.ai[0] - 100.0) / 200.0));
+            if ((double)num1 > 600.0)
+                num1 = 600f;
+            if ((double)proj.ai[0] >= 500.0)
+            {
+                num1 = Microsoft.Xna.Framework.MathHelper.Lerp(600f, 1200f, (float)(((double)proj.ai[0] - 500.0) / 100.0));
+            }
+            foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+            {
+                //Check if is hostile, if isn't, gives 165, if is, gives 186
+                if (tg.Distance(proj.Center) <= num1)
+                {
+                    bool Hostile = false;
+                    if (!Hostile)
+                    {
+                        tg.AddBuff(165, 120);
+                    }
+                    else if((!tg.HasBuff(186) || tg.GetBuff(186).Time <= 20) && Collision.CanHit(proj.Center, 1, 1, tg.TopLeftPosition, tg.Width, tg.Height))
+                    {
+                        tg.AddBuff(186, 120);
+                    }
+                }
+            }
         }
 
         public void TryRestoringPlayerStatus(Projectile projectile)

@@ -280,39 +280,7 @@ namespace giantsummon.Creatures
                 return "*[name] says that you can control her movements, but tells you to be careful about what you do.*";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*[name] is thankful for letting her live on your town. She likes the people in it.*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*[name] is talking about throwing a party later. She wants to dance with her friends.*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*[name] says that It's a gift that she has met your town.*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*[name] would like to spend some time to lie down on the floor, and watch the stars with her best friends.*";
-            }
-        }
-
+        
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             switch (Main.rand.Next(4))

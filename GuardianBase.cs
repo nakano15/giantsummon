@@ -101,12 +101,7 @@ namespace giantsummon
         public virtual string CallUnlockMessage { get { return "*It seems like I can call this guardian whenever I want.*"; } }
         public virtual string MountUnlockMessage { get { return "*It seems like I can mount this guardian whenever I want.*"; } }
         public virtual string ControlUnlockMessage { get { return "*It seems like I can control It's movement whenever I want.*"; } }
-
-        public virtual string FriendLevelMessage { get { return ""; } }
-        public virtual string BestFriendLevelMessage { get { return ""; } }
-        public virtual string BFFLevelMessage { get { return ""; } }
-        public virtual string BuddyForLifeLevelMessage { get { return ""; } }
-
+        
         public virtual string LeavingWorldMessageGuardianSummoned { get { return " things were packed out of the world."; } }
         public virtual string LeavingWorldMessage { get { return " has moved out of the world."; } }
 
@@ -922,6 +917,13 @@ namespace giantsummon
             public const string BuddySelected = "Mes.BuddyPicked";
             public const string GuardianWokeUpByPlayerMessage = "Mes.WakeUpMessage",
                 GuardianWokeUpByPlayerRequestActiveMessage = "Mes.WakeUpMessageRequestActive";
+            public const string AfterAskingCompanionToJoinYourGroupSuccess = "Mes.Follower.JoinResponse",
+                AfterAskingCompanionToJoinYourGroupFullParty = "Mes.Follower.FullParty", 
+                AfterAskingCompanionToJoinYourGroupFail = "Mes.Follower.JoinResponseFail";
+            public const string AfterAskingCompanionToLeaveYourGroupAskIfYoureSure = "Mes.Follower.LeavePartyAskIfSure",
+                AfterAskingCompanionToLeaveYourGroupYesAnswer = "Mes.Follower.LeavePartyYesAnswer",
+                AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace = "Mes.Follower.LeavePartyYesAnswerDangerous",
+                AfterAskingCompanionToLeaveYourGroupNoAnswer = "Mes.Follower.LeavePartyNoAnswer";
         }
         
         public enum GuardianEffect

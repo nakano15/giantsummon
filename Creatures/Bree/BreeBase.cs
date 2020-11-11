@@ -280,39 +280,7 @@ namespace giantsummon.Creatures
                 return "Don't make me regret saying this, but you can send me to some places you can't go. Period.";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "I miss my house so much... I wonder how my son is doing...";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "The neighborhood here is great, but... I'm more used o quieter places...";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "Say... Would you mind if I... No. No... I have to go home... My son...";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "I... I... Have to go home... I have... But... This place... *She started crying*";
-            }
-        }
-
+        
         public override void Attributes(TerraGuardian g)
         {
             g.MeleeDamageMultiplier += 0.05f;

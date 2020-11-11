@@ -337,6 +337,8 @@ namespace giantsummon
             return OtherCollision - CollisionPosition;
         }
         public bool ExecutingAttackAnimation { get { return ItemAnimationTime > 0 || FreezeItemUseAnimation; } }
+        public byte TurnLock = 0;
+        public const byte TurnLockTime = 12;
 
         public int CollisionWidth
         {
@@ -1779,6 +1781,8 @@ namespace giantsummon
             }
             CollisionHeightDiscount = 0;
             FinalScale = ScaleMult;
+            if (TurnLock > 0)
+                TurnLock--;
             if (Owner != null)
             {
                 //For testing
@@ -3311,8 +3315,6 @@ namespace giantsummon
                         WingType = Equipments[e].wingSlot;
                 }
             }
-            //if (SelectedOffhand > -1 && giantsummon.IsGuardianItem(this.Inventory[SelectedOffhand]))
-            //    giantsummon.GetGuardianItemData(this.Inventory[SelectedOffhand].type).ItemStatusScript(this);
             if (OwnerPos > -1 && PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
             {
                 float HealthMod, DamageMod;
@@ -3957,6 +3959,9 @@ namespace giantsummon
                         break;
                     case 182:
                         //Cell summon
+                        break;
+                    case 186:
+                        AddFlag(GuardianFlags.DryadBane);
                         break;
                     case 187:
                         //Stardust Dragon
@@ -7144,6 +7149,35 @@ namespace giantsummon
             {
                 HealthRegenPower -= 40;
             }
+            if (HasFlag(GuardianFlags.DryadBane))
+            {
+                float damagepower = 1f;
+                if (NPC.downedBoss1)
+                    damagepower += 0.1f;
+                if (NPC.downedBoss2)
+                    damagepower += 0.1f;
+                if (NPC.downedBoss3)
+                    damagepower += 0.1f;
+                if (NPC.downedQueenBee)
+                    damagepower += 0.1f;
+                if (Main.hardMode)
+                    damagepower += 0.4f;
+                if (NPC.downedMechBoss1)
+                    damagepower += 0.15f;
+                if (NPC.downedMechBoss2)
+                    damagepower += 0.15f;
+                if (NPC.downedMechBoss3)
+                    damagepower += 0.15f;
+                if (NPC.downedPlantBoss)
+                    damagepower += 0.15f;
+                if (NPC.downedGolemBoss)
+                    damagepower += 0.15f;
+                if (NPC.downedAncientCultist)
+                    damagepower += 0.15f;
+                if (Main.expertMode)
+                    damagepower *= Main.expertNPCDamage;
+                HealthRegenPower -= (int)(2 * (4 * damagepower));
+            }
             if (HasFlag(GuardianFlags.Electrified))
             {
                 HealthRegenPower -= 8;
@@ -8556,7 +8590,7 @@ namespace giantsummon
                 DistanceMod *= 1.5f;
             if (Scale > 1)
                 DistanceMod *= Scale;
-            int SpotRangeX = 420;
+            int SpotRangeX = 380;
             int SpotRangeY = 360;
             float NearestDistance = float.MaxValue;
             if (HurtPanic)
@@ -13020,7 +13054,7 @@ namespace giantsummon
                         //FallSpeed = (-FallSpeed + 1E-05f);
                     }
                 }
-                if (WallSlideStyle > 0)
+                if (WallSlideStyle > 0 && !CollisionY)
                 {
                     bool GenerateSlideDust = false;
                     if (MoveDown)
@@ -13079,7 +13113,7 @@ namespace giantsummon
 
         public void UpdateHorizontalMovement()
         {
-            bool UnallowDirectionChange = LockDirection || FreezeItemUseAnimation || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.LightVerticalSwing));
+            bool UnallowDirectionChange = LockDirection || FreezeItemUseAnimation || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.LightVerticalSwing) || TurnLock > 0);
             float MaxSpeed = this.MaxSpeed;
             float Acceleration = this.Acceleration;
             float SlowDown = this.SlowDown;
@@ -13113,6 +13147,7 @@ namespace giantsummon
                 if ((!MoveLeft && !MoveRight) || (Velocity.X > 0 && MoveLeft) || (Velocity.X < 0 && MoveRight))
                 {
                     SpeedFactor = SlowDown;
+                    if(Velocity.X != 0) SetTurnLock();
                 }
                 if (Ducking)
                     SpeedFactor = 0;
@@ -13142,6 +13177,19 @@ namespace giantsummon
                     }
                 }
             }
+        }
+
+        public string GetMessage(string MessageID, string DefaultMessage = "")
+        {
+            string Mes = Base.GetSpecialMessage(MessageID);
+            if (Mes == "" && DefaultMessage != "")
+                Mes = DefaultMessage;
+            return Mes;
+        }
+
+        public void SetTurnLock()
+        {
+            TurnLock = TurnLockTime;
         }
 
         public Point[] UpdateTouchingTiles()

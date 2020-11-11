@@ -158,39 +158,7 @@ namespace giantsummon.Creatures
                 return "*Hey again! I have some of my family's resistence in me, so If you need me to do something extremelly dangerous, I can do it.*";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*I really am enjoying this world, I feel like I'm being of great help.*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*Hey buddy, you seem to be overworking a bit on your adventure. Do you want a hug, and possibly have a chat? It's good to stop and chat around sometimes.*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*I'm very happy with this place, I feel like I belong to this place, the people here make me feel it. You helped too, hahaha. Hey, are you turning into a tomato?*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*It has been quite a long road for this hug giver. I've met several stories, and made new friends along the road. Say, what if we do a feast? So everyone can get their heads off their trouble and just eat the entire night?! I'm sure that I will be the one who will eat more in It. Hahaha.*";
-            }
-        }
-
+        
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian Guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();

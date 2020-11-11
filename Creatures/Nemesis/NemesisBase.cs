@@ -59,39 +59,7 @@ namespace giantsummon.Creatures
                 return "If you have something dangerous to do that can possibly end on demise, you can send me to do it instead. I don't care.";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "You have been doing so many things for me. Good.";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "What do you think when you give me those outfits to wear? People seems to have mixed reactions depending on how I'm dressed.";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "I have long lost my emotions since I died, so I'm trying to mirror you trying to have some. It isn't working, but you seem to benefit from my companionship, so I keep following you.";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "I don't think I have a goal, or even a purpose for existing, so I guess I will keep following you. At least until I find a purpose.";
-            }
-        }
-
+        
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             switch (Main.rand.Next(3))

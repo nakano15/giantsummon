@@ -369,38 +369,6 @@ namespace giantsummon.Creatures
             }
         }
 
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*Hey Boss, I'm about to have a few drinks, want to go too?*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*I didn't really liked working as a Royal Guard in the Ether Realm, all that standing around was boring. Being your Body Guard is giving me enough adrenaline to love this job.*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*It gradually crushes me when I think about the possibility of not being able to defend everyone in this world. What makes me move on, is seeing the faces and talking to the people I defend everyday. That is an automatic reward.*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*Hey Boss. I... Uh... Thank you for hiring me. I love this world, I like the town I live, and the citizens who live in it. It's like family. And for my family, I gladly give my life. My sword is yours, and I will be your shield.*";
-            }
-        }
-
         public override void Attributes(TerraGuardian g)
         {
             g.DefenseRate += 0.10f;

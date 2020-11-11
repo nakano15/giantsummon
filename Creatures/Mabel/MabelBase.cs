@@ -137,39 +137,7 @@ namespace giantsummon.Creatures
                 return "*Hey, do you want to meet the Ether Realm? What? You can't visit it? Don't worry, I can take you there.*";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*I really love this place, It's like as if everybody loves me. I'm like a star in your world?*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*Oh hello, I wanted to give you this, for being a good friend. *She hugged you* Tee hee.*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*Thanks to the people around, I have enough confidence that I will win the next contest. Just you see, I want you to be watching the contest too.*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*I just love everything in this world. The vegetation, the towns, the people, and even the monsters. You're a lucky person for having all that. And so am I for having you as friend.*";
-            }
-        }
-
+        
         public override bool GuardianWhenAttackedNPC(TerraGuardian guardian, int Damage, NPC Attacker)
         {
             if (Main.rand.Next(5) == 0)

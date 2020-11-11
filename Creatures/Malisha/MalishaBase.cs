@@ -248,39 +248,7 @@ namespace giantsummon.Creatures
                 return "*Okay, It's not working either way. I have an idea, what If I go alone in the travels? Just tell me where you wanted to go.*";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*You're the only person in this town who doesn't comes complaining at my experiments. I guess I should thank you for that.*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*Oh, hello. No, nothing exploded today. You were just checking If I was alright? Oh.*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*Hello again, feel free to stay as long as you want on my laboratory. Maybe you can give me a hand?*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*There is still lots I need to research for and do experiments, but I feel like here I'll be able to, so Thank You.*";
-            }
-        }
-
+        
         //It has been so long that I got this companion idea, that I even forgot her personality. Oops.
         public override string GreetMessage(Terraria.Player player, TerraGuardian guardian)
         {

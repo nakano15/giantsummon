@@ -1227,32 +1227,6 @@ namespace giantsummon
                 ControlMessageUnlocked = true;
                 return true;
             }
-            //return false;
-            //
-            if (!FriendMessageUnlocked && FriendshipLevel >= Base.FriendsLevel && Base.FriendLevelMessage != "")
-            {
-                Text = Base.FriendLevelMessage + "\n[You are now Friend of this companion]";
-                FriendMessageUnlocked = true;
-                return true;
-            }
-            if (!BestFriendMessageUnlocked && FriendshipLevel >= Base.BestFriendLevel && Base.BestFriendLevelMessage != "")
-            {
-                Text = Base.BestFriendLevelMessage + "\n[You are now Best Friend of this companion]";
-                BestFriendMessageUnlocked = true;
-                return true;
-            }
-            if (!BFFMessageUnlocked && FriendshipLevel >= Base.BestFriendForeverLevel && Base.BFFLevelMessage != "")
-            {
-                Text = Base.BFFLevelMessage + "\n[You are now Best Friend Forever of this companion]";
-                BFFMessageUnlocked = true;
-                return true;
-            }
-            if (!BuddyForLifeMessageUnlocked && FriendshipLevel >= Base.BuddiesForLife && Base.BFFLevelMessage != "")
-            {
-                Text = Base.BFFLevelMessage + "\n[You are now Buddy For Life of this companion]";
-                BuddyForLifeMessageUnlocked = true;
-                return true;
-            }
             return false;
         }
     }

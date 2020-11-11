@@ -166,6 +166,10 @@ namespace giantsummon
 
         public static void Update()
         {
+            if (Options.Count == 0)
+            {
+                AddOption("Close", CloseDialogueButtonAction);
+            }
             SomeoneMouseOver = false;
             int LastMouseOverGuardian = MouseOverGuardian;
             MouseOverGuardian = -1;
@@ -418,6 +422,14 @@ namespace giantsummon
             {
                 if (!tg.Base.InvalidGuardian)
                 {
+                    if (tg.OwnerPos == Main.myPlayer)
+                    {
+                        AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
+                    }
+                    else
+                    {
+                        AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
+                    }
                     string OptionText = "Check Request";
                     if (tg.request.RequestCompleted || tg.request.Failed)
                     {
@@ -451,9 +463,10 @@ namespace giantsummon
                 }
                 if(tg.OwnerPos == -1)
                     AddOption("Let me see your inventory.", OpenInventoryManagementButtonAction);
+                Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             }
-            Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             AddOption("Goodbye", CloseDialogueButtonAction);
+
         }
 
         public static void AddOption(string Mes, Action<TerraGuardian> Action)
@@ -462,8 +475,71 @@ namespace giantsummon
             Options.Add(option);
         }
 
+        //Call/Dismiss Related
+
+        public static void AskGuardianToFollowYouButtonPressed(TerraGuardian tg)
+        {
+            if (!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel)
+            {
+                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"));
+                GetDefaultOptions(tg);
+            }
+            else
+            {
+                PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+                if (pm.GetEmptyGuardianSlot() == 255)
+                {
+                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for your companion in the group.)"));
+                }
+                else
+                {
+                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess, "(It seems happy to follow you.)"));
+                    pm.CallGuardian(tg.ID, tg.ModID);
+                }
+                GetDefaultOptions(tg);
+            }
+        }
+
+        public static void AskGuardianToLeaveGroupButtonPressed(TerraGuardian tg)
+        {
+            Options.Clear();
+            //If not in town, ask if the player is sure. If in town, go right away to Yes option press.
+            if (tg.TownNpcs >= 3)
+                AskGuardianToLeaveGroupYesButtonPressed(tg);
+            else
+            {
+                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure, "(It asks if It's really okay to leave It alone in this place.)"));
+                AddOption("Yes", AskGuardianToLeaveGroupYesButtonPressed);
+                AddOption("No", AskGuardianToLeaveGroupNoButtonPressed);
+            }
+        }
+
+        public static void AskGuardianToLeaveGroupYesButtonPressed(TerraGuardian tg)
+        {
+            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            pm.DismissGuardian(tg.ID, tg.ModID);
+            if (tg.TownNpcs < 3)
+            {
+                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace, "(They say that will try getting to the town safelly.)"));
+            }
+            else
+            {
+                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswer, "(They give you a farewell, and wishes you a good journey.)"));
+            }
+            GetDefaultOptions(tg);
+        }
+
+        public static void AskGuardianToLeaveGroupNoButtonPressed(TerraGuardian tg)
+        {
+            SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer, "(They say that didn't wanted to leave the group, anyway.)"));
+            GetDefaultOptions(tg);
+        }
+
+        //End Call/Dismiss Related
+
         public static void SomethingElseButtonPressed(TerraGuardian tg)
         {
+            Options.Clear();
             AddOption("Change my Nickname.", ChangeNicknameButtonPressed);
             AddOption("Nevermind.", GetDefaultOptions);
         }
@@ -723,7 +799,6 @@ namespace giantsummon
         {
             Message = Message.Replace("[name]", guardian.Name);
             Message = Message.Replace("[nickname]", guardian.PersonalNicknameToPlayer != null ? guardian.PersonalNicknameToPlayer : Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetNickname);
-            //Message += "[gn:1:""]";
             string FinalMessage = "";
             string CommandType = "";
             string CommandValue = "", CommandValue2 = "";

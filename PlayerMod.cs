@@ -789,7 +789,6 @@ namespace giantsummon
                 MainMod.ToReviveID = SelectedOne;
                 MainMod.ToReviveIsGuardian = SelectedIsGuardian;
                 player.mouseInterface = true;
-                player.controlUseItem = false;
             }
             else
             {
@@ -2141,10 +2140,13 @@ namespace giantsummon
             {
                 if (AssistSlot == 0)
                 {
-                    if (Guardian.PlayerMounted)
-                        Guardian.ToggleMount();
-                    if (Guardian.PlayerControl)
-                        Guardian.TogglePlayerControl();
+                    if (Guardian.Active)
+                    {
+                        if (Guardian.PlayerMounted)
+                            Guardian.ToggleMount();
+                        if (Guardian.PlayerControl)
+                            Guardian.TogglePlayerControl();
+                    }
                     SelectedGuardian = Id;
                 }
                 else
@@ -2185,7 +2187,11 @@ namespace giantsummon
                     this.Guardian = guardian;
                 else
                     AssistGuardians[AssistSlot - 1] = guardian;
-                guardian.TeleportToPlayer();
+                if (guardian.Distance(player.Center) >= 512f)
+                {
+                    guardian.TeleportToPlayer();
+                }
+                MainMod.AddActiveGuardian(guardian);
                 if (player.whoAmI == Main.myPlayer && !TutorialOrderIntroduction)
                 {
                     TutorialOrderIntroduction = true;

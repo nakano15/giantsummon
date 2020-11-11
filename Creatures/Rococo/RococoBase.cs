@@ -312,39 +312,7 @@ namespace giantsummon.Creatures
                 return "*[name] says that entrusts his life to you.*";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*[name] says that you have been a good friend to him.*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*[name] says that you're the best friend he ever had.*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*[name] says that you're like the only family he has.*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*[name] is glad of having met you.*";
-            }
-        }
-
+        
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             switch (Main.rand.Next(4))

@@ -222,39 +222,7 @@ namespace giantsummon.Creatures
                 return "*You know, If you have any dangerous thing to do, send me to do it. I'm already dead, anyway.*";
             }
         }
-
-        public override string FriendLevelMessage
-        {
-            get
-            {
-                return "*You've been a good friend to me, even with my current state... Thanks.*";
-            }
-        }
-
-        public override string BestFriendLevelMessage
-        {
-            get
-            {
-                return "*You didn't forgot about me. Thanks for being good to me.*";
-            }
-        }
-
-        public override string BFFLevelMessage
-        {
-            get
-            {
-                return "*Hey friend, I was thinking if... No... Forget it... Good to see you, anyway.*";
-            }
-        }
-
-        public override string BuddyForLifeLevelMessage
-        {
-            get
-            {
-                return "*After all this time, you didn't left me behind. You're a thousand times better than the other Terrarian I followed. Say, would you help me kick his behinds If we ever meet him again? Hahaha.*";
-            }
-        }
-
+        
         public override void Attributes(TerraGuardian g)
         {
             g.DefenseRate += 0.1f;
