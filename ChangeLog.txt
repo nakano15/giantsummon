@@ -31,3 +31,4 @@ Added some more special dialogue entries for companions.
 	There are for:
 		Leopold's recruitment (the 3 dialogues where the companion leader speaks to him).
 		For when you add or removes the companion from the group, through dialogue.
+Companions will not only try facing the one they're reviving, based on which direction their left arm is closer to, but also will keep a 8 pixels distance from the one they're reviving.

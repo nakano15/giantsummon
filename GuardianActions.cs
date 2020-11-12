@@ -531,42 +531,64 @@ namespace giantsummon
                                 {
                                     if (guardian.Velocity.X == 0)
                                     {
-                                        guardian.FaceDirection(TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0);
-                                        byte ReviveBoost = 1;
-                                        if (!guardian.IsAttackingSomething)
-                                            ReviveBoost += 2;
-                                        bool IsMounted = guardian.PlayerMounted;
-                                        if (IsPlayer)
+                                        if (Math.Abs(guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f)) < 8)
                                         {
-                                            Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
-                                            //if(!IsMounted) guardian.AddDrawMomentToPlayer(Players[0]);
-                                        }
-                                        else
-                                        {
-                                            Guardians[0].ReviveBoost += ReviveBoost;
-                                            //if (!IsMounted) guardian.AddDrawMomentToTerraGuardian(Guardians[0]);
-                                        }
-                                        guardian.StuckTimer = 0;
-                                        guardian.OffHandAction = false;
-                                        int TalkTime = GetIntegerValue(ITalkTime);
-                                        if (TalkTime == 0)
-                                        {
-                                            if (MainMod.ReviveTalkDelay <= 0)
+                                            if (guardian.Position.X < TargetPosition.X + TargetWidth * 0.5f)
                                             {
-                                                if (MainMod.CompanionsSpeaksWhileReviving)
-                                                {
-                                                    Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
-                                                        guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
-                                                }
-                                                TalkTime = (600 + Main.rand.Next(10) * 50) * 2;
-                                                MainMod.ReviveTalkDelay = 600 + Main.rand.Next(10) * 50;
+                                                guardian.MoveLeft = true;
+                                            }
+                                            else
+                                            {
+                                                guardian.MoveRight = true;
                                             }
                                         }
                                         else
                                         {
-                                            TalkTime--;
+                                            {
+                                                Vector2 FacingLeftPosition = guardian.GetLeftHandPosition(guardian.Base.ReviveFrame, true),
+                                                        FacingRightPosition = FacingLeftPosition;
+                                                FacingLeftPosition.X *= -1;
+                                                FacingLeftPosition.X += guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f);
+                                                FacingRightPosition.X += guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f);
+                                                guardian.FaceDirection(Math.Abs(FacingLeftPosition.X) < Math.Abs(FacingRightPosition.X));
+                                                //guardian.FaceDirection(TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0);
+                                            }
+                                            byte ReviveBoost = 1;
+                                            if (!guardian.IsAttackingSomething)
+                                                ReviveBoost += 2;
+                                            bool IsMounted = guardian.PlayerMounted;
+                                            if (IsPlayer)
+                                            {
+                                                Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
+                                                //if(!IsMounted) guardian.AddDrawMomentToPlayer(Players[0]);
+                                            }
+                                            else
+                                            {
+                                                Guardians[0].ReviveBoost += ReviveBoost;
+                                                //if (!IsMounted) guardian.AddDrawMomentToTerraGuardian(Guardians[0]);
+                                            }
+                                            guardian.StuckTimer = 0;
+                                            guardian.OffHandAction = false;
+                                            int TalkTime = GetIntegerValue(ITalkTime);
+                                            if (TalkTime == 0)
+                                            {
+                                                if (MainMod.ReviveTalkDelay <= 0)
+                                                {
+                                                    if (MainMod.CompanionsSpeaksWhileReviving)
+                                                    {
+                                                        Main.NewText(guardian.Name + ">>" + (IsPlayer ? Players[0].name : Guardians[0].Name) + ": " +
+                                                            guardian.Base.ReviveMessage(guardian, IsPlayer, (IsPlayer ? Players[0] : null), (!IsPlayer ? Guardians[0] : null)));
+                                                    }
+                                                    TalkTime = (600 + Main.rand.Next(10) * 50) * 2;
+                                                    MainMod.ReviveTalkDelay = 600 + Main.rand.Next(10) * 50;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                TalkTime--;
+                                            }
+                                            SetIntegerValue(ITalkTime, TalkTime);
                                         }
-                                        SetIntegerValue(ITalkTime, TalkTime);
                                     }
                                 }
                                 else
