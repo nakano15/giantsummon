@@ -924,6 +924,11 @@ namespace giantsummon
                 AfterAskingCompanionToLeaveYourGroupSuccessAnswer = "Mes.Follower.LeavePartyYesAnswer",
                 AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace = "Mes.Follower.LeavePartyYesAnswerDangerous",
                 AfterAskingCompanionToLeaveYourGroupNoAnswer = "Mes.Follower.LeavePartyNoAnswer";
+            public const string RequestAccepted = "Mes.RequestAccept",
+                RequestCantAcceptTooManyRequests = "Mes.TooManyRequests",
+                RequestRejected = "Mes.RequestRejected",
+                RequestPostpone = "Mes.RequestPostpone",
+                RequestFailed = "Mes.RequestFailed";
         }
         
         public enum GuardianEffect

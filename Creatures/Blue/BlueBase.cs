@@ -863,6 +863,16 @@ namespace giantsummon.Creatures
                     return "*She says that may be entertaining slashing her way back home.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*She sounds relieved.*";
+                case MessageIDs.RequestAccepted:
+                    return "*She tells you to becareful when doing the request.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*She tells you that you wont be able to focus on her request, because you have too many of them accepted.*";
+                case MessageIDs.RequestRejected:
+                    return "*She looked sad, and then stored away the list.*";
+                case MessageIDs.RequestPostpone:
+                    return "*She asks if you found the request impossible, or if can't do It right now.*";
+                case MessageIDs.RequestFailed:
+                    return "*Her face is filled with the disappointment over you failing on her request. She then tried to console you.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

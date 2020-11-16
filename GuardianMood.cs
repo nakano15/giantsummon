@@ -65,47 +65,15 @@ namespace giantsummon
 
         public class MoodMod
         {
-            public string Name = "";
-            public sbyte HorizontalChange = 0, VerticalChange = 0;
+            public GuardianMoodBase MoodBase;
             public int Duration = 0;
+            public sbyte HorizontalChange { get { return MoodBase.HorizontalMod; } }
+            public sbyte VerticalChange { get { return MoodBase.VerticalMod; } }
 
-            public void MoodMod(string Name, sbyte Horizontal, sbyte Vertical, int Duration)
+            public MoodMod(GuardianMoodBase Mood, int Duration)
             {
-                this.Name = Name;
-                this.HorizontalChange = Horizontal;
-                this.VerticalChange = Vertical;
+                MoodBase = Mood;
                 this.Duration = Duration;
-            }
-
-            public void MoodMod(string Name, MoodTypes mood, sbyte Value, int Duration)
-            {
-                this.Name = Name;
-                switch (mood)
-                {
-                    case MoodTypes.Happiness:
-                        HorizontalChange = Value;
-                        break;
-                    case MoodTypes.Sadness:
-                        HorizontalChange = Value;
-                        HorizontalChange *= -1;
-                        break;
-                    case MoodTypes.Anger:
-                        VerticalChange = Value;
-                        VerticalChange *= -1;
-                        break;
-                    case MoodTypes.Fear:
-                        VerticalChange = Value;
-                        break;
-                }
-                this.Duration = Duration;
-            }
-
-            public enum MoodTypes : byte
-            {
-                Happiness,
-                Sadness,
-                Anger,
-                Fear
             }
         }
     }

@@ -589,6 +589,16 @@ namespace giantsummon.Creatures
                     return "Yes, fine. Leave a damsel fight her way back to home all alone...";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "Okay, let's find a safe place for me before we leave, then.";
+                case MessageIDs.RequestAccepted:
+                    return "Good. Don't delay too long with the request.";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "What? No way. You have many things to do right now.";
+                case MessageIDs.RequestRejected:
+                    return "Hmph. I should have wondered that It would be too hard for you.";
+                case MessageIDs.RequestPostpone:
+                    return "Hey, but I need that now! *Sigh* Whatever, go do your things.";
+                case MessageIDs.RequestFailed:
+                    return "Good job, you managed to ruin everything. Now go away!";
             }
             return base.GetSpecialMessage(MessageID);
         }

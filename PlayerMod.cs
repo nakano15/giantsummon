@@ -124,6 +124,18 @@ namespace giantsummon
                 return Allowance;
             }
         }
+
+        public void FriendshipLevelNotification()
+        {
+            Main.NewText("You reached Friendship Rank " + FriendshipLevel + ".");
+            if (!BuddiesMode)
+            {
+                if (FriendshipLevel == 2 || FriendshipLevel == 6 || FriendshipLevel == 12 || FriendshipLevel == 18 || FriendshipLevel == 25)
+                {
+                    Main.NewText("You can now have " + (MaxExtraGuardiansAllowed + 1) + " companions following you.");
+                }
+            }
+        }
         public int GetSummonedGuardianCount
         {
             get
@@ -1438,18 +1450,6 @@ namespace giantsummon
             if (Guardian.Active)
             {
                 Guardian.WhenPlayerDies();
-            }
-        }
-
-        public void FriendshipLevelNotification()
-        {
-            Main.NewText("You reached Friendship Rank " + FriendshipLevel + ".");
-            if (!BuddiesMode)
-            {
-                if (FriendshipLevel == 2 || FriendshipLevel == 5 || FriendshipLevel == 8 || FriendshipLevel == 10 || FriendshipLevel == 14)
-                {
-                    Main.NewText("You can now have " + (MaxExtraGuardiansAllowed + 1) + " companions following you.");
-                }
             }
         }
 

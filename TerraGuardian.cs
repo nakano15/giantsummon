@@ -4927,7 +4927,8 @@ namespace giantsummon
             if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified) || KnockedOut) return;
             if (!Is2PControlled)
             {
-                LookForThreats();
+                //LookForThreats();
+                LookForThreatsV2();
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
                 CheckIfSomeoneNeedsRevive();
@@ -8567,7 +8568,273 @@ namespace giantsummon
                 if (HasFlag(GuardianFlags.Scope)) player.scope = true;
             }
         }
-        
+
+        public void LookForThreatsV2()
+        {
+            if (HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+                return;
+            Player Owner = null;
+            if (OwnerPos > -1)
+                Owner = Main.player[OwnerPos];
+            if (Owner != null && !Owner.dead && !WofFacing && !GuardingPosition.HasValue && Math.Abs(Owner.Center.X - Position.X) >= 512)
+            {
+                return; //Ignore attempt to look for targets
+            }
+            float ThreatDetectionDistance = 260f;
+            float ViewDistance = 380f + AssistSlot * 32f;
+            List<Vector4> PartyMembersPosition = new List<Vector4>();
+            Vector2 AwarenessCenter = CenterPosition, MyCenter = AwarenessCenter;
+            PartyMembersPosition.Add(new Vector4(TopLeftPosition, Width, Height));
+            {
+                float ViewDistanceMod = 1f, ThreatDetectionMod = 1f;
+                if (HasFlag(GuardianFlags.LightPotion))
+                    ViewDistanceMod *= 1.2f;
+                if (HasFlag(GuardianFlags.NightVisionPotion))
+                {
+                    ViewDistanceMod *= 1.25f;
+                    ThreatDetectionMod *= 1.25f;
+                }
+                if (HasFlag(GuardianFlags.Blind))
+                {
+                    ViewDistanceMod *= 0.66f;
+                    ThreatDetectionMod *= 0.66f;
+                }
+                if (HasFlag(GuardianFlags.Blackout))
+                {
+                    ViewDistanceMod *= 0.25f;
+                    ThreatDetectionMod *= 0.25f;
+                }
+                if (HasFlag(GuardianFlags.HunterPotion))
+                {
+                    ThreatDetectionMod *= 1.5f;
+                }
+                if (HurtPanic)
+                {
+                    ThreatDetectionDistance *= 2f;
+                }
+                ViewDistance *= ViewDistanceMod;
+                ThreatDetectionDistance *= ThreatDetectionMod;
+            }
+            if (Passive)
+            {
+                ThreatDetectionDistance = 96f;
+            }
+            else
+            {
+                if (Owner != null) //Be reserved for party members only.
+                {
+                    if (!IsPlayerHostile(Owner))
+                    {
+                        Vector2 Center = Owner.Center;
+                        if (Math.Abs(Center.X - MyCenter.X) < (Owner.width + Width) * 0.5f + ViewDistance &&
+                            Math.Abs(Center.Y - MyCenter.Y) < (Owner.height + Height) * 0.5f + ViewDistance)
+                        {
+                            PartyMembersPosition.Add(new Vector4(Owner.position, Owner.width, Owner.height));
+                            if (ProtectMode)
+                                AwarenessCenter = Owner.Center;
+                        }
+                    }
+                    foreach (TerraGuardian tg in Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                    {
+                        if (tg.Active && tg.WhoAmID != WhoAmID && !IsGuardianHostile(tg))
+                        {
+                            Vector2 Center = tg.CenterPosition;
+                            if (Math.Abs(Center.X - MyCenter.X) < (tg.Width + Width) * 0.5f + ViewDistance &&
+                                Math.Abs(Center.Y - MyCenter.Y) < (tg.Height + Height) * 0.5f + ViewDistance)
+                            {
+                                PartyMembersPosition.Add(new Vector4(tg.TopLeftPosition, tg.Width, tg.Height));
+                            }
+                        }
+                    }
+                }
+                else //Try helping the ones in their view range.
+                {
+                    for (int i = 0; i < 255; i++)
+                    {
+                        if (Main.player[i].active && !Main.player[i].dead && !Main.player[i].GetModPlayer<PlayerMod>().KnockedOutCold && !IsPlayerHostile(Main.player[i]))
+                        {
+                            Vector2 Center = Main.player[i].Center;
+                            if (Math.Abs(Center.X - MyCenter.X) < (Main.player[i].width + Width) * 0.5f + ViewDistance &&
+                                Math.Abs(Center.Y - MyCenter.Y) < (Main.player[i].height + Height) * 0.5f + ViewDistance)
+                            {
+                                PartyMembersPosition.Add(new Vector4(Main.player[i].position, Main.player[i].width, Main.player[i].height));
+                            }
+                        }
+                        if (i < 200 && Main.npc[i].active && Main.npc[i].townNPC)
+                        {
+                            Vector2 Center = Main.npc[i].Center;
+                            if (Math.Abs(Center.X - MyCenter.X) < (Main.npc[i].width + Width) * 0.5f + ViewDistance &&
+                                Math.Abs(Center.Y - MyCenter.Y) < (Main.npc[i].height + Height) * 0.5f + ViewDistance)
+                            {
+                                PartyMembersPosition.Add(new Vector4(Main.npc[i].position, Main.npc[i].width, Main.npc[i].height));
+                            }
+                        }
+                    }
+                    foreach (int i in MainMod.ActiveGuardians.Keys)
+                    {
+                        TerraGuardian guardian = MainMod.ActiveGuardians[i];
+                        if (i != WhoAmID && !guardian.Downed && !guardian.KnockedOutCold && !IsGuardianHostile(guardian))
+                        {
+                            Vector2 Center = guardian.CenterPosition;
+                            if (Math.Abs(Center.X - MyCenter.X) < (guardian.Width + Width) * 0.5f + ViewDistance &&
+                                Math.Abs(Center.Y - MyCenter.Y) < (guardian.Height + Height) * 0.5f + ViewDistance)
+                            {
+                                PartyMembersPosition.Add(new Vector4(guardian.TopLeftPosition, guardian.Width, guardian.Height));
+                            }
+                        }
+                    }
+                }
+            }
+            float NearestTargetDistance = float.MaxValue;
+            int TargetPosition = -1;
+            TargetTypes TargetType = TargetTypes.Npc;
+            if (IsAttackingSomething)
+            {
+                switch (TargetType)
+                {
+                    case TargetTypes.Npc:
+                        if (Main.npc[TargetID].active)
+                        {
+                            NearestTargetDistance = Main.npc[TargetID].Distance(CenterPosition);
+                        }
+                        else
+                        {
+                            TargetID = -1;
+                        }
+                        break;
+                    case TargetTypes.Player:
+                        if (Main.player[TargetID].active && !Main.player[TargetID].dead && !Main.player[TargetID].GetModPlayer<PlayerMod>().KnockedOutCold)
+                        {
+                            NearestTargetDistance = Main.player[TargetID].Distance(CenterPosition);
+                        }
+                        else
+                        {
+                            TargetID = -1;
+                        }
+                        break;
+                    case TargetTypes.Guardian:
+                        if (MainMod.ActiveGuardians.ContainsKey(TargetID) && !MainMod.ActiveGuardians[TargetID].Downed && !MainMod.ActiveGuardians[TargetID].KnockedOutCold)
+                        {
+                            NearestTargetDistance = MainMod.ActiveGuardians[TargetID].Distance(CenterPosition);
+                        }
+                        else
+                        {
+                            TargetID = -1;
+                        }
+                        break;
+                }
+            }
+            List<byte> NpcsSpotted = new List<byte>(),
+                PlayersSpotted = new List<byte>();
+            List<int> GuardiansSpotted = new List<int>();
+            Vector2 MyTopLeftPosition = TopLeftPosition;
+            for (byte i = 0; i < 255; i++)
+            {
+                if (i < 200 && Main.npc[i].active)
+                {
+                    foreach (Vector4 MemberPosition in PartyMembersPosition)
+                    {
+                        if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
+                        {
+                            Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
+                            Vector2 NpcCenter = Main.npc[i].Center;
+                            if (Math.Abs(NpcCenter.X - MemberCenter.X) < (Main.npc[i].width + MemberPosition.Z) * 0.5f + ThreatDetectionDistance &&
+                                Math.Abs(NpcCenter.Y - MemberCenter.Y) < (Main.npc[i].height + MemberPosition.W) * 0.5f + ThreatDetectionDistance)
+                            {
+                                if (!this.NpcsSpotted.Contains(i))
+                                {
+                                    this.DoTrigger(TriggerTypes.NpcSpotted, i);
+                                }
+                                NpcsSpotted.Add(i);
+                            }
+                            if (Main.npc[i].CanBeChasedBy(null))
+                            {
+                                float Distance = Main.npc[i].Distance(MemberCenter);
+                                if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type] || Main.npc[i].boss)
+                                    Distance *= 0.5f;
+                                if (Distance < NearestTargetDistance)
+                                {
+                                    NearestTargetDistance = Distance;
+                                    TargetID = i;
+                                    TargetType = TargetTypes.Npc;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (Main.player[i].active)
+                {
+                    foreach (Vector4 MemberPosition in PartyMembersPosition)
+                    {
+                        if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.player[i].position, Main.player[i].width, Main.player[i].height))
+                        {
+                            Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
+                            if (Math.Abs(Main.player[i].position.X + Main.player[i].width * 0.5f - MemberCenter.X) < (Main.player[i].width + MemberPosition.Z) * 0.5f + ThreatDetectionDistance &&
+                                Math.Abs(Main.player[i].position.Y + Main.player[i].height * 0.5f - MemberCenter.Y) < (Main.player[i].height + MemberPosition.W) * 0.5f + ThreatDetectionDistance)
+                            {
+                                if (!this.PlayersSpotted.Contains(i))
+                                {
+                                    this.DoTrigger(TriggerTypes.PlayerSpotted, i);
+                                }
+                                PlayersSpotted.Add(i);
+                            }
+                            if (IsPlayerHostile(Main.player[i]) && !Main.player[i].dead && !Main.player[i].GetModPlayer<PlayerMod>().KnockedOutCold)
+                            {
+                                float Distance = Main.player[i].Distance(MemberCenter);
+                                if (Distance < NearestTargetDistance)
+                                {
+                                    NearestTargetDistance = Distance;
+                                    TargetID = i;
+                                    TargetType = TargetTypes.Player;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            bool LastHadTarget = IsAttackingSomething;
+            foreach (int key in MainMod.ActiveGuardians.Keys)
+            {
+                if (key != WhoAmID)
+                {
+                    TerraGuardian guardian = MainMod.ActiveGuardians[key];
+                    foreach (Vector4 MemberPosition in PartyMembersPosition)
+                    {
+                        if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, guardian.TopLeftPosition, guardian.Width, guardian.Height))
+                        {
+                            Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
+                            if (Math.Abs(guardian.Position.X - MemberCenter.X) < (MemberPosition.Z + guardian.Width) * 0.5f + ThreatDetectionDistance &&
+                                Math.Abs(guardian.Position.Y - MemberCenter.Y) < (MemberPosition.W + guardian.Height) * 0.5f + ThreatDetectionDistance)
+                            {
+                                if (!this.GuardiansSpotted.Contains(key))
+                                {
+                                    this.DoTrigger(TriggerTypes.GuardianSpotted, key);
+                                }
+                                GuardiansSpotted.Add(key);
+                            }
+                            if (!guardian.Downed && !guardian.KnockedOutCold && IsGuardianHostile(guardian))
+                            {
+                                float Distance = guardian.Distance(MemberCenter);
+                                if (Distance < NearestTargetDistance)
+                                {
+                                    NearestTargetDistance = Distance;
+                                    TargetID = key;
+                                    TargetType = TargetTypes.Guardian;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (!LastHadTarget && IsAttackingSomething && !MainMod.TestNewCombatAI)
+            {
+                TargetInAim = false;
+            }
+            this.NpcsSpotted = NpcsSpotted;
+            this.PlayersSpotted = PlayersSpotted;
+            this.GuardiansSpotted = GuardiansSpotted;
+        }
+
         public void LookForThreats()
         {
             Player Owner = null;
@@ -8590,8 +8857,8 @@ namespace giantsummon
                 DistanceMod *= 1.5f;
             if (Scale > 1)
                 DistanceMod *= Scale;
-            int SpotRangeX = 360;
-            int SpotRangeY = 320;
+            int SpotRangeX = 260;
+            int SpotRangeY = 280;
             float NearestDistance = float.MaxValue;
             if (HurtPanic)
             {
@@ -8648,8 +8915,7 @@ namespace giantsummon
             }
             bool LastHadTarget = IsAttackingSomething;
             int TotalActiveGuardians = MainMod.ActiveGuardians.Count;
-            int HighestNumber = 255;
-            for (int t = 0; t < HighestNumber; t++)
+            for (int t = 0; t < 255; t++)
             {
                 if (t < 200 && Main.npc[t].active) //(Collision.CanHitLine(TopLeftPosition, Width, Height, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height) || Collision.CanHitLine(CollisionPosition, Width, CollisionHeight, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height))
                 {
@@ -13181,10 +13447,7 @@ namespace giantsummon
 
         public string GetMessage(string MessageID, string DefaultMessage = "")
         {
-            string Mes = Base.GetSpecialMessage(MessageID);
-            if (Mes == "" && DefaultMessage != "")
-                Mes = DefaultMessage;
-            return Mes;
+            return Data.GetMessage(MessageID, DefaultMessage);
         }
 
         public void SetTurnLock()

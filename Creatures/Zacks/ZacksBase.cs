@@ -720,6 +720,16 @@ namespace giantsummon.Creatures
                     return "*Then I'll try returning home. Be sure to visit me safe and sound.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*Great choice, [nickname].*";
+                case MessageIDs.RequestAccepted:
+                    return "*You know where to find me.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*You seems to have too many things to do right now. Maybe later.*";
+                case MessageIDs.RequestRejected:
+                    return "*Didn't liked my request, [nickname]?*";
+                case MessageIDs.RequestPostpone:
+                    return "*Well, It can wait, then.*";
+                case MessageIDs.RequestFailed:
+                    return "*I'm thinking about trying eating a succulent Terrarian now. Just kidding. I'm not that mad about this, but I wanted that done.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

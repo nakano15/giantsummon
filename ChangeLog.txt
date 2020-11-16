@@ -2,7 +2,7 @@
 Mabel also got a change on her default weapon: She will now use Bee Keeper, instead of Enchanted Boomerang.
 Removed Nemesis unused sprites.
 Nerfed companions view range:
-	It went from 520x480 to 360x320.
+	It went from 520x480 to 260x280.
 Recipes will no longer spoil your shopping on Domino's store.
 Nerfed damage penalty for having more than 1 companion.
 	Damage penalty went from 20% to 10% of the previous damage reduction.
@@ -32,3 +32,6 @@ Added some more special dialogue entries for companions.
 		Leopold's recruitment (the 3 dialogues where the companion leader speaks to him).
 		For when you add or removes the companion from the group, through dialogue.
 Companions will not only try facing the one they're reviving, based on which direction their left arm is closer to, but also will keep a 8 pixels distance from the one they're reviving.
+The mod will now show the message of increase in number of followers on the correct friendship rank level.
+There is now a different text when reporting failed missions.
+Companions now have their texts for when you: Accept Request, Reject Request, Postpone Request, Have too many Requests, and Fail Request.

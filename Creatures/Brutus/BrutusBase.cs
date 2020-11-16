@@ -1044,6 +1044,16 @@ namespace giantsummon.Creatures
                     return "*Okay then, I'll return to the town. Take care of yourself, [nickname].*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*I shall guard your life some more then.*";
+                case MessageIDs.RequestAccepted:
+                    return "*Try not to get yourself killed while doing my request, [nickname]. If necessary, bring me with you.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*I think you may end up getting stressed out if I give you another request. Maybe do something about the ones you have.*";
+                case MessageIDs.RequestRejected:
+                    return "*Maybe I asked too much. I'll try doing that later, when I'm off service.*";
+                case MessageIDs.RequestPostpone:
+                    return "*I guess I can put this on hold.*";
+                case MessageIDs.RequestFailed:
+                    return "*You couldn't do what I asked, right? I should have thought before giving you such a request.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

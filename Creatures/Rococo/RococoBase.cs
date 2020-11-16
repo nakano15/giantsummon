@@ -574,6 +574,16 @@ namespace giantsummon.Creatures
                     return "*[name] tells you to becareful on your travel, and that will see you back at home.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*[name] seems relieved when you changed your mind.*";
+                case MessageIDs.RequestAccepted:
+                    return "*[name] smiles to you.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*[name] is worried because you have too many requests.*";
+                case MessageIDs.RequestRejected:
+                    return "*[name] seems sad.*";
+                case MessageIDs.RequestPostpone:
+                    return "*[name] waves you goodbye.*";
+                case MessageIDs.RequestFailed:
+                    return "*[name] looks at you with a sad face.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -711,14 +711,14 @@ namespace giantsummon
         public string GetRequestAccept(GuardianData gd)
         {
             if (IsCommonRequest)
-                return "(You have accepted the request.)";
+                return gd.GetMessage(GuardianBase.MessageIDs.RequestAccepted, "(You have accepted the request.)");
             return GetRequestBase(gd).AcceptText;
         }
 
         public string GetRequestDeny(GuardianData gd)
         {
             if (IsCommonRequest)
-                return "(Request rejected.)";
+                return gd.GetMessage(GuardianBase.MessageIDs.RequestRejected, "(Request rejected.)");
             return GetRequestBase(gd).DenyText;
         }
 
@@ -732,7 +732,7 @@ namespace giantsummon
         public string GetRequestFailed(GuardianData gd, TerraGuardian giver)
         {
             if (IsCommonRequest)
-                return "(Request cancelled)";
+                return gd.GetMessage(GuardianBase.MessageIDs.RequestFailed, "(Request failed)");
             return GetRequestBase(gd).FailureText;
         }
 

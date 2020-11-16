@@ -345,6 +345,16 @@ namespace giantsummon.Creatures
                     return "I think I know the way home. It's that way, right?";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "Let's try getting into a safe place before leaving the group.";
+                case MessageIDs.RequestAccepted:
+                    return "Nice. Come see me when you complete It.";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "Aren't you a little overloaded with requests?";
+                case MessageIDs.RequestRejected:
+                    return "Aww...";
+                case MessageIDs.RequestPostpone:
+                    return "Later?";
+                case MessageIDs.RequestFailed:
+                    return "You failed? It's so disappointing...";
             }
             return base.GetSpecialMessage(MessageID);
         }

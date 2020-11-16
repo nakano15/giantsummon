@@ -478,6 +478,16 @@ namespace giantsummon.Creatures
                     return "*Okay... Don't you come asking for discount if I find something cool to sell.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*I thought so. Let's go to a town before you decide to remove me from the team.*";
+                case MessageIDs.RequestAccepted:
+                    return "*I had the feeling that you would accept. I'll have something prepared for you when you come back.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*I value my request, so try getting rid of those other requests before you ask for mine.*";
+                case MessageIDs.RequestRejected:
+                    return "*You wont get paid for that.*";
+                case MessageIDs.RequestPostpone:
+                    return "*It's not like as if It's a one time deal, anyway.*";
+                case MessageIDs.RequestFailed:
+                    return "*You failed? Well, I should ask you to pay me for that, but instead I'll give you nothing.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

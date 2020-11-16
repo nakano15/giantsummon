@@ -729,6 +729,16 @@ namespace giantsummon.Creatures
                     return "*You're going to regret that when I see you at the town.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*Okay, I think you are able to think rationally sometimes.*";
+                case MessageIDs.RequestAccepted:
+                    return "*Good, that will keep me alone with my experiments. Try not to come back too soon.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*No no no no no. Go deal with your other requests. I can't have you doing a bad job at my request because you're overloaded.*";
+                case MessageIDs.RequestRejected:
+                    return "*Pft. Fine. Go away, now.*";
+                case MessageIDs.RequestPostpone:
+                    return "*No no no, come back here.*";
+                case MessageIDs.RequestFailed:
+                    return "*You what?! Now, try thinking of reasons as to why I shouldn't turn you into a squirrel.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

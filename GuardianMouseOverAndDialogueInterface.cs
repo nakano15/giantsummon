@@ -436,7 +436,11 @@ namespace giantsummon
                         }
                     }
                     string OptionText = "Check Request";
-                    if (tg.request.RequestCompleted || tg.request.Failed)
+                    if (tg.request.Failed)
+                    {
+                        OptionText = "Report Failing the Request";
+                    }
+                    else if (tg.request.RequestCompleted)
                     {
                         OptionText = "Report Request";
                     }
@@ -702,7 +706,7 @@ namespace giantsummon
         {
             if (PlayerMod.GetPlayerAcceptedRequestCount(MainPlayer) >= RequestData.MaxRequestCount)
             {
-                SetDialogue("(You have too many requests active.)", tg);
+                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.RequestCantAcceptTooManyRequests, "(You have too many requests active.)"), tg);
             }
             else
             {
@@ -782,6 +786,9 @@ namespace giantsummon
 
         public static void PostponeRequestButtonAction(TerraGuardian Guardian)
         {
+            string Mes = Guardian.GetMessage(GuardianBase.MessageIDs.RequestPostpone);
+            if (Mes != "")
+                Guardian.SaySomething(Mes);
             CloseDialogueButtonAction(Guardian);
         }
 

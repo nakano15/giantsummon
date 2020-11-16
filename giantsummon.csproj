@@ -112,6 +112,7 @@
     <Compile Include="GuardianID.cs" />
     <Compile Include="GuardianManagement.cs" />
     <Compile Include="GuardianMood.cs" />
+    <Compile Include="GuardianMoodBase.cs" />
     <Compile Include="GuardianMouseOverAndDialogueInterface.cs" />
     <Compile Include="GuardianNPC\List\AlexNPC.cs" />
     <Compile Include="GuardianNPC\List\BrutusNPC.cs" />

@@ -317,6 +317,16 @@ namespace giantsummon.Creatures
                     return "(She leaves your team with a sad look in her face.)";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "(She smiled after you said no.)";
+                case MessageIDs.RequestAccepted:
+                    return "(She nods at you. She seems to be counting on you.)";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "(She seems to have noticed that you have many things to do, and decided not to give you her request.)";
+                case MessageIDs.RequestRejected:
+                    return "(She looked a bit sad after you rejected.)";
+                case MessageIDs.RequestPostpone:
+                    return "(She's looking at you with a question mark face.)";
+                case MessageIDs.RequestFailed:
+                    return "(Her face shows the disappointment your failure brought, but she seems to recognize that you did your best.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

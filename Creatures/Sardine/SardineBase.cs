@@ -683,6 +683,16 @@ namespace giantsummon.Creatures
                     return "Okay, okay. I wont judge your decision. I see you back at home. Be safe.";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "Yes, let's look for a town so I can leave the group.";
+                case MessageIDs.RequestAccepted:
+                    return "Ok. See me when you get that done.";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "Don't you have many things to do right now?";
+                case MessageIDs.RequestRejected:
+                    return "Oh, fine.";
+                case MessageIDs.RequestPostpone:
+                    return "Come see me if you decide to help me with this.";
+                case MessageIDs.RequestFailed:
+                    return "Well, It's not everyday you can have success, right. I'm not angry. It's fine.";
             }
             return base.GetSpecialMessage(MessageID);
         }

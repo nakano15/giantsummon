@@ -508,6 +508,16 @@ namespace giantsummon.Creatures
                     return "*Okay, better I start running, then?*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*I'm soooooooo happy that you changed your mind.*";
+                case MessageIDs.RequestAccepted:
+                    return "*Yay! You know where to find me when you do It, right?*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*It may be dangerous to your health to have many things to do. Why don't you try doing your other requests before?*";
+                case MessageIDs.RequestRejected:
+                    return "*Aww... No problem. I'm sure you have a good reason to reject my request.*";
+                case MessageIDs.RequestPostpone:
+                    return "*Alright. Come ask me again if you want to do my request. Bye!*";
+                case MessageIDs.RequestFailed:
+                    return "*You failed? Don't worry, It's fine. You tried, right? There, don't feel sad.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

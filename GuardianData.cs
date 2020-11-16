@@ -1206,6 +1206,14 @@ namespace giantsummon
             }
         }
 
+        public string GetMessage(string MessageID, string DefaultMessage = "")
+        {
+            string Mes = Base.GetSpecialMessage(MessageID);
+            if (Mes == "" && DefaultMessage != "")
+                Mes = DefaultMessage;
+            return Mes;
+        }
+
         public bool CheckForImportantMessages(out string Text)
         {
             Text = "";
