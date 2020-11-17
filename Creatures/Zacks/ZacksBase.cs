@@ -840,10 +840,26 @@ namespace giantsummon.Creatures
                     float Percentage = (float)Time / PullMaxTime;
                     EndPosition = guardian.CenterPosition + (EndPosition - guardian.CenterPosition) * Percentage;
                 }
-                DrawIntestine(guardian, EndPosition);
+                GuardianDrawData[] gdds = DrawIntestine(guardian, EndPosition);
+                for (int gdd = 0; gdd < TerraGuardian.DrawFront.Count; gdd++)
+                {
+                    if (TerraGuardian.DrawFront[gdd].textureType == GuardianDrawData.TextureType.TGLeftArm)
+                    {
+                        TerraGuardian.DrawFront.InsertRange(gdd, gdds);
+                        return;
+                    }
+                }
+                for (int gdd = 0; gdd < TerraGuardian.DrawBehind.Count; gdd++)
+                {
+                    if (TerraGuardian.DrawBehind[gdd].textureType == GuardianDrawData.TextureType.TGLeftArm)
+                    {
+                        TerraGuardian.DrawBehind.InsertRange(gdd, gdds);
+                        return;
+                    }
+                }
             }
 
-            public void DrawIntestine(TerraGuardian Guardian, Vector2 ChainEndPosition)
+            public GuardianDrawData[] DrawIntestine(TerraGuardian Guardian, Vector2 ChainEndPosition)
             {
                 Vector2 ChainStartPosition = Guardian.CenterPosition;
                 ChainStartPosition.X -= 8 * Guardian.Direction;
@@ -851,6 +867,7 @@ namespace giantsummon.Creatures
                 float DifX = ChainStartPosition.X - ChainEndPosition.X, DifY = ChainStartPosition.Y - ChainEndPosition.Y;
                 bool DrawMoreChain = true;
                 float Rotation = (float)Math.Atan2(DifY, DifX) - 1.57f;
+                List<GuardianDrawData> gdds = new List<GuardianDrawData>();
                 while (DrawMoreChain)
                 {
                     float sqrt = (float)Math.Sqrt(DifX * DifX + DifY * DifY);
@@ -866,9 +883,12 @@ namespace giantsummon.Creatures
                         DifX = ChainStartPosition.X - ChainEndPosition.X;
                         DifY = ChainStartPosition.Y - ChainEndPosition.Y;
                         Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)ChainEndPosition.X / 16, (int)ChainEndPosition.Y / 16);
-                        Main.spriteBatch.Draw(Main.chain12Texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width * 0.5f, Main.chain12Texture.Height * 0.5f), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
+                        GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.chain12Texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width * 0.5f, Main.chain12Texture.Height * 0.5f), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
+                        gdds.Add(gdd);
+                        //Main.spriteBatch.Draw(Main.chain12Texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width * 0.5f, Main.chain12Texture.Height * 0.5f), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
                     }
                 }
+                return gdds.ToArray();
             }
         }
     }

@@ -497,7 +497,7 @@ namespace giantsummon
             else
             {
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-                if (pm.GetEmptyGuardianSlot() == 255)
+                if (pm.GetSummonedGuardianCount < pm.MaxExtraGuardiansAllowed + 1)
                 {
                     SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for your companion in the group.)"), tg));
                 }

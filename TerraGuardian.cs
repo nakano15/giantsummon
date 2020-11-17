@@ -101,6 +101,7 @@ namespace giantsummon
         public int ID { get { return Data.ID; } set { Data.ID = value; } }
         public GuardianID MyID { get { return Data.MyID; } set { Data.MyID = value; } }
         public string PersonalNicknameToPlayer { get { return Data.PersonalNicknameToPlayer; } set { Data.PersonalNicknameToPlayer = value; } }
+        public GuardianMood Mood { get { return Data.Mood; } }
         public bool HasRequestActive { get { return Data.request.Active; } }
         public bool Active = false;
         public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;

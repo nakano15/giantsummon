@@ -788,6 +788,10 @@ namespace giantsummon
             }
             if (!Main.gameMenu && !Main.gamePaused)
                 GuardianShopHandler.UpdateShops();
+            if (GuardianMood.MoodUpdateDelay == 0)
+                GuardianMood.MoodUpdateDelay += 9;
+            else
+                GuardianMood.MoodUpdateDelay--;
         }
 
         private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs;

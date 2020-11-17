@@ -13,6 +13,7 @@ namespace giantsummon
         public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, ModID); } }
         public Group GetGroup { get { return Base.GetGroup; } }
         public string GroupID { get { return Base.GetGroupID; } }
+        public GuardianMood Mood = new GuardianMood();
         public string Name
         {
             get
@@ -167,6 +168,11 @@ namespace giantsummon
                 }
                 return Status;
             }
+        }
+
+        public void UpdateMood()
+        {
+            Mood.UpdateMood();
         }
 
         public bool HasPersonalRequestBeenCompleted(int ID)
@@ -737,6 +743,7 @@ namespace giantsummon
                 if (Fatigue < -32)
                     Fatigue = -32;
             }
+            UpdateMood();
         }
         
         public Item[] GetRewards(int Score, Player player)
