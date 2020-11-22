@@ -17,3 +17,5 @@ C:\Users\Nakano15\Documents\My Games\Terraria\ModLoader\Mod Sources\giantsummon\
 C:\Users\Nakano15\Documents\My Games\Terraria\ModLoader\Mod Sources\giantsummon\bin\Debug\Windows.dll
 C:\Users\Nakano15\Documents\My Games\Terraria\ModLoader\Mod Sources\giantsummon\obj\Debug\giantsummon.Form1.resources
 C:\Users\Nakano15\Documents\My Games\Terraria\ModLoader\Mod Sources\giantsummon\obj\Debug\giantsummon.csproj.GenerateResource.Cache
+C:\Users\Douglas\Documents\My Games\Terraria\ModLoader\Mod Sources\giantsummon\obj\Debug\giantsummon.csprojAssemblyReference.cache
+C:\Users\Douglas\Documents\My Games\Terraria\ModLoader\Mod Sources\giantsummon\obj\Debug\giantsummon.csproj.CoreCompileInputs.cache

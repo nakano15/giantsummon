@@ -139,7 +139,10 @@ namespace giantsummon
         public bool UseWeaponsByInventoryOrder { get { return Data.UseWeaponsByInventoryOrder; } set { Data.UseWeaponsByInventoryOrder = value; } }
         public bool HideWereForm { get { return Data.HideWereForm; } set { Data.HideWereForm = value; } }
         public float Accuracy { get { if (_Accuracy < 1f) return _Accuracy; return 1f; } set { _Accuracy = value; } }
-        private float _Accuracy = 1f;
+        public float Agility { get { if (_Agility < 0.1f) return 0.1f; return _Agility; } set { _Agility = value; } }
+        public float Trigger { get { if (_Trigger < 0.1f) return 0.1f; if (_Trigger < 1f) return _Trigger; return 1f; } set { _Trigger = value; } }
+        private float _Accuracy = 1f, _Agility = 1f, _Trigger = 1f;
+        private byte TriggerStack = 0;
         public bool FallProtection = false;
         public bool LockDirection = false;
         public bool BeingPulledByPlayer = false, SuspendedByChains = false;
@@ -3125,39 +3128,38 @@ namespace giantsummon
         {
             bool ReachedLocation = false;
             Vector2 MoveDir = Vector2.Zero;
-            if (Width < 40)
-                Width = 40;
-            if (Height < 40)
-                Height = 40;
-            if (AimDirection.X >= Position.X + Width * 0.2f && AimDirection.X < Position.X + Width * 0.8f && AimDirection.Y >= Position.Y + Height * 0.2f && AimDirection.Y < Position.Y + Height * 0.8f)
+            int Width2 = Width, Height2 = Height;
+            if (Width2 < 40)
+                Width2 = 40;
+            if (Height2 < 40)
+                Height2 = 40;
+            if (AimDirection.X >= Position.X + Width2 * 0.2f && AimDirection.X < Position.X + Width2 * 0.8f && AimDirection.Y >= Position.Y + Height2 * 0.2f && AimDirection.Y < Position.Y + Height2 * 0.8f)
             {
-                if (AimDirection.X != (int)(Position.X + Width * 0.5f) && AimDirection.Y != (int)(Position.Y + Height * 0.5f))
+                if (AimDirection.X != (int)(Position.X + Width2 * 0.5f) && AimDirection.Y != (int)(Position.Y + Height2 * 0.5f))
                 {
-                    MoveDir.X = (Position.X + Width * 0.5f - AimDirection.X);
-                    MoveDir.Y = (Position.Y + Height * 0.5f - AimDirection.Y);
+                    MoveDir.X = (Position.X + Width2 * 0.5f - AimDirection.X);
+                    MoveDir.Y = (Position.Y + Height2 * 0.5f - AimDirection.Y);
                 }
                 ReachedLocation = true;
             }
             else
             {
-                MoveDir.X = (Position.X + Width * 0.5f - AimDirection.X);
-                MoveDir.Y = (Position.Y + Height * 0.5f - AimDirection.Y);
-                //MoveDir.X = (Position.X + Width * (Width == 0 ? 1f : (float)Main.rand.NextDouble()) - AimDirection.X);
-                //MoveDir.Y = (Position.Y + Height * (Height == 0 ? 1f : (float)Main.rand.NextDouble()) - AimDirection.Y);
+                MoveDir.X = (Position.X + Width2 * 0.5f - AimDirection.X);
+                MoveDir.Y = (Position.Y + Height2 * 0.5f - AimDirection.Y);
             }
             const float MaxMouseMoveSpeed = 26f;
-            if (MoveDir.Length() > MaxMouseMoveSpeed)
+            if (MoveDir.Length() > MaxMouseMoveSpeed * Agility)
             {
                 MoveDir.Normalize();
-                MoveDir *= MaxMouseMoveSpeed;
+                MoveDir *= MaxMouseMoveSpeed * Agility;
             }
             else
             {
-                MoveDir *= 0.7f;
+                MoveDir *= 0.7f * Agility;
             }
             AimDirection.X += (int)MoveDir.X;
             AimDirection.Y += (int)MoveDir.Y;
-            if (!ReachedLocation && AimDirection.X >= Position.X && AimDirection.X < Position.X + Width && AimDirection.Y >= Position.Y && AimDirection.Y < Position.Y + Height)
+            if (!ReachedLocation && AimDirection.X >= Position.X && AimDirection.X < Position.X + Width2 && AimDirection.Y >= Position.Y && AimDirection.Y < Position.Y + Height2)
                 ReachedLocation = true;
             return ReachedLocation;
         }
@@ -3261,6 +3263,8 @@ namespace giantsummon
             RocketMaxTime = 7;
             MeleeSpeed = RangedSpeed = MagicSpeed = 1f;
             Accuracy = Base.Accuracy;
+            Agility = Base.Agility;
+            Trigger = Base.Trigger;
             ManaRegenBonus = 0;
             float LastHealthPercentage = 1f, LastManaPercentage = 1f;
             if (HP < MHP) LastHealthPercentage = (float)HP / MHP;
@@ -4491,7 +4495,7 @@ namespace giantsummon
                 WaitingForManaRecharge = false;
             bool NearDeath = HP < MHP * 0.2f && !PlayerMounted;
             bool TargetInAim = false;
-            if (MoveCursorToPosition(TargetPosition, TargetWidth, TargetHeight))
+            if (MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight))
                 TargetInAim = true;
             if (HasFlag(GuardianFlags.Confusion))
             {
@@ -4676,12 +4680,12 @@ namespace giantsummon
                                         ApproachDistance += 44;
                                         RetreatDistance += 20;
                                     }
-                                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X) <= RetreatDistance)
+                                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) <= RetreatDistance)
                                         Retreat = true;
                                     else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
                                         Approach = true;
-                                    //if(TargetInAim)
-                                    Attack = true;
+                                    if(TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                        Attack = true;
                                 }
                                 if (!NearDeath && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
                                 {
@@ -4712,8 +4716,8 @@ namespace giantsummon
                                         Approach = true;
                                     else if (DistanceX <= RetreatDistance)
                                         Retreat = true;
-                                    //if (TargetInAim)
-                                    Attack = true;
+                                    if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                        Attack = true;
                                 }
                             }
                             break;
@@ -4738,8 +4742,8 @@ namespace giantsummon
                                     Approach = true;
                                 else if (DistanceX <= RetreatDistance)
                                     Retreat = true;
-                                //if (TargetInAim)
-                                Attack = true;
+                                if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                    Attack = true;
                             }
                             break;
                     }
@@ -4836,9 +4840,26 @@ namespace giantsummon
             if (Attack && (TargetInAim || (SelectedItem == -1 || Inventory[SelectedItem].melee)) && ItemAnimationTime == 0 && !Action && !LastAction)// || (SelectedItem > -1 && Inventory[SelectedItem].autoReuse)))
             {
                 //if(TargetInAim)
-                if (ItemAnimationTime == 0 && (SelectedItem == -1 || Inventory[SelectedItem].melee))
-                    Direction = TargetPosition.X + TargetWidth * 0.5f < Position.X ? -1 : 1;
-                this.Action = true;
+                bool UseItem = true;
+                if (!Inventory[SelectedItem].autoReuse && ItemAnimationTime == 0)
+                {
+                    int CurrentStack = (int)((0.5f + Main.rand.NextFloat() * 0.5f) * Trigger * 100);
+                    if (TriggerStack + CurrentStack >= 100)
+                    {
+                        TriggerStack = 0;
+                    }
+                    else
+                    {
+                        TriggerStack += (byte)CurrentStack;
+                        UseItem = false;
+                    }
+                }
+                if (UseItem)
+                {
+                    if (ItemAnimationTime == 0 && (SelectedItem == -1 || Inventory[SelectedItem].melee))
+                        Direction = TargetPosition.X + TargetWidth * 0.5f < Position.X ? -1 : 1;
+                    this.Action = true;
+                }
             }
         }
 
@@ -8300,7 +8321,24 @@ namespace giantsummon
             if (Attack)
             {
                 if ((SelectedItem > -1 && HeldProj > -1 && Inventory[SelectedItem].channel) || (ItemAnimationTime == 0 && (!LastAction || (SelectedItem > -1 && Inventory[SelectedItem].autoReuse))))
-                    Action = true;
+                {
+                    bool UseItem = true;
+                    if (!Inventory[SelectedItem].autoReuse && ItemAnimationTime == 0)
+                    {
+                        int CurrentStack = (int)((0.5f + Main.rand.NextFloat() * 0.5f) * Trigger * 100);
+                        if (TriggerStack + CurrentStack >= 100)
+                        {
+                            TriggerStack = 0;
+                        }
+                        else
+                        {
+                            TriggerStack += (byte)CurrentStack;
+                            UseItem = false;
+                        }
+                    }
+                    if(UseItem)
+                        Action = true;
+                }
             }
             if (DoDuck && !PlayerMounted)
                 MoveDown = true;
@@ -9579,6 +9617,8 @@ namespace giantsummon
                 FinalDamage = (int)(Damage * (1f - CurrentDefenseRate)) - Defense / 2;
                 if (PlayerMounted && HasFlag(GuardianFlags.MountDamageReceivedReduction))
                     FinalDamage -= (int)(FinalDamage * 0.2f);
+                if (KnockedOut && FinalDamage > 1)
+                    FinalDamage -= (int)(FinalDamage * 0.5f);
                 if (FinalDamage < 1)
                     FinalDamage = 1;
                 this.HP -= FinalDamage;
@@ -15054,6 +15094,7 @@ namespace giantsummon
             }
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);
+            //DrawBehind.Insert(0, new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.blackTileTexture, new Rectangle((int)(HitBox.X - Main.screenPosition.X), (int)(HitBox.Y - Main.screenPosition.Y), HitBox.Width, HitBox.Height), null, Color.Red));
             foreach (GuardianDrawData gdd in DrawBehind)
             {
                 if (!MountedOnPlayer || Downed)

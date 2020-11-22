@@ -29,7 +29,7 @@ namespace giantsummon
         public float TownNpcSlot = 1f;
         public bool Male = true;
         public int MaxJumpHeight = 15;
-        public float Accuracy = 0.9f;
+        public float Accuracy = 0.9f, Agility = 0.5f, Trigger = 0.5f;
         public float JumpSpeed = 7.08f;
         public int InitialMHP = 100, LifeCrystalHPBonus = 20, LifeFruitHPBonus = 5;
         public int InitialMP = 20, ManaCrystalMPBonus = 20;

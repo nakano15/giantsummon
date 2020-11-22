@@ -102,7 +102,7 @@ namespace giantsummon
             string Message = "";
             if (tg.Base.InvalidGuardian)
             {
-                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to help you.)";
+                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to help you.)\nGuardian ID: "+tg.ID+", Guardian Mod ID: "+tg.ModID+".\nIf this isn't related to a mod you uninstalled, send It's to the mod developer.";
             }
             else if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
             {
@@ -497,7 +497,7 @@ namespace giantsummon
             else
             {
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-                if (pm.GetSummonedGuardianCount < pm.MaxExtraGuardiansAllowed + 1)
+                if (pm.GetSummonedGuardianCount >= pm.MaxExtraGuardiansAllowed + 1)
                 {
                     SetDialogue(MessageParser(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for your companion in the group.)"), tg));
                 }

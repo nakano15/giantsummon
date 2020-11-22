@@ -1349,6 +1349,12 @@ namespace giantsummon
             {
                 damage = (int)(damage * 0.67f);
             }
+            if(damage > 1 && KnockedOut)
+            {
+                damage -= (int)(damage * 0.5f);
+                if (damage < 1)
+                    damage = 1;
+            }
             return true;
         }
 

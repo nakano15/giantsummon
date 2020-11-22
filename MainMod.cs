@@ -647,6 +647,7 @@ namespace giantsummon
         public override void Unload()
         {
             GuardianBase.UnloadGuardians();
+            TriedLoadingCustomGuardians = false;
         }
 
         public static bool IsGuardianInTheWorld(int ID, string ModId = "")
@@ -1224,7 +1225,7 @@ namespace giantsummon
                 }
                 int MaxHealthBarSize = 98;
                 if(UsingGuardianNecessitiesSystem && Guardian.Data.Injury > 0 && !Downed)
-                    MaxHealthBarSize = (int)(MaxHealthBarSize * ((float)Guardian.Data.Injury / 100));
+                    MaxHealthBarSize = (int)(MaxHealthBarSize * (1f - (float)Guardian.Data.Injury / 100));
                 if (Downed)
                 {
                     int BarWidth = (int)(MaxHealthBarScale * 98);
@@ -1270,8 +1271,9 @@ namespace giantsummon
                 if (UsingGuardianNecessitiesSystem && Guardian.Data.Injury > 0)
                 {
                     Vector2 InjuryPosition = HealthbarPosition;
-                    InjuryPosition.X += 98 - MaxHealthBarSize;
-                    Main.spriteBatch.Draw(GuardianHealthBar, InjuryPosition, new Rectangle(22 + 98 - MaxHealthBarSize, 16 * 4 + 4, MaxHealthBarSize, 8), Color.White);
+                    int BarSize = 98 - MaxHealthBarSize;
+                    InjuryPosition.X += MaxHealthBarSize;
+                    Main.spriteBatch.Draw(GuardianHealthBar, InjuryPosition, new Rectangle(22 + MaxHealthBarSize, 16 * 4 + 4, BarSize, 8), Color.White);
                 }
                 {
                     HealthbarPosition.X -= 22;

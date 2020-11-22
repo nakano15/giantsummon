@@ -35,3 +35,12 @@ Companions will not only try facing the one they're reviving, based on which dir
 The mod will now show the message of increase in number of followers on the correct friendship rank level.
 There is now a different text when reporting failed missions.
 Companions now have their texts for when you: Accept Request, Reject Request, Postpone Request, Have too many Requests, and Fail Request.
+Whenever the mod adds a fragmented companion on the world, It will tell on their dialogue which ID and Mod Name they belong to.
+	That may help on the debugging.
+Fixed a problem with the companion health bar, related to the Injury system.
+	The health bar will no longer be all empty regardless of how hurt your companion is.
+Added two more attributes that influences the companion combat ai:
+	Agility: Controls how fast their cursor moves to the target. They will only be able to use ranged attacks when their cursor is on their target.
+	Trigger: Controls how fast your companion will use non auto swinging weapons. Each frame the companion can attack will increase this stack. Once It reaches 100 or above, the companion will attack, and this will reset.
+Your character, and also your companions, will take 50% less damage when knocked out.
+	That will probably increase their survivability while in that state.
