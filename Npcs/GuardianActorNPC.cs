@@ -288,7 +288,7 @@ namespace giantsummon.Npcs
             RightArmAnimationFrame = Frame;
         }
         
-        public virtual DrawData? DrawItem(Color drawColor)
+        public virtual GuardianDrawData DrawItem(Color drawColor)
         {
             return null;
         }
@@ -414,11 +414,11 @@ namespace giantsummon.Npcs
                     dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
                     dds.Add(dd);
                 }
-                /*{
-                    DrawData? dd2 = DrawItem(drawColor);
-                    if (dd2.HasValue)
-                        dds.Add(dd2.Value);
-                }*/
+                {
+                    GuardianDrawData dd2 = DrawItem(drawColor);
+                    if (dd2 != null)
+                        dds.Add(dd2);
+                }
                 if (bodyfrontrect.X > -1 && Base.sprites.BodyFrontSprite != null)
                 {
                     dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects);

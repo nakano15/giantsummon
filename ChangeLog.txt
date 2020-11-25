@@ -44,3 +44,6 @@ Added two more attributes that influences the companion combat ai:
 	Trigger: Controls how fast your companion will use non auto swinging weapons. Each frame the companion can attack will increase this stack. Once It reaches 100 or above, the companion will attack, and this will reset.
 Your character, and also your companions, will take 50% less damage when knocked out.
 	That will probably increase their survivability while in that state.
+Changed the way the companions checks the enemy distancing from them when they are rescuing someone.
+Bug fixes to Blue's Marshmellow on a Stick.
+	Yes, again. For some reason, the method I used for drawing the items recruit npcs holds was deactivated, and also dated. I had to update the method and activate It again.

@@ -5602,6 +5602,22 @@ namespace giantsummon
             }
         }
 
+        public bool IsUsingChair
+        {
+            get
+            {
+                if (furniturex > -1 && furniturey > -1 && UsingFurniture)
+                {
+                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    if (tile.active() && tile.type == Terraria.ID.TileID.Chairs)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         public bool IsPlayerRoomMate(Player player)
         {
             player.FindSpawn();

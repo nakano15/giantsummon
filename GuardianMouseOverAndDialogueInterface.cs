@@ -97,12 +97,28 @@ namespace giantsummon
             modPlayer.IsTalkingToAGuardian = true;
             modPlayer.TalkingGuardianPosition = tg.WhoAmID;
             tg.TalkPlayerID = MainPlayer.whoAmI;
+            bool PlayerToTheLeft = MainPlayer.Center.X < tg.Position.X;
+            if(tg.LookingLeft != PlayerToTheLeft)
+            {
+                if (tg.UsingFurniture && tg.IsUsingChair)
+                {
+                    tg.LeaveFurniture(false);
+                }
+                tg.LookingLeft = PlayerToTheLeft;
+            }
+            if (MainPlayer.velocity == Vector2.Zero && ((MainPlayer.direction > 0 && !PlayerToTheLeft) || (MainPlayer.direction < 0 && PlayerToTheLeft)))
+            {
+                if (PlayerToTheLeft)
+                    MainPlayer.direction = 1;
+                else
+                    MainPlayer.direction = -1;
+            }
             //GetCompanionDialogue
             GetDefaultOptions(tg);
             string Message = "";
             if (tg.Base.InvalidGuardian)
             {
-                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to help you.)\nGuardian ID: "+tg.ID+", Guardian Mod ID: "+tg.ModID+".\nIf this isn't related to a mod you uninstalled, send It's to the mod developer.";
+                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to speak with you.)\nGuardian ID: "+tg.ID+", Guardian Mod ID: "+tg.ModID+".\nIf this isn't related to a mod you uninstalled, send It's to the mod developer.";
             }
             else if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
             {
@@ -128,7 +144,7 @@ namespace giantsummon
                         Message = tg.Base.NormalMessage(MainPlayer, tg);
                 }
             }
-            if (!NpcMod.HasMetGuardian(tg.ID, tg.ModID))
+            if (!tg.Base.InvalidGuardian && !NpcMod.HasMetGuardian(tg.ID, tg.ModID))
             {
                 Message = tg.Base.GreetMessage(MainPlayer, tg);
                 NpcMod.AddGuardianMet(tg.ID, tg.ModID);
@@ -657,44 +673,51 @@ namespace giantsummon
         public static void RestButtonAction(TerraGuardian tg)
         {
             Options.Clear();
-            SetDialogue("(How long should we rest?)");
-            AddOption("4 Hours", delegate(TerraGuardian tg2)
+            if (Main.bloodMoon || Main.eclipse || Main.invasionType >= Terraria.ID.InvasionID.GoblinArmy) //Todo - Add dialogues for when the companion asks for how long will rest, and for when It's not possible to
             {
-                if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
-                {
-                    GuardianActions.RestCommand(tg2, 0);
-                    CloseDialogueButtonAction(tg2);
-                }
-            });
-            AddOption("8 Hours", delegate(TerraGuardian tg2)
-            {
-                if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
-                {
-                    GuardianActions.RestCommand(tg2, 1);
-                    CloseDialogueButtonAction(tg2);
-                }
-            });
-            if (!Main.dayTime)
-            {
-                AddOption("Until Dawn", delegate(TerraGuardian tg2)
-                {
-                    if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
-                    {
-                        GuardianActions.RestCommand(tg2, 2);
-                        CloseDialogueButtonAction(tg2);
-                    }
-                });
+                SetDialogue("(Maybe It's not a good idea to rest right now.)");
             }
             else
             {
-                AddOption("Until Night", delegate(TerraGuardian tg2)
+                SetDialogue("(How long should we rest?)");
+                AddOption("4 Hours", delegate (TerraGuardian tg2)
                 {
                     if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
-                        GuardianActions.RestCommand(tg2, 3);
+                        GuardianActions.RestCommand(tg2, 0);
                         CloseDialogueButtonAction(tg2);
                     }
                 });
+                AddOption("8 Hours", delegate (TerraGuardian tg2)
+                {
+                    if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                    {
+                        GuardianActions.RestCommand(tg2, 1);
+                        CloseDialogueButtonAction(tg2);
+                    }
+                });
+                if (!Main.dayTime)
+                {
+                    AddOption("Until Dawn", delegate (TerraGuardian tg2)
+                    {
+                        if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                        {
+                            GuardianActions.RestCommand(tg2, 2);
+                            CloseDialogueButtonAction(tg2);
+                        }
+                    });
+                }
+                else
+                {
+                    AddOption("Until Night", delegate (TerraGuardian tg2)
+                    {
+                        if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                        {
+                            GuardianActions.RestCommand(tg2, 3);
+                            CloseDialogueButtonAction(tg2);
+                        }
+                    });
+                }
             }
             AddOption("Nevermind", delegate(TerraGuardian tg2)
             {

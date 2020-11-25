@@ -486,7 +486,8 @@ namespace giantsummon
                                 guardian.GetTargetInformation(out EnemyPosition, out EnemyWidth, out EnemyHeight);
                                 EnemyPosition.X += EnemyWidth * 0.5f;
                                 EnemyPosition.Y += EnemyHeight * 0.5f;
-                                if (IsMountedPlayer || (EnemyPosition - guardian.CenterPosition).Length() < 168f + EnemyWidth * 0.5f)
+                                if (IsMountedPlayer || (Math.Abs(EnemyPosition.X - guardian.Position.X) < 168f + EnemyWidth * 0.5f &&
+                                    Math.Abs(EnemyPosition.Y - guardian.Position.Y) < 168f + EnemyHeight * 0.5f))
                                 {
                                     RepelingEnemies = true;
                                 }
@@ -552,7 +553,6 @@ namespace giantsummon
                                             FacingLeftPosition.X += guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f);
                                             FacingRightPosition.X += guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f);
                                             guardian.FaceDirection(Math.Abs(FacingLeftPosition.X) < Math.Abs(FacingRightPosition.X));
-                                            //guardian.FaceDirection(TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0);
                                         }
                                         byte ReviveBoost = 1;
                                         if (!guardian.IsAttackingSomething)
@@ -561,12 +561,10 @@ namespace giantsummon
                                         if (IsPlayer)
                                         {
                                             Players[0].GetModPlayer<PlayerMod>().ReviveBoost += ReviveBoost;
-                                            //if(!IsMounted) guardian.AddDrawMomentToPlayer(Players[0]);
                                         }
                                         else
                                         {
                                             Guardians[0].ReviveBoost += ReviveBoost;
-                                            //if (!IsMounted) guardian.AddDrawMomentToTerraGuardian(Guardians[0]);
                                         }
                                         guardian.StuckTimer = 0;
                                         guardian.OffHandAction = false;

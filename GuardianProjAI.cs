@@ -14,7 +14,7 @@ namespace giantsummon
     {
         private void GroundPetsAndBabySlimeAI(Projectile proj)
         {
-            if (!MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID) || !GuardianProj.ContainsKey(proj.whoAmI))
+            if (!GuardianProj.ContainsKey(proj.whoAmI) || !MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID))
             {
                 proj.active = false;
                 return;
@@ -2885,7 +2885,7 @@ namespace giantsummon
 
         private void HornetSummonAI(Projectile proj)
         {
-            if (!MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID) || !GuardianProj.ContainsKey(proj.whoAmI))
+            if (!GuardianProj.ContainsKey(proj.whoAmI) || !MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID))
             {
                 proj.active = false;
                 return;

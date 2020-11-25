@@ -15,7 +15,7 @@ namespace giantsummon.Npcs
         public int AiValue { get { return (int)npc.ai[1]; } set { npc.ai[1] = value; } }
         public const int RefusalStep = 200;
         private static readonly KeyValuePair<string, string>[] DialoguesAndAnswers = new KeyValuePair<string, string>[]{ //This should be turned into a method, instead.
-            new KeyValuePair<string, string>("*It asks if you're here for camping, too.*","Deny"),
+            new KeyValuePair<string, string>("*She asks if you're here for camping, too.*","Deny"),
             new KeyValuePair<string, string>("*After you denied, she asked if you're an adventurer.*","Yes"),
             new KeyValuePair<string, string>("*After you told her that, she looked very interessed.*","Continue"),
             new KeyValuePair<string, string>("*She tells you that on truth, didn't came to your world for camping.*","Continue"),
@@ -477,17 +477,20 @@ namespace giantsummon.Npcs
             return Message;
         }
 
-        public override Terraria.DataStructures.DrawData? DrawItem(Color drawColor)
+        public override GuardianDrawData DrawItem(Color drawColor)
         {
             if (AiStage != 0) return null;
             Vector2 Origin = new Vector2(3, 6);
             int StickPositionX, StickPositionY;
             Base.GetBetweenHandsPosition(Base.ItemUseFrames[2], out StickPositionX, out StickPositionY);
             if (npc.direction < 0)
+            {
                 StickPositionX = Base.SpriteWidth - StickPositionX;
+                Origin.X = Main.itemTexture[Terraria.ID.ItemID.MarshmallowonaStick].Width - Origin.X;
+            }
             StickPositionX -= (int)(Base.SpriteWidth * 0.5f);
             StickPositionY -= Base.SpriteHeight;
-            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(Main.itemTexture[Terraria.ID.ItemID.MarshmallowonaStick], npc.Bottom + new Vector2(StickPositionX, StickPositionY) - Main.screenPosition, null, drawColor, 0f, Origin, 1f, (npc.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None), 0);
+            GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.MainHandItem, Main.itemTexture[Terraria.ID.ItemID.MarshmallowonaStick], npc.Bottom + new Vector2(StickPositionX, StickPositionY) - Main.screenPosition, null, drawColor, 0f, Origin, 1f, (npc.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None));
             return dd;
         }
         
