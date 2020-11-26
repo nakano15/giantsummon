@@ -4379,6 +4379,41 @@ namespace giantsummon
             return InRangeX && InRangeY;
         }
 
+        public bool CheckIfCanUsePoisonOnWeapons()
+        {
+            if (ItemAnimationTime > 0) return false;
+            foreach (BuffData buff in Buffs)
+            {
+                if (buff.ID == Terraria.ID.BuffID.WeaponImbueConfetti ||
+                    buff.ID == Terraria.ID.BuffID.WeaponImbueCursedFlames ||
+                    buff.ID == Terraria.ID.BuffID.WeaponImbueFire ||
+                    buff.ID == Terraria.ID.BuffID.WeaponImbueGold ||
+                    buff.ID == Terraria.ID.BuffID.WeaponImbueIchor ||
+                    buff.ID == Terraria.ID.BuffID.WeaponImbueNanites ||
+                    buff.ID == Terraria.ID.BuffID.WeaponImbuePoison ||
+                    buff.ID == Terraria.ID.BuffID.WeaponImbueVenom)
+                    return false;
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                Item item = Inventory[i];
+                if (item.type == Terraria.ID.ItemID.FlaskofCursedFlames ||
+                    item.type == Terraria.ID.ItemID.FlaskofFire ||
+                    item.type == Terraria.ID.ItemID.FlaskofGold ||
+                    item.type == Terraria.ID.ItemID.FlaskofIchor ||
+                    item.type == Terraria.ID.ItemID.FlaskofNanites ||
+                    item.type == Terraria.ID.ItemID.FlaskofParty ||
+                    item.type == Terraria.ID.ItemID.FlaskofPoison ||
+                    item.type == Terraria.ID.ItemID.FlaskofVenom)
+                {
+                    SelectedItem = i;
+                    Action = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public const int NormalTargetMemoryTime = 5 * 60, BossTargetMemoryTime = 30 * 60;
         public sbyte MeleePosition = -1, RangedPosition = -1, MagicPosition = -1; 
 
@@ -4387,6 +4422,26 @@ namespace giantsummon
             if (TargetID == -1 || (DoAction.InUse && DoAction.IgnoreCombat))
             {
                 return;
+            }
+            CombatTactic Tactic = this.tactic;
+            if (OwnerPos != -1)
+            {
+                PlayerMod.BehaviorChanges behavior = Main.player[OwnerPos].GetModPlayer<PlayerMod>().CurrentTactic;
+                if (behavior != PlayerMod.BehaviorChanges.FreeWill)
+                {
+                    switch (behavior)
+                    {
+                        case PlayerMod.BehaviorChanges.ChargeOnTarget:
+                            Tactic = CombatTactic.Charge;
+                            break;
+                        case PlayerMod.BehaviorChanges.AvoidContact:
+                            Tactic = CombatTactic.Assist;
+                            break;
+                        case PlayerMod.BehaviorChanges.StayAwayFromTarget:
+                            Tactic = CombatTactic.Snipe;
+                            break;
+                    }
+                }
             }
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
@@ -4459,7 +4514,8 @@ namespace giantsummon
                 if (((Math.Abs(RCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance || Math.Abs(LCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance) &&
                 Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) <= YCheckDistance))
                 {
-                    AttackingTarget = true;
+                    if(!CheckIfCanUsePoisonOnWeapons())
+                        AttackingTarget = true;
                 }
                 else
                     return;
@@ -4581,7 +4637,6 @@ namespace giantsummon
                         }
                         SelectedItem = -1;
                         bool InMeleeRange = false;
-                        //if (tactic != CombatTactic.Snipe)
                         if (MeleePosition > -1)
                         {
                             if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false))
@@ -4634,7 +4689,7 @@ namespace giantsummon
                 if (!TargetOnSight)
                 {
                     float Distance = 16;
-                    switch (tactic)
+                    switch (Tactic)
                     {
                         case CombatTactic.Assist:
                             Distance = 64f;
@@ -4658,7 +4713,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    switch (tactic)
+                    switch (Tactic)
                     {
                         case CombatTactic.Charge: //This AI is clashing against GoMelee AI.
                             {
@@ -4775,9 +4830,9 @@ namespace giantsummon
                             Duck = true;
                     }
                     float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
-                        DistanceAbs = Math.Abs(Position.X + Velocity.X * 0.5f - TargetPosition.X + (TargetWidth * 0.5f));
+                        DistanceAbs = Math.Abs((Position.X + Velocity.X * 0.5f) - (TargetPosition.X + TargetWidth * 0.5f));
                     Approach = Retreat = false;
-                    if (DistanceAbs < Width * 0.5f + 8 || NearDeath)
+                    if (DistanceAbs < (Width + TargetWidth) * 0.5f + 8 || (NearDeath && DistanceAbs < (Width + TargetWidth) * 0.5f + 64))
                         Retreat = true;
                     else if (DistanceAbs > AttackRange)
                         Approach = true;
@@ -5034,6 +5089,191 @@ namespace giantsummon
             UpdateFurnitureUsageScript();
             //LootItemScript();
             DoLootItems();
+            if (TargetID == -1 && !UsingFurniture && Velocity.X == 0)
+            {
+                if (DoAction.InUse && !DoAction.IsGuardianSpecificAction && DoAction.ID == (int)GuardianActions.ActionIDs.BuySomethingFromNpcShop)
+                {
+                    if (HasCooldown(GuardianCooldownManager.CooldownType.ShopCheckCooldown))
+                        RemoveCooldown(GuardianCooldownManager.CooldownType.ShopCheckCooldown);
+                }
+                else
+                {
+                    IncreaseCooldownValue(GuardianCooldownManager.CooldownType.ShopCheckCooldown);
+                    if (GetCooldownValue(GuardianCooldownManager.CooldownType.ShopCheckCooldown) >= 3 * 60)
+                    {
+                        DecreaseCooldownValue(GuardianCooldownManager.CooldownType.ShopCheckCooldown, 30 * 60);
+                        CheckForVendors();
+                    }
+                }
+            }
+        }
+
+        public void CheckForVendors()
+        {
+            byte MerchantPosition = 255, ArmsDealerPosition = 255, CyborgPosition = 255;
+            Vector2 MyCenter = CenterPosition;
+            for (byte i = 0; i < 200; i++)
+            {
+                if (Main.npc[i].active && Main.npc[i].townNPC)
+                {
+                    Vector2 NpcCenter = Main.npc[i].Center;
+                    if (MyCenter.X >= NpcCenter.X - 300 && MyCenter.X < NpcCenter.X + 200 &&
+                        MyCenter.Y >= NpcCenter.Y - 300 && MyCenter.Y < NpcCenter.Y + 200)
+                    {
+                        if (Main.npc[i].type == Terraria.ID.NPCID.Merchant)
+                            MerchantPosition = i;
+                        if (Main.npc[i].type == Terraria.ID.NPCID.ArmsDealer)
+                            ArmsDealerPosition = i;
+                        if (Main.npc[i].type == Terraria.ID.NPCID.Cyborg)
+                            CyborgPosition = i;
+                    }
+                }
+            }
+            //Add an action later, which makes the companion go to the npc buy stuff.
+            //The action should log the npc the companion should go to, the item to buy, the stack, and the price.
+            if (MerchantPosition < 255 || ArmsDealerPosition < 255 || CyborgPosition < 255)
+            {
+                int HealingPotionCount = 0, ManaPotionCount = 0;
+                int EmptyInventorySlots = 0;
+                int MedKits = 0;
+                Dictionary<int, int> AmmoAndTheirStack = new Dictionary<int, int>();
+                bool HasMagicWeapon = false;
+                int MedKitID = (MainMod.UsingGuardianNecessitiesSystem ? ModContent.ItemType<Items.Consumable.FirstAidKit>() : 0);
+                for (int i = 0; i < 50; i++)
+                {
+                    if (MerchantPosition < 255 && Inventory[i].healLife > 0)
+                        HealingPotionCount += Inventory[i].stack;
+                    if (i < 10 && Inventory[i].useAmmo > 0 && !AmmoAndTheirStack.ContainsKey(Inventory[i].useAmmo)) //Let's only get ammo for weapons the companion will use.
+                    {
+                        AmmoAndTheirStack.Add(Inventory[i].useAmmo, 0);
+                    }
+                    if (i < 10 && Inventory[i].mana > 0)
+                    {
+                        HasMagicWeapon = true;
+                    }
+                    if (MedKitID > 0 && Inventory[i].type == MedKitID)
+                    {
+                        MedKits += Inventory[i].stack;
+                    }
+                    if (Inventory[i].ammo > 0)
+                    {
+                        if (AmmoAndTheirStack.ContainsKey(Inventory[i].ammo))
+                        {
+                            AmmoAndTheirStack[Inventory[i].ammo] += Inventory[i].stack;
+                        }
+                    }
+                    if (Inventory[i].type == 0)
+                        EmptyInventorySlots++;
+                }
+                if (MerchantPosition > 255 && HealingPotionCount < 30)
+                {
+                    if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserHealingPotion, 300, 30 - HealingPotionCount))
+                        return;
+                }
+                if (MerchantPosition > 255 && HasMagicWeapon && ManaPotionCount < 30)
+                {
+                    if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserManaPotion, 100, 30 - ManaPotionCount))
+                        return;
+                }
+                if (MerchantPosition > 255 && MedKitID > 0 && MedKits < 1)
+                {
+                    if (TryBuyingItem(MerchantPosition, MedKitID, 6000, 1 - MedKits))
+                        return;
+                }
+                foreach (int key in AmmoAndTheirStack.Keys)
+                {
+                    int ToRefill = 999 - AmmoAndTheirStack[key];
+                    if (ToRefill < 0)
+                        continue;
+                    if (MerchantPosition < 255)
+                    {
+                        if (key == Terraria.ID.AmmoID.Arrow)
+                        {
+                            if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.WoodenArrow, 5, ToRefill))
+                                return;
+                        }
+                    }
+                    if (ArmsDealerPosition < 255)
+                    {
+                        if (key == Terraria.ID.AmmoID.Bullet)
+                        {
+                            if (TryBuyingItem(ArmsDealerPosition, Terraria.ID.ItemID.MusketBall, 5, ToRefill))
+                                return;
+                        }
+                        if (key == Terraria.ID.AmmoID.StyngerBolt)
+                        {
+                            if (TryBuyingItem(ArmsDealerPosition, Terraria.ID.ItemID.StyngerBolt, 75, ToRefill))
+                                return;
+                        }
+                        if (key == Terraria.ID.AmmoID.Stake)
+                        {
+                            if (TryBuyingItem(ArmsDealerPosition, Terraria.ID.ItemID.Stake, 15, ToRefill))
+                                return;
+                        }
+                        if (key == Terraria.ID.AmmoID.NailFriendly)
+                        {
+                            if (TryBuyingItem(ArmsDealerPosition, Terraria.ID.ItemID.Nail, 100, ToRefill))
+                                return;
+                        }
+                        if (key == Terraria.ID.AmmoID.CandyCorn)
+                        {
+                            if (TryBuyingItem(ArmsDealerPosition, Terraria.ID.ItemID.CandyCorn, 5, ToRefill))
+                                return;
+                        }
+                    }
+                    if (CyborgPosition < 255)
+                    {
+                        if (key == Terraria.ID.AmmoID.Rocket)
+                        {
+                            if (TryBuyingItem(CyborgPosition, Terraria.ID.ItemID.RocketI, 50, ToRefill))
+                                return;
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool TryBuyingItem(int NpcPos, int ID, int ItemPrice, int Stack)
+        {
+            if (Coins >= ItemPrice)
+            {
+                GuardianActions.BuyItemFromShopCommand(this, NpcPos, ID, Stack, ItemPrice);
+                return true;
+            }
+            return false;
+        }
+
+        public int BuyItem(int ID, int ItemPrice, int Stack)
+        {
+            int ItemsBought = 0;
+            for (int i = 0; i < 50; i++)
+            {
+                if (Inventory[i].type == ID)
+                {
+                    int ToRefill = Inventory[i].maxStack - Inventory[i].stack;
+                    if (ToRefill > Stack - ItemsBought)
+                        ToRefill = Stack - ItemsBought;
+                    int MaxRefil = (int)(Coins / ItemPrice);
+                    if (MaxRefil < ToRefill)
+                        ToRefill = MaxRefil;
+                    Inventory[i].stack += ToRefill;
+                    Coins -= (uint)(ToRefill * ItemPrice);
+                    ItemsBought += ToRefill;
+                    if (Inventory[i].stack == 0)
+                    {
+                        Inventory[i].SetDefaults(0);
+                        break;
+                    }
+                }
+                if (Inventory[i].type == 0)
+                {
+                    Inventory[i].SetDefaults(ID);
+                    Inventory[i].stack = 0;
+                    i--;
+                    continue;
+                }
+            }
+            return ItemsBought;
         }
 
         public void AvoidHazard()
@@ -7571,18 +7811,18 @@ namespace giantsummon
             float HealthRegenValue = 1;
             if (HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
             {
-                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 180 * 60);
+                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 600 * 60);
                 HealthRegenValue = 0.5f;
             }
             else if (HasBuff(ModContent.BuffType<Buffs.Injury>()))
             {
                 RemoveBuff(ModContent.BuffType<Buffs.Injury>());
-                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
+                AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 300 * 60);
                 HealthRegenValue = 0.75f;
             }
             else
             {
-                AddBuff(ModContent.BuffType<Buffs.Injury>(), 30 * 60);
+                AddBuff(ModContent.BuffType<Buffs.Injury>(), 90 * 60);
             }
             HP = (int)((MHP / 2 + ReviveBoost * 10) * HealthRegenValue);
             Rotation = 0f;
@@ -8054,10 +8294,30 @@ namespace giantsummon
             bool HasMeleeWeapon = this.HasMeleeWeapon,
                 HasRangedWeapon = this.HasRangedWeapon,
                 HasMagicWeapon = this.HasMagicWeapon;
+            CombatTactic Tactic = this.tactic;
+            if (OwnerPos != -1)
+            {
+                PlayerMod.BehaviorChanges behavior = Main.player[OwnerPos].GetModPlayer<PlayerMod>().CurrentTactic;
+                if (behavior != PlayerMod.BehaviorChanges.FreeWill)
+                {
+                    switch (behavior)
+                    {
+                        case PlayerMod.BehaviorChanges.ChargeOnTarget:
+                            Tactic = CombatTactic.Charge;
+                            break;
+                        case PlayerMod.BehaviorChanges.AvoidContact:
+                            Tactic = CombatTactic.Assist;
+                            break;
+                        case PlayerMod.BehaviorChanges.StayAwayFromTarget:
+                            Tactic = CombatTactic.Snipe;
+                            break;
+                    }
+                }
+            }
             bool TryOtherAI = true;
             if (UsingFurniture)
                 LeaveFurniture();
-            if (tactic == CombatTactic.Charge && InMeleeRange)
+            if (Tactic == CombatTactic.Charge && InMeleeRange)
             {
                 TryOtherAI = true;
             }
@@ -8078,7 +8338,7 @@ namespace giantsummon
                 if (!WaitingForManaRecharge)
                 {
                     TryOtherAI = false;
-                    if (tactic == CombatTactic.Charge && !InMeleeRangeX)
+                    if (Tactic == CombatTactic.Charge && !InMeleeRangeX)
                         Approach = true;
                     else if (Math.Abs(SquaredDistance.X) >= 156 + TargetWidth * 0.5f)
                     {
@@ -8116,7 +8376,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    switch (tactic)
+                    switch (Tactic)
                     {
                         case CombatTactic.Charge:
                             {
@@ -13713,12 +13973,25 @@ namespace giantsummon
             WallSlideStyle = 0;
             if (CollisionX && !CollisionY && !SittingOnPlayerMount && !WalkMode && Velocity.Y >= 0)
             {
-                SlidingLeft = MoveLeft;
-                if (HasFlag(GuardianFlags.ClimbingClaws))
-                    WallSlideStyle++;
-                if (HasFlag(GuardianFlags.ClimbingPaws))
-                    WallSlideStyle++;
-                SetFallStart();
+                int SolidWallsY = CollisionHeight / 16;
+                int CheckX = (int)(Position.X + (Width * 0.5f + 1) * Direction) / 16;
+                for (int y = -SolidWallsY; y < 0; y++)
+                {
+                    int CheckY = (int)(Position.Y) / 16 + y;
+                    if (Main.tile[CheckX, CheckY].active() && Main.tileSolid[Main.tile[CheckX, CheckY].type])
+                    {
+                        SolidWallsY++;
+                    }
+                }
+                if (SolidWallsY == 0)
+                {
+                    SlidingLeft = MoveLeft;
+                    if (HasFlag(GuardianFlags.ClimbingClaws))
+                        WallSlideStyle++;
+                    if (HasFlag(GuardianFlags.ClimbingPaws))
+                        WallSlideStyle++;
+                    SetFallStart();
+                }
             }
             DoorHandler();
             if (OwnerPos > -1 && (MoveLeft || MoveRight) && !MoveDown)
@@ -14045,7 +14318,7 @@ namespace giantsummon
                 if (GetCooldownValue(GuardianCooldownManager.CooldownType.SuffocationDelay) < 5)
                     IncreaseCooldownValue(GuardianCooldownManager.CooldownType.SuffocationDelay);
                 else
-                   AddBuff(68, 2);
+                   AddBuff(68, 10);
             }
             else if (TileInfo.Y != 0)
             {

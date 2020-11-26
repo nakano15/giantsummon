@@ -55,7 +55,7 @@ namespace giantsummon
             oldGamePadState = GamePad.GetState(controlPort);
         public static bool Gameplay2PMode = false;
         public static bool MoveLeftPress = false, MoveRightPress = false, MoveUpPress = false, MoveDownPress = false, UseItemPress = false, JumpPress = false;
-        public static Mod NExperienceMod, KalciphozMod;
+        public static Mod NExperienceMod, KalciphozMod, SubworldLibrary;
         public static bool TestForceGuardianOnFront = false;
         public static Main MainHook { get { return Main.instance; } }
         public static bool LastWof = false;
@@ -2567,11 +2567,13 @@ namespace giantsummon
             {
                 NExperienceMod = ModLoader.GetMod("NExperience");
                 KalciphozMod = ModLoader.GetMod("kRPG");
+                SubworldLibrary = ModLoader.GetMod("SubworldLibrary");
             }
             catch
             {
                 NExperienceMod = null;
                 KalciphozMod = null;
+                SubworldLibrary = null;
             }
         }
 

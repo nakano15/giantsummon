@@ -38,6 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ModCompatibilityDLLs\NExperience.XNA.dll</HintPath>
     </Reference>
+    <Reference Include="SubworldLibrary">
+      <HintPath>ModCompatibilityDLLs\SubworldLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -79,6 +82,7 @@
     <Compile Include="CharacterInfo.cs" />
     <Compile Include="CommonRequestsDB.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
+    <Compile Include="Compatibility\HubWorlds.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
     <Compile Include="ConfigMod.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
@@ -244,6 +248,7 @@
     <Compile Include="SavePlayerDefsCommand.cs" />
     <Compile Include="SkinReqStruct.cs" />
     <Compile Include="SoundData.cs" />
+    <Compile Include="SubWorlds\TestWorld.cs" />
     <Compile Include="TerraGuardian.cs" />
     <Compile Include="TriggerHandler.cs" />
     <Compile Include="UtilityMethods.cs" />
@@ -455,7 +460,6 @@
     <Content Include="Items\Weapons\UprootedTree.png" />
     <Content Include="Items\Weapons\WoodenCrossbow.png" />
     <Content Include="Items\Weapons\WoodenGreathammer.png" />
-    <Content Include="ModCompatibilityDLLs\NExperience.XNA.dll" />
     <Content Include="Npcs\AlexNPC.png" />
     <Content Include="Npcs\BreeNPC.png" />
     <Content Include="Npcs\BrutusNPC.png" />

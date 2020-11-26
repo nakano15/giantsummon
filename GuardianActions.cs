@@ -240,6 +240,18 @@ namespace giantsummon
             Guardian.DoAction.InUse = true;
             Guardian.DoAction.SetIntegerValue(0, RestTime);
         }
+
+        public static void BuyItemFromShopCommand(TerraGuardian Guardian, int NpcPosition, int ItemID, int BuyStack, int BuyPrice)
+        {
+            if (Guardian.OwnerPos == -1) return;
+            Guardian.DoAction = new GuardianActions();
+            Guardian.DoAction.ID = (int)ActionIDs.BuySomethingFromNpcShop;
+            Guardian.DoAction.InUse = true;
+            Guardian.DoAction.SetIntegerValue(0, NpcPosition);
+            Guardian.DoAction.SetIntegerValue(1, ItemID);
+            Guardian.DoAction.SetIntegerValue(2, BuyStack);
+            Guardian.DoAction.SetIntegerValue(3, BuyPrice);
+        }
         
         public virtual void Update(TerraGuardian guardian)
         {
@@ -258,6 +270,160 @@ namespace giantsummon
             {
                 switch ((ActionIDs)ID)
                 {
+                    case ActionIDs.BuySomethingFromNpcShop:
+                        {
+                            if (Step == 0 && StepStart)
+                            {
+                                Cancellable = true;
+                            }
+                            const int NpcPosVar = 0, ItemIDVar = 1, ItemStackVar = 2, ItemBuyPriceVar = 3;
+                            if (guardian.TargetID > -1 || guardian.TalkPlayerID > -1 || guardian.BeingPulledByPlayer)
+                            {
+                                InUse = false;
+                                return;
+                            }
+                            bool MakeNpcFocusOnGuardian = false;
+                            guardian.MoveLeft = guardian.MoveRight = false;
+                            switch (Step)
+                            {
+                                case 0: //Try reaching npc
+                                    {
+                                        int NpcPosition = GetIntegerValue(NpcPosVar);
+                                        NPC npc = Main.npc[NpcPosition];
+                                        if (!npc.active)
+                                        {
+                                            InUse = false;
+                                            return;
+                                        }
+                                        Vector2 NpcBottom = npc.Bottom;
+                                        if (Time == 10 * 60)
+                                        {
+                                            guardian.Position = NpcBottom;
+                                            guardian.SetFallStart();
+                                        }
+                                        else if (Math.Abs(NpcBottom.X - guardian.Position.X) < 16)
+                                        {
+                                            if (guardian.Position.X >= NpcBottom.X)
+                                            {
+                                                guardian.MoveRight = true;
+                                            }
+                                            else
+                                            {
+                                                guardian.MoveLeft = true;
+                                            }
+                                        }
+                                        else if (Math.Abs(NpcBottom.X - guardian.Position.X) >= 16f + guardian.Width * 0.5f)
+                                        {
+                                            if (guardian.Position.X < NpcBottom.X)
+                                            {
+                                                guardian.MoveRight = true;
+                                            }
+                                            else
+                                            {
+                                                guardian.MoveLeft = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            MakeNpcFocusOnGuardian = true;
+                                            ChangeStep();
+                                            /*{
+                                                Item i = new Item();
+                                                i.SetDefaults(GetIntegerValue(ItemIDVar));
+                                                guardian.SaySomething("*Buying "+i.Name+" from "+npc.GivenOrTypeName+".*");
+                                            }*/
+                                        }
+                                        if (Math.Abs(NpcBottom.Y - guardian.Position.Y) > 8)
+                                        {
+                                            if (guardian.Position.Y < NpcBottom.Y)
+                                            {
+                                                if (guardian.Velocity.Y == 0)
+                                                {
+                                                    bool SolidBlockBellow = false;
+                                                    int CheckY = (int)(guardian.Position.Y + 2) / 16;
+                                                    for (int i = 0; i < guardian.Width / 16; i++)
+                                                    {
+                                                        int CheckX = (int)(guardian.TopLeftPosition.X / 16) + i;
+                                                        if (Main.tile[CheckX, CheckY].active() && Main.tileSolid[Main.tile[CheckX, CheckY].type] && !Terraria.ID.TileID.Sets.Platforms[Main.tile[CheckX, CheckY].type])
+                                                        {
+                                                            SolidBlockBellow = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (!SolidBlockBellow)
+                                                    {
+                                                        guardian.MoveDown = true;
+                                                        guardian.Jump = true;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                int CheckX = (int)(guardian.Position.X / 16);
+                                                if (guardian.JumpHeight == 0 && !guardian.Jump || guardian.JumpHeight > 0)
+                                                {
+                                                    for (int i = 1; i < 6; i++)
+                                                    {
+                                                        int CheckY = (int)(guardian.Position.Y / 16) - i;
+                                                        if (Main.tile[CheckX, CheckY].active() && Terraria.ID.TileID.Sets.Platforms[Main.tile[CheckX, CheckY].type])
+                                                        {
+                                                            guardian.Jump = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    {
+                                        NPC npc = Main.npc[GetIntegerValue(NpcPosVar)];
+                                        MakeNpcFocusOnGuardian = true;
+                                        Vector2 NpcCenter = npc.Center;
+                                        if (Math.Abs(guardian.Position.X - NpcCenter.X) < 16)
+                                        {
+                                            if (guardian.Position.X < NpcCenter.X)
+                                                guardian.MoveLeft = true;
+                                            else
+                                                guardian.MoveRight = true;
+                                        }
+                                        else if (guardian.Velocity.X == 0)
+                                        {
+                                            guardian.LookingLeft = guardian.Position.X >= NpcCenter.X;
+                                        }
+                                        if (Time >= 4 * 60)
+                                        {
+                                            int Stack = guardian.BuyItem(GetIntegerValue(ItemIDVar), GetIntegerValue(ItemBuyPriceVar), GetIntegerValue(ItemStackVar));
+                                            /*{
+                                                Item i = new Item();
+                                                i.SetDefaults(GetIntegerValue(ItemIDVar));
+                                                guardian.SaySomething("*Bought " + Stack + " " + i.Name + " from " + npc.GivenOrTypeName + ".*");
+                                            }*/
+                                        }
+                                        if (Time >= 6 * 60)
+                                        {
+                                            InUse = false;
+                                            return;
+                                        }
+                                    }
+                                    break;
+                            }
+                            if (MakeNpcFocusOnGuardian)
+                            {
+                                NPC npc = Main.npc[GetIntegerValue(NpcPosVar)];
+                                if (npc.ai[0] != 0)
+                                    npc.netUpdate = true;
+                                npc.ai[0] = 0;
+                                npc.ai[1] = 300;
+                                npc.localAI[3] = 100;
+                                if (npc.Center.X < guardian.Position.X)
+                                    npc.direction = 1;
+                                else
+                                    npc.direction = -1;
+                            }
+                        }
+                        break;
                     case ActionIDs.GoSleep:
                         {
                             IgnoreCombat = true;
@@ -2503,7 +2669,8 @@ namespace giantsummon
             TeleportWithPlayerToTown,
             UseSkillResetPotion,
             ReviveSomeone,
-            GoSleep
+            GoSleep,
+            BuySomethingFromNpcShop
         }
     }
 }

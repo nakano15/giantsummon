@@ -54,6 +54,7 @@ namespace giantsummon
         public byte LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
         public int ExtraMaxHealthValue = 0;
         public bool InEtherRealm = false;
+        public BehaviorChanges CurrentTactic = BehaviorChanges.FreeWill;
         public bool MountedOnGuardian
         {
             get
@@ -1391,18 +1392,18 @@ namespace giantsummon
             float HealthRestoreValue = 1f;
             if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
             {
-                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 180 * 60);
+                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 600 * 60);
                 HealthRestoreValue = 0.5f;
             }
             else if (player.HasBuff(ModContent.BuffType<Buffs.Injury>()))
             {
                 player.DelBuff(player.FindBuffIndex(ModContent.BuffType<Buffs.Injury>()));
-                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 60 * 60);
+                player.AddBuff(ModContent.BuffType<Buffs.HeavyInjury>(), 300 * 60);
                 HealthRestoreValue = 0.75f;
             }
             else
             {
-                player.AddBuff(ModContent.BuffType<Buffs.Injury>(), 30 * 60);
+                player.AddBuff(ModContent.BuffType<Buffs.Injury>(), 90 * 60);
             }
             player.statLife = (int)((player.statLifeMax2 / 2 + ReviveBoost * 10) * HealthRestoreValue);
             CombatText.NewText(player.getRect(), Color.Cyan, "Revived!", true);
@@ -2764,6 +2765,14 @@ namespace giantsummon
             Open,
             HalfOpen,
             Closed
+        }
+
+        public enum BehaviorChanges
+        {
+            FreeWill,
+            ChargeOnTarget,
+            AvoidContact,
+            StayAwayFromTarget
         }
     }
 }

@@ -47,3 +47,18 @@ Your character, and also your companions, will take 50% less damage when knocked
 Changed the way the companions checks the enemy distancing from them when they are rescuing someone.
 Bug fixes to Blue's Marshmellow on a Stick.
 	Yes, again. For some reason, the method I used for drawing the items recruit npcs holds was deactivated, and also dated. I had to update the method and activate It again.
+The Suffocation debuff is no longer pathetic.
+Companions will now try using poisons before attacking a monster.
+	The flask should be in one of their first 10 inventory slots, so they can use It automatically. They will not use It If they are under the effect of a flask.
+Injury and Heavy Injury debuffs now lasts for longer on your character and companions.
+	Injury Time went from 30 seconds to 1 minute and 30 seconds.
+	Heavy Injury from Injury went from 1 minute to 5 minutes.
+	Heavy Injury persistence went from 3 minutes to 10 minutes.
+You can now change all your companions behavior through the new order hud.
+	The Tactic menu has been added. It will allow you to change the companion behaviors to:
+		Charge: The companions will go melee combat against their target.
+		Avoid Contact: The companion will avoid staying near the melee range of the monsters.
+		Attack from safe distance: The companion will stay far away from the enemy, and try using ranged attacks from far away.
+		Free Will: Will make the companions resume using their set combat behaviors.
+Companions can now spend their coins on npcs stores, to buy potions or some ammo for them.
+	The coins they will use is their own coins, not the ones they have in their inventory slots.

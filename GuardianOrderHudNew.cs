@@ -28,6 +28,7 @@ namespace giantsummon
             AddOption(Option.OptionType.Interaction);
             AddOption(Option.OptionType.Action);
             AddOption(Option.OptionType.Item);
+            AddOption(Option.OptionType.Tactic);
         }
 
         public static void AddOptionHolder()
@@ -159,6 +160,15 @@ namespace giantsummon
                                 continue;
                             AddOption(Option.OptionType.PickGuardian, true, i);
                         }
+                    }
+                    break;
+                case Option.OptionType.Tactic:
+                    {
+                        AddOptionHolder();
+                        AddOption(Option.OptionType.ChargeOnTarget);
+                        AddOption(Option.OptionType.AvoidContactWithTarget);
+                        AddOption(Option.OptionType.AttackTargetFromAwayIt);
+                        AddOption(Option.OptionType.FreeWill);
                     }
                     break;
                 case Option.OptionType.PickGuardian:
@@ -543,6 +553,30 @@ namespace giantsummon
                         Close();
                     }
                     break;
+                case Option.OptionType.ChargeOnTarget:
+                    {
+                        player.CurrentTactic = PlayerMod.BehaviorChanges.ChargeOnTarget;
+                        Close();
+                    }
+                    break;
+                case Option.OptionType.AvoidContactWithTarget:
+                    {
+                        player.CurrentTactic = PlayerMod.BehaviorChanges.AvoidContact;
+                        Close();
+                    }
+                    break;
+                case Option.OptionType.AttackTargetFromAwayIt:
+                    {
+                        player.CurrentTactic = PlayerMod.BehaviorChanges.StayAwayFromTarget;
+                        Close();
+                    }
+                    break;
+                case Option.OptionType.FreeWill:
+                    {
+                        player.CurrentTactic = PlayerMod.BehaviorChanges.FreeWill;
+                        Close();
+                    }
+                    break;
             }
         }
 
@@ -670,6 +704,16 @@ namespace giantsummon
                     }
                 case Option.OptionType.SetLeader:
                     return "Set as Leader";
+                case Option.OptionType.Tactic:
+                    return "Tactic";
+                case Option.OptionType.ChargeOnTarget:
+                    return "Charge";
+                case Option.OptionType.AvoidContactWithTarget:
+                    return "Avoid Contact";
+                case Option.OptionType.AttackTargetFromAwayIt:
+                    return "Attack from safe distance";
+                case Option.OptionType.FreeWill:
+                    return "Free Will";
             }
         }
 
@@ -695,6 +739,7 @@ namespace giantsummon
                 Item,
                 Interaction,
                 PullGuardians,
+                Tactic,
 
                 //Order
                 Follow,
@@ -721,7 +766,13 @@ namespace giantsummon
                 MountGuardian,
                 ShareMount,
                 PlayerControl,
-                SetLeader
+                SetLeader,
+
+                //Tactics
+                ChargeOnTarget,
+                AvoidContactWithTarget,
+                AttackTargetFromAwayIt,
+                FreeWill
             }
         }
     }

@@ -929,6 +929,8 @@ namespace giantsummon
                 RequestRejected = "Mes.RequestRejected",
                 RequestPostpone = "Mes.RequestPostpone",
                 RequestFailed = "Mes.RequestFailed";
+            public const string RestAskForHowLong = "Mes.RestTimeQuestion",
+                RestNotPossible = "Mes.RestNotPossible";
         }
         
         public enum GuardianEffect

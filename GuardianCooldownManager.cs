@@ -10,7 +10,7 @@ namespace giantsummon
         public CooldownType type;
         public int CooldownTime = 0;
         public bool ResetUponDeath { get { return type != CooldownType.ResurrectionCooldown; } }
-        public bool DontDepleteOvertime { get { return type == CooldownType.BeetleCountdown || type == CooldownType.BeetleCounter; } }
+        public bool DontDepleteOvertime { get { return type == CooldownType.BeetleCountdown || type == CooldownType.BeetleCounter || type == CooldownType.ShopCheckCooldown; } }
 
         public enum CooldownType : byte
         {
@@ -44,7 +44,8 @@ namespace giantsummon
             SpelunkerEffect,
             PhantasmCooldown,
             NebulaCD,
-            TargetMemoryCooldown
+            TargetMemoryCooldown,
+            ShopCheckCooldown
         }
     }
 }
