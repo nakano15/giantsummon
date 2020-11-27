@@ -584,6 +584,22 @@ namespace giantsummon.Creatures
                     return "*[name] waves you goodbye.*";
                 case MessageIDs.RequestFailed:
                     return "*[name] looks at you with a sad face.*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*[name] tells you that he seems fine with taking a rest. He's asking how long will you rest.*";
+                case MessageIDs.RestNotPossible:
+                    return "*[name] says that It's not possible at this moment.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*[name] tells you to have a good night.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*[name] is telling you that wants to check [shop]'s shop.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*[name] tells you to wait a moment while he buys something.";
+                case MessageIDs.GenericYes:
+                    return "*[name] nods.*";
+                case MessageIDs.GenericNo:
+                    return "*[name] shook head.*";
+                case MessageIDs.GenericThankYou:
+                    return "*[name] seems very thankful.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -5,10 +5,11 @@ using System.Text;
 using Terraria;
 using Terraria.World.Generation;
 using Terraria.GameContent.Generation;
+using Terraria.ModLoader;
 
 namespace giantsummon.SubWorlds
 {
-    public class TestWorld : SubworldLibrary.Subworld
+    public class TestWorld : SubworldBase
     {
         public override int width
         {
@@ -43,26 +44,52 @@ namespace giantsummon.SubWorlds
                 return true;
             }
         }
-        
+
+        public override bool AllowBuildingAndDestruction => false;
+
         public override List<Terraria.World.Generation.GenPass> tasks
         {
             get {
                 List<Terraria.World.Generation.GenPass> GenStuff = new List<Terraria.World.Generation.GenPass>();
-                GenStuff.Add(new PassLegacy("Test Gen", delegate(GenerationProgress progress)
+                GenStuff.Add(new PassLegacy("Test Gen", delegate (GenerationProgress progress)
                 {
+                    int HeightVariability = 0;
+                    byte HeightChangeDelay = 0;
+                    const byte HeightChangeStack = 20;
+                    int DefaultHeight = height / 5;
+                    Random rand = new Random(12345);
                     for (int x = 0; x < width; x++)
                     {
-                        for (int y = height / 5; y < height; y++)
+                        if(HeightChangeDelay == 0)
+                        {
+                            HeightVariability = (int)((rand.NextDouble() - 0.5f) * 3);
+                            HeightChangeDelay += HeightChangeStack;
+                        }
+                        HeightChangeDelay--;
+                        for (int y = (DefaultHeight + HeightVariability); y < height; y++)
                         {
                             Main.tile[x, y].active(true);
                             Main.tile[x, y].type = Terraria.ID.TileID.TungstenBrick;
                         }
+                        if (HeightChangeDelay == HeightChangeStack / 2)
+                        {
+                            int TorchY = (DefaultHeight + HeightVariability) - 1;
+                            WorldGen.Place1xX(x, TorchY, 93);
+                        }
                     }
                 }));
                 Main.spawnTileX = width / 2;
-                Main.spawnTileY = height / 5 - 1;
+                Main.spawnTileY = height / 5 - 3;
                 return GenStuff;
             }
+        }
+
+        public override void ModifySpawns(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            pool.Clear();
+            pool.Add(Terraria.ID.NPCID.Bunny, 0.6f);
+            pool.Add(Terraria.ID.NPCID.Butcher, 0.01f);
+            pool.Add(Terraria.ID.NPCID.Zombie, 0.8f);
         }
     }
 }

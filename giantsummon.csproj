@@ -82,7 +82,7 @@
     <Compile Include="CharacterInfo.cs" />
     <Compile Include="CommonRequestsDB.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
-    <Compile Include="Compatibility\HubWorlds.cs" />
+    <Compile Include="Compatibility\SubWorlds.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
     <Compile Include="ConfigMod.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
@@ -248,6 +248,7 @@
     <Compile Include="SavePlayerDefsCommand.cs" />
     <Compile Include="SkinReqStruct.cs" />
     <Compile Include="SoundData.cs" />
+    <Compile Include="SubWorlds\SubworldBase.cs" />
     <Compile Include="SubWorlds\TestWorld.cs" />
     <Compile Include="TerraGuardian.cs" />
     <Compile Include="TriggerHandler.cs" />

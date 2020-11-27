@@ -873,6 +873,22 @@ namespace giantsummon.Creatures
                     return "*She asks if you found the request impossible, or if can't do It right now.*";
                 case MessageIDs.RequestFailed:
                     return "*Her face is filled with the disappointment over you failing on her request. She then tried to console you.*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*She agrees with you, and says that her feet are sore. Then asked for how long will rest.*";
+                case MessageIDs.RestNotPossible:
+                    return "*She tells you that It doesn't seems like a good moment to rest.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*She tells you not to hog all the blanket.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*She's telling you that wants to check [shop]'s\nshop. She asks you to get closer to the shop.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*She tells you to wait a moment while she shops.*";
+                case MessageIDs.GenericYes:
+                    return "*She nods.*";
+                case MessageIDs.GenericNo:
+                    return "*She denies.*";
+                case MessageIDs.GenericThankYou:
+                    return "*She thanked.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

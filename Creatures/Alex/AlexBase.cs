@@ -612,7 +612,23 @@ namespace giantsummon.Creatures
                 case MessageIDs.RequestPostpone:
                     return "Not now? Try helping me with this later. Woof!";
                 case MessageIDs.RequestFailed:
-                    return "You couldn't do It? Don't worry. *He's trying to cheer you up now*";
+                    return "You couldn't do It? Don't worry. *He seems to be trying to cheer you up now*";
+                case MessageIDs.RestAskForHowLong:
+                    return "Already? Aww... How long we'll rest then?";
+                case MessageIDs.RestNotPossible:
+                    return "Doesn't looks like the best moment to get a rest.";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "I hope you have good dreams.";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*Snif snif* [nickname], there is something cool on\n[shop]'s shop! Let's check out.";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "Hey, what is this?";
+                case MessageIDs.GenericYes:
+                    return "Yes!";
+                case MessageIDs.GenericNo:
+                    return "No...";
+                case MessageIDs.GenericThankYou:
+                    return "Yay! Thank you!";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -327,6 +327,22 @@ namespace giantsummon.Creatures
                     return "(She's looking at you with a question mark face.)";
                 case MessageIDs.RequestFailed:
                     return "(Her face shows the disappointment your failure brought, but she seems to recognize that you did your best.)";
+                case MessageIDs.RestAskForHowLong:
+                    return "(She seems to like the idea. She seems to be asking for how long will rest.)";
+                case MessageIDs.RestNotPossible:
+                    return "(She seems worried about the moment you asked that. Maybe It's better to try again another time.)";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "(She yawned, then went to bed.)";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "(She's calling you attention, and pointing at [shop]'s shop.)";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "(She signals you to wait a moment.)";
+                case MessageIDs.GenericYes:
+                    return "(She nods)";
+                case MessageIDs.GenericNo:
+                    return "(She shook her head.)";
+                case MessageIDs.GenericThankYou:
+                    return "(She bows as a Thank You.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

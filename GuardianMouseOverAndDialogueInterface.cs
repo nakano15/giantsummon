@@ -684,12 +684,24 @@ namespace giantsummon
                 {
                     if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
+                        string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                        if (Mes != "")
+                        {
+                            Mes = MessageParser(Mes, tg2);
+                            tg2.SaySomething(Mes);
+                        }
                         GuardianActions.RestCommand(tg2, 0);
                         CloseDialogueButtonAction(tg2);
                     }
                 });
                 AddOption("8 Hours", delegate (TerraGuardian tg2)
                 {
+                    string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                    if (Mes != "")
+                    {
+                        Mes = MessageParser(Mes, tg2);
+                        tg2.SaySomething(Mes);
+                    }
                     if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
                         GuardianActions.RestCommand(tg2, 1);
@@ -700,6 +712,12 @@ namespace giantsummon
                 {
                     AddOption("Until Dawn", delegate (TerraGuardian tg2)
                     {
+                        string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                        if (Mes != "")
+                        {
+                            Mes = MessageParser(Mes, tg2);
+                            tg2.SaySomething(Mes);
+                        }
                         if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                         {
                             GuardianActions.RestCommand(tg2, 2);
@@ -711,6 +729,12 @@ namespace giantsummon
                 {
                     AddOption("Until Night", delegate (TerraGuardian tg2)
                     {
+                        string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                        if (Mes != "")
+                        {
+                            Mes = MessageParser(Mes, tg2);
+                            tg2.SaySomething(Mes);
+                        }
                         if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                         {
                             GuardianActions.RestCommand(tg2, 3);

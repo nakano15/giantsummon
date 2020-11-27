@@ -599,6 +599,22 @@ namespace giantsummon.Creatures
                     return "Hey, but I need that now! *Sigh* Whatever, go do your things.";
                 case MessageIDs.RequestFailed:
                     return "Good job, you managed to ruin everything. Now go away!";
+                case MessageIDs.RestAskForHowLong:
+                    return "I was really needing to get this bag off my back for a while, so a rest seems good enough. How long we'll rest?";
+                case MessageIDs.RestNotPossible:
+                    return "This isn't a good moment to rest.";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "I wont share my bag with you, use your pillow.";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "Hey [nickname], could you get closer to [shop]'s shop?";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "Alright, wait a moment...";
+                case MessageIDs.GenericYes:
+                    return "Yes, sure.";
+                case MessageIDs.GenericNo:
+                    return "No way.";
+                case MessageIDs.GenericThankYou:
+                    return "Thank you.";
             }
             return base.GetSpecialMessage(MessageID);
         }

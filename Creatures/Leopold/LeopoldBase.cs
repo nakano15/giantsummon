@@ -477,10 +477,10 @@ namespace giantsummon.Creatures
                     Actions.Add(action);
                 }
             }
-            {
+            /*{
                 GuardianMouseOverAndDialogueInterface.DialogueOption TestOption = new GuardianMouseOverAndDialogueInterface.DialogueOption("Test Tungsten Brick World", delegate(TerraGuardian tg)
                 {
-                    if (Compatibility.HubWorlds.IsModInstalled)
+                    if (Compatibility.SubWorlds.IsModInstalled)
                     {
                         SubworldLibrary.Subworld.Enter<SubWorlds.TestWorld>();
                     }
@@ -490,7 +490,7 @@ namespace giantsummon.Creatures
                     }
                 });
                 Actions.Add(TestOption);
-            }
+            }*/
             return Actions;
         }
 
@@ -549,6 +549,22 @@ namespace giantsummon.Creatures
                     return "*Huh? Oh.. Fine.*";
                 case MessageIDs.RequestFailed:
                     return "*I'll... Try adding that to my research notes. Thanks for the cooperation.*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*I like the idea of staying for a while, I can read some books while I don't get sleepy. How long are we going to stay out of adventures?*";
+                case MessageIDs.RestNotPossible:
+                    return "*Are you crazy? Not now!*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*Try not to snore, that will ruin my concentration.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*Wait [nickname], let's check out [shop]'s shop.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*Just a minute, let me try getting something...*";
+                case MessageIDs.GenericYes:
+                    return "*That looks good.*";
+                case MessageIDs.GenericNo:
+                    return "*I don't find that good.*";
+                case MessageIDs.GenericThankYou:
+                    return "*Thank you! That will help.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

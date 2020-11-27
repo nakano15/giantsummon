@@ -243,7 +243,7 @@ namespace giantsummon
 
         public static void BuyItemFromShopCommand(TerraGuardian Guardian, int NpcPosition, int ItemID, int BuyStack, int BuyPrice)
         {
-            if (Guardian.OwnerPos == -1) return;
+            //if (Guardian.OwnerPos == -1) return;
             Guardian.DoAction = new GuardianActions();
             Guardian.DoAction.ID = (int)ActionIDs.BuySomethingFromNpcShop;
             Guardian.DoAction.InUse = true;
@@ -283,7 +283,8 @@ namespace giantsummon
                                 return;
                             }
                             bool MakeNpcFocusOnGuardian = false;
-                            guardian.MoveLeft = guardian.MoveRight = false;
+                            if(!guardian.PlayerMounted)
+                                guardian.MoveLeft = guardian.MoveRight = false;
                             switch (Step)
                             {
                                 case 0: //Try reaching npc
@@ -295,13 +296,19 @@ namespace giantsummon
                                             InUse = false;
                                             return;
                                         }
+                                        if (StepStart && guardian.PlayerMounted)
+                                        {
+                                            string Message = guardian.GetMessage(GuardianBase.MessageIDs.AskPlayerToGetCloserToShopNpc, "*This companion wants to buy from [shop]'s store.\nGet closer to It so they can buy from It.*");
+                                            Message.Replace("[shop]", npc.GivenOrTypeName);
+                                            guardian.SaySomething(Message);
+                                        }
                                         Vector2 NpcBottom = npc.Bottom;
-                                        if (Time == 10 * 60)
+                                        if (!guardian.PlayerMounted && Time == 10 * 60)
                                         {
                                             guardian.Position = NpcBottom;
                                             guardian.SetFallStart();
                                         }
-                                        else if (Math.Abs(NpcBottom.X - guardian.Position.X) < 16)
+                                        else if (!guardian.PlayerMounted && Math.Abs(NpcBottom.X - guardian.Position.X) < 16)
                                         {
                                             if (guardian.Position.X >= NpcBottom.X)
                                             {
@@ -314,19 +321,28 @@ namespace giantsummon
                                         }
                                         else if (Math.Abs(NpcBottom.X - guardian.Position.X) >= 16f + guardian.Width * 0.5f)
                                         {
-                                            if (guardian.Position.X < NpcBottom.X)
+                                            if (!guardian.PlayerMounted)
                                             {
-                                                guardian.MoveRight = true;
-                                            }
-                                            else
-                                            {
-                                                guardian.MoveLeft = true;
+                                                if (guardian.Position.X < NpcBottom.X)
+                                                {
+                                                    guardian.MoveRight = true;
+                                                }
+                                                else
+                                                {
+                                                    guardian.MoveLeft = true;
+                                                }
                                             }
                                         }
                                         else
                                         {
                                             MakeNpcFocusOnGuardian = true;
                                             ChangeStep();
+                                            if (guardian.PlayerMounted)
+                                            {
+                                                string Message = guardian.GetMessage(GuardianBase.MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping, "*They ask you to wait a moment.*");
+                                                Message.Replace("[shop]", npc.GivenOrTypeName);
+                                                guardian.SaySomething(Message);
+                                            }
                                             /*{
                                                 Item i = new Item();
                                                 i.SetDefaults(GetIntegerValue(ItemIDVar));
@@ -404,6 +420,10 @@ namespace giantsummon
                                         if (Time >= 6 * 60)
                                         {
                                             InUse = false;
+                                            if (guardian.PlayerMounted)
+                                            {
+                                                guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.GenericThankYou, "*It thanked you.*"));
+                                            }
                                             return;
                                         }
                                     }

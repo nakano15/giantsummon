@@ -518,6 +518,22 @@ namespace giantsummon.Creatures
                     return "*Alright. Come ask me again if you want to do my request. Bye!*";
                 case MessageIDs.RequestFailed:
                     return "*You failed? Don't worry, It's fine. You tried, right? There, don't feel sad.*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*Yes, my legs are hurting a bit, resting will be nice. How long do you think we'll be fine?*";
+                case MessageIDs.RestNotPossible:
+                    return "*Now? No way! Seems like a impossible moment!*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*Alright. I hope we have a nice dreams.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*Wait [nickname], [shop] seems to have\nsomething I need.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*Oh! Wait, I need to buy that...*";
+                case MessageIDs.GenericYes:
+                    return "*Yes!*";
+                case MessageIDs.GenericNo:
+                    return "*No... No.*";
+                case MessageIDs.GenericThankYou:
+                    return "*Thank you! You're the best!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

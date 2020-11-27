@@ -930,7 +930,16 @@ namespace giantsummon
                 RequestPostpone = "Mes.RequestPostpone",
                 RequestFailed = "Mes.RequestFailed";
             public const string RestAskForHowLong = "Mes.RestTimeQuestion",
-                RestNotPossible = "Mes.RestNotPossible";
+                RestNotPossible = "Mes.RestNotPossible",
+                RestWhenGoingSleep = "Mes.RestGoodNight";
+            /// <summary>
+            /// This message contains the special [shop] keyword, which gives the name of the town npc the companion wants your character to approach.
+            /// </summary>
+            public const string AskPlayerToGetCloserToShopNpc = "Mes.AskToGetCloserToShopNpc",
+                AskPlayerToWaitAMomentWhileCompanionIsShopping = "Mes.AskPlayerToWaitWhileShopping";
+            public const string GenericYes = "Mes.Yes",
+                GenericNo = "Mes.No",
+                GenericThankYou = "Mes.ThankYou";
         }
         
         public enum GuardianEffect

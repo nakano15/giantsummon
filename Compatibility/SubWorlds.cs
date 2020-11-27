@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace giantsummon.Compatibility
 {
-    public class HubWorlds
+    public class SubWorlds
     {
         public static bool IsModInstalled { get { return MainMod.SubworldLibrary != null; } }
 

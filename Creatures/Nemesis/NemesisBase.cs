@@ -276,6 +276,22 @@ namespace giantsummon.Creatures
                     return "It will be waiting here, then.";
                 case MessageIDs.RequestFailed:
                     return "Failure was not an option.";
+                case MessageIDs.RestAskForHowLong:
+                    return "How long do you plan on resting?";
+                case MessageIDs.RestNotPossible:
+                    return "No, not a good time.";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "...";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "[shop]'s shop has something useful for me.";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "Yes, this one.";
+                case MessageIDs.GenericYes:
+                    return "Yes.";
+                case MessageIDs.GenericNo:
+                    return "No.";
+                case MessageIDs.GenericThankYou:
+                    return "Thanks.";
             }
             return base.GetSpecialMessage(MessageID);
         }

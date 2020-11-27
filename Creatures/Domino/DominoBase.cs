@@ -488,6 +488,22 @@ namespace giantsummon.Creatures
                     return "*It's not like as if It's a one time deal, anyway.*";
                 case MessageIDs.RequestFailed:
                     return "*You failed? Well, I should ask you to pay me for that, but instead I'll give you nothing.*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*You can sleep any time you want, I'll open a shop meanwhile.\nHow long do you plan on sleeping?*";
+                case MessageIDs.RestNotPossible:
+                    return "*Not now, It's a horrible moment for resting.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*Time to do business...*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*Do you mind if we visit [shop]'s shop?*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*Don't worry, I wont spend much of your time.*";
+                case MessageIDs.GenericYes:
+                    return "*Uh huh.*";
+                case MessageIDs.GenericNo:
+                    return "*Nope.*";
+                case MessageIDs.GenericThankYou:
+                    return "*Alright, that's good.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

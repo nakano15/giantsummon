@@ -739,6 +739,22 @@ namespace giantsummon.Creatures
                     return "*No no no, come back here.*";
                 case MessageIDs.RequestFailed:
                     return "*You what?! Now, try thinking of reasons as to why I shouldn't turn you into a squirrel.*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*I enjoy that idea, seems like the perfect moment to test some spells. How long to you plan to rest?*";
+                case MessageIDs.RestNotPossible:
+                    return "*If It was in another moment, I would have loved that idea.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*Try not to wake up earlier, will you?*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*Wait, what is that [shop] is offering?*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*Hm... This may be useful... Wait a moment.*";
+                case MessageIDs.GenericYes:
+                    return "*Yes.*";
+                case MessageIDs.GenericNo:
+                    return "*No.*";
+                case MessageIDs.GenericThankYou:
+                    return "*Yes, you did good. There.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
