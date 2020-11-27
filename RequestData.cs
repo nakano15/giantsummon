@@ -38,6 +38,8 @@ namespace giantsummon
 
         public bool RequiresGuardianActive(GuardianData d)
         {
+            if (IsTalkQuest || Active)
+                return false;
             foreach (RequestBase.RequestObjective o in GetRequestBase(d).Objectives)
             {
                 if ((o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore && ((RequestBase.ExploreRequest)o).RequiresGuardianActive) || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout)

@@ -153,30 +153,37 @@ namespace giantsummon
                 if (modPlayer.HasGuardian(tg.ID, tg.ModID))
                     modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);
             }
-            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-            foreach (int gid in pm.MyGuardians.Keys)
+            if (!tg.Base.InvalidGuardian && tg.HasBuff(ModContent.BuffType<Buffs.Sleeping>()))
             {
-                GuardianData gd = pm.MyGuardians[gid];
-                if (gd.request.requestState == RequestData.RequestState.RequestActive && gd.request.GetRequestBase(gd).Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian))
+                Message = "(Seems to be under a heavy sleep.)";
+            }
+            else
+            {
+                PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+                foreach (int gid in pm.MyGuardians.Keys)
                 {
-                    RequestBase rb = gd.request.GetRequestBase(gd);
-                    bool HasObjective = false;
-                    for (int obj = 0; obj < rb.Objectives.Count; obj++)
+                    GuardianData gd = pm.MyGuardians[gid];
+                    if (gd.request.requestState == RequestData.RequestState.RequestActive && gd.request.GetRequestBase(gd).Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian))
                     {
-                        if (rb.Objectives[obj].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian && gd.request.GetIntegerValue(obj) == 0)
+                        RequestBase rb = gd.request.GetRequestBase(gd);
+                        bool HasObjective = false;
+                        for (int obj = 0; obj < rb.Objectives.Count; obj++)
                         {
-                            RequestBase.TalkToGuardianRequestObjective to = (RequestBase.TalkToGuardianRequestObjective)rb.Objectives[obj];
-                            if (to.GuardianID == tg.ID && to.ModID == tg.ModID)
+                            if (rb.Objectives[obj].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian && gd.request.GetIntegerValue(obj) == 0)
                             {
-                                HasObjective = true;
-                                Message = to.MessageText;
-                                gd.request.SetIntegerValue(obj, 1);
-                                break;
+                                RequestBase.TalkToGuardianRequestObjective to = (RequestBase.TalkToGuardianRequestObjective)rb.Objectives[obj];
+                                if (to.GuardianID == tg.ID && to.ModID == tg.ModID)
+                                {
+                                    HasObjective = true;
+                                    Message = to.MessageText;
+                                    gd.request.SetIntegerValue(obj, 1);
+                                    break;
+                                }
                             }
                         }
+                        if (HasObjective)
+                            break;
                     }
-                    if (HasObjective)
-                        break;
                 }
             }
             SetDialogue(Message, tg);
@@ -432,7 +439,11 @@ namespace giantsummon
         public static void GetDefaultOptions(TerraGuardian tg)
         {
             Options.Clear();
-            if (tg.IsUsingBed)
+            if (tg.HasBuff(ModContent.BuffType<Buffs.Sleeping>()))
+            {
+
+            }
+            else if (tg.IsUsingBed)
             {
                 AddOption("Wake Up", WakeUpCompanionButtonAction);
             }
@@ -491,7 +502,6 @@ namespace giantsummon
                 Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             }
             AddOption("Goodbye", CloseDialogueButtonAction);
-
         }
 
         public static void AddOption(string Mes, Action<TerraGuardian> Action)
@@ -504,7 +514,7 @@ namespace giantsummon
 
         public static void AskGuardianToFollowYouButtonPressed(TerraGuardian tg)
         {
-            if (!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel)
+            if (!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && (!tg.request.Active || !tg.request.RequiresGuardianActive(tg.Data)))
             {
                 SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), tg);
                 HideCallDismissButton = true;

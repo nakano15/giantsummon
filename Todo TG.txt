@@ -29,3 +29,5 @@ Fix Irene tombstone spawn place.
 	Still needs fixes.
 If I manage to add more companions than the game window can support showing their infos, I should consider making a more compact interface for their status.
 Bree's sleeping animation will probably be broken, when she's using a skin that does not have the bag.
+Check Zacks defeated animation on the new animation.
+Fixed Zacks having a unpainted sprite when defeated.

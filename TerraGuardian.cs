@@ -1096,8 +1096,11 @@ namespace giantsummon
 
         public void DisplayEmotion(Emotions emotion)
         {
-            CurrentEmotion = emotion;
-            EmotionDisplayTime = MaxEmotionDisplaytime;
+            if (EmotionDisplayTime <= 0 || CurrentEmotion != emotion)
+            {
+                CurrentEmotion = emotion;
+                EmotionDisplayTime = MaxEmotionDisplaytime;
+            }
         }
 
         public int SaySomething(string[] Message, bool ChatDisplay = false)
@@ -1845,6 +1848,8 @@ namespace giantsummon
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
                 DisplayEmotion(Emotions.Sleepy);
+                if (PlayerMounted)
+                    ToggleMount(true, false);
             }
             if (KnockedOutCold && !KnockedOut)
             {
@@ -4992,13 +4997,25 @@ namespace giantsummon
         {
             if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos != Main.myPlayer)
                 return;
-            if (Downed && OwnerPos == -1 && IsTownNpc)
+            if (KnockedOut && OwnerPos == -1 && IsTownNpc && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime)))
             {
-                WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
-                if (Math.Abs(Position.X - townnpc.HomeX * 16) > 64f || Math.Abs(Position.Y - townnpc.HomeY * 16) > 64)
+                bool IsPlayerNearby = false;
+                for (int i = 0; i < 255; i++)
                 {
-                    Position.X = townnpc.HomeX * 16;
-                    Position.Y = townnpc.HomeY * 16;
+                    if (Main.player[i].active && InPerceptionRange(Main.player[i].Center))
+                    {
+                        IsPlayerNearby = true;
+                        break;
+                    }
+                }
+                if (!IsPlayerNearby)
+                {
+                    WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
+                    if (Math.Abs(Position.X - townnpc.HomeX * 16) > 64f || Math.Abs(Position.Y - townnpc.HomeY * 16) > 64)
+                    {
+                        Position.X = townnpc.HomeX * 16;
+                        Position.Y = townnpc.HomeY * 16;
+                    }
                 }
             }
             if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified) || KnockedOut) return;
@@ -9702,7 +9719,7 @@ namespace giantsummon
                 {
                     if (Main.npc[n].getRect().Intersects(HitBox))
                     {
-                        if (Base.GuardianWhenAttackedNPC(this, Main.npc[n].damage, Main.npc[n]) && (Main.npc[n].damage > DamageStack || StackDamages))
+                        if (Base.GuardianWhenAttackedNPC(this, Main.npc[n].damage, Main.npc[n]) && (Main.npc[n].damage > DamageStack || StackDamages) && CanHit(Main.npc[n].position, Main.npc[n].width, Main.npc[n].height, false, true))
                         {
                             if (StackDamages)
                             {
@@ -9897,13 +9914,16 @@ namespace giantsummon
                     FinalDamage -= (int)(FinalDamage * 0.5f);
                 if (FinalDamage < 1)
                     FinalDamage = 1;
+                if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()))
+                {
+                    RemoveBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>());
+                    FinalDamage += (int)(FinalDamage * 0.5f);
+                }
                 this.HP -= FinalDamage;
                 if (MainMod.UsingGuardianNecessitiesSystem && FinalDamage >= MHP * 0.15f && OwnerPos > -1)
                 {
                     AddInjury(1);
                 }
-                if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()))
-                    RemoveBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>());
                 ResetHealthRegen();
                 CombatText.NewText(HitBox, (Critical ? CombatText.DamagedFriendlyCrit : CombatText.DamagedFriendly), FinalDamage);
                 float MaximumBlood = (float)FinalDamage * 200 / MHP;
@@ -10039,22 +10059,30 @@ namespace giantsummon
             return FinalDamage;
         }
 
-        public bool CanHit(Vector2 TargetPosition, int TargetWidth, int TargetHeight, bool Ducking = false)
+        public bool CanHit(Vector2 TargetPosition, int TargetWidth, int TargetHeight, bool Ducking = false, bool CollisionRelated = false)
         {
             Vector2 TargetCenter = TargetPosition;
             TargetCenter.X += TargetWidth * 0.5f;
             TargetCenter.Y += TargetHeight * 0.5f;
-            Vector2 Position = TopLeftPosition;
+            Vector2 Position = (CollisionRelated ? CollisionPosition : TopLeftPosition);
             int Width = this.Width;
             int Height = 42;
-            if (Ducking)
+            if (CollisionRelated)
             {
-                Height = (int)(Base.DuckingHeight * Scale);
-                Position.Y += (Base.Height - Base.DuckingHeight) * Scale;
+                Width = CollisionWidth;
+                Height = CollisionHeight;
             }
             else
             {
-                Height = (int)(Base.Height * Scale);
+                if (Ducking)
+                {
+                    Height = (int)(Base.DuckingHeight * Scale);
+                    Position.Y += (Base.Height - Base.DuckingHeight) * Scale;
+                }
+                else
+                {
+                    Height = (int)(Base.Height * Scale);
+                }
             }
             if (mount.Active)
                 Height += mount.HeightBoost;
@@ -12842,6 +12870,23 @@ namespace giantsummon
                 return;
             }
             if (HasFlag(GuardianFlags.Frozen)) return;
+            if (HasBuff(ModContent.BuffType <giantsummon.Buffs.Sleeping>()) && Velocity.X == 0 && Velocity.Y == 0 && !BeingPulledByPlayer)
+            {
+                if (Base.DownedFrame > -1)
+                {
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.DownedFrame;
+                }
+                else if (Base.DuckingFrame > -1)
+                {
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.DuckingFrame;
+                }
+                else
+                {
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
+                }
+                ApplyFrameAnimationChangeScripts();
+                return;
+            }
             if (KnockedOut && !Downed && (Velocity.Y == 0 || WofTongued))
             {
                 if (Base.DownedFrame > -1)
