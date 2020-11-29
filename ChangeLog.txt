@@ -64,4 +64,7 @@ Companions can now spend their coins on npcs stores, to buy potions or some ammo
 	The coins they will use is their own coins, not the ones they have in their inventory slots.
 Your companions will now lie down on the floor when affected by "Sleeping" debuff.
 Companions will receive 50% more damage when under "Sleeping" debuff.
-Knocked out companion town npcs will be sent to their houses when there is no player nearby.
+Fixed a problem where companion town npcs couldn't be teleported home when knocked out.
+	That's because I used the wrong variable on the condition that triggered that. Also, there was no script to check if there were players nearby, so that would always teleport them if worked.
+Brutus recruit npc will now say something when you recruit him by giving him Golds.
+	Due to that, I added an extra line of dialogue to him.

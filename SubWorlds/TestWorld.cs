@@ -53,6 +53,7 @@ namespace giantsummon.SubWorlds
                 List<Terraria.World.Generation.GenPass> GenStuff = new List<Terraria.World.Generation.GenPass>();
                 GenStuff.Add(new PassLegacy("Test Gen", delegate (GenerationProgress progress)
                 {
+                    progress.Message = "Trying to generate Tungsten World";
                     int HeightVariability = 0;
                     byte HeightChangeDelay = 0;
                     const byte HeightChangeStack = 20;
@@ -77,9 +78,15 @@ namespace giantsummon.SubWorlds
                             WorldGen.Place1xX(x, TorchY, 93);
                         }
                     }
+                    Main.spawnTileX = width / 2;
+                    Main.spawnTileY = height / 5 - 3;
+                    //
+                    progress.Message = "Trying to spawn a house.";
+                    int HouseSpawnX = 50, HouseSpawnY = 0;
+                    while (!Main.tile[HouseSpawnX, HouseSpawnY + 1].active())
+                        HouseSpawnY++;
+                    CreateHouse(HouseSpawnX, HouseSpawnY, 16);
                 }));
-                Main.spawnTileX = width / 2;
-                Main.spawnTileY = height / 5 - 3;
                 return GenStuff;
             }
         }

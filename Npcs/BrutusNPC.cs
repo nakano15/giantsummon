@@ -491,13 +491,12 @@ namespace giantsummon.Npcs
             {
                 if (Main.player[Main.myPlayer].BuyItem(Item.buyPrice(0, HirePrice)))
                 {
+                    Main.npcChatText = "*I accept the offer. I, "+NpcAlias+", will protect you until the end of my contract.*";
                     PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
                     PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                     NpcMod.AddGuardianMet(6);
                     Main.NewText("You bought " + NpcAlias + "'s help.");
                     WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Brutus);
-                    //npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());
-                    //Main.player[Main.myPlayer].talkNPC = -1;
                 }
                 else
                 {
