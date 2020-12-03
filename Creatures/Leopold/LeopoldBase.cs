@@ -477,7 +477,7 @@ namespace giantsummon.Creatures
                     Actions.Add(action);
                 }
             }
-            {
+            /*{
                 GuardianMouseOverAndDialogueInterface.DialogueOption TestOption = new GuardianMouseOverAndDialogueInterface.DialogueOption("Test Tungsten Brick World", delegate(TerraGuardian tg)
                 {
                     if (Compatibility.SubWorlds.IsModInstalled)
@@ -490,7 +490,7 @@ namespace giantsummon.Creatures
                     }
                 });
                 Actions.Add(TestOption);
-            }
+            }*/
             return Actions;
         }
 

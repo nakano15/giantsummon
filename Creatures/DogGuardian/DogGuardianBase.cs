@@ -9,6 +9,8 @@ namespace giantsummon.Creatures
 {
     public class DogGuardianBase : GuardianBase
     {
+        private const int SleuthAnimationID = 27, SleuthBackAnimationID = 28;
+
         public DogGuardianBase()
         {
             Name = "DogGuardian";
@@ -63,6 +65,8 @@ namespace giantsummon.Creatures
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(17, 0);
             BodyFrontFrameSwap.Add(18, 0);
+            BodyFrontFrameSwap.Add(27, 1);
+            BodyFrontFrameSwap.Add(28, 2);
 
             SleepingOffset.X = 16;
             

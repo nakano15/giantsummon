@@ -4917,7 +4917,7 @@ namespace giantsummon
                 if (UseItem)
                 {
                     if (ItemAnimationTime == 0 && (SelectedItem == -1 || Inventory[SelectedItem].melee))
-                        Direction = TargetPosition.X + TargetWidth * 0.5f < Position.X ? -1 : 1;
+                        LookingLeft = TargetPosition.X + TargetWidth * 0.5f < Position.X;
                     this.Action = true;
                 }
             }
