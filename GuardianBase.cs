@@ -903,6 +903,11 @@ namespace giantsummon
             return "";
         }
 
+        public void StartDialogue(Action DialogueScript, TerraGuardian guardian)
+        {
+            Dialogue.StartNewDialogue(DialogueScript, guardian);
+        }
+
         public class MessageIDs
         {
             public const string LeopoldMessage1 = "Mes.LeopoldAnswer1";

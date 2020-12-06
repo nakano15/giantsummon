@@ -191,7 +191,7 @@ namespace giantsummon
 
         public static void Update()
         {
-            if (Options.Count == 0)
+            if (Options.Count == 0 && !giantsummon.Dialogue.IsDialogue)
             {
                 AddOption("Close", CloseDialogueButtonAction);
             }
@@ -420,19 +420,22 @@ namespace giantsummon
             }
             WindowStartPosition.Y += WindowSizeY;
             //Options window here.
-            WindowSizeY = Options.Count * 30 + 16;
-            if (Main.mouseX >= WindowStartPosition.X && Main.mouseX < WindowStartPosition.X + WindowSizeX &&
-                Main.mouseY >= WindowStartPosition.Y && Main.mouseY < WindowStartPosition.Y + WindowSizeY)
-                MainPlayer.mouseInterface = true;
-            color *= 0.75f;
-            DrawBackgroundPanel(WindowStartPosition, WindowSizeX, WindowSizeY, color);
-            for (int o = 0; o < Options.Count; o++)
+            if (Options.Count > 0)
             {
-                Vector2 OptionPosition = WindowStartPosition;
-                OptionPosition.Y += 30 * o + 8;
-                OptionPosition.X += 8f;
-                color = (MouseOverOptionNumber == o ? Color.Yellow : Color.White);
-                Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, Options[o].Text, OptionPosition.X, OptionPosition.Y, color, Color.Black, Vector2.Zero);
+                WindowSizeY = Options.Count * 30 + 16;
+                if (Main.mouseX >= WindowStartPosition.X && Main.mouseX < WindowStartPosition.X + WindowSizeX &&
+                    Main.mouseY >= WindowStartPosition.Y && Main.mouseY < WindowStartPosition.Y + WindowSizeY)
+                    MainPlayer.mouseInterface = true;
+                color *= 0.75f;
+                DrawBackgroundPanel(WindowStartPosition, WindowSizeX, WindowSizeY, color);
+                for (int o = 0; o < Options.Count; o++)
+                {
+                    Vector2 OptionPosition = WindowStartPosition;
+                    OptionPosition.Y += 30 * o + 8;
+                    OptionPosition.X += 8f;
+                    color = (MouseOverOptionNumber == o ? Color.Yellow : Color.White);
+                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, Options[o].Text, OptionPosition.X, OptionPosition.Y, color, Color.Black, Vector2.Zero);
+                }
             }
         }
 

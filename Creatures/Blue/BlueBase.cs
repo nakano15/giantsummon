@@ -892,5 +892,46 @@ namespace giantsummon.Creatures
             }
             return base.GetSpecialMessage(MessageID);
         }
+
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            GuardianMouseOverAndDialogueInterface.DialogueOption Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("How are you doing?", delegate (TerraGuardian tg) {
+                StartDialogue(HangoutDialogue, tg);
+            });
+            Dialogues.Add(Option);
+            return Dialogues;
+        }
+
+        public void HangoutDialogue()
+        {
+            Dialogue.ShowDialogue("*She seems happy that you asked how she's doing.*");
+            switch (Dialogue.ShowDialogueWithOptions("*She asks you what is your favorite type of food.*", new string[] { "Mushrooms", "Sweet Potatoes", "Bunny Stew", "Nothing in particular" }))
+            {
+                case 0:
+                    Dialogue.ShowDialogue("*She shows you her disapproval at your choice, but says that It's fine if you like It.*");
+                    break;
+                case 1:
+                    Dialogue.ShowDialogue("*She laughs at your bizarre taste for food.*");
+                    break;
+                case 2:
+                    Dialogue.ShowDialogue("*As soon as you said that, she got very furious at you, and told you that you have the audacity of saying that to her.*");
+                    Dialogue.ShowDialogue("*She calmed down a bit, and apologized for being mad at you.*");
+                    break;
+                case 3:
+                    Dialogue.ShowDialogue("*She asks if you're unsure of what to say, then tells you that she may help you find something you like to eat.*");
+                    break;
+            }
+            Dialogue.ShowDialogue("*She says that likes eating foods involving meat, but she can't remember what was the food she ate once, which made her choose as her favorite.*");
+            switch(Dialogue.ShowDialogueWithOptions("*She gives the idea of making a feast sometime, and asks if you could help her with that in the future.*", new string[] { "Yes", "No" }))
+            {
+                case 0:
+                    Dialogue.ShowDialogue("*She says that can't wait until that happens, she seems to be even wondering how that would be.*", true);
+                    break;
+                case 1:
+                    Dialogue.ShowDialogue("*She looks sad, but says that in the future, maybe, she could do a feast and call all her friends to join.*", true);
+                    break;
+            }
+        }
     }
 }

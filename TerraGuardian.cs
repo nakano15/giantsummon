@@ -5026,7 +5026,7 @@ namespace giantsummon
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
                 CheckIfSomeoneNeedsRevive();
-                if (!CheckForPlayerAFK())
+                if (!Dialogue.InDialogue && !CheckForPlayerAFK() || Dialogue.UpdateDialogueParticipationGuardian(this))
                 {
                     if(MainMod.TestNewCombatAI)
                         NewCombatScript();

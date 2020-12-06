@@ -104,6 +104,7 @@
     <Compile Include="Creatures\Sardine\SardineBase.cs" />
     <Compile Include="Creatures\Wrath\WrathBase.cs" />
     <Compile Include="Creatures\Zacks\ZacksBase.cs" />
+    <Compile Include="Dialogue.cs" />
     <Compile Include="DialogueChain.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GuardianArmorAndSetEffects.cs" />
