@@ -68,3 +68,4 @@ Fixed a problem where companion town npcs couldn't be teleported home when knock
 	That's because I used the wrong variable on the condition that triggered that. Also, there was no script to check if there were players nearby, so that would always teleport them if worked.
 Brutus recruit npc will now say something when you recruit him by giving him Golds.
 	Due to that, I added an extra line of dialogue to him.
+Speaking to a companion following you will no longer ruin the formation.

@@ -5162,7 +5162,15 @@ namespace giantsummon
                         HealingPotionCount += Inventory[i].stack;
                     if (i < 10 && Inventory[i].useAmmo > 0 && !AmmoAndTheirStack.ContainsKey(Inventory[i].useAmmo)) //Let's only get ammo for weapons the companion will use.
                     {
-                        AmmoAndTheirStack.Add(Inventory[i].useAmmo, 0);
+                        int AmmoStack = 0;
+                        for (int a = 0; a < 50; a++)
+                        {
+                            if (a != i && Inventory[a].ammo == Inventory[i].useAmmo)
+                            {
+                                AmmoStack += Inventory[a].stack;
+                            }
+                        }
+                        AmmoAndTheirStack.Add(Inventory[i].useAmmo, AmmoStack);
                     }
                     if (i < 10 && Inventory[i].mana > 0)
                     {
@@ -5177,6 +5185,10 @@ namespace giantsummon
                         if (AmmoAndTheirStack.ContainsKey(Inventory[i].ammo))
                         {
                             AmmoAndTheirStack[Inventory[i].ammo] += Inventory[i].stack;
+                        }
+                        else
+                        {
+                            //AmmoAndTheirStack.Add(Inventory[i].ammo, Inventory[i].stack);
                         }
                     }
                     if (Inventory[i].type == 0)
@@ -5200,7 +5212,7 @@ namespace giantsummon
                 foreach (int key in AmmoAndTheirStack.Keys)
                 {
                     int ToRefill = 999 - AmmoAndTheirStack[key];
-                    if (ToRefill < 0)
+                    if (ToRefill <= 0)
                         continue;
                     if (MerchantPosition < 255)
                     {
@@ -6295,6 +6307,14 @@ namespace giantsummon
                         else
                             LookingLeft = false;
                     }
+                }
+                if(OwnerPos > -1)
+                {
+                    PlayerMod pm = Main.player[OwnerPos].GetModPlayer<PlayerMod>();
+                    if (ChargeAhead)
+                        pm.FollowFrontOrder++;
+                    else
+                        pm.FollowBackOrder++;
                 }
                 return true;
             }

@@ -110,7 +110,7 @@ namespace giantsummon
             SelectedOption = 0;
         }
 
-        public static void ShowDialogue(string Text, bool End = false, TerraGuardian Speaker = null)
+        public static void ShowDialogue(string Text, TerraGuardian Speaker = null)
         {
             if (Speaker == null)
                 Speaker = LastSpeaker;
@@ -120,20 +120,43 @@ namespace giantsummon
             ProceedButtonPressed = false;
             GuardianMouseOverAndDialogueInterface.SetDialogue(Text, Speaker);
             GuardianMouseOverAndDialogueInterface.Options.Clear();
-            if (End)
+            GuardianMouseOverAndDialogueInterface.AddOption("Continue", delegate (TerraGuardian tg)
+            {
+                ProceedButtonPressed = true;
+                GuardianMouseOverAndDialogueInterface.Options.Clear();
+            });
+            while (!ProceedButtonPressed)
+                Thread.Sleep(100);
+        }
+
+        public static void ShowEndDialogueMessage(string Text, bool CloseDialogue = true, TerraGuardian Speaker = null)
+        {
+            if (Speaker == null)
+                Speaker = LastSpeaker;
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian = true;
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition = Speaker.WhoAmID;
+            PlayerFaceGuardian(Speaker);
+            ProceedButtonPressed = false;
+            GuardianMouseOverAndDialogueInterface.SetDialogue(Text, Speaker);
+            GuardianMouseOverAndDialogueInterface.Options.Clear();
+            if (CloseDialogue)
             {
                 GuardianMouseOverAndDialogueInterface.AddOption("End", EndDialogueButtonAction);
             }
             else
             {
-                GuardianMouseOverAndDialogueInterface.AddOption("Continue", delegate(TerraGuardian tg)
-                {
-                    ProceedButtonPressed = true;
+                //GuardianMouseOverAndDialogueInterface.AddOption("Return", delegate(TerraGuardian tg)
+                //{
                     GuardianMouseOverAndDialogueInterface.Options.Clear();
-                });
+                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Speaker);
+                    ProceedButtonPressed = true;
+                //});
             }
             while (!ProceedButtonPressed)
+            {
                 Thread.Sleep(100);
+            }
+            Thread.CurrentThread.Interrupt();
         }
 
         public static int ShowDialogueWithOptions(string Text, string[] Options, TerraGuardian Speaker = null)

@@ -821,25 +821,25 @@ namespace giantsummon.Creatures
             switch (MessageID)
             {
                 case MessageIDs.RescueMessage:
-                    return "*I heard your call, let me help.*";
+                    return "*She says that heard your call, and said to allow her to help.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:
                     switch (Main.rand.Next(3))
                     {
                         case 0:
-                            return "*You woke me up... I hope It's important... Yawn...*";
+                            return "*She woke up, and asked if what you wanted to say was important. Then yawned...*";
                         case 1:
-                            return "*[nickname], whatever you want from me, couldn't wait?*";
+                            return "*She asked if whatever you wanted couldn't wait?*";
                         case 2:
-                            return "*Yawn... Yes, what do you want..?*";
+                            return "*She asks what you want, after yawning?*";
                     }
                     break;
                 case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
                     switch (Main.rand.Next(2))
                     {
                         case 0:
-                            return "*Wha- Who? Oh... Is It about my request?*";
+                            return "*She asks why you woke her up... If Is It about my request?*";
                         case 1:
-                            return "*Huh? You have done what I asked? I really wanted some more sleep right now.*";
+                            return "*She yawns and asks if you finished her request. Said then that she really wanted to get some more sleep.*";
                     }
                     break;
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
@@ -896,10 +896,7 @@ namespace giantsummon.Creatures
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            GuardianMouseOverAndDialogueInterface.DialogueOption Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("How are you doing?", delegate (TerraGuardian tg) {
-                StartDialogue(HangoutDialogue, tg);
-            });
-            Dialogues.Add(Option);
+            Dialogues.Add(AddDialogue("How are you doing?", HangoutDialogue));
             return Dialogues;
         }
 
@@ -926,10 +923,10 @@ namespace giantsummon.Creatures
             switch(Dialogue.ShowDialogueWithOptions("*She gives the idea of making a feast sometime, and asks if you could help her with that in the future.*", new string[] { "Yes", "No" }))
             {
                 case 0:
-                    Dialogue.ShowDialogue("*She says that can't wait until that happens, she seems to be even wondering how that would be.*", true);
+                    Dialogue.ShowEndDialogueMessage("*She says that can't wait until that happens, she seems to be even wondering how that would be.*", false);
                     break;
                 case 1:
-                    Dialogue.ShowDialogue("*She looks sad, but says that in the future, maybe, she could do a feast and call all her friends to join.*", true);
+                    Dialogue.ShowEndDialogueMessage("*She looks sad, but says that in the future, maybe, she could do a feast and call all her friends to join.*", false);
                     break;
             }
         }

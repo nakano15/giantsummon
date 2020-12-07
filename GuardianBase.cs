@@ -903,9 +903,14 @@ namespace giantsummon
             return "";
         }
 
-        public void StartDialogue(Action DialogueScript, TerraGuardian guardian)
+        public GuardianMouseOverAndDialogueInterface.DialogueOption AddDialogue(string Message, Action DialogueScript)
         {
-            Dialogue.StartNewDialogue(DialogueScript, guardian);
+            GuardianMouseOverAndDialogueInterface.DialogueOption dialogue = new GuardianMouseOverAndDialogueInterface.DialogueOption(Message,
+                delegate (TerraGuardian tg)
+                {
+                    Dialogue.StartNewDialogue(DialogueScript, tg);
+                });
+            return dialogue;
         }
 
         public class MessageIDs
