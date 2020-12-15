@@ -11,18 +11,29 @@ namespace giantsummon.SubWorlds
 {
     public class SubworldBase : SubworldLibrary.Subworld
     {
+        public static bool DesignMode = false;
+
         public override int width => 300;
 
         public override int height => 300;
 
         public virtual bool AllowBuildingAndDestruction { get { return true; } }
 
+        public virtual string BlueprintPath { get { return ""; } }
+
         public override List<GenPass> tasks
         {
             get
             {
                 List<GenPass> GenStuff = new List<GenPass>();
-                GenStuff.Add(DummyWorld());
+                if (BlueprintPath != "")
+                {
+                    GenStuff.Add(LoadWorldDataFromBlueprint());
+                }
+                else
+                {
+                    GenStuff.Add(DummyWorld());
+                }
                 return GenStuff;
             }
         }
@@ -37,21 +48,35 @@ namespace giantsummon.SubWorlds
 
         }
 
+        public GenPass LoadWorldDataFromBlueprint()
+        {
+            PassLegacy world = new PassLegacy("Loading World Data",
+                delegate (GenerationProgress gp)
+                {
+                    SubworldBlueprint.LoadSubworldBlueprint(BlueprintPath);
+                });
+            return world;
+        }
+
         private GenPass DummyWorld()
         {
             PassLegacy world = new PassLegacy("Generating Dummy World",
                 delegate (GenerationProgress gp)
                 {
-                    for (int x = 0; x < width; x++)
+                    bool First = true;
+                    for (int y = height / 2; y < height; y++)
                     {
-                        for (int y = height / 2; y < height; y++)
+                        for (int x = 0; x < width; x++)
                         {
-                            Terraria.Main.tile[x, y].active();
-                            Terraria.Main.tile[x, y].type = Terraria.ID.TileID.MarbleBlock;
+                            Main.tile[x, y].active(true);
+                            Main.tile[x, y].type = (First ? Terraria.ID.TileID.Grass : Terraria.ID.TileID.Dirt);
                         }
+                        First = false;
                     }
-                    Terraria.Main.spawnTileX = width / 2;
-                    Terraria.Main.spawnTileY = height / 2 - 1;
+                    Main.spawnTileX = width / 2;
+                    Main.spawnTileY = height / 2 - 1;
+                    Main.worldSurface = height / 2 * 16 + 32;
+                    Main.rockLayer = Main.worldSurface + 8 * 16;
                 });
             return world;
         }

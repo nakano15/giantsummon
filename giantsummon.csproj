@@ -80,6 +80,7 @@
     <Compile Include="Buffs\WellBeing.cs" />
     <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
+    <Compile Include="Commands\SaveMapBlueprintCommand.cs" />
     <Compile Include="CommonRequestsDB.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
     <Compile Include="Compatibility\SubWorlds.cs" />
@@ -250,6 +251,8 @@
     <Compile Include="SkinReqStruct.cs" />
     <Compile Include="SoundData.cs" />
     <Compile Include="SubWorlds\SubworldBase.cs" />
+    <Compile Include="SubWorlds\SubworldBlueprint.cs" />
+    <Compile Include="SubWorlds\Maps\TerraGuardianVillage.cs" />
     <Compile Include="SubWorlds\TestWorld.cs" />
     <Compile Include="TerraGuardian.cs" />
     <Compile Include="TriggerHandler.cs" />

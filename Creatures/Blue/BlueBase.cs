@@ -897,6 +897,21 @@ namespace giantsummon.Creatures
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
             Dialogues.Add(AddDialogue("How are you doing?", HangoutDialogue));
+            {
+                GuardianMouseOverAndDialogueInterface.DialogueOption TestOption = new GuardianMouseOverAndDialogueInterface.DialogueOption("Sketch Village World", delegate (TerraGuardian tg)
+                {
+                    if (Compatibility.SubWorlds.IsModInstalled)
+                    {
+                        SubWorlds.SubworldBase.DesignMode = true;
+                        SubworldLibrary.Subworld.Enter<SubWorlds.TerraGuardianVillage>();
+                    }
+                    else
+                    {
+                        GuardianMouseOverAndDialogueInterface.SetDialogue("*She tells you that there is no way of goin there.*");
+                    }
+                });
+                Dialogues.Add(TestOption);
+            }
             return Dialogues;
         }
 

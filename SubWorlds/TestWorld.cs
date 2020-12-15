@@ -47,10 +47,10 @@ namespace giantsummon.SubWorlds
 
         public override bool AllowBuildingAndDestruction => false;
 
-        public override List<Terraria.World.Generation.GenPass> tasks
+        public override List<GenPass> tasks
         {
             get {
-                List<Terraria.World.Generation.GenPass> GenStuff = new List<Terraria.World.Generation.GenPass>();
+                List<GenPass> GenStuff = new List<GenPass>();
                 GenStuff.Add(new PassLegacy("Test Gen", delegate (GenerationProgress progress)
                 {
                     progress.Message = "Trying to generate Tungsten World";

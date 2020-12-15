@@ -459,7 +459,7 @@ namespace giantsummon
             {
                 if (SubworldLibrary.SLWorld.subworld && SubworldLibrary.SLWorld.currentSubworld is SubWorlds.SubworldBase)
                 {
-                    if (!((SubWorlds.SubworldBase)SubworldLibrary.SLWorld.currentSubworld).AllowBuildingAndDestruction)
+                    if (!SubWorlds.SubworldBase.DesignMode && !((SubWorlds.SubworldBase)SubworldLibrary.SLWorld.currentSubworld).AllowBuildingAndDestruction)
                         player.noBuilding = true;
                 }
             }
