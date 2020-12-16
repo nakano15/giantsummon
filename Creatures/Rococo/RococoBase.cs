@@ -149,6 +149,95 @@ namespace giantsummon.Creatures
 
             RequestList();
             RewardList();
+            GetTopics();
+        }
+
+        public void GetTopics()
+        {
+            AddTopic("Want to play Rock, Paper and Scissor?", PlayRPS);
+        }
+
+        public void PlayRPS()
+        {
+            Random RococoRNG = new Random();
+            int PlayerVictories = 0, RococoVictories = 0;
+            Dialogue.ShowDialogue("*[name] says that would like playing Rock Paper and Scissors with you.*");
+            RestartGame:
+            byte PlayerChoice = (byte)Dialogue.ShowDialogueWithOptions("*[name] tells you to be ready.*", new string[] { "Rock", "Paper", "Scissor" });
+            Dialogue.ShowDialogueTimed("Rock, Paper, Scissor!!!", null, 60);
+            byte RococoChoice = (byte)RococoRNG.Next(3);
+            Dialogue.ShowDialogueTimed("You: [" + RPSResult(PlayerChoice) + "] - [" + RPSResult(RococoChoice) + "] : [name]", null, 120);
+            byte Winner = 0; //0 = Draw, 1 = Player, 2 = Rococo
+            switch (PlayerChoice)
+            {
+                case 0: //Rock
+                    if(RococoChoice == 1) //Paper
+                    {
+                        Winner = 2;
+                    }
+                    else if(RococoChoice == 2) //Scissor
+                    {
+                        Winner = 1;
+                    }
+                    break;
+                case 1: // Paper
+                    if(RococoChoice == 2) //Scissor
+                    {
+                        Winner = 2;
+                    }
+                    else if(RococoChoice == 0) //Rock
+                    {
+                        Winner = 1;
+                    }
+                    break;
+                case 2: //Scissor
+                    if (RococoChoice == 0) //Rock
+                    {
+                        Winner = 2;
+                    }
+                    else if (RococoChoice == 1) //Paper
+                    {
+                        Winner = 1;
+                    }
+                    break;
+            }
+            string VictoryMessage = "";
+            switch (Winner)
+            {
+                case 0:
+                    Dialogue.ShowDialogue("It's a tie!");
+                    VictoryMessage = "*[name] feels funny about having picked the same as you.*";
+                    break;
+                case 1:
+                    PlayerVictories++;
+                    Dialogue.ShowDialogue("You won!");
+                    VictoryMessage = "*[name] doesn't seems that happy about losing, but tries to laugh to relieve the frustration.*";
+                    break;
+                case 2:
+                    RococoVictories++;
+                    Dialogue.ShowDialogue("[name] won!");
+                    VictoryMessage = "*[name] seems very radiant about winning, he's even filled with joy.*";
+                    break;
+            }
+            if (Dialogue.ShowDialogueWithOptions(VictoryMessage + "\n*He then asked if you wanted another round.*\n You: "+PlayerVictories+"\n [name]: "+RococoVictories+"", new string[] { "Yes", "No" }) == 0)
+            {
+                goto RestartGame;
+            }
+            Dialogue.ShowEndDialogueMessage("*[name] says that It was a good match.*", false);
+        }
+
+        private string RPSResult(byte Choice)
+        {
+            switch (Choice)
+            {
+                case 0:
+                    return "Rock";
+                case 1:
+                    return "Paper";
+                case 2:
+                    return "Scissor";
+            }
+            return "Spock is not a valid choice.";
         }
 
         public void RequestList()
@@ -600,6 +689,10 @@ namespace giantsummon.Creatures
                     return "*[name] shook head.*";
                 case MessageIDs.GenericThankYou:
                     return "*[name] seems very thankful.*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*[name] asks what you want to talk about.*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*[name] seems okay.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

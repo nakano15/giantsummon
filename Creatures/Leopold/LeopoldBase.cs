@@ -565,6 +565,10 @@ namespace giantsummon.Creatures
                     return "*I don't find that good.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thank you! That will help.*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*We may chat about anything, but I'm not in the mood for a lecture, right now.*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*So, want something else from me?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

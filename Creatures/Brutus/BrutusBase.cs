@@ -1071,6 +1071,10 @@ namespace giantsummon.Creatures
                     return "*I have to deny this.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thanks.*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*I may be able to answer, depending on what is It.*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*As you wish, [nickname].*";
             }
             return base.GetSpecialMessage(MessageID);
         }

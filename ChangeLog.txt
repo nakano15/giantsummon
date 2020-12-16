@@ -69,3 +69,11 @@ Fixed a problem where companion town npcs couldn't be teleported home when knock
 Brutus recruit npc will now say something when you recruit him by giving him Golds.
 	Due to that, I added an extra line of dialogue to him.
 Speaking to a companion following you will no longer ruin the formation.
+Added the Dialogue System.
+	The dialogue system is to allow the possibility of creating dialogues with either branching dialogues, or even a scene to happen in the game, without getting you annoyed by hud systems.
+	Due to this addition, I added the possibility of adding Topics to the companions.
+		You can add new topics with a call text on them, which will be displayed on the list of topics you can talk about with your companion when speaking to It.
+		The option "Let's Chat" will send you to the list of topic, but It will only show up when the companion actually has a topic.
+		Added 2 new special message key calls: One for when you click "I want to talk with you.", and other for when you click "Nevermind" on the topic list.
+		There is also the possibility of adding a method as a checking of requirement to the dialogue show up.
+	You can actually make a rich dialogue system, if you make use of the companion friendship levels, and other things.

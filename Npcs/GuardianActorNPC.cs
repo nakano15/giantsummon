@@ -32,8 +32,8 @@ namespace giantsummon.Npcs
         {
             get { return GuardianBase.GetGuardianBase(GuardianID, GuardianModID); }
         }
-        private byte IdleBehaviorType = 0;
-        private int IdleBehaviorTime = 0;
+        public byte IdleBehaviorType = 0;
+        public int IdleBehaviorTime = 0;
         public List<int> DrawInFrontOfPlayers = new List<int>();
         public float XOffSet = 0, YOffset = 0;
 
@@ -99,6 +99,8 @@ namespace giantsummon.Npcs
             if (MessageTime > 0) MessageTime--;
             float Acceleration = Base.Acceleration, MaxSpeed = Base.MaxSpeed, Deceleration = Base.SlowDown,
                 JumpSpeed = Base.JumpSpeed;
+            if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI)
+                Idle = false;
             if (Idle)
             {
                 if (npc.direction == 0)

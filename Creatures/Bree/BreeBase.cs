@@ -615,6 +615,10 @@ namespace giantsummon.Creatures
                     return "No way.";
                 case MessageIDs.GenericThankYou:
                     return "Thank you.";
+                case MessageIDs.ChatAboutSomething:
+                    return "Please make haste, I have many things on my to do list.";
+                case MessageIDs.NevermindTheChatting:
+                    return "Well then, anything else?";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -343,6 +343,10 @@ namespace giantsummon.Creatures
                     return "(She shook her head.)";
                 case MessageIDs.GenericThankYou:
                     return "(She bows as a Thank You.)";
+                case MessageIDs.ChatAboutSomething:
+                    return "(She seems to be waiting for your questions.)";
+                case MessageIDs.NevermindTheChatting:
+                    return "(She nods to you.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

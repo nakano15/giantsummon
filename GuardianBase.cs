@@ -92,6 +92,7 @@ namespace giantsummon
         public float MaxWalkSpeedTime { get { return WalkAnimationFrameTime * WalkingFrames.Length; } }
         public List<int> DrawLeftArmInFrontOfHead = new List<int>();
         public bool SpecificBodyFrontFramePositions = false;
+        public List<DialogueTopic> Topics = new List<DialogueTopic>();
 
         public string GetGroupID { get { return GroupID; } }
         /// <summary>
@@ -124,6 +125,28 @@ namespace giantsummon
             Michelle = 13,
             Wrath = 14,
             Fluffles = 16;
+
+        public struct DialogueTopic
+        {
+            public string TopicText;
+            public Action TopicMethod;
+            public Func<TerraGuardian, Player, bool> Requirement;
+
+            public DialogueTopic(string TopicText, Action TopicMethod, Func<TerraGuardian, Player, bool> Requirement = null)
+            {
+                this.TopicText = TopicText;
+                this.TopicMethod = TopicMethod;
+                if (Requirement == null)
+                    this.Requirement = delegate (TerraGuardian tg, Player pl) { return true; };
+                else
+                    this.Requirement = Requirement;
+            }
+        }
+
+        public void AddTopic(string TopicText, Action TopicMethod)
+        {
+            Topics.Add(new DialogueTopic(TopicText, TopicMethod));
+        }
 
         public void SetTerraGuardian()
         {
@@ -903,16 +926,6 @@ namespace giantsummon
             return "";
         }
 
-        public GuardianMouseOverAndDialogueInterface.DialogueOption AddDialogue(string Message, Action DialogueScript)
-        {
-            GuardianMouseOverAndDialogueInterface.DialogueOption dialogue = new GuardianMouseOverAndDialogueInterface.DialogueOption(Message,
-                delegate (TerraGuardian tg)
-                {
-                    Dialogue.StartNewDialogue(DialogueScript, tg);
-                });
-            return dialogue;
-        }
-
         public class MessageIDs
         {
             public const string LeopoldMessage1 = "Mes.LeopoldAnswer1";
@@ -950,6 +963,8 @@ namespace giantsummon
             public const string GenericYes = "Mes.Yes",
                 GenericNo = "Mes.No",
                 GenericThankYou = "Mes.ThankYou";
+            public const string ChatAboutSomething = "Mes.ChatAboutSomething",
+                NevermindTheChatting = "Mes.NevermindChatting";
         }
         
         public enum GuardianEffect

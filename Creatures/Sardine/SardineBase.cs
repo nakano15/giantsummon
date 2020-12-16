@@ -709,6 +709,10 @@ namespace giantsummon.Creatures
                     return "That's bad...";
                 case MessageIDs.GenericThankYou:
                     return "Thanks!";
+                case MessageIDs.ChatAboutSomething:
+                    return "Want to share some adventure stories? I really like that idea!";
+                case MessageIDs.NevermindTheChatting:
+                    return "Had enough of chatting? Me too. Okay, we'll chat more later.";
             }
             return base.GetSpecialMessage(MessageID);
         }

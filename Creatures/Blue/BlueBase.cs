@@ -254,6 +254,12 @@ namespace giantsummon.Creatures
                 "*She said that It would be perfect to do something extremelly dangerous, and with things to hunt in the way. She also told not to forget about [gn:" + GuardianBase.Zacks + "] and her.*");
             AddExploreObjective(1500, 100, true);
             AddCompanionRequirement(GuardianBase.Zacks);
+            GetTopics();
+        }
+
+        public void GetTopics()
+        {
+            AddTopic("How are you doing?", HangoutDialogue);
         }
 
         public void GetRewards()
@@ -889,6 +895,10 @@ namespace giantsummon.Creatures
                     return "*She denies.*";
                 case MessageIDs.GenericThankYou:
                     return "*She thanked.*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*She's wondering what you want to talk about.*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*She's still waiting to see what you'll say.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
@@ -896,8 +906,8 @@ namespace giantsummon.Creatures
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            Dialogues.Add(AddDialogue("How are you doing?", HangoutDialogue));
-            {
+            //Dialogues.Add(AddDialogue("How are you doing?", HangoutDialogue));
+            /*{
                 GuardianMouseOverAndDialogueInterface.DialogueOption TestOption = new GuardianMouseOverAndDialogueInterface.DialogueOption("Sketch Village World", delegate (TerraGuardian tg)
                 {
                     if (Compatibility.SubWorlds.IsModInstalled)
@@ -911,7 +921,7 @@ namespace giantsummon.Creatures
                     }
                 });
                 Dialogues.Add(TestOption);
-            }
+            }*/
             return Dialogues;
         }
 

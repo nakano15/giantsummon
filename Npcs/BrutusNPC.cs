@@ -239,7 +239,7 @@ namespace giantsummon.Npcs
                             }
                             if (SceneTime == 780)
                             {
-                                SayMessage("*I am " + NpcAlias + ", your body guard.*");
+                                SayMessage("*I am " + NpcAlias + ". Your body guard, from now on.*");
                             }
                             if (SceneTime >= 1080)
                             {
@@ -391,6 +391,10 @@ namespace giantsummon.Npcs
             npc.friendly = false;
             npc.dontTakeDamage = false;
             SayMessage("*Show me what you are made of.*");
+            Terraria.Main.CloseNPCChatOrSign();
+            Idle = false;
+            IdleBehaviorTime = 0;
+            IdleBehaviorType = 0;
         }
 
         public void EndDamageTest()

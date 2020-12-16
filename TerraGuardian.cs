@@ -441,7 +441,12 @@ namespace giantsummon
             int Range = 40;
             if (ItemPosition > -1)
             {
-                if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[ItemPosition]))
+                Terraria.ModLoader.Config.ItemDefinition def = new Terraria.ModLoader.Config.ItemDefinition(Inventory[ItemPosition].type);
+                if (MainMod.ItemAttackRange.ContainsKey(def))
+                {
+                    Range = MainMod.ItemAttackRange[def];
+                }
+                else if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[ItemPosition]))
                 {
                     if (Main.itemTexture[this.Inventory[ItemPosition].type].Height >= Main.itemTexture[this.Inventory[ItemPosition].type].Width)
                         Range = Main.itemTexture[this.Inventory[ItemPosition].type].Height;
@@ -478,7 +483,12 @@ namespace giantsummon
             RangeYUpper = 40;
             if (ItemPosition > -1)
             {
-                if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[ItemPosition]))
+                Terraria.ModLoader.Config.ItemDefinition def = new Terraria.ModLoader.Config.ItemDefinition(Inventory[ItemPosition].type);
+                if (MainMod.ItemAttackRange.ContainsKey(def))
+                {
+                    RangeYLower = MainMod.ItemAttackRange[def];
+                }
+                else if (Main.netMode < 2 && !MainMod.IsGuardianItem(this.Inventory[ItemPosition]))
                 {
                     if (Main.itemTexture[this.Inventory[ItemPosition].type].Height >= Main.itemTexture[this.Inventory[ItemPosition].type].Width)
                     {
@@ -2091,7 +2101,6 @@ namespace giantsummon
             }
             UpdateWeapons = false;
             CooldownException.Clear();
-            TownNpcs = 0f;
             ActiveNpcs = 0f;
             if (MessageTime > 0)
             {
@@ -4369,13 +4378,13 @@ namespace giantsummon
                 Item weapon = Inventory[WeaponPosition];
                 float AttackWidth = GetMeleeWeaponRangeX(WeaponPosition, Kneeling) + TargetWidth * 0.5f, UpperY, LowerY;
                 GetMeleeWeaponRangeY(WeaponPosition, out UpperY, out LowerY, Kneeling);
-                InRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < AttackWidth;
+                InRangeX = Math.Abs(Position.X - (TargetPosition.X + TargetWidth * 0.5f)) < AttackWidth;
                 InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) || 
                     (UpperY + Position.Y - Height >= TargetPosition.Y && LowerY + Position.Y <= TargetPosition.Y + TargetHeight);
             }
             else
             {
-                InRangeX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f;
+                InRangeX = Math.Abs((TargetPosition.X + TargetWidth * 0.5f) - Position.X) <= GetMeleeWeaponRangeX() + TargetWidth * 0.5f;
                 float UpperY, LowerY;
                 GetMeleeWeaponRangeY(-1, out UpperY, out LowerY, false);
                 InRangeY = (TargetPosition.Y + TargetHeight >= UpperY + Position.Y && TargetPosition.Y < LowerY + Position.Y) ||

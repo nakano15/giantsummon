@@ -380,7 +380,11 @@ namespace giantsummon.Creatures
                 case MessageIDs.GenericNo:
                     return "*NO!*";
                 case MessageIDs.GenericThankYou:
-                    return "*Thanks!*";
+                    return "*THANKS!*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*Grrr... Fine. Just don't annoy me.*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*Finally.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

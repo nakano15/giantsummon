@@ -494,7 +494,11 @@ namespace giantsummon
                     {
                         AddOption("I have a gift for you", GiveGiftButtonAction);
                     }
-                    AddOption("Let's talk about something else.", SomethingElseButtonPressed);
+                    if(tg.Base.Topics.Count > 0)
+                    {
+                        AddOption("I want to talk with you.", LetsChatButtonPressed);
+                    }
+                    AddOption("Talk about other things.", SomethingElseButtonPressed);
                     if (tg.OwnerPos == Main.myPlayer && PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
                         AddOption("Let's get some rest.", RestButtonAction);
@@ -505,6 +509,34 @@ namespace giantsummon
                 Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             }
             AddOption("Goodbye", CloseDialogueButtonAction);
+        }
+
+        public static void LetsChatButtonPressed(TerraGuardian tg)
+        {
+            Options.Clear();
+            string Mes = tg.GetMessage(GuardianBase.MessageIDs.ChatAboutSomething);
+            if(Mes != "")
+            {
+                SetDialogue(Mes, tg);
+            }
+            foreach (GuardianBase.DialogueTopic topic in tg.Base.Topics)
+            {
+                if (topic.Requirement(tg, MainPlayer))
+                {
+                    Action a = topic.TopicMethod;
+                    AddOption(topic.TopicText, delegate (TerraGuardian tg2)
+                    {
+                        giantsummon.Dialogue.StartNewDialogue(a, tg2);
+                    });
+                }
+            }
+            AddOption("Nevermind", delegate(TerraGuardian tg2)
+            {
+                GetDefaultOptions(tg2);
+                string Mes2 = tg.GetMessage(GuardianBase.MessageIDs.NevermindTheChatting);
+                if (Mes2 != "")
+                    SetDialogue(Mes2, tg2);
+            });
         }
 
         public static void AddOption(string Mes, Action<TerraGuardian> Action)
@@ -528,7 +560,7 @@ namespace giantsummon
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
                 if (pm.GetSummonedGuardianCount >= pm.MaxExtraGuardiansAllowed + 1)
                 {
-                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for your companion in the group.)"), tg);
+                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for this companion in the group.)"), tg);
                 }
                 else
                 {
@@ -544,7 +576,7 @@ namespace giantsummon
         {
             Options.Clear();
             //If not in town, ask if the player is sure. If in town, go right away to Yes option press.
-            if (tg.TownNpcs >= 3)
+            if (tg.TownNpcs >= 1)
                 AskGuardianToLeaveGroupYesButtonPressed(tg);
             else
             {
