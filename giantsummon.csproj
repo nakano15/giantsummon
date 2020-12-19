@@ -92,6 +92,7 @@
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
+    <Compile Include="Creatures\Minerva\MinervaBase.cs" />
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />
@@ -301,6 +302,12 @@
     <Content Include="Creatures\Malisha\left_arm.png" />
     <Content Include="Creatures\Malisha\right_arm.png" />
     <Content Include="Creatures\Malisha\tails.png" />
+    <Content Include="Creatures\Minerva\body.png" />
+    <Content Include="Creatures\Minerva\body_front.png" />
+    <Content Include="Creatures\Minerva\head.png" />
+    <Content Include="Creatures\Minerva\left_arm.png" />
+    <Content Include="Creatures\Minerva\right_arm.png" />
+    <Content Include="Creatures\Minerva\right_arm_front.png" />
     <Content Include="Creatures\Rococo\shadedbody.png" />
     <Content Include="Creatures\Rococo\shadedbodyfront.png" />
     <Content Include="Creatures\Rococo\shadedhead.png" />

@@ -906,7 +906,6 @@ namespace giantsummon.Creatures
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            //Dialogues.Add(AddDialogue("How are you doing?", HangoutDialogue));
             /*{
                 GuardianMouseOverAndDialogueInterface.DialogueOption TestOption = new GuardianMouseOverAndDialogueInterface.DialogueOption("Sketch Village World", delegate (TerraGuardian tg)
                 {

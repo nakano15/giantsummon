@@ -771,6 +771,9 @@ namespace giantsummon
                     case 16:
                         gb = new FlufflesBase();
                         break;
+                    case 17:
+                        gb = new MinervaBase();
+                        break;
                 }
             }
             if (gb == null)
