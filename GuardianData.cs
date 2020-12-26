@@ -115,15 +115,11 @@ namespace giantsummon
                 return Grade;
             }
         }
-        private BitsByte MessageTriggerFlags = new BitsByte(), FriendshipLevelFlags = new BitsByte();
+        private BitsByte MessageTriggerFlags = new BitsByte();
         public bool CallMessageUnlocked { get { return MessageTriggerFlags[0]; } set { MessageTriggerFlags[0] = value; } }
         public bool MountMessageUnlocked { get { return MessageTriggerFlags[1]; } set { MessageTriggerFlags[1] = value; } }
         public bool ControlMessageUnlocked { get { return MessageTriggerFlags[2]; } set { MessageTriggerFlags[2] = value; } }
-
-        public bool FriendMessageUnlocked { get { return FriendshipLevelFlags[0]; } set { FriendshipLevelFlags[0] = value; } }
-        public bool BestFriendMessageUnlocked { get { return FriendshipLevelFlags[1]; } set { FriendshipLevelFlags[1] = value; } }
-        public bool BFFMessageUnlocked { get { return FriendshipLevelFlags[2]; } set { FriendshipLevelFlags[2] = value; } }
-        public bool BuddyForLifeMessageUnlocked { get { return FriendshipLevelFlags[3]; } set { FriendshipLevelFlags[3] = value; } }
+        public bool MoveInMessageUnlocked { get { return MessageTriggerFlags[3]; } set { MessageTriggerFlags[3] = value; } }
 
         private Dictionary<string, ModGuardianData> ModData = new Dictionary<string, ModGuardianData>();
 
@@ -939,7 +935,6 @@ namespace giantsummon
             for (int i = 0; i < 8; i++)
             {
                 tag.Add("MessageFlags"+i+"_" + UniqueID, MessageTriggerFlags[i]); //It crashes
-                tag.Add("FriendLevelFlags" + i + "_" + UniqueID, FriendshipLevelFlags[i]);
             }
             int InventorySize = Inventory.Length;
             tag.Add("InventorySize_" + UniqueID, InventorySize);
@@ -1114,7 +1109,8 @@ namespace giantsummon
                 for (int i = 0; i < 8; i++)
                 {
                     MessageTriggerFlags[i] = tag.GetBool("MessageFlags" + i + "_" + UniqueID);
-                    FriendshipLevelFlags[i] = tag.GetBool("FriendLevelFlags" + i + "_" + UniqueID);
+                    if(ModVersion < 78)
+                        tag.GetBool("FriendLevelFlags" + i + "_" + UniqueID);
                 }
             }
             int ContainerSize = tag.GetInt("InventorySize_" + UniqueID);
@@ -1240,6 +1236,12 @@ namespace giantsummon
             {
                 Text = Base.ControlUnlockMessage + "\n[You can now control this companion]";
                 ControlMessageUnlocked = true;
+                return true;
+            }
+            if (Base.MoveInLevel > 0 && !MoveInMessageUnlocked && !IsStarter && FriendshipLevel >= Base.MoveInLevel)
+            {
+                Text = Base.CallUnlockMessage + "\n[This companion can now move in to your world.]";
+                MoveInMessageUnlocked = true;
                 return true;
             }
             return false;

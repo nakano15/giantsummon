@@ -538,14 +538,14 @@ namespace giantsummon
                                 TerraGuardian tg = player.GetAllGuardianFollowers.First(x => x.ID == DisplayGuardian.ID && x.ModID == DisplayGuardian.ModID);
                                 string Mes = tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer);
                                 if (Mes != "")
-                                    Main.NewText(tg.Name += ": " + Mes);
+                                    Main.NewText(tg.Name + ": " + Mes);
                                 player.DismissGuardian(player.GetGuardianSlot(GuardianList[Selected]));
                             }
                         }
                     }
                 }
                 ElementPosition.X += ButtonRegionWidth * 0.25f;
-                if (Selected > -1)
+                if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel))
                 {
                     string ButtonText = "";
                     if (WorldMod.CanGuardianNPCSpawnInTheWorld(DisplayGuardian.ID, DisplayGuardian.ModID))

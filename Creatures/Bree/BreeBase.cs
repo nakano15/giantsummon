@@ -410,6 +410,11 @@ namespace giantsummon.Creatures
                     Mes.Add("There was one time when [gn:"+Sardine+"] returned home, and I got spooked after I saw [gn:"+Fluffles+"] on his shoulder. I screamed so loud that she ran away, and I nearly dirtied the floor too.");
                 }
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("[gn:" + Minerva + "] still haven't got into the level for my refined taste. She still has a lot to cook.");
+                Mes.Add("I tried teaching [gn:"+Minerva+"] how to cook properly, but she always misses the point when cooking.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("Eek!! Turn the other side!");

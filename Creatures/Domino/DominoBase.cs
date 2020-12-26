@@ -279,6 +279,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*What?! I never got hugged by [gn:" + Vladimir + "], I don't know why he would say that.*");
                 Mes.Add("*I feel like I've lost some weight on my shoulder. Maybe I could try smiling? No.*");
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*You wont believe when I say. I asked [gn:"+Minerva+"] if she could give me something that would be of my taste. She gave me a bone... She's really the best at guessing what people want.*");
+                Mes.Add("*What? Never saw a bone before? I like chewing them sometimes. Gladly [gn:"+Minerva+"] has some stocks of them.*");
+            }
             if (NpcMod.HasGuardianNPC(Michelle))
             {
                 Mes.Add("*Between you and [gn:" + Michelle + "] around, I preffer you. At least you don't bother me all the time.*");

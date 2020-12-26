@@ -188,6 +188,7 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("(She gave a scare on [gn:" + Leopold + "]. Now I should be trying to find some leaves.)");
                     Mes.Add("([gn:" + Leopold + "] seems to be trying to avoid being surprised by her.)");
+                    Mes.Add("(She seems to be blushing, and avoiding to stare directly at [gn:"+Leopold+"].)");
                 }
                 if (PlayerMod.HasGuardianSummoned(player, Mabel))
                 {

@@ -698,8 +698,29 @@ namespace giantsummon
             if (!WorldMod.GuardiansMet.Any(x => x.ID == ID && x.ModID == ModID))
             {
                 WorldMod.GuardiansMet.Add(new GuardianID(ID, ModID));
-                if(AllowToMoveIn)
-                    WorldMod.AllowGuardianNPCToSpawn(ID, ModID);
+                if (AllowToMoveIn)
+                {
+                    byte MoveInLevel = 0;
+                    if ((MoveInLevel = GuardianBase.GetGuardianBase(ID, ModID).MoveInLevel) > 0)
+                    {
+                        bool SomeoneHasGuardianReq = false;
+                        for (int p = 0; p < 255; p++)
+                        {
+                            if (Main.player[p].active && PlayerMod.PlayerHasGuardian(Main.player[p], ID, ModID) &&
+                                PlayerMod.GetPlayerGuardian(Main.player[p], ID, ModID).FriendshipLevel >= MoveInLevel)
+                            {
+                                SomeoneHasGuardianReq = true;
+                                break;
+                            }
+                        }
+                        if (SomeoneHasGuardianReq)
+                            WorldMod.AllowGuardianNPCToSpawn(ID, ModID);
+                    }
+                    else
+                    {
+                        WorldMod.AllowGuardianNPCToSpawn(ID, ModID);
+                    }
+                }
                 //Not only send the info on multiplayer about the guardian met, but also tell everyone that it has been found.
             }
         }

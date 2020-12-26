@@ -448,6 +448,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*[name] says that always teams up with [gn:"+Fluffles+"] to catch [gn:"+Sardine+"] on Cat and Wolf. [gn:"+Fluffles+"] catches him off guard more easier than her, but she also said that the game got easier too.*");
                 }
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*[name] seems to have came from [gn:17]'s place angry. I wonder what happened.*");
+                Mes.Add("*[name] seems to be eating a Squirrel on a Spit.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is saying that you're making her embarrassed.*");

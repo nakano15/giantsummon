@@ -77,3 +77,8 @@ Added the Dialogue System.
 		Added 2 new special message key calls: One for when you click "I want to talk with you.", and other for when you click "Nevermind" on the topic list.
 		There is also the possibility of adding a method as a checking of requirement to the dialogue show up.
 	You can actually make a rich dialogue system, if you make use of the companion friendship levels, and other things.
+It will now be easier to climb down platforms while using Rocket Boots and Wings. Just hold down [Down] key before pressing [Jump] key.
+Added the possibility of setting the minimum friendship level for the companion to move in to your world.
+	That will be used, in case you want to make companions reluctant about living in the world.
+	The only way of interacting with them, is when they visit.
+	Starter guardians will also disregard the move in level of the companion.

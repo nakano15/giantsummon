@@ -104,6 +104,11 @@ namespace giantsummon
         public GuardianMood Mood { get { return Data.Mood; } }
         public bool HasRequestActive { get { return Data.request.Active; } }
         public bool Active = false;
+        public bool IsStarter
+        {
+            get { return Data.IsStarter; }
+            set { Data.IsStarter = value; }
+        }
         public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
         public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false;
         public bool DropFromPlatform { get { return MoveDown && Jump; } set { MoveDown = Jump = value; } }
@@ -1971,7 +1976,7 @@ namespace giantsummon
                     MayRocket = true;
                 if (Velocity.Y == 0)
                     MayRocket = false;
-                if (!HasFlag(GuardianFlags.Frozen) && !HasFlag(GuardianFlags.Petrified))
+                if (!HasFlag(GuardianFlags.Frozen) && !HasFlag(GuardianFlags.Petrified) && !MoveDown)
                 {
                     WingMovement();
                     RocketMovement(MayRocket);

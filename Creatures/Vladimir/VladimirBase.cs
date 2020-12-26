@@ -737,6 +737,12 @@ namespace giantsummon.Creatures
                 Mes.Add("*It's a bit hard to help [gn:" + Fluffles + "], because I can't touch her, so I kind of pretend to be hugging her. It seems to be working.*");
                 Mes.Add("*I question myself why [gn:" + Fluffles + "] can't talk. I don't mind the silence when hugging, but It bothers me that she can't speak at all. Can you help her solve that problem?*");
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*Since the moment we met, [gn:"+Minerva+"] guessed right the kind of food I like. I always love eating her food.*");
+                Mes.Add("*Whenever I'm eating the food [gn:"+Minerva+"] makes, stares at me with a smile on her face. I think she's glad that I'm liking It.*");
+                Mes.Add("*Sometimes [gn:"+Minerva+"] asks me to hug her, and she eventually falls asleep when being hugged, and that's all fine. The problem is that she has a little flatulence problem. Sometimes I accidentally wake her up because I'm trying to blow the smell away.*");
+            }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
             {

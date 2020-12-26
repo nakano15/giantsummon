@@ -407,6 +407,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*Hmph. It looks like I got concorrence. I got to work harder on making my mentor's life not be easy.*");
                 Mes.Add("*I wonder if [gn:"+Fluffles+"] would mind If I tested a vaccuum I've created on her.*");
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*[gn:"+Minerva+"] seems to be a good test subject, but she's been rejecting my requests for food, so It's hard to lure her...*");
+                Mes.Add("*It's not my fault that [gn:"+Minerva+"] is fat. Now, if there's any other collateral effects... Maybe...*");
+            }
 
             if (guardian.IsUsingToilet)
             {

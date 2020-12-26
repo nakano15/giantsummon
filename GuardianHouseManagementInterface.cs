@@ -97,7 +97,7 @@ namespace giantsummon
                 List<TerraGuardian> Guardians = new List<TerraGuardian>();
                 foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                 {
-                    if (tg.GetTownNpcInfo != null)
+                    if (tg.GetTownNpcInfo != null && tg.FriendshipLevel >= tg.Base.MoveInLevel)
                         Guardians.Add(tg);
                 }
                 while (CurrentGuardian < Guardians.Count)

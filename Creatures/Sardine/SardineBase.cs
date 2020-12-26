@@ -450,6 +450,10 @@ namespace giantsummon.Creatures
                 }
                 Mes.Add("I have to tell you what happened to me the other day. I was on the toilet doing my things, having a hard time, until [gn:"+GuardianBase.Fluffles+"] surged from nowhere. She spooked me really hard! But at least solved my constipation issue.");
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("Like [gn:"+Minerva+"], you're wondering why I only eat fish? It's because fishs are the best!");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("Do you humans always visits bathrooms when others are using it?");

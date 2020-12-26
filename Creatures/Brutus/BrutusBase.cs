@@ -526,6 +526,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*It seems like [gn:" + Sardine + "] is in a even bigger problem now that [gn:"+Fluffles+"] joined [gn:"+Blue+"]'s game.*");
                 }
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*[nickname], where did you find that angel known as [gn:"+Minerva+"]? That woman cooks several tasty foods for me. I'm really glad that you found her.*");
+                Mes.Add("*Aaaahh... I'm stuffed. [gn:"+Minerva+"] really cooks very well. I'll see her in again only in about 8 hours.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");

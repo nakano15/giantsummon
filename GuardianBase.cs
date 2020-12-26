@@ -102,12 +102,13 @@ namespace giantsummon
         public virtual string CallUnlockMessage { get { return "*It seems like I can call this guardian whenever I want.*"; } }
         public virtual string MountUnlockMessage { get { return "*It seems like I can mount this guardian whenever I want.*"; } }
         public virtual string ControlUnlockMessage { get { return "*It seems like I can control It's movement whenever I want.*"; } }
-        
+        public virtual string MoveInUnlockMessage { get { return "*This companion seems interessed into living on your world.*"; } }
+
         public virtual string LeavingWorldMessageGuardianSummoned { get { return " things were packed out of the world."; } }
         public virtual string LeavingWorldMessage { get { return " has moved out of the world."; } }
 
         public byte KnownLevel = 2, FriendsLevel = 5, BestFriendLevel = 12, BestFriendForeverLevel = 18,  BuddiesForLife = 25;
-        public byte CallUnlockLevel = 0, LootingUnlockLevel = 3, MaySellYourLoot = 4, MountUnlockLevel = 5, StopMindingAFK = 7, MountDamageReductionLevel = 9, ControlUnlockLevel = 10, FriendshipBondUnlockLevel = 12, FallDamageReductionLevel = 15;
+        public byte CallUnlockLevel = 0, LootingUnlockLevel = 3, MaySellYourLoot = 4, MountUnlockLevel = 5, StopMindingAFK = 7, MountDamageReductionLevel = 9, ControlUnlockLevel = 10, FriendshipBondUnlockLevel = 12, FallDamageReductionLevel = 15, MoveInLevel = 0;
         
         public const int Rococo = 0,
             Blue = 1,
@@ -124,7 +125,8 @@ namespace giantsummon
             Malisha = 12,
             Michelle = 13,
             Wrath = 14,
-            Fluffles = 16;
+            Fluffles = 16,
+            Minerva = 17;
 
         public struct DialogueTopic
         {

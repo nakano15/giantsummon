@@ -421,6 +421,11 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*It's quite nice having a new girl on the town. No, I'm not cheating [gn:" + Blue + "] If that's what is on your mind.*");
             }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*Let me guess, [gn:"+Minerva+"] told you that is scared of me, and made you come to me. Don't worry, as I said before, I wont eat any citizen. That doesn't stop me from scaring them, by the way.*");
+                Mes.Add("*I don't know if [gn:"+Minerva+"] charges for the food she makes, or if gives them for free. But I can only say that she cooks very good.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");

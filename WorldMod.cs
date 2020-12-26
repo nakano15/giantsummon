@@ -839,6 +839,7 @@ namespace giantsummon
             if (!IsGuardianNpcInWorld(GuardianID, ModID))
             {
                 GuardianTownNPC.Add(guardian);
+                AddTownGuardianNpc(guardian);
             }
             GuardianTownNpcState npcstate = GuardianNPCsInWorld.First(x => x.CharID.ID == GuardianID && x.CharID.ModID == ModID);
             npcstate.HomeX = SpawnXBackup;

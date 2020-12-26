@@ -138,7 +138,7 @@ namespace giantsummon
                     {
                         Message = t;
                     }
-                    else if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless)
+                    else if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && tg.FriendshipLevel >= tg.Base.MoveInLevel)
                         Message = tg.Base.HomelessMessage(MainPlayer, tg);
                     else
                         Message = tg.Base.NormalMessage(MainPlayer, tg);
