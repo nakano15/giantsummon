@@ -134,5 +134,15 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(25, 31, 21 + 2);
             HeadVanityPosition.AddFramePoint2x(26, 31, 21 + 2);
         }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*Ist nicht allein, [nickname].*";
+            }
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }

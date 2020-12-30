@@ -921,7 +921,7 @@ namespace giantsummon.Creatures
                     }
                     else
                     {
-                        GuardianMouseOverAndDialogueInterface.SetDialogue("*She tells you that there is no way of goin there.*");
+                        GuardianMouseOverAndDialogueInterface.SetDialogue("*She tells you that there is no way of going there.*");
                     }
                 });
                 Dialogues.Add(TestOption);

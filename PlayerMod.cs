@@ -189,6 +189,7 @@ namespace giantsummon
         }
         private string Nickname = null;
         public string GetNickname { get { if (Nickname == null) return "Terrarian"; return Nickname; } set { Nickname = value; } }
+        public bool ReceivedFoodFromMinerva = false;
 
         public static int GetPlayerDefenseCount(Player player)
         {
@@ -2007,6 +2008,7 @@ namespace giantsummon
             {
                 tag.Add("PigForm_" + i, PigGuardianCloudForm[i]);
             }
+            tag.Add("ReceivedFoodFromMinerva", ReceivedFoodFromMinerva);
             return tag;
         }
 
@@ -2079,6 +2081,10 @@ namespace giantsummon
                 {
                     PigGuardianCloudForm[i] = tag.GetBool("PigForm_" + i);
                 }
+            }
+            if(ModVersion >= 79)
+            {
+                ReceivedFoodFromMinerva = tag.GetBool("ReceivedFoodFromMinerva");
             }
         }
 

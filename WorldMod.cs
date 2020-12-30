@@ -134,6 +134,7 @@ namespace giantsummon
             if (Main.time == 0)
             {
                 AlexRecruitScripts.CheckIfAlexIsInTheWorld();
+                Creatures.MinervaBase.AllowGettingMoreFoodFromMinerva();
                 if (Main.dayTime)
                     DayChange = true;
             }

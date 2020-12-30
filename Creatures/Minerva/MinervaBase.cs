@@ -116,6 +116,23 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(25, 24, 31);
             HeadVanityPosition.AddFramePoint2x(26, 24, 31);
             HeadVanityPosition.AddFramePoint2x(27, 24, 31);
+
+            SetDialogues();
+        }
+
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Can you cook something for me?", delegate (TerraGuardian tg)
+            {
+                Dialogue.StartNewDialogue(CookDialogue, tg);
+            }));
+            return Options;
+        }
+
+        public void SetDialogues()
+        {
+
         }
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
@@ -141,7 +158,13 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            if (Main.eclipse)
+            if (guardian.IsUsingBed)
+            {
+                Mes.Add("(She's really deep on her sleep. She looks very tired.)");
+                Mes.Add("(You heard a weird air sound, and now is smelling something awful.)");
+                Mes.Add("(She seems to be snoring a bit.)");
+            }
+            else if (Main.eclipse)
             {
                 Mes.Add("*Hmm... Maybe I could have use... Of a Chainsaw...*");
                 Mes.Add("*I can't concentrate on the cooking, with all those weird creatures running outside.*");
@@ -253,7 +276,7 @@ namespace giantsummon.Creatures
             Mes.Add("*It fills me with joy, when I see people happy when eating my food.*");
             Mes.Add("*Have you been eating sufficiently latelly? I'm glad to hear that you are.*");
             Mes.Add("*I don't mind cooking for anyone, It actually fills me with joy.*");
-            Mes.Add("*I would like to apologize, If I ever released a noxious gas around you, but I really needed to check if the food was good for the people to eat.*");
+            Mes.Add("*I would like to apologize to you for any noxious gas I release, but I really needed to check if the food was good for the people to eat.*");
             if (NpcMod.HasGuardianNPC(Zacks))
             {
                 Mes.Add("*I don't know why you let [gn:3] live here. Whenever he shows up on my kitchen, he's salivating while looking at me. Is he planning to eat me?*");
@@ -392,6 +415,119 @@ namespace giantsummon.Creatures
                     return "*Feel free to call me for a chatting anytime you want.*";
             }
             return "";
+        }
+
+        public static void AllowGettingMoreFoodFromMinerva()
+        {
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva = false;
+        }
+
+        //Dialogue Interactions
+        public void CookDialogue()
+        {
+            bool PlayerReceivedFood = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva;
+            if (PlayerReceivedFood)
+            {
+                Dialogue.ShowEndDialogueMessage("*I already gave you some food. Wait until " + (Main.dayTime ? "dinner" : "lunch") + " time for more.*", false);
+                return;
+            }
+            string[] PossibleFoods = new string[]{
+                "Soup",
+                "Cooked Fish",
+                "Cooked Shrimp",
+                "Pumpkin Pie",
+                "Sashimi",
+                "Grub Soup",
+                "Nevermind"
+                };
+            Player player = Main.player[Main.myPlayer];
+            if (player.position.Y >= Main.worldSurface * 16)
+                PossibleFoods[0] = "";
+            if (player.Center.X / 16 >= 250 && player.Center.X / 16 <= Main.maxTilesX / 250)
+                PossibleFoods[2] = "";
+            if (!Main.halloween)
+                PossibleFoods[3] = "";
+            if (!NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
+                PossibleFoods[4] = "";
+            if (!player.ZoneJungle)
+                PossibleFoods[5] = "";
+            bool GotFood = false;
+            switch(Dialogue.ShowDialogueWithOptions("*That is what I can cook for you right now.*", PossibleFoods))
+            {
+                case 0:
+                    {
+                        Item i = new Item();
+                        i.SetDefaults(Terraria.ID.ItemID.BowlofSoup);
+                        i.position = player.position;
+                        i.stack = 3;
+                        player.GetItem(Main.myPlayer, i);
+                        Dialogue.ShowEndDialogueMessage("*I hope you enjoy It, the mushroom and the goldfish are fresh.*", false);
+                        GotFood = true;
+                    }
+                    break;
+                case 1:
+                    {
+                        Item i = new Item();
+                        i.SetDefaults(Terraria.ID.ItemID.CookedFish);
+                        i.position = player.position;
+                        i.stack = 3;
+                        player.GetItem(Main.myPlayer, i);
+                        Dialogue.ShowEndDialogueMessage("*The fish were caught last morning, I hope they're at your taste.*", false);
+                        GotFood = true;
+                    }
+                    break;
+                case 2:
+                    {
+                        Item i = new Item();
+                        i.SetDefaults(Terraria.ID.ItemID.CookedShrimp);
+                        i.position = player.position;
+                        i.stack = 3;
+                        player.GetItem(Main.myPlayer, i);
+                        Dialogue.ShowEndDialogueMessage("*The shrimps were caught some time ago and are fresh. Enjoy your meal.*", false);
+                        GotFood = true;
+                    }
+                    break;
+                case 3:
+                    {
+                        Item i = new Item();
+                        i.SetDefaults(Terraria.ID.ItemID.PumpkinPie);
+                        i.position = player.position;
+                        i.stack = 3;
+                        player.GetItem(Main.myPlayer, i);
+                        Dialogue.ShowEndDialogueMessage("*The pie is still fresh, I hope you like It.*", false);
+                        GotFood = true;
+                    }
+                    break;
+                case 4:
+                    {
+                        Item i = new Item();
+                        i.SetDefaults(Terraria.ID.ItemID.Sashimi);
+                        i.position = player.position;
+                        i.stack = 3;
+                        player.GetItem(Main.myPlayer, i);
+                        Dialogue.ShowEndDialogueMessage("*I'm not really experienced with that, so I kind of bought that from the Travelling Merchant, instead.*", false);
+                        GotFood = true;
+                    }
+                    break;
+                case 5:
+                    {
+                        Item i = new Item();
+                        i.SetDefaults(Terraria.ID.ItemID.GrubSoup);
+                        i.position = player.position;
+                        i.stack = 3;
+                        player.GetItem(Main.myPlayer, i);
+                        Dialogue.ShowEndDialogueMessage("*Probably is not as horrible as you may think. Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*", false);
+                        GotFood = true;
+                    }
+                    break;
+                case 6:
+                    Dialogue.ShowEndDialogueMessage("*Then why did you ask for food?*", false);
+                    break;
+            }
+            if (GotFood)
+            {
+                player.GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva = true;
+            }
         }
     }
 }
