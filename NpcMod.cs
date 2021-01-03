@@ -973,6 +973,10 @@ namespace giantsummon
             {
                 Messages.Add("Watch out, I've heard that there's a ghost TerraGuardian who chases people in the forest.");
             }
+            if (!HasMetGuardian(GuardianBase.Minerva))
+            {
+                Messages.Add("Have you heard? There seems to be a TerraGuardian travelling through the world. Try seeing if you can find her on your travels.");
+            }
         }
 
         public override void GetChat(NPC npc, ref string chat)
@@ -1359,7 +1363,6 @@ namespace giantsummon
                                 if (tg.Active && !tg.KnockedOut && !tg.Downed)
                                 {
                                     tgs.Add(tg);
-                                    //tg.Coins += CoinReward;
                                 }
                             }
                             if (tgs.Count > 0)

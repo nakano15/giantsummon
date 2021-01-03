@@ -676,7 +676,16 @@ namespace giantsummon
                                     Math.Abs(EnemyPosition.Y - guardian.Position.Y) < 168f + EnemyHeight * 0.5f))
                                 {
                                     RepelingEnemies = true;
+                                    IgnoreCombat = false;
                                 }
+                                else
+                                {
+                                    IgnoreCombat = true;
+                                }
+                            }
+                            else
+                            {
+                                IgnoreCombat = false;
                             }
                             if (!RepelingEnemies)
                             {
@@ -779,11 +788,6 @@ namespace giantsummon
                                 {
                                     TryReaching = true;
                                 }
-                                IgnoreCombat = true;
-                            }
-                            else
-                            {
-                                IgnoreCombat = false;
                             }
                             if (TryReaching)
                             {

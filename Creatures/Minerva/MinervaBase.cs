@@ -118,6 +118,13 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(27, 24, 31);
 
             SetDialogues();
+            SetRewards();
+        }
+
+        public void SetRewards()
+        {
+            AddReward(Terraria.ID.ItemID.CookedFish, 1, 150, 0.66f, 2);
+            AddReward(Terraria.ID.ItemID.BowlofSoup, 1, 200, 0.5f, 2);
         }
 
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
@@ -363,6 +370,8 @@ namespace giantsummon.Creatures
             switch (MessageID)
             {
                 case MessageIDs.RescueMessage:
+                    if (Main.rand.Next(2) == 0)
+                        return "*Drink this, It will make you feel better...*";
                     return "*Try not to move, I know how to help you.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:
                     return "*You woke me up... If you want to eat something, couldn't you wait until I woke up?*";

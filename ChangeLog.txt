@@ -82,3 +82,7 @@ Added the possibility of setting the minimum friendship level for the companion 
 	That will be used, in case you want to make companions reluctant about living in the world.
 	The only way of interacting with them, is when they visit.
 	Starter guardians will also disregard the move in level of the companion.
+Reworded the message telling that the companion has a request for you:
+	Instead of "[name] has something for you.", It will instead say "[name] want something from you.".
+Fixed companions melee AI distance checking.
+Companions will now forcedly teleport to your character, when they are being pulled to your character, and your character is knocked out.

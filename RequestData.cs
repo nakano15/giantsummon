@@ -764,7 +764,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        QuestObjectives.Add(gd.Name + " has something for you.");
+                        QuestObjectives.Add(gd.Name + " want something from you.");
                     }
                     break;
                 case RequestState.RequestActive:

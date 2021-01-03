@@ -135,6 +135,14 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(26, 31, 21 + 2);
         }
 
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Any update on our little investigation?*");
+
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)

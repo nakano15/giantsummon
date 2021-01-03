@@ -1654,7 +1654,8 @@ namespace giantsummon
             foreach (TerraGuardian t in WorldMod.GuardianTownNPC)
             {
                 Vector2 NpcCenter = t.CenterPosition;
-                if (t.WhoAmID != WhoAmID && MyCenter.X >= NpcCenter.X - NPC.sWidth && MyCenter.X < NpcCenter.X + NPC.sWidth && 
+                if (t.WhoAmID != WhoAmID && t.OwnerPos == -1 && 
+                    MyCenter.X >= NpcCenter.X - NPC.sWidth && MyCenter.X < NpcCenter.X + NPC.sWidth && 
                     MyCenter.Y >= NpcCenter.Y - NPC.sHeight && MyCenter.Y < NpcCenter.Y + NPC.sHeight)
                 {
                     TownNpcs += t.Base.TownNpcSlot;
@@ -2976,7 +2977,7 @@ namespace giantsummon
                     }
                 }
                 //if (Distance > 512) Speed = 8f;
-                if (Distance >= 1512f)
+                if (Distance >= 1512f || p.GetModPlayer<PlayerMod>().KnockedOut)
 				{
 					TeleportToPlayer();
 					return false;
@@ -4736,8 +4737,8 @@ namespace giantsummon
                     {
                         case CombatTactic.Charge: //This AI is clashing against GoMelee AI.
                             {
-                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false) + TargetWidth * 0.5f,
+                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
+                                float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
                                     RetreatDistance = Width * 0.5f + 8;
                                 if (MaxAttackRange > -1)
                                 {
@@ -5208,17 +5209,17 @@ namespace giantsummon
                     if (Inventory[i].type == 0)
                         EmptyInventorySlots++;
                 }
-                if (MerchantPosition > 255 && HealingPotionCount < 30)
+                if (MerchantPosition < 255 && HealingPotionCount < 30)
                 {
                     if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserHealingPotion, 300, 30 - HealingPotionCount))
                         return;
                 }
-                if (MerchantPosition > 255 && HasMagicWeapon && ManaPotionCount < 30)
+                if (MerchantPosition < 255 && HasMagicWeapon && ManaPotionCount < 30)
                 {
                     if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserManaPotion, 100, 30 - ManaPotionCount))
                         return;
                 }
-                if (MerchantPosition > 255 && MedKitID > 0 && MedKits < 1)
+                if (MerchantPosition < 255 && MedKitID > 0 && MedKits < 1)
                 {
                     if (TryBuyingItem(MerchantPosition, MedKitID, 6000, 1 - MedKits))
                         return;
@@ -5289,9 +5290,10 @@ namespace giantsummon
         public int BuyItem(int ID, int ItemPrice, int Stack)
         {
             int ItemsBought = 0;
+            Retry:
             for (int i = 0; i < 50; i++)
             {
-                if (Inventory[i].type == ID)
+                if (Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
                 {
                     int ToRefill = Inventory[i].maxStack - Inventory[i].stack;
                     if (ToRefill > Stack - ItemsBought)
@@ -5300,13 +5302,14 @@ namespace giantsummon
                     if (MaxRefil < ToRefill)
                         ToRefill = MaxRefil;
                     Inventory[i].stack += ToRefill;
+                    Stack -= ToRefill;
                     Coins -= (uint)(ToRefill * ItemPrice);
                     ItemsBought += ToRefill;
-                    if (Inventory[i].stack == 0)
+                    if (Stack == 0 || ToRefill == 0)
                     {
-                        Inventory[i].SetDefaults(0);
                         break;
                     }
+                    goto Retry;
                 }
                 if (Inventory[i].type == 0)
                 {
