@@ -556,11 +556,11 @@ namespace giantsummon.Creatures
                         break;
                     case GuardianBase.Blue:
                         Mes.Add("*How did this happened?!*");
-                        Mes.Add("*"+ReviveGuardian.Name+"! "+ReviveGuardian.Name+"! Wake up! Talk to me!*");
-                        Mes.Add("*I wont let you die "+ReviveGuardian.Name+"! I promisse you!*");
+                        Mes.Add("*" + ReviveGuardian.Name + "! " + ReviveGuardian.Name + "! Wake up! Talk to me!*");
+                        Mes.Add("*I wont let you die " + ReviveGuardian.Name + "! I promisse you!*");
                         break;
                     case GuardianBase.Sardine:
-                        Mes.Add("*"+ReviveGuardian.Name+", I'll eat you if you don't wake up. ... It's not fun when you're knocked out.*");
+                        Mes.Add("*" + ReviveGuardian.Name + ", I'll eat you if you don't wake up. ... It's not fun when you're knocked out.*");
                         Mes.Add("*It's really odd to see you not being scared or running away... Please wake up soon...*");
                         Mes.Add("*Maybe If I pretend to be biting him will make him wake up faster?*");
                         break;
@@ -574,6 +574,11 @@ namespace giantsummon.Creatures
                         Mes.Add("*Maybe I should avoid healing him from behind, I don't want to receive an easter egg or something.*");
                         Mes.Add("*You're sleeping so peacefully... Wait until you wake up. Hehe....*");
                         Mes.Add("*I'll try showing my teeth right directly in front of his face. This should be fun when he wakes up.*");
+                        break;
+                    case GuardianBase.Minerva:
+                        Mes.Add("*Hmmmm... Beef...*");
+                        Mes.Add("*I'm trying not to salivate here.*");
+                        Mes.Add("*Please wake up... I can't hold for longer...*");
                         break;
                 }
             }

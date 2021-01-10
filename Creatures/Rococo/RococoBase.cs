@@ -696,5 +696,42 @@ namespace giantsummon.Creatures
             }
             return base.GetSpecialMessage(MessageID);
         }
+		
+		public void GetTopicList()
+		{
+			//AddTopic("What can you tell me about your past?", DialogueRococoPast);
+		}
+		
+		public void DialogueRococoPast()
+		{
+			TerraGuardian Rococo = Dialogue.DialogueParticipants[0];
+			if(Rococo.FriendshipGrade < 2)
+			{
+				Dialogue.ShowDialogue("*[name] seems a bit uncomfortable of speaking about that.*");
+				Dialogue.ShowDialogue("*[name] replies saying that doesn't want to recall how was his life in the Ether Realm.*");
+				Dialogue.ShowEndDialogueMessage("*[name] only tells you that he likes a lot more his life here than there.*", false);
+				return;
+			}
+			string[] Options = new string[]{"How was your life in the Ether Realm?", "How did you end up here?", "That's all I wanted to know."};
+			int PickedOption = Dialogue.ShowDialogueWithOptions("*[name] tells you that doesn't like remembering that, but he may answer what you want to know.*", Options);
+			OptionList:
+			switch(PickedOption)
+			{
+				default:
+					Dialogue.ShowEndDialogueMessage("*[name] seems to be recovering from the questions.*", false);
+					return;
+				case 0:
+					//Rococo's past was like of a beggar, and with people not giving him attention on the ether realm.
+					break;
+				case 1:
+					Dialogue.ShowDialogue("*[name] said that after leaving the town, he wandered by several places.*");
+					Dialogue.ShowDialogue("*[name] tells that met the Guide when travelling around the world.*");
+					Dialogue.ShowDialogue("*[name] says that the Guide got spooked when he saw "+Rococo.Name+", until the Guide asked if he was friendly.*");
+					Dialogue.ShowDialogue("*[name] told that laughed very happily for meeting a human, and then was making company to him.*");
+					break;
+			}
+			PickedOption = Dialogue.ShowDialogueWithOptions("*[name] asked you if you have any other question.*", Options);
+			goto OptionList;
+		}
     }
 }

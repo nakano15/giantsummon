@@ -324,7 +324,7 @@ namespace giantsummon.GuardianNPC
             {
                 button = "I have a gift for you.";
             }
-            else if (Guardian.request.requestState == RequestData.RequestState.HasRequestReady)
+            else if (Guardian.request.requestState == RequestData.RequestState.HasExistingRequestReady)
             {
                 if (CheckingRequest)
                 {
@@ -395,7 +395,7 @@ namespace giantsummon.GuardianNPC
                         case RequestData.RequestState.Cooldown:
                             Main.npcChatText = MessageParser(data.Base.NoRequestMessage(Main.player[Main.myPlayer], Guardian), Guardian);
                             break;
-                        case RequestData.RequestState.HasRequestReady:
+                        case RequestData.RequestState.HasExistingRequestReady:
                             {
                                 if (data.request.IsTalkQuest)
                                 {
@@ -475,7 +475,7 @@ namespace giantsummon.GuardianNPC
             }
             else
             {
-                if (data.request.requestState == RequestData.RequestState.HasRequestReady && CheckingRequest)
+                if (data.request.requestState == RequestData.RequestState.HasExistingRequestReady && CheckingRequest)
                 {
                     CheckingRequest = false;
                     data.request.UponRejecting();

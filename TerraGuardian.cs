@@ -4916,7 +4916,7 @@ namespace giantsummon
             {
                 //if(TargetInAim)
                 bool UseItem = true;
-                if (!Inventory[SelectedItem].autoReuse && ItemAnimationTime == 0)
+                if ((SelectedItem == -1 || !Inventory[SelectedItem].autoReuse) && ItemAnimationTime == 0)
                 {
                     int CurrentStack = (int)((0.5f + Main.rand.NextFloat() * 0.5f) * Trigger * 100);
                     if (TriggerStack + CurrentStack >= 100)
@@ -5084,6 +5084,7 @@ namespace giantsummon
                         OffHandAction = true;
                     CheckForLifeCrystals();
                     TryJumpingTallTiles();
+                    CheckIfNeedsJumping();
                     //TryLandingOnSafeSpot();
                 }
                 if (JumpUntilHeight > -1)
@@ -5142,6 +5143,8 @@ namespace giantsummon
 
         public void CheckForVendors()
         {
+            if (DoAction.InUse)
+                return;
             byte MerchantPosition = 255, ArmsDealerPosition = 255, CyborgPosition = 255;
             Vector2 MyCenter = CenterPosition;
             for (byte i = 0; i < 200; i++)
@@ -5182,6 +5185,8 @@ namespace giantsummon
                         {
                             if (a != i && Inventory[a].ammo == Inventory[i].useAmmo)
                             {
+                                if (AmmoStack >= 999)
+                                    break;
                                 AmmoStack += Inventory[a].stack;
                             }
                         }
@@ -5327,6 +5332,45 @@ namespace giantsummon
 
         }
 
+        public void CheckIfNeedsJumping()
+        {
+            if (JumpHeight <= 0 && Velocity.Y != 0)
+                return;
+            if(MoveRight || MoveLeft)
+            {
+                int CheckDirection = MoveLeft ? -1 : 1;
+                int MyX = (int)Position.X / 16, MyY = (int)Position.Y / 16;
+                for (int x = 1; x < 4; x++)
+                {
+                    for(int y = 0; y < 3; y++)
+                    {
+                        Tile tile = Framing.GetTileSafely(MyX + x * CheckDirection, MyY + y);
+                        if (tile.active() && Main.tileSolid[tile.type])
+                            return;
+                    }
+                }
+                //There is a hole.
+                int uy = MyY - (int)(JumpSpeed * Base.MaxJumpHeight / 16), ly = MyY + 3;
+                for (int X = 1; X < (MoveSpeed * Base.MaxJumpHeight / 16); X++)
+                {
+                    for (int y = uy; y < ly; y++)
+                    {
+                        Tile tile = Framing.GetTileSafely(MyX + X * CheckDirection, MyY + y);
+                        if (tile.active() && Main.tileSolid[tile.type])
+                        {
+                            Tile uppertile = Framing.GetTileSafely(MyX + X * CheckDirection, MyY + y - 1);
+                            if (!(uppertile.active() && Main.tileSolid[uppertile.type]))
+                            {
+                                //Jump here!
+                                Jump = true;
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public void TryLandingOnSafeSpot()
         {
             /*if (Velocity.Y == 0)
@@ -5338,7 +5382,7 @@ namespace giantsummon
                 YSum = YStart;
             byte VerticalCheck = 8;
             List<int> XCheck = new List<int>();
-            XCheck.Add(XStart - 1);
+            XCheck.Add(XStart);
             XCheck.Add(XStart);
             float FallHorizontalSpeedSum = MoveSpeed / 16, HorizontalSum = 0f;
             bool FireProtection = HasFlag(GuardianFlags.FireblocksImmunity);
@@ -5388,7 +5432,7 @@ namespace giantsummon
                         }
                         if (Safe)
                         {
-                            int X = (x - 1) * 16;
+                            int X = x * 16;
                             if (NearestTile == 0 || Math.Abs(Position.X - X) < Math.Abs(Position.X - NearestTile))
                                 NearestTile = X;
                         }

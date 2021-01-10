@@ -172,7 +172,7 @@ namespace giantsummon
                 IsCommonRequest = tag.GetBool("RequestIsCommon" + IDText);
             }
             RequestState requestState = (RequestState)tag.GetByte("RequestState" + IDText);
-            if (requestState >= RequestState.HasRequestReady)
+            if (requestState >= RequestState.HasExistingRequestReady)
             {
                 if (IsTalkQuest)
                 {
@@ -294,7 +294,7 @@ namespace giantsummon
             }
             bool HasCompanionSummonedOrInTheWorld = (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID) || NpcMod.HasGuardianNPC(gd.ID, gd.ModID));
             bool GotRequest = false;
-            if ((gd.FriendshipLevel == 0 || Main.rand.NextDouble() < 0.333f) && HasCompanionSummonedOrInTheWorld) //A talk request should never reset the quest chain.
+            if (false && (gd.FriendshipLevel == 0 || Main.rand.NextDouble() < 0.333f) && HasCompanionSummonedOrInTheWorld) //A talk request should never reset the quest chain.
             {
                 CreateTalkRequest();
                 if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
@@ -334,7 +334,17 @@ namespace giantsummon
                             Time = 0;
                             if (player.player.whoAmI == Main.myPlayer)
                             {
-                                SpawnNewRequest(gd, player);
+                                if (Main.rand.NextDouble() < 0.333)
+                                {
+                                    CreateTalkRequest();
+                                    if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
+                                        Main.NewText(gd.Name + " wants to speak with you.");
+                                }
+                                else
+                                {
+                                    requestState = RequestState.NewRequestReady;
+                                }
+                                //SpawnNewRequest(gd, player);
                             }
                         }
                     }
@@ -757,7 +767,7 @@ namespace giantsummon
                 case RequestState.Cooldown:
                     QuestObjectives.Add(gd.Name + " has no requests right now.");
                     break;
-                case RequestState.HasRequestReady:
+                case RequestState.HasExistingRequestReady:
                     if (IsTalkQuest)
                     {
                         QuestObjectives.Add(gd.Name + " want to talk to you.");
@@ -1143,7 +1153,7 @@ namespace giantsummon
             Failed = false;
             IsTalkQuest = true;
             IsCommonRequest = false;
-            requestState = RequestState.HasRequestReady;
+            requestState = RequestState.HasExistingRequestReady;
         }
 
         public void ChangeRequest(GuardianData gd, int ID, bool CommonRequest = false)
@@ -1153,7 +1163,7 @@ namespace giantsummon
             RequestID = ID;
             Failed = false;
             IsTalkQuest = false;
-            requestState = RequestState.HasRequestReady;
+            requestState = RequestState.HasExistingRequestReady;
             this.IsCommonRequest = CommonRequest;
             if (gd.Base.InvalidGuardian)
                 return;
@@ -1556,7 +1566,8 @@ namespace giantsummon
         public enum RequestState : byte
         {
             Cooldown,
-            HasRequestReady,
+            NewRequestReady,
+            HasExistingRequestReady,
             RequestActive
         }
 

@@ -610,6 +610,7 @@ namespace giantsummon
                 MyID = new GuardianID(ID, ModID);
                 PickedName = (byte)Main.rand.Next(Base.PossibleNames.Length);
             }
+            request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime);
             for (int e = 0; e < Equipments.Length; e++)
                 Equipments[e] = new Item();
             for (int i = 0; i < Inventory.Length; i++)

@@ -27,7 +27,9 @@ namespace giantsummon.Npcs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             if (Main.dayTime && Main.time < 3600 * 6.5f && !NpcMod.HasMetGuardian(GuardianBase.Minerva) && !NpcMod.HasGuardianNPC(GuardianBase.Minerva))
-                return 1f / 250;
+            {
+                return 1f / 250; //250
+            }
             return 0;
         }
     }

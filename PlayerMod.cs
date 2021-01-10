@@ -2368,14 +2368,16 @@ namespace giantsummon
             int[] Keys = MyGuardians.Keys.ToArray();
             foreach (int g in Keys)
             {
-                if (SpawnID == g)
-                    SpawnID++;
+                //if (SpawnID == g)
+                //    SpawnID++;
                 if (MyGuardians[g].ID == Id && MyGuardians[g].ModID == ModId)
                     AlreadySpawned = true;
             }
             bool FirstGuardian = Keys.Length == 0;
             if (!AlreadySpawned)
             {
+                while (MyGuardians.ContainsKey(SpawnID))
+                    SpawnID++;
                 MyGuardians.Add(SpawnID, new GuardianData(Id, ModId));
                 if (MyGuardians[SpawnID].Base.CanChangeGender)
                     MyGuardians[SpawnID].Male = Main.rand.Next(2) == 0;

@@ -51,10 +51,11 @@ namespace giantsummon
             }
         }
         private static bool HideCallDismissButton = false;
+        private static TerraGuardian Speaker;
 
         public static void SetDialogue(string Message)
         {
-            SetDialogue(Message, null);
+            SetDialogue(Message, Speaker);
         }
 
         public static void SetDialogueDistanceAutoCloseDelay()
@@ -79,6 +80,7 @@ namespace giantsummon
 
         public static void StartDialogue(TerraGuardian tg)
         {
+            Speaker = tg;
             HideCallDismissButton = false;
             GuardianShopInterface.ShopOpen = false;
             Main.CancelHairWindow();
@@ -126,6 +128,7 @@ namespace giantsummon
                 if (tg.ID == WorldMod.SpawnGuardian.Key && tg.ModID == WorldMod.SpawnGuardian.Value)
                     modPlayer.GetGuardian(tg.ID, tg.ModID).SetStarterGuardian();
                 Message = tg.Base.GreetMessage(MainPlayer, tg);
+                modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);
             }
             else
             {
@@ -148,10 +151,8 @@ namespace giantsummon
             {
                 Message = tg.Base.GreetMessage(MainPlayer, tg);
                 NpcMod.AddGuardianMet(tg.ID, tg.ModID);
-                if (WorldMod.HasEmptyGuardianNPCSlot())
+                if (WorldMod.HasEmptyGuardianNPCSlot() && tg.FriendshipLevel >= tg.Base.MoveInLevel)
                     WorldMod.AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
-                if (modPlayer.HasGuardian(tg.ID, tg.ModID))
-                    modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);
             }
             if (!tg.Base.InvalidGuardian && tg.HasBuff(ModContent.BuffType<Buffs.Sleeping>()))
             {
@@ -474,7 +475,11 @@ namespace giantsummon
                     {
                         OptionText = "Report Request";
                     }
-                    else if (tg.request.requestState == RequestData.RequestState.HasRequestReady)
+                    else if (tg.request.requestState == RequestData.RequestState.NewRequestReady)
+                    {
+                        OptionText = "Need Something?";
+                    }
+                    else if (tg.request.requestState == RequestData.RequestState.HasExistingRequestReady)
                     {
                         if (tg.request.IsTalkQuest)
                         {
@@ -482,7 +487,7 @@ namespace giantsummon
                         }
                         else
                         {
-                            OptionText = "Need Something?";
+                            OptionText = "Let's talk about your request?";
                         }
                     }
                     AddOption(OptionText, CheckRequestButtonAction);
@@ -644,12 +649,14 @@ namespace giantsummon
         public static void CheckRequestButtonAction(TerraGuardian tg)
         {
             GuardianData data = tg.Data;
+            if (data.request.requestState == RequestData.RequestState.NewRequestReady)
+                data.request.SpawnNewRequest(data, MainPlayer.GetModPlayer<PlayerMod>());
             switch (data.request.requestState)
             {
                 case RequestData.RequestState.Cooldown:
                     SetDialogue(data.Base.NoRequestMessage(MainPlayer, tg), tg);
                     break;
-                case RequestData.RequestState.HasRequestReady:
+                case RequestData.RequestState.HasExistingRequestReady:
                     if (data.request.IsTalkQuest)
                     {
                         data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>());

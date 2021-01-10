@@ -2182,7 +2182,7 @@ namespace giantsummon
                                 else
                                     RequestCount.Add(d);
                             }
-                            else if (d.request.requestState == RequestData.RequestState.HasRequestReady)
+                            else if (d.request.requestState == RequestData.RequestState.HasExistingRequestReady)
                             {
                                 if (d.ID == Guardian.ID && d.ModID == Guardian.ModID)
                                 {
@@ -2221,7 +2221,7 @@ namespace giantsummon
                             Vector2 ButtonPosition = SlotStartPosition;
                             if (Guardian.Active && Guardian.ID == d.ID && Guardian.ModID == d.ModID)
                             {
-                                if (false && d.request.IsTalkQuest && d.request.requestState >= RequestData.RequestState.HasRequestReady)
+                                if (false && d.request.IsTalkQuest && d.request.requestState >= RequestData.RequestState.HasExistingRequestReady)
                                 {
                                     ButtonPosition.X += 48f;
                                     Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, "Talk", ButtonPosition, Color.White, 1f, 0.5f);
@@ -2237,7 +2237,7 @@ namespace giantsummon
                                     }
                                     SlotStartPosition.Y += 28f;
                                 }
-                                else if (d.request.requestState == RequestData.RequestState.HasRequestReady)
+                                else if (d.request.requestState == RequestData.RequestState.HasExistingRequestReady)
                                 {
 
                                 }

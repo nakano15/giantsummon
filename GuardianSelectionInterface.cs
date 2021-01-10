@@ -468,7 +468,7 @@ namespace giantsummon
                     ExtraInfoList.Add("Friend Grade: " + DisplayGuardian.FriendshipGradeText);
                     if (MainMod.UsingGuardianNecessitiesSystem)
                         ExtraInfoList.Add("Status: " + DisplayGuardian.Data.GetNecessityStatus);
-                    if (DisplayGuardian.Data.request.requestState == RequestData.RequestState.HasRequestReady)
+                    if (DisplayGuardian.Data.request.requestState == RequestData.RequestState.HasExistingRequestReady)
                         ExtraInfoList.Add("Has a request for you.");
                     ExtraInfoList.Add(BirthdayTime);
                     ExtraInfoList.Add("Mod: " + ModName);

@@ -461,70 +461,47 @@ namespace giantsummon.Creatures
             if (!player.ZoneJungle)
                 PossibleFoods[5] = "";
             bool GotFood = false;
+            int ItemToGet = 0;
             switch(Dialogue.ShowDialogueWithOptions("*That is what I can cook for you right now.*", PossibleFoods))
             {
                 case 0:
                     {
-                        Item i = new Item();
-                        i.SetDefaults(Terraria.ID.ItemID.BowlofSoup);
-                        i.position = player.position;
-                        i.stack = 3;
-                        player.GetItem(Main.myPlayer, i);
+                        ItemToGet = Terraria.ID.ItemID.BowlofSoup;
                         Dialogue.ShowEndDialogueMessage("*I hope you enjoy It, the mushroom and the goldfish are fresh.*", false);
                         GotFood = true;
                     }
                     break;
                 case 1:
                     {
-                        Item i = new Item();
-                        i.SetDefaults(Terraria.ID.ItemID.CookedFish);
-                        i.position = player.position;
-                        i.stack = 3;
-                        player.GetItem(Main.myPlayer, i);
+                        ItemToGet = Terraria.ID.ItemID.CookedFish;
                         Dialogue.ShowEndDialogueMessage("*The fish were caught last morning, I hope they're at your taste.*", false);
                         GotFood = true;
                     }
                     break;
                 case 2:
                     {
-                        Item i = new Item();
-                        i.SetDefaults(Terraria.ID.ItemID.CookedShrimp);
-                        i.position = player.position;
-                        i.stack = 3;
-                        player.GetItem(Main.myPlayer, i);
+                        ItemToGet = Terraria.ID.ItemID.CookedShrimp;
                         Dialogue.ShowEndDialogueMessage("*The shrimps were caught some time ago and are fresh. Enjoy your meal.*", false);
                         GotFood = true;
                     }
                     break;
                 case 3:
                     {
-                        Item i = new Item();
-                        i.SetDefaults(Terraria.ID.ItemID.PumpkinPie);
-                        i.position = player.position;
-                        i.stack = 3;
-                        player.GetItem(Main.myPlayer, i);
+                        ItemToGet = Terraria.ID.ItemID.PumpkinPie;
                         Dialogue.ShowEndDialogueMessage("*The pie is still fresh, I hope you like It.*", false);
                         GotFood = true;
                     }
                     break;
                 case 4:
                     {
-                        Item i = new Item();
-                        i.SetDefaults(Terraria.ID.ItemID.Sashimi);
-                        i.position = player.position;
-                        i.stack = 3;
-                        player.GetItem(Main.myPlayer, i);
+                        ItemToGet = Terraria.ID.ItemID.Sashimi;
                         Dialogue.ShowEndDialogueMessage("*I'm not really experienced with that, so I kind of bought that from the Travelling Merchant, instead.*", false);
                         GotFood = true;
                     }
                     break;
                 case 5:
                     {
-                        Item i = new Item();
-                        i.SetDefaults(Terraria.ID.ItemID.GrubSoup);
-                        i.position = player.position;
-                        i.stack = 3;
-                        player.GetItem(Main.myPlayer, i);
+                        ItemToGet = Terraria.ID.ItemID.Grubby;
                         Dialogue.ShowEndDialogueMessage("*Probably is not as horrible as you may think. Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*", false);
                         GotFood = true;
                     }
@@ -536,6 +513,7 @@ namespace giantsummon.Creatures
             if (GotFood)
             {
                 player.GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva = true;
+                player.GetItem(Main.myPlayer, Main.item[Item.NewItem(player.getRect(), ItemToGet, 3, true)]);
             }
         }
     }

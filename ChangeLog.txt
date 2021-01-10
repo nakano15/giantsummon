@@ -86,3 +86,12 @@ Reworded the message telling that the companion has a request for you:
 	Instead of "[name] has something for you.", It will instead say "[name] want something from you.".
 Fixed companions melee AI distance checking.
 Companions will now forcedly teleport to your character, when they are being pulled to your character, and your character is knocked out.
+You can no longer get companion friendship exp by discovering them on other worlds. But you will still gain friendship exp for meeting them for the first time.
+Companions you just met will no longer greet you with a new request after a few seconds since you met them.
+Requests given by the companion will no longer be generated when the cooldown timer runs out:
+	Now, when the timer runs out, either It checks if will give a Talk request, or if the companion should give you other kind of request.
+	When ready to get a new request, a new request will be picked when ask the companion "Need Something?" on It's dialogue.
+		This way, the request received will be given based on the world you are currently when asking for request to the companion, instead of when the request cooldown ended.
+			(That could cause problems like: The request got ready on a crimson world, but you only checked on a corrupt world, and then It requires things from the Crimson.)
+	You can still post-pone the request, in case you think you wont be able to do It at the moment. The option "Let's talk about your request?" allows you to check It again.
+	

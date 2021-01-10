@@ -176,7 +176,13 @@ namespace giantsummon.Creatures
 
             SkinsAndOutfits();
             RequestList();
+			TopicList();
         }
+		
+		public void TopicList()
+		{
+			
+		}
 
         public void RequestList()
         {
@@ -1083,5 +1089,10 @@ namespace giantsummon.Creatures
             }
             return base.GetSpecialMessage(MessageID);
         }
+		
+		public void Dialogue()
+		{
+			
+		}
     }
 }
