@@ -633,6 +633,12 @@ namespace giantsummon.Creatures
                     return "You may ask me anything.";
                 case MessageIDs.NevermindTheChatting:
                     return "Huh? Oh! Fine!";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "Yipee! Wait, what? You're don't want to do that for me?";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Whine whine* Fine... I'm not sad or anything...";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Happily wagging the tail*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -544,6 +544,10 @@ namespace giantsummon
                         }
                     }
                 }
+                else
+                {
+
+                }
                 ElementPosition.X += ButtonRegionWidth * 0.25f;
                 if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel))
                 {

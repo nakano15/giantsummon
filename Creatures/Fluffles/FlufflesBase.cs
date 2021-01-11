@@ -348,6 +348,12 @@ namespace giantsummon.Creatures
                     return "(She seems to be waiting for your questions.)";
                 case MessageIDs.NevermindTheChatting:
                     return "(She nods to you.)";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "(She looks at you like as if didn't believed what you said. You're really wanting to cancel her request?)";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "(She lowers her head, then shook It slowly side ways.)";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "(She got a smile on her face after hearing that.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

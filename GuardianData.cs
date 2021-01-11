@@ -741,6 +741,10 @@ namespace giantsummon
                     Fatigue = -32;
             }
             UpdateMood();
+            if(request.Active && WorldMod.DayChange && !WorldMod.IsGuardianNpcInWorld(MyID) && !WorldMod.ScheduledVisits.Contains(MyID))
+            {
+                WorldMod.ScheduledVisits.Add(MyID);
+            }
         }
         
         public Item[] GetRewards(int Score, Player player)

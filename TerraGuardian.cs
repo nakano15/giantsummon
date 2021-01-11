@@ -348,6 +348,8 @@ namespace giantsummon
         public bool ExecutingAttackAnimation { get { return ItemAnimationTime > 0 || FreezeItemUseAnimation; } }
         public byte TurnLock = 0;
         public const byte TurnLockTime = 12;
+        public Vector2 PrioritaryMovementTarget = Vector2.Zero;
+        public PrioritaryBehavior PrioritaryBehaviorType = PrioritaryBehavior.None;
 
         public int CollisionWidth
         {
@@ -5334,7 +5336,34 @@ namespace giantsummon
 
         public void CheckIfNeedsJumping()
         {
-            if (JumpHeight <= 0 && Velocity.Y != 0)
+            if(PrioritaryBehaviorType == PrioritaryBehavior.Jump)
+            {
+                MoveLeft = MoveRight = false;
+                if (PrioritaryMovementTarget.X > Position.X)
+                    MoveRight = true;
+                else
+                    MoveLeft = true;
+                bool InRangeY = Math.Abs(PrioritaryMovementTarget.Y - Position.Y + Velocity.Y) < 8;
+                if (Math.Abs(PrioritaryMovementTarget.X - Position.X + Velocity.X) < 8)
+                {
+                    PrioritaryBehaviorType = PrioritaryBehavior.None;
+                    LockDirection = false;
+                    TurnLock = 0;
+                }
+                else
+                {
+                    if (JumpHeight > 0)
+                        Jump = true;
+                    else if (Velocity.Y == 0)
+                    {
+                        PrioritaryBehaviorType = PrioritaryBehavior.None;
+                        LockDirection = false;
+                        TurnLock = 0;
+                    }
+                }
+                return;
+            }
+            if (PlayerControl || PlayerMounted || (JumpHeight <= 0 && Velocity.Y != 0))
                 return;
             if(MoveRight || MoveLeft)
             {
@@ -5346,22 +5375,30 @@ namespace giantsummon
                     {
                         Tile tile = Framing.GetTileSafely(MyX + x * CheckDirection, MyY + y);
                         if (tile.active() && Main.tileSolid[tile.type])
+                        {
+                            //SaySomething("*No jumping needed.*");
                             return;
+                        }
                     }
                 }
+                if (OwnerPos > -1 && Main.player[OwnerPos].Bottom.Y > Position.Y + 8)
+                    return;
+                //SaySomething("*Jumping needed.* " + (MaxSpeed * Base.MaxJumpHeight / 16));
                 //There is a hole.
-                int uy = MyY - (int)(JumpSpeed * Base.MaxJumpHeight / 16), ly = MyY + 3;
-                for (int X = 1; X < (MoveSpeed * Base.MaxJumpHeight / 16); X++)
+                int uy = MyY - (int)(JumpSpeed * Base.MaxJumpHeight / 16), ly = MyY + 2;
+                for (int X = 1; X < (MaxSpeed * Base.MaxJumpHeight / 16 * 2); X++)
                 {
                     for (int y = uy; y < ly; y++)
                     {
-                        Tile tile = Framing.GetTileSafely(MyX + X * CheckDirection, MyY + y);
+                        Tile tile = Framing.GetTileSafely(MyX + X * CheckDirection, y);
                         if (tile.active() && Main.tileSolid[tile.type])
                         {
-                            Tile uppertile = Framing.GetTileSafely(MyX + X * CheckDirection, MyY + y - 1);
-                            if (!(uppertile.active() && Main.tileSolid[uppertile.type]))
+                            Tile uppertile = Framing.GetTileSafely(MyX + X * CheckDirection, y - 1);
+                            if (!uppertile.active() || !Main.tileSolid[uppertile.type])
                             {
                                 //Jump here!
+                                PrioritaryBehaviorType = PrioritaryBehavior.Jump;
+                                PrioritaryMovementTarget = new Vector2((MyX + X * CheckDirection) * 16 + 8, (y - 1) * 16 + 8);
                                 Jump = true;
                                 return;
                             }
@@ -6592,6 +6629,10 @@ namespace giantsummon
             {
                 if (IdleActionTime <= 0)
                 {
+                    if(GetTownNpcInfo != null && FriendshipLevel < Base.MoveInLevel)
+                    {
+                        WorldMod.RemoveGuardianNPCToSpawn(ID, ModID);
+                    }
                     switch (CurrentIdleAction)
                     {
                         case IdleActions.TryGoingSleep:
@@ -16549,5 +16590,11 @@ namespace giantsummon
         Charge = 2,
         Assist = 1,
         Snipe = 0
+    }
+
+    public enum PrioritaryBehavior: byte
+    {
+        None,
+        Jump
     }
 }

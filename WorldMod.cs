@@ -22,6 +22,7 @@ namespace giantsummon
         public static KeyValuePair<int, string> SpawnGuardian = new KeyValuePair<int, string>(0, "");
         public static int GuardiansMetCount { get { return GuardiansMet.Count; } }
         public static byte SpawnDelay = 0, LeaveCooldown = 0;
+        public static List<GuardianID> ScheduledVisits = new List<GuardianID>();
 
         public static void AllowGuardianNPCToSpawn(int ID, string ModID = "")
         {
@@ -112,12 +113,14 @@ namespace giantsummon
                     {
                         Main.time -= 9 * 3600;
                         Main.dayTime = true;
+                        DayChange = true;
                         Main.AnglerQuestSwap();
                     }
                     else if (Main.time < 0)
                     {
                         Main.time += 9 * 3600;
                         Main.dayTime = true;
+                        DayChange = true;
                     }
                     else { CheckDayPhaseChange = false; }
                 }
@@ -197,10 +200,17 @@ namespace giantsummon
                 if (tg.GetTownNpcInfo == null)
                     VisitRate /= 2;
             }
-            if (Main.rand.NextDouble() < VisitRate * 0.00333f)
+            if ((ScheduledVisits.Count > 0 && Main.rand.NextDouble() < 0.5f) || Main.rand.NextDouble() < VisitRate * 0.00333f)
             {
                 List<GuardianID> PossibleIDs = new List<GuardianID>();
-                foreach (GuardianID ids in GuardiansMet)
+                List<GuardianID> GuardianListToCheck = GuardiansMet;
+                bool IsFromSchedule = false;
+                if(ScheduledVisits.Count > 0)
+                {
+                    IsFromSchedule = true;
+                    GuardianListToCheck = ScheduledVisits;
+                }
+                foreach (GuardianID ids in GuardianListToCheck)
                 {
                     if (!MainMod.IsGuardianInTheWorld(ids.ID, ids.ModID) && !GuardianNPCsInWorld.Any(x => x != null && x.IsID(ids.ID, ids.ModID)))
                     {
@@ -214,6 +224,8 @@ namespace giantsummon
                 if (PossibleIDs.Count > 0)
                 {
                     GuardianID WinnerID = PossibleIDs[Main.rand.Next(PossibleIDs.Count)];
+                    if (IsFromSchedule)
+                        ScheduledVisits.Remove(WinnerID);
                     List<Vector2> PossibleSpawnPosition = new List<Vector2>();
                     for (int n = 0; n < 200; n++)
                     {

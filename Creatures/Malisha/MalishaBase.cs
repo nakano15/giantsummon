@@ -764,6 +764,12 @@ namespace giantsummon.Creatures
                     return "*For the last time, I already said that I didn't incinerated... Oh, It's not about that? Well, go ahead then.*";
                 case MessageIDs.NevermindTheChatting:
                     return "*Yawn. It's over? Good.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*Wait, you came to me, and said that wont do what I asked for? Are you really sure?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Okay, you're relieved. Get out of my sight, NOW! Before I decide to do something to you.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*The clock is ticking, [nickname].*";
             }
             return base.GetSpecialMessage(MessageID);
         }

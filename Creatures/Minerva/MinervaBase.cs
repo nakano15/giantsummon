@@ -422,6 +422,12 @@ namespace giantsummon.Creatures
                     return "*I can cook while talking, sure. What do you want to talk about?*";
                 case MessageIDs.NevermindTheChatting:
                     return "*Feel free to call me for a chatting anytime you want.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*What? Are you serious?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*I... Okay... If that's what you want...*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Uff... Well.. Do you want anything else?*";
             }
             return "";
         }
@@ -437,7 +443,7 @@ namespace giantsummon.Creatures
             bool PlayerReceivedFood = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva;
             if (PlayerReceivedFood)
             {
-                Dialogue.ShowEndDialogueMessage("*I already gave you some food. Wait until " + (Main.dayTime ? "dinner" : "lunch") + " time for more.*", false);
+                Dialogue.ShowEndDialogueMessage("*I already gave you some food... Wait until " + (Main.dayTime ? "dinner" : "lunch") + " time for more.*", false);
                 return;
             }
             string[] PossibleFoods = new string[]{
@@ -462,52 +468,52 @@ namespace giantsummon.Creatures
                 PossibleFoods[5] = "";
             bool GotFood = false;
             int ItemToGet = 0;
-            switch(Dialogue.ShowDialogueWithOptions("*That is what I can cook for you right now.*", PossibleFoods))
+            switch(Dialogue.ShowDialogueWithOptions("*That is what I can cook for you right now:*", PossibleFoods))
             {
                 case 0:
                     {
                         ItemToGet = Terraria.ID.ItemID.BowlofSoup;
-                        Dialogue.ShowEndDialogueMessage("*I hope you enjoy It, the mushroom and the goldfish are fresh.*", false);
+                        Dialogue.ShowEndDialogueMessage("*I hope you enjoy It... The mushroom and the goldfish are fresh.*", false);
                         GotFood = true;
                     }
                     break;
                 case 1:
                     {
                         ItemToGet = Terraria.ID.ItemID.CookedFish;
-                        Dialogue.ShowEndDialogueMessage("*The fish were caught last morning, I hope they're at your taste.*", false);
+                        Dialogue.ShowEndDialogueMessage("*The fish were caught last morning... I hope they're at your taste.*", false);
                         GotFood = true;
                     }
                     break;
                 case 2:
                     {
                         ItemToGet = Terraria.ID.ItemID.CookedShrimp;
-                        Dialogue.ShowEndDialogueMessage("*The shrimps were caught some time ago and are fresh. Enjoy your meal.*", false);
+                        Dialogue.ShowEndDialogueMessage("*The shrimps were caught some time ago and are fresh... Enjoy your meal.*", false);
                         GotFood = true;
                     }
                     break;
                 case 3:
                     {
                         ItemToGet = Terraria.ID.ItemID.PumpkinPie;
-                        Dialogue.ShowEndDialogueMessage("*The pie is still fresh, I hope you like It.*", false);
+                        Dialogue.ShowEndDialogueMessage("*The pie is still fresh... I hope you like It.*", false);
                         GotFood = true;
                     }
                     break;
                 case 4:
                     {
                         ItemToGet = Terraria.ID.ItemID.Sashimi;
-                        Dialogue.ShowEndDialogueMessage("*I'm not really experienced with that, so I kind of bought that from the Travelling Merchant, instead.*", false);
+                        Dialogue.ShowEndDialogueMessage("*I'm not really experienced with that... So I kind of bought that from the Travelling Merchant, instead.*", false);
                         GotFood = true;
                     }
                     break;
                 case 5:
                     {
                         ItemToGet = Terraria.ID.ItemID.Grubby;
-                        Dialogue.ShowEndDialogueMessage("*Probably is not as horrible as you may think. Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*", false);
+                        Dialogue.ShowEndDialogueMessage("*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*", false);
                         GotFood = true;
                     }
                     break;
                 case 6:
-                    Dialogue.ShowEndDialogueMessage("*Then why did you ask for food?*", false);
+                    Dialogue.ShowEndDialogueMessage("*...Then why did you ask for food...*", false);
                     break;
             }
             if (GotFood)

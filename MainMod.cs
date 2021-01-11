@@ -1009,14 +1009,12 @@ namespace giantsummon
             };*/
             if(true)
             {
-                List<string> New = new List<string>();                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                List<string> New = new List<string>();
+                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    /*New.Add(g.Name + " actions: " + g.LastLoggedPlayerState.Count);
-                    if(g.LastLoggedPlayerState.Count > 0)
-                        New.Add("Action Type: " + g.LastLoggedPlayerState[0].Key.ToString() + " Pos: " + g.LastLoggedPlayerState[0].Value);*/
-                    //New.Add("Main Hand Item Position: " + g.ItemPositionX + "~" + g.ItemPositionY);
-                    //New.Add("Off Hand Item Position: " + g.OffHandPositionX + "~" + g.OffHandPositionY);
+                    New.Add(g.Name + " Priority: " + g.PrioritaryBehaviorType.ToString());
+                    New.Add("Priority Position: " + g.PrioritaryMovementTarget);
                 }
                 TextsToDraw = New.ToArray();
             }

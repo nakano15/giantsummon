@@ -569,6 +569,12 @@ namespace giantsummon.Creatures
                     return "*We may chat about anything, but I'm not in the mood for a lecture, right now.*";
                 case MessageIDs.NevermindTheChatting:
                     return "*So, want something else from me?*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*You can't drop my request, the future about the Terra Realms research is in your hands. Are you really going to cancel my request?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Sigh.. Okay. But be sure not to drop my request in the future.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*I knew I could count on you, [nickname].*";
             }
             return base.GetSpecialMessage(MessageID);
         }

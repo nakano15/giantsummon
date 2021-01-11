@@ -385,6 +385,12 @@ namespace giantsummon.Creatures
                     return "*Grrr... Fine. Just don't annoy me.*";
                 case MessageIDs.NevermindTheChatting:
                     return "*Finally.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*You what? Tell me that you really didn't mean that!*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Urgh... Okay... I can do It myself them. No thanks to you, of course!*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Then you just wanted to anger me?!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

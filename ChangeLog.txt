@@ -94,4 +94,8 @@ Requests given by the companion will no longer be generated when the cooldown ti
 		This way, the request received will be given based on the world you are currently when asking for request to the companion, instead of when the request cooldown ended.
 			(That could cause problems like: The request got ready on a crimson world, but you only checked on a corrupt world, and then It requires things from the Crimson.)
 	You can still post-pone the request, in case you think you wont be able to do It at the moment. The option "Let's talk about your request?" allows you to check It again.
-	
+You can now cancel requests on their dialogues.
+	Companions also will have their own dialogues for each cancel request branching.
+	To avoid mistaken clicks, there is an extra step to ask if you are sure. The first option will always be "No".
+Companions that doesn't lives in your world, will now more likelly visit you when you have a request with them active.
+	They really want to know if you did what they asked.

@@ -334,7 +334,7 @@ namespace giantsummon
                             Time = 0;
                             if (player.player.whoAmI == Main.myPlayer)
                             {
-                                if (Main.rand.NextDouble() < 0.333)
+                                if (gd.FriendshipLevel < gd.Base.MoveInLevel || Main.rand.NextDouble() < 0.333)
                                 {
                                     CreateTalkRequest();
                                     if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))

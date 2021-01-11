@@ -538,6 +538,12 @@ namespace giantsummon.Creatures
                     return "*Sure. So, what do you want to talk about?*";
                 case MessageIDs.NevermindTheChatting:
                     return "*Oh, okay.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*You can't do my request?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Oh... I hope I didn't make your nervous, or anything... You don't need to do what I asked anymore.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*I'm so glad...*";
             }
             return base.GetSpecialMessage(MessageID);
         }

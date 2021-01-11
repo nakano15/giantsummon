@@ -513,6 +513,12 @@ namespace giantsummon.Creatures
                     return "*I can't spend chatting, but I think I can spend a few moments answering you.*";
                 case MessageIDs.NevermindTheChatting:
                     return "*Fine. Want to check my wares now?*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*You know that you wont get anything if you cancel my request, do you?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Okay... You're relieved of my task. Now if you don't mind, I have business to do.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Go do that, [nickname].*";
             }
             return base.GetSpecialMessage(MessageID);
         }

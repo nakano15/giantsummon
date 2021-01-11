@@ -1141,6 +1141,12 @@ namespace giantsummon.Creatures
                     return "*You want to chat? It's always good to hang out with a friend sometimes. What do you want to know?*";
                 case MessageIDs.NevermindTheChatting:
                     return "*I enjoyed the chatting, let's talk more later.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*I see... You don't want to do what I asked you to, right?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*That's fine, [nickname]. Not everytime It's possible to do something we thing is possible, right? Don't worry.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Okay. Do you need something else?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

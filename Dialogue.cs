@@ -87,7 +87,7 @@ namespace giantsummon
                 return;
             IsDialogue = true;
             DialogueParticipants = Participants;
-            LastSpeaker = Participants[0];
+            GuardianMouseOverAndDialogueInterface.Speaker = LastSpeaker = Participants[0];
             ThreadStart ts = new ThreadStart(delegate () {
                 try
                 {

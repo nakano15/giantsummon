@@ -760,6 +760,12 @@ namespace giantsummon.Creatures
                     return "*You want to know something from me? I hope It's not related to my condition.*";
                 case MessageIDs.NevermindTheChatting:
                     return "*I was getting tired of chatting too.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*You're not feeling that can do my request?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Rrr.... Fine... You don't need to do that anymore. Just answer me, how crunchy is a Terrarian?*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Then why you brought that, in first place?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

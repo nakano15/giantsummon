@@ -904,6 +904,12 @@ namespace giantsummon.Creatures
                     return "*She's wondering what you want to talk about.*";
                 case MessageIDs.NevermindTheChatting:
                     return "*She's still waiting to see what you'll say.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*She got shocked after you said that. She's asking if you're sure.*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*She tries to hide the disappointment. Now her face is filled with rage. Run [nickname], Run!*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*She puts her hand on the chest, and exhale out of relief. Then asked if you want to talk about something else.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

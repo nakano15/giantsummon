@@ -51,7 +51,7 @@ namespace giantsummon
             }
         }
         private static bool HideCallDismissButton = false;
-        private static TerraGuardian Speaker;
+        public static TerraGuardian Speaker;
 
         public static void SetDialogue(string Message)
         {
@@ -685,14 +685,17 @@ namespace giantsummon
                     break;
                 case RequestData.RequestState.RequestActive:
                     {
+                        bool GiveOptionToCancelRequest = false;
                         if (data.request.IsTalkQuest && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
                         {
+                            //GiveOptionToCancelRequest = true;
                             GetDefaultOptions(tg);
                         }
                         else if (data.request.Failed)
                         {
                             data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>());
                             SetDialogue(data.request.GetRequestFailed(data, tg), tg);
+                            //GiveOptionToCancelRequest = true;
                             GetDefaultOptions(tg);
                         }
                         else if (data.request.RequestCompleted && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
@@ -701,6 +704,7 @@ namespace giantsummon
                             if (Mes == "")
                                 Mes = data.Base.CompletedRequestMessage(MainPlayer, tg);
                             SetDialogue(Mes, tg);
+                            //GiveOptionToCancelRequest = true;
                             GetDefaultOptions(tg);
                         }
                         else
@@ -708,7 +712,7 @@ namespace giantsummon
                             string Mes = data.request.GetRequestInfo(data);
                             if (Mes == "")
                             {
-                                Mes = "(It gave you a list of things you need to do.)";
+                                Mes = "(I were given a list of things you need to do.)";
                             }
                             Mes += "\n---------------------";
                             foreach (string s in data.request.GetRequestText(MainPlayer, data))
@@ -716,10 +720,34 @@ namespace giantsummon
                                 Mes += "\n" + s;
                             }
                             SetDialogue(Mes, tg);
+                            Options.Clear();
+                            AddOption("Cancel Request", CancelRequestButtonAction);
+                            AddOption("Thanks", delegate (TerraGuardian tg2)
+                            {
+                                GetDefaultOptions(tg2);
+                            });
                         }
                     }
                     break;
             }
+        }
+
+        public static void CancelRequestButtonAction(TerraGuardian tg)
+        {
+            SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.CancelRequestAskIfSure, "(It seems like " + (tg.Male ? "he" : "she") + " is wonder if you are sure about that.)"));
+            Options.Clear();
+            AddOption("No", delegate (TerraGuardian tg2)
+            {
+                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.CancelRequestNoAnswered, (tg.Male ? "He" : "She") + " seems relieved after hearing that.)"));
+                GetDefaultOptions(tg2);
+            });
+            AddOption("Yes", delegate (TerraGuardian tg2)
+            {
+                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.CancelRequestYesAnswered, (tg.Male ? "He" : "She") + " seems a bit disappointed towards you.)"));
+                GetDefaultOptions(tg2);
+                tg2.request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime);
+                tg2.request.requestState = RequestData.RequestState.Cooldown;
+            });
         }
 
         public static void RestButtonAction(TerraGuardian tg)

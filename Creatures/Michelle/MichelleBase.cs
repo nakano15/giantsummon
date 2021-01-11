@@ -375,6 +375,12 @@ namespace giantsummon.Creatures
                     return "What do you want to know?";
                 case MessageIDs.NevermindTheChatting:
                     return "It's fine, It was a good chatting.";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "Is my request too tough for you? I can try dealing with It myself, if you want.";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "Okay, I'll be in charge of this then.";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "Oh... Be sure to give me an update when you do what I asked for.";
             }
             return base.GetSpecialMessage(MessageID);
         }

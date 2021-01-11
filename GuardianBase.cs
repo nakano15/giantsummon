@@ -970,6 +970,11 @@ namespace giantsummon
                 GenericThankYou = "Mes.ThankYou";
             public const string ChatAboutSomething = "Mes.ChatAboutSomething",
                 NevermindTheChatting = "Mes.NevermindChatting";
+            public const string CancelRequestAskIfSure = "Mes.AskIfSureOnCancelRequest",
+                CancelRequestYesAnswered = "Mes.WhenYesAnswerOnRequestCancel",
+                CancelRequestNoAnswered = "Mes.WhenNoAnswerOnRequestCancel";
+            public const string AfterAskingIfCompanionCanVisitNextDayYesAnswer = "Mes.VisitAccept",
+                AfterAskingIfCompanionCanVisitNextDayNoAnswer = "Mes.VisitReject";
         }
         
         public enum GuardianEffect

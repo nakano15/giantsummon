@@ -624,6 +624,12 @@ namespace giantsummon.Creatures
                     return "Please make haste, I have many things on my to do list.";
                 case MessageIDs.NevermindTheChatting:
                     return "Well then, anything else?";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "YOU WHAT?! How can you... Wait, you're really going to drop what I asked for, are you?";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "Grr... Fine. I'll do It myself, then.";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "Ah, good. Well, do you need anything else?";
             }
             return base.GetSpecialMessage(MessageID);
         }

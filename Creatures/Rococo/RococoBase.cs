@@ -693,6 +693,12 @@ namespace giantsummon.Creatures
                     return "*[name] asks what you want to talk about.*";
                 case MessageIDs.NevermindTheChatting:
                     return "*[name] seems okay.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*[name] scratches his head, then asks if you really don't want to do his request anymore.*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*[name] shows you a sad face, and then say that It's fine.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*[name] shows a little smile.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
