@@ -30,7 +30,7 @@ namespace giantsummon
         public static bool CheckingQuestBrief = false;
         public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true;
         //Contest related
-        public const string VoteLink = ""; //
+        public const string VoteLink = ""; //There is no contest
         public static bool HasPlayerAwareOfContestMonthChange = false;
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";

@@ -7827,7 +7827,7 @@ namespace giantsummon
         {
             if (!Base.WhenTriggerActivates(this, trigger, Value, Value2, Value3, Value4, Value5))
                 return;
-
+            //TODO - It's missing script here. There should be default behavior scripts depending on the triggers.
         }
 
         public void ResetHealthRegen()

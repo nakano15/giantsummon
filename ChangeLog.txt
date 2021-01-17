@@ -99,3 +99,7 @@ You can now cancel requests on their dialogues.
 	To avoid mistaken clicks, there is an extra step to ask if you are sure. The first option will always be "No".
 Companions that doesn't lives in your world, will now more likelly visit you when you have a request with them active.
 	They really want to know if you did what they asked.
+Companions will now try to jump holes in their way.
+	When following you, they will only do so if your character is higher or equal in height than their position.
+Added some more infos to the GuardianBase commands. Maybe that will make It clearer about what they do.
+Added a overrideable method on the GuardianBase. Now you can alter which request the companion will give, or if the companion will actually give requests.

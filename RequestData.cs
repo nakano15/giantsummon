@@ -304,8 +304,6 @@ namespace giantsummon
             else if (Requests.Count > 0 && HasCompanionSummonedOrInTheWorld)
             {
                 ChangeRequest(gd, Requests[Main.rand.Next(Requests.Count)], MakeCommonRequest);
-                //if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
-                //    Main.NewText(gd.Name + " has a request for you.");
                 GotRequest = true;
             }
             else
@@ -334,6 +332,27 @@ namespace giantsummon
                             Time = 0;
                             if (player.player.whoAmI == Main.myPlayer)
                             {
+                                {
+                                    int SpawnRequestID;
+                                    bool SpawnTalkRequest;
+                                    if (!gd.Base.AlterRequestGiven(gd, out SpawnRequestID, out SpawnTalkRequest))
+                                    {
+                                        Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime);
+                                        return;
+                                    }
+                                    if (SpawnTalkRequest)
+                                    {
+                                        CreateTalkRequest();
+                                        //if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))
+                                        //    Main.NewText(gd.Name + " wants to speak with you.");
+                                        return;
+                                    }
+                                    else if(SpawnRequestID > -1 && SpawnRequestID < gd.Base.RequestDB.Count)
+                                    {
+                                        ChangeRequest(gd, SpawnRequestID, false);
+                                        return;
+                                    }
+                                }
                                 if (gd.FriendshipLevel < gd.Base.MoveInLevel || Main.rand.NextDouble() < 0.333)
                                 {
                                     CreateTalkRequest();

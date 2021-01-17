@@ -121,6 +121,11 @@ namespace giantsummon.Creatures
             SetRewards();
         }
 
+        public void SetDialogues()
+        {
+
+        }
+
         public void SetRewards()
         {
             AddReward(Terraria.ID.ItemID.CookedFish, 1, 150, 0.66f, 2);
@@ -135,11 +140,6 @@ namespace giantsummon.Creatures
                 Dialogue.StartNewDialogue(CookDialogue, tg);
             }));
             return Options;
-        }
-
-        public void SetDialogues()
-        {
-
         }
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
@@ -173,7 +173,7 @@ namespace giantsummon.Creatures
             }
             else if (Main.eclipse)
             {
-                Mes.Add("*Hmm... Maybe I could have use... Of a Chainsaw...*");
+                Mes.Add("*Hmm... Maybe I could have use... For a Chainsaw...*");
                 Mes.Add("*I can't concentrate on the cooking, with all those weird creatures running outside.*");
                 Mes.Add("*I'm sorry... I can't cook for you right now... I'm busy trying to survive this day.*");
             }
