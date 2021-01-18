@@ -5297,33 +5297,38 @@ namespace giantsummon
         public int BuyItem(int ID, int ItemPrice, int Stack)
         {
             int ItemsBought = 0;
-            Retry:
-            for (int i = 0; i < 50; i++)
+            for (int checktime = 0; checktime < 2; checktime++)
             {
-                if (Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
+                if (Stack == 0)
+                    break;
+                for (int i = 0; i < 50; i++)
                 {
-                    int ToRefill = Inventory[i].maxStack - Inventory[i].stack;
-                    if (ToRefill > Stack - ItemsBought)
-                        ToRefill = Stack - ItemsBought;
-                    int MaxRefil = (int)(Coins / ItemPrice);
-                    if (MaxRefil < ToRefill)
-                        ToRefill = MaxRefil;
-                    Inventory[i].stack += ToRefill;
-                    Stack -= ToRefill;
-                    Coins -= (uint)(ToRefill * ItemPrice);
-                    ItemsBought += ToRefill;
-                    if (Stack == 0 || ToRefill == 0)
+                    bool ForceSlotChecking = false;
+                    if (checktime == 1 && Stack > 0 && Inventory[i].type == 0)
                     {
-                        break;
+                        Inventory[i].SetDefaults(ID);
+                        Inventory[i].stack = 0;
+                        ForceSlotChecking = true;
                     }
-                    goto Retry;
-                }
-                if (Inventory[i].type == 0)
-                {
-                    Inventory[i].SetDefaults(ID);
-                    Inventory[i].stack = 0;
-                    i--;
-                    continue;
+                    if ((checktime == 0 || ForceSlotChecking) && Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
+                    {
+                        int ToRefill = Inventory[i].maxStack - Inventory[i].stack;
+                        if (ToRefill > Stack)
+                            ToRefill = Stack;
+                        {
+                            int MaxRefil = (int)(Coins / ItemPrice);
+                            if (MaxRefil < ToRefill)
+                                ToRefill = MaxRefil;
+                        }
+                        Inventory[i].stack += ToRefill;
+                        Stack -= ToRefill;
+                        Coins -= (uint)(ToRefill * ItemPrice);
+                        ItemsBought += ToRefill;
+                        if (Stack == 0)
+                        {
+                            break;
+                        }
+                    }
                 }
             }
             return ItemsBought;
@@ -9552,21 +9557,6 @@ namespace giantsummon
             }
         }
 
-        /// <summary>
-        /// Add AI checking if the player fell or jumped in some place.
-        /// </summary>
-
-        public PlayerMovementStateEnumerator PlayerState = 0, LastPlayerState = 0;
-
-        public enum PlayerMovementStateEnumerator : byte
-        {
-            Normal,
-            Jumped,
-            Falling,
-            Drop
-        }
-        public List<KeyValuePair<PlayerMovementStateEnumerator, Point>> LastLoggedPlayerState = new List<KeyValuePair<PlayerMovementStateEnumerator, Point>>();
-
         public void FollowPlayerAI()
         {
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
@@ -9575,7 +9565,6 @@ namespace giantsummon
             float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0;
             int LeaderHeight = 1;
             bool LeaderWet = false;
-            LastPlayerState = PlayerState;
             if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
             {
                 TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.First(x => x.Active && x.PlayerMounted && !x.Base.ReverseMount);
@@ -9585,24 +9574,6 @@ namespace giantsummon
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
                 LeaderWet = guardian.Wet;
-                if (guardian.Velocity.Y == 0 && PlayerState > 0)
-                {
-                    PlayerState = 0;
-                }
-                else if (PlayerState == 0)
-                {
-                    if (guardian.Velocity.Y < 0 && guardian.LastJump)
-                    {
-                        PlayerState = PlayerMovementStateEnumerator.Jumped;
-                    }
-                    else if (guardian.Velocity.Y > 0)
-                    {
-                        if (guardian.LastMoveDown)
-                            PlayerState = PlayerMovementStateEnumerator.Drop;
-                        else
-                            PlayerState = PlayerMovementStateEnumerator.Falling;
-                    }
-                }
             }
             else if (Owner.GetModPlayer<PlayerMod>().ControllingGuardian)
             {
@@ -9613,24 +9584,6 @@ namespace giantsummon
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
                 LeaderWet = guardian.Wet;
-                if (guardian.Velocity.Y == 0 && PlayerState > 0)
-                {
-                    PlayerState = 0;
-                }
-                else if (PlayerState == 0)
-                {
-                    if (guardian.Velocity.Y < 0 && guardian.LastJump)
-                    {
-                        PlayerState = PlayerMovementStateEnumerator.Jumped;
-                    }
-                    else if (guardian.Velocity.Y > 0)
-                    {
-                        if (guardian.LastMoveDown)
-                            PlayerState = PlayerMovementStateEnumerator.Drop;
-                        else
-                            PlayerState = PlayerMovementStateEnumerator.Falling;
-                    }
-                }
             }
             else
             {
@@ -9640,85 +9593,8 @@ namespace giantsummon
                 LeaderBottom = Owner.position.Y + Owner.height;
                 LeaderHeight = Owner.height;
                 LeaderWet = Owner.wet;
-                if (Owner.velocity.Y == 0 && PlayerState > 0)
-                {
-                    PlayerState = 0;
-                }
-                else if (PlayerState == 0)
-                {
-                    if (Owner.oldVelocity.Y == 0)
-                    {
-                        if (Owner.velocity.Y < 0 && Owner.controlJump)
-                        {
-                            PlayerState = PlayerMovementStateEnumerator.Jumped;
-                        }
-                        else if (Owner.velocity.Y > 0)
-                        {
-                            if (Owner.controlDown)
-                                PlayerState = PlayerMovementStateEnumerator.Drop;
-                            else
-                                PlayerState = PlayerMovementStateEnumerator.Falling;
-                        }
-                    }
-                }
             }
             float XDiscount = 0;
-            if (false && !BeingPulledByPlayer) //Analyze how will make this work with the scripts bellow.
-            {
-                if (PlayerState != LastPlayerState)
-                {
-                    KeyValuePair<PlayerMovementStateEnumerator, Point> PlayerStatePosition = new KeyValuePair<PlayerMovementStateEnumerator, Point>(PlayerState, new Point((int)Owner.Center.X / 16, (int)Owner.Bottom.Y / 16));
-                    LastLoggedPlayerState.Add(PlayerStatePosition);
-                }
-                if (LastLoggedPlayerState.Count > 0)
-                {
-                    KeyValuePair<PlayerMovementStateEnumerator, Point> ActionPoint = LastLoggedPlayerState[0];
-                    PositionDifference.X = ActionPoint.Value.X * 16 + CollisionWidth * 0.5f;
-                    LeaderCenterX = PositionDifference.X;
-                    //PositionDifference.Y = ActionPoint.Value.Y * 16;
-                    XDiscount = (Position - PositionDifference).Length();
-                    switch (ActionPoint.Key)
-                    {
-                        case PlayerMovementStateEnumerator.Jumped:
-                            if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8)
-                            {
-                                Jump = true;
-                                LastLoggedPlayerState.RemoveAt(0);
-                            }
-                            break;
-                        case PlayerMovementStateEnumerator.Drop:
-                            if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8)
-                            {
-                                DropFromPlatform = true;
-                                LastLoggedPlayerState.RemoveAt(0);
-                            }
-                            break;
-                        case PlayerMovementStateEnumerator.Falling:
-                            {
-                                if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8)
-                                {
-                                    LastLoggedPlayerState.RemoveAt(0);
-                                }
-                            }
-                            break;
-                        case PlayerMovementStateEnumerator.Normal:
-                            {
-                                if (ActionPoint.Value.X * 16 >= Position.X - 8 && ActionPoint.Value.X * 16 < Position.X + 8 && Velocity.Y == 0)
-                                {
-                                    LastLoggedPlayerState.RemoveAt(0);
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-            else
-            {
-                if (LastLoggedPlayerState.Count > 0)
-                {
-                    LastLoggedPlayerState.Clear();
-                }
-            }
             bool Confused = HasFlag(GuardianFlags.Confusion) && OwnerPos > -1;
             if (ChargeAhead)
             {
@@ -9787,6 +9663,16 @@ namespace giantsummon
                                 MoveLeft = true;
                             }
                         }
+                    }
+                }
+                else
+                {
+                    if(Velocity.X == 0 && Velocity.Y == 0 && !UsingFurniture && !IsAttackingSomething)
+                    {
+                        if (Position.X < LeaderCenterX)
+                            Direction = 1;
+                        else
+                            Direction = -1;
                     }
                 }
                 bool TryFlying = WingType > 0,

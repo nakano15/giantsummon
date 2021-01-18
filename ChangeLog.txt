@@ -103,3 +103,4 @@ Companions will now try to jump holes in their way.
 	When following you, they will only do so if your character is higher or equal in height than their position.
 Added some more infos to the GuardianBase commands. Maybe that will make It clearer about what they do.
 Added a overrideable method on the GuardianBase. Now you can alter which request the companion will give, or if the companion will actually give requests.
+Companions will now look at their group leader when they are following someone, and they are stopped, and not in combat, and neither using furnitures.
