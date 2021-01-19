@@ -914,27 +914,6 @@ namespace giantsummon.Creatures
             return base.GetSpecialMessage(MessageID);
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
-        {
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            /*{
-                GuardianMouseOverAndDialogueInterface.DialogueOption TestOption = new GuardianMouseOverAndDialogueInterface.DialogueOption("Sketch Village World", delegate (TerraGuardian tg)
-                {
-                    if (Compatibility.SubWorlds.IsModInstalled)
-                    {
-                        SubWorlds.SubworldBase.DesignMode = true;
-                        SubworldLibrary.Subworld.Enter<SubWorlds.TerraGuardianVillage>();
-                    }
-                    else
-                    {
-                        GuardianMouseOverAndDialogueInterface.SetDialogue("*She tells you that there is no way of going there.*");
-                    }
-                });
-                Dialogues.Add(TestOption);
-            }*/
-            return Dialogues;
-        }
-
         public void HangoutDialogue()
         {
             Dialogue.ShowDialogue("*She seems happy that you asked how she's doing.*");

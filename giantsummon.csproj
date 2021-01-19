@@ -80,10 +80,8 @@
     <Compile Include="Buffs\WellBeing.cs" />
     <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
-    <Compile Include="Commands\SaveMapBlueprintCommand.cs" />
     <Compile Include="CommonRequestsDB.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
-    <Compile Include="Compatibility\SubWorlds.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
     <Compile Include="ConfigMod.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
@@ -252,10 +250,6 @@
     <Compile Include="SavePlayerDefsCommand.cs" />
     <Compile Include="SkinReqStruct.cs" />
     <Compile Include="SoundData.cs" />
-    <Compile Include="SubWorlds\SubworldBase.cs" />
-    <Compile Include="SubWorlds\SubworldBlueprint.cs" />
-    <Compile Include="SubWorlds\Maps\TerraGuardianVillage.cs" />
-    <Compile Include="SubWorlds\TestWorld.cs" />
     <Compile Include="TerraGuardian.cs" />
     <Compile Include="TriggerHandler.cs" />
     <Compile Include="UtilityMethods.cs" />
@@ -481,7 +475,9 @@
     <Content Include="Projectiles\BloodVomit.png" />
     <Content Include="Projectiles\ZombieFart.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Commands\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -617,14 +617,6 @@ namespace giantsummon
                     pool.Add(ModContent.NPCType<Npcs.WrathNPC>(), 1f / 64);
                 }
             }
-            //Last
-            if(Compatibility.SubWorlds.IsModInstalled)
-            {
-                if (SubworldLibrary.SLWorld.subworld && SubworldLibrary.SLWorld.currentSubworld is SubWorlds.SubworldBase)
-                {
-                    ((SubWorlds.SubworldBase)SubworldLibrary.SLWorld.currentSubworld).ModifySpawns(pool, spawnInfo);
-                }
-            }
         }
 
         public static void MaskGuardianPositionToPlayers(NPC npc)

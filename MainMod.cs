@@ -35,7 +35,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 80, LastModVersion = 77;
+        public const int ModVersion = 80, LastModVersion = 80;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -2564,13 +2564,25 @@ namespace giantsummon
             try
             {
                 NExperienceMod = ModLoader.GetMod("NExperience");
-                KalciphozMod = ModLoader.GetMod("kRPG");
-                SubworldLibrary = ModLoader.GetMod("SubworldLibrary");
             }
             catch
             {
                 NExperienceMod = null;
+            }
+            try
+            {
+                KalciphozMod = ModLoader.GetMod("kRPG");
+            }
+            catch
+            {
                 KalciphozMod = null;
+            }
+            try
+            {
+                SubworldLibrary = ModLoader.GetMod("SubworldLibrary");
+            }
+            catch
+            {
                 SubworldLibrary = null;
             }
         }

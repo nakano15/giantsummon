@@ -1,5 +1,5 @@
 author = Nakano15
-version = 36.9
+version = 36.9.0.1
 displayName = TerraGuardians
 homepage = https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/
 hideCode = true
@@ -7,4 +7,4 @@ hideResources = true
 includeSource = true
 buildIgnore = *.csproj, *.user, obj\*, bin\*, .vs\*, ModCompatibilityDLLs\* , Ideas\*, TerraGuardian Sprites\*
 includePDB = false
-weakReferences = NExperience@1.3.4.2, SubworldLibrary@1.1.0.3
+weakReferences = NExperience@1.3.4.2

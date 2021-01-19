@@ -477,20 +477,6 @@ namespace giantsummon.Creatures
                     Actions.Add(action);
                 }
             }
-            /*{
-                GuardianMouseOverAndDialogueInterface.DialogueOption TestOption = new GuardianMouseOverAndDialogueInterface.DialogueOption("Test Tungsten Brick World", delegate(TerraGuardian tg)
-                {
-                    if (Compatibility.SubWorlds.IsModInstalled)
-                    {
-                        SubworldLibrary.Subworld.Enter<SubWorlds.TestWorld>();
-                    }
-                    else
-                    {
-                        GuardianMouseOverAndDialogueInterface.SetDialogue("*Huh? What? You can't go there yet, there is something missing.*");
-                    }
-                });
-                Actions.Add(TestOption);
-            }*/
             return Actions;
         }
 

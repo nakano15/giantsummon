@@ -456,14 +456,6 @@ namespace giantsummon
                 player.minionDamage += DamageMod;
                 player.statDefense += DefenseMod;
             }
-            if (Compatibility.SubWorlds.IsModInstalled)
-            {
-                if (SubworldLibrary.SLWorld.subworld && SubworldLibrary.SLWorld.currentSubworld is SubWorlds.SubworldBase)
-                {
-                    if (!SubWorlds.SubworldBase.DesignMode && !((SubWorlds.SubworldBase)SubworldLibrary.SLWorld.currentSubworld).AllowBuildingAndDestruction)
-                        player.noBuilding = true;
-                }
-            }
         }
 
         public override void NaturalLifeRegen(ref float regen)
@@ -556,13 +548,6 @@ namespace giantsummon
             if (KnockedOut)
             {
                 player.waterWalk = player.waterWalk2 = false;
-            }
-            if (Compatibility.SubWorlds.IsModInstalled)
-            {
-                if (SubworldLibrary.SLWorld.subworld && SubworldLibrary.SLWorld.currentSubworld is SubWorlds.SubworldBase)
-                {
-                    ((SubWorlds.SubworldBase)SubworldLibrary.SLWorld.currentSubworld).UpdatePlayerStatus(player);
-                }
             }
         }
 

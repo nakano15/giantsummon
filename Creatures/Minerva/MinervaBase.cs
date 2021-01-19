@@ -442,6 +442,12 @@ namespace giantsummon.Creatures
                     return "*I... Okay... If that's what you want...*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*Uff... Well.. Do you want anything else?*";
+                case MessageIDs.LeopoldMessage1:
+                    return "*Uh.. We're not... Hostages...*";
+                case MessageIDs.LeopoldMessage2:
+                    return "*What? Then why...*";
+                case MessageIDs.LeopoldMessage3:
+                    return "*The Terrarian... Is leading us.. On their adventure... And can understand what you're saying...*";
             }
             return "";
         }
