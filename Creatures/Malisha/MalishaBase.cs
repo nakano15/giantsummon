@@ -47,6 +47,7 @@ namespace giantsummon.Creatures
             DrinksBeverage = true;
             IsNocturnal = true;
             SetTerraGuardian();
+            MoveInLevel = 3;
             CallUnlockLevel = 5;
 
             PopularityContestsWon = 0;
@@ -153,6 +154,8 @@ namespace giantsummon.Creatures
             WingPosition.AddFramePoint2x(23, 28, 33);
             WingPosition.AddFramePoint2x(24, 28, 33);
             WingPosition.AddFramePoint2x(25, 28, 33);
+
+            CreateRequests();
         }
 
         public override void Attributes(TerraGuardian g)
@@ -248,13 +251,15 @@ namespace giantsummon.Creatures
                 return "*Okay, It's not working either way. I have an idea, what If I go alone in the travels? Just tell me where you wanted to go.*";
             }
         }
-        
+
+        public override string MoveInUnlockMessage => "*I think It will be benefitial for us if I move my things to this world. There are so many potential subj... Study creatures around here that may be useful for my experiments. Just give me a call when you have a house ready.*";
+
         //It has been so long that I got this companion idea, that I even forgot her personality. Oops.
         public override string GreetMessage(Terraria.Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
             Mes.Add("*Oh, a Terrarian. I think I may have a use for you.*");
-            Mes.Add("*Funny, I thought here was a naturalist colony, but you're still wearing clothes.*");
+            Mes.Add("*Funny, I thought here was a naturalist colony, but you're wearing clothes. Well, whatever. I may hang around here for a while.*");
             Mes.Add("*You're really small, my neck aches a bit trying to look at you. Say, would you mind participating of some experiments?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -264,9 +269,13 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             Mes.Add("*Don't mind what people says, I'm one of the best magicians in the Ether Realm.*");
             if (player.Male)
+            {
                 Mes.Add("*You're making me a bit uncomfortable with the angle you're looking at me. Just a bit.*");
+            }
             else
+            {
                 Mes.Add("*You can't see my head, or something?*");
+            }
             Mes.Add("*I once tried to conjure demons, that's when I had to leave the first village I lived in hurry.*");
             Mes.Add("*Always wondered why you get stronger by using specific kinds of outfits? Well, me too.*");
             Mes.Add("*It's not easy being a prodigy, but when you're one, you have to keep working hard to continue being.*");
@@ -772,6 +781,57 @@ namespace giantsummon.Creatures
                     return "*The clock is ticking, [nickname].*";
             }
             return base.GetSpecialMessage(MessageID);
+        }
+
+        public override bool AlterRequestGiven(GuardianData Guardian, out int ForcedMissionID, out bool IsTalkRequest)
+        {
+            if (Guardian.FriendshipLevel < 3)
+            {
+                if (Guardian.FriendshipProgression % 2 == 1)
+                {
+                    ForcedMissionID = 2;
+                }
+                else
+                {
+                    switch (Guardian.FriendshipLevel)
+                    {
+                        case 1:
+                            ForcedMissionID = 0;
+                            break;
+                        case 2:
+                            ForcedMissionID = 1;
+                            break;
+                    }
+                }
+            }
+            return base.AlterRequestGiven(Guardian, out ForcedMissionID, out IsTalkRequest);
+        }
+
+        private void CreateRequests()
+        {
+            AddNewRequest("Helper Number 1", 300, 
+                "*I heard from the other people that you really love helping others. Say... Would you mind catching some Squirrels?*",
+                "*That's my "+(Main.player[Main.myPlayer].Male ? "boy" : "girl")+". Now go and make me happy.*",
+                "*Hmph. I shouldn't have listened them, then.*",
+                "*Great! Now I can do experiements with some kind of acid I've discovered. Thank you.*",
+                "*Still didn't got the Squirrels I want? You can find them in the Forest, right? Now go.*",
+                "*[nickname]... I will use you for my experiement tonight... If you don't go away now...*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.Squirrel, 10);
+            AddNewRequest("Ornithophobia", 325,
+                "*I'm pretty sure that you'll be interessed in doing my current request. The Harpies you can find in the sky, they have feathers that will be useful for my experiement. Would you mind getting a number of them?*",
+                "*You wouldn't disappoint me, right, [nickname]? If you find trouble finding the Harpies, try building a skybridge when nearly leaving the atmosphere. They wont resist, for sure.*",
+                "*Are you alergic to feathers? I would like to examine your body constitution if you do.*",
+                "*Great! This new invention I'll call... A fan! Will help me in this infernal lab.*",
+                "*You lost the way to the sky? Use some Ropes or build a stairway to It. If you find a Sky Island will even be better.*",
+                "*How could you fail at getting me feathers, [nickname]? You're already making me angry.*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.Feather, 30);
+            AddNewRequest("Counter Strike of the Panther", 350, 
+                "*[nickname], I'm so furious right now, and I have a important mission for you. Kill as many of those depraved slimes as you can. Will you do It?!*",
+                "*Don't leave any of them alive!*",
+                "*Grrr... I should do It then! Thanks for nothing.*",
+                "*You did? Good! You just avenged by backside, that will teach them to not pop up behind me when I'm about to sit.*",
+                "*Having troubles finding Slimes, [nickname]? They are literally everywhere! How could you be lost?*");
+            AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 50, 0);
         }
     }
 }

@@ -121,6 +121,18 @@ namespace giantsummon.Npcs
             {
                 npc.gfxOffY = 0;
                 AiTimer += 1;
+                int CenterY = (int)npc.Center.Y / 16, CenterX = (int)npc.Center.X / 16 - 1;
+                bool FaceOnTheFloor = false;
+                for(int x = 0; x < 2; x++)
+                {
+                    if(Main.tile[CenterX + x, CenterY].active() && Main.tileSolid[Main.tile[CenterX + x, CenterY].type])
+                    {
+                        FaceOnTheFloor = true;
+                        break;
+                    }
+                }
+                if (!FaceOnTheFloor)
+                    npc.position.Y += 16;
                 if (AiTimer % 300 == 0)
                     SayMessage("*Someone, help me!*");
                 npc.noGravity = true;

@@ -35,7 +35,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 79, LastModVersion = 77;
+        public const int ModVersion = 80, LastModVersion = 77;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -49,7 +49,7 @@ namespace giantsummon
         public static Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> ItemAttackRange = new Dictionary<Terraria.ModLoader.Config.ItemDefinition, int>();
         public static bool ForceUpdateGuardiansStatus = false;
         public static bool ManagingGuardianEquipments = false;
-        public const bool IndividualSkillLeveling = false;
+        public const bool IndividualSkillLeveling = true;
         public static PlayerIndex controlPort = PlayerIndex.Two;
         public static GamePadState gamePadState = GamePad.GetState(controlPort),
             oldGamePadState = GamePad.GetState(controlPort);

@@ -610,7 +610,7 @@ namespace giantsummon
                 MyID = new GuardianID(ID, ModID);
                 PickedName = (byte)Main.rand.Next(Base.PossibleNames.Length);
             }
-            request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime);
+            request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime) / 4;
             for (int e = 0; e < Equipments.Length; e++)
                 Equipments[e] = new Item();
             for (int i = 0; i < Inventory.Length; i++)
@@ -1212,6 +1212,8 @@ namespace giantsummon
             {
                 Coins = (uint)(tag.GetInt("Coins_" + UniqueID) + int.MaxValue);
             }
+            if (ModVersion < 80)
+                ResetSkillsProgress();
         }
 
         public string GetMessage(string MessageID, string DefaultMessage = "")

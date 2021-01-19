@@ -5124,7 +5124,7 @@ namespace giantsummon
             UpdateFurnitureUsageScript();
             //LootItemScript();
             DoLootItems();
-            if (TargetID == -1 && !UsingFurniture && Velocity.X == 0)
+            /*if (TargetID == -1 && !UsingFurniture && Velocity.X == 0) //Needs some review
             {
                 if (DoAction.InUse && !DoAction.IsGuardianSpecificAction && DoAction.ID == (int)GuardianActions.ActionIDs.BuySomethingFromNpcShop)
                 {
@@ -5140,7 +5140,7 @@ namespace giantsummon
                         CheckForVendors();
                     }
                 }
-            }
+            }*/
         }
 
         public void CheckForVendors()
@@ -5299,10 +5299,10 @@ namespace giantsummon
             int ItemsBought = 0;
             for (int checktime = 0; checktime < 2; checktime++)
             {
-                if (Stack == 0)
-                    break;
                 for (int i = 0; i < 50; i++)
                 {
+                    if (Stack == 0)
+                        break;
                     bool ForceSlotChecking = false;
                     if (checktime == 1 && Stack > 0 && Inventory[i].type == 0)
                     {
@@ -9197,8 +9197,8 @@ namespace giantsummon
                         {
                             Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
                             Vector2 NpcCenter = Main.npc[i].Center;
-                            if (Math.Abs(NpcCenter.X - MemberCenter.X) < (Main.npc[i].width + MemberPosition.Z) * 0.5f + ThreatDetectionDistance &&
-                                Math.Abs(NpcCenter.Y - MemberCenter.Y) < (Main.npc[i].height + MemberPosition.W) * 0.5f + ThreatDetectionDistance)
+                            if (Math.Abs(NpcCenter.X - MemberCenter.X) < (Main.npc[i].width + MemberPosition.Z) + ThreatDetectionDistance &&
+                                Math.Abs(NpcCenter.Y - MemberCenter.Y) < (Main.npc[i].height + MemberPosition.W) + ThreatDetectionDistance)
                             {
                                 if (!this.NpcsSpotted.Contains(i))
                                 {

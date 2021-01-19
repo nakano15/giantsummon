@@ -509,7 +509,7 @@ namespace giantsummon
                         AddOption("Let's get some rest.", RestButtonAction);
                     }
                 }
-                if(tg.OwnerPos == -1)
+                if(tg.OwnerPos == -1 && tg.FriendshipLevel >= tg.Base.FriendsLevel)
                     AddOption("Let me see your inventory.", OpenInventoryManagementButtonAction);
                 Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
             }

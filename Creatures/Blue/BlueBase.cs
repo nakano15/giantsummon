@@ -259,7 +259,7 @@ namespace giantsummon.Creatures
 
         public void GetTopics()
         {
-            AddTopic("How are you doing?", HangoutDialogue);
+            //AddTopic("How are you doing?", HangoutDialogue); //This topic is actually for testing purposes, only.
         }
 
         public void GetRewards()

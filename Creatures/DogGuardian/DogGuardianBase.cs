@@ -13,7 +13,7 @@ namespace giantsummon.Creatures
 
         public DogGuardianBase()
         {
-            Name = "DogGuardian";
+            Name = "DogGuardian"; //I really want to name him Alexander. The problem is Alex.
             Description = "";
             Size = GuardianSize.Large;
             Width = 28;

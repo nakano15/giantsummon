@@ -88,6 +88,7 @@ Fixed companions melee AI distance checking.
 Companions will now forcedly teleport to your character, when they are being pulled to your character, and your character is knocked out.
 You can no longer get companion friendship exp by discovering them on other worlds. But you will still gain friendship exp for meeting them for the first time.
 Companions you just met will no longer greet you with a new request after a few seconds since you met them.
+	However, their new request will pop up inside 1/4 of the normal request spawn time, so be sure to talk to the npc later if you want to get a request from It.
 Requests given by the companion will no longer be generated when the cooldown timer runs out:
 	Now, when the timer runs out, either It checks if will give a Talk request, or if the companion should give you other kind of request.
 	When ready to get a new request, a new request will be picked when ask the companion "Need Something?" on It's dialogue.
@@ -104,3 +105,8 @@ Companions will now try to jump holes in their way.
 Added some more infos to the GuardianBase commands. Maybe that will make It clearer about what they do.
 Added a overrideable method on the GuardianBase. Now you can alter which request the companion will give, or if the companion will actually give requests.
 Companions will now look at their group leader when they are following someone, and they are stopped, and not in combat, and neither using furnitures.
+Malisha will no longer move in to your world, until her Friendship level is 3 or above.
+You can only ask to see the inventory of the companion if your friendship level with it is Friends or more.
+Companions skill leveling is now back to leveling up individually.
+	Time to make the ultimate companions build.
+	Due to this change, all companions skills progress were reset, but there will be a growth bonus based on the sum of skill levels your companion had.

@@ -9,6 +9,15 @@ namespace giantsummon.Creatures
 {
     public class MinervaBase : GuardianBase
     {
+        /// <summary>
+        /// -Not very sociable.
+        /// -Loves cooking.
+        /// -Likes Vladimir.
+        /// -Has flatulence problems.
+        /// -Loves clear weather days.
+        /// -Likes seeing people enjoy her food.
+        /// -Is fat due to experimenting her own food, to see if It's good.
+        /// </summary>
         public MinervaBase()
         {
             Name = "Minerva";
@@ -58,6 +67,11 @@ namespace giantsummon.Creatures
             ReviveFrame = 20;
             DownedFrame = 19;
             //PetrifiedFrame = 28;
+
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.FruitcakeChakram, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.BeeGun, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.BottledHoney, 5));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.BowlofSoup, 5));
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(15, 0);

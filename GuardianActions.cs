@@ -343,11 +343,6 @@ namespace giantsummon
                                                 Message.Replace("[shop]", npc.GivenOrTypeName);
                                                 guardian.SaySomething(Message);
                                             }
-                                            /*{
-                                                Item i = new Item();
-                                                i.SetDefaults(GetIntegerValue(ItemIDVar));
-                                                guardian.SaySomething("*Buying "+i.Name+" from "+npc.GivenOrTypeName+".*");
-                                            }*/
                                         }
                                         if (Math.Abs(NpcBottom.Y - guardian.Position.Y) > 8)
                                         {
@@ -408,16 +403,11 @@ namespace giantsummon
                                         {
                                             guardian.LookingLeft = guardian.Position.X >= NpcCenter.X;
                                         }
-                                        if (Time >= 4 * 60)
+                                        if (Time >= 1.5f * 60)
                                         {
                                             int Stack = guardian.BuyItem(GetIntegerValue(ItemIDVar), GetIntegerValue(ItemBuyPriceVar), GetIntegerValue(ItemStackVar));
-                                            /*{
-                                                Item i = new Item();
-                                                i.SetDefaults(GetIntegerValue(ItemIDVar));
-                                                guardian.SaySomething("*Bought " + Stack + " " + i.Name + " from " + npc.GivenOrTypeName + ".*");
-                                            }*/
                                         }
-                                        if (Time >= 6 * 60)
+                                        if (Time >= 2 * 60)
                                         {
                                             InUse = false;
                                             if (guardian.PlayerMounted)
