@@ -1,2 +1,3 @@
-﻿Removed all the support to SubworldLibrary...
-Added some missing dialogues to Minerva.
+﻿Alex will no longer cause world generation to crash, possibly.
+Did some changes on Tombstone generation.
+Companions using a Flying Carpet will now float.

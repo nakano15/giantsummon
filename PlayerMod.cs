@@ -1560,7 +1560,7 @@ namespace giantsummon
                         player.velocity.Y = 0;
                         if (KnockedOut && !guardian.IsAttackingSomething && guardian.Velocity.X == 0)
                         {
-                            player.position = guardian.Position;
+                            player.position = guardian.PositionWithOffset;
                             player.position.X += player.width * 0.5f * guardian.Direction;
                             player.position.Y -= player.height - 12;
                             player.direction = -guardian.Direction;
@@ -1724,11 +1724,6 @@ namespace giantsummon
                 guardian.GravityDirection = (int)player.gravDir;
             }
             return true;
-        }
-
-        public override void PostItemCheck()
-        {
-
         }
 
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)

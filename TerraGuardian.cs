@@ -1033,7 +1033,7 @@ namespace giantsummon
                 Pos.X -= SpriteWidth * 0.5f;
                 Pos.Y -= SpriteHeight;
                 Pos *= Scale;*/
-                Pos += Position;
+                Pos += PositionWithOffset;
                 return Pos;
             }
         }
@@ -1042,14 +1042,7 @@ namespace giantsummon
         {
             get
             {
-                return GetBetweenHandsPosition(LeftArmAnimationFrame) + Position;
-                Vector2 Pos = AnimationPositionValueTranslator(Base.GetBetweenHandsPosition(LeftArmAnimationFrame).ToVector2());
-                /*if (LookingLeft) Pos.X = SpriteWidth - Pos.X;
-                Pos.X -= SpriteWidth * 0.5f;
-                Pos.Y -= SpriteHeight;
-                Pos *= Scale;*/
-                Pos += Position;
-                return Pos;
+                return GetBetweenHandsPosition(LeftArmAnimationFrame) + PositionWithOffset;
             }
         }
 
@@ -1057,14 +1050,7 @@ namespace giantsummon
         {
             get
             {
-                return GetLeftHandPosition(LeftArmAnimationFrame) + Position;
-                Vector2 Pos = AnimationPositionValueTranslator(Base.LeftHandPoints.GetPositionFromFramePoint(LeftArmAnimationFrame).ToVector2());
-                /*if (LookingLeft) Pos.X = SpriteWidth - Pos.X;
-                Pos.X -= SpriteWidth * 0.5f;
-                Pos.Y -= SpriteHeight;
-                Pos *= Scale;*/
-                Pos += Position;
-                return Pos;
+                return GetLeftHandPosition(LeftArmAnimationFrame) + PositionWithOffset;
             }
         }
 
@@ -1072,14 +1058,7 @@ namespace giantsummon
         {
             get
             {
-                return GetRightHandPosition(RightArmAnimationFrame) + Position;
-                Vector2 Pos = AnimationPositionValueTranslator(Base.RightHandPoints.GetPositionFromFramePoint(RightArmAnimationFrame).ToVector2());
-                /*if (LookingLeft) Pos.X = SpriteWidth - Pos.X;
-                Pos.X -= SpriteWidth * 0.5f;
-                Pos.Y -= SpriteHeight;
-                Pos *= Scale;*/
-                Pos += Position;
-                return Pos;
+                return GetRightHandPosition(RightArmAnimationFrame) + PositionWithOffset;
             }
         }
 
@@ -2497,6 +2476,13 @@ namespace giantsummon
                 {
                     UpdateStatus = true;
                 }
+            }
+            if(HasCarpet())
+            {
+                if (!HasCooldown(GuardianCooldownManager.CooldownType.CarpetFlightTime))
+                    AddCooldown(GuardianCooldownManager.CooldownType.CarpetFlightTime, 3000);
+                float FlightHeight = (float)Math.Sin((float)GetCooldownValue(GuardianCooldownManager.CooldownType.CarpetFlightTime) * 0.06f) * 4 + 2;
+                OffsetY -= FlightHeight;
             }
             if (GravityDirection < 0 && !HasFlag(GuardianFlags.GravityChange))
                 FlipGravity();

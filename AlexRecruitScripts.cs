@@ -45,178 +45,200 @@ namespace giantsummon
 
         public static void TrySpawningTombstone(Terraria.World.Generation.GenerationProgress status)
         {
-            int StartPosX = 0, StartPosY = 0;
-        retry:
-            int Attempt = 0;
-            while (true)
+            try
             {
-                Attempt++;
-                status.Message = "Trying to spawn a tombstone.";
-                StartPosX = Main.rand.Next((int)Main.leftWorld / 16, (int)Main.rightWorld / 16 - TombstoneWidth);
-                StartPosY = Main.rand.Next((int)(Main.worldSurface * 0.35f), (int)Main.worldSurface - TombstoneHeight);
-                //StartPosY = (int)Main.topWorld / 16;
-                bool AtLeastOnePositionFound = false, PassedSurface = false;
-                while (true)
+                int StartPosX = 0, StartPosY = 0;
+                byte RetryCount = 0;
+            retry:
+                RetryCount++;
+                if(RetryCount >= 200)
                 {
-                    byte Blocked = 0;
-                    for (int x = 0; x < TombstoneWidth; x++)
-                    {
-                        if (Main.tile[StartPosX + x, StartPosY].active())
-                        {
-                            Blocked++;
-                            break;
-                        }
-                    }
-                    if (Blocked == 0)
-                    {
-                        AtLeastOnePositionFound = true;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    StartPosY++;
-                    if (StartPosY >= Main.worldSurface)
-                    {
-                        PassedSurface = true;
-                        break;
-                    }
-                }
-                if (!AtLeastOnePositionFound || PassedSurface)
-                {
-                    continue;
-                }
-                StartPosY -= TombstoneHeight;
-                bool SomeTileInTheWay = false;
-                for (int y = 0; y < TombstoneHeight; y++)
-                {
-                    for (int x = 0; x < TombstoneWidth; x++)
-                    {
-                        if (Main.tile[StartPosX + x, StartPosY + y].active() ||
-                            Main.tile[StartPosX + x, StartPosY + y].liquid > 0)
-                        {
-                            SomeTileInTheWay = true;
-                            break;
-                        }
-                        if (Main.tile[StartPosX + x, StartPosY + y].wall > 0)
-                        {
-                            SomeTileInTheWay = true;
-                            break;
-                        }
-                    }
-                }
-                bool NonSolidTileBellow = false;
-                while (!NonSolidTileBellow)
-                {
-                    int TileY = StartPosY + TombstoneHeight + 1;
-                    for (int x = 0; x < TombstoneWidth; x++)
-                    {
-                        if (Main.tile[StartPosX + x, TileY].nactive() || !Main.tileSolid[Main.tile[StartPosX + x, TileY].type])
-                        {
-                            NonSolidTileBellow = true;
-                            break;
-                        }
-                        if (Main.tile[StartPosX + x, TileY].halfBrick() || Main.tile[StartPosX + x, TileY].slope() > 0)
-                        {
-                            NonSolidTileBellow = true;
-                            break;
-                        }
-                        if (Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.Cloud || Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.RainCloud ||
-                            Terraria.ID.TileID.Sets.Corrupt[Main.tile[StartPosX + x, TileY].type])
-                        {
-                            NonSolidTileBellow = true;
-                            break;
-                        }
-                    }
-                    if (!NonSolidTileBellow)
-                        StartPosY++;
-                }
-                for (int y = 0; y < TombstoneHeight; y++)
-                {
-                    for (int x = 0; x < TombstoneWidth; x++)
-                    {
-                        if (Main.tile[StartPosX + x, StartPosY + y].active() ||
-                            Main.tile[StartPosX + x, StartPosY + y].liquid > 0)
-                        {
-                            SomeTileInTheWay = true;
-                            break;
-                        }
-                        if (Main.tile[StartPosX + x, StartPosY + y].wall > 0)
-                        {
-                            SomeTileInTheWay = true;
-                            break;
-                        }
-                    }
-                }
-                if (!SomeTileInTheWay && NonSolidTileBellow)
-                {
-                    break;
-                }
-                if (Attempt >= 500)
-                {
-                    status.Message = "Unable to spawn Tombstone.";
-                    Attempt = 0;
-                    while (Attempt++ < 600)
-                    {
-
-                    }
+                    status.Message = "Nowhere to spawn " + AlexOldPartner + "'s tombstone...";
+                    System.Threading.Thread.Sleep(3000);
                     return;
                 }
-                //status.Message = "Failed at PosX = " + StartPosX + "  PosY = " + StartPosY + ".";
-            }
-            //status.Message = "Tombstone at PosX = " + StartPosX + "  PosY = " + StartPosY + ".";
-            byte TombstoneFrameX = 0, TombstoneFrameY = 0;
-            int TombstonePosX = 0, TombstonePosY = 0;
-            for (int y = 0; y < TombstoneHeight; y++)
-            {
-                TombstoneFrameX = 0;
-                bool HasTombstoneTile = false;
-                for (int x = 0; x < TombstoneWidth; x++)
+                int Attempt = 0;
+                while (true)
                 {
-                    int TilePosX = StartPosX + x, TilePosY = StartPosY + y;
-                    Tile tile = Main.tile[TilePosX, TilePosY];
-                    switch (TombstonePedestal[x, y])
+                    Attempt++;
+                    status.Message = "Trying to spawn a tombstone.";
+                    StartPosX = Main.rand.Next((int)Main.leftWorld / 16, (int)Main.rightWorld / 16 - TombstoneWidth);
+                    StartPosY = Main.rand.Next((int)(Main.worldSurface * 0.35f), (int)Main.worldSurface - TombstoneHeight);
+                    //StartPosY = (int)Main.topWorld / 16;
+                    bool AtLeastOnePositionFound = false, PassedSurface = false;
+                    while (true)
                     {
-                        case 'T':
-                            if (TombstoneFrameX == 0 && TombstoneFrameY == 0)
+                        byte Blocked = 0;
+                        for (int x = 0; x < TombstoneWidth; x++)
+                        {
+                            if (Main.tile[StartPosX + x, StartPosY].active())
                             {
-                                TombstonePosX = TilePosX;
-                                TombstonePosY = TilePosY;
+                                Blocked++;
+                                break;
                             }
-                            tile.active(true);
-                            tile.type = TileID.Tombstones;
-                            HasTombstoneTile = true;
-                            tile.frameX = (short)(TombstoneFrameX * 18);
-                            tile.frameY = (short)(TombstoneFrameY * 18);
-                            if (TombstoneFrameX == 1 && TombstoneFrameY == 1)
+                        }
+                        if (Blocked == 0)
+                        {
+                            AtLeastOnePositionFound = true;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                        StartPosY++;
+                        if (StartPosY >= Main.worldSurface)
+                        {
+                            PassedSurface = true;
+                            break;
+                        }
+                    }
+                    if (!AtLeastOnePositionFound || PassedSurface)
+                    {
+                        continue;
+                    }
+                    StartPosY -= TombstoneHeight;
+                    bool SomeTileInTheWay = false;
+                    for (int y = 0; y < TombstoneHeight; y++)
+                    {
+                        for (int x = 0; x < TombstoneWidth; x++)
+                        {
+                            if (Main.tile[StartPosX + x, StartPosY + y].active() ||
+                                Main.tile[StartPosX + x, StartPosY + y].liquid > 0)
                             {
-                                TombstoneTileX = TilePosX;
-                                TombstoneTileY = TilePosY + 1;
+                                SomeTileInTheWay = true;
+                                break;
                             }
-                            TombstoneFrameX++;
-                            break;
-                        case 'B':
-                            tile.active(true);
-                            tile.type = TileID.StoneSlab;
-                            WorldGen.TileFrame(TilePosX, TilePosY, true);
-                            break;
+                            if (Main.tile[StartPosX + x, StartPosY + y].wall > 0)
+                            {
+                                SomeTileInTheWay = true;
+                                break;
+                            }
+                        }
+                    }
+                    bool NonSolidTileBellow = false;
+                    while (!NonSolidTileBellow)
+                    {
+                        int TileY = StartPosY + TombstoneHeight + 1;
+                        bool InvalidSpawnPosition = false;
+                        for (int x = 0; x < TombstoneWidth; x++)
+                        {
+                            if (Main.tile[StartPosX + x, TileY].nactive() || !Main.tileSolid[Main.tile[StartPosX + x, TileY].type])
+                            {
+                                NonSolidTileBellow = true;
+                                break;
+                            }
+                            if (Main.tile[StartPosX + x, TileY].halfBrick() || Main.tile[StartPosX + x, TileY].slope() > 0)
+                            {
+                                InvalidSpawnPosition = true;
+                                break;
+                            }
+                            if (Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.Cloud || Main.tile[StartPosX + x, TileY].type == Terraria.ID.TileID.RainCloud ||
+                                Terraria.ID.TileID.Sets.Corrupt[Main.tile[StartPosX + x, TileY].type])
+                            {
+                                InvalidSpawnPosition = true;
+                                break;
+                            }
+                        }
+                        if (InvalidSpawnPosition)
+                            goto retry;
+                        if (!NonSolidTileBellow)
+                            StartPosY++;
+                    }
+                    for (int y = 0; y < TombstoneHeight; y++)
+                    {
+                        for (int x = 0; x < TombstoneWidth; x++)
+                        {
+                            if (Main.tile[StartPosX + x, StartPosY + y].active() ||
+                                Main.tile[StartPosX + x, StartPosY + y].liquid > 0)
+                            {
+                                SomeTileInTheWay = true;
+                                break;
+                            }
+                            if (Main.tile[StartPosX + x, StartPosY + y].wall > 0)
+                            {
+                                SomeTileInTheWay = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!SomeTileInTheWay && NonSolidTileBellow)
+                    {
+                        break;
+                    }
+                    if (Attempt >= 500)
+                    {
+                        status.Message = "Unable to spawn Tombstone.";
+                        Attempt = 0;
+                        while (Attempt++ < 600)
+                        {
+
+                        }
+                        return;
                     }
                 }
-                if (HasTombstoneTile)
+                byte TombstoneFrameX = 0, TombstoneFrameY = 0;
+                int TombstonePosX = 0, TombstonePosY = 0;
+                for (int y = 0; y < TombstoneHeight; y++)
                 {
-                    TombstoneFrameY++;
+                    TombstoneFrameX = 0;
+                    bool HasTombstoneTile = false;
+                    for (int x = 0; x < TombstoneWidth; x++)
+                    {
+                        int TilePosX = StartPosX + x, TilePosY = StartPosY + y;
+                        Tile tile = Main.tile[TilePosX, TilePosY];
+                        switch (TombstonePedestal[x, y])
+                        {
+                            case 'T':
+                                if (TombstoneFrameX == 0 && TombstoneFrameY == 0)
+                                {
+                                    TombstonePosX = TilePosX;
+                                    TombstonePosY = TilePosY;
+                                }
+                                tile.active(true);
+                                tile.type = TileID.Tombstones;
+                                HasTombstoneTile = true;
+                                tile.frameX = (short)(TombstoneFrameX * 18);
+                                tile.frameY = (short)(TombstoneFrameY * 18);
+                                if (TombstoneFrameX == 1 && TombstoneFrameY == 1)
+                                {
+                                    TombstoneTileX = TilePosX;
+                                    TombstoneTileY = TilePosY + 1;
+                                }
+                                TombstoneFrameX++;
+                                break;
+                            case 'B':
+                                tile.active(true);
+                                tile.type = TileID.StoneSlab;
+                                WorldGen.TileFrame(TilePosX, TilePosY, true);
+                                break;
+                        }
+                    }
+                    if (HasTombstoneTile)
+                    {
+                        TombstoneFrameY++;
+                    }
                 }
-            }
-            if (TombstonePosX == 0 || TombstonePosY == 0 || TombstoneTileX == 0 || TombstoneTileY == 0)
-            {
-                goto retry;
-            }
+                if (TombstonePosX == 0 || TombstonePosY == 0 || TombstoneTileX == 0 || TombstoneTileY == 0)
+                {
+                    goto retry;
+                }
 
-            int signpos = Sign.ReadSign(TombstonePosX, TombstonePosY);
-            if (signpos > -1)
-                Sign.TextSign(signpos, TombstoneText);
-            NPC.NewNPC(TombstoneTileX * 16, TombstoneTileY * 16, ModContent.NPCType<Npcs.AlexNPC>());
-            SpawnedTombstone = true;
+                int signpos = Sign.ReadSign(TombstonePosX, TombstonePosY);
+                if (signpos > -1)
+                {
+                    if (Main.sign[signpos] == null)
+                        Main.sign[signpos] = new Sign();
+                    Sign.TextSign(signpos, TombstoneText);
+                }
+                NPC.NewNPC(TombstoneTileX * 16, TombstoneTileY * 16, ModContent.NPCType<Npcs.AlexNPC>());
+                SpawnedTombstone = true;
+            }
+            catch
+            {
+                status.Message = AlexOldPartner+"'s tombstone failed to appear in this world...";
+                System.Threading.Thread.Sleep(3000);
+                SpawnedTombstone = false;
+            }
         }
 
         public static void CheckIfAlexIsInTheWorld()
