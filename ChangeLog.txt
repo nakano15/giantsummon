@@ -1,3 +1,9 @@
-﻿Alex will no longer cause world generation to crash, possibly.
-Did some changes on Tombstone generation.
-Companions using a Flying Carpet will now float.
+﻿Malisha will now again move in to your world.
+	I really don't want to change her recruitment dialogue...
+Companions with a flying carpet equipped will no longer float while using furnitures.
+Sardine will now correctly teleport out of your team, when Bree starts scolding him.
+When speaking with Malisha's recruit npc, instead of showing "*?*" as option for dialogues without answer, It will show "Proceed", instead.
+Boosted by 10 times the chance of companions visiting you.
+Topics can now have requirement setup.
+Brutus recruit npc will now face you during dialogues.
+Fixed an Idle AI issue with nocturnal companions. Now they should behave correctly at night.

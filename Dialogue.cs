@@ -44,6 +44,14 @@ namespace giantsummon
             GatherAroundPosition
         }
 
+        public static void AddParticipant(TerraGuardian tg)
+        {
+            List<TerraGuardian> NewParticipants = new List<TerraGuardian>();
+            NewParticipants.AddRange(DialogueParticipants);
+            NewParticipants.Add(tg);
+            DialogueParticipants = NewParticipants.ToArray();
+        }
+
         public static void RemoveGatheringPoint()
         {
             CenterType = GatherCenterType.DontGatherAroundSomething;

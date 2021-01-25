@@ -47,7 +47,6 @@ namespace giantsummon.Creatures
             DrinksBeverage = true;
             IsNocturnal = true;
             SetTerraGuardian();
-            MoveInLevel = 3;
             CallUnlockLevel = 5;
 
             PopularityContestsWon = 0;

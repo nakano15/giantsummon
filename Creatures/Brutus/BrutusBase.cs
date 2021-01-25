@@ -193,7 +193,7 @@ namespace giantsummon.Creatures
                 "*Oh, you're not ready to face It again? Don't worry about that, I'm okay.*",
                 "*I think we did good on this fight, but I feel bad about the Clothier's death. I can't really feel any sense of victory in this fight.*",
                 "*You want to know how to call the Skeletron? I have no idea either. It's related to the Clother, right? Maybe there is a way.*",
-                "*I can't protect someone If I let the ones I'm supposed to protect die... I still need to practice more.*");
+                "*I can't protect anyone If I let the ones I'm supposed to protect die... I still need to practice more.*");
             AddRequestRequirement(delegate(Player player)
             {
                 return NPC.downedBoss3;

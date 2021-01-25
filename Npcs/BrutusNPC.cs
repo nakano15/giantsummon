@@ -162,6 +162,8 @@ namespace giantsummon.Npcs
             BodyFrame = -1;
             //AI Work here
             npc.homeTileX = npc.homeTileY = -1;
+            if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI)
+                npc.direction = Main.player[Main.myPlayer].Center.X < npc.Center.X ? -1 : 1;
             if (!WarnedAboutBrutus)
             {
                 Main.NewText(npc.GivenOrTypeName + " is still visiting your world.");

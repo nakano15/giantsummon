@@ -38,11 +38,12 @@ namespace giantsummon
 
         public bool RequiresGuardianActive(GuardianData d)
         {
-            if (IsTalkQuest || Active)
+            if (IsTalkQuest)
                 return false;
             foreach (RequestBase.RequestObjective o in GetRequestBase(d).Objectives)
             {
-                if ((o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore && ((RequestBase.ExploreRequest)o).RequiresGuardianActive) || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester || o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout)
+                if ((o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.Explore && ((RequestBase.ExploreRequest)o).RequiresGuardianActive) || 
+                    o.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.RequiresRequester)
                     return true;
             }
             return false;
@@ -233,8 +234,7 @@ namespace giantsummon
             if (Count)
             {
                 RequestBase rb = GetRequestBase(gd);
-                RequestBase.RequestObjective[] objs = rb.Objectives.Where(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement).ToArray();
-                foreach (RequestBase.RequestObjective obj in objs)
+                foreach (RequestBase.RequestObjective obj in rb.Objectives)
                 {
                     if (obj.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.CompanionRequirement)
                     {

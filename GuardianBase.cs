@@ -132,14 +132,14 @@ namespace giantsummon
         {
             public string TopicText;
             public Action TopicMethod;
-            public Func<TerraGuardian, Player, bool> Requirement;
+            public Func<TerraGuardian, PlayerMod, bool> Requirement;
 
-            public DialogueTopic(string TopicText, Action TopicMethod, Func<TerraGuardian, Player, bool> Requirement = null)
+            public DialogueTopic(string TopicText, Action TopicMethod, Func<TerraGuardian, PlayerMod, bool> Requirement = null)
             {
                 this.TopicText = TopicText;
                 this.TopicMethod = TopicMethod;
                 if (Requirement == null)
-                    this.Requirement = delegate (TerraGuardian tg, Player pl) { return true; };
+                    this.Requirement = delegate (TerraGuardian tg, PlayerMod pl) { return true; };
                 else
                     this.Requirement = Requirement;
             }
@@ -152,9 +152,9 @@ namespace giantsummon
         /// </summary>
         /// <param name="TopicText">The message displayed when this topic is disponible.</param>
         /// <param name="TopicMethod">The script that holds the dialogue with this companion, use Dialogue methods for It.</param>
-        public void AddTopic(string TopicText, Action TopicMethod)
+        public void AddTopic(string TopicText, Action TopicMethod, Func<TerraGuardian, PlayerMod, bool> TopicRequirement = null)
         {
-            Topics.Add(new DialogueTopic(TopicText, TopicMethod));
+            Topics.Add(new DialogueTopic(TopicText, TopicMethod, TopicRequirement));
         }
 
         /// <summary>

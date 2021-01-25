@@ -526,7 +526,7 @@ namespace giantsummon
             }
             foreach (GuardianBase.DialogueTopic topic in tg.Base.Topics)
             {
-                if (topic.Requirement(tg, MainPlayer))
+                if (topic.Requirement(tg, MainPlayer.GetModPlayer<PlayerMod>()))
                 {
                     Action a = topic.TopicMethod;
                     AddOption(topic.TopicText, delegate (TerraGuardian tg2)

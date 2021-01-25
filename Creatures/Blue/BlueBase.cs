@@ -256,12 +256,7 @@ namespace giantsummon.Creatures
             AddCompanionRequirement(GuardianBase.Zacks);
             GetTopics();
         }
-
-        public void GetTopics()
-        {
-            //AddTopic("How are you doing?", HangoutDialogue); //This topic is actually for testing purposes, only.
-        }
-
+        
         public void GetRewards()
         {
             AddReward(Terraria.ID.ItemID.FlaskofPoison, 3, 100, 0.66f, 2);
@@ -912,6 +907,19 @@ namespace giantsummon.Creatures
                     return "*She puts her hand on the chest, and exhale out of relief. Then asked if you want to talk about something else.*";
             }
             return base.GetSpecialMessage(MessageID);
+        }
+
+        public void GetTopics()
+        {
+            //AddTopic("How are you doing?", HangoutDialogue); //This topic is actually for testing purposes, only.
+        }
+
+        public void DialogueAskHowSheMetZacks()
+        {
+            bool ZacksIsPresent = PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], Zacks);
+            if (ZacksIsPresent)
+                Dialogue.AddParticipant(PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Zacks));
+            Dialogue.ShowDialogue("**");
         }
 
         public void HangoutDialogue()

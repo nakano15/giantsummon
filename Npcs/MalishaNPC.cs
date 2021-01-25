@@ -355,7 +355,7 @@ namespace giantsummon.Npcs
                 case 11:
                     return "No, wait.";
             }
-            return "*?*";
+            return "Proceed";
         }
 
         public override void  ModifyDrawDatas(List<GuardianDrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)

@@ -2477,7 +2477,7 @@ namespace giantsummon
                     UpdateStatus = true;
                 }
             }
-            if(HasCarpet())
+            if(!UsingFurniture && HasCarpet())
             {
                 if (!HasCooldown(GuardianCooldownManager.CooldownType.CarpetFlightTime))
                     AddCooldown(GuardianCooldownManager.CooldownType.CarpetFlightTime, 3000);
@@ -5073,6 +5073,8 @@ namespace giantsummon
                     CheckForLifeCrystals();
                     TryJumpingTallTiles();
                     CheckIfNeedsJumping();
+                    //if (OwnerPos > -1 && AssistSlot == 0 && Main.player[OwnerPos].dead)
+                    ///    GuardianActions.UseResurrectOnPlayer(this, Main.player[OwnerPos]);
                     //TryLandingOnSafeSpot();
                 }
                 if (JumpUntilHeight > -1)
@@ -5102,7 +5104,6 @@ namespace giantsummon
                 if (Math.Abs(CenterPosition.X - Main.player[OwnerPos].Center.X) > (Main.screenWidth + Width) * 0.5f ||
                     Math.Abs(CenterPosition.Y - Main.player[OwnerPos].Center.Y) > (Main.screenHeight + Height) * 0.5f)
                     IncreaseStuckTimer();
-                //if (PlayerMounted) ToggleMount();
                 CheckIfSomeoneNeedsRevive(true);
                 if (PlayerControl) TogglePlayerControl();
                 if (GuardingPosition.HasValue) ToggleWait();
@@ -6373,6 +6374,16 @@ namespace giantsummon
             get { return emote != null && emote.lifeTime > 0; }
         }
 
+        public bool IsInCompanionActivityTime
+        {
+            get
+            {
+                if (Base.IsNocturnal)
+                    return !Main.dayTime;
+                return Main.dayTime;
+            }
+        }
+
         public bool NewIdleBehavior()
         {
             if (!IsAttackingSomething && TalkPlayerID > -1)
@@ -6435,7 +6446,7 @@ namespace giantsummon
                 {
                     if (MoveIndoors)
                     {
-                        if ((!Base.IsNocturnal && !Main.dayTime && Main.time == 0) || (!Base.IsNocturnal && Main.dayTime && Main.time >= 5400 && WorldMod.LastTime < 5400))
+                        if ((!Base.IsNocturnal && !Main.dayTime && Main.time == 0) || (Base.IsNocturnal && Main.dayTime && Main.time >= 5400 && WorldMod.LastTime < 5400))
                         {
                             if (UsingFurniture)
                                 LeaveFurniture();

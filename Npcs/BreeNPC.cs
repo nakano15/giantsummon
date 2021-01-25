@@ -204,7 +204,22 @@ namespace giantsummon.Npcs
                             break;
                         case SceneIds.SardineFlees:
                             if (PlayerMod.GetPlayerMainGuardian(player).Active)
+                            {
+                                TerraGuardian SardineRef = null;
+                                foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                                {
+                                    if (tg.ID == 2 && tg.ModID == MainMod.mod.Name)
+                                    {
+                                        SardineRef = tg;
+                                        break;
+                                    }
+                                }
                                 player.GetModPlayer<PlayerMod>().DismissGuardian(2, "");
+                                if(SardineRef != null && SardineRef.Active)
+                                {
+                                    SardineRef.Spawn();
+                                }
+                            }
                             SayMessage("What? Where did he go?");
                             ChangeScene(SceneIds.BreeAsksWhereSardineWent);
                             break;
