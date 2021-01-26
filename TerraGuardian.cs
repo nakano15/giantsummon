@@ -6590,7 +6590,16 @@ namespace giantsummon
                                 if (MayTryGoingSleep)
                                 {
                                     if (IdleActionTime == 0 || (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.Wait))
-                                        ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
+                                    {
+                                        if (Math.Abs(Position.X - HouseX) > 200 || Math.Abs(Position.Y - HouseY) > 200)
+                                        {
+                                            ChangeIdleAction(IdleActions.GoHome, 200);
+                                        }
+                                        else
+                                        {
+                                            ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
+                                        }
+                                    }
                                     if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
                                     {
                                         DropFromPlatform = true;

@@ -26,6 +26,11 @@ namespace giantsummon.Compatibility
             else SetGuardianLevel.Add(gi, Level);
         }
 
+        public static void GiveExpRewardToPlayer(Player player, float Level, float Difficulty)
+        {
+
+        }
+
         public static void ResetOnWorldLoad()
         {
             SetGuardianLevel.Clear();

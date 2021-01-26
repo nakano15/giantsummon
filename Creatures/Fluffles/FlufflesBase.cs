@@ -83,7 +83,7 @@ namespace giantsummon.Creatures
 
             LeftHandPoints.AddFramePoint2x(10, 25, 31);
 
-            LeftHandPoints.AddFramePoint2x(15, 39, 48);
+            LeftHandPoints.AddFramePoint2x(15, 39, 44);
 
             //Right Arm
             RightHandPoints.AddFramePoint2x(6, 27, 3);
@@ -91,7 +91,7 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(8, 38, 20);
             RightHandPoints.AddFramePoint2x(9, 34, 29);
 
-            RightHandPoints.AddFramePoint2x(15, 42, 48);
+            RightHandPoints.AddFramePoint2x(15, 42, 44);
             
             //Headgear
             HeadVanityPosition.DefaultCoordinate2x = new Point(22, 13);
@@ -276,7 +276,7 @@ namespace giantsummon.Creatures
         public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
         {
             List<string> Mes = new List<string>();
-            if (IsPlayer && RevivePlayer.whoAmI == RevivePlayer.whoAmI)
+            if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
             {
                 Mes.Add("(Tear drops are falling on your body.)");
                 Mes.Add("(She's trying to ease your pain.)");
@@ -284,9 +284,18 @@ namespace giantsummon.Creatures
             }
             else
             {
-                Mes.Add("(She's trying to soothe the one she's tending.)");
-                Mes.Add("(She's trying to reduce the pain.)");
-                Mes.Add("(She seems to be tending the wounds.)");
+                if (!IsPlayer && Guardian.ID == Leopold && Guardian.ModID == MainMod.mod.Name)
+                {
+                    Mes.Add("(She seems to be trying her best to reanimate him.)");
+                    Mes.Add("(She seems to be crying while attempting to revive him.)");
+                    Mes.Add("(She seems to be trying to make him comfortable, while healing his wounds.)");
+                }
+                else
+                {
+                    Mes.Add("(She's trying to soothe the one she's tending.)");
+                    Mes.Add("(She's trying to reduce the pain.)");
+                    Mes.Add("(She seems to be tending the wounds.)");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -393,18 +402,30 @@ namespace giantsummon.Creatures
             ColorMod = GetColorMod;
             foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
             {
-                if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
-                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
-                    gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
+                if(gdd.textureType == GuardianDrawData.TextureType.TGHeadAccessory)
+                {
+                    if (guardian.KnockedOut)
+                    {
+                        gdd.color = GhostfyColor(gdd.color, KoAlpha, 1f);
+                    }
+                }
+                else if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
+                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
                 {
                     gdd.color = GhostfyColor(gdd.color, KoAlpha, ColorMod);
                 }
             }
             foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
             {
-                if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
-                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
-                    gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
+                if (gdd.textureType == GuardianDrawData.TextureType.TGHeadAccessory)
+                {
+                    if (guardian.KnockedOut)
+                    {
+                        gdd.color = GhostfyColor(gdd.color, KoAlpha, 1f);
+                    }
+                }
+                else if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
+                    gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings)
                 {
                     gdd.color = GhostfyColor(gdd.color, KoAlpha, ColorMod);
                 }
@@ -482,6 +503,11 @@ namespace giantsummon.Creatures
                         {
                             KnockoutAlpha[guardian.WhoAmID] -= 0.005f;
                             if (KnockoutAlpha[guardian.WhoAmID] < MinOpacity)
+                                KnockoutAlpha[guardian.WhoAmID] = MinOpacity;
+                        }else if(KnockoutAlpha[guardian.WhoAmID] < MinOpacity)
+                        {
+                            KnockoutAlpha[guardian.WhoAmID] += 0.005f;
+                            if (KnockoutAlpha[guardian.WhoAmID] > MinOpacity)
                                 KnockoutAlpha[guardian.WhoAmID] = MinOpacity;
                         }
                     }

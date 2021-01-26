@@ -7,3 +7,8 @@ Boosted by 10 times the chance of companions visiting you.
 Topics can now have requirement setup.
 Brutus recruit npc will now face you during dialogues.
 Fixed an Idle AI issue with nocturnal companions. Now they should behave correctly at night.
+Fixed an issue where revive messages from Fluffles related to your character would show regardless of who's being revived.
+Fluffles headgear will now correctly vanish when she's knocked out.
+Readjusted some weird pixels that were missing on Fluffles belly.
+Fluffles will now be a bit higher from the floor when reviving someone.
+Companions will now check if they in their houses, before trying to go sleep.
