@@ -564,7 +564,11 @@ namespace giantsummon
                 if (g.ID == ID && g.ModID == ModID)
                     return g;
             }
-            return player.GetModPlayer<PlayerMod>().Guardian;
+            if (player.GetModPlayer<PlayerMod>().Guardian.MyID.IsSameID(ID, ModID))
+            {
+                return player.GetModPlayer<PlayerMod>().Guardian;
+            }
+            return null;
         }
 
         public static TerraGuardian GetPlayerMainGuardian(Player player)
@@ -849,6 +853,7 @@ namespace giantsummon
                 if (ReviveBoost > 0 && player.breath < player.breathMax - 1)
                 {
                     player.breathCD += 1 + (ReviveBoost / 2);
+                    player.breath++;
                     if (player.breathCD > 5)
                     {
                         player.breathCD -= 5;

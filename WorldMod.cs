@@ -751,6 +751,24 @@ namespace giantsummon
                 return;
             }
             if (Housing_IsRoomCrowded(gb)) return;
+            if (gb.MoveInLevel > 0)
+            {
+                bool SomeoneHasTheLevel = false;
+                for (int p = 0; p < 255; p++)
+                {
+                    if (Main.player[p].active)
+                    {
+                        PlayerMod pm = Main.player[p].GetModPlayer<PlayerMod>();
+                        if(pm.HasGuardian(GuardianID, ModID) && pm.GetGuardian(GuardianID, ModID).FriendshipLevel >= gb.MoveInLevel)
+                        {
+                            SomeoneHasTheLevel = true;
+                            break;
+                        }
+                    }
+                }
+                if (!SomeoneHasTheLevel)
+                    return;
+            }
             for (int npc = 0; npc < GuardianTownNPC.Count; npc++)
             {
                 GuardianTownNpcState townstate = GuardianTownNPC[npc].GetTownNpcInfo;
@@ -980,6 +998,17 @@ namespace giantsummon
                 return false;
             }
             GuardianTownNpcState townstate = tg.GetTownNpcInfo;
+            if(townstate == null)
+            {
+                AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
+                townstate = tg.GetTownNpcInfo;
+                if (townstate == null)
+                {
+                    if (!Silent)
+                        Main.NewText("The world is too crowded for " + tg.Name + " to move in.", Color.Red, false);
+                    return false;
+                }
+            }
             townstate.Homeless = false;
             int HomeX = WorldGen.bestX, HomeY = WorldGen.bestY;
             Housing_TryGettingPlaceForCompanionToStay(ref HomeX, ref HomeY);

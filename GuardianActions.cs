@@ -607,6 +607,11 @@ namespace giantsummon
                         {
                             if (guardian.furniturex > -1)
                                 guardian.LeaveFurniture(false);
+                            if(guardian.BeingPulledByPlayer)
+                            {
+                                InUse = false;
+                                return;
+                            }
                             if ((guardian.PlayerMounted && (Players.Count == 0 || Players[0].whoAmI != guardian.OwnerPos)) || guardian.Is2PControlled)
                             {
                                 if (!guardian.MoveDown)

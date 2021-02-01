@@ -815,7 +815,7 @@ namespace giantsummon.Creatures
                 "*Great! Now I can do experiements with some kind of acid I've discovered. Thank you.*",
                 "*Still didn't got the Squirrels I want? You can find them in the Forest, right? Now go.*",
                 "*[nickname]... I will use you for my experiement tonight... If you don't go away now...*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.Squirrel, 10);
+            AddItemCollectionObjective(Terraria.ID.ItemID.Squirrel, 3);
             AddNewRequest("Ornithophobia", 325,
                 "*I'm pretty sure that you'll be interessed in doing my current request. The Harpies you can find in the sky, they have feathers that will be useful for my experiement. Would you mind getting a number of them?*",
                 "*You wouldn't disappoint me, right, [nickname]? If you find trouble finding the Harpies, try building a skybridge when nearly leaving the atmosphere. They wont resist, for sure.*",
@@ -830,7 +830,7 @@ namespace giantsummon.Creatures
                 "*Grrr... I should do It then! Thanks for nothing.*",
                 "*You did? Good! You just avenged by backside, that will teach them to not pop up behind me when I'm about to sit.*",
                 "*Having troubles finding Slimes, [nickname]? They are literally everywhere! How could you be lost?*");
-            AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 50, 0);
+            AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 30, 0);
         }
     }
 }

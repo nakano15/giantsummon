@@ -12,3 +12,11 @@ Fluffles headgear will now correctly vanish when she's knocked out.
 Readjusted some weird pixels that were missing on Fluffles belly.
 Fluffles will now be a bit higher from the floor when reviving someone.
 Companions will now check if they in their houses, before trying to go sleep.
+Companions will now try not to keep stepping on dangerous tiles.
+Nerfed Malisha's request objective counts for "Helper Number 1" and "Counterstrike of the Panther" requests.
+Companions will no longer stare at their leader when charging ahead of them. They will now face the direction the player is facing.
+Companions now has a higher vertical range check for seeing if they should attack a monster.
+	Their decision also increases based on their size.
+Companions will now stop trying to revive someone when you pull them to your position.
+Any companion will no longer help other companions who got defeated while underwater to drown.
+Domino recruit npc will no longer "softlock" If you remove Brutus from your team, after either letting him move in to your world, or not.

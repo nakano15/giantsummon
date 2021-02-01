@@ -39,7 +39,19 @@ namespace giantsummon.Npcs
 
         public override void AI()
         {
-            bool PlayerHasBrutusSummoned = PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID);
+            TerraGuardian Brutustg = PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], BrutusID);
+            bool PlayerHasBrutusSummoned = Brutustg != null;
+            if(Brutustg == null)
+            {
+                foreach(TerraGuardian tg in WorldMod.GuardianTownNPC)
+                {
+                    if(tg.ID == BrutusID && tg.ModID == MainMod.mod.Name)
+                    {
+                        Brutustg = tg;
+                        break;
+                    }
+                }
+            }
             Player player = Main.player[Main.myPlayer];
             bool PlayerHasDomino = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Domino);
             string BrutusChat = "";
@@ -156,9 +168,10 @@ namespace giantsummon.Npcs
                             break;
                     }
                 }
-                else if (!PlayerHasBrutusSummoned)
+                else if (!PlayerHasDomino && !PlayerHasBrutusSummoned && DialogueStep == -1)
                 {
                     Idle = true;
+                    DialogueTime = 0;
                 }
                 else
                 {
@@ -414,9 +427,9 @@ namespace giantsummon.Npcs
             {
                 npc.active = false;
             }
-            if (PlayerHasBrutusSummoned && BrutusChat != "")
+            if (BrutusChat != "" && Brutustg != null)
             {
-                PlayerMod.GetPlayerSummonedGuardian(player, BrutusID).SaySomething(BrutusChat);
+                Brutustg.SaySomething(BrutusChat);
             }
             base.AI();
         }

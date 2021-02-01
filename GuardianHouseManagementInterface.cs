@@ -92,30 +92,32 @@ namespace giantsummon
                 float SlotSpace = (56 * Scale);
                 int MaxRowItems = (int)((Main.screenWidth - 64) / SlotSpace);
                 Vector2 RowPosition = new Vector2(0, Main.screenHeight - SlotSpace - 8);
-                int CurrentGuardian = 0;
                 bool MouseOverHouseIcon = false;
-                List<TerraGuardian> Guardians = new List<TerraGuardian>();
-                foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
+                List<TerraGuardian[]> GuardianRows = new List<TerraGuardian[]>();
                 {
-                    if (tg.GetTownNpcInfo != null && tg.FriendshipLevel >= tg.Base.MoveInLevel)
-                        Guardians.Add(tg);
-                }
-                while (CurrentGuardian < Guardians.Count)
-                {
-                    int MaxNum = Guardians.Count - CurrentGuardian;
-                    if (MaxNum <= 0)
-                        break;
-                    if (MaxNum > MaxRowItems)
+                    List<TerraGuardian> Guardians = new List<TerraGuardian>();
+                    int Counter = 0;
+                    foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                     {
-                        MaxNum = MaxRowItems;
+                        if (tg.FriendshipLevel >= tg.Base.MoveInLevel)
+                            Guardians.Add(tg);
+                        Counter++;
+                        if (Counter >= MaxRowItems)
+                        {
+                            GuardianRows.Add(Guardians.ToArray());
+                            Guardians.Clear();
+                        }
                     }
-                    RowPosition.X = Main.screenWidth * 0.5f - MaxNum * SlotSpace * 0.5f;
-                    for (int num = 0; num < MaxNum; num++)
+                    GuardianRows.Add(Guardians.ToArray());
+                    Guardians.Clear();
+                }
+                for (int r = 0; r < GuardianRows.Count; r++)
+                {
+                    RowPosition.X = Main.screenWidth * 0.5f - GuardianRows[r].Length * SlotSpace * 0.5f;
+                    for (int n = 0; n < GuardianRows[r].Length; n++)
                     {
-                        if (CurrentGuardian >= Guardians.Count)
-                            break;
                         Main.spriteBatch.Draw(Main.inventoryBack6Texture, RowPosition, null, Main.inventoryBack, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
-                        Guardians[CurrentGuardian].DrawHead(RowPosition + new Vector2(28, 28) * Scale);
+                        GuardianRows[r][n].DrawHead(RowPosition + new Vector2(28, 28) * Scale);
                         if (Main.mouseX >= RowPosition.X && Main.mouseX < RowPosition.X + SlotSpace &&
                             Main.mouseY >= RowPosition.Y && Main.mouseY < RowPosition.Y + SlotSpace)
                         {
@@ -124,12 +126,11 @@ namespace giantsummon
                             if (Main.mouseLeft && Main.mouseLeftRelease)
                             {
                                 IsPickingAGuardianHouse = true;
-                                PickedGuardianToGiveHousing = Guardians[CurrentGuardian].WhoAmID;
+                                PickedGuardianToGiveHousing = GuardianRows[r][n].WhoAmID;
                                 Main.PlaySound(12, -1, -1, 1, 1f, 0f);
                             }
                         }
                         RowPosition.X += SlotSpace;
-                        CurrentGuardian++;
                     }
                     RowPosition.Y -= SlotSpace;
                 }

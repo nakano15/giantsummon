@@ -37,5 +37,10 @@ namespace giantsummon
         {
             return g.ID == ID && g.ModID == ModID;
         }
+
+        public bool IsSameID(int ID, string ModID = "")
+        {
+            return ID == this.ID && ModID == this.ModID;
+        }
     }
 }

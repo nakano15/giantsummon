@@ -1712,6 +1712,11 @@ namespace giantsummon
                 if (Breath < BreathMax - 1)
                 {
                     BreathCooldown += 1 + ReviveBoost / 2;
+                    if(BreathCooldown > 5)
+                    {
+                        BreathCooldown -= 5;
+                        Breath++;
+                    }
                 }
                 if (ReviveBoost + TownNpcs > 255)
                     ReviveBoost = 255;
@@ -4423,7 +4428,8 @@ namespace giantsummon
         }
 
         public const int NormalTargetMemoryTime = 5 * 60, BossTargetMemoryTime = 30 * 60;
-        public sbyte MeleePosition = -1, RangedPosition = -1, MagicPosition = -1; 
+        public sbyte MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
+        private int LastCheckedWeapon = -1, LastCheckedWeaponAttackRange = -1;
 
         public void NewCombatScript()
         {
@@ -4455,11 +4461,6 @@ namespace giantsummon
             int TargetWidth = 0, TargetHeight = 0;
             bool TargetIsBoss = false;
             bool ThroughWall = false;
-            float MaxAttackRange = -1;
-            if (SelectedItem > -1 && MainMod.ItemAttackRange.Any(x => x.Key.Type == Inventory[SelectedItem].type))
-            {
-                MaxAttackRange = MainMod.ItemAttackRange.First(x => x.Key.Type == Inventory[SelectedItem].type).Value;
-            }
             switch (TargetType)
             {
                 case TargetTypes.Npc:
@@ -4504,12 +4505,14 @@ namespace giantsummon
             if (!AttackingTarget)
             {
                 float LCX = Position.X, RCX = Position.X;
-                int XCheckDistance = 320, YCheckDistance = 180;
+                int XCheckDistance = 320, YCheckDistance = 280;
                 if (TargetIsBoss)
                 {
-                    XCheckDistance += 160;
+                    XCheckDistance *= 2;
                     YCheckDistance *= 2;
                 }
+                XCheckDistance += (int)(Width * 0.5f);
+                YCheckDistance += (int)(Height * 0.5f);
                 if (OwnerPos > -1 && !GuardingPosition.HasValue)
                 {
                     Player p = Main.player[OwnerPos];
@@ -4694,6 +4697,23 @@ namespace giantsummon
                 bool InRangeX, InRangeY;
                 CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
                 bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
+                float MaxAttackRange = -1;
+                if (SelectedItem > -1)
+                {
+                    if (LastCheckedWeapon != Inventory[SelectedItem].type)
+                    {
+                        LastCheckedWeapon = Inventory[SelectedItem].type;
+                        if (MainMod.ItemAttackRange.Any(x => x.Key.Type == Inventory[SelectedItem].type))
+                        {
+                            LastCheckedWeaponAttackRange = MainMod.ItemAttackRange.First(x => x.Key.Type == Inventory[SelectedItem].type).Value;
+                        }
+                        else
+                        {
+                            LastCheckedWeaponAttackRange = -1;
+                        }
+                    }
+                    MaxAttackRange = LastCheckedWeaponAttackRange;
+                }
                 if (!TargetOnSight)
                 {
                     float Distance = 16;
@@ -5071,8 +5091,12 @@ namespace giantsummon
                     if(!CanDualWield)
                         OffHandAction = true;
                     CheckForLifeCrystals();
-                    TryJumpingTallTiles();
-                    CheckIfNeedsJumping();
+                    if (!SittingOnPlayerMount)
+                    {
+                        TryJumpingTallTiles();
+                        CheckIfNeedsJumping();
+                        CheckIfIsSteppingOnDamageTiles();
+                    }
                     //if (OwnerPos > -1 && AssistSlot == 0 && Main.player[OwnerPos].dead)
                     ///    GuardianActions.UseResurrectOnPlayer(this, Main.player[OwnerPos]);
                     //TryLandingOnSafeSpot();
@@ -5128,6 +5152,37 @@ namespace giantsummon
                     }
                 }
             }*/
+        }
+
+        public void CheckIfIsSteppingOnDamageTiles()
+        {
+            if (Velocity.Y != 0 || MoveLeft || MoveRight)
+                return;
+            bool OnDamageTile = false;
+            int MinTileX = (int)(Position.X - Width * 0.5f) / 16, MaxTileX = (int)(Position.X + Width * 0.5f) / 16, TileY = (int)(Position.Y) / 16;
+            for (int x = MinTileX; x <= MaxTileX; x++)
+            {
+                for (int y = 0; y < 2; y++)
+                {
+                    Tile tile = Main.tile[x, TileY + y];
+                    if(tile.active() && (Terraria.ID.TileID.Sets.TouchDamageHot[tile.type] > 0 || Terraria.ID.TileID.Sets.TouchDamageOther[tile.type] > 0))
+                    {
+                        OnDamageTile = true;
+                        break;
+                    }
+                }
+            }
+            if (!OnDamageTile)
+                return;
+            bool MoveToLeft = LookingLeft;
+            if(OwnerPos > -1)
+            {
+                MoveToLeft = Main.player[OwnerPos].Center.X < Position.X;
+            }
+            if (MoveToLeft)
+                MoveLeft = true;
+            else
+                MoveRight = true;
         }
 
         public void CheckForVendors()
@@ -9602,15 +9657,18 @@ namespace giantsummon
             }
             float XDiscount = 0;
             bool Confused = HasFlag(GuardianFlags.Confusion) && OwnerPos > -1;
-            if (ChargeAhead)
+            /*if (ChargeAhead)
             {
-                PositionDifference.X += (96f + Math.Abs(Owner.velocity.X)) * Owner.direction * (Confused ? -1 : 1);
-            }
-            PositionDifference -= Position;
+                PositionDifference.X += (48f + Math.Abs(Owner.velocity.X)) * Owner.direction * (Confused ? -1 : 1);
+            }*/
             float DistanceMult = IsAttackingSomething ? 1.5f : 1f, 
                   DistanceBonus = 48 * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
             if (ChargeAhead)
-                PositionDifference.X += DistanceBonus * Owner.direction * (Confused ? -1 : 1);
+            {
+                PositionDifference.X += (48f + Math.Abs(Owner.velocity.X) + DistanceBonus) * Owner.direction * (Confused ? -1 : 1);
+                XDiscount = DistanceBonus + 20;
+            }
+            PositionDifference -= Position;
             DistanceMult *= Scale;
             if (ProtectMode && IsAttackingSomething)
                 DistanceMult *= 0.2f;
@@ -9679,6 +9737,8 @@ namespace giantsummon
                             Direction = 1;
                         else
                             Direction = -1;
+                        if (ChargeAhead)
+                            Direction *= -1;
                     }
                 }
                 bool TryFlying = WingType > 0,
