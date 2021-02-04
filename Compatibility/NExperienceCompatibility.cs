@@ -28,7 +28,7 @@ namespace giantsummon.Compatibility
 
         public static void GiveExpRewardToPlayer(Player player, float Level, float Difficulty)
         {
-
+            player.GetModPlayer<NExperience.PlayerMod>().GetExpReward(Level, Difficulty);
         }
 
         public static void ResetOnWorldLoad()

@@ -2532,7 +2532,7 @@ namespace giantsummon
 
             foreach (TerraGuardian g in GetAllGuardianFollowers)
             {
-                if (!g.Active)
+                if (!g.Active || !g.InCameraRange())
                     continue;
                 g.DrawDataCreation();
                 int BackStack = 0, FurnitureStack = 0;

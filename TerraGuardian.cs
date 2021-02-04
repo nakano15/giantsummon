@@ -1777,6 +1777,12 @@ namespace giantsummon
             MainMod.DrawMoment.Add(gdm);
         }
 
+        public bool InCameraRange()
+        {
+            return (Math.Abs(Position.X - Main.player[Main.myPlayer].Center.X) < Main.screenWidth * 0.5f + 200 &&
+                Math.Abs(CenterPosition.Y - Main.player[Main.myPlayer].Center.Y) < Main.screenHeight * 0.5f + 150);
+        }
+
         public void Update(Player Owner = null)
         {
             if (!Active)
@@ -1972,7 +1978,10 @@ namespace giantsummon
                 UpdateManaRegen();
                 UpdateExtraStuff();
             }
-            UpdateAnimation();
+            if (InCameraRange())
+            {
+                UpdateAnimation();
+            }
             CheckFriendshipProgression();
             if (ImmuneTime > 0)
             {
@@ -5020,7 +5029,7 @@ namespace giantsummon
         {
             if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos != Main.myPlayer)
                 return;
-            if (KnockedOut && OwnerPos == -1 && IsTownNpc && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime)))
+            if (KnockedOut && OwnerPos == -1 && IsTownNpc && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime) || Breath <= 0))
             {
                 bool IsPlayerNearby = false;
                 for (int i = 0; i < 255; i++)
@@ -5133,7 +5142,6 @@ namespace giantsummon
                 if (GuardingPosition.HasValue) ToggleWait();
             }
             UpdateFurnitureUsageScript();
-            //LootItemScript();
             DoLootItems();
             /*if (TargetID == -1 && !UsingFurniture && Velocity.X == 0) //Needs some review
             {
@@ -6260,26 +6268,7 @@ namespace giantsummon
                 {
                     if (CollisionX)
                     {
-                        /*bool HasNoTile = false;
-                        if (!LastJump)
-                        {
-                            int MaxJumpTiles = (int)(JumpSpeed * this.MaxJumpHeight) / 16;
-                            for (int y = 0; y <= MaxJumpTiles; y++)
-                            {
-                                int TileX = CenterX + (Velocity.X < 0 ? -2 : 2),
-                                    TileY = BottomY - y;
-                                Tile tile = Framing.GetTileSafely(TileX, TileY);
-                                if (!tile.active() || !Main.tileSolid[tile.type])
-                                {
-                                    HasNoTile = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (HasNoTile || JumpHeight > 0)*/
-                        {
-                            Jump = true;
-                        }
+                        Jump = true;
                     }
                 }
             }
@@ -6609,7 +6598,7 @@ namespace giantsummon
                         }
                         else //Has House
                         {
-                            float XDif = Position.X - HouseX - 16, YDif = Position.Y - HouseY;
+                            float XDif = Position.X - HouseX - 16, YDif = Position.Y - HouseY - 16;
                             if (CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome && (Math.Abs(XDif) > 8 || Math.Abs(YDif) > 48))
                             {
                                 if (CurrentIdleAction != IdleActions.Wander || IdleActionTime <= 0)
@@ -8040,8 +8029,6 @@ namespace giantsummon
 
         public void DoForceKill(string DeathMessage = "")
         {
-            if (DeathMessage != "")
-                DeathMessage = Name + DeathMessage;
             ForceKill = true;
             Knockout(DeathMessage);
         }
@@ -9252,12 +9239,49 @@ namespace giantsummon
             {
                 if (i < 200 && Main.npc[i].active)
                 {
+                    Vector4 NearestMember = Vector4.Zero;
+                    float NearestDistance = float.MaxValue;
                     foreach (Vector4 MemberPosition in PartyMembersPosition)
+                    {
+                        float Distance = ((MemberPosition.XY() + MemberPosition.ZW() * 0.5f) - Main.npc[i].Center).Length();
+                        if (Distance < NearestDistance)
+                        {
+                            NearestDistance = Distance;
+                            NearestMember = MemberPosition;
+                        }
+                    }
+                    Vector2 NpcCenter = Main.npc[i].Center;
+                    Tile NpcTile = Framing.GetTileSafely((int)NpcCenter.X / 16, (int)NpcCenter.Y / 16);
+                    if ((Main.npc[i].behindTiles && (!NpcTile.active() || !Main.tileSolid[NpcTile.type])) || Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
+                    {
+                        Vector2 MemberCenter = NearestMember.XY() + NearestMember.ZW() * 0.5f;
+                        if (Math.Abs(NpcCenter.X - MemberCenter.X) < (Main.npc[i].width + NearestMember.Z) + ThreatDetectionDistance &&
+                                Math.Abs(NpcCenter.Y - MemberCenter.Y) < (Main.npc[i].height + NearestMember.W) + ThreatDetectionDistance)
+                        {
+                            if (!this.NpcsSpotted.Contains(i))
+                            {
+                                this.DoTrigger(TriggerTypes.NpcSpotted, i);
+                            }
+                            NpcsSpotted.Add(i);
+                        }
+                        if (Main.npc[i].CanBeChasedBy(null))
+                        {
+                            float Distance = Main.npc[i].Distance(MemberCenter);
+                            if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type] || Main.npc[i].boss)
+                                Distance *= 0.5f;
+                            if (Distance < NearestTargetDistance)
+                            {
+                                NearestTargetDistance = Distance;
+                                TargetID = i;
+                                TargetType = TargetTypes.Npc;
+                            }
+                        }
+                    }
+                    /*foreach (Vector4 MemberPosition in PartyMembersPosition)
                     {
                         if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
                         {
                             Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
-                            Vector2 NpcCenter = Main.npc[i].Center;
                             if (Math.Abs(NpcCenter.X - MemberCenter.X) < (Main.npc[i].width + MemberPosition.Z) + ThreatDetectionDistance &&
                                 Math.Abs(NpcCenter.Y - MemberCenter.Y) < (Main.npc[i].height + MemberPosition.W) + ThreatDetectionDistance)
                             {
@@ -9280,7 +9304,7 @@ namespace giantsummon
                                 }
                             }
                         }
-                    }
+                    }*/
                 }
                 if (Main.player[i].active)
                 {
@@ -14214,6 +14238,12 @@ namespace giantsummon
                         }
                         break;
                 }
+                if(type != 229)
+                {
+                    JumpHeight = 0;
+                    return;
+                }
+
             }
         }
 
@@ -15629,11 +15659,12 @@ namespace giantsummon
             {
                 Position.X -= MainMod.LosangleOfUnnown.Width * XOffset;
                 Position.Y -= MainMod.LosangleOfUnnown.Height * XOffset;
-                GuardianDrawData losangle = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, MainMod.LosangleOfUnnown, Position,
-                 null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None);
-                losangle.Draw(Main.spriteBatch);
+                new GuardianDrawData(GuardianDrawData.TextureType.TGHead, MainMod.LosangleOfUnnown, Position,
+                 null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None).Draw(Main.spriteBatch);
                 return;
             }
+            if (!Base.sprites.IsTextureLoaded)
+                Base.sprites.LoadTextures();
             if (Base.IsTerrarian)
             {
                 Position.Y -= 16f;

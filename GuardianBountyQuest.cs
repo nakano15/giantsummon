@@ -17,7 +17,7 @@ namespace giantsummon
         public static bool IsAnnouncementBox = false;
         public static int SpawnStress = 0;
         public static int TargetMonsterID = 0, TargetMonsterSpawnPosition = -1;
-        public static string TargetName = "", Suffix = ""; //How to recognize who defeated it?
+        public static string TargetName = "", Suffix = "";
         public static string TargetFullName { get { return TargetName + " the " + Suffix; } }
         public static SpawnBiome spawnBiome = SpawnBiome.Corruption;
         public static List<Modifiers> modifier = new List<Modifiers>();
@@ -437,11 +437,20 @@ namespace giantsummon
                     GiveRewardToPlayer(i, player);
                     //player.GetItem(player.whoAmI, i, true);
                 }
+                int ValueStack = CoinReward;
                 foreach (Item i in RewardList)
                 {
                     Item ni = i.Clone();
                     GiveRewardToPlayer(ni, player);
+                    if (ni.value > 1)
+                        ValueStack += ni.value * i.stack / 16;
+                    else
+                        ValueStack += ni.value * i.stack;
                     //player.GetItem(player.whoAmI, ni, true);
+                }
+                if (Compatibility.NExperienceCompatibility.IsModActive)
+                {
+                    Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player, 5 + (float)ValueStack / 250, 0.15f);
                 }
                 BountyProgress[player.name] = BountyRewardRedeemed;
                 return true;

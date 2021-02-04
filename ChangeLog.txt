@@ -20,3 +20,12 @@ Companions now has a higher vertical range check for seeing if they should attac
 Companions will now stop trying to revive someone when you pull them to your position.
 Any companion will no longer help other companions who got defeated while underwater to drown.
 Domino recruit npc will no longer "softlock" If you remove Brutus from your team, after either letting him move in to your world, or not.
+The mod will no longer try drawing or updating the animation of companions not in camera range.
+	My fps went from about 20 to about 45 after this change.
+Companions will now be slowed down by honey blocks.
+Drowned companion town npcs will now be moved back to their houses, when they are knocked out.
+The script of checking for targets has been made faster.
+	Eater of Worlds, and possibly The Destroyer will no longer cause your game to lose fps.
+The mod will no longer show the companion name twice on their death message.
+	If you didn't see this bug yet, I congratulate you for taking care of your companions.
+Revamped a bit Vladimir body sprites.

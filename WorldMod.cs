@@ -554,8 +554,19 @@ namespace giantsummon
                 Main.GameViewMatrix.TransformationMatrix);
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
-                if (tg.OwnerPos == -1 && !MainMod.DrawMoment.Any(x => x.GuardianWhoAmID == tg.WhoAmID))
+                if (tg.OwnerPos == -1 && tg.InCameraRange())
                 {
+                    bool HasDrawMoment = false;
+                    foreach (GuardianDrawMoment dm in MainMod.DrawMoment)
+                    {
+                        if (dm.GuardianWhoAmID == tg.WhoAmID)
+                        {
+                            HasDrawMoment = true;
+                            break;
+                        }
+                    }
+                    if (HasDrawMoment)
+                        continue;
                     tg.Draw();
                 }
             }
