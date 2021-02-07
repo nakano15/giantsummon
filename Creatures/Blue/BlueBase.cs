@@ -119,7 +119,7 @@ namespace giantsummon.Creatures
             RightArmFrontFrameSwap.Add(29, 0);
 
             //Shoulder Position
-            MountShoulderPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(16 * 2, 16 * 2);
+            MountShoulderPoints.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 16);
             MountShoulderPoints.AddFramePoint2x(11, 29, 22);
             MountShoulderPoints.AddFramePoint2x(12, 33, 29);
 
