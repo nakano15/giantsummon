@@ -26,9 +26,9 @@ namespace giantsummon.Compatibility
             else SetGuardianLevel.Add(gi, Level);
         }
 
-        public static void GiveExpRewardToPlayer(Player player, float Level, float Difficulty)
+        public static void GiveExpRewardToPlayer(Player player, float Level, float Difficulty, bool ShowTooltip = true)
         {
-            player.GetModPlayer<NExperience.PlayerMod>().GetExpReward(Level, Difficulty);
+            player.GetModPlayer<NExperience.PlayerMod>().GetExpReward(Level, Difficulty, ShowTooltip);
         }
 
         public static void ResetOnWorldLoad()

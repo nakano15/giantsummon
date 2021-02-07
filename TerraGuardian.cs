@@ -14243,7 +14243,32 @@ namespace giantsummon
                     JumpHeight = 0;
                     return;
                 }
+            }
+        }
 
+        public void GetItem(int ID, int Stack)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                if (this.Inventory[i].type == ID)
+                {
+                    int StackToGet = this.Inventory[i].maxStack - this.Inventory[i].stack;
+                    if (StackToGet > Stack)
+                        StackToGet = Stack;
+                    this.Inventory[i].stack += StackToGet;
+                    Stack -= StackToGet;
+                    if (Stack == 0)
+                        return;
+                }
+            }
+            for (int i = 0; i < 50; i++)
+            {
+                if (this.Inventory[i].type == 0)
+                {
+                    this.Inventory[i].SetDefaults(ID);
+                    this.Inventory[i].stack = Stack;
+                    return;
+                }
             }
         }
 

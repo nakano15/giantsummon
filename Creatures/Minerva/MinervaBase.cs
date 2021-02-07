@@ -493,42 +493,42 @@ namespace giantsummon.Creatures
                 case 0:
                     {
                         ItemToGet = Terraria.ID.ItemID.BowlofSoup;
-                        Dialogue.ShowEndDialogueMessage("*I hope you enjoy It... The mushroom and the goldfish are fresh.*", false);
+                        Dialogue.ShowDialogue("*I hope you enjoy It... The mushroom and the goldfish are fresh.*");
                         GotFood = true;
                     }
                     break;
                 case 1:
                     {
                         ItemToGet = Terraria.ID.ItemID.CookedFish;
-                        Dialogue.ShowEndDialogueMessage("*The fish were caught last morning... I hope they're at your taste.*", false);
+                        Dialogue.ShowDialogue("*The fish were caught last morning... I hope they're at your taste.*");
                         GotFood = true;
                     }
                     break;
                 case 2:
                     {
                         ItemToGet = Terraria.ID.ItemID.CookedShrimp;
-                        Dialogue.ShowEndDialogueMessage("*The shrimps were caught some time ago and are fresh... Enjoy your meal.*", false);
+                        Dialogue.ShowDialogue("*The shrimps were caught some time ago and are fresh... Enjoy your meal.*");
                         GotFood = true;
                     }
                     break;
                 case 3:
                     {
                         ItemToGet = Terraria.ID.ItemID.PumpkinPie;
-                        Dialogue.ShowEndDialogueMessage("*The pie is still fresh... I hope you like It.*", false);
+                        Dialogue.ShowDialogue("*The pie is still fresh... I hope you like It.*");
                         GotFood = true;
                     }
                     break;
                 case 4:
                     {
                         ItemToGet = Terraria.ID.ItemID.Sashimi;
-                        Dialogue.ShowEndDialogueMessage("*I'm not really experienced with that... So I kind of bought that from the Travelling Merchant, instead.*", false);
+                        Dialogue.ShowDialogue("*I'm not really experienced with that... So I kind of bought that from the Travelling Merchant, instead.*");
                         GotFood = true;
                     }
                     break;
                 case 5:
                     {
-                        ItemToGet = Terraria.ID.ItemID.Grubby;
-                        Dialogue.ShowEndDialogueMessage("*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*", false);
+                        ItemToGet = Terraria.ID.ItemID.GrubSoup;
+                        Dialogue.ShowDialogue("*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*");
                         GotFood = true;
                     }
                     break;
@@ -540,6 +540,21 @@ namespace giantsummon.Creatures
             {
                 player.GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva = true;
                 player.GetItem(Main.myPlayer, Main.item[Item.NewItem(player.getRect(), ItemToGet, 3, true)]);
+                foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                {
+                    if (tg.Active)
+                    {
+                        if (tg.ID == Minerva && tg.ModID == MainMod.mod.Name && ItemToGet == Terraria.ID.ItemID.GrubSoup)
+                        {
+                            tg.GetItem(Terraria.ID.ItemID.BowlofSoup, 3);
+                        }
+                        else
+                        {
+                            tg.GetItem(ItemToGet, 3);
+                        }
+                    }
+                }
+                Dialogue.ShowEndDialogueMessage("*I... Also gave some to your... Companions... If you don't mind...*", false);
             }
         }
     }
