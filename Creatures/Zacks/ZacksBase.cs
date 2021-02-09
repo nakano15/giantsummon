@@ -346,6 +346,21 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*[name] feels bad when goes to talk with [gn:1], because she looks partially joyful and partially saddened.*");
                 Mes.Add("*[name] is thinking about [gn:1], he wishes to be alive and entire again just to be with her.*");
+                if(PlayerMod.PlayerHasGuardianSummoned(player, Blue))
+                {
+                    switch(PlayerMod.GetPlayerGuardian(player, Blue).OutfitID)
+                    {
+                        case 1:
+                            Mes.Add("*[name] says that would howl at [gn:" + Blue + "], if his lungs weren't badly damaged.*");
+                            Mes.Add("*[name] says that [gn:" + Blue + "] looks as great as when they first met.*");
+                            Mes.Add("*[name] says that looking at [gn:" + Blue + "] remembered how much he liked her.*");
+                            break;
+                        case 2:
+                            Mes.Add("*[name] asks [gn:" + Blue + "] where is her cloak. He says that didn't really liked It, but couldn't imagine her not using It.*");
+                            Mes.Add("*[name] seems impressed at [gn:" + Blue + "]'s outfit.*");
+                            break;
+                    }
+                }
             }
             else
             {

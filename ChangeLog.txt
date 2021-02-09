@@ -31,3 +31,5 @@ Companions requests and bounties will now give you Exp on NExperience Mod.
 Asking for food to Minerva now gives a share of them to the companions following you.
 Asking Minerva to give you a Grub Soup, will no longer only give you 3 Grubbys.
 	She will also not prepare a Grub Soup for herself to eat. She will instead get 3 bowls of soup.
+Added Blue's Red Riding Hood Outfit.
+	That outfit also has a cloakless version disponible. It is unlocked alongside the normal outfit.

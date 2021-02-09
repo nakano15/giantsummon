@@ -278,6 +278,8 @@
     <Content Include="Buffs\WellBeing.png" />
     <Content Include="ChangeLog.txt" />
     <Content Include="Creatures\Alex\right_arm_front.png" />
+    <Content Include="Creatures\Blue\red_hood_outfit.png" />
+    <Content Include="Creatures\Blue\red_hood_outfit_body_f.png" />
     <Content Include="Creatures\Bree\bags.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit_f.png" />

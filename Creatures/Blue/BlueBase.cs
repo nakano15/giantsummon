@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace giantsummon.Creatures
 {
     public class BlueBase : GuardianBase
     {
+        public const byte RedHoodOutfitID = 1, CloaklessOutfitID = 2;
+        public const string RedHoodSkinOutfitID = "red_hood_outfit", RedHoodSkinOutfitBodyFrontID = "red_hood_outfit_body_f";
+
         /// <summary>
         /// -Cares about her hair.
         /// -Friendly.
@@ -143,32 +147,266 @@ namespace giantsummon.Creatures
             //Wing
             WingPosition.DefaultCoordinate2x = new Point(22, 21);
 
+            SetupOutfits();
             GetQuests();
             GetRewards();
+            GetTopics();
+        }
+
+        public void SetupOutfits()
+        {
+            AddOutfit(RedHoodOutfitID, "Red Hood Traveller", delegate (GuardianData gd, Player player) { return player.GetModPlayer<PlayerMod>().GetGuardian(Blue).HasPersonalRequestBeenCompleted(10); });
+            AddOutfit(CloaklessOutfitID, "Cloakless Traveller Outfit", delegate (GuardianData gd, Player player) { return player.GetModPlayer<PlayerMod>().GetGuardian(Blue).HasPersonalRequestBeenCompleted(10); });
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(RedHoodSkinOutfitID, "red_hood_outfit");
+            sprites.AddExtraTexture(RedHoodSkinOutfitBodyFrontID, "red_hood_outfit_body_f");
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
+        {
+            if(guardian.OutfitID > 0)
+            {
+                Rectangle BodyRect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
+                    LeftArmRect = guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame),
+                    RightArmRect = guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame);
+                GuardianDrawData gdd;
+                Texture2D texture = sprites.GetExtraTexture(RedHoodSkinOutfitID),
+                    bodyfronttexture = sprites.GetExtraTexture(RedHoodSkinOutfitBodyFrontID);
+                const int TextureGap = 96 * 2;
+                bool Hoodless = guardian.OutfitID == CloaklessOutfitID;
+                bool DrawFront = false;
+                int CloakAnimationFrame = guardian.BodyAnimationFrame;
+                if(!Hoodless && (TerraGuardian.FaceSlot > 0 || TerraGuardian.HeadSlot > 0))
+                {
+                    if(CloakAnimationFrame < 11 || (CloakAnimationFrame >= 16 && CloakAnimationFrame <= 20) || (CloakAnimationFrame >= 24 && CloakAnimationFrame <= 26) || CloakAnimationFrame == 29)
+                    {
+                        CloakAnimationFrame = 13;
+                    }
+                    else if ((CloakAnimationFrame >= 20 && CloakAnimationFrame <= 23) || CloakAnimationFrame == 33)
+                    {
+                        CloakAnimationFrame = 14;
+                    }
+                    else if (CloakAnimationFrame == 27 || CloakAnimationFrame == 31)
+                    {
+                        CloakAnimationFrame = 15;
+                    }
+                }
+                for (int f = TerraGuardian.DrawBehind.Count - 1; f >= 0; f--)
+                {
+                    switch (TerraGuardian.DrawBehind[f].textureType)
+                    {
+                        case GuardianDrawData.TextureType.TGHead:
+                            {
+                                if (!Hoodless)
+                                {
+                                    Rectangle rect = BodyRect;
+                                    //Head
+                                    rect.Y += 8 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                }
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGBody:
+                            {
+                                Rectangle rect = BodyRect;
+                                if (!Hoodless)
+                                {
+                                    //Head
+                                    rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
+                                    rect.Y += 4 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                    //Cloak Right Arm
+                                    rect = RightArmRect;
+                                    rect.Y += 5 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                }
+                                //Shirt
+                                rect = BodyRect;
+                                rect.Y += 3 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                //Pants
+                                rect = BodyRect;
+                                rect.Y += 2 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                //Shoes
+                                rect = BodyRect;
+                                rect.Y += 1 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGLeftArm:
+                            {
+                                Rectangle rect;
+                                if (!Hoodless)
+                                {
+                                    //Head
+                                    rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
+                                    rect.Y += 8 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                    //Cloak Front
+                                    rect = LeftArmRect;
+                                    rect.Y += 7 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                }
+                                //Shirt Sleeve
+                                rect = LeftArmRect;
+                                rect.Y += 6 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGRightArm:
+                            {
+                                if (!Hoodless)
+                                {
+                                    Rectangle rect = RightArmRect;
+                                    //Cloak Right Arm Back
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f - 1, DrawFront);
+                                }
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGBodyFront:
+                            {
+                                //Shirt
+                                Rectangle rect = guardian.GetAnimationFrameRectangle(guardian.Base.GetBodyFrontSprite(guardian.BodyAnimationFrame));
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, bodyfronttexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                            }
+                            break;
+                    }
+                }
+                DrawFront = true;
+                for (int f = TerraGuardian.DrawFront.Count - 1; f >= 0; f--)
+                {
+                    switch (TerraGuardian.DrawFront[f].textureType)
+                    {
+                        case GuardianDrawData.TextureType.TGHead:
+                            {
+                                if (!Hoodless)
+                                {
+                                    Rectangle rect = BodyRect;
+                                    //Head
+                                    rect.Y += 8 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                }
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGBody:
+                            {
+                                Rectangle rect = BodyRect;
+                                if (!Hoodless)
+                                {
+                                    //Head
+                                    rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
+                                    rect.Y += 4 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                    //Cloak Right Arm
+                                    rect = RightArmRect;
+                                    rect.Y += 5 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                }
+                                //Shirt
+                                rect = BodyRect;
+                                rect.Y += 3 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                //Pants
+                                rect = BodyRect;
+                                rect.Y += 2 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                //Shoes
+                                rect = BodyRect;
+                                rect.Y += 1 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGLeftArm:
+                            {
+                                Rectangle rect;
+                                if (!Hoodless)
+                                {
+                                    //Head
+                                    rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
+                                    rect.Y += 8 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                    //Cloak Front
+                                    rect = LeftArmRect;
+                                    rect.Y += 7 * TextureGap;
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                                }
+                                //Shirt Sleeve
+                                rect = LeftArmRect;
+                                rect.Y += 6 * TextureGap;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGRightArm:
+                            {
+                                if (!Hoodless)
+                                {
+                                    Rectangle rect = RightArmRect;
+                                    //Cloak Right Arm Back
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    guardian.AddDrawDataAfter(gdd, f - 1, DrawFront);
+                                }
+                            }
+                            break;
+                        case GuardianDrawData.TextureType.TGBodyFront:
+                            {
+                                //Shirt
+                                Rectangle rect = guardian.GetAnimationFrameRectangle(guardian.Base.GetBodyFrontSprite(guardian.BodyAnimationFrame));
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, bodyfronttexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                guardian.AddDrawDataAfter(gdd, f, DrawFront);
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         public void GetQuests()
         {
+            //0
             AddNewRequest("Revenge", 280,
                 "*She says that everytime she thinks of zombies It makes her very angry, because of what happened to [gn:" + GuardianBase.Zacks + "]. She is asking you if you would mind going get some revenge on them with her.*",
                 "*She tells that the hunt begins.*",
                 "*She seems very furious after you rejected.*",
                 "*She says that doesn't feel like having avenged [gn:" + GuardianBase.Zacks + "], but at least that made her feel a bit better.*",
                 "*She says that you wont find Zombies until the night comes. And tells you not to forget of her.*");
-            AddRequestRequirement(delegate(Player player)
+            AddRequestRequirement(delegate (Player player)
             {
                 return PlayerMod.PlayerHasGuardian(player, GuardianBase.Zacks);
             });
             AddHuntObjective(Terraria.ID.NPCID.Zombie, 10, 0.333f);
-            //
-            AddNewRequest("Slime Bane",185,
+            //1
+            AddNewRequest("Slime Bane", 185,
                 "*She says that the slimes are gross creatures, and asks you to eliminate a number of them.*",
                 "*She tells you not to let them touch you.*",
                 "*She asks If you hate them too.*",
                 "*She seems relieved of knowing that you took care of the Slimes.*",
                 "*She tells you that Slimes appears in many places, but most frequently at Forest during the day.*");
             AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 5, 0.2f);
-            //
+            //2
             AddNewRequest("Privacy, please.", 210,
                 "*She says that dislikes hunting in the night in your world, because there are Demon Eyes peeking at her. She finds that quite disturbing, and want you to black out a number of them.*",
                 "*She tells you to not let their stare intimidate you, while you hunt them.*",
@@ -176,8 +414,8 @@ namespace giantsummon.Creatures
                 "*She thanks you for taking care of her request, then said that she feels less spied at the moment, and that now looks safe to use the bathroom.*",
                 "*She tells you that Demon Eyes appears during the night. She told you to becareful because they swarm their target, but they also can be easily repelled with a hard hitting weapon.*");
             AddHuntObjective(Terraria.ID.NPCID.DemonEye, 5, 0.3f);
-            //
-            AddNewRequest("Bunny",70,
+            //3
+            AddNewRequest("Bunny", 110,
                 "*She is asking if you could get her a Bunny. She didn't gave you a reason as to why she wants one.*",
                 "*She says that will wait until you bring one to her.*",
                 "*She says that doesn't mind, that It was a stupid request anyway.*",
@@ -185,18 +423,18 @@ namespace giantsummon.Creatures
                 "*She tells you that Bunnies can be found in the forest. You can find them easily on safe places.*");
             AddRequestRequirement(RequestBase.GetBugNetRequirement);
             AddItemCollectionObjective(Terraria.ID.ItemID.Bunny, 1, 0);
-            //
+            //4
             AddNewRequest("Loot the Snipers.", 295,
                 "*She is telling you that is running out of Stingers for her potions, and wants you to bring some more for her.*",
                 "*She thanks you, and tells that you can get Stingers from Hornets, at the Underground Jungle.*",
                 "*She looks at you with a disappointment look, and tells that she really needed to do some exercises, and possibly some acrobatics too.*",
                 "*She looks overjoyed after you brought the Stingers to her, then thanked you deeply for that.*");
-            AddRequestRequirement(delegate(Player player)
+            AddRequestRequirement(delegate (Player player)
             {
                 return NPC.downedBoss2 || NPC.downedBoss3;
             });
             AddItemCollectionObjective(Terraria.ID.ItemID.Stinger, 8, 0.2f);
-            //
+            //5
             AddNewRequest("Price of Immunity", 650,
                 "*She tells you of stories about an accessory that gives immunity to poisoning. She tells you that want It, then asks If you would be able to find It for her.*",
                 "*She said that creatures that can inflict poison are the ones you should look for, meaning you should look for It in the Underground Jungle.*",
@@ -204,57 +442,69 @@ namespace giantsummon.Creatures
                 "*When you brought the item, she couldn't believe at first, and had to touch It to find out that It's real. Then she got extremelly overjoyed for you bringing It to her.*",
                 "*She told you that the Underground Jungle is the place you should go to look for those Items.*");
             AddItemCollectionObjective(Terraria.ID.ItemID.Bezoar, 1, 0);
-            AddRequestRequirement(delegate(Player player)
+            AddRequestRequirement(delegate (Player player)
             {
                 return NPC.downedBoss2 || NPC.downedBoss3;
             });
-            //
+            //6
             AddNewRequest("Under the Moonlight", 340,
                 "*She is telling you that a Full Moon is coming, and that It's her favorite time to hunt. She says that It is because Werewolves comes out, and she likes to hunt them down. She asks If you want to join her in the hunt.*",
                 "*She tells you that by having her by your side, the Werewolves will be unable to hurt you.*",
                 "*She looks disappointed, then said that will then try to hunt alone.*",
                 "*She liked the result of the hunt, but you start to freak out a bit after watching her having Werewolf blood all over her fur.*",
                 "*She tells you that Werewolves appears during Full Moon nights, and tells you to beware not to miss it. She also told you to call her when you go hunt in It.*");
-            AddRequestRequirement(delegate(Player player)
+            AddRequestRequirement(delegate (Player player)
             {
                 return Main.hardMode && (Main.moonPhase == 7 || (Main.moonPhase == 0 && Main.dayTime));
             });
             AddHuntObjective(Terraria.ID.NPCID.Werewolf, 9, 0.15f);
             AddRequesterSummonedRequirement();
-            //
+            //7
             AddNewRequest("An attempt of cheering up.", 300,
-                "*She tells you that ever since [gn:"+GuardianBase.Zacks+"] was found, he has been very depressed about his state. She thinks you can help him cheer up by taking him on an adventure.*",
+                "*She tells you that ever since [gn:" + GuardianBase.Zacks + "] was found, he has been very depressed about his state. She thinks you can help him cheer up by taking him on an adventure.*",
                 "*She thanks you, and tells you to take care of him while you two travel.*",
                 "*She asked If you still didn't got over the moment he attacked her and you...*",
                 "*She thanks you for that, and tells you that she will be busy for a few moment, listening to the story of his adventure.*",
-                "*She told you that [gn:"+GuardianBase.Zacks+"] may like taking part in combat during your adventure.*");
-            AddRequestRequirement(delegate(Player player)
+                "*She told you that [gn:" + GuardianBase.Zacks + "] may like taking part in combat during your adventure.*");
+            AddRequestRequirement(delegate (Player player)
             {
                 return PlayerMod.PlayerHasGuardian(player, GuardianBase.Zacks);
             });
             AddCompanionRequirement(GuardianBase.Zacks);
             AddExploreObjective(1200, 50, false);
-            //
+            //8
             AddNewRequest("Hornet Hunt", 270,
                 "*She seems in pain, she tells you that got stung in the behind by a Moss Hornet. Now she wants revenge, and asks for your help.*",
                 "*She told to not let any of them alive.*",
                 "*She asked if you could at least help remove the stings from her behind.*",
                 "*She feels avenged, but said should take a little rest because of all the hornet stings she got hit by during the revenge.*",
                 "*She told you that Moss Hornets appears on the Underground Jungle, If you two are going to hunt them, look for them there.*");
-            AddRequestRequirement(delegate(Player p)
+            AddRequestRequirement(delegate (Player p)
             {
                 return Main.hardMode;
             });
-            //
+            //9
             AddNewRequest("The couple and the candle holder.", 320,
-                "*She says that wants to spend some time with [gn:"+GuardianBase.Zacks+"], but has no idea of what to do meanwhile, then she thought: What If they accompany you on your adventure?*",
-                "*She told you to call [gn:"+GuardianBase.Zacks+"], and to try not to make things awkward during the adventure.*",
+                "*She says that wants to spend some time with [gn:" + GuardianBase.Zacks + "], but has no idea of what to do meanwhile, then she thought: What If they accompany you on your adventure?*",
+                "*She told you to call [gn:" + GuardianBase.Zacks + "], and to try not to make things awkward during the adventure.*",
                 "*She asked If you rejected because the plan is weird.*",
-                "*She said that both [gn:"+GuardianBase.Zacks+"] and her enjoyed the time together, and thanked you for that.*",
+                "*She said that both [gn:" + GuardianBase.Zacks + "] and her enjoyed the time together, and thanked you for that.*",
                 "*She said that It would be perfect to do something extremelly dangerous, and with things to hunt in the way. She also told not to forget about [gn:" + GuardianBase.Zacks + "] and her.*");
             AddExploreObjective(1500, 100, true);
             AddCompanionRequirement(GuardianBase.Zacks);
-            GetTopics();
+            //10
+            AddNewRequest("Memories from the Past", 400, 
+                "*She's telling you that wants to spend some time travelling with you, and asks if you mind if she tagged along.*",
+                "*She got happy and said that we should get to travelling.*",
+                "*She says that It's fine.*", 
+                "*She thanks you for the wonderful time, and tells you that the travelling remembered her of when she met [gn:"+Zacks+"]. She even said that were wearing a specific outfit when she met him, but doesn't know why she's not using It anymore. She then tells you that should begin trying to use It again.*", 
+                "*She tells you that doesn't matter where the travelling leads too, she just needs to explore while she thinks about some things.*");
+            AddExploreObjective(4000, 100);
+            AddRequestRequirement(delegate (Player p)
+            {
+                GuardianData gd = p.GetModPlayer<PlayerMod>().GetGuardian(Blue, "");
+                return PlayerMod.PlayerHasGuardian(p, Zacks) && !gd.HasPersonalRequestBeenCompleted(10);
+            });
         }
         
         public void GetRewards()
@@ -349,6 +599,18 @@ namespace giantsummon.Creatures
                 {
                     if (!Main.dayTime)
                         Mes.Add("*[name] is saying that she is feeling a familiar presence, coming from the far lands of the world. Saying that we should check.*");
+                }
+            }
+            if (!Main.bloodMoon)
+            {
+                switch (guardian.OutfitID)
+                {
+                    case RedHoodOutfitID:
+                        Mes.Add("*[name] is saying that she likes that outfit. She also tells you that feels very adventurous when wearing It.*");
+                        break;
+                    case CloaklessOutfitID:
+                        Mes.Add("*[name] says that likes this outfit, but would like having her cloak on too.*");
+                        break;
                 }
             }
             if (!Main.dayTime)

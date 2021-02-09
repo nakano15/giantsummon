@@ -2525,6 +2525,15 @@ namespace giantsummon
             return (BodyFrame == 7 || BodyFrame == 8 || BodyFrame == 9 || BodyFrame == 14 || BodyFrame == 15 || BodyFrame == 16);
         }
 
+        public override bool CanHitPvpWithProj(Projectile proj, Player target)
+        {
+            if (ProjMod.IsGuardianProjectile(proj.whoAmI) && !ProjMod.GuardianProj[proj.whoAmI].IsPlayerHostile(target))
+            {
+                return false;
+            }
+            return base.CanHitPvpWithProj(proj, target);
+        }
+
         public void GetDrawDatas(out List<Terraria.DataStructures.DrawData> Back, out List<Terraria.DataStructures.DrawData> Front)
         {
             Back = new List<Terraria.DataStructures.DrawData>();

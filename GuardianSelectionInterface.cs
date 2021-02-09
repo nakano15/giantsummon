@@ -300,7 +300,7 @@ namespace giantsummon
                         {
                             Name += " (" + DisplayGuardian.Base.Name + ")";
                         }
-                        Age = DisplayGuardian.Data.GetAge();
+                        Age = DisplayGuardian.Data.GetAgeString();
                         Time = DisplayGuardian.Data.GetTime();
                         ModName = DisplayGuardian.Data.ModID;
                         Mod mod = ModLoader.GetMod(ModName);

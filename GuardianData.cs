@@ -886,11 +886,16 @@ namespace giantsummon
             return T + ".";
         }
 
-        public string GetAge()
+        public string GetAgeString()
         {
-            int Age = Base.Age + (int)(LifeTime.TotalDays / DaysToYears); //365.25
+            int Age = GetAge();
             string TimeInfo = Age + " Years Old";
             return TimeInfo;
+        }
+
+        public int GetAge()
+        {
+            return Base.Age + (int)(LifeTime.TotalDays / DaysToYears);
         }
 
         public string GetTime()
