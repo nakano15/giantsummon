@@ -86,6 +86,7 @@ namespace giantsummon
                     guardian.Accuracy += LevelValue * 0.025f;
                     break;
                 case SkillTypes.Leadership:
+                    guardian.MHP += (int)(guardian.Base.InitialMHP * (LevelValue * 0.05f));
                     guardian.SummonDamageMultiplier += LevelValue * 0.03f;
                     //int SummonBonus = (int)(Level * 2);
                     //if (SummonBonus > 5) SummonBonus = 5;
@@ -125,7 +126,7 @@ namespace giantsummon
                         Desc = "Increases Damage and Attack Speed of Magic attacks, and increases Accuracy.";
                         break;
                     case SkillTypes.Leadership:
-                        Desc = "Increases the Damage of Summon attacks.";
+                        Desc = "Increases the Damage of Summon attacks and Max Health.";
                         break;
                     case SkillTypes.Luck:
                         Desc = "Not only increases general critical rate, but also may cause good things to happen.";

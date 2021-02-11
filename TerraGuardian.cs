@@ -7883,6 +7883,261 @@ namespace giantsummon
             if (!Base.WhenTriggerActivates(this, trigger, Value, Value2, Value3, Value4, Value5))
                 return;
             //TODO - It's missing script here. There should be default behavior scripts depending on the triggers.
+            switch (trigger)
+            {
+                case TriggerTypes.PlayerHurt:
+                    {
+                        Player player = Main.player[Value];
+                        if (!IsPlayerHostile(player))
+                        {
+                            int Damage = Value2;
+                            bool Pvp = Value4 == 1;
+                            byte HostileType = 255;
+                            int HostileID = 0;
+                            float HostileDistance = 512f;
+                            bool Urgency = player.statLife < player.statLifeMax2 * 0.5f;
+                            if (Pvp)
+                            {
+                                for(int p = 0; p < 255; p++)
+                                {
+                                    if(p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
+                                    {
+                                        float Distance = (Main.player[p].Center - player.Center).Length();
+                                        if(Distance < HostileDistance)
+                                        {
+                                            HostileDistance = Distance;
+                                            HostileType = 0;
+                                            HostileID = p;
+                                        }
+                                    }
+                                }
+                            }
+                            for(int n = 0; n < 200; n++)
+                            {
+                                if(Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
+                                {
+                                    float Distance = (Main.npc[n].Center - player.Center).Length();
+                                    if(Distance < HostileDistance)
+                                    {
+                                        HostileDistance = Distance;
+                                        HostileType = 1;
+                                        HostileID = n;
+                                    }
+                                }
+                            }
+                            foreach(TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                            {
+                                if (IsGuardianHostile(tg))
+                                {
+                                    float Distance = (tg.CenterPosition - player.Center).Length();
+                                    if (Distance < HostileDistance)
+                                    {
+                                        HostileDistance = Distance;
+                                        HostileType = 2;
+                                        HostileID = tg.WhoAmID;
+                                    }
+                                }
+                            }
+                            if (HostileType < 255)
+                            {
+                                switch (HostileType)
+                                {
+                                    case 0:
+                                        if(Urgency || !AttackingTarget)
+                                        {
+                                            TargetID = HostileID;
+                                            TargetType = TargetTypes.Player;
+                                        }
+                                        break;
+                                    case 1:
+                                        if (Urgency || !AttackingTarget)
+                                        {
+                                            TargetID = HostileID;
+                                            TargetType = TargetTypes.Npc;
+                                        }
+                                        break;
+                                    case 2:
+                                        if (Urgency || !AttackingTarget)
+                                        {
+                                            TargetID = HostileID;
+                                            TargetType = TargetTypes.Guardian;
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case TriggerTypes.GuardianHurt:
+                    {
+                        if (MainMod.ActiveGuardians.ContainsKey(Value))
+                        {
+                            TerraGuardian tg = MainMod.ActiveGuardians[Value];
+                            if (!IsGuardianHostile(tg))
+                            {
+                                int Damage = Value2;
+                                bool Pvp = Value4 == 1;
+                                byte HostileType = 255;
+                                int HostileID = 0;
+                                float HostileDistance = 512f;
+                                bool Urgency = tg.HP < tg.MHP * 0.5f;
+                                if (Pvp)
+                                {
+                                    for (int p = 0; p < 255; p++)
+                                    {
+                                        if (p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
+                                        {
+                                            float Distance = (Main.player[p].Center - tg.CenterPosition).Length();
+                                            if (Distance < HostileDistance)
+                                            {
+                                                HostileDistance = Distance;
+                                                HostileType = 0;
+                                                HostileID = p;
+                                            }
+                                        }
+                                    }
+                                }
+                                for (int n = 0; n < 200; n++)
+                                {
+                                    if (Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
+                                    {
+                                        float Distance = (Main.npc[n].Center - tg.CenterPosition).Length();
+                                        if (Distance < HostileDistance)
+                                        {
+                                            HostileDistance = Distance;
+                                            HostileType = 1;
+                                            HostileID = n;
+                                        }
+                                    }
+                                }
+                                foreach (TerraGuardian tg2 in MainMod.ActiveGuardians.Values)
+                                {
+                                    if (tg.WhoAmID != tg2.WhoAmID && IsGuardianHostile(tg2))
+                                    {
+                                        float Distance = (tg2.CenterPosition - tg2.CenterPosition).Length();
+                                        if (Distance < HostileDistance)
+                                        {
+                                            HostileDistance = Distance;
+                                            HostileType = 2;
+                                            HostileID = tg2.WhoAmID;
+                                        }
+                                    }
+                                }
+                                if (HostileType < 255)
+                                {
+                                    switch (HostileType)
+                                    {
+                                        case 0:
+                                            if (Urgency || !AttackingTarget)
+                                            {
+                                                TargetID = HostileID;
+                                                TargetType = TargetTypes.Player;
+                                            }
+                                            break;
+                                        case 1:
+                                            if (Urgency || !AttackingTarget)
+                                            {
+                                                TargetID = HostileID;
+                                                TargetType = TargetTypes.Npc;
+                                            }
+                                            break;
+                                        case 2:
+                                            if (Urgency || !AttackingTarget)
+                                            {
+                                                TargetID = HostileID;
+                                                TargetType = TargetTypes.Guardian;
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case TriggerTypes.NpcHurt:
+                    {
+                        NPC npc = Main.npc[Value];
+                        if (!IsNpcHostile(npc) && npc.townNPC)
+                        {
+                            int Damage = Value2;
+                            bool Pvp = Value4 == 1;
+                            byte HostileType = 255;
+                            int HostileID = 0;
+                            float HostileDistance = 512f;
+                            bool Urgency = npc.life < npc.lifeMax * 0.5f;
+                            if (Pvp)
+                            {
+                                for (int p = 0; p < 255; p++)
+                                {
+                                    if (p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
+                                    {
+                                        float Distance = (Main.player[p].Center - npc.Center).Length();
+                                        if (Distance < HostileDistance)
+                                        {
+                                            HostileDistance = Distance;
+                                            HostileType = 0;
+                                            HostileID = p;
+                                        }
+                                    }
+                                }
+                            }
+                            for (int n = 0; n < 200; n++)
+                            {
+                                if (Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
+                                {
+                                    float Distance = (Main.npc[n].Center - npc.Center).Length();
+                                    if (Distance < HostileDistance)
+                                    {
+                                        HostileDistance = Distance;
+                                        HostileType = 1;
+                                        HostileID = n;
+                                    }
+                                }
+                            }
+                            foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                            {
+                                if (IsGuardianHostile(tg))
+                                {
+                                    float Distance = (tg.CenterPosition - npc.Center).Length();
+                                    if (Distance < HostileDistance)
+                                    {
+                                        HostileDistance = Distance;
+                                        HostileType = 2;
+                                        HostileID = tg.WhoAmID;
+                                    }
+                                }
+                            }
+                            if (HostileType < 255)
+                            {
+                                switch (HostileType)
+                                {
+                                    case 0:
+                                        if (Urgency || !AttackingTarget)
+                                        {
+                                            TargetID = HostileID;
+                                            TargetType = TargetTypes.Player;
+                                        }
+                                        break;
+                                    case 1:
+                                        if (Urgency || !AttackingTarget)
+                                        {
+                                            TargetID = HostileID;
+                                            TargetType = TargetTypes.Npc;
+                                        }
+                                        break;
+                                    case 2:
+                                        if (Urgency || !AttackingTarget)
+                                        {
+                                            TargetID = HostileID;
+                                            TargetType = TargetTypes.Guardian;
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
         }
 
         public void ResetHealthRegen()
@@ -9154,7 +9409,7 @@ namespace giantsummon
                         }
                     }
                 }
-                else //Try helping the ones in their view range.
+                else if (false) //Try helping the ones in their view range. - Disabled because seems to be causing lags
                 {
                     for (int i = 0; i < 255; i++)
                     {

@@ -34,3 +34,7 @@ Asking Minerva to give you a Grub Soup, will no longer only give you 3 Grubbys.
 Added Blue's Red Riding Hood Outfit.
 	That outfit also has a cloakless version disponible. It is unlocked alongside the normal outfit.
 Fixed Zacks sprite when knocked out. It no longer shows only his sprite outlines.
+Companion town npcs will no longer check if someone around is being chased by enemies.
+	This change is to fix an issue that was causing the game to lose fps. Companion town npcs will still chase enemies near them. And try protecting npcs hurt near them.
+Leadership skill now increases Max Health.
+Companions will now be aware when someone near them is hurt by something, and try seeking who hurt It.
