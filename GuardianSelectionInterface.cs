@@ -527,7 +527,7 @@ namespace giantsummon
                                         string mes = tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess);
                                         if (mes != "")
                                         {
-                                            tg.SaySomething(mes);
+                                            tg.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(mes, tg));
                                         }
                                         break;
                                     }
@@ -538,7 +538,7 @@ namespace giantsummon
                                 TerraGuardian tg = player.GetAllGuardianFollowers.First(x => x.ID == DisplayGuardian.ID && x.ModID == DisplayGuardian.ModID);
                                 string Mes = tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer);
                                 if (Mes != "")
-                                    Main.NewText(tg.Name + ": " + Mes);
+                                    Main.NewText(tg.Name + ": " + GuardianMouseOverAndDialogueInterface.MessageParser(Mes, tg));
                                 player.DismissGuardian(player.GetGuardianSlot(GuardianList[Selected]));
                             }
                         }
