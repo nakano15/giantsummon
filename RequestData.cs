@@ -1239,7 +1239,7 @@ namespace giantsummon
                     case RequestBase.RequestObjective.ObjectiveTypes.NobodyCanBeKod:
                     case RequestBase.RequestObjective.ObjectiveTypes.RequesterCannotKnockout:
                         {
-                            SetIntegerValue(o, 1);
+                            SetIntegerValue(o, 0);
                         }
                         break;
                 }

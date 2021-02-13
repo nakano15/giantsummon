@@ -118,6 +118,8 @@ namespace giantsummon
         public static float FlufflesHauntOpacity = -1f;
         public static Color ScreenColor = Color.Black;
         public static float ScreenColorAlpha = 0f;
+
+        public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
         
         public static Group AddNewGroup(string ID, string Name, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
         {
@@ -2461,11 +2463,11 @@ namespace giantsummon
             MoveUpPress = MoveDownPress = MoveLeftPress = MoveRightPress = UseItemPress = false;
             if (Gameplay2PMode && Guardian.Active)
             {
-                Vector2 Movement = gamePadState.ThumbSticks.Left;
-                Guardian.MoveUp = Movement.Y < -0.2f;
-                Guardian.MoveDown = Movement.Y > 0.2f;
-                Guardian.MoveLeft = Movement.X < -0.2f;
-                Guardian.MoveRight = Movement.X > 0.2f;
+                Vector2 MovementThumbstick = gamePadState.ThumbSticks.Left;
+                Guardian.MoveUp = MovementThumbstick.Y > 0.2f;
+                Guardian.MoveDown = MovementThumbstick.Y < -0.2f;
+                Guardian.MoveLeft = MovementThumbstick.X < -0.2f;
+                Guardian.MoveRight = MovementThumbstick.X > 0.2f;
                 Guardian.Action = CheckForButtonPress(Buttons.RightTrigger);
                 int SlotChange = Guardian.SelectedItem;
                 if (CheckForButtonPress(Buttons.LeftShoulder)) SlotChange--;
@@ -2474,9 +2476,9 @@ namespace giantsummon
                 if (SlotChange >= 10) SlotChange -= 10;
                 Guardian.SelectedItem = SlotChange;
                 Guardian.Jump = CheckForButtonPress(Buttons.B);
-                Vector2 RightThumbstick = gamePadState.ThumbSticks.Right * -128f;
+                Vector2 RightThumbstick = gamePadState.ThumbSticks.Right * 128f;
                 //RightThumbstick.X *= -1;
-                Vector2 AimDirection = Guardian.CenterPosition + RightThumbstick;
+                Vector2 AimDirection = Guardian.CenterPosition + new Vector2(RightThumbstick.X, -RightThumbstick.Y);
                 Guardian.AimDirection = AimDirection.ToPoint();
             }
             oldGamePadState = gamePadState;

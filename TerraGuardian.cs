@@ -1779,8 +1779,9 @@ namespace giantsummon
 
         public bool InCameraRange()
         {
-            return (Math.Abs(Position.X - Main.player[Main.myPlayer].Center.X) < Main.screenWidth * 0.5f + 200 &&
-                Math.Abs(CenterPosition.Y - Main.player[Main.myPlayer].Center.Y) < Main.screenHeight * 0.5f + 150);
+            Vector2 CameraCenter = MainMod.GetScreenCenter;
+            return (Math.Abs(Position.X - CameraCenter.X) < (Main.screenWidth + SpriteWidth) * 0.5f + 200 &&
+                Math.Abs(CenterPosition.Y - CameraCenter.Y) < (Main.screenHeight + SpriteHeight) * 0.5f + 150);
         }
 
         public void Update(Player Owner = null)
@@ -6590,8 +6591,6 @@ namespace giantsummon
                                             FaceDirection(!LookingLeft);
                                         }
                                         DoIdleMovement = false;
-                                        //ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
-                                        //FaceDirection(!LookingLeft);
                                     }
                                 }
                             }
@@ -6743,13 +6742,6 @@ namespace giantsummon
                 case IdleActions.UseNearbyFurnitureHome:
                 case IdleActions.TryGoingSleep:
                     WalkMode = true;
-                    /*if (UsingFurniture)
-                    {
-                        if (!IsEmoteActive)
-                        {
-                            ShowEmote(89);
-                        }
-                    }*/
                     break;
                 case IdleActions.GoHome:
                     {

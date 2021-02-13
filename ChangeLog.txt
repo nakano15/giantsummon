@@ -1,45 +1,4 @@
-﻿Malisha will now again move in to your world.
-	I really don't want to change her recruitment dialogue...
-Companions with a flying carpet equipped will no longer float while using furnitures.
-Sardine will now correctly teleport out of your team, when Bree starts scolding him.
-When speaking with Malisha's recruit npc, instead of showing "*?*" as option for dialogues without answer, It will show "Proceed", instead.
-Boosted by 5 times the chance of companions visiting you.
-Topics can now have requirement setup.
-Brutus recruit npc will now face you during dialogues.
-Fixed an Idle AI issue with nocturnal companions. Now they should behave correctly at night.
-Fixed an issue where revive messages from Fluffles related to your character would show regardless of who's being revived.
-Fluffles headgear will now correctly vanish when she's knocked out.
-Readjusted some weird pixels that were missing on Fluffles belly.
-Fluffles will now be a bit higher from the floor when reviving someone.
-Companions will now check if they in their houses, before trying to go sleep.
-Companions will now try not to keep stepping on dangerous tiles.
-Nerfed Malisha's request objective counts for "Helper Number 1" and "Counterstrike of the Panther" requests.
-Companions will no longer stare at their leader when charging ahead of them. They will now face the direction the player is facing.
-Companions now has a higher vertical range check for seeing if they should attack a monster.
-	Their decision also increases based on their size.
-Companions will now stop trying to revive someone when you pull them to your position.
-Any companion will no longer help other companions who got defeated while underwater to drown.
-Domino recruit npc will no longer "softlock" If you remove Brutus from your team, after either letting him move in to your world, or not.
-The mod will no longer try drawing or updating the animation of companions not in camera range.
-Drowned companion town npcs will now be moved back to their houses, when they are knocked out.
-The script of checking for targets has been made faster.
-	Eater of Worlds, and possibly The Destroyer will no longer cause your game to lose fps.
-The mod will no longer show the companion name twice on their death message.
-	If you didn't see this bug yet, I congratulate you for taking care of your companions.
-Revamped a bit Vladimir body sprites.
-Companions requests and bounties will now give you Exp on NExperience Mod.
-Asking for food to Minerva now gives a share of them to the companions following you.
-Asking Minerva to give you a Grub Soup, will no longer only give you 3 Grubbys.
-	She will also not prepare a Grub Soup for herself to eat. She will instead get 3 bowls of soup.
-Added Blue's Red Riding Hood Outfit.
-	That outfit also has a cloakless version disponible. It is unlocked alongside the normal outfit.
-Fixed Zacks sprite when knocked out. It no longer shows only his sprite outlines.
-Companion town npcs will no longer check if someone around is being chased by enemies.
-	This change is to fix an issue that was causing the game to lose fps. Companion town npcs will still chase enemies near them. And try protecting npcs hurt near them.
-Leadership skill now increases Max Health.
-Companions will now be aware when someone near them is hurt by something, and try seeking who hurt It.
-Fixed Minerva's Reviving frame not having position for her hands set.
-Readjusted Minerva's arm sprites when standing.
-Calling and dismissing a companion will have their message text codes parsed correctly.
-	"[name] approves." - WRONG!
-	"Rococo approves." - Correct :3
+﻿Changed the position the mod takes the camera position, to actually be the center of the screen.
+	That way, companions wont have problems drawing when the camera is far away from the player.
+Possibly fixed the issue where the vertical thumbsticks were inverted.
+	It wasn't my fault, It's like as if thumbsticks works by X, -Y.

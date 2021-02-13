@@ -138,7 +138,7 @@ namespace giantsummon.Creatures
                 "You don't really want me to stay, right? I didn't wanted to stay, anyway.",
                 "You managed to do that? Alright, I can put down my things in my house and stay for longer. My back was beggining to ache, anyway.",
                 "You don't know where to find a Double Cod? The Jungle is where you should go!");
-            AddItemCollectionObjective(Terraria.ID.ItemID.DoubleCod, 15, 0);
+            AddItemCollectionObjective(Terraria.ID.ItemID.DoubleCod, 5, 0);
             AddRequestRequirement(RequestBase.GetFishingRodRequirement);
         }
 
