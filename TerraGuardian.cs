@@ -6683,10 +6683,6 @@ namespace giantsummon
             {
                 if (IdleActionTime <= 0)
                 {
-                    if(GetTownNpcInfo != null && FriendshipLevel < Base.MoveInLevel)
-                    {
-                        WorldMod.RemoveGuardianNPCToSpawn(ID, ModID);
-                    }
                     switch (CurrentIdleAction)
                     {
                         case IdleActions.TryGoingSleep:

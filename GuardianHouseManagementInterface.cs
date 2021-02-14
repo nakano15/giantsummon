@@ -80,10 +80,17 @@ namespace giantsummon
                             MouseText = guardian.Name;
                             if (Main.mouseRight && Main.mouseRightRelease)
                             {
-                                townnpc.Homeless = true;
-                                townnpc.HomeX =
-                                townnpc.HomeY = -1;
-                                Main.PlaySound(12, -1, -1, 1, 1f, 0f);
+                                if (guardian.FriendshipLevel < guardian.Base.MoveInLevel)
+                                {
+                                    Main.NewText(guardian.Name + " doesn't want to be kicked out of their house.");
+                                }
+                                else
+                                {
+                                    townnpc.Homeless = true;
+                                    townnpc.HomeX =
+                                    townnpc.HomeY = -1;
+                                    Main.PlaySound(12, -1, -1, 1, 1f, 0f);
+                                }
                             }
                         }
                     }

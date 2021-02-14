@@ -3,3 +3,4 @@
 Possibly fixed the issue where the vertical thumbsticks were inverted.
 	It wasn't my fault, It's like as if thumbsticks works by X, -Y.
 Fluffles body sprite got changes to her head.
+Companions who have move in level, will no longer leave their houses and their world, when someone who doesn't have the friendship level enters It.
