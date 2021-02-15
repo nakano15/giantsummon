@@ -2466,8 +2466,8 @@ namespace giantsummon
                 Vector2 MovementThumbstick = gamePadState.ThumbSticks.Left;
                 Guardian.MoveUp = MovementThumbstick.Y > 0.2f;
                 Guardian.MoveDown = MovementThumbstick.Y < -0.2f;
-                Guardian.MoveLeft = MovementThumbstick.X < -0.2f;
-                Guardian.MoveRight = MovementThumbstick.X > 0.2f;
+                Guardian.MoveLeft = MovementThumbstick.X > 0.2f;
+                Guardian.MoveRight = MovementThumbstick.X < -0.2f;
                 Guardian.Action = CheckForButtonPress(Buttons.RightTrigger);
                 int SlotChange = Guardian.SelectedItem;
                 if (CheckForButtonPress(Buttons.LeftShoulder)) SlotChange--;
@@ -2476,9 +2476,8 @@ namespace giantsummon
                 if (SlotChange >= 10) SlotChange -= 10;
                 Guardian.SelectedItem = SlotChange;
                 Guardian.Jump = CheckForButtonPress(Buttons.B);
-                Vector2 RightThumbstick = gamePadState.ThumbSticks.Right * 128f;
-                //RightThumbstick.X *= -1;
-                Vector2 AimDirection = Guardian.CenterPosition + new Vector2(RightThumbstick.X, -RightThumbstick.Y);
+                Vector2 RightThumbstick = -gamePadState.ThumbSticks.Right * 128f;
+                Vector2 AimDirection = Guardian.CenterPosition + new Vector2(RightThumbstick.X, RightThumbstick.Y);
                 Guardian.AimDirection = AimDirection.ToPoint();
             }
             oldGamePadState = gamePadState;

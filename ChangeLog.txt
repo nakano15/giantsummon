@@ -1,6 +1,6 @@
 ﻿Changed the position the mod takes the camera position, to actually be the center of the screen.
 	That way, companions wont have problems drawing when the camera is far away from the player.
-Possibly fixed the issue where the vertical thumbsticks were inverted.
-	It wasn't my fault, It's like as if thumbsticks works by X, -Y.
+Possibly fixed the issue where the thumbstick controls were inverted.
+	Why the thumbstick variables returns the intended value inverted?!
 Fluffles body sprite got changes to her head.
 Companions who have move in level, will no longer leave their houses and their world, when someone who doesn't have the friendship level enters It.
