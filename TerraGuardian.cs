@@ -9493,6 +9493,8 @@ namespace giantsummon
                             NearestMember = MemberPosition;
                         }
                     }
+                    if (NearestMember.Length() == 0)
+                        continue;
                     Vector2 NpcCenter = Main.npc[i].Center;
                     Tile NpcTile = Framing.GetTileSafely((int)NpcCenter.X / 16, (int)NpcCenter.Y / 16);
                     if ((Main.npc[i].behindTiles && (!NpcTile.active() || !Main.tileSolid[NpcTile.type])) || Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
@@ -9520,34 +9522,6 @@ namespace giantsummon
                             }
                         }
                     }
-                    /*foreach (Vector4 MemberPosition in PartyMembersPosition)
-                    {
-                        if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
-                        {
-                            Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
-                            if (Math.Abs(NpcCenter.X - MemberCenter.X) < (Main.npc[i].width + MemberPosition.Z) + ThreatDetectionDistance &&
-                                Math.Abs(NpcCenter.Y - MemberCenter.Y) < (Main.npc[i].height + MemberPosition.W) + ThreatDetectionDistance)
-                            {
-                                if (!this.NpcsSpotted.Contains(i))
-                                {
-                                    this.DoTrigger(TriggerTypes.NpcSpotted, i);
-                                }
-                                NpcsSpotted.Add(i);
-                            }
-                            if (Main.npc[i].CanBeChasedBy(null))
-                            {
-                                float Distance = Main.npc[i].Distance(MemberCenter);
-                                if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type] || Main.npc[i].boss)
-                                    Distance *= 0.5f;
-                                if (Distance < NearestTargetDistance)
-                                {
-                                    NearestTargetDistance = Distance;
-                                    TargetID = i;
-                                    TargetType = TargetTypes.Npc;
-                                }
-                            }
-                        }
-                    }*/
                 }
                 if (Main.player[i].active)
                 {

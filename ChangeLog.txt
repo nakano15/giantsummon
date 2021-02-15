@@ -4,3 +4,5 @@ Possibly fixed the issue where the thumbstick controls were inverted.
 	Why the thumbstick variables returns the intended value inverted?!
 Fluffles body sprite got changes to her head.
 Companions who have move in level, will no longer leave their houses and their world, when someone who doesn't have the friendship level enters It.
+Fixed a bug where companions would try changing their perspective when looking for targets, if no one they check distance for is nearby.
+	That could cause heavy lags, includding on invasions.
