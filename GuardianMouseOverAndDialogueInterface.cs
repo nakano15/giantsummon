@@ -495,7 +495,7 @@ namespace giantsummon
                     {
                         AddOption("What do you have for sale?", OpenShopButtonAction);
                     }
-                    if (MayGiveBirthdayGift(tg))
+                    if (MayGiveBirthdayGift(tg) && (!tg.DoAction.InUse || tg.DoAction.IsGuardianSpecificAction || tg.DoAction.ID != (int)GuardianActions.ActionIDs.OpenGiftBox))
                     {
                         AddOption("I have a gift for you", GiveGiftButtonAction);
                     }
@@ -883,6 +883,7 @@ namespace giantsummon
                 MainPlayer.inventory[GiftSlot].SetDefaults(0);
                 GuardianActions.OpenBirthdayPresent(Guardian, EmptyGuardianSlot);
                 SetDialogue("*You gave the gift.*");
+                GetDefaultOptions(Guardian);
                 return;
             }
             else

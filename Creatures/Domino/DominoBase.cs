@@ -124,7 +124,7 @@ namespace giantsummon.Creatures
             item = Shop_AddItem(shop, Terraria.ID.ItemID.EmptyBullet, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return Main.hardMode; };
             item = Shop_AddItem(shop, Terraria.ID.ItemID.StyngerBolt, -1, "", 50);
-            item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.Stinger); };
+            item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.Stynger); };
             item = Shop_AddItem(shop, Terraria.ID.ItemID.Stake, -1, "", 50);
             item.GetIfItemIsDisponible = delegate(Player player) { return player.HasItem(Terraria.ID.ItemID.StakeLauncher); };
             item = Shop_AddItem(shop, Terraria.ID.ItemID.Nail, -1, "", 50);
@@ -161,7 +161,7 @@ namespace giantsummon.Creatures
             {
                 return PlayerMod.PlayerHasGuardian(player, GuardianBase.Brutus);
             });
-            AddTalkToGuardianRequest("*You say that you have a delivery for me? Weird, nobody I know knows that I'm here. Well, let's see It....! [nickname], where did you get this? Tell me! I mean, who gave you this? You can't tell me? ... Thanks... Anyway..*", GuardianBase.Brutus);
+            AddTalkToGuardianRequest("*You say that you have a delivery for me? Weird, nobody I care about knows that I'm here. Well, let's see It....! [nickname], where did you get this? Tell me! I mean, who gave you this? You can't tell me? ... Thanks... Anyway..*", GuardianBase.Brutus);
         }
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)

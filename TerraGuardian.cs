@@ -9480,7 +9480,7 @@ namespace giantsummon
             Vector2 MyTopLeftPosition = TopLeftPosition;
             for (byte i = 0; i < 255; i++)
             {
-                if (i < 200 && Main.npc[i].active)
+                if (i < 200 && Main.npc[i].active && IsNpcHostile(Main.npc[i]))
                 {
                     Vector4 NearestMember = Vector4.Zero;
                     float NearestDistance = float.MaxValue;
@@ -9523,31 +9523,42 @@ namespace giantsummon
                         }
                     }
                 }
-                if (Main.player[i].active)
+                if (Main.player[i].active && !Main.player[i].dead && IsPlayerHostile(Main.player[i]))
                 {
-                    foreach (Vector4 MemberPosition in PartyMembersPosition)
+                    Vector4 NearestMember = Vector4.Zero;
+                    float NearestDistance = float.MaxValue;
+                    foreach (Vector4 mp in PartyMembersPosition)
                     {
-                        if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.player[i].position, Main.player[i].width, Main.player[i].height))
+                        float Distance = ((mp.XY() + mp.ZW() * 0.5f) - Main.player[i].Center).Length();
+                        if (Distance < NearestDistance)
                         {
-                            Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
-                            if (Math.Abs(Main.player[i].position.X + Main.player[i].width * 0.5f - MemberCenter.X) < (Main.player[i].width + MemberPosition.Z) * 0.5f + ThreatDetectionDistance &&
-                                Math.Abs(Main.player[i].position.Y + Main.player[i].height * 0.5f - MemberCenter.Y) < (Main.player[i].height + MemberPosition.W) * 0.5f + ThreatDetectionDistance)
+                            NearestDistance = Distance;
+                            NearestMember = mp;
+                        }
+                    }
+                    if (NearestMember.Length() == 0)
+                        continue;
+                    Vector4 MemberPosition = NearestMember;
+                    if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.player[i].position, Main.player[i].width, Main.player[i].height))
+                    {
+                        Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
+                        if (Math.Abs(Main.player[i].position.X + Main.player[i].width * 0.5f - MemberCenter.X) < (Main.player[i].width + MemberPosition.Z) * 0.5f + ThreatDetectionDistance &&
+                            Math.Abs(Main.player[i].position.Y + Main.player[i].height * 0.5f - MemberCenter.Y) < (Main.player[i].height + MemberPosition.W) * 0.5f + ThreatDetectionDistance)
+                        {
+                            if (!this.PlayersSpotted.Contains(i))
                             {
-                                if (!this.PlayersSpotted.Contains(i))
-                                {
-                                    this.DoTrigger(TriggerTypes.PlayerSpotted, i);
-                                }
-                                PlayersSpotted.Add(i);
+                                this.DoTrigger(TriggerTypes.PlayerSpotted, i);
                             }
-                            if (IsPlayerHostile(Main.player[i]) && !Main.player[i].dead && !Main.player[i].GetModPlayer<PlayerMod>().KnockedOutCold)
+                            PlayersSpotted.Add(i);
+                        }
+                        if (IsPlayerHostile(Main.player[i]) && !Main.player[i].dead && !Main.player[i].GetModPlayer<PlayerMod>().KnockedOutCold)
+                        {
+                            float Distance = Main.player[i].Distance(MemberCenter);
+                            if (Distance < NearestTargetDistance)
                             {
-                                float Distance = Main.player[i].Distance(MemberCenter);
-                                if (Distance < NearestTargetDistance)
-                                {
-                                    NearestTargetDistance = Distance;
-                                    TargetID = i;
-                                    TargetType = TargetTypes.Player;
-                                }
+                                NearestTargetDistance = Distance;
+                                TargetID = i;
+                                TargetType = TargetTypes.Player;
                             }
                         }
                     }
@@ -9559,8 +9570,22 @@ namespace giantsummon
                 if (key != WhoAmID)
                 {
                     TerraGuardian guardian = MainMod.ActiveGuardians[key];
-                    foreach (Vector4 MemberPosition in PartyMembersPosition)
+                    if (IsGuardianHostile(guardian) && !guardian.KnockedOutCold && !guardian.Downed)
                     {
+                        Vector4 NearestMember = Vector4.Zero;
+                        float NearestDistance = float.MaxValue;
+                        foreach (Vector4 mp in PartyMembersPosition)
+                        {
+                            float Distance = ((mp.XY() + mp.ZW() * 0.5f) - guardian.CenterPosition).Length();
+                            if (Distance < NearestDistance)
+                            {
+                                NearestDistance = Distance;
+                                NearestMember = mp;
+                            }
+                        }
+                        if (NearestMember.Length() == 0)
+                            continue;
+                        Vector4 MemberPosition = NearestMember;
                         if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, guardian.TopLeftPosition, guardian.Width, guardian.Height))
                         {
                             Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
@@ -9573,15 +9598,12 @@ namespace giantsummon
                                 }
                                 GuardiansSpotted.Add(key);
                             }
-                            if (!guardian.Downed && !guardian.KnockedOutCold && IsGuardianHostile(guardian))
+                            float Distance = guardian.Distance(MemberCenter);
+                            if (Distance < NearestTargetDistance)
                             {
-                                float Distance = guardian.Distance(MemberCenter);
-                                if (Distance < NearestTargetDistance)
-                                {
-                                    NearestTargetDistance = Distance;
-                                    TargetID = key;
-                                    TargetType = TargetTypes.Guardian;
-                                }
+                                NearestTargetDistance = Distance;
+                                TargetID = key;
+                                TargetType = TargetTypes.Guardian;
                             }
                         }
                     }
@@ -10087,11 +10109,11 @@ namespace giantsummon
                                         ForcePetrify = true;
                                     }
                                 }
-                                if ((Position.X > Main.npc[n].Center.X || Main.npc[n].direction > 0 || !LookingLeft) &&
-                                    (Position.X <= Main.npc[n].Center.X || Main.npc[n].direction < 0 || LookingLeft) ||
-                                !ForcePetrify || !Collision.CanHitLine(CenterPosition, 1, 1, Main.npc[n].Center, 1, 1) &&
-                                    !Collision.CanHitLine(Main.npc[n].Center - Vector2.UnitY * 16, 1, 1, CenterPosition, 1, 1) &&
-                                    !Collision.CanHitLine(Main.npc[n].Center + Vector2.UnitY * 8, 1, 1, CenterPosition, 1, 1))
+                                if (((Position.X > Main.npc[n].Center.X && Main.npc[n].direction > 0 && LookingLeft) ||
+                                    (Position.X <= Main.npc[n].Center.X && Main.npc[n].direction < 0 && !LookingLeft)) ||
+                                ForcePetrify || (Collision.CanHitLine(CenterPosition, 1, 1, Main.npc[n].Center, 1, 1) ||
+                                    Collision.CanHitLine(Main.npc[n].Center - Vector2.UnitY * 16, 1, 1, CenterPosition, 1, 1) ||
+                                    Collision.CanHitLine(Main.npc[n].Center + Vector2.UnitY * 8, 1, 1, CenterPosition, 1, 1)))
                                 {
                                     int DebuffDuration = 60;
                                     if (NearDeath)

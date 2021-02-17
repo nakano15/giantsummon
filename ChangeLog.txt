@@ -1,8 +1,7 @@
-﻿Changed the position the mod takes the camera position, to actually be the center of the screen.
-	That way, companions wont have problems drawing when the camera is far away from the player.
-Possibly fixed the issue where the thumbstick controls were inverted.
-	Why the thumbstick variables returns the intended value inverted?!
-Fluffles body sprite got changes to her head.
-Companions who have move in level, will no longer leave their houses and their world, when someone who doesn't have the friendship level enters It.
-Fixed a bug where companions would try changing their perspective when looking for targets, if no one they check distance for is nearby.
-	That could cause heavy lags, includding on invasions.
+﻿Tweaked some more the companion targetting AI.
+You can no longer spam give gifts to your companions through their dialogues.
+Domino will no longer sell you Stynger bolts when you have Stingers (which drops from Hornets in the Underground Jungle) in your inventory.
+Changed Brutus dialogue a bit on Domino's "Mysterious Package" request.
+Companions will now be drawn on by the world when their owner player is petrified.
+	That will fix the issue where companions simply disappear when your character is petrified.
+Companions should now be petrified on the correct conditions, now.
