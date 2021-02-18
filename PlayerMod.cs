@@ -55,6 +55,7 @@ namespace giantsummon
         public int ExtraMaxHealthValue = 0;
         public bool InEtherRealm = false;
         public BehaviorChanges CurrentTactic = BehaviorChanges.FreeWill;
+        public TimeSpan TimeDuration = new TimeSpan();
         public bool MountedOnGuardian
         {
             get
@@ -1224,6 +1225,7 @@ namespace giantsummon
         public override void PreUpdate()
         {
             eye = EyeState.Open;
+            TimeDuration += TimeSpan.FromSeconds(Main.dayRate);
             if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
             {
                 bool ReduceOpacity = Main.dayTime && !Main.eclipse && player.position.Y < Main.worldSurface * 16 && Main.tile[(int)(player.Center.X) / 16, (int)(player.Center.Y / 16)].wall == 0;
@@ -1975,6 +1977,7 @@ namespace giantsummon
                 tag.Add("BuddyID", BuddiesModeBuddyID.ID);
                 tag.Add("BuddyModID", BuddiesModeBuddyID.ModID);
             }
+            tag.Add("TimeDuration", TimeDuration.TotalMilliseconds);
             tag.Add("KnockedOut", KnockedOut);
             int[] Keys = MyGuardians.Keys.ToArray();
             tag.Add("GuardianUIDs", Keys);
@@ -2059,6 +2062,24 @@ namespace giantsummon
                         SelectedAssistGuardians[i] = tag.GetInt("SelectedAssistGuardian_" + i);
                     }
                 }
+            }
+            if (ModVersion >= 81)
+            {
+                TimeDuration = TimeSpan.FromMilliseconds(tag.GetDouble("TimeDuration"));
+            }
+            else
+            {
+                double MaxDuration = 0;
+                foreach(GuardianData gd in MyGuardians.Values)
+                {
+                    double Duration = gd.LifeTime.Value.TotalMilliseconds;
+                    if (Duration > MaxDuration)
+                    {
+                        MaxDuration = Duration;
+                    }
+                    gd.LifeTime = null;
+                }
+                TimeDuration = TimeSpan.FromMilliseconds(MaxDuration);
             }
             if (ModVersion >= 71)
             {

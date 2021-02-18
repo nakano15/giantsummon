@@ -306,6 +306,7 @@ namespace giantsummon
                         Mod mod = ModLoader.GetMod(ModName);
                         if (mod != null)
                             ModName = mod.DisplayName;
+                        DisplayGuardian.Scale = DisplayGuardian.GetAgeSize();
                         if (DisplayGuardian.Data.IsBirthday)
                         {
                             BirthdayTime = "Turns " + DisplayGuardian.Data.GetBirthdayAge + " years old today.";

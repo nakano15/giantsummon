@@ -16,7 +16,7 @@ namespace giantsummon
         public InvalidGuardianPoints invalidGuardianPoints = new InvalidGuardianPoints(true);
         public delegate void GuardianModDel(TerraGuardian guardian);
         public delegate void GuardianBehaviorModDel(TerraGuardian guardian, ref bool AllowAIMovement);
-        public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian";
+        public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian", TerraGuardianCaitSithGroupID = "caitsithguardian";
 
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;

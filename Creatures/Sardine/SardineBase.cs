@@ -30,7 +30,7 @@ namespace giantsummon.Creatures
             SpriteHeight = 56;
             FramesInRows = 25;
             //DuckingHeight = 54;
-            Age = 6;
+            Age = 25; //6
             Male = true;
             InitialMHP = 80; //320
             LifeCrystalHPBonus = 12;
@@ -45,6 +45,7 @@ namespace giantsummon.Creatures
             CanDuck = false;
             ReverseMount = true;
             SetTerraGuardian();
+            GroupID = TerraGuardianCaitSithGroupID;
             DodgeRate = 40;
             HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit51);
             DeadSound = new SoundData(Terraria.ID.SoundID.NPCDeath54);

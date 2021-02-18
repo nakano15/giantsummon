@@ -103,6 +103,7 @@ namespace giantsummon
         public string PersonalNicknameToPlayer { get { return Data.PersonalNicknameToPlayer; } set { Data.PersonalNicknameToPlayer = value; } }
         public GuardianMood Mood { get { return Data.Mood; } }
         public bool HasRequestActive { get { return Data.request.Active; } }
+        private float AgeScale = 0;
         public bool Active = false;
         public bool IsStarter
         {
@@ -2474,6 +2475,25 @@ namespace giantsummon
             return Change;
         }
 
+        public void Rebirth(int RebirthAge) //Needs some more work
+        {
+            GuardianData data = Data;
+            data.SavedAge = RebirthAge;
+            data.LifeTime = new TimeSpan(0);
+            AgeScale = Scale = FinalScale = GetAgeSize();
+            Main.NewText(Name + " has rebirth to age " + RebirthAge + "!");
+        }
+
+        public float GetAgeSize()
+        {
+            if (Base.IsTerrarian)
+                return 1f;
+            float Age = Data.GetRealAgeDecimal();
+            if (Age >= 18)
+                return 1f;
+            return Age / 18 * 0.9f + 0.1f;
+        }
+
         public void UpdateExtraStuff()
         {
             if (SetToPlayerSize)
@@ -2492,6 +2512,11 @@ namespace giantsummon
                     UpdateStatus = true;
                 }
             }
+            if (WorldMod.DayChange)
+            {
+                AgeScale = GetAgeSize();
+            }
+            FinalScale *= AgeScale;
             if(!UsingFurniture && HasCarpet())
             {
                 if (!HasCooldown(GuardianCooldownManager.CooldownType.CarpetFlightTime))
@@ -3278,6 +3303,10 @@ namespace giantsummon
             JumpSpeed = Base.JumpSpeed;
             FallHeightTolerance = 15;
             ScaleMult = 1f;
+            bool LastAgeScaleWas0 = AgeScale == 0;
+            AgeScale = GetAgeSize();
+            if (LastAgeScaleWas0)
+                Scale = FinalScale = AgeScale;
 
             DashSpeed = 0;
             WingMaxFlightTime = 0;

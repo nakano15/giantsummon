@@ -35,7 +35,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 80, LastModVersion = 80;
+        public const int ModVersion = 81, LastModVersion = 80;
         public const int MaxExtraGuardianFollowers = 5;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -120,7 +120,14 @@ namespace giantsummon
         public static float ScreenColorAlpha = 0f;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
-        
+
+        public static Group AddNewGroup(string ID, string Name, float AgingSpeed, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
+        {
+            Group g = AddNewGroup(ID, Name, CustomSprite, RecognizeAsTerraGuardian);
+            g.AgingSpeed = AgingSpeed;
+            return g;
+        }
+
         public static Group AddNewGroup(string ID, string Name, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
         {
             Group g;
@@ -2561,6 +2568,7 @@ namespace giantsummon
             }
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
+            AddNewGroup(GuardianBase.TerraGuardianCaitSithGroupID, "Cait Sith Guardian", 1f / 0.272f, true, true);
             CommonRequestsDB.PopulateCommonRequestsDB();
             try
             {

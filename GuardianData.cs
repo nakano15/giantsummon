@@ -65,7 +65,14 @@ namespace giantsummon
         public float TravellingStacker = 0f, DamageStacker = 0f, ComfortStack = 0f; //For damagestacker to work, I need to know whose projectiles were spawned from a Guardian.
         public byte FoodStacker = 0, DrinkStacker = 0, ComfortPoints = 0;
         public CombatTactic tactic = CombatTactic.Assist;
-        public TimeSpan LifeTime = new TimeSpan();
+        public TimeSpan? LifeTime = null;
+        public TimeSpan GetLifeTime { get
+            {
+                if (LifeTime.HasValue)
+                    return LifeTime.Value;
+                return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TimeDuration;
+            } }
+        public int SavedAge = 0;
         public bool CanBeCalled { get { return FriendshipLevel >= Base.CallUnlockLevel; } }
         public bool CanChangeName { get { return _Name == null; } }
         public List<BuffData> Buffs = new List<BuffData>();
@@ -81,8 +88,8 @@ namespace giantsummon
                 const float MaxTime = 54000 + 32400;
                 float Time = (float)Main.time;
                 if (!Main.dayTime) Time += 54000f;
-                TimeSpan CurrentTime = LifeTime.Duration() - TimeSpan.FromSeconds(Time);
-                TimeSpan NextTime = LifeTime.Duration() + TimeSpan.FromSeconds(MaxTime - Time);
+                TimeSpan CurrentTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(Time);
+                TimeSpan NextTime = GetLifeTime.Duration() + TimeSpan.FromSeconds(MaxTime - Time);
                 int CurrentAge = (int)(CurrentTime.TotalDays / DaysToYears);
                 int NextAge = (int)(NextTime.TotalDays / DaysToYears);
                 return CurrentAge != NextAge && NextAge > 0;
@@ -93,8 +100,8 @@ namespace giantsummon
             get
             {
                 const float MaxTime = 54000 + 32400;
-                TimeSpan NextTime = LifeTime.Duration() + TimeSpan.FromSeconds(MaxTime);
-                return (int)(NextTime.TotalDays / DaysToYears) + Base.Age;
+                TimeSpan NextTime = GetLifeTime.Duration() + TimeSpan.FromSeconds(MaxTime);
+                return (int)(NextTime.TotalDays / DaysToYears) + (SavedAge > 0 ? SavedAge : Base.Age);
             }
         }
         public byte FriendshipGrade
@@ -844,13 +851,14 @@ namespace giantsummon
                 }
             }
             //
-            LifeTime += TimeSpan.FromSeconds(Main.dayRate); //A frame = a second
+            if(LifeTime != null)
+                LifeTime += TimeSpan.FromSeconds(Main.dayRate); //A frame = a second
             //
         }
 
         public TimeSpan TimeUntilBirthday()
         {
-            TimeSpan CurrentTime = LifeTime.Duration();
+            TimeSpan CurrentTime = GetLifeTime.Duration();
             TimeSpan NextBirthdayTime = CurrentTime.Duration();
             NextBirthdayTime = NextBirthdayTime.Subtract(TimeSpan.FromDays(NextBirthdayTime.TotalDays % DaysToYears));
             NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(DaysToYears));
@@ -888,19 +896,28 @@ namespace giantsummon
 
         public string GetAgeString()
         {
-            int Age = GetAge();
-            string TimeInfo = Age + " Years Old";
-            return TimeInfo;
+            int Age = GetAge(true), YearlyAge = GetAge(false);
+            if(Age != YearlyAge)
+            {
+                return Age + " (" + YearlyAge + " Years)";
+            }
+            return Age + " Years Old";
         }
 
-        public int GetAge()
+        public int GetAge(bool ByCompanionLifeTimeSpeed = false)
         {
-            return Base.Age + (int)(LifeTime.TotalDays / DaysToYears);
+            double AgingFactor = (!ByCompanionLifeTimeSpeed ? (double)Base.GetGroup.AgingSpeed : 1d);
+            return (int)((SavedAge > 0 ? SavedAge : Base.Age) * (ByCompanionLifeTimeSpeed ? 1f : 1f / AgingFactor) + (GetLifeTime.TotalDays * AgingFactor) / DaysToYears);
+        }
+
+        public float GetRealAgeDecimal()
+        {
+            return (float)((SavedAge > 0 ? SavedAge : Base.Age) * Base.GetGroup.AgingSpeed + (GetLifeTime.TotalDays * (double)Base.GetGroup.AgingSpeed) / DaysToYears);
         }
 
         public string GetTime()
         {
-            return Lang.LocalizedDuration(LifeTime, false, false);
+            return Lang.LocalizedDuration(GetLifeTime, false, false);
         }
 
         public void Save(Terraria.ModLoader.IO.TagCompound tag, int UniqueID)
@@ -986,7 +1003,9 @@ namespace giantsummon
             tag.Add("InjuryCount_" + UniqueID, (byte)Injury);
             request.Save(tag, UniqueID);
             //request.Save(tag, UniqueID);
-            tag.Add("ExistenceTime_" + UniqueID, LifeTime.TotalSeconds);
+            tag.Add("HasExistenceTime_" + UniqueID, LifeTime.HasValue);
+            if(LifeTime.HasValue)
+                tag.Add("ExistenceTime_" + UniqueID, LifeTime.Value.TotalSeconds);
             tag.Add("SkinID_" + UniqueID, SkinID);
             tag.Add("OutfitID_" + UniqueID, OutfitID);
             tag.Add("Coins_" + UniqueID, (int)Coins - int.MaxValue);
@@ -1206,8 +1225,18 @@ namespace giantsummon
             }
             //if (ModVersion >= 8)
             //    request.Load(tag, ModVersion, UniqueID);
-            if (ModVersion >= 15)
-                LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
+            if (ModVersion <= 80)
+            {
+                if (ModVersion >= 15)
+                    LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
+            }
+            else
+            {
+                if (tag.GetBool("HasExistenceTime_" + UniqueID))
+                {
+                    LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
+                }
+            }
             if (ModVersion >= 66)
             {
                 SkinID = tag.GetByte("SkinID_" + UniqueID);

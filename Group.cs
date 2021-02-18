@@ -11,5 +11,6 @@ namespace giantsummon
         public string Name = "";
         public bool RecognizeAsTerraGuardian = false;
         public bool CustomSprite = true;
+        public float AgingSpeed = 1f;
     }
 }
