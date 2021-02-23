@@ -5,3 +5,14 @@ Changed Brutus dialogue a bit on Domino's "Mysterious Package" request.
 Companions will now be drawn on by the world when their owner player is petrified.
 	That will fix the issue where companions simply disappear when your character is petrified.
 Companions should now be petrified on the correct conditions, now.
+Improved companions aging and growth process.
+	Now the companions aging will be based on a timer in the player, so the player controls how old they are.
+	Companions younger than 18 years old will now appear smaller.
+	Added the possibility of changing a companion group aging speed.
+		That doesn't means they will have birthday parties more frequently. Their birthday will still happen every 32 days.
+	The Cait Sith companions have now their own group, with a different aging process:
+		They will age 367% faster than the other TerraGuardians.
+		This group affects Sardine and Bree.
+Companions going melee will now have their direction enforced to their target direction.
+	That is to avoid them swinging their weapons to the oposite direction of their target.
+Companions with negative health will have their health sent to 0.

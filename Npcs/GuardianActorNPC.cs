@@ -36,6 +36,7 @@ namespace giantsummon.Npcs
         public int IdleBehaviorTime = 0;
         public List<int> DrawInFrontOfPlayers = new List<int>();
         public float XOffSet = 0, YOffset = 0;
+        private float AgeScale = 1f;
 
         public GuardianActorNPC(int ID, string ModID, string Alias = "")
         {
@@ -94,8 +95,24 @@ namespace giantsummon.Npcs
                     Math.Abs(player.Center.Y - npc.Center.Y) < CustomRangeY);
         }
 
+        private bool FirstFrame = true;
+
         public override void AI()
         {
+            if (Main.netMode < 2 && FirstFrame)
+            {
+                FirstFrame = false;
+                if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID))
+                {
+                    GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+                    AgeScale = TerraGuardian.GetAgeSizeValue(gd.GetRealAgeDecimal());
+                }
+                else
+                {
+                    float AgeValue = TerraGuardian.GetAgeDecimalValue(Base.Age, Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TimeDuration, Base.GetGroup.AgingSpeed);
+                    AgeScale = TerraGuardian.GetAgeSizeValue(AgeValue);
+                }
+            }
             if (MessageTime > 0) MessageTime--;
             float Acceleration = Base.Acceleration, MaxSpeed = Base.MaxSpeed, Deceleration = Base.SlowDown,
                 JumpSpeed = Base.JumpSpeed;

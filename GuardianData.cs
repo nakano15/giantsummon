@@ -912,7 +912,8 @@ namespace giantsummon
 
         public float GetRealAgeDecimal()
         {
-            return (float)((SavedAge > 0 ? SavedAge : Base.Age) * Base.GetGroup.AgingSpeed + (GetLifeTime.TotalDays * (double)Base.GetGroup.AgingSpeed) / DaysToYears);
+            return TerraGuardian.GetAgeDecimalValue((SavedAge > 0 ? SavedAge : Base.Age), GetLifeTime, Base.GetGroup.AgingSpeed);
+            //return (float)((SavedAge > 0 ? SavedAge : Base.Age) * Base.GetGroup.AgingSpeed + (GetLifeTime.TotalDays * (double)Base.GetGroup.AgingSpeed) / DaysToYears);
         }
 
         public string GetTime()

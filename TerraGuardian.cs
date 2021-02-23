@@ -1675,7 +1675,7 @@ namespace giantsummon
             {
                 if (MainMod.GuardiansDontDiesAfterDownedDefeat)
                 {
-                    if (HP < 0 && !Downed)
+                    if (HP < 0)
                         HP = 0;
                 }
                 else
@@ -2484,14 +2484,28 @@ namespace giantsummon
             Main.NewText(Name + " has rebirth to age " + RebirthAge + "!");
         }
 
+        public static float GetAgeDecimalValue(int StartAge, TimeSpan Time, float AgingSpeed = 1f)
+        {
+            return (float)(StartAge * AgingSpeed + (Time.TotalDays * (double)AgingSpeed) / GuardianData.DaysToYears);
+        }
+
+        public static float GetAgeSizeValue(float Age)
+        {
+            //Age = Data.GetRealAgeDecimal();
+            if (Age >= 18)
+                return 1f;
+            return Age / 18 * 0.9f + 0.1f;
+        }
+
         public float GetAgeSize()
         {
             if (Base.IsTerrarian)
                 return 1f;
-            float Age = Data.GetRealAgeDecimal();
+            return GetAgeSizeValue(Data.GetRealAgeDecimal());
+            /*float Age = Data.GetRealAgeDecimal();
             if (Age >= 18)
                 return 1f;
-            return Age / 18 * 0.9f + 0.1f;
+            return Age / 18 * 0.9f + 0.1f;*/
         }
 
         public void UpdateExtraStuff()
@@ -4826,7 +4840,7 @@ namespace giantsummon
                                     const float AssistDistance = 120f;
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                     float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
-                                        RetreatDistance = TargetWidth + Width + AssistDistance - 24;
+                                        RetreatDistance = TargetWidth + Width + AssistDistance + DistanceDiscount - 24;
                                     if (MaxAttackRange > -1)
                                     {
                                         ApproachDistance = MaxAttackRange + TargetWidth;
@@ -4979,7 +4993,10 @@ namespace giantsummon
                 if (UseItem)
                 {
                     if (ItemAnimationTime == 0 && (SelectedItem == -1 || Inventory[SelectedItem].melee))
+                    {
                         LookingLeft = TargetPosition.X + TargetWidth * 0.5f < Position.X;
+                        LockDirection = true;
+                    }
                     this.Action = true;
                 }
             }
@@ -7611,6 +7628,8 @@ namespace giantsummon
                 HealthRegenPower = HealthRegenTime = 0;
                 return;
             }
+            if (HP < 0)
+                HP = 0;
             if (HasFlag(GuardianFlags.Poisoned))
             {
                 HealthRegenPower -= 4;
