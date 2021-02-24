@@ -513,7 +513,7 @@ namespace giantsummon
                         tg.Position.X = PositionX;
                         tg.Position.Y = PositionY;
                         tg.SetFallStart();
-                        if (HPPercentage != 1) //Disabled because what the f is happening here?
+                        if (HPPercentage != 1)
                         {
                             tg.HP = (int)((float)tg.MHP * HPPercentage);
                             if (tg.HP < 0)
