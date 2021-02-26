@@ -37,7 +37,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 81, LastModVersion = 80;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1022,8 +1022,10 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    New.Add(g.Name + " Priority: " + g.PrioritaryBehaviorType.ToString());
-                    New.Add("Priority Position: " + g.PrioritaryMovementTarget);
+                    New.Add(g.Name + " main hand: " + g.HeldItemHand.ToString() + "  Off-hand" + g.HeldItemHand.ToString());
+                    New.Add("Body Frame: " + g.BodyAnimationFrame + "  Left Arm: " + g.LeftArmAnimationFrame + "  Right Arm: " + g.RightArmAnimationFrame);
+                    //New.Add(g.Name + " Priority: " + g.PrioritaryBehaviorType.ToString());
+                    //New.Add("Priority Position: " + g.PrioritaryMovementTarget);
                 }
                 TextsToDraw = New.ToArray();
             }
@@ -2062,19 +2064,22 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        const int TestGuardianID = 17;
+                                        int[] TestGuardianIDs = new int[] { 15, 18 };
                                         bool b = false;
-                                        if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(TestGuardianID))
+                                        foreach (int TestGuardianID in TestGuardianIDs)
                                         {
-                                            AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Test " + GuardianBase.GetGuardianBase(TestGuardianID).Name + "? ", ref b);
-                                            if (b)
+                                            if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(TestGuardianID))
                                             {
-                                                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().AddNewGuardian(TestGuardianID);
-                                                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetGuardian(TestGuardianID).FriendshipLevel = 15;
+                                                AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Test " + GuardianBase.GetGuardianBase(TestGuardianID).Name + "? ", ref b);
+                                                if (b)
+                                                {
+                                                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().AddNewGuardian(TestGuardianID);
+                                                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetGuardian(TestGuardianID).FriendshipLevel = 15;
+                                                }
+                                                SlotStartPosition.Y += 26;
                                             }
-                                            SlotStartPosition.Y += 26;
+                                            b = false;
                                         }
-                                        b = false;
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Start Blood Moon ", ref b);
                                         if (b)
                                         {
@@ -2215,11 +2220,6 @@ namespace giantsummon
                                 HasRequest = true;
                             }
                             if (Guardian.Active == false || d.ID != Guardian.ID) HasUnsummonedGuardianRequest = true;
-                            //Guardian.DrawFriendshipHeart(SlotStartPosition, d.FriendshipLevel, d.FriendshipProgression);
-                            //SlotStartPosition.X += 24f;
-                            //Utils.DrawBorderString(Main.spriteBatch, d.Name + "'s Request", SlotStartPosition, Color.White);
-                            //SlotStartPosition.X -= 24f;
-                            //SlotStartPosition.Y += 28f;
                             string[] RequestDesc = d.request.GetRequestText(Main.player[Main.myPlayer], d);
                             foreach (string s in RequestDesc)
                             {
@@ -2252,28 +2252,7 @@ namespace giantsummon
                                 {
                                     if (d.request.RequestCompleted || d.request.Failed)
                                     {
-                                        /*ButtonPosition.X += 48f;
-                                        string ButtonText = "Report";
-                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
-                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
-                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                        {
-                                            player.player.mouseInterface = true;
-                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
-                                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                            {
-                                                CheckingQuestBrief = false;
-                                                if (d.request.Failed)
-                                                {
-                                                    Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestFailed(d, Guardian), Guardian), true);
-                                                }
-                                                else
-                                                {
-                                                    Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestComplete(d, Guardian), Guardian), true);
-                                                }
-                                                d.request.CompleteRequest(Guardian, d, player);
-                                            }
-                                        }*/
+
                                     }
                                     else
                                     {
@@ -2569,6 +2548,7 @@ namespace giantsummon
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
             AddNewGroup(GuardianBase.TerraGuardianCaitSithGroupID, "Cait Sith Guardian", 1f / 0.272f, true, true);
+            AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "G. Dog Guardian", 4.6667f, true, true);
             CommonRequestsDB.PopulateCommonRequestsDB();
             try
             {

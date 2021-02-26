@@ -16,3 +16,9 @@ Improved companions aging and growth process.
 Companions going melee will now have their direction enforced to their target direction.
 	That is to avoid them swinging their weapons to the oposite direction of their target.
 Companions with negative health will have their health sent to 0.
+Alex's initial weapon is now a Tungsten Broadsword, instead of a Trident.
+Giant Dog Guardians has also got their own group.
+	Their group ages 466.67% faster than normal companions.
+	Alex still has age 42, but he's now 9 years old.
+Fixed a problem where Alex would stop using his left arm to attack while the player is mounted.
+Updated the sprite of Sardine that shows when he's inside the King Slime.

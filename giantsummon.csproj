@@ -87,6 +87,7 @@
     <Compile Include="Creatures\Alex\AlexBase.cs" />
     <Compile Include="Creatures\Bapha\BaphaBase.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
+    <Compile Include="Creatures\Daphne\DaphneBase.cs" />
     <Compile Include="Creatures\DogGuardian\DogGuardianBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
@@ -288,6 +289,12 @@
     <Content Include="Creatures\Bree\bags.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit_f.png" />
+    <Content Include="Creatures\Daphne\body.png" />
+    <Content Include="Creatures\Daphne\body_front.png" />
+    <Content Include="Creatures\Daphne\halo.png" />
+    <Content Include="Creatures\Daphne\head.png" />
+    <Content Include="Creatures\Daphne\left_arm.png" />
+    <Content Include="Creatures\Daphne\right_arm.png" />
     <Content Include="Creatures\DogGuardian\body.png" />
     <Content Include="Creatures\DogGuardian\body_front.png" />
     <Content Include="Creatures\DogGuardian\head.png" />
@@ -399,7 +406,6 @@
     <Content Include="GuardianNPC\BlankNPC.png" />
     <Content Include="GuardianNPC\List\Zacks_Head.png" />
     <Content Include="GuardianNPC\Terrarians\Michelle_Head.png" />
-    <Content Include="Ideas\Equipments.txt" />
     <Content Include="Interface\Crown.png" />
     <Content Include="Interface\EditButton.png" />
     <Content Include="Interface\Emotions.png" />
@@ -484,6 +490,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />
+    <Folder Include="Ideas\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

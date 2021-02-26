@@ -27,7 +27,7 @@ namespace giantsummon.Creatures
             DuckingHeight = 52;
             SpriteWidth = 96;
             SpriteHeight = 96;
-            Age = 42; //Mental Age = Age / 9
+            Age = 42; //Age, 42. Mental Age, Real Age / 9
             Male = true;
             InitialMHP = 175; //1125
             LifeCrystalHPBonus = 30;
@@ -43,7 +43,9 @@ namespace giantsummon.Creatures
             ReverseMount = false;
             DrinksBeverage = false;
             DontUseRightHand = false;
+            ForceWeaponUseOnMainHand = true;
             SetTerraGuardian();
+            GroupID = GiantDogGuardianGroupID;
             //HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             //DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
             CallUnlockLevel = 0;
@@ -52,7 +54,7 @@ namespace giantsummon.Creatures
             ContestSecondPlace = 0;
             ContestThirdPlace = 4;
 
-            AddInitialItem(Terraria.ID.ItemID.Trident, 1);
+            AddInitialItem(Terraria.ID.ItemID.TungstenBroadsword, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
 
             //Animation Frames

@@ -16,7 +16,7 @@ namespace giantsummon
         public InvalidGuardianPoints invalidGuardianPoints = new InvalidGuardianPoints(true);
         public delegate void GuardianModDel(TerraGuardian guardian);
         public delegate void GuardianBehaviorModDel(TerraGuardian guardian, ref bool AllowAIMovement);
-        public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian", TerraGuardianCaitSithGroupID = "caitsithguardian";
+        public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian", TerraGuardianCaitSithGroupID = "caitsithguardian", GiantDogGuardianGroupID = "giantdogguardian";
 
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
@@ -36,7 +36,7 @@ namespace giantsummon
         public int MaxBreath = 200, BreathCooldown = 7;
         public int BlockRate = 0, DodgeRate = 0;
         public float MountBurdenPercentage = 0.05f;
-        public bool DontUseRightHand = false;
+        public bool DontUseRightHand = false, ForceWeaponUseOnMainHand = false;
         public bool DontUseHeavyWeapons = false;
         public bool CanChangeGender = false;
         public bool OneHanded2HWeaponWield = false;
@@ -126,7 +126,8 @@ namespace giantsummon
             Michelle = 13,
             Wrath = 14,
             Fluffles = 16,
-            Minerva = 17;
+            Minerva = 17,
+            Daphne = 18;
 
         public struct DialogueTopic
         {
@@ -1095,6 +1096,9 @@ namespace giantsummon
                         break;
                     case 17:
                         gb = new MinervaBase();
+                        break;
+                    case 18:
+                        gb = new DaphneBase();
                         break;
                 }
             }

@@ -12786,7 +12786,7 @@ namespace giantsummon
 
         public void PickHandToUse(ref HeldHand hand)
         {
-            if (Base.DontUseRightHand)
+            if (Base.DontUseRightHand || Base.ForceWeaponUseOnMainHand)
             {
                 hand = HeldHand.Left;
                 return;
