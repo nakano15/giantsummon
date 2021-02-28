@@ -47,7 +47,7 @@ namespace giantsummon
         public List<Reward> RewardsList = new List<Reward>();
         public List<SkinReqStruct> SkinList = new List<SkinReqStruct>(), OutfitList = new List<SkinReqStruct>();
         public bool IsNocturnal = false;
-
+        
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;
         public GuardianAnimationPoints LeftHandPoints = new GuardianAnimationPoints(),

@@ -55,7 +55,7 @@ namespace giantsummon
             oldGamePadState = GamePad.GetState(controlPort);
         public static bool Gameplay2PMode = false;
         public static bool MoveLeftPress = false, MoveRightPress = false, MoveUpPress = false, MoveDownPress = false, UseItemPress = false, JumpPress = false;
-        public static Mod NExperienceMod, KalciphozMod, SubworldLibrary;
+        public static Mod NExperienceMod, KalciphozMod, SubworldLibrary, TerraClassesMod;
         public static bool TestForceGuardianOnFront = false;
         public static Main MainHook { get { return Main.instance; } }
         public static bool LastWof = false;
@@ -174,6 +174,15 @@ namespace giantsummon
                 PossibleGuardians.Add(new GuardianID(0, ""));
             }
             return PossibleGuardians.ToArray();
+        }
+
+        public override object Call(params object[] args)
+        {
+            if(args.Length > 1 && (string)args[0] == "getothermodtargets")
+            {
+                //return Compatibility.TerraClassesCompatibility.GetTargets((Player)args[1], (bool)args[2]);
+            }
+            return base.Call(args);
         }
 
         public static int CalculateMessageTime(string s)
@@ -2573,6 +2582,14 @@ namespace giantsummon
             catch
             {
                 SubworldLibrary = null;
+            }
+            try
+            {
+                TerraClassesMod = ModLoader.GetMod("TerraClasses");
+            }
+            catch
+            {
+                TerraClassesMod = null;
             }
         }
 
