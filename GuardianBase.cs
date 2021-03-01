@@ -18,6 +18,8 @@ namespace giantsummon
         public delegate void GuardianBehaviorModDel(TerraGuardian guardian, ref bool AllowAIMovement);
         public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian", TerraGuardianCaitSithGroupID = "caitsithguardian", GiantDogGuardianGroupID = "giantdogguardian";
 
+        public virtual GuardianData GetGuardianData(int ID = -1, string ModID = "") { return new GuardianData(ID, ModID);}
+
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
         public string Name = "", Description = "";
@@ -125,6 +127,7 @@ namespace giantsummon
             Malisha = 12,
             Michelle = 13,
             Wrath = 14,
+            Alexander = 15,
             Fluffles = 16,
             Minerva = 17,
             Daphne = 18;
@@ -1089,7 +1092,7 @@ namespace giantsummon
                         gb = new WrathBase();
                         break;
                     case 15:
-                        gb = new DogGuardianBase();
+                        gb = new AlexanderBase();
                         break;
                     case 16:
                         gb = new FlufflesBase();

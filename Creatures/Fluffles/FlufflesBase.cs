@@ -363,6 +363,12 @@ namespace giantsummon.Creatures
                     return "(She lowers her head, then shook It slowly side ways.)";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "(She got a smile on her face after hearing that.)";
+                case MessageIDs.LeopoldMessage1:
+                    return "(Her face turned red while looking at the Rabbit Guardian. Her facial expression also changed, she seems to be shy.)";
+                case MessageIDs.LeopoldMessage2:
+                    return "*Is that... AAAAAHHH!! A ghost!!! Help!*";
+                case MessageIDs.LeopoldMessage3:
+                    return "(After he screamed, she looked at you with a sad face, and your character tried comforting her, while you looked at him with an angry face.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

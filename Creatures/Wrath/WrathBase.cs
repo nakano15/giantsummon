@@ -391,6 +391,12 @@ namespace giantsummon.Creatures
                     return "*Urgh... Okay... I can do It myself them. No thanks to you, of course!*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*Then you just wanted to anger me?!*";
+                case MessageIDs.LeopoldMessage1:
+                    return "*He's already starting to annoy me. Can I beat him up?*";
+                case MessageIDs.LeopoldMessage2:
+                    return "*What?! How can you think of attacking me? I'm trying to save you!*";
+                case MessageIDs.LeopoldMessage3:
+                    return "*Save me? I'm following that Terrarian because I want, and also because he asked me to.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

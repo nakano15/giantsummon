@@ -22,3 +22,4 @@ Giant Dog Guardians has also got their own group.
 	Alex still has age 42, but he's now 9 years old.
 Fixed a problem where Alex would stop using his left arm to attack while the player is mounted.
 Updated the sprite of Sardine that shows when he's inside the King Slime.
+Expanded Rococo's dialogues.

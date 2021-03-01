@@ -177,11 +177,11 @@ namespace giantsummon
                         string GuardianModID = reader.ReadString();
                         if (!player.MyGuardians.ContainsKey(GuardianPos))
                         {
-                            player.MyGuardians.Add(GuardianPos, new GuardianData(GuardianID, GuardianModID));
+                            player.MyGuardians.Add(GuardianPos, GuardianBase.GetGuardianBase(GuardianID, GuardianModID).GetGuardianData(GuardianID, GuardianModID));
                         }
                         else
                         {
-                            player.MyGuardians[GuardianPos] = new GuardianData(GuardianID, GuardianModID);
+                            player.MyGuardians[GuardianPos] = GuardianBase.GetGuardianBase(GuardianID, GuardianModID).GetGuardianData(GuardianID, GuardianModID);
                         }
                         string GuardianName = reader.ReadString();
                         byte GuardianLifeCrystalHealth = reader.ReadByte(),

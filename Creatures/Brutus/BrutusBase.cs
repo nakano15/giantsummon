@@ -1038,7 +1038,7 @@ namespace giantsummon.Creatures
                         case 0:
                             return "*Huh? I can explain... Oh, request? Yes. Request, what is It? Did It?*";
                         case 1:
-                            return "*Where did you... I mean... Yes, I was totally expecting you, did you do what I asked?*";
+                            return "*When did you... I mean... Yes, I was totally expecting you, did you do what I asked?*";
                     }
                     break;
                 //

@@ -442,17 +442,37 @@ namespace giantsummon.Creatures
         {
             bool MerchantInTheWorld = NPC.AnyNPCs(Terraria.ID.NPCID.Merchant), SteampunkerInTheWorld = NPC.AnyNPCs(Terraria.ID.NPCID.Steampunker);
             List<string> Mes = new List<string>();
-            if (!Main.bloodMoon)
+            if (!Main.bloodMoon && !Main.eclipse)
+            {
                 Mes.Add("*[name] is happy for seeing you.*");
+                Mes.Add("*[name] asks if you brought him something to eat.*");
+                Mes.Add("*[name] is asking if you want to play with him.*");
+                Mes.Add("*[name] wants you to check some of his toys.*");
+                Mes.Add("*[name] seems very glad to see you safe.*");
+                if(guardian.OwnerPos == -1)
+                    Mes.Add("*[name] is asking you if you came to ask him to go on an adventure.*");
+                if (guardian.HasBuff(Terraria.ID.BuffID.WellFed))
+                {
+                    Mes.Add("*[name] thanks you for the food.*");
+                    Mes.Add("*[name] seems to be relaxing after eating something.*");
+                }
+                else
+                {
+                    Mes.Add("*You can hear [name]'s stomach growl.*");
+                    Mes.Add("*[name] seems to be a bit hungry.*");
+                }
+            }
             if (Main.dayTime)
             {
                 if (!Main.eclipse)
                 {
                     Mes.Add("*[name] asks you what's up.*");
+                    Mes.Add("*[name] is telling that is liking the weather.*");
                 }
                 else
                 {
                     Mes.Add("*[name] seems to be watching some classic horror movie on the tv... No, wait, that's a window.*");
+                    Mes.Add("*[name] is trying to hide behind you, he seems scared of the monsters.*");
                 }
             }
             else
@@ -463,11 +483,13 @@ namespace giantsummon.Creatures
                         Mes.Add("*As soon as [name] started talking, you hastily asked him to stop, because of the bad trash breath that comes from his mouth.*");
                     Mes.Add("*[name] is sleeping while awake.*");
                     Mes.Add("*[name] is trying hard to keep It's eyes opened.*");
+                    Mes.Add("*[name] seems sleepy.*");
                 }
                 else
                 {
-                    Mes.Add("*[name] looks scared, maybe he hates blood moons.*");
+                    Mes.Add("*[name] looks scared.*");
                     Mes.Add("*[name] is trembling in terror..*");
+                    Mes.Add("*[name] asks if his house is safe.*");
                 }
             }
             if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)

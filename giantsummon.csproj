@@ -92,7 +92,7 @@
     <Compile Include="Creatures\Bapha\BaphaBase.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
-    <Compile Include="Creatures\DogGuardian\DogGuardianBase.cs" />
+    <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
@@ -165,6 +165,7 @@
     <Compile Include="ModTargetting.cs" />
     <Compile Include="NetMod.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="Npcs\AlexanderNPC.cs" />
     <Compile Include="Npcs\AlexNPC.cs" />
     <Compile Include="Npcs\BlueNPC.cs" />
     <Compile Include="Npcs\BreeNPC.cs" />
@@ -299,11 +300,11 @@
     <Content Include="Creatures\Daphne\head.png" />
     <Content Include="Creatures\Daphne\left_arm.png" />
     <Content Include="Creatures\Daphne\right_arm.png" />
-    <Content Include="Creatures\DogGuardian\body.png" />
-    <Content Include="Creatures\DogGuardian\body_front.png" />
-    <Content Include="Creatures\DogGuardian\head.png" />
-    <Content Include="Creatures\DogGuardian\left_arm.png" />
-    <Content Include="Creatures\DogGuardian\right_arm.png" />
+    <Content Include="Creatures\Alexander\body.png" />
+    <Content Include="Creatures\Alexander\body_front.png" />
+    <Content Include="Creatures\Alexander\head.png" />
+    <Content Include="Creatures\Alexander\left_arm.png" />
+    <Content Include="Creatures\Alexander\right_arm.png" />
     <Content Include="Creatures\Fluffles\body.png" />
     <Content Include="Creatures\Fluffles\body_front.png" />
     <Content Include="Creatures\Fluffles\head.png" />

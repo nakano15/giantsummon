@@ -1983,6 +1983,8 @@ namespace giantsummon
             tag.Add("GuardianUIDs", Keys);
             foreach (int g in Keys)
             {
+                tag.Add("GuardianUID" + g + "_ID", MyGuardians[g].ID);
+                tag.Add("GuardianUID" + g + "_ModID", MyGuardians[g].ModID);
                 MyGuardians[g].Save(tag, g);
             }
             tag.Add("SelectedGuardian", SelectedGuardian);
@@ -2046,7 +2048,17 @@ namespace giantsummon
                 int[] Keys = tag.GetIntArray("GuardianUIDs");
                 foreach (int g in Keys)
                 {
-                    GuardianData d = new GuardianData();
+                    GuardianData d;// = new GuardianData();
+                    if(ModVersion >= 82)
+                    {
+                        int ID = tag.GetInt("GuardianUID" + g + "_ID");
+                        string ModID = tag.GetString("GuardianUID" + g + "_ModID");
+                        d = GuardianBase.GetGuardianBase(ID, ModID).GetGuardianData(ID, ModID);
+                    }
+                    else
+                    {
+                        d = new GuardianData();
+                    }
                     d.Load(tag, ModVersion, g);
                     MyGuardians.Add(g, d);
                 }
@@ -2384,7 +2396,7 @@ namespace giantsummon
             {
                 while (MyGuardians.ContainsKey(SpawnID))
                     SpawnID++;
-                MyGuardians.Add(SpawnID, new GuardianData(Id, ModId));
+                MyGuardians.Add(SpawnID, GuardianBase.GetGuardianBase(Id, ModId).GetGuardianData(Id, ModId));
                 if (MyGuardians[SpawnID].Base.CanChangeGender)
                     MyGuardians[SpawnID].Male = Main.rand.Next(2) == 0;
                 if (FirstGuardian)

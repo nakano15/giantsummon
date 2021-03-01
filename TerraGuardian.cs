@@ -60,7 +60,9 @@ namespace giantsummon
                 }
                 catch { }
                 if (_Data == null)
+                {
                     _Data = new GuardianData();
+                }
                 return _Data;
             }
             set
@@ -1069,7 +1071,7 @@ namespace giantsummon
             {
                 if (ModID == "")
                     ModID = MainMod.mod.Name;
-                _Data = new GuardianData(CreateByType, ModID);
+                _Data = GuardianBase.GetGuardianBase(CreateByType, ModID).GetGuardianData(CreateByType, ModID);
             }
             WhoAmID = IDStack++;
         }

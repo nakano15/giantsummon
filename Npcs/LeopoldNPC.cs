@@ -508,7 +508,7 @@ namespace giantsummon.Npcs
                             ChangeScene(SceneIDs.LeopoldGetsSurprisedThatPlayerHasBeenHearingAllTime);
                             break;
                         case SceneIDs.LeopoldGetsSurprisedThatPlayerHasBeenHearingAllTime:
-                            SayMessage("*That Terrarian can understand what we are saying?!*");
+                            SayMessage("*What?! That Terrarian can understand what we are saying?!*");
                             ChangeScene(SceneIDs.LeopoldTellsToForgetEverything);
                             break;
                         case SceneIDs.LeopoldTellsToForgetEverything:
