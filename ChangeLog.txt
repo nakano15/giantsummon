@@ -23,3 +23,6 @@ Giant Dog Guardians has also got their own group.
 Fixed a problem where Alex would stop using his left arm to attack while the player is mounted.
 Updated the sprite of Sardine that shows when he's inside the King Slime.
 Expanded Rococo's dialogues.
+Added a button to the Guardian Selection Interface, to take you to the wiki page of the companions.
+	That also resulted into swapping the Close Button position, to the originally intended Wiki button position. Now It's located on the upper right of the window.
+Added some missing dialogues to new companions, related to Leopold recruitment.

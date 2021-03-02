@@ -5141,7 +5141,7 @@ namespace giantsummon
                     MoveLeft = MoveRight = Jump = MoveDown = false;
                 }
                 if (!PlayerControl && !IsAttackingSomething)
-                    MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f) * Scale);
+                    MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f));
                 if (!PlayerControl)
                 {
                     CheckIfCanSummon();

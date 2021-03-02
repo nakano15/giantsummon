@@ -15,7 +15,7 @@ namespace giantsummon
         public static Vector2 InterfacePosition = Vector2.Zero;
         public static int Width = 0, Height = 0;
         public const int GuardianDisplayWidth = 128, GuardianDisplayHeight = 192;
-        public static bool HoveringSummonButton = false, HoveringMoveButton = false, HoveringCancelButton = false, HoveringEquipmentButton = false, HoveringVoteButton = false;
+        public static bool HoveringSummonButton = false, HoveringMoveButton = false, HoveringWikiButton = false, HoveringEquipmentButton = false, HoveringVoteButton = false;
         public static bool VoteButtonClickedOnce = false;
         public static string Age, Time, Name, BirthdayTime, ModName;
         public static int ScrollY = 0;
@@ -590,23 +590,29 @@ namespace giantsummon
                     }
                 }
                 ElementPosition.X += ButtonRegionWidth * 0.25f;
+                if(Selected > -1)
                 {
-                    string ButtonText = "Close";
+                    string ButtonText = "Wiki";
                     Color ButtonColor = Color.White;
-                    if (HoveringCancelButton)
+                    if (HoveringWikiButton)
                         ButtonColor = Color.Yellow;
-                    HoveringCancelButton = false;
+                    HoveringWikiButton = false;
                     ElementPosition.X = (int)ElementPosition.X;
                     ElementPosition.Y = (int)ElementPosition.Y;
                     Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ElementPosition, ButtonColor, 1.2f, 0.5f, 0.5f);
                     if (Main.mouseX >= ElementPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ElementPosition.X + ButtonDimension.X * 0.5f &&
                         Main.mouseY >= ElementPosition.Y - ButtonDimension.Y * 0.5f && Main.mouseY < ElementPosition.Y + ButtonDimension.Y * 0.5f)
                     {
-                        HoveringCancelButton = true;
-                        MouseText = "Closes this window.";
+                        HoveringWikiButton = true;
+                        MouseText = "Opens the wiki for this companion.";
                         if (Main.mouseLeft && Main.mouseLeftRelease)
                         {
-                            IsActive = false;
+                            string Url = "https://nakano15-mods.fandom.com/wiki/";
+                            if (DisplayGuardian.Base.WikiPageLink != null)
+                                Url += DisplayGuardian.Base.WikiPageLink;
+                            else
+                                Url += DisplayGuardian.Base.Name;
+                            System.Diagnostics.Process.Start(Url);
                         }
                     }
                 }
@@ -660,6 +666,24 @@ namespace giantsummon
                             VoteButtonClickedOnce = true;
                         }
                     }
+                }
+                if(Selected > -1)
+                {
+                    Vector2 CloseButtonPosition = InterfacePosition;
+                    CloseButtonPosition.X += Width - 4;
+                    CloseButtonPosition.Y += 4;
+                    const float CloseButtonSize = 0.85f;
+                    Color color = Color.Red;
+                    if(Main.mouseX >= CloseButtonPosition.X - 60 * CloseButtonSize && Main.mouseX < CloseButtonPosition.X && 
+                        Main.mouseY >= CloseButtonPosition.Y + 4 * CloseButtonSize && Main.mouseY < CloseButtonPosition.Y + 22 * CloseButtonSize)
+                    {
+                        color = Color.Yellow;
+                        if(Main.mouseLeft && Main.mouseLeftRelease)
+                        {
+                            IsActive = false;
+                        }
+                    }
+                    Utils.DrawBorderString(Main.spriteBatch, "Close", CloseButtonPosition, color, CloseButtonSize, 1, 0);
                 }
                 if (MouseText != "")
                 {
