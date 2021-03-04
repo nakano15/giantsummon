@@ -50,6 +50,7 @@ namespace giantsummon
         public List<Reward> RewardsList = new List<Reward>();
         public List<SkinReqStruct> SkinList = new List<SkinReqStruct>(), OutfitList = new List<SkinReqStruct>();
         public bool IsNocturnal = false;
+        public bool SleepsAtBed = true;
         
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;
@@ -1306,6 +1307,11 @@ namespace giantsummon
                 CancelRequestNoAnswered = "Mes.WhenNoAnswerOnRequestCancel";
             public const string AfterAskingIfCompanionCanVisitNextDayYesAnswer = "Mes.VisitAccept",
                 AfterAskingIfCompanionCanVisitNextDayNoAnswer = "Mes.VisitReject";
+            public const string AlexanderSleuthingStart = "Mes.Alexander.SleuthStart",
+                AlexanderSleuthingFail = "Mes.Alexander.SleuthFail",
+                AlexanderSleuthingProgress = "Mes.Alexander.SleuthProgress1",
+                AlexanderSleuthingProgressNearlyDone = "Mes.Alexander.SleuthProgress2",
+                AlexanderSleuthingProgressFinished = "Mes.Alexander.SleuthProgressFinished";
         }
         
         public enum GuardianEffect

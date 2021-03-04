@@ -452,6 +452,17 @@ namespace giantsummon.Creatures
                     return "*What? Then why...*";
                 case MessageIDs.LeopoldMessage3:
                     return "*The Terrarian... Is leading us.. On their adventure... And can understand what you're saying...*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Let's see what are you cooking...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... Yes... Interesting...*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*...What was that noise...?*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*Eww... This smell... I'm glad I already identified you but... What were you eating... Ugh..*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... Eh... Good morning?*";
             }
             return "";
         }

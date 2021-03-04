@@ -778,6 +778,19 @@ namespace giantsummon.Creatures
                     return "*Okay, you're relieved. Get out of my sight, NOW! Before I decide to do something to you.*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*The clock is ticking, [nickname].*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Please don't wake up.. Please don't wake up...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Even her scent rises my fur...*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*So many different things she came in contact with... Many are dangerous...*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    if(NpcMod.HasGuardianNPC(Leopold))
+                        return "*I feel pity of [gn:"+Leopold+"] now.*";
+                    return "*I'm so glad I wont need to identify her again.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Uh oh... HEEEEELP!!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

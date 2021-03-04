@@ -36,6 +36,7 @@ namespace giantsummon.Creatures
             CanDuck = true;
             ReverseMount = false;
             DrinksBeverage = true;
+            SleepsAtBed = false;
             SetTerraGuardian();
 
             //Animation Frames

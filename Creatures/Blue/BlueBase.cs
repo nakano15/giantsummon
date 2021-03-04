@@ -1167,6 +1167,17 @@ namespace giantsummon.Creatures
                     return "*She tries to hide the disappointment. Now her face is filled with rage. Run [nickname], Run!*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*She puts her hand on the chest, and exhale out of relief. Then asked if you want to talk about something else.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Let's see...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*She's so beautiful...*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*Maybe I should ask her out... No, wait... I should focus...*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*Okay... Done. Maybe for future planning...*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... No.. That's not what you're thinking!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

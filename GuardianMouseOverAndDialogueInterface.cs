@@ -447,7 +447,7 @@ namespace giantsummon
             {
 
             }
-            else if (tg.IsUsingBed)
+            else if (tg.IsUsingBed && tg.Base.SleepsAtBed)
             {
                 AddOption("Wake Up", WakeUpCompanionButtonAction);
             }

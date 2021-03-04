@@ -48,6 +48,7 @@ namespace giantsummon.Creatures
             ReverseMount = false;
             DrinksBeverage = true;
             IsNocturnal = false;
+            SleepsAtBed = false;
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit1);
             DeadSound = new SoundData(Terraria.ID.SoundID.ZombieMoan);
@@ -781,6 +782,17 @@ namespace giantsummon.Creatures
                     return "*Rrr.... Fine... You don't need to do that anymore. Just answer me, how crunchy is a Terrarian?*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*Then why you brought that, in first place?*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Is... That even safe...?*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Eugh... This smell... It's horrible!*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*There's even vile creatures inside his body...*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*I hope none of them entered my nose.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*No, I'm not seeking a bone, I was just checking... Things.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

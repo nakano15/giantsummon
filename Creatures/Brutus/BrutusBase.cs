@@ -1092,6 +1092,17 @@ namespace giantsummon.Creatures
                     return "*Hm... Okay. I'll see if I can do that another time.*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*Oh, okay.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Let's check you out...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Ugh, I smell ale. And... *";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*How much do you drink? It seems like you've been eating, like lots.*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*Ok, I think that's enough info, better I move on!*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ah... Uh.. Sleeping again? What a shame!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

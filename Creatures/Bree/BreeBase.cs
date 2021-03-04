@@ -631,6 +631,19 @@ namespace giantsummon.Creatures
                     return "Grr... Fine. I'll do It myself, then.";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "Ah, good. Well, do you need anything else?";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*I hope you don't mind if I collect some infos...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... You actually look cute when not with an angry face.*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    if(NpcMod.HasGuardianNPC(Sardine))
+                        return "*Hm... I catched [gn:"+Sardine+"]'s scent...*";
+                    return "*She's carrying a photo... Who's that black cat?*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*Alright, I now know you.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Wait, what are you going to do with that frying pan?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

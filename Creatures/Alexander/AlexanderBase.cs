@@ -155,9 +155,55 @@ namespace giantsummon.Creatures
         {
             if (id.ModID == MainMod.mod.Name)
             {
-                switch (id)
+                switch (id.ID)
                 {
-
+                    case Rococo:
+                        g.Defense++;
+                        break;
+                    case Blue:
+                        g.MeleeSpeed += 0.03f;
+                        break;
+                    case Sardine:
+                        g.JumpHeight++;
+                        break;
+                    case Alex:
+                        g.MoveSpeed += 0.04f;
+                        break;
+                    case Brutus:
+                        g.MeleeDamageMultiplier += 0.02f;
+                        g.DefenseRate += 0.01f;
+                        break;
+                    case Bree:
+                        g.MeleeDamageMultiplier += 0.02f;
+                        break;
+                    case Mabel:
+                        g.MHP += 3;
+                        break;
+                    case Domino:
+                        g.RangedDamageMultiplier += 0.03f;
+                        break;
+                    case Leopold:
+                        g.MagicDamageMultiplier += 0.04f;
+                        break;
+                    case Vladimir:
+                        g.MHP += 8;
+                        g.HealthRegenPower++;
+                        break;
+                    case Malisha:
+                        g.MMP += 5;
+                        break;
+                    case Wrath:
+                        g.MeleeDamageMultiplier += 0.02f;
+                        break;
+                    case Fluffles:
+                        g.DodgeRate += 0.03f;
+                        break;
+                    case Minerva:
+                        g.Defense += 2;
+                        break;
+                    case Daphne:
+                        g.CoverRate += 0.02f;
+                        break;
                 }
             }
         }
@@ -176,6 +222,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*Any update on our little investigation?*");
                 Mes.Add("*This mystery is making me intrigued. I've never found something like this before.*");
                 Mes.Add("*Is there something you seek, [nickname]?*");
+                Mes.Add("*Did you found the Terrarian we are looking for? I can't blame if you didn't, my description is really vague.*");
 
                 Mes.Add("*I can identify anyone by sleuthing them, but not everyone may like that idea.*");
                 Mes.Add("*Everytime I sleuth someone, I can replicate part of their strength.*");
@@ -243,6 +290,14 @@ namespace giantsummon.Creatures
                     Mes.Add("*Sometimes I hang around with [gn:"+Brutus+"], he sometimes gives me ideas for clues I need on my investigations.*");
                     Mes.Add("*I often have to ask [gn:"+Brutus+"] for help to try investigating some place.*");
                 }
+                if (NpcMod.HasGuardianNPC(Michelle))
+                {
+                    Mes.Add("*I sleuthed [gn:" + Michelle + "], and she's not the one I'm looking for.*");
+                }
+                if (NpcMod.HasGuardianNPC(Nemesis))
+                {
+                    Mes.Add("*I was unable to caught [gn:" + Nemesis + "] scent, no matter how hard I tried. I really hope he isn't the one I'm looking for.*");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -252,6 +307,7 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             Mes.Add("*I wonder if they are fine... Who? Oh... Nevermind..*");
             Mes.Add("*I used to be part of a group with 3 Terrarians, but then they disappeared after... Something happened..*");
+            Mes.Add("*My only hope is finding that Terrarian who made seems involved into my friends disappearance. If I find him, I may find a clue of where they could be.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -277,6 +333,36 @@ namespace giantsummon.Creatures
             Mes.Add("*It's good to know that I can count on you. I think this will suit the time you spent.*");
             Mes.Add("*You completed what I asked for, then? Good. This is a compensation for the time you spent.*");
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
+        {
+            switch (trigger)
+            {
+                case TriggerTypes.GuardianDowned:
+                    {
+                        TerraGuardian tg = MainMod.ActiveGuardians[Value];
+                        AlexanderData data = (AlexanderData)guardian.Data;
+                        if (!guardian.DoAction.InUse && tg.Base.IsTerraGuardian && !data.WasGuardianIdentified(tg))
+                        {
+                            if (guardian.StartNewGuardianAction(new SleuthAction(tg), 0))
+                                return true;
+                        }
+                    }
+                    break;
+                case TriggerTypes.GuardianSpotted:
+                    {
+                        TerraGuardian tg = MainMod.ActiveGuardians[Value];
+                        AlexanderData data = (AlexanderData)guardian.Data;
+                        if (!guardian.DoAction.InUse && tg.Base.IsTerraGuardian && tg.IsUsingBed && !data.WasGuardianIdentified(tg))
+                        {
+                            if (guardian.StartNewGuardianAction(new SleuthAction(tg), 0))
+                                return true;
+                        }
+                    }
+                    break;
+            }
+            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
         }
 
         public override string HomelessMessage(Player player, TerraGuardian guardian)
@@ -318,12 +404,14 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*Come on... You've got to help me solve the mystery.*");
                 Mes.Add("*I think I just need to do this... It's working.*");
+                Mes.Add("*Those wounds...*");
             }
             else
             {
                 Mes.Add("*Hold on.*");
             }
             Mes.Add("*I know you're feeling pain, but try not to move.*");
+            Mes.Add("*If It helps, hold my hand.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -393,7 +481,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.LeopoldMessage2:
                     return "*Shh... It will be hard to rescue you if the Terrarian realizes that we are talking.*";
                 case MessageIDs.LeopoldMessage3:
-                    return "*The Terrarian already does, and we're not It's hostages. You're worrying way too much.*";
+                    return "*The Terrarian is already listening to us talking, and we're not their hostages. You're worrying way too much.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
@@ -407,11 +495,106 @@ namespace giantsummon.Creatures
 
             public List<GuardianID> IdentifiedGuardians = new List<GuardianID>();
 
+            public bool WasGuardianIdentified(TerraGuardian tg)
+            {
+                foreach (GuardianID id in IdentifiedGuardians)
+                    if (id.IsSameID(tg))
+                        return true;
+                return false;
+            }
+
             public void AddIdentifiedGuardian(GuardianID id)
             {
                 if(!(id.ID == Alexander && id.ModID == MainMod.mod.Name) && !IdentifiedGuardians.Any(x => x.ID == id.ID && x.ModID == id.ModID))
                 {
                     IdentifiedGuardians.Add(id);
+                }
+            }
+        }
+
+        public class SleuthAction : GuardianActions
+        {
+            public float SleuthPercent = 0;
+            public bool Sleuthing = false;
+            public SleuthAction(TerraGuardian target)
+            {
+                Guardians[0] = target;
+            }
+
+            public override void Update(TerraGuardian guardian)
+            {
+                TerraGuardian Target = Guardians[0];
+                switch (Step)
+                {
+                    case 0: //Approach
+                        if ((guardian.Position - Target.Position).Length() < 20)
+                            guardian.WalkMode = true;
+                        if (guardian.UsingFurniture)
+                            guardian.LeaveFurniture(true);
+                        guardian.MoveLeft = guardian.MoveRight = false;
+                        Sleuthing = false;
+                        if (!Target.KnockedOut || !Target.IsUsingBed)
+                        {
+                            if (SleuthPercent > 70)
+                                guardian.SaySomething("*...So close...*");
+                            else
+                                guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingFail, "*I... Was just checking if you were fine.*"));
+                            InUse = false;
+                            return;
+                        }
+                        if(Target.Downed)
+                        {
+                            InUse = false;
+                            guardian.SaySomething("*...I should have helped instead...*");
+                            return;
+                        }
+                        if (Math.Abs(guardian.Position.X - Target.Position.X) < 8f)
+                        {
+                            if (guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
+                            {
+                                Sleuthing = true;
+                                guardian.LookingLeft = (Target.Position.X < guardian.Position.X);
+                                float LastSleuthPercent = SleuthPercent;
+                                float FillSpeed = guardian.IsUsingBed ? 0.5f : 1f;
+                                SleuthPercent += Main.rand.NextFloat() * FillSpeed;
+                                if (SleuthPercent >= 100)
+                                {
+                                    AlexanderData data = (AlexanderData)guardian.Data;
+                                    data.AddIdentifiedGuardian(Target.MyID);
+                                    InUse = false;
+                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressFinished, "*Okay, so that's how you work.*"));
+                                    guardian.UpdateStatus = true;
+                                }
+                                else if (SleuthPercent >= 70 && LastSleuthPercent < 70)
+                                {
+                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressNearlyDone, "*Hm... Interesting...*"));
+                                }
+                                else if (SleuthPercent >= 35 && LastSleuthPercent < 35)
+                                {
+                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgress, "*Uh huh...*"));
+                                }
+                                else if (SleuthPercent > 0 && LastSleuthPercent <= 0)
+                                {
+                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingStart, "*Let's see how you work...*"));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (guardian.Position.X < Target.Position.X)
+                                guardian.MoveLeft = true;
+                            else
+                                guardian.MoveRight = true;
+                        }
+                        break;
+                }
+            }
+
+            public override void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
+            {
+                if (Sleuthing)
+                {
+                    guardian.LeftArmAnimationFrame = guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame = SleuthBackAnimationID;
                 }
             }
         }
