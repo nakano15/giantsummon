@@ -1104,6 +1104,9 @@ namespace giantsummon
                     case 18:
                         gb = new DaphneBase();
                         break;
+                    case 19:
+                        gb = new BunnyReaperGuardianBase();
+                        break;
                 }
             }
             if (gb == null)

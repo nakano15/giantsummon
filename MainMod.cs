@@ -118,6 +118,8 @@ namespace giantsummon
         public static float FlufflesHauntOpacity = -1f;
         public static Color ScreenColor = Color.Black;
         public static float ScreenColorAlpha = 0f;
+        public static Vector2 PlayerSoulPosition = Vector2.Zero;
+        public static bool SoulSaved = false;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -785,6 +787,7 @@ namespace giantsummon
 
         public override void PostUpdateEverything()
         {
+            SoulSaved = false;
             GuardianNpcHousingCheckCooldown++;
             if (GuardianNpcHousingCheckCooldown > MaxGuardianNpcHousingCheckCooldown)
             {
@@ -1031,10 +1034,15 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    New.Add(g.Name + " main hand: " + g.HeldItemHand.ToString() + "  Off-hand" + g.HeldItemHand.ToString());
-                    New.Add("Body Frame: " + g.BodyAnimationFrame + "  Left Arm: " + g.LeftArmAnimationFrame + "  Right Arm: " + g.RightArmAnimationFrame);
-                    //New.Add(g.Name + " Priority: " + g.PrioritaryBehaviorType.ToString());
-                    //New.Add("Priority Position: " + g.PrioritaryMovementTarget);
+                    if(g.ID == 19)
+                    {
+                        Creatures.BunnyReaperGuardianBase.ReaperGuardianData data = (Creatures.BunnyReaperGuardianBase.ReaperGuardianData)g.Data;
+                        New.Add("Soul count: " + data.ActiveSouls.Count + "  Souls Caught: " + data.SoulsLoaded);
+                        /*foreach (Creatures.BunnyReaperGuardianBase.ReaperGuardianData.FallenSoul s in data.ActiveSouls)
+                        {
+                            New.Add(" " + s.Position + " v=" + s.Velocity);
+                        }*/
+                    }
                 }
                 TextsToDraw = New.ToArray();
             }
@@ -2073,7 +2081,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        int[] TestGuardianIDs = new int[] { 15, 18 };
+                                        int[] TestGuardianIDs = new int[] { 15, 18, 19 };
                                         bool b = false;
                                         foreach (int TestGuardianID in TestGuardianIDs)
                                         {

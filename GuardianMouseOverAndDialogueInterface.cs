@@ -457,13 +457,16 @@ namespace giantsummon
                 {
                     if (!HideCallDismissButton)
                     {
-                        if (tg.OwnerPos == Main.myPlayer)
+                        if (!PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
                         {
-                            AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
-                        }
-                        else
-                        {
-                            AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
+                            if (tg.OwnerPos == Main.myPlayer)
+                            {
+                                AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
+                            }
+                            else
+                            {
+                                AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
+                            }
                         }
                     }
                     string OptionText = "Check Request";

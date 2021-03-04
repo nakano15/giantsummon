@@ -26,3 +26,7 @@ Expanded Rococo's dialogues.
 Added a button to the Guardian Selection Interface, to take you to the wiki page of the companions.
 	That also resulted into swapping the Close Button position, to the originally intended Wiki button position. Now It's located on the upper right of the window.
 Added some missing dialogues to new companions, related to Leopold recruitment.
+Removed the dialogue option of removing companion from party when the player is on Buddies mode.
+	I added a few extra lines of codes when loading save. Now the game should force your buddy to show up, in case you dismissed It.
+Companions will no longer simply disappear just because your character turned into a ghost.
+	Companions will also start their idle AI when your character is dead.

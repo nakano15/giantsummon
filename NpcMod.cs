@@ -631,7 +631,7 @@ namespace giantsummon
                     PlayerDeadStatusBackup[p] = Main.player[p].dead;
                     PlayerWetBackup[p] = Main.player[p].wet;
                     if (npc.type != ModContent.NPCType<Npcs.ZombieGuardian>() && npc.type != ModContent.NPCType<Npcs.BlueNPC>() && npc.type != ModContent.NPCType<Npcs.BrutusNPC>() && npc.type != ModContent.NPCType<Npcs.AlexNPC>() && npc.type != ModContent.NPCType<Npcs.VladimirNPC>() && npc.type != ModContent.NPCType<GuardianNPC.List.BearNPC>()
-                         && npc.type != ModContent.NPCType<Npcs.WrathNPC>() && npc.type != ModContent.NPCType<Npcs.GhostFoxGuardianNPC>())
+                         && npc.type != ModContent.NPCType<Npcs.WrathNPC>() && npc.type != ModContent.NPCType<Npcs.GhostFoxGuardianNPC>() && npc.type != ModContent.NPCType<Npcs.AlexanderNPC>())
                     {
                         TerraGuardian PlayerGuardian = null;
                         float LowestAggroCount = (Main.player[p].Center - npc.Center).Length() - Main.player[p].aggro;

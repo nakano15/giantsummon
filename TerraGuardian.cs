@@ -6513,7 +6513,7 @@ namespace giantsummon
             }
             if (CurrentIdleAction == IdleActions.Listening)
                 CurrentIdleAction = IdleActions.Wait;
-            if (OwnerPos > -1 && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
+            if (OwnerPos > -1 && !Main.player[OwnerPos].ghost && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
                 return false;
             }
@@ -15986,14 +15986,14 @@ namespace giantsummon
                  null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None).Draw(Main.spriteBatch);
                 return;
             }
-            if (!Base.sprites.IsTextureLoaded)
-                Base.sprites.LoadTextures();
             if (Base.IsTerrarian)
             {
                 Position.Y -= 16f;
                 DrawTerrarianHeadData(Position, Scale);
                 return;
             }
+            if (!Base.sprites.IsTextureLoaded)
+                Base.sprites.LoadTextures();
             Position.X -= Base.sprites.HeadSprite.Width * XOffset;
             Position.Y -= Base.sprites.HeadSprite.Height * YOffset;
             List<GuardianDrawData> gddlist = new List<GuardianDrawData>();

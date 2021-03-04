@@ -1224,6 +1224,10 @@ namespace giantsummon
 
         public override void PreUpdate()
         {
+            if (player.ghost)
+            {
+                UpdateGuardian();
+            }
             eye = EyeState.Open;
             TimeDuration += TimeSpan.FromSeconds(Main.dayRate);
             if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
@@ -1640,6 +1644,13 @@ namespace giantsummon
 
         public override void ModifyScreenPosition()
         {
+            if(MainMod.PlayerSoulPosition.Length() > 0)
+            {
+                Main.screenPosition.X = (int)(MainMod.PlayerSoulPosition.X - (Main.screenWidth * 0.5f));
+                Main.screenPosition.Y = (int)(MainMod.PlayerSoulPosition.Y - (Main.screenHeight * 0.5f));
+                MainMod.PlayerSoulPosition = Vector2.Zero;
+                return;
+            }
             foreach (TerraGuardian Guardian in GetAllGuardianFollowers)
             {
                 if (Guardian.Active && ((Guardian.PlayerMounted && !Guardian.Base.ReverseMount) || Guardian.PlayerControl || Guardian.GrabbingPlayer || (Guardian.DoAction.InUse && Guardian.DoAction.FocusCameraOnGuardian)))
@@ -2103,6 +2114,21 @@ namespace giantsummon
             if(ModVersion >= 79)
             {
                 ReceivedFoodFromMinerva = tag.GetBool("ReceivedFoodFromMinerva");
+            }
+            if (BuddiesMode)
+            {
+                bool HasBuddySummoned = SelectedGuardian != -1 && MyGuardians[SelectedGuardian].MyID.IsSameID(BuddiesModeBuddyID);
+                if (!HasBuddySummoned)
+                {
+                    foreach(int i in MyGuardians.Keys)
+                    {
+                        if (MyGuardians[i].MyID.IsSameID(BuddiesModeBuddyID))
+                        {
+                            SelectedGuardian = i;
+                            break;
+                        }
+                    }
+                }
             }
         }
 
@@ -2622,6 +2648,11 @@ namespace giantsummon
         {
             if (ControllingGuardian)
                 layers.Clear();
+            if(player.whoAmI == Main.myPlayer && MainMod.SoulSaved)
+            {
+                layers.Clear();
+                return;
+            }
             PlayerLayer l;
             if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
             {

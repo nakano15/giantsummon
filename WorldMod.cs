@@ -348,6 +348,7 @@ namespace giantsummon
             LastTime = -1;
             MainMod.FlufflesHauntOpacity = -0.5f;
             Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = false;
+            MainMod.SoulSaved = false;
         }
 
         public override void NetSend(System.IO.BinaryWriter writer)
@@ -554,7 +555,7 @@ namespace giantsummon
                 Main.GameViewMatrix.TransformationMatrix);
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
-                if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
+                if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
                 {
                     bool HasDrawMoment = false;
                     foreach (GuardianDrawMoment dm in MainMod.DrawMoment)

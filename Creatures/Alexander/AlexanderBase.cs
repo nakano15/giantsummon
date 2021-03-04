@@ -66,9 +66,9 @@ namespace giantsummon.Creatures
             BodyFrontFrameSwap.Add(17, 0);
             BodyFrontFrameSwap.Add(18, 0);
             BodyFrontFrameSwap.Add(27, 1);
-            BodyFrontFrameSwap.Add(28, 2);
-            BodyFrontFrameSwap.Add(29, 2);
-            BodyFrontFrameSwap.Add(30, 3);
+            BodyFrontFrameSwap.Add(28, 1);
+            BodyFrontFrameSwap.Add(29, 1);
+            BodyFrontFrameSwap.Add(30, 2);
 
             SleepingOffset.X = 16;
             

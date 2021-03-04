@@ -10,7 +10,7 @@ namespace giantsummon.Npcs
 {
     public class AlexanderNPC : GuardianActorNPC
     {
-        private int NpcRecruitStep = 0, DialogueDuration = 0;
+        private int NpcRecruitStep = IdleStep, DialogueDuration = 0;
 
         public AlexanderNPC() : base(GuardianBase.Alexander, "")
         {
@@ -44,9 +44,12 @@ namespace giantsummon.Npcs
                             int AnimationDuration = DialogueDuration % 180;
                             if (AnimationDuration >= 70)
                             {
-                                if ((AnimationDuration >= 80 && AnimationDuration < 90) ||
-                                    (AnimationDuration >= 110 && AnimationDuration < 120) ||
-                                    (AnimationDuration >= 140 && AnimationDuration < 150))
+                                if ((AnimationDuration >= 75 && AnimationDuration < 80) || 
+                                    (AnimationDuration >= 85 && AnimationDuration < 90) ||
+                                    (AnimationDuration >= 95 && AnimationDuration < 100) ||
+                                    (AnimationDuration >= 105 && AnimationDuration < 110) ||
+                                    (AnimationDuration >= 115 && AnimationDuration < 120) ||
+                                    (AnimationDuration >= 125 && AnimationDuration < 130))
                                 {
                                     BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = 29;
                                 }
@@ -84,7 +87,7 @@ namespace giantsummon.Npcs
                                 if(Main.player[p].getRect().Intersects(SightRange) && Collision.CanHitLine(npc.position, npc.width, npc.height, Main.player[p].position, Main.player[p].width, Main.player[p].height))
                                 {
                                     npc.target = p;
-                                    NpcRecruitStep = 1;
+                                    NextStep = CallingOutPlayerStep;
                                     break;
                                 }
                             }
@@ -98,11 +101,11 @@ namespace giantsummon.Npcs
                         {
                             if (Main.player[npc.target].GetModPlayer<PlayerMod>().KnockedOut)
                             {
-                                SayMessage("You there! Hang on!");
+                                SayMessage("*You there! Hang on!*");
                             }
                             else
                             {
-                                SayMessage("Hey! You there! Stop!");
+                                SayMessage("*Hey! You there! Stop!*");
                             }
                         }
                         if(DialogueDuration >= 150)
@@ -115,13 +118,13 @@ namespace giantsummon.Npcs
                         }
                         if (!Main.player[npc.target].active)
                         {
-                            NextStep = 0;
-                            SayMessage("Hm... " + (Main.player[npc.target].Male ? "He" : "She") + " disappeared...");
+                            NextStep = IdleStep;
+                            SayMessage("*Hm... " + (Main.player[npc.target].Male ? "He" : "She") + " disappeared...*");
                         }
                         else if (Main.player[npc.target].dead)
                         {
-                            NextStep = 0;
-                            SayMessage("Well... That's... Horrible...");
+                            NextStep = IdleStep;
+                            SayMessage("*Well... That's... Horrible...*");
                         }
                     }
                     break;
@@ -142,13 +145,13 @@ namespace giantsummon.Npcs
                         }
                         if (!player.active)
                         {
-                            NextStep = 0;
-                            SayMessage("Hm... " + (Main.player[npc.target].Male ? "He" : "She") + " disappeared...");
+                            NextStep = IdleStep;
+                            SayMessage("*Hm... " + (Main.player[npc.target].Male ? "He" : "She") + " disappeared...*");
                         }
                         else if (player.dead)
                         {
-                            NextStep = 0;
-                            SayMessage("Damn, I'm too late...");
+                            NextStep = IdleStep;
+                            SayMessage("*Damn, I'm too late...*");
                         }
                     }
                     break;
@@ -158,24 +161,35 @@ namespace giantsummon.Npcs
                             FindFrame(0);
                         Player player = Main.player[npc.target];
                         player.immuneTime = 5;
+                        player.immuneNoBlink = true;
                         Vector2 PlayerPosition = Base.LeftHandPoints.GetPositionFromFrameVector(LeftArmAnimationFrame);
                         player.fullRotationOrigin = new Vector2(40, 56) * 0.5f;
                         if (npc.direction > 0)
+                        {
                             player.fullRotation = 1.570796f;
+                            player.direction = -1;
+                        }
                         else
                         {
                             player.fullRotation = -1.570796f;
                             PlayerPosition.X = (Base.SpriteWidth * 0.5f) - PlayerPosition.X;
+                            player.direction = 1;
                         }
                         PlayerPosition += npc.position;
                         PlayerPosition.X += npc.width * 0.5f;
-                        PlayerPosition.Y = npc.position.Y + npc.height - 20;
+                        PlayerPosition.Y = npc.position.Y + npc.height - 20 + player.height * 0.5f;
+                        player.velocity = Vector2.Zero;
                         player.Center = PlayerPosition;
+                        player.statLife++;
+                        if (player.mount.Active)
+                            player.mount.Dismount(player);
+                        player.gfxOffY = 0;
+                        player.AddBuff(Terraria.ID.BuffID.Cursed, 5);
                         if (player.GetModPlayer<PlayerMod>().KnockedOut)
                         {
                             if (DialogueDuration == 0)
                             {
-                                SayMessage("Better I take care of those wounds first.");
+                                SayMessage("*Better I take care of those wounds first.*");
                             }
                             if (DialogueDuration > 1)
                                 DialogueDuration = 1;
@@ -188,18 +202,21 @@ namespace giantsummon.Npcs
                                 switch(DialogueDuration / 180)
                                 {
                                     case 0:
-                                        SayMessage("Now don't move.");
+                                        SayMessage("*Got you! Now don't move.*");
                                         break;
                                     case 1:
-                                        SayMessage("Hm...");
+                                        SayMessage("*Hm...*");
                                         break;
                                     case 2:
-                                        SayMessage("Interesting...");
+                                        SayMessage("*Interesting...*");
                                         break;
                                     case 3:
-                                        SayMessage("But I think you're not the one I'm looking for...");
+                                        SayMessage("*Uh huh...*");
                                         break;
                                     case 4:
+                                        SayMessage("*But you're not the one I'm looking for...*");
+                                        break;
+                                    case 5:
                                         NextStep = IntroductingToPlayerStep;
                                         player.fullRotation = 0;
                                         player.fullRotationOrigin = new Vector2(40, 56) * 0.5f;
@@ -212,8 +229,8 @@ namespace giantsummon.Npcs
                         DialogueDuration++;
                         if (!player.active)
                         {
-                            NextStep = 0;
-                            SayMessage((Main.player[npc.target].Male ? "He" : "She") + "!");
+                            NextStep = IdleStep;
+                            SayMessage("*" + (Main.player[npc.target].Male ? "He" : "She") + " disappeared!*");
                         }
                     }
                     break;
@@ -267,7 +284,8 @@ namespace giantsummon.Npcs
             switch (DialogueDuration)
             {
                 case 1:
-                    
+                    button = "Why did you jumped on me?";
+                    button2 = "If you wanted to know that, you could have just asked.";
                     break;
             }
         }
