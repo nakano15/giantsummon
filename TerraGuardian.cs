@@ -597,6 +597,7 @@ namespace giantsummon
         public bool IsDelay = false;
         public int ItemPositionX = 0, ItemPositionY = 0;
         public int OffHandPositionX = 0, OffHandPositionY = 0;
+        private sbyte OffhandOrientation = 0;
         public HeldHand HeldItemHand = HeldHand.Both, HeldOffHand = HeldHand.Right;
         public float ItemRotation = 0f, ItemScale = 1f;
         public byte ArmOrientation = 0;
@@ -3500,6 +3501,8 @@ namespace giantsummon
                 MoveSpeed -= MoveSpeed * Base.MountBurdenPercentage;
             if (Tanker)
                 Aggro += TankerAggroBonus;
+            if (AvoidCombat)
+                Aggro -= 200;
             MeleeSpeed = 1f / MeleeSpeed;
             RangedSpeed = 1f / RangedSpeed;
             MagicSpeed = 1f / MagicSpeed;
@@ -4570,296 +4573,351 @@ namespace giantsummon
                     TargetHeight = MainMod.ActiveGuardians[TargetID].Height;
                     break;
             }
-            if (!AttackingTarget)
-            {
-                float LCX = Position.X, RCX = Position.X;
-                int XCheckDistance = 320, YCheckDistance = 280;
-                if (TargetIsBoss)
-                {
-                    XCheckDistance *= 2;
-                    YCheckDistance *= 2;
-                }
-                XCheckDistance += (int)(Width * 0.5f);
-                YCheckDistance += (int)(Height * 0.5f);
-                if (OwnerPos > -1 && !GuardingPosition.HasValue)
-                {
-                    Player p = Main.player[OwnerPos];
-                    float PlayerCenter = p.Center.X;
-                    if (Position.X > PlayerCenter)
-                        LCX = PlayerCenter;
-                    else if (Position.X < PlayerCenter)
-                        RCX = PlayerCenter;
-                }
-                if (((Math.Abs(RCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance || Math.Abs(LCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance) &&
-                Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) <= YCheckDistance))
-                {
-                    if(!CheckIfCanUsePoisonOnWeapons())
-                        AttackingTarget = true;
-                }
-                else
-                    return;
-            }
-            bool TargetOnSight = CanHit(TargetPosition, TargetWidth, TargetHeight), NeedsDucking = false;
-            if (!TargetOnSight)
-            {
-                if (Base.CanDuck && CanHit(TargetPosition, TargetWidth, TargetHeight, true))
-                {
-                    NeedsDucking = true;
-                    TargetOnSight = true;
-                }
-            }
-            if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= 1080 || Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) >= 760)
-            {
-                TargetOnSight = false;
-            }
-            if (TargetOnSight)
-            {
-                SetCooldownValue(GuardianCooldownManager.CooldownType.TargetMemoryCooldown, (TargetType == TargetTypes.Npc && Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[TargetID].type]) ? BossTargetMemoryTime : NormalTargetMemoryTime);
-            }
-            else
-            {
-                if (!HasCooldown(GuardianCooldownManager.CooldownType.TargetMemoryCooldown))
-                {
-                    TargetID = -1;
-                    AttackingTarget = false;
-                    return;
-                }
-            }
             bool Approach = false, Retreat = false, Jump = false, Duck = false, Attack = false;
-            if (WaitingForManaRecharge && MP >= MMP)
-                WaitingForManaRecharge = false;
-            bool NearDeath = HP < MHP * 0.2f && !PlayerMounted;
-            bool TargetInAim = false;
-            if (MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight))
-                TargetInAim = true;
-            if (HasFlag(GuardianFlags.Confusion))
-            {
-                if(OwnerPos > -1)
-                    TargetPosition.X += (TargetPosition.X + TargetWidth * 0.5f - Main.player[OwnerPos].Center.X) * 2;
-            }
-            //AimDirection.X = (int)(TargetPosition.X + TargetVelocity.X + TargetWidth * 0.5f);
-            //AimDirection.Y = (int)(TargetPosition.Y + TargetVelocity.Y + TargetHeight * 0.5f);
-            float DistanceDiscount = -32 + 8f * AssistSlot;
             if (AvoidCombat)
             {
-                float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                if (Distance < (TargetWidth + Width) * 0.5f + 48)
+                float DistanceFromTarget = 60 + (TargetWidth + Width) * 0.5f;
+                switch (Tactic)
+                {
+                    case CombatTactic.Assist:
+                        DistanceFromTarget = 120;
+                        break;
+                    case CombatTactic.Snipe:
+                        DistanceFromTarget = 200;
+                        break;
+                }
+                float Distance = Math.Abs(CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X);
+                AttackingTarget = false;
+                if (Distance < DistanceFromTarget)
                 {
                     Retreat = true;
                 }
+                else if (Distance < DistanceFromTarget + 20)
+                {
+                    MoveLeft = MoveRight = false;
+                    if(Velocity.Length() == 0)
+                    {
+                        LookingLeft = CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f >= 0;
+                    }
+                }
             }
             else
             {
-                if (ItemAnimationTime == 0 && !Action)
+                if (!AttackingTarget)
                 {
-                    if (TargetOnSight) //Check weapons
+                    float LCX = Position.X, RCX = Position.X;
+                    int XCheckDistance = 320, YCheckDistance = 280;
+                    if (TargetIsBoss)
                     {
-                        MeleePosition = -1;
-                        RangedPosition = -1;
-                        MagicPosition = -1;
-                        //int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
-                        int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
-                        bool MagicItemNeedsRecharge = false, NoManaMagicItem = false;
-                        bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
-                        for (int i = 0; i < 10; i++)
-                        {
-                            if (Inventory[i].type == 0)
-                                continue;
-                            if (Inventory[i].melee)
-                            {
-                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || MayUseHeavyWeapon))
-                                {
-                                    HighestMeleeDamage = Inventory[i].damage;
-                                    MeleePosition = (sbyte)i;
-                                }
-                            }
-                            if ((Inventory[i].ranged && Inventory[i].ammo == 0) || Inventory[i].thrown)
-                            {
-                                if (Inventory[i].damage > HighestRangedDamage && (!UseWeaponsByInventoryOrder || RangedPosition == -1))
-                                {
-                                    HighestRangedDamage = Inventory[i].damage;
-                                    RangedPosition = (sbyte)i;
-                                }
-                            }
-                            if (Inventory[i].magic)
-                            {
-                                if (Inventory[i].damage > HighestMagicDamage && (!UseWeaponsByInventoryOrder || MagicPosition == -1))
-                                {
-                                    int ManaCost = (int)(Inventory[i].mana * ManaCostMult);
-                                    if (Inventory[i].type == Terraria.ID.ItemID.SpaceGun && HasFlag(GuardianFlags.MeteorSetEffect))
-                                    {
-                                        HighestMagicDamage = Inventory[i].damage;
-                                        MagicPosition = (sbyte)i;
-                                        ManaCost = 0;
-                                        NoManaMagicItem = true;
-                                    }
-                                    else if (MP >= Inventory[i].mana * ManaCostMult)
-                                    {
-                                        HighestMagicDamage = Inventory[i].damage;
-                                        MagicPosition = (sbyte)i;
-                                        MagicItemNeedsRecharge = false;
-                                        NoManaMagicItem = false;
-                                    }
-                                    else if (MagicPosition == -1)
-                                    {
-                                        HighestMagicDamage = Inventory[i].damage;
-                                        MagicPosition = (sbyte)i;
-                                        MagicItemNeedsRecharge = true;
-                                        NoManaMagicItem = false;
-                                    }
-                                }
-                            }
-                        }
-                        if (MagicItemNeedsRecharge && (!HasFlag(GuardianFlags.AutoManaPotion) || !Inventory.Any(x => x.type > 0 && x.healMana > 0)))
-                        {
-                            WaitingForManaRecharge = true;
-                        }
-                        SelectedItem = -1;
-                        bool InMeleeRange = false;
-                        if (MeleePosition > -1)
-                        {
-                            if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false))
-                            {
-                                InMeleeRange = true;
-                            }
-                            else if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, true))
-                            {
-                                InMeleeRange = true;
-                                NeedsDucking = true;
-                            }
-                        }
-                        if (RangedPosition > -1)
-                        {
-                            SelectedItem = RangedPosition;
-                        }
-                        if (MagicPosition > -1 && ((!WaitingForManaRecharge || NoManaMagicItem) || ManaCostMult == 0) && !HasFlag(GuardianFlags.Silence))
-                        {
-                            SelectedItem = MagicPosition;
-                        }
-                        if ((SelectedItem == -1 || InMeleeRange) && MeleePosition > -1)
-                        {
-                            SelectedItem = MeleePosition;
-                        }
+                        XCheckDistance *= 2;
+                        YCheckDistance *= 2;
+                    }
+                    XCheckDistance += (int)(Width * 0.5f);
+                    YCheckDistance += (int)(Height * 0.5f);
+                    if (OwnerPos > -1 && !GuardingPosition.HasValue)
+                    {
+                        Player p = Main.player[OwnerPos];
+                        float PlayerCenter = p.Center.X;
+                        if (Position.X > PlayerCenter)
+                            LCX = PlayerCenter;
+                        else if (Position.X < PlayerCenter)
+                            RCX = PlayerCenter;
+                    }
+                    if (((Math.Abs(RCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance || Math.Abs(LCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance) &&
+                    Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) <= YCheckDistance))
+                    {
+                        if (!CheckIfCanUsePoisonOnWeapons())
+                            AttackingTarget = true;
                     }
                     else
-                    {
-                        SelectedItem = -1;
-                        int HighestDamage = 0;
-                        MeleePosition = -1;
-                        for (int m = 0; m < 10; m++)
-                        {
-                            if (Inventory[m].type > 0 && Inventory[m].melee && Inventory[m].damage > HighestDamage)
-                            {
-                                MeleePosition = (sbyte)m;
-                                HighestDamage = Inventory[m].damage;
-                            }
-                        }
-                        if (MeleePosition > -1)
-                            SelectedItem = MeleePosition;
-                    }
+                        return;
                 }
-                /*if (HasFlag(GuardianFlags.Confusion) && OwnerPos > -1)
-                {
-                    TargetPosition.X += (Main.player[OwnerPos].Center.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
-                }*/
-                bool InRangeX, InRangeY;
-                CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
-                bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
-                float MaxAttackRange = -1;
-                if (SelectedItem > -1)
-                {
-                    if (LastCheckedWeapon != Inventory[SelectedItem].type)
-                    {
-                        LastCheckedWeapon = Inventory[SelectedItem].type;
-                        if (MainMod.ItemAttackRange.Any(x => x.Key.Type == Inventory[SelectedItem].type))
-                        {
-                            LastCheckedWeaponAttackRange = MainMod.ItemAttackRange.First(x => x.Key.Type == Inventory[SelectedItem].type).Value;
-                        }
-                        else
-                        {
-                            LastCheckedWeaponAttackRange = -1;
-                        }
-                    }
-                    MaxAttackRange = LastCheckedWeaponAttackRange;
-                }
+                bool TargetOnSight = CanHit(TargetPosition, TargetWidth, TargetHeight), NeedsDucking = false;
                 if (!TargetOnSight)
                 {
-                    float Distance = 16;
-                    switch (Tactic)
+                    if (Base.CanDuck && CanHit(TargetPosition, TargetWidth, TargetHeight, true))
                     {
-                        case CombatTactic.Assist:
-                            Distance = 64f;
-                            break;
-                        case CombatTactic.Snipe:
-                            Distance = 96f;
-                            break;
+                        NeedsDucking = true;
+                        TargetOnSight = true;
                     }
-                    if (NearDeath)
+                }
+                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= 1080 || Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) >= 760)
+                {
+                    TargetOnSight = false;
+                }
+                if (TargetOnSight)
+                {
+                    SetCooldownValue(GuardianCooldownManager.CooldownType.TargetMemoryCooldown, (TargetType == TargetTypes.Npc && Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[TargetID].type]) ? BossTargetMemoryTime : NormalTargetMemoryTime);
+                }
+                else
+                {
+                    if (!HasCooldown(GuardianCooldownManager.CooldownType.TargetMemoryCooldown))
                     {
-                        Distance *= 2;
+                        TargetID = -1;
+                        AttackingTarget = false;
+                        return;
                     }
-                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) > Distance)
-                    {
-                        Approach = true;
-                    }
-                    else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) <= Distance * 0.5f)
+                }
+                if (WaitingForManaRecharge && MP >= MMP)
+                    WaitingForManaRecharge = false;
+                bool NearDeath = HP < MHP * 0.2f && !PlayerMounted;
+                bool TargetInAim = false;
+                if (MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight))
+                    TargetInAim = true;
+                if (HasFlag(GuardianFlags.Confusion))
+                {
+                    if (OwnerPos > -1)
+                        TargetPosition.X += (TargetPosition.X + TargetWidth * 0.5f - Main.player[OwnerPos].Center.X) * 2;
+                }
+                //AimDirection.X = (int)(TargetPosition.X + TargetVelocity.X + TargetWidth * 0.5f);
+                //AimDirection.Y = (int)(TargetPosition.Y + TargetVelocity.Y + TargetHeight * 0.5f);
+                float DistanceDiscount = -32 + 8f * AssistSlot;
+                if (AvoidCombat)
+                {
+                    float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                    if (Distance < (TargetWidth + Width) * 0.5f + 48)
                     {
                         Retreat = true;
                     }
                 }
                 else
                 {
-                    switch (Tactic)
+                    if (ItemAnimationTime == 0 && !Action)
                     {
-                        case CombatTactic.Charge: //This AI is clashing against GoMelee AI.
+                        if (TargetOnSight) //Check weapons
+                        {
+                            MeleePosition = -1;
+                            RangedPosition = -1;
+                            MagicPosition = -1;
+                            //int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
+                            int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
+                            bool MagicItemNeedsRecharge = false, NoManaMagicItem = false;
+                            bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
+                            for (int i = 0; i < 10; i++)
                             {
-                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
-                                float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
-                                    RetreatDistance = Width * 0.5f + 8;
-                                if (MaxAttackRange > -1)
+                                if (Inventory[i].type == 0)
+                                    continue;
+                                if (Inventory[i].melee)
                                 {
-                                    ApproachDistance = MaxAttackRange;
-                                }
-                                if (DistanceX <= ApproachDistance + 8 && InRangeY)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
-                                {
-                                    GoMelee = true;
-                                }
-                                else
-                                {
-                                    if (NearDeath)
+                                    if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || MayUseHeavyWeapon))
                                     {
-                                        ApproachDistance += 44;
-                                        RetreatDistance += 20;
+                                        HighestMeleeDamage = Inventory[i].damage;
+                                        MeleePosition = (sbyte)i;
                                     }
-                                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) <= RetreatDistance)
-                                        Retreat = true;
-                                    else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
-                                        Approach = true;
-                                    if(TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
-                                        Attack = true;
                                 }
-                                if (!NearDeath && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
+                                if ((Inventory[i].ranged && Inventory[i].ammo == 0) || Inventory[i].thrown)
                                 {
-                                    Jump = true;
+                                    if (Inventory[i].damage > HighestRangedDamage && (!UseWeaponsByInventoryOrder || RangedPosition == -1))
+                                    {
+                                        HighestRangedDamage = Inventory[i].damage;
+                                        RangedPosition = (sbyte)i;
+                                    }
+                                }
+                                if (Inventory[i].magic)
+                                {
+                                    if (Inventory[i].damage > HighestMagicDamage && (!UseWeaponsByInventoryOrder || MagicPosition == -1))
+                                    {
+                                        int ManaCost = (int)(Inventory[i].mana * ManaCostMult);
+                                        if (Inventory[i].type == Terraria.ID.ItemID.SpaceGun && HasFlag(GuardianFlags.MeteorSetEffect))
+                                        {
+                                            HighestMagicDamage = Inventory[i].damage;
+                                            MagicPosition = (sbyte)i;
+                                            ManaCost = 0;
+                                            NoManaMagicItem = true;
+                                        }
+                                        else if (MP >= Inventory[i].mana * ManaCostMult)
+                                        {
+                                            HighestMagicDamage = Inventory[i].damage;
+                                            MagicPosition = (sbyte)i;
+                                            MagicItemNeedsRecharge = false;
+                                            NoManaMagicItem = false;
+                                        }
+                                        else if (MagicPosition == -1)
+                                        {
+                                            HighestMagicDamage = Inventory[i].damage;
+                                            MagicPosition = (sbyte)i;
+                                            MagicItemNeedsRecharge = true;
+                                            NoManaMagicItem = false;
+                                        }
+                                    }
                                 }
                             }
-                            break;
-                        case CombatTactic.Assist:
+                            if (MagicItemNeedsRecharge && (!HasFlag(GuardianFlags.AutoManaPotion) || !Inventory.Any(x => x.type > 0 && x.healMana > 0)))
                             {
-                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                WaitingForManaRecharge = true;
+                            }
+                            SelectedItem = -1;
+                            bool InMeleeRange = false;
+                            if (MeleePosition > -1)
+                            {
+                                if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false))
                                 {
-                                    GoMelee = true;
+                                    InMeleeRange = true;
                                 }
-                                else
+                                else if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, true))
                                 {
-                                    const float AssistDistance = 120f;
+                                    InMeleeRange = true;
+                                    NeedsDucking = true;
+                                }
+                            }
+                            if (RangedPosition > -1)
+                            {
+                                SelectedItem = RangedPosition;
+                            }
+                            if (MagicPosition > -1 && ((!WaitingForManaRecharge || NoManaMagicItem) || ManaCostMult == 0) && !HasFlag(GuardianFlags.Silence))
+                            {
+                                SelectedItem = MagicPosition;
+                            }
+                            if ((SelectedItem == -1 || InMeleeRange) && MeleePosition > -1)
+                            {
+                                SelectedItem = MeleePosition;
+                            }
+                        }
+                        else
+                        {
+                            SelectedItem = -1;
+                            int HighestDamage = 0;
+                            MeleePosition = -1;
+                            for (int m = 0; m < 10; m++)
+                            {
+                                if (Inventory[m].type > 0 && Inventory[m].melee && Inventory[m].damage > HighestDamage)
+                                {
+                                    MeleePosition = (sbyte)m;
+                                    HighestDamage = Inventory[m].damage;
+                                }
+                            }
+                            if (MeleePosition > -1)
+                                SelectedItem = MeleePosition;
+                        }
+                    }
+                    /*if (HasFlag(GuardianFlags.Confusion) && OwnerPos > -1)
+                    {
+                        TargetPosition.X += (Main.player[OwnerPos].Center.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
+                    }*/
+                    bool InRangeX, InRangeY;
+                    CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
+                    bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
+                    float MaxAttackRange = -1;
+                    if (SelectedItem > -1)
+                    {
+                        if (LastCheckedWeapon != Inventory[SelectedItem].type)
+                        {
+                            LastCheckedWeapon = Inventory[SelectedItem].type;
+                            if (MainMod.ItemAttackRange.Any(x => x.Key.Type == Inventory[SelectedItem].type))
+                            {
+                                LastCheckedWeaponAttackRange = MainMod.ItemAttackRange.First(x => x.Key.Type == Inventory[SelectedItem].type).Value;
+                            }
+                            else
+                            {
+                                LastCheckedWeaponAttackRange = -1;
+                            }
+                        }
+                        MaxAttackRange = LastCheckedWeaponAttackRange;
+                    }
+                    if (!TargetOnSight)
+                    {
+                        float Distance = 16;
+                        switch (Tactic)
+                        {
+                            case CombatTactic.Assist:
+                                Distance = 64f;
+                                break;
+                            case CombatTactic.Snipe:
+                                Distance = 96f;
+                                break;
+                        }
+                        if (NearDeath)
+                        {
+                            Distance *= 2;
+                        }
+                        if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) > Distance)
+                        {
+                            Approach = true;
+                        }
+                        else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) <= Distance * 0.5f)
+                        {
+                            Retreat = true;
+                        }
+                    }
+                    else
+                    {
+                        switch (Tactic)
+                        {
+                            case CombatTactic.Charge: //This AI is clashing against GoMelee AI.
+                                {
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
+                                    float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
+                                        RetreatDistance = Width * 0.5f + 8;
+                                    if (MaxAttackRange > -1)
+                                    {
+                                        ApproachDistance = MaxAttackRange;
+                                    }
+                                    if (DistanceX <= ApproachDistance + 8 && InRangeY)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                    {
+                                        GoMelee = true;
+                                    }
+                                    else
+                                    {
+                                        if (NearDeath)
+                                        {
+                                            ApproachDistance += 44;
+                                            RetreatDistance += 20;
+                                        }
+                                        if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) <= RetreatDistance)
+                                            Retreat = true;
+                                        else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
+                                            Approach = true;
+                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                            Attack = true;
+                                    }
+                                    if (!NearDeath && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
+                                    {
+                                        Jump = true;
+                                    }
+                                }
+                                break;
+                            case CombatTactic.Assist:
+                                {
+                                    if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                    {
+                                        GoMelee = true;
+                                    }
+                                    else
+                                    {
+                                        const float AssistDistance = 120f;
+                                        float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                                        float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
+                                            RetreatDistance = TargetWidth + Width + AssistDistance + DistanceDiscount - 24;
+                                        if (MaxAttackRange > -1)
+                                        {
+                                            ApproachDistance = MaxAttackRange + TargetWidth;
+                                            RetreatDistance = MaxAttackRange - 24;
+                                            if (RetreatDistance < Width * 0.5f + 8)
+                                                RetreatDistance = Width * 0.5f + 8;
+                                        }
+                                        if (DistanceX >= ApproachDistance)
+                                            Approach = true;
+                                        else if (DistanceX <= RetreatDistance)
+                                            Retreat = true;
+                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                            Attack = true;
+                                    }
+                                }
+                                break;
+                            case CombatTactic.Snipe:
+                                {
+                                    if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                    {
+                                        GoMelee = true;
+                                    }
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                    float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
-                                        RetreatDistance = TargetWidth + Width + AssistDistance + DistanceDiscount - 24;
+                                    const float SnipeDistance = 260f;
+                                    float ApproachDistance = TargetWidth + Width + SnipeDistance + DistanceDiscount,
+                                        RetreatDistance = TargetWidth + Width + SnipeDistance - 50;
                                     if (MaxAttackRange > -1)
                                     {
                                         ApproachDistance = MaxAttackRange + TargetWidth;
-                                        RetreatDistance = MaxAttackRange - 24;
+                                        RetreatDistance = MaxAttackRange - 50;
                                         if (RetreatDistance < Width * 0.5f + 8)
                                             RetreatDistance = Width * 0.5f + 8;
                                     }
@@ -4870,68 +4928,43 @@ namespace giantsummon
                                     if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
                                         Attack = true;
                                 }
-                            }
-                            break;
-                        case CombatTactic.Snipe:
-                            {
-                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
-                                {
-                                    GoMelee = true;
-                                }
-                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                const float SnipeDistance = 260f;
-                                float ApproachDistance = TargetWidth + Width + SnipeDistance + DistanceDiscount,
-                                    RetreatDistance = TargetWidth + Width + SnipeDistance - 50;
-                                if (MaxAttackRange > -1)
-                                {
-                                    ApproachDistance = MaxAttackRange + TargetWidth;
-                                    RetreatDistance = MaxAttackRange - 50;
-                                    if (RetreatDistance < Width * 0.5f + 8)
-                                        RetreatDistance = Width * 0.5f + 8;
-                                }
-                                if (DistanceX >= ApproachDistance)
-                                    Approach = true;
-                                else if (DistanceX <= RetreatDistance)
-                                    Retreat = true;
-                                if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
-                                    Attack = true;
-                            }
-                            break;
-                    }
-                }
-                if (GoMelee)
-                {
-                    if (InRangeX)
-                    {
-                        if (!InRangeY)
-                        {
-                            if (TargetPosition.Y + TargetHeight * 0.5 < CenterPosition.Y)
-                            {
-                                if ((!LastJump && Velocity.Y == 0) || JumpHeight > 0)
-                                {
-                                    Jump = true;
-                                }
-                            }
-                            else
-                            {
-                                if (CheckAttackRange(SelectedItem, TargetPosition, TargetWidth, TargetHeight, true, out InRangeX, out InRangeY))
-                                    NeedsDucking = true;
-                            }
+                                break;
                         }
                     }
-                    if ((InRangeX && InRangeY) || NearDeath)
+                    if (GoMelee)
                     {
-                        Attack = true;
-                        if (NeedsDucking && !NearDeath)
-                            Duck = true;
+                        if (InRangeX)
+                        {
+                            if (!InRangeY)
+                            {
+                                if (TargetPosition.Y + TargetHeight * 0.5 < CenterPosition.Y)
+                                {
+                                    if ((!LastJump && Velocity.Y == 0) || JumpHeight > 0)
+                                    {
+                                        Jump = true;
+                                    }
+                                }
+                                else
+                                {
+                                    if (CheckAttackRange(SelectedItem, TargetPosition, TargetWidth, TargetHeight, true, out InRangeX, out InRangeY))
+                                        NeedsDucking = true;
+                                }
+                            }
+                        }
+                        if ((InRangeX && InRangeY) || NearDeath)
+                        {
+                            Attack = true;
+                            if (NeedsDucking && !NearDeath)
+                                Duck = true;
+                        }
+                        float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
+                            DistanceAbs = Math.Abs((Position.X + Velocity.X * 0.5f) - (TargetPosition.X + TargetWidth * 0.5f));
+                        Approach = Retreat = false;
+                        if (DistanceAbs < (Width + TargetWidth) * 0.5f + 8 || (NearDeath && DistanceAbs < (Width + TargetWidth) * 0.5f + 64))
+                            Retreat = true;
+                        else if (DistanceAbs > AttackRange)
+                            Approach = true;
                     }
-                    float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
-                        DistanceAbs = Math.Abs((Position.X + Velocity.X * 0.5f) - (TargetPosition.X + TargetWidth * 0.5f));
-                    Approach = Retreat = false;
-                    if (DistanceAbs < (Width + TargetWidth) * 0.5f + 8 || (NearDeath && DistanceAbs < (Width + TargetWidth) * 0.5f + 64))
-                        Retreat = true;
-                    else if (DistanceAbs > AttackRange)
-                        Approach = true;
                 }
             }
             if (Duck && ItemAnimationTime == 0)
@@ -11233,7 +11266,7 @@ namespace giantsummon
                         PickOffHandToUse(ref HeldOffHand);
                     float AngleChecker = CalculateAimingUseAnimation(ItemRotation);
                     OffhandRotation = 0;
-                    bool IsUmbrella = Inventory[SelectedOffhand].type == 946;
+                    //bool IsUmbrella = Inventory[SelectedOffhand].type == 946;
                     int Frame = 0;
                     /*if (Inventory[SelectedOffhand].type == 946)
                     {
@@ -11253,6 +11286,9 @@ namespace giantsummon
                             Frame = Base.ItemUseFrames[2];
                         }
                     }
+                    OffhandOrientation = 0;
+                    bool CheckingAgain = false;
+                    GetPositionAgain:
                     if (HeldOffHand == HeldHand.Both)
                     {
                         GetBetweenHandsPosition(Frame, out OffHandPositionX, out OffHandPositionY);
@@ -11264,6 +11300,25 @@ namespace giantsummon
                     if (HeldOffHand == HeldHand.Right)
                     {
                         GetRightHandPosition(Frame, out OffHandPositionX, out OffHandPositionY);
+                    }
+                    if (!CheckingAgain)
+                    {
+                        CheckingAgain = true;
+                        Tile t = Framing.GetTileSafely((int)(Position.X + OffHandPositionX) / 16, (int)(Position.Y + OffHandPositionY) / 16);
+                        if (!Ducking && t.active() && Main.tileSolid[t.type])
+                        {
+                            if (OwnerPos > -1 && !PlayerMounted && Main.player[OwnerPos].Center.Y < Position.Y - Height * 0.5f)
+                            {
+                                Frame = Base.ItemUseFrames[1];
+                                OffhandOrientation = -1;
+                            }
+                            else
+                            {
+                                Frame = Base.ItemUseFrames[3];
+                                OffhandOrientation = 1;
+                            }
+                            goto GetPositionAgain;
+                        }
                     }
                 }
                 if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.PeaceCandle)
@@ -13549,7 +13604,7 @@ namespace giantsummon
                         }
                         else
                         {
-                            Frame = Base.ItemUseFrames[2];
+                            Frame = Base.ItemUseFrames[2 + OffhandOrientation];
                         }
                     }
                     if (hand == HeldHand.Left)

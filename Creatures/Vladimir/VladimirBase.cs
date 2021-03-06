@@ -316,14 +316,16 @@ namespace giantsummon.Creatures
                             }
                         }
                         bool End = player.controlJump;
-                        if (PlayerMod.PlayerHasGuardianSummoned(player, guardian.ID, guardian.ModID))
-                            End = true;
+                        //if (PlayerMod.PlayerHasGuardianSummoned(player, guardian.ID, guardian.ModID))
+                        //    End = true;
                         if (Main.bloodMoon)
                             End = false;
                         if (End)
                         {
                             action.InUse = false;
                             player.Bottom = guardian.Position;
+                            if (guardian.BodyAnimationFrame == guardian.Base.ChairSittingFrame)
+                                player.position.Y -= guardian.SpriteHeight - guardian.Base.SittingPoint.Y * guardian.Scale;
                             PlayerMod pm = player.GetModPlayer<PlayerMod>();
                             if (pm.ControllingGuardian)
                             {
@@ -513,75 +515,72 @@ namespace giantsummon.Creatures
 
         public override void GuardianActionUpdateAnimation(TerraGuardian guardian, GuardianActions action, ref bool UsingLeftArm, ref bool UsingRightArm)
         {
-            if (guardian.OwnerPos == -1)
+            switch (action.ID)
             {
-                switch (action.ID)
-                {
-                    case 0:
+                case 0:
+                    {
+                        if (guardian.BodyAnimationFrame == BedSleepingFrame)
                         {
-                            if (guardian.BodyAnimationFrame == BedSleepingFrame)
+                            if (!Main.bloodMoon)
                             {
-                                if (!Main.bloodMoon)
-                                {
-                                    guardian.BodyAnimationFrame++;
-                                    guardian.LeftArmAnimationFrame = guardian.BodyAnimationFrame;
-                                    guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame;
-                                }
+                                guardian.BodyAnimationFrame++;
+                                guardian.LeftArmAnimationFrame = guardian.BodyAnimationFrame;
+                                guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame;
                             }
-                            else if (guardian.BodyAnimationFrame == ThroneSittingFrame)
+                        }
+                        else if (guardian.BodyAnimationFrame == ThroneSittingFrame)
+                        {
+                            if (!Main.bloodMoon)
                             {
-                                if (!Main.bloodMoon)
-                                {
-                                    guardian.BodyAnimationFrame++;
-                                }
-                                else
-                                {
-                                    if (!UsingLeftArm)
-                                    {
-                                        UsingLeftArm = true;
-                                        guardian.LeftArmAnimationFrame = guardian.BodyAnimationFrame++;
-                                    }
-                                    if (!UsingRightArm)
-                                    {
-                                        UsingRightArm = true;
-                                        guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame++;
-                                    }
-                                }
-                            }
-                            else if (guardian.BodyAnimationFrame == ChairSittingFrame)
-                            {
-                                if (!UsingLeftArm)
-                                {
-                                    guardian.LeftArmAnimationFrame = SittingFrame;
-                                    UsingLeftArm = true;
-                                }
-                                if (!UsingRightArm)
-                                {
-                                    guardian.RightArmAnimationFrame = SittingFrame;
-                                    UsingRightArm = true;
-                                }
+                                guardian.BodyAnimationFrame++;
                             }
                             else
                             {
-                                int Frame = 1;
-                                if (guardian.Ducking)
-                                    Frame = 12;
-                                if (!Main.bloodMoon && (guardian.BodyAnimationFrame == StandingFrame || guardian.BodyAnimationFrame == DuckingFrame))
-                                    guardian.BodyAnimationFrame = Frame;
                                 if (!UsingLeftArm)
                                 {
-                                    guardian.LeftArmAnimationFrame = Frame;
                                     UsingLeftArm = true;
+                                    guardian.LeftArmAnimationFrame = guardian.BodyAnimationFrame++;
                                 }
                                 if (!UsingRightArm)
                                 {
-                                    guardian.RightArmAnimationFrame = Frame;
                                     UsingRightArm = true;
+                                    guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame++;
                                 }
                             }
                         }
-                        break;
-                }
+                        else if (guardian.BodyAnimationFrame == ChairSittingFrame)
+                        {
+                            if (!UsingLeftArm)
+                            {
+                                guardian.LeftArmAnimationFrame = SittingFrame;
+                                UsingLeftArm = true;
+                            }
+                            if (!UsingRightArm)
+                            {
+                                guardian.RightArmAnimationFrame = SittingFrame;
+                                UsingRightArm = true;
+                            }
+                        }
+                        else
+                        {
+                            int Frame = 1;
+                            if (guardian.Ducking)
+                                Frame = 12;
+                            if (!Main.bloodMoon && (guardian.BodyAnimationFrame == StandingFrame || guardian.BodyAnimationFrame == DuckingFrame))
+                                guardian.BodyAnimationFrame = Frame;
+                            if (!UsingLeftArm)
+                            {
+                                guardian.LeftArmAnimationFrame = Frame;
+                                UsingLeftArm = true;
+                            }
+                            if (!UsingRightArm)
+                            {
+                                guardian.RightArmAnimationFrame = Frame;
+                                UsingRightArm = true;
+                            }
+                        }
+                    }
+                    break;
             }
         }
 

@@ -447,6 +447,12 @@ namespace giantsummon
 
         public override bool PreDraw(NPC npc, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
+            if (!WorldMod.HasDrawnTownCompanions)
+            {
+                WorldMod.HasDrawnTownCompanions = true;
+                WorldMod.DrawTownNpcCompanions();
+            }
+
             if (npc.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
             {
                 Vector2 Velocity = new Vector2(Main.rand.Next(-10, 11), Main.rand.Next(-10, 11));

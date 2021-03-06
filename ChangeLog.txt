@@ -35,3 +35,9 @@ Some companions will not sleep while at bed, so you can speak with them right aw
 You will no longer receive messages telling you that your Starter Guardian can now be called, due to friendship level increasing.
 	Starter Guardians are always willing to follow you.
 Further improved the move in level requirement, making so Starter Guardians no longer refuse to move in or anything If you didn't met their friendship level.
+Setting companions to "Avoid Combat" no longer means "dumb" in combat.
+	They will also now less likelly attract monster aggro in that state, too.
+	Due to each combat row having their own defined distances, you can now set them up when the companion is using this.
+Having Vladimir follow you doesn't means he will instantly stop giving you a hug.
+Vladimir will no longer bury you on the ground, when you ask him to stop hugging you, while he's sitting on a chair.
+If your companion is holding an offhand item, like a torch, and the position the torch is at has a wall, the companion will lower It's arm.

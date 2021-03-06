@@ -37,7 +37,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 82, LastModVersion = 80;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -2105,7 +2105,8 @@ namespace giantsummon
                                             Main.bloodMoon = true;
                                         }
                                         SlotStartPosition.Y += 26;
-                                        b = (!Main.dayTime && Main.time >= 4.5 * 3600) || (Main.dayTime && Main.time < 3 * 3600);
+                                        //b = (!Main.dayTime && Main.time >= 4.5 * 3600) || (Main.dayTime && Main.time < 3 * 3600);
+                                        b = false;
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Start Late Night ", ref b);
                                         if (b)
                                         {
@@ -2140,8 +2141,6 @@ namespace giantsummon
                                     SlotStartPosition.Y += 26;
                                     break;
                                 case 1: //Combat
-                                    if (!Guardian.AvoidCombat)
-                                    {
                                         Utils.DrawBorderString(Main.spriteBatch, "Combat Behavior", SlotStartPosition, Color.White);
                                         SlotStartPosition.Y += 26;
                                         int hoveritem = -1;
@@ -2153,19 +2152,21 @@ namespace giantsummon
                                         switch (hoveritem)
                                         {
                                             case 0:
-                                                MouseOverText = "Attack far away from target.";
+                                                MouseOverText = (!Guardian.AvoidCombat ? "Attack far away from target." : "Void the target at all cost.");
                                                 break;
                                             case 1:
-                                                MouseOverText = "Attack near the target, but keep some distance.";
+                                                MouseOverText = (!Guardian.AvoidCombat ? "Attack near the target, but keep some distance." : "Keep a decent distance away from target.");
                                                 break;
                                             case 2:
-                                                MouseOverText = "Try melee combat with the target.";
+                                                MouseOverText = (!Guardian.AvoidCombat ? "Try melee combat with the target." : "Keep some distance from target.");
                                                 break;
                                         }
                                         Main.spriteBatch.Draw(TacticsIconsTexture, SlotStartPosition + new Vector2((int)Guardian.tactic * 56 - 4, -8), new Rectangle(0, 0, 36, 36), Color.White);
                                         Main.spriteBatch.Draw(TacticsIconsTexture, SlotStartPosition + new Vector2(56 * 3 - 4, -4), new Rectangle(36, 0, 36, 36), Color.White);
 
-                                        SlotStartPosition.Y += 26;
+                                    SlotStartPosition.Y += 26;
+                                    if (!Guardian.AvoidCombat)
+                                    {
                                         if (Guardian.HasFlag(GuardianFlags.Tanking))
                                         {
                                             AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Guardian lures foes attention?", ref Guardian.Data.Tanker);
@@ -2509,6 +2510,11 @@ namespace giantsummon
                 }
                 return "Terraria: " + s;
             }
+        }
+
+        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        {
+            WorldMod.HasDrawnTownCompanions = false;
         }
 
         public override void PostDrawFullscreenMap(ref string mouseText)

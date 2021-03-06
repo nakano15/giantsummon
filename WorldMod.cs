@@ -546,16 +546,28 @@ namespace giantsummon
 
         public override void PostDrawTiles()
         {
-            Main.spriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
-                Microsoft.Xna.Framework.Graphics.BlendState.AlphaBlend,
-                Main.DefaultSamplerState,
-                Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
-                Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone,
-                null,
-                Main.GameViewMatrix.TransformationMatrix);
+            if (!HasDrawnTownCompanions)
+            {
+                HasDrawnTownCompanions = true;
+                Main.spriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
+                    Microsoft.Xna.Framework.Graphics.BlendState.AlphaBlend,
+                    Main.DefaultSamplerState,
+                    Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
+                    Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone,
+                    null,
+                    Main.GameViewMatrix.TransformationMatrix);
+                DrawTownNpcCompanions();
+                Main.spriteBatch.End();
+            }
+        }
+
+        public static bool HasDrawnTownCompanions = false;
+
+        public static void DrawTownNpcCompanions()
+        {
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
-                if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
+                if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || (tg.UsingFurniture && !tg.PlayerMounted) || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
                 {
                     bool HasDrawMoment = false;
                     foreach (GuardianDrawMoment dm in MainMod.DrawMoment)
@@ -571,7 +583,6 @@ namespace giantsummon
                     tg.Draw();
                 }
             }
-            Main.spriteBatch.End();
         }
 
         public static GuardianTownNpcState GetTownNpcState(GuardianID Id)
