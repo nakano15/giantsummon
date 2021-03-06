@@ -1902,7 +1902,18 @@ namespace giantsummon
             {
                 UpdateStatus = true;
             }
-            DoAction.Update(this);
+            if (DoAction.InUse)
+            {
+                if (Downed || KnockedOut)
+                {
+                    DoAction.InUse = false;
+                }
+                else
+                {
+                    //StuckTimer = 0;
+                    DoAction.Update(this);
+                }
+            }
             if (ItemAnimationTime == 0)
             {
                 if (MoveDown && Base.CanDuck && !SittingOnPlayerMount && (!Base.ReverseMount || !PlayerMounted) && Velocity.Y == 0)
@@ -3237,10 +3248,12 @@ namespace giantsummon
                 UpdateStatus = true;
                 if (Main.netMode < 2 && OwnerPos == Main.myPlayer && (!PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]) || Main.player[OwnerPos].GetModPlayer<PlayerMod>().IsPlayerBuddy(MyID)))
                 {
-                    if (FriendshipLevel == Base.CallUnlockLevel && !PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
+                    if (FriendshipLevel == Base.CallUnlockLevel && !IsStarter && !PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
                         Main.NewText("You can now call " + this.Name + " to help you.");
                     if (FriendshipLevel == Base.MountUnlockLevel)
                         Main.NewText(this.Name + "'s Mounting ability unlocked.");
+                    if (FriendshipLevel == Base.MoveInLevel)
+                        Main.NewText(this.Name + " will now agree to live in your world.");
                     if (FriendshipLevel == Base.ControlUnlockLevel && !Base.IsTerrarian)
                         Main.NewText(this.Name + "'s Control ability unlocked.");
                     if (FriendshipLevel == Base.StopMindingAFK)
@@ -13819,7 +13832,7 @@ namespace giantsummon
 
         public void ApplyFrameAnimationChangeScripts()
         {
-            if (!FreezeItemUseAnimation)
+            if (!FreezeItemUseAnimation && DoAction.InUse)
             {
                 DoAction.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
             }

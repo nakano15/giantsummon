@@ -750,6 +750,20 @@ namespace giantsummon
         public static bool RoomOccupied, RoomEvil;
         public static int RoomScore;
 
+        public static bool HasCompanionMetSomeoneWithHighFriendshipLevel(int ID, string ModID)
+        {
+            for(int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active && PlayerMod.PlayerHasGuardian(Main.player[i], ID, ModID))
+                {
+                    GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[i], ID, ModID);
+                    if (gd.IsStarter || gd.FriendshipLevel >= gd.Base.MoveInLevel)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public static void TrySpawningOrMovingGuardianNPC(int GuardianID, string ModID, int X, int Y)
         {
             if (!Main.wallHouse[Main.tile[X, Y].wall] || !WorldGen.StartRoomCheck(X, Y))
@@ -763,24 +777,8 @@ namespace giantsummon
                 return;
             }
             if (Housing_IsRoomCrowded(gb)) return;
-            if (gb.MoveInLevel > 0)
-            {
-                bool SomeoneHasTheLevel = false;
-                for (int p = 0; p < 255; p++)
-                {
-                    if (Main.player[p].active)
-                    {
-                        PlayerMod pm = Main.player[p].GetModPlayer<PlayerMod>();
-                        if(pm.HasGuardian(GuardianID, ModID) && pm.GetGuardian(GuardianID, ModID).FriendshipLevel >= gb.MoveInLevel)
-                        {
-                            SomeoneHasTheLevel = true;
-                            break;
-                        }
-                    }
-                }
-                if (!SomeoneHasTheLevel)
-                    return;
-            }
+            if (!HasCompanionMetSomeoneWithHighFriendshipLevel(GuardianID, ModID))
+                return;
             for (int npc = 0; npc < GuardianTownNPC.Count; npc++)
             {
                 GuardianTownNpcState townstate = GuardianTownNPC[npc].GetTownNpcInfo;

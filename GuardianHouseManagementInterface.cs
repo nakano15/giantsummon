@@ -80,9 +80,9 @@ namespace giantsummon
                             MouseText = guardian.Name;
                             if (Main.mouseRight && Main.mouseRightRelease)
                             {
-                                if (guardian.FriendshipLevel < guardian.Base.MoveInLevel)
+                                if (!guardian.IsStarter && guardian.FriendshipLevel < guardian.Base.MoveInLevel)
                                 {
-                                    Main.NewText(guardian.Name + " doesn't want to be kicked out of their house.");
+                                    Main.NewText(guardian.Name + (Main.rand.Next(2) == 0 ? " refuses to leave their house." : " doesn't want to be kicked out of their house."));
                                 }
                                 else
                                 {
@@ -106,7 +106,7 @@ namespace giantsummon
                     int Counter = 0;
                     foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                     {
-                        if (tg.FriendshipLevel >= tg.Base.MoveInLevel)
+                        if (tg.FriendshipLevel >= tg.Base.MoveInLevel || tg.IsStarter)
                             Guardians.Add(tg);
                         Counter++;
                         if (Counter >= MaxRowItems)

@@ -353,7 +353,7 @@ namespace giantsummon
                                         return;
                                     }
                                 }
-                                if (gd.FriendshipLevel < gd.Base.MoveInLevel || Main.rand.NextDouble() < 0.333)
+                                if ((!gd.IsStarter && gd.FriendshipLevel < gd.Base.MoveInLevel) || Main.rand.NextDouble() < 0.333)
                                 {
                                     CreateTalkRequest();
                                     if (PlayerMod.HasGuardianSummoned(player.player, gd.ID, gd.ModID))

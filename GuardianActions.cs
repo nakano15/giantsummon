@@ -255,13 +255,6 @@ namespace giantsummon
         
         public virtual void Update(TerraGuardian guardian)
         {
-            if (!InUse) return;
-            if (guardian.Downed || guardian.KnockedOut)
-            {
-                InUse = false;
-                return;
-            }
-            guardian.StuckTimer = 0;
             if (IsGuardianSpecificAction)
             {
                 guardian.Base.GuardianActionUpdate(guardian, this);
@@ -2281,7 +2274,6 @@ namespace giantsummon
 
         public virtual void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
         {
-            if (!InUse) return;
             if (IsGuardianSpecificAction)
             {
                 guardian.Base.GuardianActionUpdateAnimation(guardian, this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);

@@ -281,6 +281,7 @@ namespace giantsummon.Npcs
                         player.fullRotation = npc.direction * MathHelper.ToRadians(45);
                     else
                         player.fullRotation = npc.direction * MathHelper.ToRadians(90);
+                    player.gfxOffY = -2;
                     player.Center = NewPlayerPosition;
                     player.direction = -npc.direction;
                     player.immuneTime = 30;

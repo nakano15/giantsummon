@@ -692,23 +692,7 @@ namespace giantsummon
                 WorldMod.GuardiansMet.Add(new GuardianID(ID, ModID));
                 if (AllowToMoveIn)
                 {
-                    byte MoveInLevel = 0;
-                    if ((MoveInLevel = GuardianBase.GetGuardianBase(ID, ModID).MoveInLevel) > 0)
-                    {
-                        bool SomeoneHasGuardianReq = false;
-                        for (int p = 0; p < 255; p++)
-                        {
-                            if (Main.player[p].active && PlayerMod.PlayerHasGuardian(Main.player[p], ID, ModID) &&
-                                PlayerMod.GetPlayerGuardian(Main.player[p], ID, ModID).FriendshipLevel >= MoveInLevel)
-                            {
-                                SomeoneHasGuardianReq = true;
-                                break;
-                            }
-                        }
-                        if (SomeoneHasGuardianReq)
-                            WorldMod.AllowGuardianNPCToSpawn(ID, ModID);
-                    }
-                    else
+                    if(WorldMod.HasCompanionMetSomeoneWithHighFriendshipLevel(ID, ModID))
                     {
                         WorldMod.AllowGuardianNPCToSpawn(ID, ModID);
                     }
@@ -968,6 +952,10 @@ namespace giantsummon
             if (!HasMetGuardian(GuardianBase.Minerva))
             {
                 Messages.Add("Have you heard? There seems to be a TerraGuardian travelling through the world. Try seeing if you can find her on your travels.");
+            }
+            if (!HasMetGuardian(GuardianBase.Alexander) && Npcs.AlexanderNPC.AlexanderConditionMet)
+            {
+                Messages.Add("There seems to be a TerraGuardian jumping and smelling anyone It finds travelling the dungeon, and saying that is not who he's are looking for. I think you may want to check that out.");
             }
         }
 

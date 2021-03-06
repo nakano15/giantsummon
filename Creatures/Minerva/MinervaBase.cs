@@ -456,11 +456,11 @@ namespace giantsummon.Creatures
                 case MessageIDs.AlexanderSleuthingStart:
                     return "*Let's see what are you cooking...*";
                 case MessageIDs.AlexanderSleuthingProgress:
-                    return "*Hm... Yes... Interesting...*";
+                    return "*Hm... So many different food smell...*";
                 case MessageIDs.AlexanderSleuthingProgressNearlyDone:
-                    return "*...What was that noise...?*";
+                    return "*Huh... What was that noise...?*";
                 case MessageIDs.AlexanderSleuthingProgressFinished:
-                    return "*Eww... This smell... I'm glad I already identified you but... What were you eating... Ugh..*";
+                    return "*Eww... This smell... I'm glad I already identified you but... Ugh..*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ah... Eh... Good morning?*";
             }

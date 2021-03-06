@@ -518,75 +518,78 @@ namespace giantsummon.Creatures
             public bool Sleuthing = false;
             public SleuthAction(TerraGuardian target)
             {
-                Guardians[0] = target;
+                Guardians.Add(target);
+                IsGuardianSpecificAction = true;
             }
 
             public override void Update(TerraGuardian guardian)
             {
                 TerraGuardian Target = Guardians[0];
-                switch (Step)
+                if ((guardian.Position - Target.Position).Length() < 20)
+                    guardian.WalkMode = true;
+                if (guardian.UsingFurniture)
+                    guardian.LeaveFurniture(true);
+                guardian.StuckTimer = 0;
+                if (guardian.BeingPulledByPlayer)
                 {
-                    case 0: //Approach
-                        if ((guardian.Position - Target.Position).Length() < 20)
-                            guardian.WalkMode = true;
-                        if (guardian.UsingFurniture)
-                            guardian.LeaveFurniture(true);
-                        guardian.MoveLeft = guardian.MoveRight = false;
-                        Sleuthing = false;
-                        if (!Target.KnockedOut || !Target.IsUsingBed)
+                    guardian.SaySomething("*Alright, I'm coming, I'm coming.*");
+                    InUse = false;
+                    return;
+                }
+                guardian.MoveLeft = guardian.MoveRight = false;
+                Sleuthing = false;
+                if (!Target.KnockedOut && !Target.IsUsingBed)
+                {
+                    if (SleuthPercent > 70)
+                        guardian.SaySomething("*...So close...*");
+                    else
+                        guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingFail, "*I... Was just checking if you were fine.*"));
+                    InUse = false;
+                    return;
+                }
+                if (Target.Downed)
+                {
+                    InUse = false;
+                    guardian.SaySomething("*...I should have helped instead...*");
+                    return;
+                }
+                if (Math.Abs(guardian.Position.X - Target.Position.X) < 8f)
+                {
+                    if (guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
+                    {
+                        Sleuthing = true;
+                        guardian.LookingLeft = (Target.Position.X < guardian.Position.X);
+                        float LastSleuthPercent = SleuthPercent;
+                        float FillSpeed = guardian.IsUsingBed ? 0.1f : 0.5f;
+                        SleuthPercent += Main.rand.NextFloat() * FillSpeed;
+                        if (SleuthPercent >= 100)
                         {
-                            if (SleuthPercent > 70)
-                                guardian.SaySomething("*...So close...*");
-                            else
-                                guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingFail, "*I... Was just checking if you were fine.*"));
+                            AlexanderData data = (AlexanderData)guardian.Data;
+                            data.AddIdentifiedGuardian(Target.MyID);
                             InUse = false;
-                            return;
+                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressFinished, "*Okay, so that's how you work.*"));
+                            guardian.UpdateStatus = true;
                         }
-                        if(Target.Downed)
+                        else if (SleuthPercent >= 70 && LastSleuthPercent < 70)
                         {
-                            InUse = false;
-                            guardian.SaySomething("*...I should have helped instead...*");
-                            return;
+                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressNearlyDone, "*Hm... Interesting...*"));
                         }
-                        if (Math.Abs(guardian.Position.X - Target.Position.X) < 8f)
+                        else if (SleuthPercent >= 35 && LastSleuthPercent < 35)
                         {
-                            if (guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
-                            {
-                                Sleuthing = true;
-                                guardian.LookingLeft = (Target.Position.X < guardian.Position.X);
-                                float LastSleuthPercent = SleuthPercent;
-                                float FillSpeed = guardian.IsUsingBed ? 0.5f : 1f;
-                                SleuthPercent += Main.rand.NextFloat() * FillSpeed;
-                                if (SleuthPercent >= 100)
-                                {
-                                    AlexanderData data = (AlexanderData)guardian.Data;
-                                    data.AddIdentifiedGuardian(Target.MyID);
-                                    InUse = false;
-                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressFinished, "*Okay, so that's how you work.*"));
-                                    guardian.UpdateStatus = true;
-                                }
-                                else if (SleuthPercent >= 70 && LastSleuthPercent < 70)
-                                {
-                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressNearlyDone, "*Hm... Interesting...*"));
-                                }
-                                else if (SleuthPercent >= 35 && LastSleuthPercent < 35)
-                                {
-                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgress, "*Uh huh...*"));
-                                }
-                                else if (SleuthPercent > 0 && LastSleuthPercent <= 0)
-                                {
-                                    guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingStart, "*Let's see how you work...*"));
-                                }
-                            }
+                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgress, "*Uh huh...*"));
                         }
-                        else
+                        else if (SleuthPercent > 0 && LastSleuthPercent <= 0)
                         {
-                            if (guardian.Position.X < Target.Position.X)
-                                guardian.MoveLeft = true;
-                            else
-                                guardian.MoveRight = true;
+                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingStart, "*Let's see how you work...*"));
                         }
-                        break;
+                    }
+                }
+                else
+                {
+                    if (Target.Position.X < guardian.Position.X)
+                        guardian.MoveLeft = true;
+                    else
+                        guardian.MoveRight = true;
                 }
             }
 

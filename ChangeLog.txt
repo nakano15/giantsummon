@@ -32,3 +32,6 @@ Companions will no longer simply disappear just because your character turned in
 	Companions will also start their idle AI when your character is dead.
 Some companions will not sleep while at bed, so you can speak with them right away.
 	Zacks is an example of those kinds of companions.
+You will no longer receive messages telling you that your Starter Guardian can now be called, due to friendship level increasing.
+	Starter Guardians are always willing to follow you.
+Further improved the move in level requirement, making so Starter Guardians no longer refuse to move in or anything If you didn't met their friendship level.

@@ -296,11 +296,13 @@
     <Content Include="Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit_f.png" />
     <Content Include="Creatures\BunnyReaperGuardian\body.png" />
+    <Content Include="Creatures\BunnyReaperGuardian\body_front.png" />
     <Content Include="Creatures\BunnyReaperGuardian\head.png" />
     <Content Include="Creatures\BunnyReaperGuardian\left_arm.png" />
     <Content Include="Creatures\BunnyReaperGuardian\mouth.png" />
     <Content Include="Creatures\BunnyReaperGuardian\mouth_lit.png" />
     <Content Include="Creatures\BunnyReaperGuardian\right_arm.png" />
+    <Content Include="Creatures\BunnyReaperGuardian\scythe.png" />
     <Content Include="Creatures\BunnyReaperGuardian\skeleton_body.png" />
     <Content Include="Creatures\BunnyReaperGuardian\skeleton_left_arm.png" />
     <Content Include="Creatures\BunnyReaperGuardian\skeleton_right_arm.png" />

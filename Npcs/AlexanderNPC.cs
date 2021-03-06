@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace giantsummon.Npcs
 {
@@ -25,6 +26,7 @@ namespace giantsummon.Npcs
             npc.knockBackResist = 0;
             npc.dontCountMe = true;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
+            npc.npcSlots = 10;
         }
 
         public override void FindFrame(int frameHeight)
@@ -44,12 +46,10 @@ namespace giantsummon.Npcs
                             int AnimationDuration = DialogueDuration % 180;
                             if (AnimationDuration >= 70)
                             {
-                                if ((AnimationDuration >= 75 && AnimationDuration < 80) || 
-                                    (AnimationDuration >= 85 && AnimationDuration < 90) ||
-                                    (AnimationDuration >= 95 && AnimationDuration < 100) ||
-                                    (AnimationDuration >= 105 && AnimationDuration < 110) ||
-                                    (AnimationDuration >= 115 && AnimationDuration < 120) ||
-                                    (AnimationDuration >= 125 && AnimationDuration < 130))
+                                if ((AnimationDuration >= 70 && AnimationDuration < 80) ||
+                                    (AnimationDuration >= 90 && AnimationDuration < 100) ||
+                                    (AnimationDuration >= 110 && AnimationDuration < 120) ||
+                                    (AnimationDuration >= 130 && AnimationDuration < 140))
                                 {
                                     BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = 29;
                                 }
@@ -143,6 +143,10 @@ namespace giantsummon.Npcs
                         {
                             DialogueDuration++;
                         }
+                        if (Main.player[npc.target].Center.X < npc.Center.X)
+                            npc.direction = -1;
+                        else
+                            npc.direction = 1;
                         if (!Main.player[npc.target].active)
                         {
                             NextStep = IdleStep;
@@ -162,11 +166,15 @@ namespace giantsummon.Npcs
                             MoveLeft = true;
                         else
                             MoveRight = true;
-                        if (!player.GetModPlayer<PlayerMod>().KnockedOut && npc.velocity.Y == 0 && Math.Abs(player.Center.X - npc.Center.X) < 80)
+                        if (!player.GetModPlayer<PlayerMod>().KnockedOut && npc.velocity.Y == 0 && player.velocity.Y != 0)
                         {
                             Jump = true;
                         }
-                        if (player.getRect().Intersects(npc.getRect()))
+                        if (PlayerMod.PlayerHasGuardian(Main.player[npc.target], GuardianID, GuardianModID) && Math.Abs(player.Center.X - npc.Center.X) < 80)
+                        {
+                            NextStep = SpeakingToAlreadyKnownPlayer;
+                        }
+                        else if (player.getRect().Intersects(npc.getRect()))
                         {
                             if (PlayerMod.PlayerHasGuardian(Main.player[npc.target], GuardianID, GuardianModID))
                             {
@@ -194,10 +202,11 @@ namespace giantsummon.Npcs
                         if (DialogueDuration == 0)
                             FindFrame(0);
                         Player player = Main.player[npc.target];
-                        player.immuneTime = 5;
+                        player.immuneTime = 90;
                         player.immuneNoBlink = true;
-                        Vector2 PlayerPosition = Base.LeftHandPoints.GetPositionFromFrameVector(LeftArmAnimationFrame);
-                        player.fullRotationOrigin = new Vector2(40, 56) * 0.5f;
+                        Vector2 PlayerPosition = new Vector2(npc.Center.X + 32 * npc.direction, npc.position.Y + npc.height);
+                        player.fullRotationOrigin = new Vector2(player.width, player.height) * 0.5f;
+                        player.aggro = -99999;
                         if (npc.direction > 0)
                         {
                             player.fullRotation = 1.570796f;
@@ -206,27 +215,28 @@ namespace giantsummon.Npcs
                         else
                         {
                             player.fullRotation = -1.570796f;
-                            PlayerPosition.X = (Base.SpriteWidth * 0.5f) - PlayerPosition.X;
+                            //PlayerPosition.X *= -1;
                             player.direction = 1;
                         }
-                        PlayerPosition += npc.position;
-                        PlayerPosition.X += npc.width * 0.5f;
-                        PlayerPosition.Y = npc.position.Y + npc.height - 20 + player.height * 0.5f;
+                        DrawInFrontOfPlayers.Add(npc.whoAmI);
                         player.velocity = Vector2.Zero;
                         player.Center = PlayerPosition;
                         player.statLife++;
                         if (player.mount.Active)
                             player.mount.Dismount(player);
-                        player.gfxOffY = 0;
+                        player.gfxOffY = -2;
                         player.AddBuff(Terraria.ID.BuffID.Cursed, 5);
-                        if (player.GetModPlayer<PlayerMod>().KnockedOut)
+                        if(npc.velocity.X != 0 || npc.velocity.Y != 0)
+                        {
+
+                        }
+                        else if (player.GetModPlayer<PlayerMod>().KnockedOut)
                         {
                             if (DialogueDuration == 0)
                             {
                                 SayMessage("*Better I take care of those wounds first.*");
+                                DialogueDuration++;
                             }
-                            if (DialogueDuration > 1)
-                                DialogueDuration = 1;
                             player.GetModPlayer<PlayerMod>().ReviveBoost++;
                         }
                         else
@@ -260,8 +270,8 @@ namespace giantsummon.Npcs
                                         break;
                                 }
                             }
+                            DialogueDuration++;
                         }
-                        DialogueDuration++;
                         if (!player.active)
                         {
                             NextStep = IdleStep;
@@ -279,7 +289,10 @@ namespace giantsummon.Npcs
                             Main.npcChatText = GetChat();
                         }
                         if (!Main.player[npc.target].active)
+                        {
                             npc.TargetClosest(false);
+                            DialogueDuration = 1;
+                        }
                         if(DialogueDuration > 1 && Main.player[npc.target].talkNPC != npc.whoAmI)
                         {
                             DialogueDuration = 1;
@@ -288,21 +301,21 @@ namespace giantsummon.Npcs
                     break;
                 case SpeakingToAlreadyKnownPlayer:
                     {
-                        if(DialogueDuration <= 0)
+                        if(DialogueDuration % 180 == 0)
                         {
                             switch(DialogueDuration / 180)
                             {
                                 case 0:
-                                    DialogueDuration = SayMessage("*I didn't expected to see you here.*");
+                                    SayMessage("*I didn't expected to see you here.*");
                                     break;
                                 case 1:
-                                    DialogueDuration = SayMessage("*I think I may have caught that Terrarian's scent around here.*");
+                                    SayMessage("*I think I may have caught that Terrarian's scent around here.*");
                                     break;
                                 case 2:
-                                    DialogueDuration = SayMessage("*Or maybe I accidentally caught your scent again.*");
+                                    SayMessage("*Or maybe I accidentally caught your scent again.*");
                                     break;
                                 case 3:
-                                    DialogueDuration = SayMessage("*Anyway, If you need me, I'll be around.*");
+                                    SayMessage("*Anyway, If you need me, I'll be around.*");
                                     break;
                                 case 4:
                                     {
@@ -312,7 +325,27 @@ namespace giantsummon.Npcs
                                     return;
                             }
                         }
-                        DialogueDuration--;
+                        if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 30)
+                        {
+                            Walk = true;
+                            if (Main.player[npc.target].Center.X < npc.Center.X)
+                                MoveLeft = true;
+                            else
+                                MoveRight = true;
+                        }
+                        else
+                        {
+                            if (Main.player[npc.target].Center.X < npc.Center.X)
+                                npc.direction = -1;
+                            else
+                                npc.direction = 1;
+                        }
+                        if (!Main.player[npc.target].active)
+                        {
+                            NextStep = IdleStep;
+                            SayMessage("*" + (Main.player[npc.target].Male ? "He" : "She") + " disappeared!*");
+                        }
+                        DialogueDuration++;
                     }
                     break;
             }
@@ -326,7 +359,7 @@ namespace giantsummon.Npcs
 
         public override bool CanChat()
         {
-            return NpcRecruitStep == 5;
+            return NpcRecruitStep == IntroductingToPlayerStep;
         }
 
         public override string GetChat()
@@ -376,7 +409,7 @@ namespace giantsummon.Npcs
             {
                 case DialogueFirstTalk:
                     button = "Why did you jumped on me?";
-                    button2 = "If you wanted to know that, you could have just asked.";
+                    button2 = "You could have just asked instead.";
                     break;
                 case DialogueQuestionJump:
                     button = "Who are you looking for?";
@@ -386,7 +419,7 @@ namespace giantsummon.Npcs
                     break;
                 case DialogueAlexanderTellsReason:
                     button = "How are you sure It's a Terrarian?";
-                    button2 = "Why would It be involved in the disappearance of your friends?";
+                    button2 = "Why would It be involved?";
                     break;
                 case DialogueAskHowCouldBeATerrarian:
                 case DialogueAskHowCouldBeRelatedToFriendsDisappearance:
@@ -441,8 +474,27 @@ namespace giantsummon.Npcs
                     Main.npcChatText = GetChat();
                     TurnNpcInTownNpc(firstButton);
                     return;
+                case DialogueAskHowCouldBeATerrarian:
+                case DialogueAskHowCouldBeRelatedToFriendsDisappearance:
+                    DialogueDuration = DialogueAskWhyHeCaughtYourScent;
+                    break;
             }
             Main.npcChatText = GetChat();
+        }
+
+        public static bool AlexanderConditionMet
+        {
+            get { return NPC.downedBoss3; }
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (!NpcMod.HasGuardianNPC(GuardianBase.Alexander) && !NpcMod.HasMetGuardian(GuardianBase.Alexander) && AlexanderConditionMet && 
+                spawnInfo.player.ZoneDungeon && !NPC.AnyNPCs(ModContent.NPCType<AlexanderNPC>()))
+            {
+                return 1f / 500;
+            }
+            return 0;
         }
 
         public void TurnNpcInTownNpc(bool MoveIn)

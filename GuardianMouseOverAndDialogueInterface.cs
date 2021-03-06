@@ -141,7 +141,7 @@ namespace giantsummon
                     {
                         Message = t;
                     }
-                    else if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && tg.FriendshipLevel >= tg.Base.MoveInLevel)
+                    else if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
                         Message = tg.Base.HomelessMessage(MainPlayer, tg);
                     else
                         Message = tg.Base.NormalMessage(MainPlayer, tg);
@@ -151,7 +151,7 @@ namespace giantsummon
             {
                 Message = tg.Base.GreetMessage(MainPlayer, tg);
                 NpcMod.AddGuardianMet(tg.ID, tg.ModID);
-                if (WorldMod.HasEmptyGuardianNPCSlot() && tg.FriendshipLevel >= tg.Base.MoveInLevel)
+                if (WorldMod.HasEmptyGuardianNPCSlot() && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
                     WorldMod.AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
             }
             if (!tg.Base.InvalidGuardian && tg.HasBuff(ModContent.BuffType<Buffs.Sleeping>()))

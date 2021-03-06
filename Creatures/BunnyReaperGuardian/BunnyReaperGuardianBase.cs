@@ -10,7 +10,8 @@ namespace giantsummon.Creatures
 {
     public class BunnyReaperGuardianBase : GuardianBase
     {
-        public const string SkeletonBodyID = "skeletonbody", SkeletonLeftArmID = "skeletonlarm", SkeletonRightArmID = "skeletonrarm", MouthID = "mouth", MouthLitID = "mouthlit";
+        public const string SkeletonBodyID = "skeletonbody", SkeletonLeftArmID = "skeletonlarm", SkeletonRightArmID = "skeletonrarm", 
+            MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe";
 
         public BunnyReaperGuardianBase()
         {
@@ -33,7 +34,7 @@ namespace giantsummon.Creatures
             SlowDown = 0.42f;
             MaxJumpHeight = 15;
             JumpSpeed = 7.16f;
-            CanDuck = true;
+            CanDuck = false;
             ReverseMount = false;
             DrinksBeverage = true;
             SleepsAtBed = false;
@@ -47,13 +48,18 @@ namespace giantsummon.Creatures
             ItemUseFrames = new int[] { 11, 12, 13, 14 };
             //DuckingFrame = 23;
             //DuckingSwingFrames = new int[] { 24, 25, 26 };
-            //SittingFrame = 17;
-            //ChairSittingFrame = 18;
+            SittingFrame = 15;
+            ChairSittingFrame = 15;
             //DrawLeftArmInFrontOfHead.AddRange(new int[] { 13, 14, 15, 16 });
-            //ThroneSittingFrame = 20;
-            //BedSleepingFrame = 19;
+            ThroneSittingFrame = 16;
+            BedSleepingFrame = 17;
             //DownedFrame = 21;
-            //ReviveFrame = 22;
+            ReviveFrame = 18;
+
+            SpecificBodyFrontFramePositions = true;
+            BodyFrontFrameSwap.Add(15, 0);
+
+            SittingPoint2x = new Point(13, 32);
 
             //Left Arm
             LeftHandPoints.AddFramePoint2x(11, 17, 6);
@@ -61,12 +67,42 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(13, 25, 19);
             LeftHandPoints.AddFramePoint2x(14, 23, 24);
 
+            LeftHandPoints.AddFramePoint2x(15, 20, 26);
+
+            LeftHandPoints.AddFramePoint2x(18, 21, 29);
+
             //Right Arm
             RightHandPoints.DefaultCoordinate2x = new Point(27, 18);
+            RightHandPoints.AddFramePoint2x(3, 26, 18);
+            RightHandPoints.AddFramePoint2x(4, 26, 17);
+            RightHandPoints.AddFramePoint2x(5, 26, 17);
+            RightHandPoints.AddFramePoint2x(6, 26, 18);
+            RightHandPoints.AddFramePoint2x(8, 27, 17);
+            RightHandPoints.AddFramePoint2x(9, 27, 17);
+            RightHandPoints.AddFramePoint2x(10, 27, 17);
+
             RightHandPoints.AddFramePoint2x(11, 21, 6);
             RightHandPoints.AddFramePoint2x(12, 25, 11);
             RightHandPoints.AddFramePoint2x(13, 27, 19);
             RightHandPoints.AddFramePoint2x(14, 25, 24);
+
+            RightHandPoints.AddFramePoint2x(15, 27, 18);
+            RightHandPoints.AddFramePoint2x(16, 18 + 2, 25);
+            RightHandPoints.AddFramePoint2x(17, 15, 25);
+            RightHandPoints.AddFramePoint2x(18, 28, 22);
+        }
+
+        public override void Attributes(TerraGuardian g)
+        {
+            g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
+            //g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
+            //g.AddFlag(GuardianFlags.HideKOBar);
+            //g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
+            if (g.KnockedOut)
+            {
+                g.AddFlag(GuardianFlags.DontTakeAggro);
+                g.AddFlag(GuardianFlags.CantBeHurt);
+            }
         }
 
         public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
@@ -81,6 +117,7 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(SkeletonRightArmID, "skeleton_right_arm");
             sprites.AddExtraTexture(MouthID, "mouth");
             sprites.AddExtraTexture(MouthLitID, "mouth_lit");
+            sprites.AddExtraTexture(ScytheID, "scythe");
         }
 
         public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
@@ -112,6 +149,76 @@ namespace giantsummon.Creatures
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
             ReaperGuardianData data = (ReaperGuardianData)guardian.Data;
+            if (guardian.SelectedOffhand > -1)
+            {
+                if (data.HoldingScythe)
+                    DetachScythe(guardian, data);
+                else
+                {
+                    Vector2 MoveDirection = (guardian.CenterPosition - data.ScythePosition);
+                    float MaxSpeed = (guardian.Velocity.Length() + 1);
+                    if (MaxSpeed < 3)
+                        MaxSpeed = 3;
+                    if (MoveDirection.Length() < 20)
+                    {
+                        //data.ScytheSpeed *= 0.1f;
+                        //data.ScytheSpeed *= 0.33f;
+                    }
+                    else
+                    {
+                        MoveDirection.Normalize();
+                        data.ScytheSpeed += MoveDirection* 0.1f;
+                    }
+                    float Velocity = data.ScytheSpeed.Length();
+                    if (Velocity > MaxSpeed)
+                    {
+                        data.ScytheSpeed.Normalize();
+                        data.ScytheSpeed *= MaxSpeed;
+                        Velocity = MaxSpeed;
+                    }
+                    data.ScythePosition += data.ScytheSpeed;
+                    if (MoveDirection.X < 0)
+                        data.ScytheRotation -= Velocity * 0.01f;
+                    else
+                        data.ScytheRotation += Velocity * 0.01f;
+                }
+            }
+            else
+            {
+                if (!data.HoldingScythe)
+                {
+                    Vector2 MoveDirection = (guardian.CenterPosition - data.ScythePosition);
+                    if (MoveDirection.Length() < 2)
+                    {
+                        data.HoldingScythe = true;
+                    }
+                    else
+                    {
+                        if (MoveDirection.Length() < 20)
+                        {
+                            MoveDirection.Normalize();
+                            data.ScytheSpeed = MoveDirection * 0.9f;
+                        }
+                        else
+                        {
+                            MoveDirection.Normalize();
+                            data.ScytheSpeed += MoveDirection * 0.33f;
+                        }
+                        float Velocity = data.ScytheSpeed.Length();
+                        if (Velocity > 8f)
+                        {
+                            data.ScytheSpeed.Normalize();
+                            data.ScytheSpeed *= 8f;
+                            Velocity = 8f;
+                        }
+                        data.ScythePosition += data.ScytheSpeed;
+                        if (MoveDirection.X < 0)
+                            data.ScytheRotation -= Velocity * 0.01f;
+                        else
+                            data.ScytheRotation += Velocity * 0.01f;
+                    }
+                }
+            }
             if (data.MouthOpenTime > 0)
                 data.MouthOpenTime--;
             const float MaxSoulSpeed = 8f;
@@ -254,11 +361,22 @@ namespace giantsummon.Creatures
                     }
                 }
             }
-            if (guardian.OwnerPos > -1 && Main.player[guardian.OwnerPos].ghost)
-            {
-                
-            }
             data.LastDefeatedAllyCount = (byte)DefeatedAllyCount;
+            if(Main.netMode < 2)
+            {
+                float SoulsValue = data.SoulsLoaded;
+                const int SparkleDelay = 2500;
+                while (SoulsValue > 0)
+                {
+                    if (Main.rand.NextFloat() < (float)SoulsValue / (SparkleDelay + SoulsValue))
+                    {
+                        Dust d = Dust.NewDustDirect(guardian.TopLeftPosition, guardian.Width, guardian.Height, Terraria.ID.DustID.SilverCoin);
+                        d.noGravity = true;
+                        d.velocity *= 0;
+                    }
+                    SoulsValue -= SparkleDelay;
+                }
+            }
         }
 
         public void SpawnSoul(Vector2 Position, TerraGuardian guardian, TerraGuardian.TargetTypes OwnerType, int OwnerID, bool HoverOnly = false)
@@ -267,20 +385,128 @@ namespace giantsummon.Creatures
             data.ActiveSouls.Add(new ReaperGuardianData.FallenSoul() { Position = Position, Owner = OwnerType, OwnerID = OwnerID, HoverOnly = HoverOnly });
         }
 
+        public void DetachScythe(TerraGuardian guardian,  ReaperGuardianData data)
+        {
+            data.HoldingScythe = false;
+            data.ScythePosition = guardian.GetGuardianRightHandPosition;
+            data.ScytheRotation = 0;
+            data.ScytheSpeed = Vector2.Zero;
+            data.ScytheFacingLeft = guardian.LookingLeft;
+            byte ScytheType = 0;
+            switch (guardian.RightArmAnimationFrame)
+            {
+                default:
+                    ScytheType = 1;
+                    break;
+                case 16:
+                    data.ScytheRotation = -1.57079633f * guardian.Direction;
+                    break;
+                case 17:
+                    break;
+            }
+            data.ScytheType = ScytheType;
+        }
+
+        private GuardianDrawData DrawEquippedScythe(ReaperGuardianData data, TerraGuardian guardian, Vector2 DrawPosition, Color color, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
+        {
+            if (!data.HoldingScythe)
+                return null;
+            Vector2 ScythePosition = guardian.GetGuardianRightHandPosition - Main.screenPosition;
+            SpriteEffects ScytheEffect = SpriteEffects.None;
+            float ScytheRotation = 0f;
+            byte ScytheType = 0;
+            switch (guardian.RightArmAnimationFrame)
+            {
+                default:
+                    ScytheType = 1;
+                    break;
+                case 16:
+                    ScytheRotation = -1.57079633f * guardian.Direction;
+                    break;
+                case 17:
+                    break;
+            }
+            Vector2 ScytheOrigin = (ScytheType == 0 ?
+                new Vector2(ReaperGuardianData.ScytheVerticalHoldX, ReaperGuardianData.ScytheVerticalHoldY) :
+                new Vector2(ReaperGuardianData.ScytheDiagonalHoldX, ReaperGuardianData.ScytheDiagonalHoldY));
+            if (!guardian.LookingLeft)
+            {
+                switch (ScytheType)
+                {
+                    case 0:
+                        ScytheEffect = SpriteEffects.FlipHorizontally;
+                        ScytheOrigin.X = 66 - ScytheOrigin.X;
+                        break;
+                    case 1:
+                        ScytheEffect = SpriteEffects.FlipHorizontally;
+                        ScytheOrigin.X = 66 - ScytheOrigin.X;
+                        break;
+                }
+            }
+            Texture2D ScytheTexture = sprites.GetExtraTexture(ScytheID);
+            return new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, ScytheTexture, ScythePosition, new Rectangle(ScytheType * 66, 0, 66, 66), color, ScytheRotation, ScytheOrigin, Scale, ScytheEffect);
+        }
+
+        private GuardianDrawData DrawFlyingScythe(ReaperGuardianData data, TerraGuardian guardian, Vector2 DrawPosition, Color color, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
+        {
+            Vector2 ScythePosition = data.ScythePosition - Main.screenPosition;
+            SpriteEffects ScytheEffect = SpriteEffects.None;
+            float ScytheRotation = data.ScytheRotation;
+            byte ScytheType = data.ScytheType;
+            Vector2 ScytheOrigin = (ScytheType == 0 ?
+                new Vector2(ReaperGuardianData.ScytheVerticalHoldX, ReaperGuardianData.ScytheVerticalHoldY) :
+                new Vector2(ReaperGuardianData.ScytheDiagonalHoldX, ReaperGuardianData.ScytheDiagonalHoldY));
+            if (!data.ScytheFacingLeft)
+            {
+                switch (ScytheType)
+                {
+                    case 0:
+                        ScytheEffect = SpriteEffects.FlipHorizontally;
+                        ScytheOrigin.X = 66 - ScytheOrigin.X;
+                        break;
+                    case 1:
+                        ScytheEffect = SpriteEffects.FlipHorizontally;
+                        ScytheOrigin.X = 66 - ScytheOrigin.X;
+                        break;
+                }
+            }
+            Texture2D ScytheTexture = sprites.GetExtraTexture(ScytheID);
+            return new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, ScytheTexture, ScythePosition, new Rectangle(ScytheType * 66, 0, 66, 66), color, ScytheRotation, ScytheOrigin, Scale, ScytheEffect);
+        }
+
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
         {
             ReaperGuardianData data = (ReaperGuardianData)guardian.Data;
             bool HasSoulNearby = data.MouthOpenTime > 0;
             bool BodyPlaced = false, LeftArmPlaced = false, RightArmPlaced = false, MouthPlaced = false;
             GuardianDrawData gdd;
-            //float MinOpacity = (float)data.SoulsLoaded / 2500;
-            float OpacityRate = (1f - ((float)(color.R + color.G + color.B) / (255 * 3)));
+            float MinOpacity = (float)data.SoulsLoaded / (2500 + data.SoulsLoaded);
+            float OpacityRate = (1f - (Math.Max(MinOpacity, (float)(color.R + color.G + color.B) / (255 * 3))));
             Color PlasmaOpacity = Color.White * OpacityRate;
             bool BodyIsFront = false;
+            GuardianDrawData ScytheSlot = DrawEquippedScythe(data, guardian, DrawPosition, color, Rotation, Origin, Scale, seffect);
+            byte MouthFrameX = 0;
+            switch (guardian.BodyAnimationFrame)
+            {
+                case 16:
+                    MouthFrameX = 1;
+                    break;
+                case 17:
+                    MouthFrameX = 2;
+                    break;
+                case 18:
+                    MouthFrameX = 3;
+                    break;
+            }
             for (int i = 0; i < TerraGuardian.DrawBehind.Count; i++)
             {
                 switch (TerraGuardian.DrawBehind[i].textureType)
                 {
+                    case GuardianDrawData.TextureType.TGBodyFront:
+                        {
+                            TerraGuardian.DrawBehind[i].color = PlasmaOpacity;
+                        }
+                        break;
                     case GuardianDrawData.TextureType.TGBody:
                         {
                             if (!BodyPlaced)
@@ -300,17 +526,17 @@ namespace giantsummon.Creatures
                                 if (DrawMouth)
                                 {
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthLitID), DrawPosition,
-                                        new Rectangle(0, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
                                     if(i + 3 < TerraGuardian.DrawBehind.Count) TerraGuardian.DrawBehind.Insert(i + 3, gdd);
                                     else TerraGuardian.DrawBehind.Add(gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthID), DrawPosition,
-                                        new Rectangle(0, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
                                     TerraGuardian.DrawBehind.Insert(i + 3, gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthLitID), DrawPosition,
-                                        new Rectangle(0, 0, SpriteWidth, SpriteHeight), Color.White, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, 0, SpriteWidth, SpriteHeight), Color.White, Rotation, Origin, Scale, seffect);
                                     TerraGuardian.DrawBehind.Insert(i + 1, gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthID), DrawPosition,
-                                        new Rectangle(0, 0, SpriteWidth, SpriteHeight), color, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, 0, SpriteWidth, SpriteHeight), color, Rotation, Origin, Scale, seffect);
                                     TerraGuardian.DrawBehind.Insert(i + 1, gdd);
                                 }
                                 BodyPlaced = true;
@@ -338,6 +564,8 @@ namespace giantsummon.Creatures
                                     guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame), color, Rotation, Origin, Scale, seffect);
                                 TerraGuardian.DrawBehind.Insert(i, gdd);
                                 RightArmPlaced = true;
+                                if(ScytheSlot != null)
+                                    TerraGuardian.DrawBehind.Insert(i, ScytheSlot);
                             }
                         }
                         break;
@@ -347,6 +575,11 @@ namespace giantsummon.Creatures
             {
                 switch (TerraGuardian.DrawFront[i].textureType)
                 {
+                    case GuardianDrawData.TextureType.TGBodyFront:
+                        {
+                            TerraGuardian.DrawFront[i].color = PlasmaOpacity;
+                        }
+                        break;
                     case GuardianDrawData.TextureType.TGBody:
                         {
                             if (!BodyPlaced)
@@ -365,17 +598,17 @@ namespace giantsummon.Creatures
                                 if (DrawMouth)
                                 {
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthLitID), DrawPosition,
-                                        new Rectangle(0, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
                                     if(i + 3 < TerraGuardian.DrawFront.Count) TerraGuardian.DrawFront.Insert(i + 3, gdd);
                                     else TerraGuardian.DrawFront.Add(gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthID), DrawPosition,
-                                        new Rectangle(0, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
                                     TerraGuardian.DrawFront.Insert(i + 3, gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthLitID), DrawPosition,
-                                        new Rectangle(0, 0, SpriteWidth, SpriteHeight), Color.White, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, 0, SpriteWidth, SpriteHeight), Color.White, Rotation, Origin, Scale, seffect);
                                     TerraGuardian.DrawFront.Insert(i + 1, gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthID), DrawPosition,
-                                        new Rectangle(0, 0, SpriteWidth, SpriteHeight), color, Rotation, Origin, Scale, seffect);
+                                        new Rectangle(SpriteWidth * MouthFrameX, 0, SpriteWidth, SpriteHeight), color, Rotation, Origin, Scale, seffect);
                                     TerraGuardian.DrawFront.Insert(i + 1, gdd);
                                 }
                                 BodyPlaced = true;
@@ -403,10 +636,16 @@ namespace giantsummon.Creatures
                                     guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame), color, Rotation, Origin, Scale, seffect);
                                 TerraGuardian.DrawFront.Insert(i, gdd);
                                 RightArmPlaced = true;
+                                if (ScytheSlot != null)
+                                    TerraGuardian.DrawFront.Insert(i, ScytheSlot);
                             }
                         }
                         break;
                 }
+            }
+            if(ScytheSlot == null)
+            {
+                TerraGuardian.DrawBehind.Insert(0, DrawFlyingScythe(data, guardian, DrawPosition, color, Rotation, Origin, Scale, seffect));
             }
             if (!Main.projectileLoaded[Terraria.ID.ProjectileID.LostSoulHostile])
                 Main.instance.LoadProjectile(Terraria.ID.ProjectileID.LostSoulHostile);
@@ -420,18 +659,6 @@ namespace giantsummon.Creatures
                     TerraGuardian.DrawFront.Add(gdd);
                 else
                     TerraGuardian.DrawBehind.Add(gdd);
-            }
-            float SoulsValue = data.SoulsLoaded;
-            const int SparkleDelay = 25000;
-            while (SoulsValue > 0)
-            {
-                if (Main.rand.NextFloat() * OpacityRate < (float)SoulsValue / SparkleDelay)
-                {
-                    Dust d = Dust.NewDustDirect(guardian.TopLeftPosition, guardian.Width, guardian.Height, Terraria.ID.DustID.SilverCoin);
-                    d.noGravity = true;
-                    d.velocity *= 0;
-                }
-                SoulsValue -= SparkleDelay;
             }
         }
 
@@ -447,6 +674,13 @@ namespace giantsummon.Creatures
             public byte LastDefeatedAllyCount = 0;
             public Dictionary<int, int> PlayerDeathCounter = new Dictionary<int, int>();
             public byte MouthOpenTime = 0;
+            public bool HoldingScythe = true;
+            public byte ScytheType = 1;
+            public const int ScytheDiagonalHoldX = 12, ScytheDiagonalHoldY = 48;
+            public const int ScytheVerticalHoldX = 33, ScytheVerticalHoldY = 52;
+            public Vector2 ScythePosition = Vector2.Zero, ScytheSpeed = Vector2.Zero;
+            public float ScytheRotation = 0f;
+            public bool ScytheFacingLeft = false;
 
             public ReaperGuardianData(int ID, string ModID) : base(ID, ModID)
             {
