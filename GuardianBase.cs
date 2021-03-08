@@ -927,6 +927,12 @@ namespace giantsummon
 
         public void CalculateHealthToGive(int ResultMHP, float LCBonusPercentage = 1f, float LFBonusPercentage = 1f)
         {
+            if(LCBonusPercentage + LFBonusPercentage != 1f)
+            {
+                float Discount = 1f / (LCBonusPercentage + LFBonusPercentage);
+                LCBonusPercentage *= Discount;
+                LFBonusPercentage *= Discount;
+            }
             int LCHealth = (int)(ResultMHP * (0.6f * LCBonusPercentage / 15)), LFHealth = (int)(ResultMHP * (0.2f * LFBonusPercentage / 20));
             InitialMHP = ResultMHP - (LCHealth * 15 + LFHealth * 20);
             LifeCrystalHPBonus = LCHealth;

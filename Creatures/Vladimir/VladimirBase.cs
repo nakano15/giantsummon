@@ -31,10 +31,10 @@ namespace giantsummon.Creatures
             FramesInRows = 15;
             Age = 26;
             Male = true;
-            CalculateHealthToGive(1600, 0.85f, 0.7f); //Lc: 95, LF: 16
-            //InitialMHP = 200; //1000
-            //LifeCrystalHPBonus = 40;
-            //LifeFruitHPBonus = 10;
+            //CalculateHealthToGive(1600, 0.85f, 0.7f); //Lc: 95, LF: 16
+            InitialMHP = 250; //1600
+            LifeCrystalHPBonus = 50;
+            LifeFruitHPBonus = 30;
             Accuracy = 0.72f;
             Mass = 0.7f;
             MaxSpeed = 4.9f;

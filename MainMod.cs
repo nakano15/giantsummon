@@ -1043,6 +1043,8 @@ namespace giantsummon
                             New.Add(" " + s.Position + " v=" + s.Velocity);
                         }*/
                     }
+                    New.Add("Selected Item: " + g.SelectedItem);
+                    New.Add("Action Pressed: " + g.Action);
                 }
                 TextsToDraw = New.ToArray();
             }

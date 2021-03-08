@@ -4574,6 +4574,7 @@ namespace giantsummon
                     break;
             }
             bool Approach = false, Retreat = false, Jump = false, Duck = false, Attack = false;
+            bool TargetInAim = MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight);
             if (AvoidCombat)
             {
                 float DistanceFromTarget = 60 + (TargetWidth + Width) * 0.5f;
@@ -4595,7 +4596,7 @@ namespace giantsummon
                 else if (Distance < DistanceFromTarget + 20)
                 {
                     MoveLeft = MoveRight = false;
-                    if(Velocity.Length() == 0)
+                    if (Velocity.Length() == 0)
                     {
                         LookingLeft = CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f >= 0;
                     }
@@ -4661,9 +4662,6 @@ namespace giantsummon
                 if (WaitingForManaRecharge && MP >= MMP)
                     WaitingForManaRecharge = false;
                 bool NearDeath = HP < MHP * 0.2f && !PlayerMounted;
-                bool TargetInAim = false;
-                if (MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight))
-                    TargetInAim = true;
                 if (HasFlag(GuardianFlags.Confusion))
                 {
                     if (OwnerPos > -1)
@@ -4671,124 +4669,113 @@ namespace giantsummon
                 }
                 //AimDirection.X = (int)(TargetPosition.X + TargetVelocity.X + TargetWidth * 0.5f);
                 //AimDirection.Y = (int)(TargetPosition.Y + TargetVelocity.Y + TargetHeight * 0.5f);
-                float DistanceDiscount = -32 + 8f * AssistSlot;
-                if (AvoidCombat)
+                float DistanceDiscount = 8f * AssistSlot;
+                if (ItemAnimationTime == 0 && !Action)
                 {
-                    float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                    if (Distance < (TargetWidth + Width) * 0.5f + 48)
+                    if (TargetOnSight) //Check weapons
                     {
-                        Retreat = true;
+                        MeleePosition = -1;
+                        RangedPosition = -1;
+                        MagicPosition = -1;
+                        //int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
+                        int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
+                        bool MagicItemNeedsRecharge = false, NoManaMagicItem = false;
+                        bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
+                        for (int i = 0; i < 10; i++)
+                        {
+                            if (Inventory[i].type == 0)
+                                continue;
+                            if (Inventory[i].melee)
+                            {
+                                if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || MayUseHeavyWeapon))
+                                {
+                                    HighestMeleeDamage = Inventory[i].damage;
+                                    MeleePosition = (sbyte)i;
+                                }
+                            }
+                            if ((Inventory[i].ranged && Inventory[i].ammo == 0) || Inventory[i].thrown)
+                            {
+                                if (Inventory[i].damage > HighestRangedDamage && (!UseWeaponsByInventoryOrder || RangedPosition == -1))
+                                {
+                                    HighestRangedDamage = Inventory[i].damage;
+                                    RangedPosition = (sbyte)i;
+                                }
+                            }
+                            if (Inventory[i].magic)
+                            {
+                                if (Inventory[i].damage > HighestMagicDamage && (!UseWeaponsByInventoryOrder || MagicPosition == -1))
+                                {
+                                    int ManaCost = (int)(Inventory[i].mana * ManaCostMult);
+                                    if (Inventory[i].type == Terraria.ID.ItemID.SpaceGun && HasFlag(GuardianFlags.MeteorSetEffect))
+                                    {
+                                        HighestMagicDamage = Inventory[i].damage;
+                                        MagicPosition = (sbyte)i;
+                                        ManaCost = 0;
+                                        NoManaMagicItem = true;
+                                    }
+                                    else if (MP >= Inventory[i].mana * ManaCostMult)
+                                    {
+                                        HighestMagicDamage = Inventory[i].damage;
+                                        MagicPosition = (sbyte)i;
+                                        MagicItemNeedsRecharge = false;
+                                        NoManaMagicItem = false;
+                                    }
+                                    else if (MagicPosition == -1)
+                                    {
+                                        HighestMagicDamage = Inventory[i].damage;
+                                        MagicPosition = (sbyte)i;
+                                        MagicItemNeedsRecharge = true;
+                                        NoManaMagicItem = false;
+                                    }
+                                }
+                            }
+                        }
+                        if (MagicItemNeedsRecharge && (!HasFlag(GuardianFlags.AutoManaPotion) || !Inventory.Any(x => x.type > 0 && x.healMana > 0)))
+                        {
+                            WaitingForManaRecharge = true;
+                        }
+                        SelectedItem = -1;
+                        bool InMeleeRange = false;
+                        if (MeleePosition > -1)
+                        {
+                            if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false))
+                            {
+                                InMeleeRange = true;
+                            }
+                            else if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, true))
+                            {
+                                InMeleeRange = true;
+                                NeedsDucking = true;
+                            }
+                        }
+                        if (RangedPosition > -1)
+                        {
+                            SelectedItem = RangedPosition;
+                        }
+                        if (MagicPosition > -1 && ((!WaitingForManaRecharge || NoManaMagicItem) || ManaCostMult == 0) && !HasFlag(GuardianFlags.Silence))
+                        {
+                            SelectedItem = MagicPosition;
+                        }
+                        if ((SelectedItem == -1 || InMeleeRange) && MeleePosition > -1)
+                        {
+                            SelectedItem = MeleePosition;
+                        }
                     }
-                }
-                else
-                {
-                    if (ItemAnimationTime == 0 && !Action)
+                    else
                     {
-                        if (TargetOnSight) //Check weapons
+                        SelectedItem = -1;
+                        int HighestDamage = 0;
+                        MeleePosition = -1;
+                        for (int m = 0; m < 10; m++)
                         {
-                            MeleePosition = -1;
-                            RangedPosition = -1;
-                            MagicPosition = -1;
-                            //int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
-                            int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
-                            bool MagicItemNeedsRecharge = false, NoManaMagicItem = false;
-                            bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
-                            for (int i = 0; i < 10; i++)
+                            if (Inventory[m].type > 0 && Inventory[m].melee && Inventory[m].damage > HighestDamage)
                             {
-                                if (Inventory[i].type == 0)
-                                    continue;
-                                if (Inventory[i].melee)
-                                {
-                                    if (Inventory[i].damage > HighestMeleeDamage && (!UseWeaponsByInventoryOrder || MeleePosition == -1) && (!Items.GuardianItemPrefab.IsHeavyItem(Inventory[i]) || MayUseHeavyWeapon))
-                                    {
-                                        HighestMeleeDamage = Inventory[i].damage;
-                                        MeleePosition = (sbyte)i;
-                                    }
-                                }
-                                if ((Inventory[i].ranged && Inventory[i].ammo == 0) || Inventory[i].thrown)
-                                {
-                                    if (Inventory[i].damage > HighestRangedDamage && (!UseWeaponsByInventoryOrder || RangedPosition == -1))
-                                    {
-                                        HighestRangedDamage = Inventory[i].damage;
-                                        RangedPosition = (sbyte)i;
-                                    }
-                                }
-                                if (Inventory[i].magic)
-                                {
-                                    if (Inventory[i].damage > HighestMagicDamage && (!UseWeaponsByInventoryOrder || MagicPosition == -1))
-                                    {
-                                        int ManaCost = (int)(Inventory[i].mana * ManaCostMult);
-                                        if (Inventory[i].type == Terraria.ID.ItemID.SpaceGun && HasFlag(GuardianFlags.MeteorSetEffect))
-                                        {
-                                            HighestMagicDamage = Inventory[i].damage;
-                                            MagicPosition = (sbyte)i;
-                                            ManaCost = 0;
-                                            NoManaMagicItem = true;
-                                        }
-                                        else if (MP >= Inventory[i].mana * ManaCostMult)
-                                        {
-                                            HighestMagicDamage = Inventory[i].damage;
-                                            MagicPosition = (sbyte)i;
-                                            MagicItemNeedsRecharge = false;
-                                            NoManaMagicItem = false;
-                                        }
-                                        else if (MagicPosition == -1)
-                                        {
-                                            HighestMagicDamage = Inventory[i].damage;
-                                            MagicPosition = (sbyte)i;
-                                            MagicItemNeedsRecharge = true;
-                                            NoManaMagicItem = false;
-                                        }
-                                    }
-                                }
-                            }
-                            if (MagicItemNeedsRecharge && (!HasFlag(GuardianFlags.AutoManaPotion) || !Inventory.Any(x => x.type > 0 && x.healMana > 0)))
-                            {
-                                WaitingForManaRecharge = true;
-                            }
-                            SelectedItem = -1;
-                            bool InMeleeRange = false;
-                            if (MeleePosition > -1)
-                            {
-                                if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false))
-                                {
-                                    InMeleeRange = true;
-                                }
-                                else if (CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, true))
-                                {
-                                    InMeleeRange = true;
-                                    NeedsDucking = true;
-                                }
-                            }
-                            if (RangedPosition > -1)
-                            {
-                                SelectedItem = RangedPosition;
-                            }
-                            if (MagicPosition > -1 && ((!WaitingForManaRecharge || NoManaMagicItem) || ManaCostMult == 0) && !HasFlag(GuardianFlags.Silence))
-                            {
-                                SelectedItem = MagicPosition;
-                            }
-                            if ((SelectedItem == -1 || InMeleeRange) && MeleePosition > -1)
-                            {
-                                SelectedItem = MeleePosition;
+                                MeleePosition = (sbyte)m;
+                                HighestDamage = Inventory[m].damage;
                             }
                         }
-                        else
-                        {
-                            SelectedItem = -1;
-                            int HighestDamage = 0;
-                            MeleePosition = -1;
-                            for (int m = 0; m < 10; m++)
-                            {
-                                if (Inventory[m].type > 0 && Inventory[m].melee && Inventory[m].damage > HighestDamage)
-                                {
-                                    MeleePosition = (sbyte)m;
-                                    HighestDamage = Inventory[m].damage;
-                                }
-                            }
-                            if (MeleePosition > -1)
-                                SelectedItem = MeleePosition;
-                        }
+                        if (MeleePosition > -1)
+                            SelectedItem = MeleePosition;
                     }
                     /*if (HasFlag(GuardianFlags.Confusion) && OwnerPos > -1)
                     {
@@ -4843,7 +4830,7 @@ namespace giantsummon
                     {
                         switch (Tactic)
                         {
-                            case CombatTactic.Charge: //This AI is clashing against GoMelee AI.
+                            case CombatTactic.Charge:
                                 {
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
                                     float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,

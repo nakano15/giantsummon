@@ -862,6 +862,7 @@ namespace giantsummon
         {
             PlayerMod pm = MainPlayer.GetModPlayer<PlayerMod>();
             pm.IsTalkingToAGuardian = false;
+            tg.TalkPlayerID = -1;
             Options.Clear();
             Dialogue = new string[0];
         }

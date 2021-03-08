@@ -24,12 +24,15 @@ namespace giantsummon.Creatures
             FramesInRows = 20;
             Age = 19;
             Male = true;
-            CalculateHealthToGive(1200, 0.9f, 0.6f); //Lc: 95, LF: 16
+            //CalculateHealthToGive(1200, 0.45f, 0.6f); //Lc: 95, LF: 16
+            InitialMHP = 375; //1200
+            LifeCrystalHPBonus = 35;
+            LifeFruitHPBonus = 15;
             Accuracy = 0.72f;
-            Mass = 0.7f;
-            MaxSpeed = 4.9f;
-            Acceleration = 0.14f;
-            SlowDown = 0.42f;
+            Mass = 0.45f;
+            MaxSpeed = 5.1f;
+            Acceleration = 0.19f;
+            SlowDown = 0.39f;
             MaxJumpHeight = 15;
             JumpSpeed = 7.16f;
             CanDuck = true;
@@ -43,8 +46,8 @@ namespace giantsummon.Creatures
             ContestSecondPlace = 0;
             ContestThirdPlace = 0;
 
-            AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
-            AddInitialItem(Terraria.ID.ItemID.Mushroom, 3);
+            AddInitialItem(Terraria.ID.ItemID.Muramasa, 1);
+            AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
 
             //Animation Frames
             StandingFrame = 0;
