@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 
 namespace giantsummon.Creatures
 {
@@ -58,7 +59,7 @@ namespace giantsummon.Creatures
             ThroneSittingFrame = 14;
             BedSleepingFrame = 19;
             SleepingOffset.X = 16;
-            //ReviveFrame = 20;
+            ReviveFrame = 21;
             DownedFrame = 20;
 
             SpecificBodyFrontFramePositions = true;
@@ -82,6 +83,8 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(17, 32, 25);
             LeftHandPoints.AddFramePoint2x(18, 29, 30);
 
+            LeftHandPoints.AddFramePoint2x(21, 40, 40);
+
             //Right Arm
 
             //Head Equipment Position
@@ -93,6 +96,40 @@ namespace giantsummon.Creatures
 
             HeadVanityPosition.AddFramePoint2x(19, 40, 39);
             HeadVanityPosition.AddFramePoint2x(20, 40, 39);
+            GetRequests();
+        }
+
+        public void GetRequests()
+        {
+            //0
+            AddNewRequest("A Little Treat", 200,
+                "(You think you should give her a little treat to eat, you wonder if some cooked fish would be good.)",
+                "(Once you said what you were going to give her, she got all happy, and waits for you to bring It.)",
+                "(At the last moment, you changed your mind, and didn't told her about what you planned.)",
+                "(She seems to have really enjoyed the food you gave to her.)",
+                "(I need a fishing rod for this... And a lake in the forest...)",
+                "(How did I managed to fail this?)");
+            AddItemCollectionObjective(Terraria.ID.ItemID.CookedFish, 1, 0);
+            //1
+            AddNewRequest("Going for a Walk", 200,
+                "(She seems to be wanting to go out for a walk. Doesn't matter where I take her, I just have to make sure she's safe and sound)",
+                "(I told her that we were going out for a walk, and she loved the idea.)",
+                "(You really doesn't feel like going anywhere right now...)",
+                "(She have enjoyed the walk, but seems a bit exausted. Or not, she's already jumping again.)",
+                "(I just need to take her for a walk, how hard can this be?)",
+                "(How did I managed to fail this?)");
+            AddExploreObjective(2000);
+        }
+
+        public override bool AlterRequestGiven(GuardianData Guardian, out int ForcedMissionID, out bool IsTalkRequest)
+        {
+            if(Main.rand.Next(3) > 0)
+            {
+                IsTalkRequest = false;
+                ForcedMissionID = Main.rand.Next(2);
+                return true;
+            }
+            return base.AlterRequestGiven(Guardian, out ForcedMissionID, out IsTalkRequest);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -136,6 +173,70 @@ namespace giantsummon.Creatures
                 }
                 gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(HaloTextureID), HaloDrawPosition, new Rectangle(26, 0, 26, 12), Color.White * TransparencyValue, Rotation, new Vector2(13, 6), Scale, SpriteEffects.None);
                 TerraGuardian.DrawFront.Add(gdd);
+            }
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("Bark! Bark! *Wagging tail*");
+            Mes.Add("*Chasing her own tail.*");
+            Mes.Add("Bark! *She seems happy to see you.*");
+            if (!Main.dayTime)
+            {
+                Mes.Add("Grrr.... *She's growling at something outside.*");
+                Mes.Add("Yaaaawn~");
+            }
+            if (Main.moonPhase == 0)
+                Mes.Add("Awoooooooooo~!!");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*You petted her, and then she lied down on the floor, wanting her belly rubbed.*");
+            Mes.Add("*She starts licking your face out of happiness.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            return "Bark! Bark! (She looks okay right now.)";
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            return "(She's staring at you, attentiously.)";
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            return "(She started licking you, she seems really happy.)";
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.Next(2) == 0)
+                return "(She seems really happy.)";
+            return "(Is she trying to sing along the music?)";
+        }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            return "(As she fixes her eyes at you, she approaches and snifs you. After doing so, she started to wag her tail and bark.)";
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            switch (Main.rand.Next(3))
+            {
+                default:
+                    return "Whine... Whine... Whine...";
+                case 1:
+                    return "(Licking the injured person)";
+                case 2:
+                    return "... Bark! Bark! Whine... Whine....";
             }
         }
     }

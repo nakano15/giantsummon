@@ -41,6 +41,7 @@ namespace giantsummon.Creatures
             ReverseMount = false;
             DrinksBeverage = true;
             SleepsAtBed = false;
+            DontUseHeavyWeapons = true;
             SetTerraGuardian();
 
             //Animation Frames
@@ -56,7 +57,7 @@ namespace giantsummon.Creatures
             //DrawLeftArmInFrontOfHead.AddRange(new int[] { 13, 14, 15, 16 });
             ThroneSittingFrame = 16;
             BedSleepingFrame = 17;
-            //DownedFrame = 21;
+            DownedFrame = 19;
             ReviveFrame = 18;
 
             SpecificBodyFrontFramePositions = true;
@@ -667,7 +668,165 @@ namespace giantsummon.Creatures
 
         public Vector2 GetMouthPosition(int Frame)
         {
+            switch (Frame)
+            {
+                case 16:
+                    return new Vector2(32, 32);
+                case 17:
+                    return new Vector2(32, 34);
+                case 18:
+                    return new Vector2(42, 40);
+            }
             return new Vector2(40, 34);
+        }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            switch (Main.rand.Next(3))
+            {
+                default:
+                    return "*Don't be afraid, Terrarian. Your time haven't came yet, but the creatures you've killed must be carried to their destination.*";
+                case 1:
+                    return "*I have came to this place due to the many deaths happening here. It will ease my job if I stay around.*";
+                case 2:
+                    return "*I didn't came for your soul, if that's what you are thinking. I'm only going to be a ferry for the creatures who dies here.*";
+            }
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*My body consists of a kind of plasma, which I use to carry the souls I save. When It's filled enough, I deliver them to their destination.*");
+            Mes.Add("*You can only see my body in dark places. If there's light, you can actually see my bones.*");
+            Mes.Add("*The reason why I'm missing a pelvis and my legs, is related to when I died.*");
+            Mes.Add("*Depending on the amount of souls I save, they make my body look like the universe full of stars.*");
+
+            Mes.Add("*I try to avoid being sociable with the people around, since I wouldn't feel good when taking them to their end of line.*");
+            Mes.Add("*My presence here makes people scared, they may be thinking I'm after them.*");
+            Mes.Add("*Due to people knowing who I am, they avoid even speaking to me. That makes It easier for me not to care about them.*");
+
+            Mes.Add("*It may not look like It, but I like seeing children around. It makes me proud of my job.*");
+
+            if (player.difficulty == 2)
+            {
+                Mes.Add("*I'm starting to fear the end of your line, [nickname]. Taking you to your destination will end up being a pain to me.*");
+            }
+            else
+            {
+                Mes.Add("*If you take me with you on your adventures, I can hold onto your and your allies souls until you resurrect.*");
+            }
+
+
+            if (Main.dayTime)
+            {
+                if (Main.eclipse)
+                {
+                    Mes.Add("*I shouldn't actually try saving those abominations. I think I should instead burn them, but that's against the rules.*");
+                    Mes.Add("*What kind of monster created those monstrosities. Even their souls seems twisted.*");
+                }
+                else
+                {
+                    Mes.Add("*I like seeing living things around, beside you may have thought otherwise.*");
+                    Mes.Add("*I used to hate being exposed to the sun for long period, but now I don't feel anything.*");
+                    Mes.Add("*It's really weird to me when people stares at my bones. At those moments, I wished It was dark.*");
+                }
+            }
+            else
+            {
+                if (Main.bloodMoon)
+                {
+                    Mes.Add("*[nickname], there's many of them around... Be careful...*");
+                    Mes.Add("*I suggest you to ensure the safety of the people around.*");
+                    Mes.Add("*I can take care of some of those zombies who walks around, I'm demi immortal anyways. But I fear for the other people around.*");
+                }
+                Mes.Add("*I can't save the zombified people that appears during the night until their bodies aren't destroyed.*");
+                Mes.Add("*You should stay safe at night, [nickname]. At this moment, dangerous creatures roams the world.*");
+                Mes.Add("*I preffer when people see my plasma, but I wasn't always blue. I had white fur, and a yellow circle on my fur that covered my left eye.*");
+            }
+            if (Main.raining)
+            {
+                Mes.Add("*I'm glad I don't need an umbrella.*");
+                Mes.Add("*[nickname], beware not to catch a flu. Even a simple flu can be dangerous, if you let It evolve further.*");
+            }
+
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
+            {
+                Mes.Add("*I went earlier to [nn:" + Terraria.ID.NPCID.Merchant + "]'s shop to try buying some potions, he ended up pleading for his life.*");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.ArmsDealer))
+            {
+                Mes.Add("*[nn:" + Terraria.ID.NPCID.ArmsDealer + "] got really impressed when he discovered I was into guns. But I had to end the chatting as soon as possible.*");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Nurse))
+            {
+                Mes.Add("*I asked [nn:" + Terraria.ID.NPCID.Nurse + "] if she needed some assistance. She looked upset, so I left.*");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Clothier))
+            {
+                Mes.Add("*Would you mind help me? I visitted [nn:" + Terraria.ID.NPCID.Clothier + "] earlier this day, to see if he could make me a cloak, and he ran away. May you help me explain?*");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Dryad))
+            {
+                Mes.Add("*Only [nn:" + Terraria.ID.NPCID.Dryad + "] seems to be the only person who's not scared of me.*");
+            }
+            if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
+            {
+                Mes.Add("*I can't really get angry at [nn:" + Terraria.ID.NPCID.Angler + "], having him lost his parents and living all alone must have changed his behavior.*");
+            }
+
+            if (NpcMod.HasGuardianNPC(Rococo))
+            {
+                Mes.Add("*I kind of sympatize with [gn:" + Rococo + "], his spirit is of a child.*");
+            }
+            if (NpcMod.HasGuardianNPC(Sardine))
+            {
+                Mes.Add("*Sometimes I go along on [gn:" + Sardine + "]'s adventures. It helps me saving many souls.*");
+                if(NpcMod.HasGuardianNPC(Bree))
+                    Mes.Add("*I think [gn:" + Bree + "] doesn't actually trust me, she always panics when she sees me with [gn:"+Sardine+"].*");
+            }
+            if (NpcMod.HasGuardianNPC(Alex))
+            {
+                Mes.Add("*[gn:"+Alex+"] asked me if I carried his old owner to their destination. I only came to this world recently, so maybe another reaper did.*");
+                Mes.Add("*I like how [gn:"+Alex+"] is such a good dog. "+AlexRecruitScripts.AlexOldPartner+" have done one fine job.*");
+                Mes.Add("*This will sound grim, but [gn:"+Alex+"] told me to bring him to "+AlexRecruitScripts.AlexOldPartner+"'s resting place when he dies. I can do that but.. I would need to find out where did she went to.*");
+            }
+            bool HasZacks = NpcMod.HasGuardianNPC(Zacks), HasFluffles = NpcMod.HasGuardianNPC(Fluffles);
+            if (HasZacks && NpcMod.HasGuardianNPC(Blue))
+            {
+                Mes.Add("*[gn:"+Blue+"] confronted me earlier, wanting me not to take [gn:"+Zacks+"] to their destination. I replied to her that even if I wanted, I couldn't due to his curse.*");
+            }
+            if(HasZacks)
+            {
+                Mes.Add("*I can't take [gn:"+Zacks+"] to their destination due to the curse laid on him. Until that curse is lifted, I can't do anything. Beside I think he may still be willing to help you, so maybe I can open an exception.*");
+                Mes.Add("*The curse [gn:"+Zacks+"] carries is different from the ones the zombies in this land carries. That explains why he regained consciousness.*");
+            }
+            if (HasFluffles)
+            {
+                Mes.Add("*[gn:"+Fluffles+"] soul is troubled by what happened to her old group. And she seems to have such a strong bond towards you, so I can't take her to her destination.*");
+                Mes.Add("*What happened to [gn:"+Fluffles+"] caused on her some kind of post traumatic stress. Maybe time will make her recover from that.*");
+            }
+            if (NpcMod.HasGuardianNPC(Leopold))
+            {
+                Mes.Add("*I get so bored when [gn:"+Leopold+"] asks me about the life after the life and about death.*");
+            }
+            if (NpcMod.HasGuardianNPC(Malisha))
+            {
+                Mes.Add("*How many times should I say that I won't... Oh, I thought It was [gn:"+Malisha+"].*");
+                Mes.Add("*I sense death at [gn:"+Malisha+"]'s house.*");
+            }
+            if (NpcMod.HasGuardianNPC(Mabel))
+            {
+                Mes.Add("*I can't stop staring at [gn:"+Mabel+"]. Wait, I have a job to do, so I can't distract myself!*");
+            }
+            if (NpcMod.HasGuardianNPC(Vladimir))
+            {
+                Mes.Add("*Out of everyone in this world, [gn:"+Vladimir+"] is the only one who seems to want to be my friend.*");
+            }
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*Even though I don't have a digestive system, or the need to eat, I love eating food. Gladly [gn:"+Minerva+"] is such a good cook.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public class ReaperGuardianData : GuardianData

@@ -1278,6 +1278,22 @@ namespace giantsummon
                     {
                         PossibleMessages.Add("Missed me? It's because " + NpcMod.GetGuardianNPCName(GuardianBase.Malisha) + " turned me into a frog, and has placed me inside a cage for hours! I had only flies to eat meanwhile, FLIES!");
                     }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Wrath))
+                    {
+                        PossibleMessages.Add("The next time I need to collect the rent from " + NpcMod.GetGuardianNPCName(GuardianBase.Wrath) + ", YOU DO THAT! I think he even broke some of my bones!");
+                    }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Alexander))
+                    {
+                        PossibleMessages.Add("Don't bother me, my back is aching right no! Everytime I visit " + NpcMod.GetGuardianNPCName(GuardianBase.Alexander) + ", he pounces on me and drops me on my back on the floor!");
+                    }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
+                    {
+                        PossibleMessages.Add("I tried collecting " + NpcMod.GetGuardianNPCName(GuardianBase.Fluffles) + " rent earlier. I didn't found her, until someone saw her on my shoulder. What is her problem?!");
+                    }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Minerva))
+                    {
+                        PossibleMessages.Add("I charge less rent from " + NpcMod.GetGuardianNPCName(GuardianBase.Minerva) + ". She's the only person who treats me right, and also cooks something whenever I visit.");
+                    }
                     break;
                 case Terraria.ID.NPCID.PartyGirl:
                     if (HasGuardianNPC(6) && Main.rand.Next(2) == 0)

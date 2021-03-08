@@ -913,6 +913,7 @@ namespace giantsummon
         /// <summary>
         /// It's used to change what is the request the mod will give, when one is ready.
         /// Setting ForceMissionID to -1, will make the mod decide which request will give.
+        /// Return false to make the companion not give a request.
         /// </summary>
         /// <param name="Guardian">The guardian that will give the mission. You may use It to get infos, like companion friendship level and exp.</param>
         /// <param name="ForcedMissionID">Setting to a value other above -1, will force the companion to give It's special request, regardless of the request requirement. You may use this to give hidden requests to the companion, or requests specific to friendship leveling.</param>
