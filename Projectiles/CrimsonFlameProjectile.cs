@@ -70,9 +70,12 @@ namespace giantsummon.Projectiles
 
         public void ChangeToImpact()
         {
+			if(Impact)
+				return;
             Impact = true;
             projectile.frame = 0;
             projectile.frameCounter = 0;
+			//TODO - Add AOE damage effect.
             projectile.damage = 0;
             projectile.velocity = Vector2.Zero;
         }
