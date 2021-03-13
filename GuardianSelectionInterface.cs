@@ -160,8 +160,8 @@ namespace giantsummon
                     ScrollbarShowing = true;
                     ElementPosition.X -= 8f * ScaleX;
                     //Draw scroll bar
-                    int MaxHeight = Height - 32;
-                    float ScrollbarSize = 1f - ((float)MaxGuardiansY / GuardianList.Length);
+                    int MaxHeight = Height - 48;
+                    float ScrollbarSize = ((float)MaxGuardiansY / GuardianList.Length);
                     if (ScrollbarSize > 1f)
                         ScrollbarSize = 1f;
                     ScrollbarSize *= MaxHeight;
@@ -184,10 +184,10 @@ namespace giantsummon
                     DrawRectangle(ButtonPos.X + 8 - 3, ButtonPos.Y + 8, 6, 2, foreground);
                     DrawRectangle(ButtonPos.X + 8 - 4, ButtonPos.Y + 10, 8, 2, foreground);
                     ButtonPos.Y += 16 + (MaxHeight - ScrollbarSize) * ScrollY;
-                    DrawRectangle(ButtonPos.X, ButtonPos.Y, 16, MaxHeight, Color.Blue);
+                    DrawRectangle(ButtonPos.X, ButtonPos.Y, 16, (int)ScrollbarSize, Color.Blue);
                     background = Color.Blue;
                     foreground = Color.Gray;
-                    ButtonPos.Y = ElementPosition.Y + MaxHeight;
+                    ButtonPos.Y = ElementPosition.Y + MaxHeight + 16;
                     if (Main.mouseX >= ButtonPos.X && Main.mouseX < ButtonPos.X + 16 && Main.mouseY >= ButtonPos.Y && Main.mouseY < ButtonPos.Y + 16)
                     {
                         background = Color.LightBlue;
@@ -195,8 +195,8 @@ namespace giantsummon
                         if (Main.mouseLeft && Main.mouseLeftRelease)
                         {
                             ScrollY++;
-                            if (ScrollY >= MaxScrollY)
-                                ScrollY = MaxScrollY - 1;
+                            if (ScrollY > MaxScrollY)
+                                ScrollY = MaxScrollY;
                             if (ScrollY < 0)
                                 ScrollY = 0;
                         }

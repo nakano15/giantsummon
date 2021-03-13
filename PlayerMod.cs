@@ -783,6 +783,7 @@ namespace giantsummon
                     if (!g.Downed && g.KnockedOut && !g.IsPlayerHostile(player) &&
                         MouseX >= g.Position.X - g.Width * 0.5f && MouseX < g.Position.X + g.Width * 0.5f &&
                         MouseY >= g.Position.Y - g.Height * 0.5f && MouseY < g.Position.Y && 
+                        (!g.KnockedOut || !g.HasFlag(GuardianFlags.CantReceiveHelpOnReviving)) &&
                         rect.Intersects(g.HitBox))
                     {
                         SelectedOne = key;
@@ -1627,7 +1628,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        DamageMod += DamageMod * 0.1f; //0.2f
+                        DamageMod += DamageMod * 0.1f;
                     }
                 }
                 DamageMod = 1f - DamageMod;
@@ -1805,6 +1806,8 @@ namespace giantsummon
                         break;
                     }
                 }
+                //if(GuardianOrderHudNew.Active)
+                //    player.selectedItem = player.oldSelectItem;
                 if (GuardianOrderHudNew.Active)
                 {
                     GuardianOrderHudNew.Update(this);
@@ -1900,7 +1903,7 @@ namespace giantsummon
                 }
                 if (player.controlJump && player.releaseJump)
                     guardian.TryToDisableAfkPunishment();
-                bool MountbuttonPressed = false;
+                //bool MountbuttonPressed = false;
                 if (!SomeoneQuickMounted && MountKeyPressed && !guardian.SittingOnPlayerMount && !ControllingGuardian && guardian.HasFlag(GuardianFlags.AllowMount) && guardian.OverrideQuickMountToMountGuardianInstead)
                 {
                     bool LastMountState = guardian.PlayerMounted;
@@ -2439,8 +2442,8 @@ namespace giantsummon
 
         public void DoRetroCompatibilityLoad(Terraria.ModLoader.IO.TagCompound tag, int ModVersion)
         {
-            GuardianData d = new GuardianData();
-            d.ID = tag.GetInt("GuardianID");
+            int ID = tag.GetInt("GuardianID");
+            GuardianData d = GuardianBase.GetGuardianBase(ID).GetGuardianData(ID);
             if (ModVersion >= 7)
             {
                 d.FriendshipLevel = tag.GetByte("FriendshipLevel");
@@ -2597,7 +2600,7 @@ namespace giantsummon
         {
             Back = new List<Terraria.DataStructures.DrawData>();
             Front = new List<Terraria.DataStructures.DrawData>();
-
+            TerraGuardian.CurrentDrawnOrderID = 0 + player.whoAmI * 100;
             foreach (TerraGuardian g in GetAllGuardianFollowers)
             {
                 if (!g.Active || !g.InCameraRange() || (g.UsingFurniture && !g.PlayerMounted))

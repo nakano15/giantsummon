@@ -5,6 +5,7 @@ using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.ModLoader.IO;
 
 namespace giantsummon.Creatures
 {
@@ -831,6 +832,7 @@ namespace giantsummon.Creatures
 
         public class ReaperGuardianData : GuardianData
         {
+            private const int SaveID = 0;
             public List<FallenSoul> ActiveSouls = new List<FallenSoul>();
             public int SoulsLoaded = 0;
             public byte LastDefeatedAllyCount = 0;
@@ -847,6 +849,18 @@ namespace giantsummon.Creatures
             public ReaperGuardianData(int ID, string ModID) : base(ID, ModID)
             {
 
+            }
+
+            public override void SaveCustom(TagCompound tag, int UniqueID)
+            {
+                tag.Add(UniqueID + "tg_SaveID", SaveID);
+                tag.Add(UniqueID + "tg_SoulsLoaded", SoulsLoaded);
+            }
+
+            public override void LoadCustom(TagCompound tag, int ModVersion, int UniqueID)
+            {
+                int SaveID = tag.GetInt(UniqueID + "tg_SaveID");
+                SoulsLoaded = tag.GetInt(UniqueID + "tg_SoulsLoaded");
             }
 
             public class FallenSoul

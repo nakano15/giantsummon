@@ -450,6 +450,7 @@ namespace giantsummon
             if (!WorldMod.HasDrawnTownCompanions)
             {
                 WorldMod.HasDrawnTownCompanions = true;
+                TerraGuardian.CurrentDrawnOrderID = -2000;
                 WorldMod.DrawTownNpcCompanions();
             }
 
@@ -1284,7 +1285,7 @@ namespace giantsummon
                     }
                     if (NpcMod.HasGuardianNPC(GuardianBase.Alexander))
                     {
-                        PossibleMessages.Add("Don't bother me, my back is aching right no! Everytime I visit " + NpcMod.GetGuardianNPCName(GuardianBase.Alexander) + ", he pounces on me and drops me on my back on the floor!");
+                        PossibleMessages.Add("Don't bother me, my back is aching right now! Everytime I visit " + NpcMod.GetGuardianNPCName(GuardianBase.Alexander) + ", he jumps on me and drops me on my back on the floor!");
                     }
                     if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
                     {

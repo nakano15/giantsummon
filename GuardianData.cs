@@ -1010,6 +1010,7 @@ namespace giantsummon
             tag.Add("SkinID_" + UniqueID, SkinID);
             tag.Add("OutfitID_" + UniqueID, OutfitID);
             tag.Add("Coins_" + UniqueID, (int)Coins - int.MaxValue);
+            SaveCustom(tag, UniqueID);
         }
 
         public void Load(Terraria.ModLoader.IO.TagCompound tag, int ModVersion, int UniqueID)
@@ -1249,6 +1250,18 @@ namespace giantsummon
             }
             if (ModVersion < 80)
                 ResetSkillsProgress();
+            if(ModVersion >= 83)
+                LoadCustom(tag, ModVersion, UniqueID);
+        }
+
+        public virtual void SaveCustom(Terraria.ModLoader.IO.TagCompound tag, int UniqueID)
+        {
+
+        }
+
+        public virtual void LoadCustom(Terraria.ModLoader.IO.TagCompound tag, int ModVersion, int UniqueID)
+        {
+
         }
 
         public string GetMessage(string MessageID, string DefaultMessage = "")

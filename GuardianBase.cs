@@ -51,6 +51,7 @@ namespace giantsummon
         public List<SkinReqStruct> SkinList = new List<SkinReqStruct>(), OutfitList = new List<SkinReqStruct>();
         public bool IsNocturnal = false;
         public bool SleepsAtBed = true;
+        public List<GuardianSpecialAttack> SpecialAttackList = new List<GuardianSpecialAttack>();
         
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;
@@ -1147,6 +1148,11 @@ namespace giantsummon
             return gb;
         }
 
+        public virtual bool BeforeUsingItem(TerraGuardian tg, ref int SelectedItem)
+        {
+            return true;
+        }
+
         public void SetInvalidGuardianStatus()
         {
             Name = "Unknown";
@@ -1268,6 +1274,20 @@ namespace giantsummon
         public virtual string GetSpecialMessage(string MessageID)
         {
             return "";
+        }
+
+        public GuardianSpecialAttack AddNewSubAttack()
+        {
+            SpecialAttackList.Add(new GuardianSpecialAttack());
+            return SpecialAttackList[SpecialAttackList.Count - 1];
+        }
+
+        public void AddNewSubAttackFrame(int Duration, int BodyAnimationFrame, int LeftArmAnimationFrame = -1, int RightArmAnimationFrame = -1)
+        {
+            SpecialAttackList[SpecialAttackList.Count - 1].SpecialAttackFrames.Add(new GuardianSpecialAttackFrame()
+            {
+                Duration = Duration, BodyFrame = BodyAnimationFrame, LeftArmFrame = LeftArmAnimationFrame, RightArmFrame = RightArmAnimationFrame
+            });
         }
 
         public class MessageIDs

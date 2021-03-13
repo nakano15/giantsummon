@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 
 namespace giantsummon.Creatures.Bapha
 {
@@ -12,6 +13,7 @@ namespace giantsummon.Creatures.Bapha
         private const int DownedFrameID = 22, RevivingFrameID = 29;
         private const string HellGateSpriteID = "hellgate";
         private const float HellGateAnimationFrameTime = 4f;
+        private const byte CrimsonFlameID = 0;
 
         public BaphaBase()
         {
@@ -76,6 +78,46 @@ namespace giantsummon.Creatures.Bapha
             RightHandPoints.AddFramePoint(29, 86, 113);
             RightHandPoints.AddFramePoint(30, 86, 113);
             RightHandPoints.AddFramePoint(31, 86, 113);
+
+            SubAttackSetup();
+        }
+
+        public void SubAttackSetup()
+        {
+            //Anim duration: 9~18
+            //15 = Attack
+            GuardianSpecialAttack specialAttack = AddNewSubAttack();
+            specialAttack.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame, int Time)
+            {
+                if(Frame == 6) //= frame 15
+                {
+                    Vector2 ProjectileSpawnPosition = tg.GetGuardianLeftHandPosition;
+                    Vector2 ShotDirection = new Vector2(tg.AimDirection.X, tg.AimDirection.Y) - ProjectileSpawnPosition;
+                    ShotDirection.Normalize();
+                    ShotDirection *= 8f;
+                    int Damage = 20;
+                    if (tg.SelectedItem > -1)
+                        Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.75f);
+                    Damage = (int)(Damage * tg.MagicDamageMultiplier);
+                    tg.SetProjectileOwnership(Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>(), 
+                        20, 3.6f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer)));
+                }
+            };
+            for(int i = 9; i < 19; i++)
+            {
+                AddNewSubAttackFrame(6, i, i, i);
+            }
+        }
+
+        public override bool BeforeUsingItem(TerraGuardian tg, ref int SelectedItem)
+        {
+            if(SelectedItem == -1 || tg.Inventory[SelectedItem].damage > 0)
+            {
+                if (!tg.SubAttackInUse)
+                    tg.UseSubAttack(CrimsonFlameID);
+                return false;
+            }
+            return true;
         }
 
         public override void Attributes(TerraGuardian g)

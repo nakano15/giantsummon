@@ -44,3 +44,7 @@ If your companion is holding an offhand item, like a torch, and the position the
 Companions using furnitures will now be shown behind npcs.
 Made some companions no longer use the method created to automatically calculate their maximum status.
 	Companion affected by that: Vladimir.
+Fixed scrollbar misbehavior on the Guardian Selection Interface.
+Companions perception of nearby characters now works again:
+	They will no longer check for players, npcs and companions around when looking for threats, as It used to before.
+	Now they have a variating cooldown before they spot who's around them again.

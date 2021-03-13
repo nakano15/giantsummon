@@ -556,6 +556,7 @@ namespace giantsummon
                     Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone,
                     null,
                     Main.GameViewMatrix.TransformationMatrix);
+                TerraGuardian.CurrentDrawnOrderID = -1000;
                 DrawTownNpcCompanions();
                 Main.spriteBatch.End();
             }

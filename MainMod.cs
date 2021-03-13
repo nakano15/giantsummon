@@ -35,9 +35,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 82, LastModVersion = 80;
+        public const int ModVersion = 83, LastModVersion = 80;
         public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -120,6 +120,7 @@ namespace giantsummon
         public static float ScreenColorAlpha = 0f;
         public static Vector2 PlayerSoulPosition = Vector2.Zero;
         public static bool SoulSaved = false;
+        public static int LastChatTime = 0;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -814,6 +815,25 @@ namespace giantsummon
                 GuardianMood.MoodUpdateDelay += 9;
             else
                 GuardianMood.MoodUpdateDelay--;
+            if(Main.netMode < 2 && !Main.gameMenu)
+            {
+                if (Main.player[Main.myPlayer].chatOverhead.timeLeft > LastChatTime)
+                {
+                    if (Main.player[Main.myPlayer].chatOverhead.chatText.Trim().ToLower().Contains("daphne") && !NpcMod.HasMetGuardian(GuardianBase.Daphne) && !NPC.AnyNPCs(ModContent.NPCType<Npcs.DaphneNPC>()) && Main.rand.NextFloat() < 0.25f)
+                    {
+                        int NpcID = ModContent.NPCType<Npcs.DaphneNPC>();
+                        NPC.SpawnOnPlayer(Main.myPlayer, NpcID);
+                        if (NPC.AnyNPCs(NpcID))
+                        {
+                            NPC npc = Main.npc[NPC.FindFirstNPC(NpcID)];
+                            Npcs.DaphneNPC danpc = (Npcs.DaphneNPC)npc.modNPC;
+                            npc.target = Main.myPlayer;
+                            danpc.MeetStep = 1;
+                        }
+                    }
+                }
+                LastChatTime = Main.player[Main.myPlayer].chatOverhead.timeLeft;
+            }
         }
 
         private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs;
@@ -1043,8 +1063,17 @@ namespace giantsummon
                             New.Add(" " + s.Position + " v=" + s.Velocity);
                         }*/
                     }
-                    New.Add("Selected Item: " + g.SelectedItem);
-                    New.Add("Action Pressed: " + g.Action);
+                    if(g.ID == GuardianBase.Alexander)
+                    {
+                        New.Add("Identified Guardians: ");
+                        Creatures.AlexanderBase.AlexanderData data = (Creatures.AlexanderBase.AlexanderData)g.Data;
+                        foreach(GuardianID identified in data.IdentifiedGuardians)
+                        {
+                            New.Add(identified.ID + ":" + identified.ModID);
+                        }
+                    }
+                    //New.Add("Selected Item: " + g.SelectedItem);
+                    //New.Add("Action Pressed: " + g.Action);
                 }
                 TextsToDraw = New.ToArray();
             }

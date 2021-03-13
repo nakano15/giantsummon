@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace giantsummon.Creatures
 {
@@ -495,7 +496,7 @@ namespace giantsummon.Creatures
             {
 
             }
-
+            private const int AlexanderSaveID = 0;
             public List<GuardianID> IdentifiedGuardians = new List<GuardianID>();
 
             public bool WasGuardianIdentified(TerraGuardian tg)
@@ -511,6 +512,31 @@ namespace giantsummon.Creatures
                 if(!(id.ID == Alexander && id.ModID == MainMod.mod.Name) && !IdentifiedGuardians.Any(x => x.ID == id.ID && x.ModID == id.ModID))
                 {
                     IdentifiedGuardians.Add(id);
+                }
+            }
+
+            public override void SaveCustom(TagCompound tag, int UniqueID)
+            {
+                tag.Add(UniqueID + "tg_saveID", AlexanderSaveID);
+                tag.Add(UniqueID + "tg_SleuthCount", IdentifiedGuardians.Count);
+                for(int i = 0; i < IdentifiedGuardians.Count; i++)
+                {
+                    GuardianID gid = IdentifiedGuardians[i];
+                    tag.Add(UniqueID + "tg_SleuthID_" + i, gid.ID);
+                    tag.Add(UniqueID + "tg_SleuthModID_" + i, gid.ModID);
+                }
+            }
+
+            public override void LoadCustom(TagCompound tag, int ModVersion, int UniqueID)
+            {
+                int SaveID = tag.GetInt(UniqueID + "tg_saveID");
+                int Count = tag.GetInt(UniqueID + "tg_SleuthCount");
+                IdentifiedGuardians.Clear();
+                for (int i = 0; i < Count; i++)
+                {
+                    int ID = tag.GetInt(UniqueID + "tg_SleuthID_" + i);
+                    string ModID = tag.GetString(UniqueID + "tg_SleuthModID_" + i);
+                    IdentifiedGuardians.Add(new GuardianID(ID, ModID));
                 }
             }
         }
@@ -563,7 +589,7 @@ namespace giantsummon.Creatures
                         Sleuthing = true;
                         guardian.LookingLeft = (Target.Position.X < guardian.Position.X);
                         float LastSleuthPercent = SleuthPercent;
-                        float FillSpeed = guardian.IsUsingBed ? 0.1f : 0.5f;
+                        float FillSpeed = guardian.IsUsingBed ? 0.05f : 0.2f;
                         SleuthPercent += Main.rand.NextFloat() * FillSpeed;
                         if (SleuthPercent >= 100)
                         {

@@ -353,6 +353,12 @@ namespace giantsummon
         public const byte TurnLockTime = 12;
         public Vector2 PrioritaryMovementTarget = Vector2.Zero;
         public PrioritaryBehavior PrioritaryBehaviorType = PrioritaryBehavior.None;
+        private byte _SubAttack = 0;
+        public int SubAttackID { get { return _SubAttack - 1; } }
+        public int SubAttackTime = 0;
+        public bool SubAttackInUse { get { return _SubAttack > 0; } }
+        public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
+        public static int CurrentDrawnOrderID = 0;
 
         public int CollisionWidth
         {
@@ -1068,6 +1074,7 @@ namespace giantsummon
 
         public TerraGuardian(int CreateByType = -1, string ModID = "")
         {
+            AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, Main.rand.Next(60));
             if (CreateByType != -1)
             {
                 if (ModID == "")
@@ -1788,6 +1795,64 @@ namespace giantsummon
                 Math.Abs(CenterPosition.Y - CameraCenter.Y) < (Main.screenHeight + SpriteHeight) * 0.5f + 150);
         }
 
+        public void UpdatePerception()
+        {
+            if (HasCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown))
+                return;
+            AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, 60 + Main.rand.Next(90));
+            List<byte> NpcsSpotted = new List<byte>(),
+                PlayersSpotted = new List<byte>();
+            List<int> GuardiansSpotted = new List<int>();
+            const float DetectionDistance = 200;
+            Vector2 CenterPosition = this.CenterPosition;
+            int Width = this.Width;
+            int Height = this.Height;
+            for(byte i = 0; i < 255; i++)
+            {
+                if (Math.Abs(Main.player[i].position.X + Main.player[i].width * 0.5f - CenterPosition.X) < (Main.player[i].width + Width) * 0.5f + DetectionDistance &&
+                    Math.Abs(Main.player[i].position.Y + Main.player[i].height * 0.5f - CenterPosition.Y) < (Main.player[i].height + Height) * 0.5f + DetectionDistance)
+                {
+                    if (!this.PlayersSpotted.Contains(i))
+                    {
+                        this.DoTrigger(TriggerTypes.PlayerSpotted, i);
+                    }
+                    PlayersSpotted.Add(i);
+                }
+                if(i < 200)
+                {
+
+                    if (Math.Abs(Main.npc[i].Center.X - CenterPosition.X) < (Main.npc[i].width + Width) + DetectionDistance &&
+                            Math.Abs(Main.npc[i].Center.Y - CenterPosition.Y) < (Main.npc[i].height + Height) + DetectionDistance)
+                    {
+                        if (!this.NpcsSpotted.Contains(i))
+                        {
+                            this.DoTrigger(TriggerTypes.NpcSpotted, i);
+                        }
+                        NpcsSpotted.Add(i);
+                    }
+                }
+            }
+            foreach(int key in MainMod.ActiveGuardians.Keys)
+            {
+                if(key != this.WhoAmID)
+                {
+                    TerraGuardian guardian = MainMod.ActiveGuardians[key];
+                    if (Math.Abs(guardian.Position.X - CenterPosition.X) < (Width + guardian.Width) * 0.5f + DetectionDistance &&
+                        Math.Abs(guardian.Position.Y - CenterPosition.Y) < (Height + guardian.Height) * 0.5f + DetectionDistance)
+                    {
+                        if (!this.GuardiansSpotted.Contains(key))
+                        {
+                            this.DoTrigger(TriggerTypes.GuardianSpotted, key); //Hardly will trigger
+                        }
+                        GuardiansSpotted.Add(key);
+                    }
+                }
+            }
+            this.NpcsSpotted = NpcsSpotted;
+            this.PlayersSpotted = PlayersSpotted;
+            this.GuardiansSpotted = GuardiansSpotted;
+        }
+
         public void Update(Player Owner = null)
         {
             if (!Active)
@@ -1994,6 +2059,7 @@ namespace giantsummon
                 UpdateManaRegen();
                 UpdateExtraStuff();
             }
+            UpdateSubAttack();
             if (InCameraRange())
             {
                 UpdateAnimation();
@@ -5148,6 +5214,7 @@ namespace giantsummon
                         CombatBehavior();
                 }
                 CheckForPlayerControl();
+                UpdatePerception();
                 //
                 /*if (false && OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease)
                 {
@@ -9583,15 +9650,6 @@ namespace giantsummon
                     if ((Main.npc[i].behindTiles && (!NpcTile.active() || !Main.tileSolid[NpcTile.type])) || Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
                     {
                         Vector2 MemberCenter = NearestMember.XY() + NearestMember.ZW() * 0.5f;
-                        if (Math.Abs(NpcCenter.X - MemberCenter.X) < (Main.npc[i].width + NearestMember.Z) + ThreatDetectionDistance &&
-                                Math.Abs(NpcCenter.Y - MemberCenter.Y) < (Main.npc[i].height + NearestMember.W) + ThreatDetectionDistance)
-                        {
-                            if (!this.NpcsSpotted.Contains(i))
-                            {
-                                this.DoTrigger(TriggerTypes.NpcSpotted, i);
-                            }
-                            NpcsSpotted.Add(i);
-                        }
                         if (Main.npc[i].CanBeChasedBy(null))
                         {
                             float Distance = Main.npc[i].Distance(MemberCenter);
@@ -9625,15 +9683,6 @@ namespace giantsummon
                     if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.player[i].position, Main.player[i].width, Main.player[i].height))
                     {
                         Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
-                        if (Math.Abs(Main.player[i].position.X + Main.player[i].width * 0.5f - MemberCenter.X) < (Main.player[i].width + MemberPosition.Z) * 0.5f + ThreatDetectionDistance &&
-                            Math.Abs(Main.player[i].position.Y + Main.player[i].height * 0.5f - MemberCenter.Y) < (Main.player[i].height + MemberPosition.W) * 0.5f + ThreatDetectionDistance)
-                        {
-                            if (!this.PlayersSpotted.Contains(i))
-                            {
-                                this.DoTrigger(TriggerTypes.PlayerSpotted, i);
-                            }
-                            PlayersSpotted.Add(i);
-                        }
                         if (IsPlayerHostile(Main.player[i]) && !Main.player[i].dead && !Main.player[i].GetModPlayer<PlayerMod>().KnockedOutCold)
                         {
                             float Distance = Main.player[i].Distance(MemberCenter);
@@ -9672,15 +9721,6 @@ namespace giantsummon
                         if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, guardian.TopLeftPosition, guardian.Width, guardian.Height))
                         {
                             Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
-                            if (Math.Abs(guardian.Position.X - MemberCenter.X) < (MemberPosition.Z + guardian.Width) * 0.5f + ThreatDetectionDistance &&
-                                Math.Abs(guardian.Position.Y - MemberCenter.Y) < (MemberPosition.W + guardian.Height) * 0.5f + ThreatDetectionDistance)
-                            {
-                                if (!this.GuardiansSpotted.Contains(key))
-                                {
-                                    this.DoTrigger(TriggerTypes.GuardianSpotted, key);
-                                }
-                                GuardiansSpotted.Add(key);
-                            }
                             float Distance = guardian.Distance(MemberCenter);
                             if (Distance < NearestTargetDistance)
                             {
@@ -9696,177 +9736,6 @@ namespace giantsummon
             {
                 TargetInAim = false;
             }
-            this.NpcsSpotted = NpcsSpotted;
-            this.PlayersSpotted = PlayersSpotted;
-            this.GuardiansSpotted = GuardiansSpotted;
-        }
-
-        public void LookForThreats()
-        {
-            Player Owner = null;
-            if (OwnerPos > -1)
-                Owner = Main.player[OwnerPos];
-            if (Owner != null && !Owner.dead && !WofFacing && !GuardingPosition.HasValue && Math.Abs(Owner.Center.X - Position.X) >= 512)
-            {
-                return; //Ignore attempt to look for targets
-            }
-            float DistanceMod = 1f;
-            if (HasFlag(GuardianFlags.LightPotion))
-                DistanceMod *= 1.2f;
-            if (HasFlag(GuardianFlags.NightVisionPotion))
-                DistanceMod *= 1.25f;
-            if (HasFlag(GuardianFlags.Blind))
-                DistanceMod *= 0.66f;
-            if (HasFlag(GuardianFlags.Blackout))
-                DistanceMod *= 0.25f;
-            if (HasFlag(GuardianFlags.HunterPotion))
-                DistanceMod *= 1.5f;
-            if (Scale > 1)
-                DistanceMod *= Scale;
-            int SpotRangeX = 260;
-            int SpotRangeY = 280;
-            float NearestDistance = float.MaxValue;
-            if (HurtPanic)
-            {
-                SpotRangeX += (int)(SpotRangeX * 1.5f);
-                SpotRangeY += (int)(SpotRangeY * 1.5f);
-                HurtPanic = false;
-            }
-            else if (Passive)
-            {
-                NearestDistance = 96f;
-            }
-            NearestDistance *= DistanceMod;
-            List<byte> NpcsSpotted = new List<byte>(), PlayersSpotted = new List<byte>();
-            List<int> GuardiansSpotted = new List<int>();
-            Vector2 CenterPosition = this.CenterPosition;
-            Vector2 TopLeftPosition = this.TopLeftPosition;
-            if (ProtectMode && OwnerPos > -1)
-            {
-                CenterPosition = Owner.Center;
-                TopLeftPosition = Owner.position;
-                TopLeftPosition.Y += Owner.height - Height;
-            }
-            if (IsAttackingSomething)
-            {
-                if (TargetType == TargetTypes.Npc && Main.npc[TargetID].active)
-                {
-                    //Get distance from that target.
-                    NearestDistance = Main.npc[TargetID].Distance(CenterPosition);
-                }
-                else if (TargetType == TargetTypes.Player && Main.player[TargetID].active)
-                {
-                    //Get distance from that target.
-                    NearestDistance = Main.player[TargetID].Distance(CenterPosition);
-                }
-                else if (TargetType == TargetTypes.Guardian && MainMod.ActiveGuardians.ContainsKey(TargetID))
-                {
-                    NearestDistance = MainMod.ActiveGuardians[TargetID].Distance(CenterPosition);
-                }
-                else
-                {
-                    TargetID = -1; //There is no target, so clear target list
-                }
-            }
-            if (HasFlag(GuardianFlags.HeadCovered))
-                NearestDistance = Width;
-            if (HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
-            {
-                return;
-            }
-            Vector2 MyPosition = CenterPosition;
-            if (HasFlag(GuardianFlags.Scope))
-            {
-                MyPosition += (AimDirection.ToVector2() - MyPosition) * 0.5f;
-            }
-            bool LastHadTarget = IsAttackingSomething;
-            int TotalActiveGuardians = MainMod.ActiveGuardians.Count;
-            for (int t = 0; t < 255; t++)
-            {
-                if (t < 200 && Main.npc[t].active) //(Collision.CanHitLine(TopLeftPosition, Width, Height, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height) || Collision.CanHitLine(CollisionPosition, Width, CollisionHeight, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height))
-                {
-                    bool CollisionCanHit = Collision.CanHitLine(TopLeftPosition, Width, Height, Main.npc[t].position, Main.npc[t].width, Main.npc[t].height);
-                    if (Math.Abs(Main.npc[t].position.X + Main.npc[t].width * 0.5f - Position.X) < SpotRangeX &&
-                        Math.Abs(Main.npc[t].position.Y + Main.npc[t].height * 0.5f - Position.Y - Height * 0.5f) < SpotRangeY &&
-                        CollisionCanHit)
-                    {
-                        if (!this.NpcsSpotted.Contains((byte)t))
-                        {
-                            this.DoTrigger(TriggerTypes.NpcSpotted, t);
-                        }
-                        NpcsSpotted.Add((byte)t);
-                    }
-                    if (Main.npc[t].CanBeChasedBy(null) && CollisionCanHit)
-                    {
-                        float Distance = Main.npc[t].Distance(MyPosition);
-                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[t].type] || Main.npc[t].boss)
-                            Distance *= 0.5f;
-                        if (Distance < NearestDistance)
-                        {
-                            NearestDistance = Distance;
-                            TargetID = t;
-                            TargetType = TargetTypes.Npc;
-                        }
-                    }
-                }
-                if (t < 255 && Main.player[t].active) //(Collision.CanHitLine(TopLeftPosition, Width, Height, Main.player[t].position, Main.player[t].width, Main.player[t].height) || Collision.CanHitLine(CollisionPosition, Width, CollisionHeight, Main.player[t].position, Main.player[t].width, Main.player[t].height))
-                {
-                    bool CollisionCanHit = Collision.CanHitLine(TopLeftPosition, Width, Height, Main.player[t].position, Main.player[t].width, Main.player[t].height);
-                    if (Math.Abs(Main.player[t].position.X + Main.player[t].width * 0.5f - Position.X) < SpotRangeX &&
-                        Math.Abs(Main.player[t].position.Y + Main.player[t].height * 0.5f - Position.Y - Height * 0.5f) < SpotRangeY &&
-                        CollisionCanHit)
-                    {
-                        if (!this.PlayersSpotted.Contains((byte)t))
-                        {
-                            this.DoTrigger(TriggerTypes.PlayerSpotted, t);
-                        }
-                        PlayersSpotted.Add((byte)t);
-                    }
-                    if (IsPlayerHostile(Main.player[t]) && !Main.player[t].dead && CollisionCanHit)
-                    {
-                        float Distance = Main.player[t].Distance(MyPosition);
-                        if (Distance < NearestDistance)
-                        {
-                            NearestDistance = Distance;
-                            TargetID = t;
-                            TargetType = TargetTypes.Player;
-                        }
-                    }
-                }
-            }
-            foreach (int key in MainMod.ActiveGuardians.Keys)
-            {
-                if (key != WhoAmID)
-                {
-                    TerraGuardian guardian = MainMod.ActiveGuardians[key];
-                    bool CollisionCanHit = Collision.CanHitLine(TopLeftPosition, Width, Height, guardian.TopLeftPosition, guardian.Width, guardian.Height);
-                    if (Math.Abs(guardian.Position.X - Position.X) < SpotRangeX &&
-                        Math.Abs(guardian.Position.Y - guardian.Height * 0.5f - Position.Y - Height * 0.5f) < SpotRangeY &&
-                        CollisionCanHit)
-                    {
-                        if (!this.GuardiansSpotted.Contains(key))
-                        {
-                            this.DoTrigger(TriggerTypes.GuardianSpotted, key);
-                        }
-                        GuardiansSpotted.Add(key);
-                    }
-                    if (!guardian.Downed && IsGuardianHostile(guardian) && CollisionCanHit)
-                    {
-                        float Distance = (guardian.CenterPosition - MyPosition).Length();
-                        if (Distance < NearestDistance)
-                        {
-                            NearestDistance = Distance;
-                            TargetID = key;
-                            TargetType = TargetTypes.Guardian;
-                        }
-                    }
-                }
-            }
-            if (!LastHadTarget && IsAttackingSomething && !MainMod.TestNewCombatAI)
-                TargetInAim = false;
-            this.NpcsSpotted = NpcsSpotted;
-            this.PlayersSpotted = PlayersSpotted;
-            this.GuardiansSpotted = GuardiansSpotted;
         }
 
         public bool IsGuardianHostile(TerraGuardian g)
@@ -10095,10 +9964,60 @@ namespace giantsummon
                 {
                     Jump = true;
                 }
-                else if (PlayerAboveMe && TryFlying)
+                else if (PlayerAboveMe)
                 {
-                    Jump = true;
-                    WingFlightTime++;
+                    if (TryFlying)
+                    {
+                        Jump = true;
+                        WingFlightTime++;
+                    }
+                    else
+                    {
+                        if(Collision.CanHitLine(TopLeftPosition, CollisionWidth, CollisionHeight, new Vector2(LeaderCenterX - 2, LeaderBottom - CollisionHeight * 0.5f), 4, 4))
+                        {
+                            bool HasPlatformAbove = false, HasSolidTile = false;
+                            for (int y = 0; y < MaxJumpHeight * JumpSpeed; y++)
+                            {
+                                int TileY = (int)CenterPosition.Y / 16 - 1 - y;
+                                if (TileY < Main.topWorld / 16)
+                                    break;
+                                HasPlatformAbove = false;
+                                for (int x = 0; x < 2; x++)
+                                {
+                                    int TileX = (int)CenterPosition.X / 16 - 1 + x;
+                                    Tile tile = Framing.GetTileSafely(TileX, TileY);
+                                    if (tile.active() && Main.tileSolid[tile.type])
+                                    {
+                                        if (!Terraria.ID.TileID.Sets.Platforms[tile.type])
+                                        {
+                                            HasSolidTile = true;
+                                            HasPlatformAbove = false;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            HasPlatformAbove = true;
+                                        }
+                                    }
+                                }
+                                if(HasSolidTile || HasPlatformAbove)
+                                {
+                                    break;
+                                }
+                            }
+                            if (!HasSolidTile && HasPlatformAbove)
+                            {
+                                Jump = true;
+                            }
+                        }
+                        else if(Math.Abs(CenterPosition.X - LeaderCenterX) > 4)
+                        {
+                            if (CenterPosition.X < LeaderCenterX)
+                                MoveRight = true;
+                            else
+                                MoveLeft = true;
+                        }
+                    }
                 }
                 else if (Breath < BreathMax && !TryFlying && !TrySwimming && Wet && !LeaderWet)
                 {
@@ -11065,7 +10984,11 @@ namespace giantsummon
             {
                 ItemScale = Scale;
                 bool AllowItemUsage = true;
-                if (SelectedItem > -1)
+                if (SubAttackInUse)
+                {
+                    AllowItemUsage = false;
+                }
+                else if (SelectedItem > -1)
                 {
                     if (HeldProj > -1)
                         AllowItemUsage = false;
@@ -11139,76 +11062,83 @@ namespace giantsummon
                     }
                     else
                     {
-                        ItemUseType = GetItemUseType(Inventory[SelectedItem]);
-                        int AnimationTime = Inventory[SelectedItem].useAnimation,
-                            UseTime = Inventory[SelectedItem].useTime;
-                        Channeling = Inventory[SelectedItem].channel;
-                        ItemScale *= Inventory[SelectedItem].scale;
-                        float MeleeSpeed = this.MeleeSpeed;
-                        if ((Inventory[SelectedItem].potion && !MainMod.IsGuardianItem(Inventory[SelectedItem])) || Inventory[SelectedItem].buffType == Terraria.ID.BuffID.WellFed || Inventory[SelectedItem].buffType == Terraria.ID.BuffID.Tipsy)
+                        if (Base.BeforeUsingItem(this, ref SelectedItem))
                         {
-                            AnimationTime *= 3;
-                            UseTime *= 3;
-                        }
-                        if (MainMod.IsGuardianItem(Inventory[SelectedItem]) && ((Items.GuardianItemPrefab)Inventory[SelectedItem].modItem).Heavy)
-                        {
-                            MeleeSpeed -= (MeleeSpeed - 1f) * 0.5f;
-                        }
-                        if (Inventory[SelectedItem].buffType > 0)
-                        {
-                            AnimationTime *= 2;
-                            UseTime *= 2;
-                        }
-                        if (Inventory[SelectedItem].melee)
-                        {
-                            AnimationTime = (int)(AnimationTime * MeleeSpeed);
-                            UseTime = (int)(UseTime * MeleeSpeed);
-                        }
-                        if (Inventory[SelectedItem].ranged || Inventory[SelectedItem].thrown)
-                        {
-                            AnimationTime = (int)(AnimationTime * RangedSpeed);
-                            UseTime = (int)(UseTime * RangedSpeed);
-                        }
-                        if (Inventory[SelectedItem].magic)
-                        {
-                            AnimationTime = (int)(AnimationTime * MagicSpeed);
-                            UseTime = (int)(UseTime * MagicSpeed);
-                        }
-                        ItemAnimationTime = ItemMaxAnimationTime = AnimationTime;
-                        if(SelectedItem != LastSelectedItem)
-                            ItemUseTime = ToolUseTime = 0;
-                        ItemMaxUseTime = UseTime;
-                        Damage = (int)(Inventory[SelectedItem].damage * GetDamageMultipliersFromItem(Inventory[SelectedItem]));
-                        if (ItemUseType != ItemUseTypes.AimingUse && Inventory[SelectedItem].useAnimation != Inventory[SelectedItem].useTime)
-                        {
-                            float DamageScaler = (float)Inventory[SelectedItem].useAnimation / Inventory[SelectedItem].useTime;
-                            Damage += (int)(Damage * DamageScaler);
-                        }
-                        if (Inventory[SelectedItem].type == Terraria.ID.ItemID.GoldenShower && HasFlag(GuardianFlags.GoldenShowerStance))
-                        {
-                            Damage += (int)(Damage * 0.2f);
-                        }
-                        if (CanDualWield && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.LightVerticalSwing))
-                        {
-                            if (LastSelectedItem != SelectedItem)
+                            ItemUseType = GetItemUseType(Inventory[SelectedItem]);
+                            int AnimationTime = Inventory[SelectedItem].useAnimation,
+                                UseTime = Inventory[SelectedItem].useTime;
+                            Channeling = Inventory[SelectedItem].channel;
+                            ItemScale *= Inventory[SelectedItem].scale;
+                            float MeleeSpeed = this.MeleeSpeed;
+                            if ((Inventory[SelectedItem].potion && !MainMod.IsGuardianItem(Inventory[SelectedItem])) || Inventory[SelectedItem].buffType == Terraria.ID.BuffID.WellFed || Inventory[SelectedItem].buffType == Terraria.ID.BuffID.Tipsy)
                             {
-                                if(MainMod.DualwieldWhitelist.Count == 0)
-                                    MainMod.GetDefaultDualwieldableItems();
-                                IsDualWielding = MainMod.DualwieldWhitelist.Any(x => x.Type == Inventory[SelectedItem].type);
-                                Damage = (int)(Damage * 0.8f);
+                                AnimationTime *= 3;
+                                UseTime *= 3;
                             }
-                            //IsDualWielding = true;
+                            if (MainMod.IsGuardianItem(Inventory[SelectedItem]) && ((Items.GuardianItemPrefab)Inventory[SelectedItem].modItem).Heavy)
+                            {
+                                MeleeSpeed -= (MeleeSpeed - 1f) * 0.5f;
+                            }
+                            if (Inventory[SelectedItem].buffType > 0)
+                            {
+                                AnimationTime *= 2;
+                                UseTime *= 2;
+                            }
+                            if (Inventory[SelectedItem].melee)
+                            {
+                                AnimationTime = (int)(AnimationTime * MeleeSpeed);
+                                UseTime = (int)(UseTime * MeleeSpeed);
+                            }
+                            if (Inventory[SelectedItem].ranged || Inventory[SelectedItem].thrown)
+                            {
+                                AnimationTime = (int)(AnimationTime * RangedSpeed);
+                                UseTime = (int)(UseTime * RangedSpeed);
+                            }
+                            if (Inventory[SelectedItem].magic)
+                            {
+                                AnimationTime = (int)(AnimationTime * MagicSpeed);
+                                UseTime = (int)(UseTime * MagicSpeed);
+                            }
+                            ItemAnimationTime = ItemMaxAnimationTime = AnimationTime;
+                            if (SelectedItem != LastSelectedItem)
+                                ItemUseTime = ToolUseTime = 0;
+                            ItemMaxUseTime = UseTime;
+                            Damage = (int)(Inventory[SelectedItem].damage * GetDamageMultipliersFromItem(Inventory[SelectedItem]));
+                            if (ItemUseType != ItemUseTypes.AimingUse && Inventory[SelectedItem].useAnimation != Inventory[SelectedItem].useTime)
+                            {
+                                float DamageScaler = (float)Inventory[SelectedItem].useAnimation / Inventory[SelectedItem].useTime;
+                                Damage += (int)(Damage * DamageScaler);
+                            }
+                            if (Inventory[SelectedItem].type == Terraria.ID.ItemID.GoldenShower && HasFlag(GuardianFlags.GoldenShowerStance))
+                            {
+                                Damage += (int)(Damage * 0.2f);
+                            }
+                            if (CanDualWield && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.LightVerticalSwing))
+                            {
+                                if (LastSelectedItem != SelectedItem)
+                                {
+                                    if (MainMod.DualwieldWhitelist.Count == 0)
+                                        MainMod.GetDefaultDualwieldableItems();
+                                    IsDualWielding = MainMod.DualwieldWhitelist.Any(x => x.Type == Inventory[SelectedItem].type);
+                                    Damage = (int)(Damage * 0.8f);
+                                }
+                                //IsDualWielding = true;
+                            }
+                            Knockback = Inventory[SelectedItem].knockBack;
+                            Main.PlaySound(Inventory[SelectedItem].UseSound, CenterPosition);
+                            if (Damage < 1) Damage = 1;
+                            CriticalRate = Inventory[SelectedItem].crit;
+                            if (Inventory[SelectedItem].melee)
+                                Knockback *= MeleeKnockback;
+                            if (Inventory[SelectedItem].ranged)
+                                Knockback *= RangedKnockback;
+                            LastSelectedItem = SelectedItem;
+                            LastSelectedOffhand = SelectedOffhand;
                         }
-                        Knockback = Inventory[SelectedItem].knockBack;
-                        Main.PlaySound(Inventory[SelectedItem].UseSound, CenterPosition);
-                        if (Damage < 1) Damage = 1;
-                        CriticalRate = Inventory[SelectedItem].crit;
-                        if (Inventory[SelectedItem].melee)
-                            Knockback *= MeleeKnockback;
-                        if (Inventory[SelectedItem].ranged)
-                            Knockback *= RangedKnockback;
-                        LastSelectedItem = SelectedItem;
-                        LastSelectedOffhand = SelectedOffhand;
+                        else
+                        {
+                            return;
+                        }
                     }
                     if (ItemUseType == ItemUseTypes.HeavyVerticalSwing && MountedOnPlayer)
                         ItemUseType = ItemUseTypes.LightVerticalSwing;
@@ -13298,6 +13228,65 @@ namespace giantsummon
             return false;
         }
 
+        public void UseSubAttack(int ID)
+        {
+            if (ID >= 254)
+                return;
+            _SubAttack = (byte)(ID + 1);
+            SubAttackTime = 0;
+        }
+
+        public void UpdateSubAttack()
+        {
+            if (!SubAttackInUse)
+                return;
+            int LastAttackTime = SubAttackTime - 1;
+            if(SubAttackTime == 0 && SubAttackID >= Base.SpecialAttackList.Count)
+            {
+                _SubAttack = 0;
+                return;
+            }
+            GuardianSpecialAttack subattack = Base.SpecialAttackList[SubAttackID];
+            int StackCounter = 0;
+            int LastFrame = -1, CurrentFrame = 0;
+            int FrameCount = 0;
+            int FrameTime = 0;
+            foreach(GuardianSpecialAttackFrame frame in subattack.SpecialAttackFrames)
+            {
+                int FrameStart = StackCounter, FrameEnd = StackCounter + frame.Duration;
+                if (SubAttackTime >= FrameStart && SubAttackTime < FrameEnd)
+                {
+                    CurrentFrame = FrameCount;
+                    FrameTime = SubAttackRightArmFrame - FrameStart;
+                }
+                if (LastAttackTime >= FrameStart && LastAttackTime < FrameEnd)
+                {
+                    LastFrame = FrameCount;
+                }
+                FrameCount++;
+            }
+            if(CurrentFrame > LastFrame)
+            {
+                subattack.WhenFrameBeginsScript(this, CurrentFrame, FrameTime);
+            }
+            if (SubAttackTime >= StackCounter)
+            {
+                _SubAttack = 0;
+                return;
+            }
+            else
+            {
+                GuardianSpecialAttackFrame frame = subattack.SpecialAttackFrames[CurrentFrame];
+                SubAttackBodyFrame = frame.BodyFrame;
+                SubAttackLeftArmFrame = frame.LeftArmFrame;
+                SubAttackRightArmFrame = frame.RightArmFrame;
+            }
+            subattack.WhenFrameUpdatesScript(this, CurrentFrame, FrameTime);
+            SubAttackTime++;
+        }
+
+        private static int SubAttackBodyFrame = -1, SubAttackLeftArmFrame = -1, SubAttackRightArmFrame = -1;
+
         public static bool UsingLeftArmAnimation = false, UsingRightArmAnimation = false;
         public enum AnimationState : byte
         {
@@ -13882,6 +13871,12 @@ namespace giantsummon
             Base.GuardianAnimationOverride(this, 0, ref BodyAnimationFrame);
             Base.GuardianAnimationOverride(this, 1, ref LeftArmAnimationFrame);
             Base.GuardianAnimationOverride(this, 2, ref RightArmAnimationFrame);
+            if (SubAttackInUse)
+            {
+                if(SubAttackBodyFrame > -1) BodyAnimationFrame = SubAttackBodyFrame;
+                if (SubAttackLeftArmFrame > -1) LeftArmAnimationFrame = SubAttackLeftArmFrame;
+                if (SubAttackRightArmFrame > -1) RightArmAnimationFrame = SubAttackRightArmFrame;
+            }
         }
 
         public void UpdateWingAnimation()
@@ -15624,6 +15619,7 @@ namespace giantsummon
 
         public void DrawDataCreation(bool IgnoreLighting = false)
         {
+            MyDrawOrder = CurrentDrawnOrderID++;
             DrawBehind.Clear();
             DrawFront.Clear();
             if (DoAction.InUse && DoAction.Invisibility)

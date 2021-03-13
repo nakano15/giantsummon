@@ -46,7 +46,8 @@ namespace giantsummon
             NebulaCD,
             TargetMemoryCooldown,
             ShopCheckCooldown,
-            CarpetFlightTime
+            CarpetFlightTime,
+            SpottingCooldown
         }
     }
 }

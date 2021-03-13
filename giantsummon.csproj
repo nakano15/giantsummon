@@ -145,6 +145,7 @@
     <Compile Include="GuardianShopInterface.cs" />
     <Compile Include="GuardianSkills.cs" />
     <Compile Include="GuardianSpawningScripts.cs" />
+    <Compile Include="GuardianSpecialAttack.cs" />
     <Compile Include="Items\Accessories\BlueHairclip.cs" />
     <Compile Include="Items\Accessories\TwoHandedMastery.cs" />
     <Compile Include="Items\Accessories\FirstSymbol.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="PlayerDataBackup.cs" />
     <Compile Include="PlayerItems\StaffOfRenew.cs" />
     <Compile Include="Projectiles\BloodVomit.cs" />
+    <Compile Include="Projectiles\CrimsonFlameProjectile.cs" />
     <Compile Include="Projectiles\ZombieFart.cs" />
     <Compile Include="RenameGuardianCommand.cs" />
     <Compile Include="MainMod.cs" />
@@ -504,6 +506,7 @@
     <Content Include="Npcs\ZombieGuardian.png" />
     <Content Include="PlayerItems\StaffOfRenew.png" />
     <Content Include="Projectiles\BloodVomit.png" />
+    <Content Include="Projectiles\CrimsonFlameProjectile.png" />
     <Content Include="Projectiles\ZombieFart.png" />
   </ItemGroup>
   <ItemGroup>
