@@ -66,6 +66,8 @@ namespace giantsummon.Creatures
 
             SittingPoint2x = new Point(13, 32);
 
+            MountShoulderPoints.DefaultCoordinate2x = new Point(14, 16);
+
             //Left Arm
             LeftHandPoints.AddFramePoint2x(11, 17, 6);
             LeftHandPoints.AddFramePoint2x(12, 23, 11);
@@ -154,7 +156,7 @@ namespace giantsummon.Creatures
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
             ReaperGuardianData data = (ReaperGuardianData)guardian.Data;
-            if (guardian.SelectedOffhand > -1)
+            if (guardian.SelectedOffhand > -1 || (guardian.ItemAnimationTime > 0 && guardian.HeldItemHand == HeldHand.Right) || guardian.KnockedOut)
             {
                 if (data.HoldingScythe)
                     DetachScythe(guardian, data);
@@ -377,7 +379,8 @@ namespace giantsummon.Creatures
                     {
                         Dust d = Dust.NewDustDirect(guardian.TopLeftPosition, guardian.Width, guardian.Height, Terraria.ID.DustID.SilverCoin);
                         d.noGravity = true;
-                        d.velocity *= 0;
+                        d.noLight = true;
+                        d.velocity = guardian.Velocity;
                     }
                     SoulsValue -= SparkleDelay;
                 }
@@ -680,6 +683,9 @@ namespace giantsummon.Creatures
             }
             return new Vector2(40, 34);
         }
+
+        public override string MountUnlockMessage => "*It will sound creepy, but I may be able to carry you on my shoulder, in case you need.*";
+        public override string ControlUnlockMessage => "*Your life is limited, but mine isn't. If there's something dangerous you need to do, just take me there.*";
 
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {

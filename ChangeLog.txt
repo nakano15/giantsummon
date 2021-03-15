@@ -51,3 +51,7 @@ Companions perception of nearby characters now works again:
 Companions will no longer try teleporting home, when they don't actually have one.
 Fixed a bug where defeated homeless companions would be teleported away from the game map.
 	To solve this issue if It's still happening, companions will be moved to spawn, if they have negative position.
+Companions will no longer try targetting enemies that are behind walls.
+Alexander and Daphne arrives!
+Companions will no longer have their "mouse" pointed directly on their target, when they aren't attacking. Instead, they will have their mouse halfway to their target.
+	That's to avoid companions from taking too long before they decide to attack, in case target changes.

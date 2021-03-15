@@ -4646,7 +4646,13 @@ namespace giantsummon
                     break;
             }
             bool Approach = false, Retreat = false, Jump = false, Duck = false, Attack = false;
-            bool TargetInAim = MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight);
+            bool TargetInAim = false;
+            if (AttackingTarget)
+                TargetInAim = MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight);
+            else
+            {
+                MoveCursorToPosition(CenterPosition + (TargetPosition - CenterPosition) * 0.5f + TargetVelocity, TargetWidth, TargetHeight);
+            }
             if (AvoidCombat)
             {
                 float DistanceFromTarget = 60 + (TargetWidth + Width) * 0.5f;
@@ -5264,7 +5270,7 @@ namespace giantsummon
                 {
                     MoveLeft = MoveRight = Jump = MoveDown = false;
                 }
-                if (!PlayerControl && !IsAttackingSomething)
+                if (!PlayerControl && TargetID == -1)
                     MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f));
                 if (!PlayerControl)
                 {
@@ -9505,7 +9511,7 @@ namespace giantsummon
                 return; //Ignore attempt to look for targets
             }
             float ThreatDetectionDistance = 260f;
-            float ViewDistance = 380f + AssistSlot * 32f;
+            float ViewDistance = 380f;// + AssistSlot * 32f;
             List<Vector4> PartyMembersPosition = new List<Vector4>();
             Vector2 AwarenessCenter = CenterPosition, MyCenter = AwarenessCenter;
             PartyMembersPosition.Add(new Vector4(TopLeftPosition, Width, Height));
@@ -9670,8 +9676,7 @@ namespace giantsummon
                     if (NearestMember.Length() == 0)
                         continue;
                     Vector2 NpcCenter = Main.npc[i].Center;
-                    Tile NpcTile = Framing.GetTileSafely((int)NpcCenter.X / 16, (int)NpcCenter.Y / 16);
-                    if ((Main.npc[i].behindTiles && (!NpcTile.active() || !Main.tileSolid[NpcTile.type])) || Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
+                    if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
                     {
                         Vector2 MemberCenter = NearestMember.XY() + NearestMember.ZW() * 0.5f;
                         if (Main.npc[i].CanBeChasedBy(null))
@@ -13289,6 +13294,10 @@ namespace giantsummon
             }
             if(CurrentFrame > LastFrame)
             {
+                GuardianSpecialAttackFrame frame = subattack.SpecialAttackFrames[CurrentFrame];
+                if (frame.BodyFrame > -1) BodyAnimationFrame = frame.BodyFrame;
+                if (frame.LeftArmFrame > -1) LeftArmAnimationFrame = frame.LeftArmFrame;
+                if (frame.RightArmFrame > -1) RightArmAnimationFrame = frame.RightArmFrame;
                 subattack.WhenFrameBeginsScript(this, CurrentFrame, FrameTime);
             }
             if (SubAttackTime >= StackCounter)
@@ -13489,6 +13498,7 @@ namespace giantsummon
             else if (GuardianHasCarpet)
             {
                 BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
+                AnimationTime++;
             }
             else if (Velocity.Y == 0)
             {

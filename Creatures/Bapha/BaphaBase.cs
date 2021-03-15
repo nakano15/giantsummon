@@ -86,7 +86,10 @@ namespace giantsummon.Creatures
         public void SubAttackSetup()
         {
             //Anim duration: 10~18
-            //15 = Attack
+            //15 = 25º
+            //16 = 65º
+            //17 = 120º
+            //18 = 180º
             GuardianSpecialAttack specialAttack = AddNewSubAttack();
             specialAttack.CanMove = false;
             specialAttack.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame, int Time)
@@ -149,7 +152,7 @@ namespace giantsummon.Creatures
                         const float AnimationDuration = 12;
                         if (guardian.AnimationTime >= AnimationDuration * 4)
                             guardian.AnimationTime -= AnimationDuration * 4;
-                        byte PickedFrame = (byte)(guardian.BodyAnimationFrame / AnimationDuration);
+                        byte PickedFrame = (byte)(guardian.AnimationTime / AnimationDuration);
                         if (PickedFrame == 3)
                             PickedFrame = 1;
                         Frame = PickedFrame + RevivingFrameID;

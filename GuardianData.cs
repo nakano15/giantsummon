@@ -760,6 +760,12 @@ namespace giantsummon
             RewardsToGet.AddRange(GetCommonAndBaseRewards(player));
             RewardsToGet = RewardsToGet.OrderByDescending(x => x.RewardScore).ToList();
             List<Item> Rewards = new List<Item>();
+            if (!NpcMod.HasMetGuardian(GuardianBase.Daphne) && Main.rand.NextDouble() < 0.01)
+            {
+                Item i = new Item();
+                i.SetDefaults(ModContent.ItemType<Items.Misc.Note>());
+                Rewards.Add(i);
+            }
             foreach (Reward rwd in RewardsToGet)
             {
                 if (Score >= rwd.RewardScore && Main.rand.NextDouble() < rwd.RewardChance)
