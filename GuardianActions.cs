@@ -2336,6 +2336,7 @@ namespace giantsummon
                                     guardian.BodyAnimationFrame = Animation;
                                     guardian.RightArmAnimationFrame = guardian.LeftArmAnimationFrame = ArmAnimation;
                                     UsingRightArmAnimation = UsingLeftArmAnimation = true;
+                                    guardian.AnimationTime++;
                                 }
                             }
                         }

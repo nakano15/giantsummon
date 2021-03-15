@@ -36,20 +36,22 @@ namespace giantsummon.Projectiles
         {
             if (!Impact)
             {
-                projectile.rotation = (float)Math.Atan2(Math.Cos(projectile.velocity.Y), Math.Sin(projectile.velocity.X));
+                const int FrameDuration = 6;
+                projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X);
                 projectile.position += projectile.velocity;
                 projectile.frameCounter++;
-                if (projectile.frameCounter >= 10 * 6)
-                    projectile.frameCounter -= 10 * 6;
-                projectile.frame = projectile.frameCounter / 6;
+                if (projectile.frameCounter >= 10 * FrameDuration)
+                    projectile.frameCounter -= 10 * FrameDuration;
+                projectile.frame = projectile.frameCounter / FrameDuration;
             }
             else
             {
+                const int FrameDuration = 6;
                 projectile.frameCounter++;
-                if (projectile.frameCounter >= 5 * 6)
+                if (projectile.frameCounter >= 5 * FrameDuration)
                     projectile.active = false;
                 else
-                    projectile.frame = projectile.frameCounter / 6 + 10;
+                    projectile.frame = projectile.frameCounter / FrameDuration + 10;
             }
         }
 
@@ -75,9 +77,25 @@ namespace giantsummon.Projectiles
             Impact = true;
             projectile.frame = 0;
             projectile.frameCounter = 0;
-			//TODO - Add AOE damage effect.
+            //TODO - Add AOE damage effect.
+            const float AoeDistance = 70f;
+            for(int n = 0; n < 200; n++)
+            {
+                if(Main.npc[n].active && Main.npc[n].friendly != projectile.hostile && Main.npc[n].CanBeChasedBy(null) && Main.npc[n].Distance(projectile.Center) < AoeDistance)
+                {
+                    Main.npc[n].StrikeNPC(projectile.damage, 0.8f, 0);
+                }
+            }
             projectile.damage = 0;
             projectile.velocity = Vector2.Zero;
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, 
+                new Rectangle(projectile.frame * 64, 0, 64, 64), Color.White, 
+                projectile.rotation, new Vector2(32, 32), projectile.scale, SpriteEffects.None, 0);
+            return false;
         }
     }
 }

@@ -2112,7 +2112,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        int[] TestGuardianIDs = new int[] { 15, 18, 19 };
+                                        int[] TestGuardianIDs = new int[] { 15, 18, 19, 20 };
                                         bool b = false;
                                         foreach (int TestGuardianID in TestGuardianIDs)
                                         {

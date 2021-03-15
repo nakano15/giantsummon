@@ -6,13 +6,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace giantsummon.Creatures.Bapha
+namespace giantsummon.Creatures
 {
     public class BaphaBase : GuardianBase
     {
         private const int DownedFrameID = 22, RevivingFrameID = 29;
         private const string HellGateSpriteID = "hellgate";
-        private const float HellGateAnimationFrameTime = 4f;
+        private const int HellGateAnimationFrameTime = 8;
         private const byte CrimsonFlameID = 0;
 
         public BaphaBase()
@@ -40,6 +40,7 @@ namespace giantsummon.Creatures.Bapha
             CanDuck = true;
             ReverseMount = false;
             DrinksBeverage = false;
+            SpecialAttackBasedCombat = true;
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
@@ -70,9 +71,9 @@ namespace giantsummon.Creatures.Bapha
             LeftHandPoints.AddFramePoint(20, 83, 55);
             LeftHandPoints.AddFramePoint(21, 75, 28);
 
-            LeftHandPoints.AddFramePoint(29, 86, 113);
-            LeftHandPoints.AddFramePoint(30, 86, 113);
-            LeftHandPoints.AddFramePoint(31, 86, 113);
+            LeftHandPoints.AddFramePoint(29, 84, 113);
+            LeftHandPoints.AddFramePoint(30, 84, 113);
+            LeftHandPoints.AddFramePoint(31, 84, 113);
 
             //Right Arm
             RightHandPoints.AddFramePoint(29, 86, 113);
@@ -84,12 +85,17 @@ namespace giantsummon.Creatures.Bapha
 
         public void SubAttackSetup()
         {
-            //Anim duration: 9~18
+            //Anim duration: 10~18
             //15 = Attack
             GuardianSpecialAttack specialAttack = AddNewSubAttack();
+            specialAttack.CanMove = false;
             specialAttack.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame, int Time)
             {
-                if(Frame == 6) //= frame 15
+                if(Frame == 0)
+                {
+                    tg.LookingLeft = tg.Position.X > tg.AimDirection.X;
+                }
+                if(Frame == 5) //= frame 15
                 {
                     Vector2 ProjectileSpawnPosition = tg.GetGuardianLeftHandPosition;
                     Vector2 ShotDirection = new Vector2(tg.AimDirection.X, tg.AimDirection.Y) - ProjectileSpawnPosition;
@@ -99,32 +105,26 @@ namespace giantsummon.Creatures.Bapha
                     if (tg.SelectedItem > -1)
                         Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.75f);
                     Damage = (int)(Damage * tg.MagicDamageMultiplier);
-                    tg.SetProjectileOwnership(Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>(), 
-                        20, 3.6f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer)));
+                    int resultproj = Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection, 
+                        Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>(),
+                        Damage, 1.2f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer));
+                    tg.SetProjectileOwnership(resultproj);
+                    Main.projectile[resultproj].scale = tg.Scale;
                 }
             };
-            for(int i = 9; i < 19; i++)
+            for(int i = 10; i < 19; i++)
             {
                 AddNewSubAttackFrame(6, i, i, i);
             }
         }
 
-        public override bool BeforeUsingItem(TerraGuardian tg, ref int SelectedItem)
-        {
-            if(SelectedItem == -1 || tg.Inventory[SelectedItem].damage > 0)
-            {
-                if (!tg.SubAttackInUse)
-                    tg.UseSubAttack(CrimsonFlameID);
-                return false;
-            }
-            return true;
-        }
-
         public override void Attributes(TerraGuardian g)
         {
+            g.ScaleMult *= 1.5f;
             g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
             g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
             g.AddFlag(GuardianFlags.HideKOBar);
+            g.AddFlag(GuardianFlags.NotPulledWhenKOd);
             if (g.KnockedOut)
             {
                 g.AddFlag(GuardianFlags.DontTakeAggro);

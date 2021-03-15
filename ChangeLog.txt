@@ -48,3 +48,6 @@ Fixed scrollbar misbehavior on the Guardian Selection Interface.
 Companions perception of nearby characters now works again:
 	They will no longer check for players, npcs and companions around when looking for threats, as It used to before.
 	Now they have a variating cooldown before they spot who's around them again.
+Companions will no longer try teleporting home, when they don't actually have one.
+Fixed a bug where defeated homeless companions would be teleported away from the game map.
+	To solve this issue if It's still happening, companions will be moved to spawn, if they have negative position.

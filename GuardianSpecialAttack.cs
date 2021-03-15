@@ -9,6 +9,7 @@ namespace giantsummon
     {
         public List<GuardianSpecialAttackFrame> SpecialAttackFrames = new List<GuardianSpecialAttackFrame>();
         public bool CanMove = true;
+        public float MinRange = 300, MaxRange = 400;
         public Action<TerraGuardian, int, int> WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID, int FrameTime) { }
         , WhenFrameUpdatesScript = delegate (TerraGuardian tg, int FrameID, int FrameTime) { };
     }

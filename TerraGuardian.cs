@@ -1857,6 +1857,8 @@ namespace giantsummon
         {
             if (!Active)
                 return;
+            if (Position.X < 0 || Position.Y < 0)
+                Spawn();
             for (int dm = 0; dm < MainMod.DrawMoment.Count; dm++)
             {
                 if (MainMod.DrawMoment[dm].GuardianWhoAmID == WhoAmID)
@@ -1921,6 +1923,10 @@ namespace giantsummon
                 MoveRight = MovingLeft;
                 MoveUp = MovingDown;
                 MoveDown = MovingUp;
+            }
+            if (SubAttackInUse && !Base.SpecialAttackList[SubAttackID].CanMove)
+            {
+                MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
             }
             if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()))
             {
@@ -3021,7 +3027,7 @@ namespace giantsummon
         {
             if (OwnerPos > -1 && !PlayerMounted && !SittingOnPlayerMount)
             {
-                if (!BeingPulledByPlayer)
+                if (!BeingPulledByPlayer && (!KnockedOut || !HasFlag(GuardianFlags.NotPulledWhenKOd)))
                 {
                     BeingPulledByPlayer = true;
                     SuspendedByChains = false;
@@ -4892,6 +4898,24 @@ namespace giantsummon
                             Retreat = true;
                         }
                     }
+                    else if (Base.SpecialAttackBasedCombat)
+                    {
+                        GuardianSpecialAttack gsa = Base.SpecialAttackList[0];
+                        float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
+                        if (Distance < gsa.MinRange)
+                        {
+                            Retreat = true;
+                        }
+                        else if (Distance >= gsa.MaxRange)
+                        {
+                            Approach = true;
+                        }
+                        else if(!SubAttackInUse)
+                        {
+                            UseSubAttack(0);
+                        }
+                        GoMelee = false;
+                    }
                     else
                     {
                         switch (Tactic)
@@ -5177,7 +5201,7 @@ namespace giantsummon
         {
             if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos != Main.myPlayer)
                 return;
-            if (KnockedOut && OwnerPos == -1 && IsTownNpc && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime) || Breath <= 0))
+            if (KnockedOut && OwnerPos == -1 && IsTownNpc && !GetTownNpcInfo.Homeless && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime) || Breath <= 0))
             {
                 bool IsPlayerNearby = false;
                 for (int i = 0; i < 255; i++)
@@ -10984,11 +11008,7 @@ namespace giantsummon
             {
                 ItemScale = Scale;
                 bool AllowItemUsage = true;
-                if (SubAttackInUse)
-                {
-                    AllowItemUsage = false;
-                }
-                else if (SelectedItem > -1)
+                if (SelectedItem > -1)
                 {
                     if (HeldProj > -1)
                         AllowItemUsage = false;
@@ -13234,6 +13254,7 @@ namespace giantsummon
                 return;
             _SubAttack = (byte)(ID + 1);
             SubAttackTime = 0;
+            //Main.NewText("Using Sub Attack " + ID);
         }
 
         public void UpdateSubAttack()
@@ -13263,6 +13284,7 @@ namespace giantsummon
                 {
                     LastFrame = FrameCount;
                 }
+                StackCounter += frame.Duration;
                 FrameCount++;
             }
             if(CurrentFrame > LastFrame)

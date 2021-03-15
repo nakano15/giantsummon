@@ -185,6 +185,7 @@ namespace giantsummon
         CantBeHurt,
         HealthGoesToZeroWhenKod,
         HideKOBar,
-        DryadBane
+        DryadBane,
+        NotPulledWhenKOd
     }
 }

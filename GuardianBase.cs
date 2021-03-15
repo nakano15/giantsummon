@@ -51,6 +51,7 @@ namespace giantsummon
         public List<SkinReqStruct> SkinList = new List<SkinReqStruct>(), OutfitList = new List<SkinReqStruct>();
         public bool IsNocturnal = false;
         public bool SleepsAtBed = true;
+        public bool SpecialAttackBasedCombat = false;
         public List<GuardianSpecialAttack> SpecialAttackList = new List<GuardianSpecialAttack>();
         
         public GuardianSprites sprites;
@@ -133,7 +134,8 @@ namespace giantsummon
             Alexander = 15,
             Fluffles = 16,
             Minerva = 17,
-            Daphne = 18;
+            Daphne = 18,
+            Bapha = 20;
 
         public struct DialogueTopic
         {
@@ -1115,6 +1117,9 @@ namespace giantsummon
                         break;
                     case 19:
                         gb = new BunnyReaperGuardianBase();
+                        break;
+                    case 20:
+                        gb = new BaphaBase();
                         break;
                 }
             }
