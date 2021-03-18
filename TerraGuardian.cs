@@ -2585,7 +2585,7 @@ namespace giantsummon
 
         public float GetAgeSize()
         {
-            if (Base.IsTerrarian)
+            if (Base.IsTerrarian || !Base.GetGroup.AgeAffectsScale)
                 return 1f;
             return GetAgeSizeValue(Data.GetRealAgeDecimal());
             /*float Age = Data.GetRealAgeDecimal();

@@ -183,5 +183,73 @@ namespace giantsummon.Creatures
                 }
             }
         }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Mwahaha! I'm evil!*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*What is It, mortal?*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*You want to know a secret from me? Well, you wont.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I want nothing right now.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I need you to collect me some tributes, would you?*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I would have destroyed you if you didn't do that.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Am I supposed to be happy with this?*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I need a shrine so I can spread my influence through this land.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*This will make you feel a little warm.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string GetSpecialMessage(string MessageID) //Check other companion scripts
+        {
+            return base.GetSpecialMessage(MessageID);
+        }
     }
 }
