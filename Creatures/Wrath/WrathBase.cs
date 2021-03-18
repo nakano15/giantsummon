@@ -21,7 +21,7 @@ namespace giantsummon.Creatures
             SpriteHeight = 68;
             FramesInRows = 28;
             //DuckingHeight = 54;
-            Age = 11;
+            Age = 15;
             Male = true;
             InitialMHP = 110; //320
             LifeCrystalHPBonus = 15;

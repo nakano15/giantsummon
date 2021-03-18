@@ -1381,7 +1381,7 @@ namespace giantsummon
                                         bool OneOfTheTwoAlive = false;
                                         for (int n = 0; n < 200; n++)
                                         {
-                                            if (Main.npc[n].active && (Main.npc[n].type == Terraria.ID.NPCID.Spazmatism || Main.npc[n].type == Terraria.ID.NPCID.Retinazer))
+                                            if (Main.npc[n].active && req.BossID != npc.type && (Main.npc[n].type == Terraria.ID.NPCID.Spazmatism || Main.npc[n].type == Terraria.ID.NPCID.Retinazer))
                                             {
                                                 OneOfTheTwoAlive = true;
                                                 break;
