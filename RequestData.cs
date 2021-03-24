@@ -934,15 +934,15 @@ namespace giantsummon
                                                 HasPendingObjective = true;
                                                 RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)rb.Objectives[o];
                                                 string BossName = "";
-                                                if (req.BossID == NPCID.Spazmatism || req.BossID == NPCID.Retinazer)
+                                                if (req.BossID == Terraria.ID.NPCID.Spazmatism || req.BossID == Terraria.ID.NPCID.Retinazer)
                                                 {
                                                     BossName = "The Twins";
                                                 }
-                                                else if (req.BossID == NPCID.EaterofWorldsBody || req.BossID == NPCID.EaterofWorldsHead || req.BossID == NPCID.EaterofWorldsTail)
+                                                else if (req.BossID == Terraria.ID.NPCID.EaterofWorldsBody || req.BossID == Terraria.ID.NPCID.EaterofWorldsHead || req.BossID == Terraria.ID.NPCID.EaterofWorldsTail)
                                                 {
                                                     BossName = "Eater of Worlds";
                                                 }
-                                                else if (req.BossID == NPCID.TheDestroyer || req.BossID == NPCID.TheDestroyerBody || req.BossID == NPCID.TheDestroyerTail)
+                                                else if (req.BossID == Terraria.ID.NPCID.TheDestroyer || req.BossID == Terraria.ID.NPCID.TheDestroyerBody || req.BossID == Terraria.ID.NPCID.TheDestroyerTail)
                                                 {
                                                     BossName = "The Destroyer";
                                                 }
@@ -1069,49 +1069,49 @@ namespace giantsummon
             bool Success = false;
             for (int n = 0; n < 200; n++)
             {
-                if (Main.npc[n].active && (Main.npc[n].boss || Main.npc[n].type == NPCID.EaterofWorldsHead))
+                if (Main.npc[n].active && (Main.npc[n].boss || Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsHead))
                 {
                     return false;
                 }
             }
-            if(ID == NPCID.EaterofWorldsBody || ID== NPCID.EaterofWorldsTail)
-                ID = NPCID.EaterofWorldsHead;
-            if(ID == NPCID.TheDestroyerBody || ID == NPCID.TheDestroyerTail)
-                ID = NPCID.TheDestroyer;
-            if (ID == NPCID.EyeofCthulhu || ID == NPCID.SkeletronHead || ID == NPCID.Spazmatism || ID == NPCID.Retinazer ||
-                ID == NPCID.TheDestroyer)
+            if(ID == Terraria.ID.NPCID.EaterofWorldsBody || ID== Terraria.ID.NPCID.EaterofWorldsTail)
+                ID = Terraria.ID.NPCID.EaterofWorldsHead;
+            if(ID == Terraria.ID.NPCID.TheDestroyerBody || ID == Terraria.ID.NPCID.TheDestroyerTail)
+                ID = Terraria.ID.NPCID.TheDestroyer;
+            if (ID == Terraria.ID.NPCID.EyeofCthulhu || ID == Terraria.ID.NPCID.SkeletronHead || ID == Terraria.ID.NPCID.Spazmatism || ID == Terraria.ID.NPCID.Retinazer ||
+                ID == Terraria.ID.NPCID.TheDestroyer)
             {
                 if (!Main.dayTime && Main.time < 2.5f * 3600)
                 {
                     NPC.SpawnOnPlayer(PlayerID, ID);
-                    if (ID == NPCID.Spazmatism)
-                        NPC.SpawnOnPlayer(PlayerID, NPCID.Retinazer);
-                    else if (ID == NPCID.Retinazer)
-                        NPC.SpawnOnPlayer(PlayerID, NPCID.Spazmatism);
+                    if (ID == Terraria.ID.NPCID.Spazmatism)
+                        NPC.SpawnOnPlayer(PlayerID, Terraria.ID.NPCID.Retinazer);
+                    else if (ID == Terraria.ID.NPCID.Retinazer)
+                        NPC.SpawnOnPlayer(PlayerID, Terraria.ID.NPCID.Spazmatism);
                     Success = true;
                 }
             }
-            else if (ID == NPCID.EaterofWorldsHead && Main.player[PlayerID].ZoneCorrupt)
+            else if (ID == Terraria.ID.NPCID.EaterofWorldsHead && Main.player[PlayerID].ZoneCorrupt)
             {
                 NPC.SpawnOnPlayer(PlayerID, ID);
                 Success = true;
             }
-            else if (ID == NPCID.BrainofCthulhu && Main.player[PlayerID].ZoneCrimson)
+            else if (ID == Terraria.ID.NPCID.BrainofCthulhu && Main.player[PlayerID].ZoneCrimson)
             {
                 NPC.SpawnOnPlayer(PlayerID, ID);
                 Success = true;
             }
-            else if (ID == NPCID.WallofFlesh && Main.player[PlayerID].ZoneUnderworldHeight)
+            else if (ID == Terraria.ID.NPCID.WallofFlesh && Main.player[PlayerID].ZoneUnderworldHeight)
             {
                 NPC.SpawnOnPlayer(PlayerID, ID);
                 Success = true;
             }
-            else if (ID == NPCID.KingSlime)
+            else if (ID == Terraria.ID.NPCID.KingSlime)
             {
                 NPC.SpawnOnPlayer(PlayerID, ID);
                 Success = true;
             }
-            else if (ID == NPCID.QueenBee && Main.player[PlayerID].ZoneJungle)
+            else if (ID == Terraria.ID.NPCID.QueenBee && Main.player[PlayerID].ZoneJungle)
             {
                 NPC.SpawnOnPlayer(PlayerID, ID);
                 Success = true;
@@ -1122,9 +1122,9 @@ namespace giantsummon
                 {
                     if (!Main.npc[n].active)
                         continue;
-                    if (Main.npc[n].type == ID || (ID == NPCID.Spazmatism && Main.npc[n].type == NPCID.Retinazer) ||
-                        (ID == NPCID.Retinazer && Main.npc[n].type == NPCID.Spazmatism) || 
-                        (Main.npc[n].type >= NPCID.EaterofWorldsHead && Main.npc[n].type <= NPCID.EaterofWorldsTail && ID == NPCID.EaterofWorldsHead))
+                    if (Main.npc[n].type == ID || (ID == Terraria.ID.NPCID.Spazmatism && Main.npc[n].type == Terraria.ID.NPCID.Retinazer) ||
+                        (ID == Terraria.ID.NPCID.Retinazer && Main.npc[n].type == Terraria.ID.NPCID.Spazmatism) || 
+                        (Main.npc[n].type >= Terraria.ID.NPCID.EaterofWorldsHead && Main.npc[n].type <= Terraria.ID.NPCID.EaterofWorldsTail && ID == Terraria.ID.NPCID.EaterofWorldsHead))
                     {
                         int Difficulty = (int)Main.npc[n].GetGlobalNPC<NpcMod>().mobType + DifficultyBonus;
                         if (Difficulty >= Enum.GetValues(typeof(MobTypes)).Length)
@@ -1249,6 +1249,7 @@ namespace giantsummon
         public static bool IsRequiredMonster(NPC npc, int ReqMobID)
         {
             int m = npc.type;
+            bool IsQuestMob = false;
             if (m == NPCID.EaterofWorldsHead || m == NPCID.EaterofWorldsBody || m == NPCID.EaterofWorldsTail)
             {
                 bool HasBodyPart = false;
@@ -1260,50 +1261,59 @@ namespace giantsummon
                         break;
                     }
                 }
-                return !HasBodyPart;
+                IsQuestMob = !HasBodyPart;
             }
             else if (m == ReqMobID)
-                return true;
+                IsQuestMob = true;
             else
             {
                 switch (ReqMobID)
                 {
                     case NPCID.Zombie: //Add event monsters to the list.
-                        return m == 430 || m == 132 || m == 186 || m == 432 || m == 187 || m == 433 || m == 188 || m == 434 || m == 189 || m == 435 ||
+                        IsQuestMob = m == 430 || m == 132 || m == 186 || m == 432 || m == 187 || m == 433 || m == 188 || m == 434 || m == 189 || m == 435 ||
                             m == 200 || m == 436 || m == 319 || m == 320 || m == 321 || m == 331 || m == 332 || m == 223 || m == 52 || m == 53 || m == 536 ||
-                            m == NPCID.ZombieEskimo || m == NPCID.ArmedZombieEskimo || m == 255 || m == 254 || m == NPCID.BloodZombie;
+                            m == Terraria.ID.NPCID.ZombieEskimo || m == NPCID.ArmedZombieEskimo || m == 255 || m == 254 || m == Terraria.ID.NPCID.BloodZombie;
+                        break;
                     case NPCID.ZombieEskimo:
-                        return m == NPCID.ArmedZombieEskimo;
+                        IsQuestMob = m == NPCID.ArmedZombieEskimo;
+                        break;
                     case NPCID.DemonEye:
-                        return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
+                        IsQuestMob = m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
+                        break;
                     case NPCID.BloodCrawler:
-                        return m == NPCID.BloodCrawlerWall;
+                        IsQuestMob = m == NPCID.BloodCrawlerWall;
+                        break;
                     case NPCID.Demon:
-                        return m == NPCID.VoodooDemon;
+                        IsQuestMob = m == NPCID.VoodooDemon;
+                        break;
                     case NPCID.JungleCreeper:
-                        return m == NPCID.JungleCreeperWall;
+                        IsQuestMob = m == NPCID.JungleCreeperWall;
+                        break;
                     case NPCID.Hornet:
-                        return m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy;
+                        IsQuestMob = m == NPCID.HornetFatty || m == NPCID.HornetHoney || m == NPCID.HornetLeafy || m == NPCID.HornetSpikey || m == NPCID.HornetStingy;
+                        break;
                     case NPCID.AngryBones:
-                        return m == 294 || m == 295 || m == 296;
+                        IsQuestMob = m == 294 || m == 295 || m == 296;
+                        break;
                     case NPCID.BlueArmoredBones:
-                        return m == NPCID.BlueArmoredBonesMace || m == NPCID.BlueArmoredBonesNoPants || m == NPCID.BlueArmoredBonesSword;
+                        IsQuestMob = m == NPCID.BlueArmoredBonesMace || m == NPCID.BlueArmoredBonesNoPants || m == NPCID.BlueArmoredBonesSword;
+                        break;
                     case NPCID.RustyArmoredBonesAxe:
-                        return m == NPCID.RustyArmoredBonesFlail || m == NPCID.RustyArmoredBonesSword || m == NPCID.RustyArmoredBonesSwordNoArmor;
+                        IsQuestMob = m == NPCID.RustyArmoredBonesFlail || m == NPCID.RustyArmoredBonesSword || m == NPCID.RustyArmoredBonesSwordNoArmor;
+                        break;
                     case NPCID.HellArmoredBones:
-                        return m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
+                        IsQuestMob = m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
+                        break;
                     case NPCID.BlueSlime:
-                        return m == NPCID.SlimeRibbonGreen || m == NPCID.SlimeRibbonRed || m == NPCID.SlimeRibbonWhite || m == NPCID.SlimeRibbonYellow || m == 302 ||
-                            m == NPCID.SandSlime || m == NPCID.IceSlime || m == NPCID.SpikedIceSlime || m == NPCID.SlimedZombie || m == NPCID.ArmedZombieSlimed ||
-                            m == NPCID.LavaSlime || m == NPCID.RainbowSlime || m == NPCID.KingSlime || m == NPCID.IlluminantSlime || m == NPCID.DungeonSlime ||
-                            m == NPCID.MotherSlime || m == NPCID.Slimeling || m == NPCID.SlimeMasked || m == NPCID.SlimeSpiked || m == NPCID.SpikedJungleSlime ||
+                        IsQuestMob = m == NPCID.SlimeRibbonGreen || m == NPCID.SlimeRibbonRed || m == NPCID.SlimeRibbonWhite || m == NPCID.SlimeRibbonYellow || m == 302 || 
+                            m == NPCID.SandSlime || m == NPCID.IceSlime || m == NPCID.SpikedIceSlime || m == NPCID.SlimedZombie || m == NPCID.ArmedZombieSlimed || 
+                            m == NPCID.LavaSlime || m == NPCID.RainbowSlime || m == NPCID.KingSlime || m == NPCID.IlluminantSlime || m == NPCID.DungeonSlime || 
+                            m == NPCID.MotherSlime || m == NPCID.Slimeling || m == NPCID.SlimeMasked || m == NPCID.SlimeSpiked || m == NPCID.SpikedJungleSlime || 
                             m == NPCID.UmbrellaSlime; //302 is Bunny Slime
-                    case NPCID.Lihzahrd:
-                        return m == NPCID.LihzahrdCrawler;
-                    default:
-                        return false;
+                        break;
                 }
             }
+            return IsQuestMob;
         }
 
         public void OnMobKill(GuardianData gd, NPC npc)
@@ -1347,14 +1357,14 @@ namespace giantsummon
                             {
                                 bool Count = false;
                                 RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)rb.Objectives[o];
-                                if (req.BossID == NPCID.EaterofWorldsBody || req.BossID == NPCID.EaterofWorldsHead || req.BossID == NPCID.EaterofWorldsTail)
+                                if (req.BossID == Terraria.ID.NPCID.EaterofWorldsBody || req.BossID == Terraria.ID.NPCID.EaterofWorldsHead || req.BossID == Terraria.ID.NPCID.EaterofWorldsTail)
                                 {
-                                    if (npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsTail)
+                                    if (npc.type == Terraria.ID.NPCID.EaterofWorldsBody || npc.type == Terraria.ID.NPCID.EaterofWorldsHead || npc.type == Terraria.ID.NPCID.EaterofWorldsTail)
                                     {
                                         bool HasBodyAlive = false;
                                         for (int n = 0; n < 200; n++)
                                         {
-                                            if (Main.npc[n].active && (Main.npc[n].type == NPCID.EaterofWorldsHead || Main.npc[n].type == NPCID.EaterofWorldsBody))
+                                            if (Main.npc[n].active && (Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsHead || Main.npc[n].type == Terraria.ID.NPCID.EaterofWorldsBody))
                                             {
                                                 HasBodyAlive = true;
                                                 break;
@@ -1364,14 +1374,14 @@ namespace giantsummon
                                             Count = true;
                                     }
                                 }
-                                else if (req.BossID == NPCID.Spazmatism || req.BossID == NPCID.Retinazer)
+                                else if (req.BossID == Terraria.ID.NPCID.Spazmatism || req.BossID == Terraria.ID.NPCID.Retinazer)
                                 {
-                                    if (npc.type == NPCID.Spazmatism || npc.type == NPCID.Retinazer)
+                                    if (npc.type == Terraria.ID.NPCID.Spazmatism || npc.type == Terraria.ID.NPCID.Retinazer)
                                     {
                                         bool OneOfTheTwoAlive = false;
                                         for (int n = 0; n < 200; n++)
                                         {
-                                            if (Main.npc[n].active && req.BossID != npc.type && (Main.npc[n].type == NPCID.Spazmatism || Main.npc[n].type == NPCID.Retinazer))
+                                            if (Main.npc[n].active && req.BossID != npc.type && (Main.npc[n].type == Terraria.ID.NPCID.Spazmatism || Main.npc[n].type == Terraria.ID.NPCID.Retinazer))
                                             {
                                                 OneOfTheTwoAlive = true;
                                                 break;
@@ -1496,34 +1506,34 @@ namespace giantsummon
                 case EventList.DD2Event:
                     switch (MobID)
                     {
-                        case NPCID.DD2GoblinT1:
-                        case NPCID.DD2GoblinT2:
-                        case NPCID.DD2GoblinT3:
-                        case NPCID.DD2GoblinBomberT1:
-                        case NPCID.DD2GoblinBomberT2:
-                        case NPCID.DD2GoblinBomberT3:
-                        case NPCID.DD2Betsy:
-                        case NPCID.DD2DarkMageT1:
-                        case NPCID.DD2DarkMageT3:
-                        case NPCID.DD2DrakinT2:
-                        case NPCID.DD2DrakinT3:
-                        case NPCID.DD2JavelinstT1:
-                        case NPCID.DD2JavelinstT2:
-                        case NPCID.DD2JavelinstT3:
-                        case NPCID.DD2KoboldFlyerT2:
-                        case NPCID.DD2KoboldFlyerT3:
-                        case NPCID.DD2KoboldWalkerT2:
-                        case NPCID.DD2KoboldWalkerT3:
-                        case NPCID.DD2LightningBugT3:
-                        case NPCID.DD2OgreT2:
-                        case NPCID.DD2OgreT3:
-                        case NPCID.DD2SkeletonT1:
-                        case NPCID.DD2SkeletonT3:
-                        case NPCID.DD2WitherBeastT2:
-                        case NPCID.DD2WitherBeastT3:
-                        case NPCID.DD2WyvernT1:
-                        case NPCID.DD2WyvernT2:
-                        case NPCID.DD2WyvernT3:
+                        case Terraria.ID.NPCID.DD2GoblinT1:
+                        case Terraria.ID.NPCID.DD2GoblinT2:
+                        case Terraria.ID.NPCID.DD2GoblinT3:
+                        case Terraria.ID.NPCID.DD2GoblinBomberT1:
+                        case Terraria.ID.NPCID.DD2GoblinBomberT2:
+                        case Terraria.ID.NPCID.DD2GoblinBomberT3:
+                        case Terraria.ID.NPCID.DD2Betsy:
+                        case Terraria.ID.NPCID.DD2DarkMageT1:
+                        case Terraria.ID.NPCID.DD2DarkMageT3:
+                        case Terraria.ID.NPCID.DD2DrakinT2:
+                        case Terraria.ID.NPCID.DD2DrakinT3:
+                        case Terraria.ID.NPCID.DD2JavelinstT1:
+                        case Terraria.ID.NPCID.DD2JavelinstT2:
+                        case Terraria.ID.NPCID.DD2JavelinstT3:
+                        case Terraria.ID.NPCID.DD2KoboldFlyerT2:
+                        case Terraria.ID.NPCID.DD2KoboldFlyerT3:
+                        case Terraria.ID.NPCID.DD2KoboldWalkerT2:
+                        case Terraria.ID.NPCID.DD2KoboldWalkerT3:
+                        case Terraria.ID.NPCID.DD2LightningBugT3:
+                        case Terraria.ID.NPCID.DD2OgreT2:
+                        case Terraria.ID.NPCID.DD2OgreT3:
+                        case Terraria.ID.NPCID.DD2SkeletonT1:
+                        case Terraria.ID.NPCID.DD2SkeletonT3:
+                        case Terraria.ID.NPCID.DD2WitherBeastT2:
+                        case Terraria.ID.NPCID.DD2WitherBeastT3:
+                        case Terraria.ID.NPCID.DD2WyvernT1:
+                        case Terraria.ID.NPCID.DD2WyvernT2:
+                        case Terraria.ID.NPCID.DD2WyvernT3:
                             return true;
                     }
                     break;
@@ -1531,22 +1541,22 @@ namespace giantsummon
                 case EventList.PumpkinMoon:
                     switch (MobID)
                     {
-                        case NPCID.Scarecrow1:
-                        case NPCID.Scarecrow2:
-                        case NPCID.Scarecrow3:
-                        case NPCID.Scarecrow4:
-                        case NPCID.Scarecrow5:
-                        case NPCID.Scarecrow6:
-                        case NPCID.Scarecrow7:
-                        case NPCID.Scarecrow8:
-                        case NPCID.Scarecrow9:
-                        case NPCID.Scarecrow10:
-                        case NPCID.Splinterling:
-                        case NPCID.Hellhound:
-                        case NPCID.Poltergeist:
-                        case NPCID.HeadlessHorseman:
-                        case NPCID.MourningWood:
-                        case NPCID.Pumpking:
+                        case Terraria.ID.NPCID.Scarecrow1:
+                        case Terraria.ID.NPCID.Scarecrow2:
+                        case Terraria.ID.NPCID.Scarecrow3:
+                        case Terraria.ID.NPCID.Scarecrow4:
+                        case Terraria.ID.NPCID.Scarecrow5:
+                        case Terraria.ID.NPCID.Scarecrow6:
+                        case Terraria.ID.NPCID.Scarecrow7:
+                        case Terraria.ID.NPCID.Scarecrow8:
+                        case Terraria.ID.NPCID.Scarecrow9:
+                        case Terraria.ID.NPCID.Scarecrow10:
+                        case Terraria.ID.NPCID.Splinterling:
+                        case Terraria.ID.NPCID.Hellhound:
+                        case Terraria.ID.NPCID.Poltergeist:
+                        case Terraria.ID.NPCID.HeadlessHorseman:
+                        case Terraria.ID.NPCID.MourningWood:
+                        case Terraria.ID.NPCID.Pumpking:
                             return true;
                     }
                     break;
@@ -1554,21 +1564,21 @@ namespace giantsummon
                 case EventList.FrostMoon:
                     switch (MobID)
                     {
-                        case NPCID.PresentMimic:
-                        case NPCID.Flocko:
-                        case NPCID.GingerbreadMan:
-                        case NPCID.ZombieElf:
-                        case NPCID.ZombieElfBeard:
-                        case NPCID.ZombieElfGirl:
-                        case NPCID.ElfArcher:
-                        case NPCID.Nutcracker:
-                        case NPCID.NutcrackerSpinning:
-                        case NPCID.Yeti:
-                        case NPCID.ElfCopter:
-                        case NPCID.Krampus:
-                        case NPCID.Everscream:
-                        case NPCID.SantaNK1:
-                        case NPCID.IceQueen:
+                        case Terraria.ID.NPCID.PresentMimic:
+                        case Terraria.ID.NPCID.Flocko:
+                        case Terraria.ID.NPCID.GingerbreadMan:
+                        case Terraria.ID.NPCID.ZombieElf:
+                        case Terraria.ID.NPCID.ZombieElfBeard:
+                        case Terraria.ID.NPCID.ZombieElfGirl:
+                        case Terraria.ID.NPCID.ElfArcher:
+                        case Terraria.ID.NPCID.Nutcracker:
+                        case Terraria.ID.NPCID.NutcrackerSpinning:
+                        case Terraria.ID.NPCID.Yeti:
+                        case Terraria.ID.NPCID.ElfCopter:
+                        case Terraria.ID.NPCID.Krampus:
+                        case Terraria.ID.NPCID.Everscream:
+                        case Terraria.ID.NPCID.SantaNK1:
+                        case Terraria.ID.NPCID.IceQueen:
                             return true;
                     }
                     break;

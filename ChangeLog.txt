@@ -1,12 +1,1 @@
-﻿Did some little fixes to Mabel's left arm sprites.
-	The connection with the body now gives the idea that there's a shoulder in the way.
-	This also allowed me to find out that the left arm color, was disconnected from the arm, when she was kneeling on the floor.
-You can no longer abuse of the not following companions inability of consuming items, to easily max out their health and mana.
-Companions now knows that Lihzahrd and Lihzahrd Crawlers are the same monster, so request requiring them will count them as killed.
-Companions will now take in consideration the player controlling guardians when checking if the player is afk or not.
-	That will also fix the bug where Brutus tele-protects the player when controlling a companion.
-Fixed a number of cases where the companion aim position wasn't set to their center, upon spawning.
-	That issue could cause companions not to use ranged attacks because their cursor was trying to catch up on them.
-Fixed Domino's right arm not being correctly colored when using a chair.
-Fixed Mabel's left arm outline not being shown when sleeping?
-Companions will no longer have their combat behavior AI work only when they aren't using an item.
+﻿

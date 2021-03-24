@@ -93,7 +93,6 @@
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\BunnyReaperGuardian\BunnyReaperGuardianBase.cs" />
     <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
-    <Compile Include="Creatures\CaitSithSon\CaitSithSonBase.cs" />
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
@@ -264,7 +263,6 @@
     <Compile Include="SkinReqStruct.cs" />
     <Compile Include="SoundData.cs" />
     <Compile Include="TerraGuardian.cs" />
-    <Compile Include="TileMod.cs" />
     <Compile Include="TriggerHandler.cs" />
     <Compile Include="UtilityMethods.cs" />
     <Compile Include="WorldMod.cs" />
@@ -318,11 +316,6 @@
     <Content Include="Creatures\Alexander\head.png" />
     <Content Include="Creatures\Alexander\left_arm.png" />
     <Content Include="Creatures\Alexander\right_arm.png" />
-    <Content Include="Creatures\CaitSithSon\body.png" />
-    <Content Include="Creatures\CaitSithSon\body_front.png" />
-    <Content Include="Creatures\CaitSithSon\head.png" />
-    <Content Include="Creatures\CaitSithSon\left_arm.png" />
-    <Content Include="Creatures\CaitSithSon\right_arm.png" />
     <Content Include="Creatures\Daphne\body.png" />
     <Content Include="Creatures\Daphne\body_front.png" />
     <Content Include="Creatures\Daphne\halo.png" />

@@ -1121,9 +1121,6 @@ namespace giantsummon
                     case 20:
                         gb = new BaphaBase();
                         break;
-                    case 21:
-                        gb = new CaitSithSonBase();
-                        break;
                 }
             }
             if (gb == null)

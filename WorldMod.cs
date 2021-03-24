@@ -525,7 +525,6 @@ namespace giantsummon
                     {
                         tg.Spawn();
                     }
-                    tg.SetAimPositionToCenter();
                     if (!SpawnedGuardianIDs.Any(x => x.ID == ID && x.ModID == ModID))
                     {
                         GuardianTownNPC.Add(tg);
@@ -543,11 +542,6 @@ namespace giantsummon
                 Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = tag.GetBool("GhostFoxHauntLifted");
             if (Version >= 74)
                 GuardianShopHandler.LoadShops(tag, Version);
-            foreach(GuardianTownNpcState tns in GuardianNPCsInWorld)
-            {
-                if (tns != null && !tns.Homeless)
-                    tns.ValidateHouse();
-            }
         }
 
         public override void PostDrawTiles()
@@ -665,7 +659,6 @@ namespace giantsummon
             {
                 GuardianTownNPC.Add(guardian);
             }
-            guardian.SetAimPositionToCenter();
             npc.active = false;
             if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI)
             {
@@ -1251,37 +1244,11 @@ namespace giantsummon
             return false;
         }
 
-        public static void UpdateTileStateOnGuardianHouses(int PositionX, int PositionY, bool Addition)
-        {
-            Tile tile = Framing.GetTileSafely(PositionX, PositionY);
-            switch (tile.type)
-            {
-                case Terraria.ID.TileID.Chairs:
-                case Terraria.ID.TileID.Beds:
-                case Terraria.ID.TileID.Thrones:
-                case Terraria.ID.TileID.Benches:
-                    {
-                        foreach(GuardianTownNpcState tns in GuardianNPCsInWorld)
-                        {
-                            if (tns == null)
-                                continue;
-                            if(PositionX >= tns.HouseStartX && PositionX <= tns.HouseEndX && PositionY >= tns.HouseStartY && PositionY <= tns.HouseEndY)
-                            {
-                                tns.UpdateTileState(tile.type, PositionX, PositionY, Addition);
-                            }
-                        }
-                    }
-                    break;
-            }
-        }
-
         public class GuardianTownNpcState
         {
             public GuardianID CharID = new GuardianID();
             public bool Homeless = true;
             public int HomeX = -1, HomeY = -1;
-            public int HouseStartX = -1, HouseEndX = -1, HouseStartY = -1, HouseEndY = -1;
-            public List<FurnitureInfo> furnitures = new List<FurnitureInfo>();
 
             public GuardianTownNpcState()
             {
@@ -1296,192 +1263,6 @@ namespace giantsummon
             public bool IsID(int ID, string ModID)
             {
                 return ID == this.CharID.ID && ModID == this.CharID.ModID;
-            }
-
-            public void UpdateTileState(ushort Type, int PositionX, int PositionY, bool Addition)
-            {
-                if (Addition)
-                {
-                    retry:
-                    Tile tile = Framing.GetTileSafely(PositionX, PositionY);
-                    bool Add = false, FacingLeft = false;
-                    switch (tile.type)
-                    {
-                        case Terraria.ID.TileID.Chairs:
-                            FacingLeft = tile.frameX < 18;
-                            if (tile.frameY % 40 >= 18)
-                                Add = true;
-                            else
-                            {
-                                PositionY++;
-                                goto retry;
-                            }
-                            break;
-                        case Terraria.ID.TileID.Thrones:
-                            if (tile.frameY % 72 >= 54 && tile.frameX == 18)
-                                Add = true;
-                            else
-                            {
-                                if (tile.frameX < 18)
-                                    PositionX++;
-                                else if(tile.frameX > 18)
-                                    PositionX--;
-                                if (tile.frameY % 72 < 54)
-                                    PositionY++;
-                            }
-                            break;
-                        case Terraria.ID.TileID.Benches:
-                            if (tile.frameY % 36 >= 18 && tile.frameX == 18)
-                                Add = true;
-                            else
-                            {
-                                if (tile.frameX < 18)
-                                    PositionX++;
-                                else if (tile.frameX > 18)
-                                    PositionX--;
-                                if (tile.frameY % 36 < 18)
-                                    PositionY++;
-                            }
-                            break;
-                        case Terraria.ID.TileID.Beds:
-                            FacingLeft = tile.frameX < 72;
-                            if (tile.frameY % 36 >= 18 && ((tile.frameX < 72 && tile.frameX % 72 == 18) || (tile.frameX >= 72 && tile.frameX % 72 == 36)))
-                                Add = true;
-                            else
-                            {
-                                int frameX = tile.frameX % 72;
-                                if (tile.frameX < 72)
-                                {
-                                    if (frameX < 18)
-                                        PositionX++;
-                                    else if (frameX > 18)
-                                        PositionX--;
-                                }
-                                else
-                                {
-                                    if (frameX < 36)
-                                        PositionX++;
-                                    else if (frameX > 36)
-                                        PositionX--;
-                                }
-                                if (tile.frameY % 36 < 18)
-                                    PositionY++;
-                            }
-                            break;
-                    }
-                    foreach(FurnitureInfo fi in furnitures)
-                    {
-                        if(fi.FurnitureID == Type && fi.FurnitureX == PositionX && fi.FurnitureY == PositionY)
-                        {
-                            Add = false;
-                            break;
-                        }
-                    }
-                    if (Add)
-                        furnitures.Add(new FurnitureInfo(tile.type, PositionX, PositionY));
-                }
-                else
-                {
-                    for(int t = 0; t < furnitures.Count; t++)
-                    {
-                        if(furnitures[t].FurnitureID == Type)
-                        {
-                            FurnitureInfo fi = furnitures[t];
-                            switch (Type)
-                            {
-                                case Terraria.ID.TileID.Chairs:
-                                    if(fi.FurnitureX == PositionX && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
-                                    {
-                                        furnitures.RemoveAt(t);
-                                        break;
-                                    }
-                                    break;
-                                case Terraria.ID.TileID.Thrones:
-                                    if (PositionX >= fi.FurnitureX - 1 && PositionX <= fi.FurnitureX + 1 && PositionY >= fi.FurnitureY - 3 && PositionY <= fi.FurnitureY)
-                                    {
-                                        furnitures.RemoveAt(t);
-                                        break;
-                                    }
-                                    break;
-                                case Terraria.ID.TileID.Benches:
-                                    if (PositionX >= fi.FurnitureX - 1 && PositionX <= fi.FurnitureX + 1 && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
-                                    {
-                                        furnitures.RemoveAt(t);
-                                        break;
-                                    }
-                                    break;
-                                case Terraria.ID.TileID.Beds:
-                                    if (PositionX >= fi.FurnitureX - (fi.FacingLeft ? 1 : 2) && PositionX <= fi.FurnitureX + (fi.FacingLeft ? 2 : 1) && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
-                                    {
-                                        furnitures.RemoveAt(t);
-                                        break;
-                                    }
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            public void ValidateHouse()
-            {
-                if (HomeX == -1 || HomeY == -1)
-                    return;
-                if (WorldGen.StartRoomCheck(HomeX, HomeY))
-                {
-                    HouseStartX = WorldGen.roomX1;
-                    HouseEndX = WorldGen.roomX2;
-                    HouseStartY = WorldGen.roomY1;
-                    HouseEndY = WorldGen.roomY2;
-                    furnitures.Clear();
-                    for(int i = 0; i < WorldGen.numRoomTiles; i++)
-                    {
-                        int X = WorldGen.roomX[i], Y = WorldGen.roomY[i];
-                        Tile tile = Framing.GetTileSafely(X, Y);
-                        /*bool Add = false;
-                        switch (tile.type)
-                        {
-                            case Terraria.ID.TileID.Chairs:
-                                if (tile.frameY % 40 >= 18)
-                                    Add = true;
-                                break;
-                            case Terraria.ID.TileID.Thrones:
-                                if (tile.frameY % 72 >= 54 && tile.frameX == 18)
-                                    Add = true;
-                                break;
-                            case Terraria.ID.TileID.Benches:
-                                if (tile.frameY % 36 >= 18 && tile.frameX == 18)
-                                    Add = true;
-                                break;
-                            case Terraria.ID.TileID.Beds:
-                                if (tile.frameY % 36 >= 18 && tile.frameX % 72 == 18)
-                                    Add = true;
-                                break;
-                        }
-                        if(Add)
-                            furnitures.Add(new FurnitureInfo(tile.type, X, Y));*/
-                        UpdateTileState(tile.type, X, Y, true);
-                    }
-                }
-                else
-                {
-                    Homeless = true;
-                }
-            }
-
-            public struct FurnitureInfo
-            {
-                public ushort FurnitureID;
-                public int FurnitureX, FurnitureY;
-                public bool FacingLeft;
-
-                public FurnitureInfo(ushort FID, int FX, int FY, bool FacingLeft = false)
-                {
-                    FurnitureID = FID;
-                    FurnitureX = FX;
-                    FurnitureY = FY;
-                    this.FacingLeft = FacingLeft;
-                }
             }
         }
     }
