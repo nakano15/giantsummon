@@ -4859,148 +4859,124 @@ namespace giantsummon
                     {
                         TargetPosition.X += (Main.player[OwnerPos].Center.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
                     }*/
-                    bool InRangeX, InRangeY;
-                    CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
-                    bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
-                    float MaxAttackRange = -1;
-                    if (SelectedItem > -1)
+                }
+                bool InRangeX, InRangeY;
+                CheckAttackRange(MeleePosition, TargetPosition, TargetWidth, TargetHeight, false, out InRangeX, out InRangeY);
+                bool GoMelee = SelectedItem == -1 || Inventory[SelectedItem].melee;
+                float MaxAttackRange = -1;
+                if (SelectedItem > -1)
+                {
+                    if (LastCheckedWeapon != Inventory[SelectedItem].type)
                     {
-                        if (LastCheckedWeapon != Inventory[SelectedItem].type)
+                        LastCheckedWeapon = Inventory[SelectedItem].type;
+                        if (MainMod.ItemAttackRange.Any(x => x.Key.Type == Inventory[SelectedItem].type))
                         {
-                            LastCheckedWeapon = Inventory[SelectedItem].type;
-                            if (MainMod.ItemAttackRange.Any(x => x.Key.Type == Inventory[SelectedItem].type))
+                            LastCheckedWeaponAttackRange = MainMod.ItemAttackRange.First(x => x.Key.Type == Inventory[SelectedItem].type).Value;
+                        }
+                        else
+                        {
+                            LastCheckedWeaponAttackRange = -1;
+                        }
+                    }
+                    MaxAttackRange = LastCheckedWeaponAttackRange;
+                }
+                if (!TargetOnSight)
+                {
+                    float Distance = 16;
+                    switch (Tactic)
+                    {
+                        case CombatTactic.Assist:
+                            Distance = 64f;
+                            break;
+                        case CombatTactic.Snipe:
+                            Distance = 96f;
+                            break;
+                    }
+                    if (NearDeath)
+                    {
+                        Distance *= 2;
+                    }
+                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) > Distance)
+                    {
+                        Approach = true;
+                    }
+                    else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) <= Distance * 0.5f)
+                    {
+                        Retreat = true;
+                    }
+                }
+                else if (Base.SpecialAttackBasedCombat)
+                {
+                    GuardianSpecialAttack gsa = Base.SpecialAttackList[0];
+                    float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
+                    if (Distance < gsa.MinRange)
+                    {
+                        Retreat = true;
+                    }
+                    else if (Distance >= gsa.MaxRange)
+                    {
+                        Approach = true;
+                    }
+                    else if (!SubAttackInUse)
+                    {
+                        UseSubAttack(0);
+                    }
+                    GoMelee = false;
+                }
+                else
+                {
+                    switch (Tactic)
+                    {
+                        case CombatTactic.Charge:
                             {
-                                LastCheckedWeaponAttackRange = MainMod.ItemAttackRange.First(x => x.Key.Type == Inventory[SelectedItem].type).Value;
+                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
+                                float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
+                                    RetreatDistance = Width * 0.5f + 8;
+                                /*if (MaxAttackRange > -1)
+                                {
+                                    ApproachDistance = MaxAttackRange;
+                                }*/
+                                if (DistanceX <= ApproachDistance + 8 && InRangeY)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                {
+                                    GoMelee = true;
+                                }
+                                else
+                                {
+                                    if (NearDeath)
+                                    {
+                                        ApproachDistance += 44;
+                                        RetreatDistance += 20;
+                                    }
+                                    //Main.NewText("Approach Distance: " + ApproachDistance + "  Current Distance: " + Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X));
+                                    if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) < RetreatDistance)
+                                        Retreat = true;
+                                    else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
+                                        Approach = true;
+                                    if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                        Attack = true;
+                                }
+                                if (!NearDeath && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
+                                {
+                                    Jump = true;
+                                }
                             }
-                            else
+                            break;
+                        case CombatTactic.Assist:
                             {
-                                LastCheckedWeaponAttackRange = -1;
-                            }
-                        }
-                        MaxAttackRange = LastCheckedWeaponAttackRange;
-                    }
-                    if (!TargetOnSight)
-                    {
-                        float Distance = 16;
-                        switch (Tactic)
-                        {
-                            case CombatTactic.Assist:
-                                Distance = 64f;
-                                break;
-                            case CombatTactic.Snipe:
-                                Distance = 96f;
-                                break;
-                        }
-                        if (NearDeath)
-                        {
-                            Distance *= 2;
-                        }
-                        if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) > Distance)
-                        {
-                            Approach = true;
-                        }
-                        else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Width * 0.5f + Velocity.X) <= Distance * 0.5f)
-                        {
-                            Retreat = true;
-                        }
-                    }
-                    else if (Base.SpecialAttackBasedCombat)
-                    {
-                        GuardianSpecialAttack gsa = Base.SpecialAttackList[0];
-                        float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
-                        if (Distance < gsa.MinRange)
-                        {
-                            Retreat = true;
-                        }
-                        else if (Distance >= gsa.MaxRange)
-                        {
-                            Approach = true;
-                        }
-                        else if(!SubAttackInUse)
-                        {
-                            UseSubAttack(0);
-                        }
-                        GoMelee = false;
-                    }
-                    else
-                    {
-                        switch (Tactic)
-                        {
-                            case CombatTactic.Charge:
+                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                 {
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
-                                    float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
-                                        RetreatDistance = Width * 0.5f + 8;
-                                    if (MaxAttackRange > -1)
-                                    {
-                                        ApproachDistance = MaxAttackRange;
-                                    }
-                                    if (DistanceX <= ApproachDistance + 8 && InRangeY)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
-                                    {
-                                        GoMelee = true;
-                                    }
-                                    else
-                                    {
-                                        if (NearDeath)
-                                        {
-                                            ApproachDistance += 44;
-                                            RetreatDistance += 20;
-                                        }
-                                        if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) <= RetreatDistance)
-                                            Retreat = true;
-                                        else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
-                                            Approach = true;
-                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
-                                            Attack = true;
-                                    }
-                                    if (!NearDeath && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
-                                    {
-                                        Jump = true;
-                                    }
+                                    GoMelee = true;
                                 }
-                                break;
-                            case CombatTactic.Assist:
+                                else
                                 {
-                                    if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
-                                    {
-                                        GoMelee = true;
-                                    }
-                                    else
-                                    {
-                                        const float AssistDistance = 120f;
-                                        float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                        float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
-                                            RetreatDistance = TargetWidth + Width + AssistDistance + DistanceDiscount - 24;
-                                        if (MaxAttackRange > -1)
-                                        {
-                                            ApproachDistance = MaxAttackRange + TargetWidth;
-                                            RetreatDistance = MaxAttackRange - 24;
-                                            if (RetreatDistance < Width * 0.5f + 8)
-                                                RetreatDistance = Width * 0.5f + 8;
-                                        }
-                                        if (DistanceX >= ApproachDistance)
-                                            Approach = true;
-                                        else if (DistanceX <= RetreatDistance)
-                                            Retreat = true;
-                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
-                                            Attack = true;
-                                    }
-                                }
-                                break;
-                            case CombatTactic.Snipe:
-                                {
-                                    if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
-                                    {
-                                        GoMelee = true;
-                                    }
+                                    const float AssistDistance = 120f;
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                    const float SnipeDistance = 260f;
-                                    float ApproachDistance = TargetWidth + Width + SnipeDistance + DistanceDiscount,
-                                        RetreatDistance = TargetWidth + Width + SnipeDistance - 50;
+                                    float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
+                                        RetreatDistance = TargetWidth + Width + AssistDistance + DistanceDiscount - 24;
                                     if (MaxAttackRange > -1)
                                     {
                                         ApproachDistance = MaxAttackRange + TargetWidth;
-                                        RetreatDistance = MaxAttackRange - 50;
+                                        RetreatDistance = MaxAttackRange - 24;
                                         if (RetreatDistance < Width * 0.5f + 8)
                                             RetreatDistance = Width * 0.5f + 8;
                                     }
@@ -5011,43 +4987,68 @@ namespace giantsummon
                                     if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
                                         Attack = true;
                                 }
-                                break;
-                        }
-                    }
-                    if (GoMelee)
-                    {
-                        if (InRangeX)
-                        {
-                            if (!InRangeY)
+                            }
+                            break;
+                        case CombatTactic.Snipe:
                             {
-                                if (TargetPosition.Y + TargetHeight * 0.5 < CenterPosition.Y)
+                                if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                 {
-                                    if ((!LastJump && Velocity.Y == 0) || JumpHeight > 0)
-                                    {
-                                        Jump = true;
-                                    }
+                                    GoMelee = true;
                                 }
-                                else
+                                float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                                const float SnipeDistance = 260f;
+                                float ApproachDistance = TargetWidth + Width + SnipeDistance + DistanceDiscount,
+                                    RetreatDistance = TargetWidth + Width + SnipeDistance - 50;
+                                if (MaxAttackRange > -1)
                                 {
-                                    if (CheckAttackRange(SelectedItem, TargetPosition, TargetWidth, TargetHeight, true, out InRangeX, out InRangeY))
-                                        NeedsDucking = true;
+                                    ApproachDistance = MaxAttackRange + TargetWidth;
+                                    RetreatDistance = MaxAttackRange - 50;
+                                    if (RetreatDistance < Width * 0.5f + 8)
+                                        RetreatDistance = Width * 0.5f + 8;
+                                }
+                                if (DistanceX >= ApproachDistance)
+                                    Approach = true;
+                                else if (DistanceX <= RetreatDistance)
+                                    Retreat = true;
+                                if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                    Attack = true;
+                            }
+                            break;
+                    }
+                }
+                if (GoMelee)
+                {
+                    if (InRangeX)
+                    {
+                        if (!InRangeY)
+                        {
+                            if (TargetPosition.Y + TargetHeight * 0.5 < CenterPosition.Y)
+                            {
+                                if ((!LastJump && Velocity.Y == 0) || JumpHeight > 0)
+                                {
+                                    Jump = true;
                                 }
                             }
+                            else
+                            {
+                                if (CheckAttackRange(SelectedItem, TargetPosition, TargetWidth, TargetHeight, true, out InRangeX, out InRangeY))
+                                    NeedsDucking = true;
+                            }
                         }
-                        if ((InRangeX && InRangeY) || NearDeath)
-                        {
-                            Attack = true;
-                            if (NeedsDucking && !NearDeath)
-                                Duck = true;
-                        }
-                        float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
-                            DistanceAbs = Math.Abs((Position.X + Velocity.X * 0.5f) - (TargetPosition.X + TargetWidth * 0.5f));
-                        Approach = Retreat = false;
-                        if (DistanceAbs < (Width + TargetWidth) * 0.5f + 8 || (NearDeath && DistanceAbs < (Width + TargetWidth) * 0.5f + 64))
-                            Retreat = true;
-                        else if (DistanceAbs > AttackRange)
-                            Approach = true;
                     }
+                    if ((InRangeX && InRangeY) || NearDeath)
+                    {
+                        Attack = true;
+                        if (NeedsDucking && !NearDeath)
+                            Duck = true;
+                    }
+                    float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
+                        DistanceAbs = Math.Abs((Position.X + Velocity.X * 0.5f) - (TargetPosition.X + TargetWidth * 0.5f));
+                    Approach = Retreat = false;
+                    if (DistanceAbs < (Width + TargetWidth) * 0.5f + 8 || (NearDeath && DistanceAbs < (Width + TargetWidth) * 0.5f + 64))
+                        Retreat = true;
+                    else if (DistanceAbs > AttackRange)
+                        Approach = true;
                 }
             }
             if (Duck && ItemAnimationTime == 0)
@@ -5875,6 +5876,8 @@ namespace giantsummon
         public Point[] TryFindingFurniture(ushort[] TileType, bool StopOnPlatformWalls, int XDist = -1, bool AtHome = false)
         {
             List<Point> Found = new List<Point>();
+            if (TileType.Length == 0)
+                return Found.ToArray();
             Point GuardianPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
             WorldMod.GuardianTownNpcState townstate = GetTownNpcInfo;
             if (townstate != null && !townstate.Homeless && AtHome)
@@ -5915,9 +5918,9 @@ namespace giantsummon
                         Tile FloorTile = Framing.GetTileSafely(TileX, TileY + 1),
                             PositionTile = Framing.GetTileSafely(TileX, TileY);
                         TileUnder = BlockedPosition = false;
-                        if (FloorTile.active() && ((Main.tileSolid[FloorTile.type] && !Main.tileSolidTop[FloorTile.type]) || FloorTile.type == Terraria.ID.TileID.Platforms))
+                        if (FloorTile.active() && ((Main.tileSolid[FloorTile.type] && !Main.tileSolidTop[FloorTile.type]) || Terraria.ID.TileID.Sets.Platforms[FloorTile.type]))
                             TileUnder = true;
-                        if (PositionTile.active() && ((Main.tileSolid[PositionTile.type] && !Main.tileSolidTop[PositionTile.type]) || (StopOnPlatformWalls && PositionTile.type == Terraria.ID.TileID.Platforms)))
+                        if (PositionTile.active() && ((Main.tileSolid[PositionTile.type] && !Main.tileSolidTop[PositionTile.type]) || (StopOnPlatformWalls && Terraria.ID.TileID.Sets.Platforms[Terraria.ID.TileID.Platforms])))
                             BlockedPosition = true;
                         if (BlockedPosition)
                         {
@@ -5932,7 +5935,7 @@ namespace giantsummon
                             for (int y = 0; y < 3; y++)
                             {
                                 Tile tile = Framing.GetTileSafely(TileX, TileY - y);
-                                if (tile.active() && ((Main.tileSolid[tile.type] && !Main.tileSolidTop[tile.type]) || (StopOnPlatformWalls && tile.type == Terraria.ID.TileID.Platforms)))
+                                if (tile.active() && ((Main.tileSolid[tile.type] && !Main.tileSolidTop[tile.type]) || (StopOnPlatformWalls && Terraria.ID.TileID.Sets.Platforms[tile.type])))
                                 {
                                     BlockedPosition = true;
                                     Attempts = 99;
@@ -7611,12 +7614,22 @@ namespace giantsummon
             }
         }
 
+        public void SetAimPositionToCenter()
+        {
+            AimDirection = CenterPosition.ToPoint();
+        }
+
         public bool CheckForPlayerAFK()
         {
             if (OwnerPos == -1 || Is2PControlled || PlayerControl || Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut || KnockedOut || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320)) return false;
             Player owner = Main.player[OwnerPos];
-            bool NoInput = !owner.controlLeft && !owner.controlRight && !owner.controlJump && !owner.controlDown && owner.itemAnimation <= 0,
-                IsAfkAbuse = (NoInput && IsAttackingSomething && owner.townNPCs == 0);
+            bool NoInput = !owner.controlLeft && !owner.controlRight && !owner.controlJump && !owner.controlDown && owner.itemAnimation <= 0;
+            if (NoInput && owner.GetModPlayer<PlayerMod>().ControllingGuardian)
+            {
+                TerraGuardian tg = owner.GetModPlayer<PlayerMod>().Guardian;
+                NoInput = !tg.MoveLeft && !tg.MoveRight && !tg.Jump && !tg.MoveDown && tg.ItemAnimationTime <= 0;
+            }
+            bool IsAfkAbuse = (NoInput && IsAttackingSomething && owner.townNPCs == 0);
             if (NoInput)
             {
                 float LastAFKCounter = AfkCounter;
@@ -12031,7 +12044,7 @@ namespace giantsummon
                 else if (ItemAnimationTime == 0) //End use item script
                 {
                     FreezeItemUseAnimation = true;
-                    bool Failed = false;
+                    bool Failed = false, ForceUse = false;
                     if (SelectedItem > -1 && (Main.netMode == 0 || OwnerPos == Main.myPlayer))
                     {
                         Item item = this.Inventory[SelectedItem];
@@ -12097,6 +12110,7 @@ namespace giantsummon
                             {
                                 if (Data.LifeCrystalHealth < MaxLifeCrystals)
                                 {
+                                    ForceUse = true;
                                     Data.LifeCrystalHealth++;
                                     UpdateStatus = true;
                                 }
@@ -12106,6 +12120,7 @@ namespace giantsummon
                             {
                                 if (Data.LifeCrystalHealth == MaxLifeCrystals && Data.LifeFruitHealth < MaxLifeFruit)
                                 {
+                                    ForceUse = true;
                                     Data.LifeFruitHealth++;
                                     UpdateStatus = true;
                                 }
@@ -12116,12 +12131,13 @@ namespace giantsummon
                         {
                             if (Data.ManaCrystals < GuardianData.MaxManaCrystals)
                             {
+                                ForceUse = true;
                                 Data.ManaCrystals++;
                                 UpdateStatus = true;
                             }
                             else Failed = true;
                         }
-                        if (!Failed && item.consumable && OwnerPos > -1)
+                        if (!Failed && item.consumable && (OwnerPos > -1 || ForceUse))
                         {
                             bool IsWeapon = item.damage > 0;
                             if (IsWeapon && item.stack == 2)
@@ -15035,7 +15051,7 @@ namespace giantsummon
                 ImmuneTime = GetImmuneTime;
                 FallProtection = true;
                 SetFallStart();
-                AimDirection = Position.ToPoint();
+                SetAimPositionToCenter();
                 SetStuckCheckPositionToMe();
             }
         }

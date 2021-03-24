@@ -2266,6 +2266,10 @@ namespace giantsummon
                 {
                     guardian.TeleportToPlayer();
                 }
+                else
+                {
+                    guardian.SetAimPositionToCenter();
+                }
                 MainMod.AddActiveGuardian(guardian);
                 if (player.whoAmI == Main.myPlayer && !TutorialOrderIntroduction)
                 {
@@ -2651,7 +2655,7 @@ namespace giantsummon
         {
             if (ControllingGuardian)
                 layers.Clear();
-            if(player.whoAmI == Main.myPlayer && MainMod.SoulSaved)
+            if (player.whoAmI == Main.myPlayer && MainMod.SoulSaved)
             {
                 layers.Clear();
                 return;
@@ -2659,7 +2663,7 @@ namespace giantsummon
             PlayerLayer l;
             if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
             {
-                l = new PlayerLayer(mod.Name, "Ghost Fox Guardian Haunt", delegate(PlayerDrawInfo pdi)
+                l = new PlayerLayer(mod.Name, "Ghost Fox Guardian Haunt", delegate (PlayerDrawInfo pdi)
                 {
                     bool PlayerKOd = !pdi.drawPlayer.dead && pdi.drawPlayer.GetModPlayer<PlayerMod>().KnockedOut;
                     const int Frame = 10, ReviveFrame = 15;
@@ -2708,7 +2712,7 @@ namespace giantsummon
                 });
                 layers.Add(l);
             }
-            l = new PlayerLayer(mod.Name, "TerraGuardians: Player Buff Effects", delegate(PlayerDrawInfo pdi)
+            l = new PlayerLayer(mod.Name, "TerraGuardians: Player Buff Effects", delegate (PlayerDrawInfo pdi)
             {
                 if (player.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
                 {
@@ -2721,7 +2725,7 @@ namespace giantsummon
                     Main.gore[gore].velocity.Y -= 0.6f;
                 }
             });
-            l = new PlayerLayer(mod.Name, "Terra Guardian Layer", delegate(PlayerDrawInfo pdi)
+            l = new PlayerLayer(mod.Name, "Terra Guardian Layer", delegate (PlayerDrawInfo pdi)
             {
                 if (pdi.shadow != 0)
                     return;
@@ -2769,7 +2773,7 @@ namespace giantsummon
             {
                 if (Main.npc[AlexRecruitScripts.AlexNPCPosition].target == player.whoAmI)
                 {
-                    l = new PlayerLayer(mod.Name, "Alex Front Part Layer", delegate(PlayerDrawInfo pdi)
+                    l = new PlayerLayer(mod.Name, "Alex Front Part Layer", delegate (PlayerDrawInfo pdi)
                     {
                         if (!(Main.npc[AlexRecruitScripts.AlexNPCPosition].modNPC is Npcs.AlexNPC))
                             return;
@@ -2790,7 +2794,7 @@ namespace giantsummon
                     layers.Add(l);
                 }
             }
-            l = new PlayerLayer(mod.Name, "Guardian NPCs Front Body Parts", delegate(PlayerDrawInfo pdi)
+            l = new PlayerLayer(mod.Name, "Guardian NPCs Front Body Parts", delegate (PlayerDrawInfo pdi)
             {
                 for (int n = 0; n < 200; n++)
                 {
@@ -2811,7 +2815,7 @@ namespace giantsummon
             layers.Add(l);
             if (eye != EyeState.Open)
             {
-                l = new PlayerLayer(mod.Name, "Player Eye", delegate(PlayerDrawInfo pdi)
+                l = new PlayerLayer(mod.Name, "Player Eye", delegate (PlayerDrawInfo pdi)
                 {
                     const int FrameYBonus = 336;
                     for (int t = 0; t < Main.playerDrawData.Count; t++)
@@ -2842,6 +2846,29 @@ namespace giantsummon
                 });
             }
             layers.Add(l);
+            //For debug purpose only.
+            /*l = new PlayerLayer(mod.Name, "Debug: Housing Furnitures Bounds", delegate (PlayerDrawInfo pdi)
+            {
+                foreach(WorldMod.GuardianTownNpcState tns in WorldMod.GuardianNPCsInWorld)
+                {
+                    if(tns != null)
+                    {
+                        if(tns.HouseStartX > -1)
+                        {
+                            Vector2 StartPosition = new Vector2(tns.HouseStartX, tns.HouseStartY) * 16 - Main.screenPosition,
+                            EndPosition = new Vector2(tns.HouseEndX, tns.HouseEndY) * 16 - Main.screenPosition;
+                            Main.spriteBatch.Draw(Main.blackTileTexture, StartPosition, null, Color.Red);
+                            Main.spriteBatch.Draw(Main.blackTileTexture, EndPosition, null, Color.Blue);
+                        }
+                        foreach(WorldMod.GuardianTownNpcState.FurnitureInfo fi in tns.furnitures)
+                        {
+                            Vector2 FurniturePointPos = new Vector2(fi.FurnitureX, fi.FurnitureY) * 16 - Main.screenPosition;
+                            Main.spriteBatch.Draw(Main.blackTileTexture, FurniturePointPos, null, Color.Yellow * 0.2f);
+                        }
+                    }
+                }
+            });
+            layers.Add(l);*/
         }
 
         public enum EyeState
