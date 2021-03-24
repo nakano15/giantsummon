@@ -115,7 +115,32 @@ namespace giantsummon.Creatures
                     Main.projectile[resultproj].scale = tg.Scale;
                 }
             };
-            for(int i = 10; i < 19; i++)
+            specialAttack.AnimationReplacer = delegate (TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame)
+            {
+                if (FrameID == 5)
+                {
+                    Vector2 PosDif = tg.AimDirection.ToVector2() - tg.CenterPosition;
+                    float RotationValue = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(PosDif.Y, PosDif.X)));
+                    if (RotationValue < 0.0174533f * 25f)
+                    {
+                        BodyFrame = 15;
+                    }
+                    else if (RotationValue < 0.0174533f * 65f)
+                    {
+                        BodyFrame = 16;
+                    }
+                    else if (RotationValue < 0.0174533f * 120)
+                    {
+                        BodyFrame = 17;
+                    }
+                    else
+                    {
+                        BodyFrame = 18;
+                    }
+                    LeftArmFrame = RightArmFrame = BodyFrame;
+                }
+            };
+            for (int i = 10; i < 16; i++)
             {
                 AddNewSubAttackFrame(6, i, i, i);
             }

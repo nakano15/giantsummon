@@ -92,7 +92,7 @@ namespace giantsummon.Projectiles
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, 
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position + new Vector2(32, 32) - Main.screenPosition, 
                 new Rectangle(projectile.frame * 64, 0, 64, 64), Color.White, 
                 projectile.rotation, new Vector2(32, 32), projectile.scale, SpriteEffects.None, 0);
             return false;
