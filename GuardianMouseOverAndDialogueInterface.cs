@@ -920,7 +920,7 @@ namespace giantsummon
         {
             string Mes = Guardian.GetMessage(GuardianBase.MessageIDs.RequestPostpone);
             if (Mes != "")
-                Guardian.SaySomething(Mes);
+                Guardian.SaySomething(MessageParser(Mes, Guardian));
             CloseDialogueButtonAction(Guardian);
         }
 

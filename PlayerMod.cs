@@ -121,6 +121,8 @@ namespace giantsummon
                     Allowance++;
                 if (Count >= 25) //14
                     Allowance++;
+                if (Count >= 32) //14
+                    Allowance++;
                 if (Allowance > MainMod.MaxExtraGuardianFollowers)
                     Allowance = MainMod.MaxExtraGuardianFollowers;
                 return Allowance;
@@ -2849,22 +2851,19 @@ namespace giantsummon
             //For debug purpose only.
             /*l = new PlayerLayer(mod.Name, "Debug: Housing Furnitures Bounds", delegate (PlayerDrawInfo pdi)
             {
-                foreach(WorldMod.GuardianTownNpcState tns in WorldMod.GuardianNPCsInWorld)
+                foreach (WorldMod.GuardianHouseInfos hi in WorldMod.HouseInfos)
                 {
-                    if(tns != null)
+                    if (hi.HouseStartX > -1)
                     {
-                        if(tns.HouseStartX > -1)
-                        {
-                            Vector2 StartPosition = new Vector2(tns.HouseStartX, tns.HouseStartY) * 16 - Main.screenPosition,
-                            EndPosition = new Vector2(tns.HouseEndX, tns.HouseEndY) * 16 - Main.screenPosition;
-                            Main.spriteBatch.Draw(Main.blackTileTexture, StartPosition, null, Color.Red);
-                            Main.spriteBatch.Draw(Main.blackTileTexture, EndPosition, null, Color.Blue);
-                        }
-                        foreach(WorldMod.GuardianTownNpcState.FurnitureInfo fi in tns.furnitures)
-                        {
-                            Vector2 FurniturePointPos = new Vector2(fi.FurnitureX, fi.FurnitureY) * 16 - Main.screenPosition;
-                            Main.spriteBatch.Draw(Main.blackTileTexture, FurniturePointPos, null, Color.Yellow * 0.2f);
-                        }
+                        Vector2 StartPosition = new Vector2(hi.HouseStartX, hi.HouseStartY) * 16 - Main.screenPosition,
+                        EndPosition = new Vector2(hi.HouseEndX, hi.HouseEndY) * 16 - Main.screenPosition;
+                        Main.spriteBatch.Draw(Main.blackTileTexture, StartPosition, null, Color.Red);
+                        Main.spriteBatch.Draw(Main.blackTileTexture, EndPosition, null, Color.Blue);
+                    }
+                    foreach (WorldMod.GuardianHouseInfos.FurnitureInfo fi in hi.furnitures)
+                    {
+                        Vector2 FurniturePointPos = new Vector2(fi.FurnitureX, fi.FurnitureY) * 16 - Main.screenPosition;
+                        Main.spriteBatch.Draw(Main.blackTileTexture, FurniturePointPos, null, Color.Yellow * 0.2f);
                     }
                 }
             });

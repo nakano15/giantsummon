@@ -10,3 +10,13 @@ Fixed a number of cases where the companion aim position wasn't set to their cen
 Fixed Domino's right arm not being correctly colored when using a chair.
 Fixed Mabel's left arm outline not being shown when sleeping?
 Companions will no longer have their combat behavior AI work only when they aren't using an item.
+All companions will now show their messages correctly.
+Companions will now correctly try going home, and using their house furnitures when there.
+The mod will now better know the furnitures at a companion house.
+	Possibly now will avoid companion using furnitures from other's house.
+	That will also make them try using furnitures at their houses, when It's not sleep time.
+Postponing a companion request will now have their reply parsed.
+Malisha got some fixes on her leg sprites.
+	I think I'll have to work on It again later.
+You can now have 7 companions following you.
+	You need Friendship Rank 32 to unlock that.

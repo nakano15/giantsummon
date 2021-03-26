@@ -23,6 +23,7 @@ namespace giantsummon
         public static int GuardiansMetCount { get { return GuardiansMet.Count; } }
         public static byte SpawnDelay = 0, LeaveCooldown = 0;
         public static List<GuardianID> ScheduledVisits = new List<GuardianID>();
+        public static List<GuardianHouseInfos> HouseInfos = new List<GuardianHouseInfos>();
 
         public static void AllowGuardianNPCToSpawn(int ID, string ModID = "")
         {
@@ -301,41 +302,41 @@ namespace giantsummon
             }
             //pick a random guardian to try making leave.
             int Pos = Main.rand.Next(GuardianTownNPC.Count);
-            if (GuardianTownNPC[Pos].GetTownNpcInfo == null)
+            if (GuardianTownNPC[Pos].GetTownNpcInfo != null)
+                return false;
+            if ((!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && (!Main.dayTime || (Main.dayTime && Main.time < 3f * 3600))))
             {
-                if ((!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && (!Main.dayTime || (Main.dayTime && Main.time < 3f * 3600))))
+                return false;
+            }
+            bool HasPlayerNearby = false;
+            for (int p = 0; p < 255; p++)
+            {
+                Player player = Main.player[p];
+                if (player.active && Math.Abs(player.Center.X - GuardianTownNPC[Pos].Position.X) < NPC.sWidth && Math.Abs(player.Center.Y - GuardianTownNPC[Pos].CenterPosition.Y) < NPC.sHeight)
                 {
-                    return false;
+                    HasPlayerNearby = true;
+                    break;
                 }
-                bool HasPlayerNearby = false;
-                for (int p = 0; p < 255; p++)
+            }
+            if (!HasPlayerNearby)
+            {
+                if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianTownNPC[Pos].ID, GuardianTownNPC[Pos].ModID))
                 {
-                    Player player = Main.player[p];
-                    if (player.active && Math.Abs(player.Center.X - GuardianTownNPC[Pos].Position.X) < NPC.sWidth && Math.Abs(player.Center.Y - GuardianTownNPC[Pos].CenterPosition.Y) < NPC.sHeight)
-                    {
-                        HasPlayerNearby = true;
-                        break;
-                    }
+                    Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessageGuardianSummoned);
                 }
-                if (!HasPlayerNearby)
+                else
                 {
-                    if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianTownNPC[Pos].ID, GuardianTownNPC[Pos].ModID))
-                    {
-                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessageGuardianSummoned);
-                    }
-                    else
-                    {
-                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage);
-                    }
-                    GuardianTownNPC.RemoveAt(Pos);
-                    return true;
+                    Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage);
                 }
+                GuardianTownNPC.RemoveAt(Pos);
+                return true;
             }
             return false;
         }
 
         public override void Initialize()
         {
+            HouseInfos.Clear();
             GuardiansMet.Clear();
             GuardianTownNPC.Clear();
             for (int i = 0; i < MaxGuardianNpcsInWorld; i++)
@@ -484,6 +485,7 @@ namespace giantsummon
                             townnpcstate.Homeless = tag.GetBool("GuardiansCanSpawn_h" + i);
                             townnpcstate.HomeX = tag.GetInt("GuardiansCanSpawn_hx" + i);
                             townnpcstate.HomeY = tag.GetInt("GuardiansCanSpawn_hy" + i);
+                            townnpcstate.ValidateHouse();
                         }
                         GuardianNPCsInWorld[i] = townnpcstate;
                     }
@@ -905,6 +907,7 @@ namespace giantsummon
             npcstate.HomeX = SpawnXBackup;
             npcstate.HomeY = SpawnYBackup;
             npcstate.Homeless = false;
+            npcstate.ValidateHouse();
             string Message = guardian.Name + (SpawnGuardian ? " arrives." : " settles in your world.");
             Color color = (guardian.Base.Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
             if (Main.netMode == 0)
@@ -1043,6 +1046,7 @@ namespace giantsummon
             Housing_TryGettingPlaceForCompanionToStay(ref HomeX, ref HomeY);
             townstate.HomeX = HomeX;
             townstate.HomeY = HomeY;
+            townstate.ValidateHouse();
             return true;
         }
 
@@ -1261,13 +1265,11 @@ namespace giantsummon
                 case Terraria.ID.TileID.Thrones:
                 case Terraria.ID.TileID.Benches:
                     {
-                        foreach(GuardianTownNpcState tns in GuardianNPCsInWorld)
+                        foreach(GuardianHouseInfos ghi in HouseInfos)
                         {
-                            if (tns == null)
-                                continue;
-                            if(PositionX >= tns.HouseStartX && PositionX <= tns.HouseEndX && PositionY >= tns.HouseStartY && PositionY <= tns.HouseEndY)
+                            if(PositionX >= ghi.HouseStartX && PositionX <= ghi.HouseEndX && PositionY >= ghi.HouseStartY && PositionY <= ghi.HouseEndY)
                             {
-                                tns.UpdateTileState(tile.type, PositionX, PositionY, Addition);
+                                ghi.UpdateTileState(tile.type, PositionX, PositionY, Addition);
                             }
                         }
                     }
@@ -1275,34 +1277,20 @@ namespace giantsummon
             }
         }
 
-        public class GuardianTownNpcState
+        public class GuardianHouseInfos
         {
-            public GuardianID CharID = new GuardianID();
-            public bool Homeless = true;
-            public int HomeX = -1, HomeY = -1;
+            public int HomePointX = 0, HomePointY = 0;
             public int HouseStartX = -1, HouseEndX = -1, HouseStartY = -1, HouseEndY = -1;
             public List<FurnitureInfo> furnitures = new List<FurnitureInfo>();
-
-            public GuardianTownNpcState()
-            {
-
-            }
-
-            public GuardianTownNpcState(int ID, string ModID)
-            {
-                this.CharID = new GuardianID(ID, ModID);
-            }
-
-            public bool IsID(int ID, string ModID)
-            {
-                return ID == this.CharID.ID && ModID == this.CharID.ModID;
-            }
+            private List<BytePoint> HousingPoints = new List<BytePoint>();
+            public bool ValidHouse = false;
+            public List<GuardianTownNpcState> GuardiansLivingHere = new List<GuardianTownNpcState>();
 
             public void UpdateTileState(ushort Type, int PositionX, int PositionY, bool Addition)
             {
                 if (Addition)
                 {
-                    retry:
+                retry:
                     Tile tile = Framing.GetTileSafely(PositionX, PositionY);
                     bool Add = false, FacingLeft = false;
                     switch (tile.type)
@@ -1324,7 +1312,7 @@ namespace giantsummon
                             {
                                 if (tile.frameX < 18)
                                     PositionX++;
-                                else if(tile.frameX > 18)
+                                else if (tile.frameX > 18)
                                     PositionX--;
                                 if (tile.frameY % 72 < 54)
                                     PositionY++;
@@ -1369,9 +1357,9 @@ namespace giantsummon
                             }
                             break;
                     }
-                    foreach(FurnitureInfo fi in furnitures)
+                    foreach (FurnitureInfo fi in furnitures)
                     {
-                        if(fi.FurnitureID == Type && fi.FurnitureX == PositionX && fi.FurnitureY == PositionY)
+                        if (fi.FurnitureID == Type && fi.FurnitureX == PositionX && fi.FurnitureY == PositionY)
                         {
                             Add = false;
                             break;
@@ -1382,15 +1370,15 @@ namespace giantsummon
                 }
                 else
                 {
-                    for(int t = 0; t < furnitures.Count; t++)
+                    for (int t = 0; t < furnitures.Count; t++)
                     {
-                        if(furnitures[t].FurnitureID == Type)
+                        if (furnitures[t].FurnitureID == Type)
                         {
                             FurnitureInfo fi = furnitures[t];
                             switch (Type)
                             {
                                 case Terraria.ID.TileID.Chairs:
-                                    if(fi.FurnitureX == PositionX && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
+                                    if (fi.FurnitureX == PositionX && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
                                     {
                                         furnitures.RemoveAt(t);
                                         break;
@@ -1425,48 +1413,39 @@ namespace giantsummon
 
             public void ValidateHouse()
             {
-                if (HomeX == -1 || HomeY == -1)
+                if (HomePointX == -1 || HomePointY == -1)
                     return;
-                if (WorldGen.StartRoomCheck(HomeX, HomeY))
+                HousingPoints.Clear();
+                if (WorldGen.StartRoomCheck(HomePointX, HomePointY))
                 {
                     HouseStartX = WorldGen.roomX1;
-                    HouseEndX = WorldGen.roomX2;
+                    HouseEndX = WorldGen.roomX2 + 1;
                     HouseStartY = WorldGen.roomY1;
-                    HouseEndY = WorldGen.roomY2;
+                    HouseEndY = WorldGen.roomY2 + 1;
                     furnitures.Clear();
-                    for(int i = 0; i < WorldGen.numRoomTiles; i++)
+                    for (int i = 0; i < WorldGen.numRoomTiles; i++)
                     {
                         int X = WorldGen.roomX[i], Y = WorldGen.roomY[i];
                         Tile tile = Framing.GetTileSafely(X, Y);
-                        /*bool Add = false;
-                        switch (tile.type)
-                        {
-                            case Terraria.ID.TileID.Chairs:
-                                if (tile.frameY % 40 >= 18)
-                                    Add = true;
-                                break;
-                            case Terraria.ID.TileID.Thrones:
-                                if (tile.frameY % 72 >= 54 && tile.frameX == 18)
-                                    Add = true;
-                                break;
-                            case Terraria.ID.TileID.Benches:
-                                if (tile.frameY % 36 >= 18 && tile.frameX == 18)
-                                    Add = true;
-                                break;
-                            case Terraria.ID.TileID.Beds:
-                                if (tile.frameY % 36 >= 18 && tile.frameX % 72 == 18)
-                                    Add = true;
-                                break;
-                        }
-                        if(Add)
-                            furnitures.Add(new FurnitureInfo(tile.type, X, Y));*/
                         UpdateTileState(tile.type, X, Y, true);
+                        HousingPoints.Add(new BytePoint((byte)(X - WorldGen.roomX1), (byte)(Y - WorldGen.roomY1)));
                     }
+                    ValidHouse = true;
                 }
                 else
                 {
-                    Homeless = true;
+                    ValidHouse = false;
                 }
+            }
+
+            public bool BelongsToThisHousing(int X, int Y)
+            {
+                foreach(BytePoint bp in HousingPoints)
+                {
+                    if (X == bp.X + HouseStartX && Y == bp.Y + HouseStartY)
+                        return true;
+                }
+                return false;
             }
 
             public struct FurnitureInfo
@@ -1481,6 +1460,112 @@ namespace giantsummon
                     FurnitureX = FX;
                     FurnitureY = FY;
                     this.FacingLeft = FacingLeft;
+                }
+            }
+
+            public struct BytePoint
+            {
+                public byte X, Y;
+                
+                public BytePoint(byte X, byte Y)
+                {
+                    this.X = X;
+                    this.Y = Y;
+                }
+            }
+        }
+
+        public class GuardianTownNpcState
+        {
+            public GuardianID CharID = new GuardianID();
+            public bool Homeless = true;
+            public int HomeX = -1, HomeY = -1;
+            public GuardianHouseInfos HouseInfo;
+
+            public GuardianTownNpcState()
+            {
+
+            }
+
+            public GuardianTownNpcState(int ID, string ModID)
+            {
+                this.CharID = new GuardianID(ID, ModID);
+            }
+
+            public bool IsID(int ID, string ModID)
+            {
+                return ID == this.CharID.ID && ModID == this.CharID.ModID;
+            }
+            
+            public bool IsAtHome(Vector2 FeetPosition)
+            {
+                if (Homeless || HomeX == -1 || HomeY == -1 || HouseInfo == null)
+                {
+                    return true;
+                }
+                return FeetPosition.X >= HouseInfo.HouseStartX * 16 && FeetPosition.X <= HouseInfo.HouseEndX * 16 &&
+                    FeetPosition.Y >= HouseInfo.HouseStartY * 16 && FeetPosition.Y <= HouseInfo.HouseEndY * 16;
+            }
+
+            public void ValidateHouse()
+            {
+                if (HomeX == -1 || HomeY == -1 || Homeless)
+                {
+                    Homeless = true;
+                    foreach(GuardianHouseInfos ghi in WorldMod.HouseInfos)
+                    {
+                        for (int i = 0; i < ghi.GuardiansLivingHere.Count; i++)
+                        {
+                            GuardianTownNpcState tns = ghi.GuardiansLivingHere[i];
+                            if (tns == this)
+                                ghi.GuardiansLivingHere.RemoveAt(i);
+                        }
+                    }
+                    return;
+                }
+                foreach (GuardianHouseInfos ghi in WorldMod.HouseInfos)
+                {
+                    if(ghi.BelongsToThisHousing(HomeX, HomeY))
+                    {
+                        if (ghi.ValidHouse)
+                        {
+                            Homeless = false;
+                            HouseInfo = ghi;
+                            bool CompanionAlreadyHere = false;
+                            foreach(GuardianTownNpcState gtns in ghi.GuardiansLivingHere)
+                            {
+                                if(gtns.CharID.ID == CharID.ID && gtns.CharID.ModID == CharID.ModID)
+                                {
+                                    CompanionAlreadyHere = true;
+                                    break;
+                                }
+                            }
+                            if (!CompanionAlreadyHere)
+                            {
+                                ghi.GuardiansLivingHere.Add(this);
+                            }
+                        }
+                        else
+                        {
+                            Homeless = true;
+                        }
+                        return;
+                    }
+                }
+                GuardianHouseInfos newhouseinfo = new GuardianHouseInfos();
+                newhouseinfo.HomePointX = HomeX;
+                newhouseinfo.HomePointY = HomeY;
+                newhouseinfo.ValidateHouse();
+                if (!newhouseinfo.ValidHouse)
+                {
+                    HouseInfo = null;
+                    Homeless = true;
+                }
+                else
+                {
+                    WorldMod.HouseInfos.Add(newhouseinfo);
+                    Homeless = false;
+                    HouseInfo = newhouseinfo;
                 }
             }
         }

@@ -89,6 +89,7 @@ namespace giantsummon
                                     townnpc.Homeless = true;
                                     townnpc.HomeX =
                                     townnpc.HomeY = -1;
+                                    townnpc.ValidateHouse();
                                     Main.PlaySound(12, -1, -1, 1, 1f, 0f);
                                 }
                             }

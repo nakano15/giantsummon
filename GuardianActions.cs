@@ -465,7 +465,7 @@ namespace giantsummon
                                             {
                                                 guardian.LeaveFurniture(false);
                                             }
-                                            guardian.TryFindingNearbyBed();
+                                            guardian.TryFindingNearbyBed(false);
                                         }
                                         if (guardian.furniturex == -1 || guardian.UsingFurniture)
                                             ChangeStep();

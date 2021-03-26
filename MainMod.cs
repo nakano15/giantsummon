@@ -36,8 +36,8 @@ namespace giantsummon
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
         public const int ModVersion = 83, LastModVersion = 83;
-        public const int MaxExtraGuardianFollowers = 5;
-        public static bool ShowDebugInfo = true;
+        public const int MaxExtraGuardianFollowers = 6;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1107,7 +1107,7 @@ namespace giantsummon
                     }
                 }
             }
-            for (int p = 0; p < 255; p++)
+            /*for (int p = 0; p < 255; p++)
             {
                 if (Main.player[p].active)
                 {
@@ -1118,6 +1118,13 @@ namespace giantsummon
                             g.DrawSocialMessages();
                         }
                     }
+                }
+            }*/
+            foreach(TerraGuardian g in MainMod.ActiveGuardians.Values)
+            {
+                if (g.Active && !g.WofFood)
+                {
+                    g.DrawSocialMessages();
                 }
             }
             return true;
@@ -2542,7 +2549,7 @@ namespace giantsummon
                 return "Terraria: " + s;
             }
         }
-
+        
         public override void PostDrawInterface(SpriteBatch spriteBatch)
         {
             WorldMod.HasDrawnTownCompanions = false;
