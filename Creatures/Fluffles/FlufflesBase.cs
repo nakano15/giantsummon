@@ -204,6 +204,11 @@ namespace giantsummon.Creatures
                     Mes.Add("([gn:" + Michelle + "] is playing with her. They seems to be liking It.)");
                     Mes.Add("([gn:" + Michelle + "] tried petting her, but the hand passed through her body.)");
                 }
+                if (PlayerMod.HasGuardianSummoned(player, Glenn))
+                {
+                    Mes.Add("(She smiles and waves at [gn:" + Glenn + "]. He also waved back at her while smiling.)");
+                    Mes.Add("(It seems like both her and [gn:" + Glenn + "] are great friends.)");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

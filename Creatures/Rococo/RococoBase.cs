@@ -541,7 +541,12 @@ namespace giantsummon.Creatures
                     Mes.Add("*[name] says that playing with [gn:"+Alex+"] and [gn:"+Fluffles+"] has been one of the most enjoyable things he has done, and asks you to join too.*");
                 }
             }
-            if (guardian.IsUsingToilet)
+            if (NpcMod.HasGuardianNPC(Glenn))
+            {
+                Mes.Add("*[name] is telling you that [gn:" + Glenn + "] is his newest friend.*");
+                Mes.Add("*[name] says that loves playing with [gn:" + Glenn + "].*");
+            }
+                if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is telling me to plug my nose.*");
                 Mes.Add("*[name] is asking if there is no other moment to chat.*");

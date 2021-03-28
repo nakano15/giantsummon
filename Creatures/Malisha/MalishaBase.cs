@@ -417,8 +417,13 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Minerva))
             {
-                Mes.Add("*[gn:"+Minerva+"] seems to be a good test subject, but she's been rejecting my requests for food, so It's hard to lure her...*");
-                Mes.Add("*It's not my fault that [gn:"+Minerva+"] is fat. Now, if there's any other collateral effects... Maybe...*");
+                Mes.Add("*[gn:" + Minerva + "] seems to be a good test subject, but she's been rejecting my requests for food, so It's hard to lure her...*");
+                Mes.Add("*It's not my fault that [gn:" + Minerva + "] is fat. Now, if there's any other collateral effects... Maybe...*");
+            }
+            if (NpcMod.HasGuardianNPC(Glenn))
+            {
+                Mes.Add("*That kid, [gn:" + Glenn + "], always manages to escape from me... I mean... Never accepts my invites.*");
+                Mes.Add("*I really would like [gn:" + Glenn + "] to participate of a little experiment... But how could I bypass his luck..?*");
             }
 
             if (guardian.IsUsingToilet)

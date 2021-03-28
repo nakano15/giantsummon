@@ -93,7 +93,7 @@
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\BunnyReaperGuardian\BunnyReaperGuardianBase.cs" />
     <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
-    <Compile Include="Creatures\CaitSithSon\CaitSithSonBase.cs" />
+    <Compile Include="Creatures\Glenn\GlennBase.cs" />
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
@@ -167,6 +167,7 @@
     <Compile Include="Items\Shields\DiamondShield.cs" />
     <Compile Include="ModGuardianData.cs" />
     <Compile Include="ModTargetting.cs" />
+    <Compile Include="NameIDHelper.cs" />
     <Compile Include="NetMod.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Npcs\AlexanderNPC.cs" />
@@ -318,11 +319,11 @@
     <Content Include="Creatures\Alexander\head.png" />
     <Content Include="Creatures\Alexander\left_arm.png" />
     <Content Include="Creatures\Alexander\right_arm.png" />
-    <Content Include="Creatures\CaitSithSon\body.png" />
-    <Content Include="Creatures\CaitSithSon\body_front.png" />
-    <Content Include="Creatures\CaitSithSon\head.png" />
-    <Content Include="Creatures\CaitSithSon\left_arm.png" />
-    <Content Include="Creatures\CaitSithSon\right_arm.png" />
+    <Content Include="Creatures\Glenn\body.png" />
+    <Content Include="Creatures\Glenn\body_front.png" />
+    <Content Include="Creatures\Glenn\head.png" />
+    <Content Include="Creatures\Glenn\left_arm.png" />
+    <Content Include="Creatures\Glenn\right_arm.png" />
     <Content Include="Creatures\Daphne\body.png" />
     <Content Include="Creatures\Daphne\body_front.png" />
     <Content Include="Creatures\Daphne\halo.png" />

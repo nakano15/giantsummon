@@ -135,7 +135,8 @@ namespace giantsummon
             Fluffles = 16,
             Minerva = 17,
             Daphne = 18,
-            Bapha = 20;
+            Bapha = 20,
+            Glenn = 21;
 
         public struct DialogueTopic
         {
@@ -1122,7 +1123,7 @@ namespace giantsummon
                         gb = new BaphaBase();
                         break;
                     case 21:
-                        gb = new CaitSithSonBase();
+                        gb = new GlennBase();
                         break;
                 }
             }

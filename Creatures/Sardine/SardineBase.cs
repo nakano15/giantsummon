@@ -345,6 +345,18 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("Where did those weird creatures came from?");
             }
+            bool HasBreeMet = PlayerMod.PlayerHasGuardian(player, Bree), HasGlennMet = PlayerMod.PlayerHasGuardian(player, Glenn);
+            if (HasBreeMet && HasGlennMet)
+            {
+                Mes.Add("I'm so glad that my son and my wife are safe.");
+                Mes.Add("I caused my son and wife so much trouble when I disappeared, now neither of us knows the way home...");
+                Mes.Add("I thank you for finding my wife and my son, [nickname]. You have my eternal gratitude.");
+            }
+            else if (!HasBreeMet && HasGlennMet)
+            {
+                Mes.Add("[nickname], I heard from my son that my wife left home to look for me. If you find a white cat during your travels, please bring her here.");
+                Mes.Add("I'm sorry for asking this [nickname], but I just heard from my son that my wife is still looking for me. She's a white cat, please find her.");
+            }
             if (NpcMod.HasGuardianNPC(1))
             {
                 Mes.Add("Do you have some spare medicine? [gn:1] seems to be wanting to play with me again...");
@@ -453,7 +465,17 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Minerva))
             {
-                Mes.Add("Like [gn:"+Minerva+"], you're wondering why I only eat fish? It's because fishs are the best!");
+                Mes.Add("Like [gn:" + Minerva + "], you're wondering why I only eat fish? It's because fishs are the best!");
+            }
+            if (NpcMod.HasGuardianNPC(Glenn))
+            {
+                Mes.Add("[gn:" + Glenn + "] is more the studious type than a fighter.");
+                Mes.Add("Sometimes I don't have the chance of doing something with [gn:" + Glenn + "], our interests are different.");
+                Mes.Add("[gn:" + Glenn + "] should stop reading so many fairy tales books, since we are literally living in one.");
+                if (NpcMod.HasGuardianNPC(Zacks))
+                {
+                    Mes.Add("If [gn:"+Zacks+"] keep scaring my son whenever he's outside at dark, I'll show him a version of me that he didn't met when biting me!");
+                }
             }
             if (guardian.IsUsingToilet)
             {
@@ -633,6 +655,13 @@ namespace giantsummon.Creatures
                                 Mes.Add(ReviveGuardian.Name + " wake up! Please wake up!");
                                 Mes.Add("I never wanted to place you in danger, don't make me feel guilty now.");
                                 Mes.Add("Please open your eyes! Say something! Insult me! Anything! " + ReviveGuardian.Name + "!!");
+                            }
+                            break;
+                        case GuardianBase.Glenn:
+                            {
+                                Mes.Add(ReviveGuardian.Name + "! " + ReviveGuardian.Name + "! Can you hear me?!");
+                                Mes.Add("No no no no NO! " + ReviveGuardian.Name+"! Hang on! Your father is here!");
+                                Mes.Add("Don't worry "+ReviveGuardian.Name+", It won't let It end like this.");
                             }
                             break;
                     }

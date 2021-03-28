@@ -713,6 +713,7 @@ namespace giantsummon.Creatures
             Mes.Add("*Due to people knowing who I am, they avoid even speaking to me. That makes It easier for me not to care about them.*");
 
             Mes.Add("*It may not look like It, but I like seeing children around. It makes me proud of my job.*");
+            Mes.Add("*Don't worry if you see me watching over the children playing. You should be more worried about the creatures that could interrupt their fun.*");
 
             if (player.difficulty == 2)
             {
@@ -831,8 +832,82 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Minerva))
             {
-                Mes.Add("*Even though I don't have a digestive system, or the need to eat, I love eating food. Gladly [gn:"+Minerva+"] is such a good cook.*");
+                Mes.Add("*Even though I don't have a digestive system, or the need to eat, I love eating food. Gladly [gn:" + Minerva + "] is such a good cook.*");
             }
+            if (NpcMod.HasGuardianNPC(Glenn))
+            {
+                bool HasBreeMet = PlayerMod.PlayerHasGuardian(player, Bree), HasSardineMet = PlayerMod.PlayerHasGuardian(player, Sardine);
+                if (HasBreeMet && HasSardineMet)
+                {
+                    Mes.Add("*I'm glad to see that [gn:"+Glenn+"] found his parents safe and sound. It would be awful if he ended up orphan.*");
+                }
+                else if (!HasBreeMet && HasSardineMet)
+                {
+                    Mes.Add("*It seems like [gn:" + Glenn + "] still didn't find his mother. You should try not to think of what could have happened to her if you want to find her.*");
+                }
+                else if (HasBreeMet && !HasSardineMet)
+                {
+                    Mes.Add("*It seems like [gn:" + Glenn + "] still didn't find his father. You should try not to think of what could have happened to him if you want to find him.*");
+                }
+                Mes.Add("*That kid, [gn:"+Glenn+"], is very curious and talkative. Anyways, It's not everyday one have a reaper as neighbor.*");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Do you think the people here will eventually stop being scared of me?*");
+            Mes.Add("*I don't know which moment I like more, the moment I was alive, or after death.*");
+            Mes.Add("*I have been around many realms for so long, doing my job. This is the first time I actually laid down somewhere and interacted with living people.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*There is nothing I look for right now.*");
+            Mes.Add("*I don't think there is something I want at this moment.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*There's actually one thing you can help me with, if you are interessed...*");
+            Mes.Add("*I've been so busy with my job, that I forgot to take care of a thing... Gladly, you can do It instead, if you agree to.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*You have my deepest gratitude, [nickname].*");
+            Mes.Add("*You have a kind soul.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*It may sound weird, but I also like having a place to call my own.*");
+            Mes.Add("*This place is too open for me... You could give me some house.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Yes, I celebrate birthday. I'm actually happy that you guys managed to prepare such a thing for me.*");
+            Mes.Add("*What? You want to see me dancing? I don't think you can follow my steps.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I shall not allow this.*");
+            Mes.Add("*Your time is not now.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

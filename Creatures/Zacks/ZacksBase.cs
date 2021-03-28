@@ -439,13 +439,14 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Minerva))
             {
-                Mes.Add("*Let me guess, [gn:"+Minerva+"] told you that is scared of me, and made you come to me. Don't worry, as I said before, I wont eat any citizen. That doesn't stop me from scaring them, by the way.*");
-                Mes.Add("*I don't know if [gn:"+Minerva+"] charges for the food she makes, or if gives them for free. But I can only say that she cooks very good.*");
+                Mes.Add("*Let me guess, [gn:" + Minerva + "] told you that is scared of me, and made you come to me. Don't worry, as I said before, I wont eat any citizen. That doesn't stop me from scaring them, by the way.*");
+                Mes.Add("*I don't know if [gn:" + Minerva + "] charges for the food she makes, or if gives them for free. But I can only say that she cooks very good.*");
             }
-            if (guardian.IsUsingToilet)
+            if (NpcMod.HasGuardianNPC(Glenn))
             {
-                Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");
-                Mes.Add("*You don't know what I'm passing through here.*");
+                Mes.Add("*I see that you've met a new toy for me to play with... Spooking [gn:" + Glenn + "] will keep me entertained.*");
+                Mes.Add("*I like following [gn:" + Glenn + "] around when he's completelly alone. His attempts to escape from me makes me want to chase him more.*");
+                Mes.Add("*I don't have anything against [gn:"+Glenn+"], but I can use my current state to scare him just for fun.*");
             }
             if (guardian.IsPlayerRoomMate(player))
             {
@@ -476,6 +477,12 @@ namespace giantsummon.Creatures
                     Mes.Add("*Since I stay up all night, the least I could do is make sure that [gn:" + Blue + "] sleep safe and sound.*");
                     Mes.Add("*It comforts me a bit to watch [gn:" + Blue + "] sleep, knowing that she's safe, and here with me.*");
                 }
+            }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Clear();
+                Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");
+                Mes.Add("*You don't know what I'm passing through here.*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -595,6 +602,11 @@ namespace giantsummon.Creatures
                         Mes.Add("*Hmmmm... Beef...*");
                         Mes.Add("*I'm trying not to salivate here.*");
                         Mes.Add("*Please wake up... I can't hold for longer...*");
+                        break;
+                    case GuardianBase.Glenn:
+                        Mes.Add("*I don't think he'll like what he'll see when wakes up.*");
+                        Mes.Add("*You're just too young to die.*");
+                        Mes.Add("*Sorry, but you'll live to get spooked by me for longer.*");
                         break;
                 }
             }

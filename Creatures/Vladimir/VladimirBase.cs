@@ -738,9 +738,31 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Minerva))
             {
-                Mes.Add("*Since the moment we met, [gn:"+Minerva+"] guessed right the kind of food I like. I always love eating her food.*");
-                Mes.Add("*Whenever I'm eating the food [gn:"+Minerva+"] makes, stares at me with a smile on her face. I think she's glad that I'm liking It.*");
-                Mes.Add("*Sometimes [gn:"+Minerva+"] asks me to hug her, and she eventually falls asleep when being hugged, and that's all fine. The problem is that she has a little flatulence problem. Sometimes I accidentally wake her up because I'm trying to blow the smell away.*");
+                Mes.Add("*Since the moment we met, [gn:" + Minerva + "] guessed right the kind of food I like. I always love eating her food.*");
+                Mes.Add("*Whenever I'm eating the food [gn:" + Minerva + "] makes, stares at me with a smile on her face. I think she's glad that I'm liking It.*");
+                Mes.Add("*Sometimes [gn:" + Minerva + "] asks me to hug her, and she eventually falls asleep when being hugged, and that's all fine. The problem is that she has a little flatulence problem. Sometimes I accidentally wake her up because I'm trying to blow the smell away.*");
+            }
+            if (NpcMod.HasGuardianNPC(Glenn))
+            {
+                bool HasBreeMet = PlayerMod.PlayerHasGuardian(player, Bree), HasSardineMet = PlayerMod.PlayerHasGuardian(player, Sardine);
+                if(!HasBreeMet && !HasSardineMet)
+                {
+                    Mes.Add("*I'm really worried about [gn:"+Glenn+"], both of his parents are missing. Help him find them.*");
+                }
+                else if(HasBreeMet && HasSardineMet)
+                {
+                    Mes.Add("*After both [gn:" + Glenn + "]'s parents were found, he started to have a happy look in his face. Good job, [nickname].*");
+                }
+                else if (HasBreeMet)
+                {
+                    Mes.Add("*[gn:" + Glenn + "] is happy that his mother were found, but he's still worried about his father...*");
+                }
+                else if (HasSardineMet)
+                {
+                    Mes.Add("*[gn:" + Glenn + "] is happy that his father were found, but he's still worried about his mother...*");
+                }
+                Mes.Add("*I sometimes help [gn:"+Glenn+"] with his studies, even more whenever he needs a pacific place to study.*");
+                Mes.Add("*At first, [gn:"+Glenn+"] was really scared of me. After we just talked for a moment, his fear vanished.*");
             }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
@@ -918,8 +940,14 @@ namespace giantsummon.Creatures
                         Mes.Add("*Zzz... Friends... Good... Zzz...*");
                         Mes.Add("*Zzz... Where I Belong... Octave fantasy... Zzz...*");
                     }
+                    if (guardian.IsPlayerRoomMate(player))
+                    {
+                        Mes.Add("*I'm very happy of sharing my room with you, I never feel lonelly again.*");
+                        Mes.Add("*Having someone to hug during the night always makes the night better.*");
+                    }
                     if (guardian.IsUsingToilet)
                     {
+                        Mes.Clear();
                         Mes.Add("*If the smell bother you, I can hug you another time.*");
                         Mes.Add("*Did you smell that? Sorry. I had to release.*");
                         Mes.Add("*I hope you don't mind the noises.*");
@@ -927,11 +955,6 @@ namespace giantsummon.Creatures
                         Mes.Add("*I don't mind hugging at this moment, It's not like as if you are watching me doing my business.*");
                         Mes.Add("*Sorry If I'm hugging too strong, but I really need to use some strength right now.*");
                         Mes.Add("*Oh! Did that noise scared you?*");
-                    }
-                    if (guardian.IsPlayerRoomMate(player))
-                    {
-                        Mes.Add("*I'm very happy of sharing my room with you, I never feel lonelly again.*");
-                        Mes.Add("*Having someone to hug during the night always makes the night better.*");
                     }
                 }
             }

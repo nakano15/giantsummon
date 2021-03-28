@@ -324,6 +324,19 @@ namespace giantsummon.Creatures
                 Mes.Add("[nn:" + Terraria.ID.NPCID.ArmsDealer + "] should be ashamed of selling such outdated guns.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
                 Mes.Add("Do you want to hear a joke? [nn:" + Terraria.ID.NPCID.Angler + "] doesn't knows how to catch two fishs at once, can you believe? Wait, you don't either? You must be kidding!");
+            bool HasSardineMet = PlayerMod.PlayerHasGuardian(player, Sardine), HasGlennMet = PlayerMod.PlayerHasGuardian(player, Glenn);
+            if (HasSardineMet && HasGlennMet)
+            {
+                Mes.Add("Thank you for finding my son and my husband. We should now try finding out which world we came from, now...");
+                Mes.Add("My son and my husband are fine, all thanks to you.");
+                Mes.Add("I feel so good about having my son and my husband okay....");
+            }
+            else if (!HasSardineMet && HasGlennMet)
+            {
+                Mes.Add("My son came looking for me, but I still didn't found my husband.");
+                Mes.Add("My son got quite sad when I told him that I didn't found his dad yet...");
+                Mes.Add("[nickname], if you could help finding my husband, It will be great. He's a black cat with some spirit for adventure.");
+            }
             if (NpcMod.HasGuardianNPC(0))
             {
                 Mes.Add("I really love having [gn:0] in the town, I can ask him to do things without questioning.");
@@ -414,12 +427,26 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(Minerva))
             {
                 Mes.Add("[gn:" + Minerva + "] still haven't got into the level for my refined taste. She still has a lot to cook.");
-                Mes.Add("I tried teaching [gn:"+Minerva+"] how to cook properly, but she always misses the point when cooking.");
+                Mes.Add("I tried teaching [gn:" + Minerva + "] how to cook properly, but she always misses the point when cooking.");
             }
-            if (guardian.IsUsingToilet)
+            if (NpcMod.HasGuardianNPC(Glenn))
             {
-                Mes.Add("Eek!! Turn the other side!");
-                Mes.Add("Do you really have to enter here and talk to me while I'm using the toilet?");
+                Mes.Add("My son is very studious, he literally devours several books every week.");
+                Mes.Add("My son is quite introvert, so the only moment you get him to talk, is when someone else does first.");
+                if (NpcMod.HasGuardianNPC(Mabel) && NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
+                    Mes.Add("I really dislike seeing [gn:" + Glenn + "] playing with [nn:" + Terraria.ID.NPCID.Angler + "], that kid is such a bad influence.");
+                else
+                {
+                    Mes.Add("It kind of worries me that there aren't many kids around for my son to play with...");
+                }
+                if (NpcMod.HasGuardianNPC(Rococo))
+                {
+                    Mes.Add("I like seeing that [gn:" + Rococo + "] has been playing with [gn:" + Glenn + "].");
+                }
+                if (NpcMod.HasGuardianNPC(Alex))
+                {
+                    Mes.Add("[gn:" + Alex + "] is not only keeping me company sometimes, but also plays with my son, [gn:" + Glenn + "].");
+                }
             }
             if (guardian.IsPlayerRoomMate(player))
             {
@@ -464,6 +491,12 @@ namespace giantsummon.Creatures
                     Mes.Add("...Sardine... Where are you... (She spoke while sleeping)");
                     Mes.Add("...My home... How are things... (She seems to be worried about her home.)");
                 }
+            }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Clear();
+                Mes.Add("Eek!! Turn the other side!");
+                Mes.Add("Do you really have to enter here and talk to me while I'm using the toilet?");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -537,6 +570,12 @@ namespace giantsummon.Creatures
                 Mes.Add("Wait! Come on! Wake up! Don't leave me again!");
                 Mes.Add("Please, don't die! It took me a year to find you again! Your son is even waiting for you at home!");
                 Mes.Add("Open your eyes! Look at me! Please!");
+            }
+            else if (!IsPlayer && ReviveGuardian.ModID == Guardian.ModID && ReviveGuardian.ID == GuardianBase.Glenn)
+            {
+                Mes.Add("Oh my... [gn:"+Glenn+"]! [gn:"+Glenn+"]!! Please! Wake up!");
+                Mes.Add("No... Not my son! No!!");
+                Mes.Add("Don't worry, [gn:"+Glenn+"], mommy is here!");
             }
             else
             {

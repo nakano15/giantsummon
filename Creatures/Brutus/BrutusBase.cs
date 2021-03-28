@@ -537,6 +537,26 @@ namespace giantsummon.Creatures
                 Mes.Add("*[nickname], where did you find that angel known as [gn:"+Minerva+"]? That woman cooks several tasty foods for me. I'm really glad that you found her.*");
                 Mes.Add("*Aaaahh... I'm stuffed. [gn:"+Minerva+"] really cooks very well. I'll see her in again only in about 8 hours.*");
             }
+            if (NpcMod.HasGuardianNPC(Glenn))
+            {
+                bool HasBreeMet = PlayerMod.PlayerHasGuardian(player, Bree), HasSardineMet = PlayerMod.PlayerHasGuardian(player, Sardine);
+                if (!HasBreeMet && !HasSardineMet)
+                {
+                    Mes.Add("*Sometimes I'm walking the lands around the town, to see if I can find [gn:"+Glenn+"]'s parents. I have the feeling that they are alive, and out there.*");
+                }
+                else if (HasBreeMet && HasSardineMet)
+                {
+                    Mes.Add("*I'm glad that [gn:"+Glenn+"] managed to find his parents.*");
+                }
+                else if (HasBreeMet)
+                {
+                    Mes.Add("*It seems like [gn:" + Glenn + "]'s mother has already been found, but his father is still missing.*");
+                }
+                else if (HasSardineMet)
+                {
+                    Mes.Add("*It seems like [gn:" + Glenn + "]'s father has already been found, but his mother is still missing.*");
+                }
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");
