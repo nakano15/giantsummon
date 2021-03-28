@@ -654,6 +654,8 @@ namespace giantsummon
             if (Head == 256 && Armor == 257 && Leggings == 258) //Ninja Set
             {
                 guardian.AddFlag(GuardianFlags.NinjaSetEffect);
+                guardian.TrailLength = 5;
+                guardian.TrailDelay = 2;
             }
             if (Head == 3374 && Armor == 3375 && Leggings == 3376) //Fossil Set
             {
@@ -680,6 +682,8 @@ namespace giantsummon
             if ((Head == 959 || Head == 151) && Armor == 152 && Leggings == 153)
             {
                 guardian.AddFlag(GuardianFlags.NecroSetEffect);
+                guardian.TrailLength = 3;
+                guardian.TrailDelay = 3;
             }
             if ((Head == 102 || Head == 956) && (Armor == 101 || Armor == 957) && (Leggings == 100 || Leggings == 958))
             {
@@ -720,6 +724,8 @@ namespace giantsummon
                 }
                 if (IsSet)
                     guardian.AddFlag(GuardianFlags.ColbaltSetEffect);
+                guardian.TrailLength = 5;
+                guardian.TrailDelay = 2;
             }
             if ((Head == 1207 || Head == 1206 || Head == 1205) && Armor == 1208 && Leggings == 1209) //Palladium Set
             {
@@ -765,7 +771,10 @@ namespace giantsummon
                     IsSet = false;
                 }
                 if (IsSet)
+                {
                     guardian.AddFlag(GuardianFlags.AdamantiteSetEffect);
+                    guardian.PulsePower = 5;
+                }
             }
             if ((Head == 1217 || Head == 1216 || Head == 1215) && Armor == 1218 && Leggings == 1219)
             {
@@ -831,6 +840,7 @@ namespace giantsummon
                 if (IsSet)
                 {
                     guardian.AddFlag(GuardianFlags.HallowedSetEffect);
+                    guardian.PulsePower = 5;
                 }
             }
             if ((Head >= 1001 && Head <= 1003) && Armor == 1004 && Leggings == 1005) //Chlorophyte Set
@@ -898,6 +908,7 @@ namespace giantsummon
             if (Head == 2763 && Armor == 2764 && Leggings == 2765) //Solar Flare Set
             {
                 guardian.AddFlag(GuardianFlags.SolarFlareSetEffect);
+                guardian.PulsePower = 5;
             }
             if (Head == 2757 && Armor == 2758 && Leggings == 2759) //Vortex Set
             {

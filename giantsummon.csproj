@@ -266,6 +266,7 @@
     <Compile Include="SoundData.cs" />
     <Compile Include="TerraGuardian.cs" />
     <Compile Include="TileMod.cs" />
+    <Compile Include="TrailPositionLogger.cs" />
     <Compile Include="TriggerHandler.cs" />
     <Compile Include="UtilityMethods.cs" />
     <Compile Include="WorldMod.cs" />

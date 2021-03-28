@@ -2611,6 +2611,7 @@ namespace giantsummon
             {
                 if (!g.Active || !g.InCameraRange() || (g.UsingFurniture && !g.PlayerMounted))
                     continue;
+                List<Terraria.DataStructures.DrawData> TrailData = g.GetTrailsDataAsDrawData();
                 g.DrawDataCreation();
                 int BackStack = 0, FurnitureStack = 0;
                 if (g.PlayerControl)
@@ -2650,6 +2651,7 @@ namespace giantsummon
                         BackStack += TerraGuardian.DrawBehind.Count + TerraGuardian.DrawFront.Count - 1;
                     }
                 }
+                Back.InsertRange(0, TrailData);
             }
         }
 

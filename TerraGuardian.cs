@@ -106,6 +106,13 @@ namespace giantsummon
         public GuardianMood Mood { get { return Data.Mood; } }
         public bool HasRequestActive { get { return Data.request.Active; } }
         private float AgeScale = 0;
+        //Trail Handler
+        public int TrailLength = 0, TrailDelay = 0;
+        public List<TrailPositionLogger> Trails = new List<TrailPositionLogger>();
+        public float PulsePower = 0;
+        public float PulseValue = 0;
+        public sbyte PulseDir = 1;
+        //
         public bool Active = false;
         public bool IsStarter
         {
@@ -2922,7 +2929,51 @@ namespace giantsummon
             UpdateSpelunkerGlowstickEffect();
             Base.GuardianUpdateScript(this);
             UpdateComfortStack();
+            ManageTrail();
+            ManagePulse();
             //FloorVisual(Velocity.Y != 0);
+        }
+
+        public void ManageTrail()
+        {
+            int MaxTrails = TrailLength * TrailDelay;
+            int TrailCount = Trails.Count;
+            if (TrailCount > 0 && TrailCount >= MaxTrails)
+                Trails.RemoveAt(0);
+            if(MaxTrails > 0 && Trails.Count < MaxTrails)
+            {
+                TrailPositionLogger trail = new TrailPositionLogger()
+                {
+                    Position = Position,
+                    BodyFrame = BodyAnimationFrame,
+                    LeftArmFrame = LeftArmAnimationFrame,
+                    RightArmFrame = RightArmAnimationFrame,
+                    FacingLeft = LookingLeft
+                };
+                Trails.Add(trail);
+            }
+        }
+
+        public void ManagePulse()
+        {
+            if(PulsePower > 0)
+            {
+                PulseValue += PulseDir * 0.075f;
+                if (PulseValue > 0.9f)
+                {
+                    PulseDir *= -1;
+                    PulseValue = 0.9f;
+                }
+                if (PulseValue < 0.1f)
+                {
+                    PulseDir *= -1;
+                    PulseValue = 0.1f;
+                }
+            }
+            else
+            {
+                PulseValue = 0;
+            }
         }
 
         public void GuardianMoodAndStatus()
@@ -3409,6 +3460,8 @@ namespace giantsummon
             AgeScale = GetAgeSize();
             if (LastAgeScaleWas0)
                 Scale = FinalScale = AgeScale;
+            TrailLength = TrailDelay = 0;
+            PulsePower = 0;
 
             DashSpeed = 0;
             WingMaxFlightTime = 0;
@@ -9619,6 +9672,7 @@ namespace giantsummon
                         else
                         {
                             TargetID = -1;
+                            AttackingTarget = false;
                         }
                         break;
                     case TargetTypes.Player:
@@ -9629,6 +9683,7 @@ namespace giantsummon
                         else
                         {
                             TargetID = -1;
+                            AttackingTarget = false;
                         }
                         break;
                     case TargetTypes.Guardian:
@@ -9639,6 +9694,7 @@ namespace giantsummon
                         else
                         {
                             TargetID = -1;
+                            AttackingTarget = false;
                         }
                         break;
                 }
@@ -11507,7 +11563,7 @@ namespace giantsummon
                     else if (Frame == 2)
                     {
                         WeaponCollision.Width *= 2;
-                        WeaponCollision.Y += (int)(WeaponCollision.Height * 0.4f * GravityDirection);
+                        WeaponCollision.Y += (int)(WeaponCollision.Height * 0.6f * GravityDirection);
                         WeaponCollision.Height = (int)(WeaponCollision.Height * 1.8f);
                     }
                     if (LookingLeft)
@@ -15587,6 +15643,91 @@ namespace giantsummon
                 dd.Draw(Main.spriteBatch);
         }
 
+        public List<Terraria.DataStructures.DrawData> GetTrailsDataAsDrawData()
+        {
+            List<GuardianDrawData> gdds = GetTrailsData();
+            List<Terraria.DataStructures.DrawData> dds = new List<Terraria.DataStructures.DrawData>();
+            foreach(GuardianDrawData gdd in gdds)
+            {
+                dds.Add(gdd.GetDrawData());
+            }
+            return dds;
+        }
+
+        public List<GuardianDrawData> GetTrailsData()
+        {
+            List<GuardianDrawData> ResultTrails = new List<GuardianDrawData>();
+            if (TrailDelay > 0) //To avoid code hanging
+            {
+                for (int tl = 0; tl < TrailLength; tl++)
+                {
+                    int TrailPosition = (TrailLength - tl) * TrailDelay;
+                    if(TrailPosition < Trails.Count)
+                    {
+                        TrailPositionLogger Trail = Trails[TrailPosition];
+                        Trail.MaskGuardianInfosToTrail(this);
+                        DrawBehind.Clear();
+                        DrawFront.Clear();
+                        DrawDataCreation();
+                        float Opacity = (float)(TrailLength - tl) / TrailLength;
+                        List<GuardianDrawData> ThisTrail = new List<GuardianDrawData>();
+                        foreach (GuardianDrawData gdd in DrawBehind)
+                        {
+                            gdd.color *= Opacity;
+                            ThisTrail.Add(gdd);
+                        }
+                        foreach (GuardianDrawData gdd in DrawFront)
+                        {
+                            gdd.color *= Opacity;
+                            ThisTrail.Add(gdd);
+                        }
+                        ResultTrails.AddRange(ThisTrail);
+                        Trail.RestoreGuardianInfos(this);
+                    }
+                }
+            }
+            if(PulsePower > 0)
+            {
+                float Pulse = PulsePower * PulseValue;
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 PositionBackup = Position;
+                    switch(i)
+                    {
+                        case 0:
+                            Position.Y -= Pulse;
+                            break;
+                        case 1:
+                            Position.X += Pulse;
+                            break;
+                        case 2:
+                            Position.Y += Pulse;
+                            break;
+                        case 3:
+                            Position.X -= Pulse;
+                            break;
+                    }
+                    DrawBehind.Clear();
+                    DrawFront.Clear();
+                    DrawDataCreation();
+                    List<GuardianDrawData> ThisTrail = new List<GuardianDrawData>();
+                    foreach (GuardianDrawData gdd in DrawBehind)
+                    {
+                        gdd.color *= PulseValue;
+                        ThisTrail.Add(gdd);
+                    }
+                    foreach (GuardianDrawData gdd in DrawFront)
+                    {
+                        gdd.color *= PulseValue;
+                        ThisTrail.Add(gdd);
+                    }
+                    ResultTrails.AddRange(ThisTrail);
+                    Position = PositionBackup;
+                }
+            }
+            return ResultTrails;
+        }
+
         public void DoWraithColoring(out Color SkinColor, out Color EyesColor, out Color EyeWhiteColor)
         {
             byte ColorMod = 39;
@@ -15931,6 +16072,8 @@ namespace giantsummon
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);
             //DrawBehind.Insert(0, new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.blackTileTexture, new Rectangle((int)(HitBox.X - Main.screenPosition.X), (int)(HitBox.Y - Main.screenPosition.Y), HitBox.Width, HitBox.Height), null, Color.Red));
+            //if(ItemAnimationTime > 0)
+            //    DrawBehind.Insert(0, new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.blackTileTexture, new Rectangle((int)(WeaponCollision.X - Main.screenPosition.X), (int)(WeaponCollision.Y - Main.screenPosition.Y), WeaponCollision.Width, WeaponCollision.Height), null, Color.Red * 0.25f));
             foreach (GuardianDrawData gdd in DrawBehind)
             {
                 if (!MountedOnPlayer || Downed)
