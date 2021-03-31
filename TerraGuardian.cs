@@ -285,7 +285,7 @@ namespace giantsummon
             {
                 Vector2 p = Position;
                 p.X += OffsetX;
-                p.Y += OffsetY;
+                p.Y += OffsetY + Base.CharacterPositionYDiscount;
                 return p;
             }
         }
@@ -1314,6 +1314,11 @@ namespace giantsummon
         public bool HasFlag(GuardianFlags type)
         {
             return FlagList.Contains(type);
+        }
+
+        public bool CCed
+        {
+            get { return FlagList.Contains(GuardianFlags.Petrified) || FlagList.Contains(GuardianFlags.Frozen); }
         }
 
         public void RemoveFlag(GuardianFlags type)
@@ -4702,10 +4707,10 @@ namespace giantsummon
             bool TargetInAim = false;
             if (AttackingTarget)
                 TargetInAim = MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight);
-            else
+            /*else
             {
                 MoveCursorToPosition(CenterPosition + (TargetPosition - CenterPosition) * 0.5f + TargetVelocity, TargetWidth, TargetHeight);
-            }
+            }*/
             if (AvoidCombat)
             {
                 float DistanceFromTarget = 60 + (TargetWidth + Width) * 0.5f;
@@ -5327,8 +5332,8 @@ namespace giantsummon
                 {
                     MoveLeft = MoveRight = Jump = MoveDown = false;
                 }
-                if (!PlayerControl && TargetID == -1)
-                    MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -SpriteHeight * 0.25f));
+                if (!PlayerControl && (TargetID == -1 || !AttackingTarget))
+                    MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -(SpriteHeight - Base.CharacterPositionYDiscount) * 0.25f));
                 if (!PlayerControl)
                 {
                     CheckIfCanSummon();
@@ -6622,6 +6627,11 @@ namespace giantsummon
                     GuardianActions.UseResurrectOnPlayer(this, Main.player[DeadPlayer]);
                 }
             }
+        }
+
+        public void FaceDirection(int Direction)
+        {
+            LookingLeft = Direction == -1;
         }
 
         public void FaceDirection(bool Left)
@@ -9316,6 +9326,23 @@ namespace giantsummon
             return false;
         }
 
+        public bool HasAmmo(Item weapon)
+        {
+            if(weapon.useAmmo > 0)
+            {
+                for(int i = 0; i < 50; i++)
+                {
+                    if (Inventory[i].ammo == weapon.useAmmo && Inventory[i].stack > 0)
+                        return true;
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         public void GetAmmoInfo(Item i, bool UseAmmo, out int ProjID, out float ShotSpeed, out int Damage, out float Knockback)
         {
             ProjID = i.shoot;
@@ -10873,7 +10900,7 @@ namespace giantsummon
             X -= (int)(SpriteWidth * 0.5f);
             if (GravityDirection > 0) Y -= SpriteHeight;
             else
-                Y = SpriteHeight - Y;
+                Y = SpriteHeight + Base.CharacterPositionYDiscount - Y;
             X = (int)(X * Scale);
             Y = (int)(Y * Scale);
         }
@@ -10907,7 +10934,7 @@ namespace giantsummon
             X -= (int)(SpriteWidth * 0.5f);
             if (GravityDirection > 0) Y -= SpriteHeight;
             else
-                Y = SpriteHeight - Y;
+                Y = SpriteHeight + Base.CharacterPositionYDiscount - Y;
             X = (int)(X * Scale);
             Y = (int)(Y * Scale);
         }
@@ -10990,7 +11017,7 @@ namespace giantsummon
             ItemPositionX -= (int)(SpriteWidth * 0.5f);
             if (GravityDirection > 0) ItemPositionY -= SpriteHeight;
             else
-                ItemPositionY = SpriteHeight - ItemPositionY;
+                ItemPositionY = SpriteHeight + Base.CharacterPositionYDiscount - ItemPositionY;
             ItemPositionX = (int)(ItemPositionX * Scale);
             ItemPositionY = (int)(ItemPositionY * Scale);
         }
@@ -11858,6 +11885,7 @@ namespace giantsummon
                             {
                                 if (Main.npc[t].type == 63 || Main.npc[t].type == 64 || Main.npc[t].type == 103 || Main.npc[t].type == 242)
                                 {
+                                    AddNpcHit(t);
                                     this.Hurt((int)(Main.npc[t].damage * 1.3f), -this.Direction, false, false, " couldn't endure " + Main.npc[t].GivenOrTypeName + " electricity.");
                                 }
                             }
@@ -12064,7 +12092,7 @@ namespace giantsummon
                     }
                 }
                 //Time reduce
-                if(MainHand) ItemAnimationTime--;
+                if (MainHand) ItemAnimationTime--;
                 if (IsDelay)
                 {
                     if (ItemAnimationTime == 0)
@@ -12270,6 +12298,7 @@ namespace giantsummon
                 ShotSpawnPosition.X += ItemPositionX + Position.X;
                 ShotSpawnPosition.Y += ItemPositionY + Position.Y;
             }
+            ShotSpawnPosition.Y += Base.CharacterPositionYDiscount * Scale;
             // Specific Item Scripts.
             if (i.type == 3094 || i.type == 3378 || i.type == 3543) //Javelins
             {
@@ -13351,6 +13380,8 @@ namespace giantsummon
             if (SubAttackTime >= StackCounter)
             {
                 _SubAttack = 0;
+                NpcHit.Clear();
+                PlayerHit.Clear();
                 return;
             }
             else
@@ -16113,6 +16144,7 @@ namespace giantsummon
             AddDrawData(dd, false);
             //dd.Draw(Main.spriteBatch);
             //Main.spriteBatch.Draw(Base.sprites.RightArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0f);
+
             DrawItem(NewPosition, seffect, true);
             rect = GetAnimationFrameRectangle(BodyAnimationFrame);
             dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, Base.sprites.BodySprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);

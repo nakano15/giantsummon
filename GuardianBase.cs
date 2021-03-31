@@ -53,6 +53,7 @@ namespace giantsummon
         public bool SleepsAtBed = true;
         public bool SpecialAttackBasedCombat = false;
         public List<GuardianSpecialAttack> SpecialAttackList = new List<GuardianSpecialAttack>();
+        public int CharacterPositionYDiscount = 0;
         
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;
@@ -709,7 +710,7 @@ namespace giantsummon
         /// <param name="Scale">The sprite scale.</param>
         /// <param name="seffect">The direction the sprite is facing.</param>
         /// <param name="gdd">Modify this list to change how the companion head will be drawn. You can even alter elements. Check textureType variable inside the list contents to check what It will draw.</param>
-        public virtual void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdd)
+        public virtual void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdds)
         {
 
         }
@@ -1125,6 +1126,9 @@ namespace giantsummon
                     case 21:
                         gb = new GlennBase();
                         break;
+                    case 22:
+                        gb = new CaptainSmellyBase();
+                        break;
                 }
             }
             if (gb == null)
@@ -1291,7 +1295,7 @@ namespace giantsummon
             return SpecialAttackList[SpecialAttackList.Count - 1];
         }
 
-        public void AddNewSubAttackFrame(int Duration, int BodyAnimationFrame, int LeftArmAnimationFrame = -1, int RightArmAnimationFrame = -1)
+        public void AddNewSubAttackFrame(int Duration, int BodyAnimationFrame = -1, int LeftArmAnimationFrame = -1, int RightArmAnimationFrame = -1)
         {
             SpecialAttackList[SpecialAttackList.Count - 1].SpecialAttackFrames.Add(new GuardianSpecialAttackFrame()
             {

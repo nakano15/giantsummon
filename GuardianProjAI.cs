@@ -3578,5 +3578,1064 @@ namespace giantsummon
             }
         }
 
+        private void PhantasmAI(Projectile proj)
+        {
+            if (!GuardianProj.ContainsKey(proj.whoAmI) || !MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID))
+            {
+                proj.active = false;
+                return;
+            }
+            TerraGuardian guardian = GuardianProj[proj.whoAmI];
+            float num = 1.57079637f;
+            Vector2 vector = guardian.HeldItemHand == HeldHand.Left ? guardian.GetGuardianLeftHandPosition : guardian.GetGuardianRightHandPosition; //player.RotatedRelativePoint(player.MountedCenter, true);
+            bool IsThisClientCharacter = true;
+            if (proj.type == 439)
+            {
+                proj.ai[0] += 1f;
+                int num2 = 0;
+                if (proj.ai[0] >= 40f)
+                {
+                    num2++;
+                }
+                if (proj.ai[0] >= 80f)
+                {
+                    num2++;
+                }
+                if (proj.ai[0] >= 120f)
+                {
+                    num2++;
+                }
+                int num3 = 24;
+                int num4 = 6;
+                proj.ai[1] += 1f;
+                bool flag = false;
+                if (proj.ai[1] >= (float)(num3 - num4 * num2))
+                {
+                    proj.ai[1] = 0f;
+                    flag = true;
+                }
+                proj.frameCounter += 1 + num2;
+                if (proj.frameCounter >= 4)
+                {
+                    proj.frameCounter = 0;
+                    proj.frame++;
+                    if (proj.frame >= 6)
+                    {
+                        proj.frame = 0;
+                    }
+                }
+                if (proj.soundDelay <= 0)
+                {
+                    proj.soundDelay = num3 - num4 * num2;
+                    if (proj.ai[0] != 1f)
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 91);
+                    }
+                }
+                if (proj.ai[1] == 1f && proj.ai[0] != 1f)
+                {
+                    Vector2 vector2 = Vector2.UnitX * 24f;
+                    vector2 = vector2.RotatedBy((double)(proj.rotation - 1.57079637f), default(Vector2));
+                    Vector2 value = proj.Center + vector2;
+                    for (int i = 0; i < 2; i++)
+                    {
+                        int num5 = Dust.NewDust(value - Vector2.One * 8f, 16, 16, 135, proj.velocity.X / 2f, proj.velocity.Y / 2f, 100, default(Color), 1f);
+                        Main.dust[num5].velocity *= 0.66f;
+                        Main.dust[num5].noGravity = true;
+                        Main.dust[num5].scale = 1.4f;
+                    }
+                }
+                if (flag && IsThisClientCharacter)
+                {
+                    bool flag2 = guardian.Channeling && guardian.UseMana(guardian.Inventory[guardian.SelectedItem].mana) && !guardian.HasFlag(GuardianFlags.Cursed) && !guardian.CCed;
+                    if (flag2)
+                    {
+                        float scaleFactor = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
+                        Vector2 value2 = vector;
+                        Vector2 value3 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - value2;
+                        if (guardian.GravityDirection == -1f)
+                        {
+                            value3.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - value2.Y;
+                        }
+                        Vector2 vector3 = Vector2.Normalize(value3);
+                        if (float.IsNaN(vector3.X) || float.IsNaN(vector3.Y))
+                        {
+                            vector3 = -Vector2.UnitY;
+                        }
+                        vector3 *= scaleFactor;
+                        if (vector3.X != proj.velocity.X || vector3.Y != proj.velocity.Y)
+                        {
+                            proj.netUpdate = true;
+                        }
+                        proj.velocity = vector3;
+                        int num6 = 440;
+                        float scaleFactor2 = 14f;
+                        int num7 = 7;
+                        for (int j = 0; j < 2; j++)
+                        {
+                            value2 = proj.Center + new Vector2((float)Main.rand.Next(-num7, num7 + 1), (float)Main.rand.Next(-num7, num7 + 1));
+                            Vector2 spinningpoint = Vector2.Normalize(proj.velocity) * scaleFactor2;
+                            spinningpoint = spinningpoint.RotatedBy(Main.rand.NextDouble() * 0.19634954631328583 - 0.098174773156642914, default(Vector2));
+                            if (float.IsNaN(spinningpoint.X) || float.IsNaN(spinningpoint.Y))
+                            {
+                                spinningpoint = -Vector2.UnitY;
+                            }
+                            Projectile.NewProjectile(value2.X, value2.Y, spinningpoint.X, spinningpoint.Y, num6, proj.damage, proj.knockBack, proj.owner, 0f, 0f);
+                        }
+                    }
+                    else
+                    {
+                        proj.Kill();
+                    }
+                }
+            }
+            if (proj.type == 445)
+            {
+                proj.localAI[0] += 1f;
+                if (proj.localAI[0] >= 60f)
+                {
+                    proj.localAI[0] = 0f;
+                }
+                if (Vector2.Distance(vector, proj.Center) >= 5f)
+                {
+                    float num8 = proj.localAI[0] / 60f;
+                    if (num8 > 0.5f)
+                    {
+                        num8 = 1f - num8;
+                    }
+                    Vector3 value4 = new Vector3(0f, 1f, 0.7f);
+                    Vector3 value5 = new Vector3(0f, 0.7f, 1f);
+                    Vector3 value6 = Vector3.Lerp(value4, value5, 1f - num8 * 2f) * 0.5f;
+                    if (Vector2.Distance(vector, proj.Center) >= 30f)
+                    {
+                        Vector2 vector4 = proj.Center - vector;
+                        vector4.Normalize();
+                        vector4 *= Vector2.Distance(vector, proj.Center) - 30f;
+                        DelegateMethods.v3_1 = value6 * 0.8f;
+                        Utils.PlotTileLine(proj.Center - vector4, proj.Center, 8f, new Utils.PerLinePoint(DelegateMethods.CastLightOpen));
+                    }
+                    Lighting.AddLight((int)proj.Center.X / 16, (int)proj.Center.Y / 16, value6.X, value6.Y, value6.Z);
+                }
+                if (IsThisClientCharacter)
+                {
+                    if (proj.localAI[1] > 0f)
+                    {
+                        proj.localAI[1] -= 1f;
+                    }
+                    if (!guardian.Channeling || guardian.HasFlag(GuardianFlags.Cursed) || guardian.CCed)
+                    {
+                        proj.Kill();
+                    }
+                    else if (proj.localAI[1] == 0f)
+                    {
+                        Vector2 value7 = vector;
+                        Vector2 vector5 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - value7;
+                        if (guardian.GravityDirection == -1f)
+                        {
+                            vector5.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - value7.Y;
+                        }
+                        Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
+                        if (tile.active())
+                        {
+                            vector5 = new Vector2((float)Player.tileTargetX, (float)Player.tileTargetY) * 16f + Vector2.One * 8f - value7;
+                            proj.localAI[1] = 2f;
+                        }
+                        vector5 = Vector2.Lerp(vector5, proj.velocity, 0.7f);
+                        if (float.IsNaN(vector5.X) || float.IsNaN(vector5.Y))
+                        {
+                            vector5 = -Vector2.UnitY;
+                        }
+                        float num9 = 30f;
+                        if (vector5.Length() < num9)
+                        {
+                            vector5 = Vector2.Normalize(vector5) * num9;
+                        }
+                        int tileBoost = guardian.Inventory[guardian.SelectedItem].tileBoost;
+                        int num10 = -Player.tileRangeX - tileBoost + 1;
+                        int num11 = Player.tileRangeX + tileBoost - 1;
+                        int num12 = -Player.tileRangeY - tileBoost;
+                        int num13 = Player.tileRangeY + tileBoost - 1;
+                        int num14 = 12;
+                        bool flag3 = false;
+                        if (vector5.X < (float)(num10 * 16 - num14))
+                        {
+                            flag3 = true;
+                        }
+                        if (vector5.Y < (float)(num12 * 16 - num14))
+                        {
+                            flag3 = true;
+                        }
+                        if (vector5.X > (float)(num11 * 16 + num14))
+                        {
+                            flag3 = true;
+                        }
+                        if (vector5.Y > (float)(num13 * 16 + num14))
+                        {
+                            flag3 = true;
+                        }
+                        if (flag3)
+                        {
+                            Vector2 value8 = Vector2.Normalize(vector5);
+                            float num15 = -1f;
+                            if (value8.X < 0f && ((float)(num10 * 16 - num14) / value8.X < num15 || num15 == -1f))
+                            {
+                                num15 = (float)(num10 * 16 - num14) / value8.X;
+                            }
+                            if (value8.X > 0f && ((float)(num11 * 16 + num14) / value8.X < num15 || num15 == -1f))
+                            {
+                                num15 = (float)(num11 * 16 + num14) / value8.X;
+                            }
+                            if (value8.Y < 0f && ((float)(num12 * 16 - num14) / value8.Y < num15 || num15 == -1f))
+                            {
+                                num15 = (float)(num12 * 16 - num14) / value8.Y;
+                            }
+                            if (value8.Y > 0f && ((float)(num13 * 16 + num14) / value8.Y < num15 || num15 == -1f))
+                            {
+                                num15 = (float)(num13 * 16 + num14) / value8.Y;
+                            }
+                            vector5 = value8 * num15;
+                        }
+                        if (vector5.X != proj.velocity.X || vector5.Y != proj.velocity.Y)
+                        {
+                            proj.netUpdate = true;
+                        }
+                        proj.velocity = vector5;
+                    }
+                }
+            }
+            if (proj.type == 460)
+            {
+                proj.ai[0] += 1f;
+                int num16 = 0;
+                if (proj.ai[0] >= 60f)
+                {
+                    num16++;
+                }
+                if (proj.ai[0] >= 180f)
+                {
+                    num16++;
+                }
+                bool flag4 = false;
+                if (proj.ai[0] == 60f || proj.ai[0] == 180f || (proj.ai[0] > 180f && proj.ai[0] % 20f == 0f))
+                {
+                    flag4 = true;
+                }
+                bool flag5 = proj.ai[0] >= 180f;
+                int num17 = 10;
+                if (!flag5)
+                {
+                    proj.ai[1] += 1f;
+                }
+                bool flag6 = false;
+                if (flag5 && proj.ai[0] % 20f == 0f)
+                {
+                    flag6 = true;
+                }
+                if (proj.ai[1] >= (float)num17 && !flag5)
+                {
+                    proj.ai[1] = 0f;
+                    flag6 = true;
+                    if (!flag5)
+                    {
+                        float scaleFactor3 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
+                        Vector2 value9 = vector;
+                        Vector2 value10 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - value9;
+                        if (guardian.GravityDirection == -1f)
+                        {
+                            value10.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - value9.Y;
+                        }
+                        Vector2 vector6 = Vector2.Normalize(value10);
+                        if (float.IsNaN(vector6.X) || float.IsNaN(vector6.Y))
+                        {
+                            vector6 = -Vector2.UnitY;
+                        }
+                        vector6 *= scaleFactor3;
+                        if (vector6.X != proj.velocity.X || vector6.Y != proj.velocity.Y)
+                        {
+                            proj.netUpdate = true;
+                        }
+                        proj.velocity = vector6;
+                    }
+                }
+                if (proj.soundDelay <= 0 && !flag5)
+                {
+                    proj.soundDelay = num17 - num16;
+                    proj.soundDelay *= 2;
+                    if (proj.ai[0] != 1f)
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 15);
+                    }
+                }
+                if (proj.ai[0] > 10f && !flag5)
+                {
+                    Vector2 vector7 = Vector2.UnitX * 18f;
+                    vector7 = vector7.RotatedBy((double)(proj.rotation - 1.57079637f), default(Vector2));
+                    Vector2 value11 = proj.Center + vector7;
+                    for (int k = 0; k < num16 + 1; k++)
+                    {
+                        int num18 = 226;
+                        float num19 = 0.4f;
+                        if (k % 2 == 1)
+                        {
+                            num18 = 226;
+                            num19 = 0.65f;
+                        }
+                        Vector2 vector8 = value11 + ((float)Main.rand.NextDouble() * 6.28318548f).ToRotationVector2() * (12f - (float)(num16 * 2));
+                        int num20 = Dust.NewDust(vector8 - Vector2.One * 8f, 16, 16, num18, proj.velocity.X / 2f, proj.velocity.Y / 2f, 0, default(Color), 1f);
+                        Main.dust[num20].velocity = Vector2.Normalize(value11 - vector8) * 1.5f * (10f - (float)num16 * 2f) / 10f;
+                        Main.dust[num20].noGravity = true;
+                        Main.dust[num20].scale = num19;
+                        //Main.dust[num20].customData = player; //Will this crash the game?
+                    }
+                }
+                if (flag6 && IsThisClientCharacter)
+                {
+                    bool flag7 = !flag4 || guardian.UseMana(guardian.Inventory[guardian.SelectedItem].mana);
+                    bool flag8 = guardian.Channeling && flag7 && !guardian.HasFlag(GuardianFlags.Cursed) && !guardian.CCed;
+                    if (flag8)
+                    {
+                        if (proj.ai[0] == 180f)
+                        {
+                            Vector2 center = proj.Center;
+                            Vector2 vector9 = Vector2.Normalize(proj.velocity);
+                            if (float.IsNaN(vector9.X) || float.IsNaN(vector9.Y))
+                            {
+                                vector9 = -Vector2.UnitY;
+                            }
+                            int num21 = (int)((float)proj.damage * 3f);
+                            int num22 = Projectile.NewProjectile(center.X, center.Y, vector9.X, vector9.Y, 461, num21, proj.knockBack, proj.owner, 0f, (float)proj.whoAmI);
+                            proj.ai[1] = (float)num22;
+                            proj.netUpdate = true;
+                        }
+                        else if (flag5)
+                        {
+                            Projectile projectile = Main.projectile[(int)proj.ai[1]];
+                            if (!projectile.active || projectile.type != 461)
+                            {
+                                proj.Kill();
+                                return;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!flag5)
+                        {
+                            int num23 = 459;
+                            float scaleFactor4 = 10f;
+                            Vector2 center2 = proj.Center;
+                            Vector2 vector10 = Vector2.Normalize(proj.velocity) * scaleFactor4;
+                            if (float.IsNaN(vector10.X) || float.IsNaN(vector10.Y))
+                            {
+                                vector10 = -Vector2.UnitY;
+                            }
+                            float num24 = 0.7f + (float)num16 * 0.3f;
+                            int num25 = (num24 < 1f) ? proj.damage : ((int)((float)proj.damage * 2f));
+                            Projectile.NewProjectile(center2.X, center2.Y, vector10.X, vector10.Y, num23, num25, proj.knockBack, proj.owner, 0f, num24);
+                        }
+                        proj.Kill();
+                    }
+                }
+            }
+            if (proj.type == 633)
+            {
+                float num26 = 30f;
+                if (proj.ai[0] > 90f)
+                {
+                    num26 = 15f;
+                }
+                if (proj.ai[0] > 120f)
+                {
+                    num26 = 5f;
+                }
+                proj.damage = (int)((float)guardian.Inventory[guardian.SelectedItem].damage * guardian.MagicDamageMultiplier);
+                proj.ai[0] += 1f;
+                proj.ai[1] += 1f;
+                bool flag9 = false;
+                if (proj.ai[0] % num26 == 0f)
+                {
+                    flag9 = true;
+                }
+                int num27 = 10;
+                bool flag10 = false;
+                if (proj.ai[0] % num26 == 0f)
+                {
+                    flag10 = true;
+                }
+                if (proj.ai[1] >= 1f)
+                {
+                    proj.ai[1] = 0f;
+                    flag10 = true;
+                    if (IsThisClientCharacter)
+                    {
+                        float scaleFactor5 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
+                        Vector2 value12 = vector;
+                        Vector2 value13 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - value12;
+                        if (guardian.GravityDirection == -1f)
+                        {
+                            value13.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - value12.Y;
+                        }
+                        Vector2 vector11 = Vector2.Normalize(value13);
+                        if (float.IsNaN(vector11.X) || float.IsNaN(vector11.Y))
+                        {
+                            vector11 = -Vector2.UnitY;
+                        }
+                        vector11 = Vector2.Normalize(Vector2.Lerp(vector11, Vector2.Normalize(proj.velocity), 0.92f));
+                        vector11 *= scaleFactor5;
+                        if (vector11.X != proj.velocity.X || vector11.Y != proj.velocity.Y)
+                        {
+                            proj.netUpdate = true;
+                        }
+                        proj.velocity = vector11;
+                    }
+                }
+                proj.frameCounter++;
+                int num28 = (proj.ai[0] < 120f) ? 4 : 1;
+                if (proj.frameCounter >= num28)
+                {
+                    proj.frameCounter = 0;
+                    if (++proj.frame >= 5)
+                    {
+                        proj.frame = 0;
+                    }
+                }
+                if (proj.soundDelay <= 0)
+                {
+                    proj.soundDelay = num27;
+                    proj.soundDelay *= 2;
+                    if (proj.ai[0] != 1f)
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 15);
+                    }
+                }
+                if (flag10 && IsThisClientCharacter)
+                {
+                    bool flag11 = !flag9 || guardian.UseMana(guardian.Inventory[guardian.SelectedItem].mana);
+                    bool flag12 = guardian.Channeling && flag11 && !guardian.HasFlag(GuardianFlags.Cursed) && !guardian.CCed;
+                    if (flag12)
+                    {
+                        if (proj.ai[0] == 1f)
+                        {
+                            Vector2 center3 = proj.Center;
+                            Vector2 vector12 = Vector2.Normalize(proj.velocity);
+                            if (float.IsNaN(vector12.X) || float.IsNaN(vector12.Y))
+                            {
+                                vector12 = -Vector2.UnitY;
+                            }
+                            int num29 = proj.damage;
+                            for (int l = 0; l < 6; l++)
+                            {
+                                Projectile.NewProjectile(center3.X, center3.Y, vector12.X, vector12.Y, 632, num29, proj.knockBack, proj.owner, (float)l, (float)proj.whoAmI);
+                            }
+                            proj.netUpdate = true;
+                        }
+                    }
+                    else
+                    {
+                        proj.Kill();
+                    }
+                }
+            }
+            if (proj.type == 595)
+            {
+                num = 0f;
+                if (proj.spriteDirection == -1)
+                {
+                    num = 3.14159274f;
+                }
+                if (++proj.frame >= Main.projFrames[proj.type])
+                {
+                    proj.frame = 0;
+                }
+                proj.soundDelay--;
+                if (proj.soundDelay <= 0)
+                {
+                    Main.PlaySound(2, (int)proj.Center.X, (int)proj.Center.Y, 1);
+                    proj.soundDelay = 12;
+                }
+                if (IsThisClientCharacter)
+                {
+                    if (guardian.Channeling && !guardian.HasFlag(GuardianFlags.Cursed) && !guardian.CCed)
+                    {
+                        float scaleFactor6 = 1f;
+                        if (guardian.Inventory[guardian.SelectedItem].shoot == proj.type)
+                        {
+                            scaleFactor6 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
+                        }
+                        Vector2 vector13 = Main.MouseWorld - vector;
+                        vector13.Normalize();
+                        if (vector13.HasNaNs())
+                        {
+                            vector13 = Vector2.UnitX * (float)guardian.Direction;
+                        }
+                        vector13 *= scaleFactor6;
+                        if (vector13.X != proj.velocity.X || vector13.Y != proj.velocity.Y)
+                        {
+                            proj.netUpdate = true;
+                        }
+                        proj.velocity = vector13;
+                    }
+                    else
+                    {
+                        proj.Kill();
+                    }
+                }
+                Vector2 vector14 = proj.Center + proj.velocity * 3f;
+                Lighting.AddLight(vector14, 0.8f, 0.8f, 0.8f);
+                if (Main.rand.Next(3) == 0)
+                {
+                    int num30 = Dust.NewDust(vector14 - proj.Size / 2f, proj.width, proj.height, 63, proj.velocity.X, proj.velocity.Y, 100, default(Color), 2f);
+                    Main.dust[num30].noGravity = true;
+                    Main.dust[num30].position -= proj.velocity;
+                }
+            }
+            if (proj.type == 600)
+            {
+                if (proj.ai[0] == 0f)
+                {
+                    if (proj.ai[1] != 0f)
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 114);
+                    }
+                    else
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 115);
+                    }
+                }
+                proj.ai[0] += 1f;
+                if (IsThisClientCharacter && proj.ai[0] == 1f)
+                {
+                    float scaleFactor7 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
+                    Vector2 value14 = vector;
+                    Vector2 value15 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - value14;
+                    if (guardian.GravityDirection == -1f)
+                    {
+                        value15.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - value14.Y;
+                    }
+                    Vector2 vector15 = Vector2.Normalize(value15);
+                    if (float.IsNaN(vector15.X) || float.IsNaN(vector15.Y))
+                    {
+                        vector15 = -Vector2.UnitY;
+                    }
+                    vector15 *= scaleFactor7;
+                    if (vector15.X != proj.velocity.X || vector15.Y != proj.velocity.Y)
+                    {
+                        proj.netUpdate = true;
+                    }
+                    proj.velocity = vector15;
+                    int num31 = 601;
+                    float scaleFactor8 = 3f;
+                    value14 = proj.Center;
+                    Vector2 vector16 = Vector2.Normalize(proj.velocity) * scaleFactor8;
+                    if (float.IsNaN(vector16.X) || float.IsNaN(vector16.Y))
+                    {
+                        vector16 = -Vector2.UnitY;
+                    }
+                    Projectile.NewProjectile(value14.X, value14.Y, vector16.X, vector16.Y, num31, proj.damage, proj.knockBack, proj.owner, proj.ai[1], 0f);
+                }
+                if (proj.ai[0] >= 30f)
+                {
+                    proj.Kill();
+                }
+            }
+            if (proj.type == 611)
+            {
+                if (proj.localAI[1] > 0f)
+                {
+                    proj.localAI[1] -= 1f;
+                }
+                proj.alpha -= 42;
+                if (proj.alpha < 0)
+                {
+                    proj.alpha = 0;
+                }
+                if (proj.localAI[0] == 0f)
+                {
+                    proj.localAI[0] = proj.velocity.ToRotation();
+                }
+                float num32 = (float)((proj.localAI[0].ToRotationVector2().X >= 0f) ? 1 : -1);
+                if (proj.ai[1] <= 0f)
+                {
+                    num32 *= -1f;
+                }
+                Vector2 vector17 = (num32 * (proj.ai[0] / 30f * 6.28318548f - 1.57079637f)).ToRotationVector2();
+                vector17.Y *= (float)Math.Sin((double)proj.ai[1]);
+                if (proj.ai[1] <= 0f)
+                {
+                    vector17.Y *= -1f;
+                }
+                vector17 = vector17.RotatedBy((double)proj.localAI[0], default(Vector2));
+                proj.ai[0] += 1f;
+                if (proj.ai[0] < 30f)
+                {
+                    proj.velocity += 48f * vector17;
+                }
+                else
+                {
+                    proj.Kill();
+                }
+            }
+            if (proj.type == 615)
+            {
+                num = 0f;
+                if (proj.spriteDirection == -1)
+                {
+                    num = 3.14159274f;
+                }
+                proj.ai[0] += 1f;
+                int num33 = 0;
+                if (proj.ai[0] >= 40f)
+                {
+                    num33++;
+                }
+                if (proj.ai[0] >= 80f)
+                {
+                    num33++;
+                }
+                if (proj.ai[0] >= 120f)
+                {
+                    num33++;
+                }
+                int num34 = 5;
+                int num35 = 0;
+                proj.ai[1] -= 1f;
+                bool flag13 = false;
+                int num36 = -1;
+                if (proj.ai[1] <= 0f)
+                {
+                    proj.ai[1] = (float)(num34 - num35 * num33);
+                    flag13 = true;
+                    int num37 = (int)proj.ai[0] / (num34 - num35 * num33);
+                    if (num37 % 7 == 0)
+                    {
+                        num36 = 0;
+                    }
+                }
+                proj.frameCounter += 1 + num33;
+                if (proj.frameCounter >= 4)
+                {
+                    proj.frameCounter = 0;
+                    proj.frame++;
+                    if (proj.frame >= Main.projFrames[proj.type])
+                    {
+                        proj.frame = 0;
+                    }
+                }
+                if (proj.soundDelay <= 0)
+                {
+                    proj.soundDelay = num34 - num35 * num33;
+                    if (proj.ai[0] != 1f)
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 36);
+                    }
+                }
+                if (flag13 && IsThisClientCharacter)
+                {
+                    bool flag14 = guardian.Channeling && guardian.HasAmmo(guardian.Inventory[guardian.SelectedItem]) && !guardian.HasFlag(GuardianFlags.Cursed) && !guardian.CCed;
+                    int num38 = 14;
+                    float scaleFactor9 = 14f;
+                    int weaponDamage = guardian.Inventory[guardian.SelectedItem].damage;
+                    float weaponKnockback = guardian.Inventory[guardian.SelectedItem].knockBack;
+                    if (flag14)
+                    {
+                        {
+                            int projid, damage;
+                            float speed, kb;
+                            guardian.GetAmmoInfo(guardian.Inventory[guardian.SelectedItem], true, out projid, out speed, out damage, out kb);
+                            num38 = projid;
+                            scaleFactor9 = speed;
+                            weaponDamage += damage;
+                            weaponKnockback += kb;
+                        }
+                        float scaleFactor10 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
+                        Vector2 value16 = vector;
+                        Vector2 value17 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - value16;
+                        if (guardian.GravityDirection == -1f)
+                        {
+                            value17.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - value16.Y;
+                        }
+                        Vector2 vector18 = Vector2.Normalize(value17);
+                        if (float.IsNaN(vector18.X) || float.IsNaN(vector18.Y))
+                        {
+                            vector18 = -Vector2.UnitY;
+                        }
+                        vector18 *= scaleFactor10;
+                        vector18 = vector18.RotatedBy(Main.rand.NextDouble() * 0.13089969754219055 - 0.065449848771095276, default(Vector2));
+                        if (vector18.X != proj.velocity.X || vector18.Y != proj.velocity.Y)
+                        {
+                            proj.netUpdate = true;
+                        }
+                        proj.velocity = vector18;
+                        for (int m = 0; m < 1; m++)
+                        {
+                            Vector2 spinningpoint2 = Vector2.Normalize(proj.velocity) * scaleFactor9;
+                            spinningpoint2 = spinningpoint2.RotatedBy(Main.rand.NextDouble() * 0.19634954631328583 - 0.098174773156642914, default(Vector2));
+                            if (float.IsNaN(spinningpoint2.X) || float.IsNaN(spinningpoint2.Y))
+                            {
+                                spinningpoint2 = -Vector2.UnitY;
+                            }
+                            Projectile.NewProjectile(value16.X, value16.Y, spinningpoint2.X, spinningpoint2.Y, num38, weaponDamage, weaponKnockback, proj.owner, 0f, 0f);
+                        }
+                        if (num36 == 0)
+                        {
+                            num38 = 616;
+                            scaleFactor9 = 8f;
+                            for (int n = 0; n < 1; n++)
+                            {
+                                Vector2 spinningpoint3 = Vector2.Normalize(proj.velocity) * scaleFactor9;
+                                spinningpoint3 = spinningpoint3.RotatedBy(Main.rand.NextDouble() * 0.39269909262657166 - 0.19634954631328583, default(Vector2));
+                                if (float.IsNaN(spinningpoint3.X) || float.IsNaN(spinningpoint3.Y))
+                                {
+                                    spinningpoint3 = -Vector2.UnitY;
+                                }
+                                Projectile.NewProjectile(value16.X, value16.Y, spinningpoint3.X, spinningpoint3.Y, num38, weaponDamage + 20, weaponKnockback * 1.25f, proj.owner, 0f, 0f);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        proj.Kill();
+                    }
+                }
+            }
+            if (proj.type == 630)
+            {
+                num = 0f;
+                if (proj.spriteDirection == -1)
+                {
+                    num = 3.14159274f;
+                }
+                proj.ai[0] += 1f;
+                int num39 = 0;
+                if (proj.ai[0] >= 40f)
+                {
+                    num39++;
+                }
+                if (proj.ai[0] >= 80f)
+                {
+                    num39++;
+                }
+                if (proj.ai[0] >= 120f)
+                {
+                    num39++;
+                }
+                int num40 = 24;
+                int num41 = 2;
+                proj.ai[1] -= 1f;
+                bool flag15 = false;
+                if (proj.ai[1] <= 0f)
+                {
+                    proj.ai[1] = (float)(num40 - num41 * num39);
+                    flag15 = true;
+                    int arg_1F5C_0 = (int)proj.ai[0] / (num40 - num41 * num39);
+                }
+                bool flag16 = guardian.Channeling && guardian.HasAmmo(guardian.Inventory[guardian.SelectedItem]) && !guardian.HasFlag(GuardianFlags.Cursed) && !guardian.CCed;
+                if (proj.localAI[0] > 0f)
+                {
+                    proj.localAI[0] -= 1f;
+                }
+                if (proj.soundDelay <= 0 && flag16)
+                {
+                    proj.soundDelay = num40 - num41 * num39;
+                    if (proj.ai[0] != 1f)
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 5);
+                    }
+                    proj.localAI[0] = 12f;
+                }
+                guardian.SetCooldownValue(GuardianCooldownManager.CooldownType.PhantasmCooldown, 2);
+                if (flag15 && IsThisClientCharacter)
+                {
+                    int num42 = 14;
+                    float scaleFactor11 = 14f;
+                    int weaponDamage2 = guardian.Inventory[guardian.SelectedItem].damage;
+                    float weaponKnockback2 = guardian.Inventory[guardian.SelectedItem].knockBack;
+                    if (flag16)
+                    {
+                        {
+                            int projid, damage;
+                            float speed, kb;
+                            guardian.GetAmmoInfo(guardian.Inventory[guardian.SelectedItem], true, out projid, out speed, out damage, out kb);
+                            num42 = projid;
+                            scaleFactor11 = speed;
+                            weaponDamage2 += damage;
+                            weaponKnockback2 += kb;
+                        }
+                        float scaleFactor12 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
+                        Vector2 vector19 = vector;
+                        Vector2 value18 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - vector19;
+                        if (guardian.GravityDirection == -1f)
+                        {
+                            value18.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - vector19.Y;
+                        }
+                        Vector2 value19 = Vector2.Normalize(value18);
+                        if (float.IsNaN(value19.X) || float.IsNaN(value19.Y))
+                        {
+                            value19 = -Vector2.UnitY;
+                        }
+                        value19 *= scaleFactor12;
+                        if (value19.X != proj.velocity.X || value19.Y != proj.velocity.Y)
+                        {
+                            proj.netUpdate = true;
+                        }
+                        proj.velocity = value19 * 0.55f;
+                        for (int num43 = 0; num43 < 4; num43++)
+                        {
+                            Vector2 vector20 = Vector2.Normalize(proj.velocity) * scaleFactor11 * (0.6f + Main.rand.NextFloat() * 0.8f);
+                            if (float.IsNaN(vector20.X) || float.IsNaN(vector20.Y))
+                            {
+                                vector20 = -Vector2.UnitY;
+                            }
+                            Vector2 vector21 = vector19 + Utils.RandomVector2(Main.rand, -15f, 15f);
+                            int num44 = Projectile.NewProjectile(vector21.X, vector21.Y, vector20.X, vector20.Y, num42, weaponDamage2, weaponKnockback2, proj.owner, 0f, 0f);
+                            Main.projectile[num44].noDropItem = true;
+                        }
+                    }
+                    else
+                    {
+                        proj.Kill();
+                    }
+                }
+            }
+            proj.position = (guardian.HeldItemHand == HeldHand.Left ? guardian.GetGuardianLeftHandPosition : guardian.GetGuardianRightHandPosition) - proj.Size / 2f;
+            proj.rotation = proj.velocity.ToRotation() + num;
+            proj.spriteDirection = proj.direction;
+            proj.timeLeft = 2;
+            guardian.FaceDirection(proj.direction);
+            guardian.HeldProj = proj.whoAmI;
+            guardian.ItemUseTime = 2;
+            guardian.ItemAnimationTime = 2;
+            guardian.ItemRotation = (float)Math.Atan2((double)(proj.velocity.Y * (float)proj.direction), (double)(proj.velocity.X * (float)proj.direction));
+            if (proj.type == 460 || proj.type == 611)
+            {
+                /*Vector2 vector22 = Main.OffsetsPlayerOnhand[player.bodyFrame.Y / 56] * 2f;
+                if (guardian.Direction != 1)
+                {
+                    vector22.X = (float)player.bodyFrame.Width - vector22.X;
+                }
+                if (player.gravDir != 1f)
+                {
+                    vector22.Y = (float)player.bodyFrame.Height - vector22.Y;
+                }
+                vector22 -= new Vector2((float)(player.bodyFrame.Width - player.width), (float)(player.bodyFrame.Height - 42)) / 2f;
+                base.Center = player.RotatedRelativePoint(player.position + vector22, true) - proj.velocity;*/
+                //proj.Center = (guardian.HeldItemHand == HeldHand.Left ? guardian.GetGuardianLeftHandPosition : guardian.GetGuardianRightHandPosition);
+            }
+            if (proj.type == 615)
+            {
+                proj.position.Y = proj.position.Y + guardian.GravityDirection * 2f;
+            }
+            if (proj.type == 611 && proj.alpha == 0)
+            {
+                for (int num45 = 0; num45 < 2; num45++)
+                {
+                    Dust dust = Main.dust[Dust.NewDust(proj.position + proj.velocity * 2f, proj.width, proj.height, 6, 0f, 0f, 100, Color.Transparent, 2f)];
+                    dust.noGravity = true;
+                    dust.velocity *= 2f;
+                    dust.velocity += proj.localAI[0].ToRotationVector2();
+                    dust.fadeIn = 1.5f;
+                }
+                float num46 = 18f;
+                int num47 = 0;
+                while ((float)num47 < num46)
+                {
+                    if (Main.rand.Next(4) == 0)
+                    {
+                        Vector2 position = proj.position + proj.velocity + proj.velocity * ((float)num47 / num46);
+                        Dust dust2 = Main.dust[Dust.NewDust(position, proj.width, proj.height, 6, 0f, 0f, 100, Color.Transparent, 1f)];
+                        dust2.noGravity = true;
+                        dust2.fadeIn = 0.5f;
+                        dust2.velocity += proj.localAI[0].ToRotationVector2();
+                        dust2.noLight = true;
+                    }
+                    num47++;
+                }
+            }
+        }
+
+        private void MedusaRayAI(Projectile proj)
+        {
+            if (!GuardianProj.ContainsKey(proj.whoAmI) || !MainMod.ActiveGuardians.ContainsKey(GuardianProj[proj.whoAmI].WhoAmID))
+            {
+                proj.active = false;
+                return;
+            }
+            TerraGuardian guardian = GuardianProj[proj.whoAmI];
+            Vector2 zero2 = Vector2.Zero;
+            bool IsThisClientCharacter = true;
+            if (proj.type == 535)
+            {
+                zero2.X = (float)guardian.Direction * 6f;
+                zero2.Y = guardian.GravityDirection * -14f;
+                proj.ai[0] += 1f;
+                int num914 = 0;
+                if (proj.ai[0] >= 60f)
+                {
+                    num914++;
+                }
+                if (proj.ai[0] >= 180f)
+                {
+                    num914++;
+                }
+                if (proj.ai[0] >= 240f)
+                {
+                    proj.Kill();
+                    return;
+                }
+                bool flag40 = false;
+                if (proj.ai[0] == 60f || proj.ai[0] == 180f)
+                {
+                    flag40 = true;
+                }
+                bool flag41 = proj.ai[0] >= 180f;
+                if (flag41)
+                {
+                    if (proj.frame < 8)
+                    {
+                        proj.frame = 8;
+                    }
+                    if (proj.frame >= 12)
+                    {
+                        proj.frame = 8;
+                    }
+                    proj.frameCounter++;
+                    if (++proj.frameCounter >= 5)
+                    {
+                        proj.frameCounter = 0;
+                        if (++proj.frame >= 12)
+                        {
+                            proj.frame = 8;
+                        }
+                    }
+                }
+                else if (++proj.frameCounter >= 5)
+                {
+                    proj.frameCounter = 0;
+                    if (++proj.frame >= 8)
+                    {
+                        proj.frame = 0;
+                    }
+                }
+                Vector2 center11 = guardian.CenterPosition;
+                Vector2 vector94 = new Vector2((float)guardian.AimDirection.X, (float)guardian.AimDirection.Y) - center11;
+                if (guardian.GravityDirection == -1f)
+                {
+                    vector94.Y = (float)(Main.screenHeight - guardian.AimDirection.Y) - center11.Y;
+                }
+                Vector2 velocity2 = new Vector2((float)Math.Sign((vector94.X == 0f) ? ((float)guardian.Direction) : vector94.X), 0f);
+                if (velocity2.X != proj.velocity.X || velocity2.Y != proj.velocity.Y)
+                {
+                    proj.netUpdate = true;
+                }
+                proj.velocity = velocity2;
+                if (proj.soundDelay <= 0 && !flag41)
+                {
+                    proj.soundDelay = 10;
+                    proj.soundDelay *= 2;
+                    if (proj.ai[0] != 1f)
+                    {
+                        Main.PlaySound(2, (int)proj.position.X, (int)proj.position.Y, 15);
+                    }
+                }
+                if (proj.ai[0] == 181f)
+                {
+                    Main.PlaySound(4, (int)proj.position.X, (int)proj.position.Y, 17);
+                }
+                if (proj.ai[0] > 10f && !flag41)
+                {
+                    Vector2 vector95 = proj.Center + new Vector2((float)(guardian.Direction * 2), guardian.GravityDirection * 5f);
+                    float scaleFactor10 = MathHelper.Lerp(30f, 10f, (proj.ai[0] - 10f) / 180f);
+                    float num915 = Main.rand.NextFloat() * 6.28318548f;
+                    for (float num916 = 0f; num916 < 1f; num916 += 1f)
+                    {
+                        Vector2 value57 = Vector2.UnitY.RotatedBy((double)(num916 / 1f * 6.28318548f + num915), default(Vector2));
+                        Dust dust9 = Main.dust[Dust.NewDust(vector95, 0, 0, 228, 0f, 0f, 0, default(Color), 1f)];
+                        dust9.position = vector95 + value57 * scaleFactor10;
+                        dust9.noGravity = true;
+                        //dust9.customData = player5; //Please don't crash
+                        dust9.velocity = value57 * -2f;
+                    }
+                }
+                if (proj.ai[0] > 180f && proj.ai[0] <= 182f)
+                {
+                    Vector2 vector96 = proj.Center + new Vector2((float)(guardian.Direction * 2), guardian.GravityDirection * 5f);
+                    float scaleFactor11 = MathHelper.Lerp(20f, 30f, (proj.ai[0] - 180f) / 182f);
+                    Main.rand.NextFloat();
+                    for (float num917 = 0f; num917 < 10f; num917 += 1f)
+                    {
+                        Vector2 value58 = Vector2.UnitY.RotatedByRandom(6.2831854820251465) * (Main.rand.NextFloat() * 0.5f + 0.5f);
+                        Dust dust10 = Main.dust[Dust.NewDust(vector96, 0, 0, 228, 0f, 0f, 0, default(Color), 1f)];
+                        dust10.position = vector96 + value58 * scaleFactor11;
+                        dust10.noGravity = true;
+                        //dust10.customData = player5;
+                        dust10.velocity = value58 * 4f;
+                        dust10.scale = 0.5f + Main.rand.NextFloat();
+                    }
+                }
+                if (IsThisClientCharacter)
+                {
+                    bool flag42 = !flag40 || guardian.UseMana(guardian.Inventory[guardian.SelectedItem].mana);
+                    bool flag43 = guardian.Channeling && flag42;
+                    if ((!flag41 && !flag43) || proj.ai[0] == 180f)
+                    {
+                        Vector2 vector97 = guardian.CenterPosition + new Vector2((float)(guardian.Direction * 4), guardian.GravityDirection * 2f);
+                        int num918 = proj.damage * (1 + num914);
+                        vector97 = guardian.CenterPosition;
+                        int num919 = 0;
+                        float num920 = 0f;
+                        for (int num921 = 0; num921 < 200; num921++)
+                        {
+                            NPC nPC9 = Main.npc[num921];
+                            if (nPC9.active && proj.Distance(nPC9.Center) < 500f && nPC9.CanBeChasedBy(this, false) && Collision.CanHitLine(nPC9.position, nPC9.width, nPC9.height, vector97, 0, 0))
+                            {
+                                Vector2 v4 = nPC9.Center - vector97;
+                                num920 += v4.ToRotation();
+                                num919++;
+                                int num922 = Projectile.NewProjectile(vector97.X, vector97.Y, v4.X, v4.Y, 536, 0, 0f, proj.owner, (float)proj.whoAmI, 0f);
+                                Main.projectile[num922].Center = nPC9.Center;
+                                Main.projectile[num922].damage = num918;
+                                Main.projectile[num922].Damage();
+                                Main.projectile[num922].damage = 0;
+                                Main.projectile[num922].Center = vector97;
+                                proj.ai[0] = 180f;
+                            }
+                        }
+                        if (num919 != 0)
+                        {
+                            num920 /= (float)num919;
+                        }
+                        else
+                        {
+                            num920 = ((guardian.Direction == 1) ? 0f : 3.14159274f);
+                        }
+                        for (int num923 = 0; num923 < 6; num923++)
+                        {
+                            Vector2 vector98 = Vector2.Zero;
+                            if (Main.rand.Next(4) != 0)
+                            {
+                                vector98 = Vector2.UnitX.RotatedByRandom(3.1415927410125732).RotatedBy((double)num920, default(Vector2)) * new Vector2(200f, 50f) * (Main.rand.NextFloat() * 0.7f + 0.3f);
+                            }
+                            else
+                            {
+                                vector98 = Vector2.UnitX.RotatedByRandom(6.2831854820251465) * new Vector2(200f, 50f) * (Main.rand.NextFloat() * 0.7f + 0.3f);
+                            }
+                            Projectile.NewProjectile(vector97.X, vector97.Y, vector98.X, vector98.Y, 536, 0, 0f, proj.owner, (float)proj.whoAmI, 0f);
+                        }
+                        proj.ai[0] = 180f;
+                        proj.netUpdate = true;
+                    }
+                }
+                Lighting.AddLight(proj.Center, 0.9f, 0.75f, 0.1f);
+            }
+            proj.rotation = ((guardian.GravityDirection == 1f) ? 0f : 3.14159274f);
+            proj.spriteDirection = proj.direction;
+            proj.timeLeft = 2;
+            Vector2 vector99 = guardian.HeldItemHand == HeldHand.Left ? guardian.GetGuardianLeftHandPosition : guardian.GetGuardianRightHandPosition;
+            proj.Center = vector99.Floor();
+            guardian.FaceDirection(proj.direction);
+            guardian.HeldProj = proj.whoAmI;
+            guardian.ItemUseTime = 2;
+            guardian.ItemAnimationTime = 2;
+        }
     }
 }

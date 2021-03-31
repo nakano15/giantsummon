@@ -37,7 +37,7 @@ namespace giantsummon.Creatures
             SlowDown = 0.47f;
             MaxJumpHeight = 15;
             JumpSpeed = 7.08f;
-            CanDuck = true;
+            CanDuck = false;
             ReverseMount = false;
             DrinksBeverage = false;
             SpecialAttackBasedCombat = true;

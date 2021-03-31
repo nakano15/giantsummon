@@ -384,9 +384,9 @@ namespace giantsummon.Creatures
             g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
             g.AddFlag(GuardianFlags.HideKOBar);
             //g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
-            g.TrailLength += 2;
-            if(g.TrailDelay == 0)
-                g.TrailDelay = 4;
+            //g.TrailLength += 2;
+            //if(g.TrailDelay == 0)
+            //    g.TrailDelay = 4;
             if (g.KnockedOut)
             {
                 g.AddFlag(GuardianFlags.DontTakeAggro);

@@ -136,6 +136,16 @@ namespace giantsummon
                     GroundPetsAndBabySlimeAI(projectile);
                     return false;
                 }
+                if (projectile.aiStyle == 75)
+                {
+                    PhantasmAI(projectile);
+                    return false;
+                }
+                if (projectile.aiStyle == 100)
+                {
+                    MedusaRayAI(projectile);
+                    return false;
+                }
                 backup = new PlayerDataBackup(Main.player[projectile.owner], g);
                 BackupUsed = true;
             }

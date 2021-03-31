@@ -2,3 +2,6 @@
 Rococo and Bree are now rarer to be found.
 Companions will now have their flag of attacking target disabled, when their last target is dead, and It finds another.
 Fixed an issue with companions attack range, when using light weapons, like normal Terrarian swords, and the attack range of their last animation frame.
+Companions will now only aim at what they will attack.
+Added "CharacterPositionYDiscount" variable to GuardianBase.
+	That variable will be very useful if you have characters whose feet aren't actually on the lower bound of the spritesheet.
