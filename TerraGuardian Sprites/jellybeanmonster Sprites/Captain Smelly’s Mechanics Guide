@@ -5,10 +5,14 @@ GP=Gemstone Power
 Psv=Passive
 TG= terra guardian
 
-Plasma Falchion:
--Starting weapon that can get added effects upon using a gemstone on it
--Starting damage = 15 
-- 1+ extra Damage per level of tg
+Weapons:
+
+>Plasma Falchion-Starting weapon that can get added effects upon using a gemstone on it
+-Starting damage = 15 (1+ extra Damage per level of tg)
+
+>Arm Blaster-Simple ranged weapon that requires mana to use
+-Starting damage- 5(+1 damage per level of tg)
+-is rapid fire
 
 Gemstone Tiers-
 Applies to all tiers>
