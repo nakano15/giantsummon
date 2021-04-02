@@ -5,3 +5,7 @@ Fixed an issue with companions attack range, when using light weapons, like norm
 Companions will now only aim at what they will attack.
 Added "CharacterPositionYDiscount" variable to GuardianBase.
 	That variable will be very useful if you have characters whose feet aren't actually on the lower bound of the spritesheet.
+Companions will no longer spam boomerang like items.
+	While the companion has the boomerang, or other weapon of the kind thrown, It will try picking a ranged or magic weapon to attack.
+Companions will now know what to do next, after they stop using a furniture at their house.
+Your following companions will now try to better follow you around.

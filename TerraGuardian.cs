@@ -4892,7 +4892,7 @@ namespace giantsummon
                         {
                             SelectedItem = MagicPosition;
                         }
-                        if ((SelectedItem == -1 || InMeleeRange) && MeleePosition > -1)
+                        if (MeleePosition > -1 && (SelectedItem == -1 || InMeleeRange) && !HasProjectileOfThisTypeSpawned(Inventory[MeleePosition]))
                         {
                             SelectedItem = MeleePosition;
                         }
@@ -6696,7 +6696,6 @@ namespace giantsummon
 
         public bool NewIdleBehavior()
         {
-            //SaySomething(CurrentIdleAction.ToString() + " Time:" + IdleActionTime);
             if (!IsAttackingSomething && TalkPlayerID > -1)
             {
                 if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome) || IdleActionTime < 5)
@@ -6933,6 +6932,7 @@ namespace giantsummon
                             }
                             break;
                         case IdleActions.UseNearbyFurniture:
+                        case IdleActions.UseNearbyFurnitureHome:
                             {
                                 LeaveFurniture();
                                 ChangeIdleAction(IdleActions.Wait, 600 + Main.rand.Next(400));
@@ -9939,7 +9939,7 @@ namespace giantsummon
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
             Player Owner = Main.player[OwnerPos];
             Vector2 PositionDifference = Vector2.Zero;
-            float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0;
+            float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0, LeaderSpeedY = 0;
             int LeaderHeight = 1;
             bool LeaderWet = false;
             if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
@@ -9948,6 +9948,7 @@ namespace giantsummon
                 PositionDifference = guardian.CenterPosition;
                 LeaderCenterX = PositionDifference.X;
                 LeaderSpeedX = guardian.Velocity.X;
+                LeaderSpeedY = guardian.Velocity.Y;
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
                 LeaderWet = guardian.Wet;
@@ -9958,6 +9959,7 @@ namespace giantsummon
                 PositionDifference = guardian.CenterPosition;
                 LeaderCenterX = PositionDifference.X;
                 LeaderSpeedX = guardian.Velocity.X;
+                LeaderSpeedY = guardian.Velocity.Y;
                 LeaderBottom = guardian.Position.Y;
                 LeaderHeight = guardian.Height;
                 LeaderWet = guardian.Wet;
@@ -9967,6 +9969,7 @@ namespace giantsummon
                 PositionDifference = Owner.Center;
                 LeaderCenterX = PositionDifference.X;
                 LeaderSpeedX = Owner.velocity.X;
+                LeaderSpeedY = Owner.velocity.Y;
                 LeaderBottom = Owner.position.Y + Owner.height;
                 LeaderHeight = Owner.height;
                 LeaderWet = Owner.wet;
@@ -9979,6 +9982,7 @@ namespace giantsummon
             }*/
             float DistanceMult = IsAttackingSomething ? 1.5f : 1f, 
                   DistanceBonus = 48 * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
+            float BottomDistanceY = LeaderBottom - Position.Y;
             if (ChargeAhead)
             {
                 PositionDifference.X += (48f + Math.Abs(Owner.velocity.X) + DistanceBonus) * Owner.direction * (Confused ? -1 : 1);
@@ -9999,7 +10003,68 @@ namespace giantsummon
                 {
                     LeaveFurniture();
                 }
-                if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 48 + DistanceBonus - XDiscount)
+                if (Math.Abs(BottomDistanceY) >= 48 && LeaderSpeedY == 0)
+                {
+                    if (Math.Abs(PositionDifference.X) >= 8)
+                    {
+                        if (PositionDifference.X < 0)
+                            MoveLeft = true;
+                        else
+                            MoveRight = true;
+                    }
+                    else
+                    {
+                        if (BottomDistanceY > 0)
+                        {
+                            if (IsStandingOnAPlatform)
+                            {
+                                MoveDown = true;
+                                Jump = true;
+                            }
+                        }
+                        else
+                        {
+                            if (BottomDistanceY < 0 && BottomDistanceY > -8 * 16 && ((!Jump && Velocity.Y == 0) || JumpHeight > 0))
+                            {
+                                int XStart = (int)(Position.X - CollisionWidth * 0.5f) / 16, XEnd = (int)(Position.X + CollisionWidth * 0.5f) / 16;
+                                bool BlockedAbove = false, PlatformAbove = false;
+                                int YStart = (int)Position.Y / 16;
+                                for (int y = -2; y >= -Math.Abs(BottomDistanceY / 16); y--)
+                                {
+                                    for (int x = XStart; x < XEnd; x++)
+                                    {
+                                        Tile tile = Framing.GetTileSafely(x, YStart + y);
+                                        if (tile.active() && Main.tileSolid[tile.type])
+                                        {
+                                            if (!Terraria.ID.TileID.Sets.Platforms[tile.type])
+                                            {
+                                                BlockedAbove = true;
+                                                PlatformAbove = false;
+                                                break;
+                                            }
+                                            else //How to recognize stairs?
+                                            {
+                                                PlatformAbove = true;
+                                            }
+                                        }
+                                        if (PlatformAbove || BlockedAbove)
+                                            break;
+                                    }
+                                }
+                                if (!BlockedAbove && PlatformAbove)
+                                    Jump = true;
+                                else if (BlockedAbove)
+                                {
+                                    if (PositionDifference.X < 0)
+                                        MoveLeft = true;
+                                    else
+                                        MoveRight = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 48 + DistanceBonus - XDiscount)
                 {
                     if (PositionDifference.X < 0)
                         MoveLeft = true;
@@ -10074,7 +10139,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        if(Collision.CanHitLine(TopLeftPosition, CollisionWidth, CollisionHeight, new Vector2(LeaderCenterX - 2, LeaderBottom - CollisionHeight * 0.5f), 4, 4))
+                        if(false && Collision.CanHitLine(TopLeftPosition, CollisionWidth, CollisionHeight, new Vector2(LeaderCenterX - 2, LeaderBottom - CollisionHeight * 0.5f), 4, 4))
                         {
                             bool HasPlatformAbove = false, HasSolidTile = false;
                             for (int y = 0; y < MaxJumpHeight * JumpSpeed; y++)
@@ -11038,15 +11103,41 @@ namespace giantsummon
 
         private bool HasProjectileOfThisTypeSpawned(Item item)
         {
-            if (item.shoot == 13 || item.shoot == 32 || (item.shoot >= 230 && item.shoot <= 235) || item.shoot == 315 || item.shoot == 331 || item.shoot == 372)
+            switch (item.shoot)
             {
-                for (int i = 0; i < 1000; i++)
-                {
-                    if (Main.projectile[i].active && Main.projectile[i].owner == GetSomeoneToSpawnProjectileFor && ProjMod.IsGuardianProjectile(i) && Main.projectile[i].type == item.shoot && Main.projectile[i].ai[0] != 2f)
+                case 6:
+                case 13:
+                case 19:
+                case 32:
+                case 33:
+                case 52:
+                case 106:
+                case 113:
+                case 182:
+                case 230:
+                case 231:
+                case 232:
+                case 233:
+                case 234:
+                case 235:
+                case 272:
+                case 301:
+                case 315:
+                case 320:
+                case 331:
+                case 333:
+                case 372:
+                    int Count = 0;
+                    for (int i = 0; i < 1000; i++)
                     {
-                        return true;
+                        if (Main.projectile[i].active && Main.projectile[i].owner == GetSomeoneToSpawnProjectileFor && ProjMod.IsGuardianProjectile(i) && Main.projectile[i].type == item.shoot && Main.projectile[i].ai[0] != 2f)
+                        {
+                            Count++;
+                            if (Count >= item.stack)
+                                return true;
+                        }
                     }
-                }
+                    break;
             }
             return false;
         }
