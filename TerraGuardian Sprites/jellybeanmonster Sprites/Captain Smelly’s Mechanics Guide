@@ -8,10 +8,10 @@ TG= terra guardian
 Weapons:
 
 >Plasma Falchion-Starting weapon that can get added effects upon using a gemstone on it
--Starting damage = 15 (1+ extra Damage per level of tg)
+-Starting damage = 15 (1+ extra Damage per freindship level of tg)
 
 >Arm Blaster-Simple ranged weapon that requires mana to use
--Starting damage- 5(+1 damage per level of tg)
+-Starting damage- 5(+1 damage per freinship level of tg)
 -is rapid fire
 
 Gemstone Tiers-
@@ -27,13 +27,13 @@ Psv- High base knockback on weapon swings but slower attack speed,
 Gp- Sends sharp topaz shards that pierce threw targets but collides with blocks and applies bleeding debuff
 
 
->energized Sapphire
+>Energized Sapphire
 Psv- Gives AttackSpeed Bonus but knock back is very low and PF damage is reduced by 15%
 Gp-Blue Streak of energy that does damage and applies electrified debuff
 
 >Bloody Ruby
-Psv-Gives lifeDrain on sword swings
-gp-Sends out a disk wave that has lifedrain
+Psv-Gives lifedrain on sword swings
+Gp-Sends out a disk wave that has lifedrain
 
 >Critical Emerald
 Psv-Gives higher base crit Chance
@@ -45,7 +45,7 @@ GP- Bright Light that stuns enemies for 2 seconds(Cooldown 10 seconds)
 
 Items:
 Phantom device- Allows usage of phantasm blitz attack
--Can be upgraded to allow for multiple usages of phantasm blitz
+-Can be upgraded to allow for multiple usages of phantasm blitz and reduce startup time
 
 
 Super moves:
