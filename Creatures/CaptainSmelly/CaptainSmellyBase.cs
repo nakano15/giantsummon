@@ -146,6 +146,25 @@ namespace giantsummon.Creatures
                 AddNewSubAttackFrame(4, -1, -1, i);
             }
             AddNewSubAttackFrame(8, -1, -1, 45);
+            special.CalculateAttackDamage = delegate (TerraGuardian tg)
+            {
+                int Damage = 10;
+                if(tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].melee)
+                {
+                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useTime / 60));
+                }
+                /*int StrongestDamage = 0;
+                for (int i = 0; i < 10; i++)
+                {
+                    if (tg.Inventory[i].type > 0 && tg.Inventory[i].melee && tg.Inventory[i].damage > 0)
+                    {
+                        int ThisDamage = (int)(tg.Inventory[i].damage * ((float)tg.Inventory[i].useTime / 60));
+                        if (ThisDamage > StrongestDamage)
+                            StrongestDamage = ThisDamage;
+                    }
+                }*/
+                return (int)(Damage * tg.MeleeDamageMultiplier);
+            };
             special.WhenFrameUpdatesScript = delegate (TerraGuardian tg, int Frame, int Time)
             {
                 if(Frame == 1)
@@ -153,7 +172,7 @@ namespace giantsummon.Creatures
                     Rectangle AttackHitbox = new Rectangle(-16 * tg.Direction + (int)tg.Position.X, -110 + (int)tg.Position.Y, 78, 94);
                     if (tg.LookingLeft)
                         AttackHitbox.X -= AttackHitbox.Width;
-                    int Damage = 8;
+                    int Damage = tg.SubAttackDamage;
                     int CriticalRate = 4;
                     float Knockback = 6f;
                     for(int n = 0; n < 200; n++)

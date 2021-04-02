@@ -8,6 +8,7 @@ namespace giantsummon
     public class GuardianSpecialAttack
     {
         public List<GuardianSpecialAttackFrame> SpecialAttackFrames = new List<GuardianSpecialAttackFrame>();
+        public SubAttackCombatType combatType = SubAttackCombatType.Melee;
         public bool CanMove = true;
         public float MinRange = 300, MaxRange = 400;
         public Action<TerraGuardian, int, int> WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID, int FrameTime) { }
@@ -17,6 +18,18 @@ namespace giantsummon
         {
 
         };
+        public Func<TerraGuardian, int> CalculateAttackDamage = delegate (TerraGuardian tg) { return 0; };
+        public GuardianSpecialAttack(SubAttackCombatType subAttackCombatType = SubAttackCombatType.Melee)
+        {
+            this.combatType = subAttackCombatType;
+        }
+
+        public enum SubAttackCombatType
+        {
+            Melee,
+            Ranged,
+            Magic
+        }
     }
 
     public class GuardianSpecialAttackFrame

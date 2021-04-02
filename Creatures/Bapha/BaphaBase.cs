@@ -90,8 +90,16 @@ namespace giantsummon.Creatures
             //16 = 65º
             //17 = 120º
             //18 = 180º
-            GuardianSpecialAttack specialAttack = AddNewSubAttack();
+            GuardianSpecialAttack specialAttack = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Magic);
             specialAttack.CanMove = false;
+            specialAttack.CalculateAttackDamage = delegate (TerraGuardian tg)
+            {
+                int Damage = 20;
+                if (tg.SelectedItem > -1)
+                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.75f);
+                Damage = (int)(Damage * tg.MagicDamageMultiplier);
+                return Damage;
+            };
             specialAttack.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame, int Time)
             {
                 if(Frame == 0)
@@ -104,10 +112,7 @@ namespace giantsummon.Creatures
                     Vector2 ShotDirection = new Vector2(tg.AimDirection.X, tg.AimDirection.Y) - ProjectileSpawnPosition;
                     ShotDirection.Normalize();
                     ShotDirection *= 8f;
-                    int Damage = 20;
-                    if (tg.SelectedItem > -1)
-                        Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.75f);
-                    Damage = (int)(Damage * tg.MagicDamageMultiplier);
+                    int Damage = tg.SubAttackDamage;
                     int resultproj = Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection, 
                         Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>(),
                         Damage, 1.2f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer));

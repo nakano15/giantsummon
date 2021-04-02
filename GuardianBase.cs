@@ -1289,9 +1289,9 @@ namespace giantsummon
             return "";
         }
 
-        public GuardianSpecialAttack AddNewSubAttack()
+        public GuardianSpecialAttack AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType subAttackType = GuardianSpecialAttack.SubAttackCombatType.Melee)
         {
-            SpecialAttackList.Add(new GuardianSpecialAttack());
+            SpecialAttackList.Add(new GuardianSpecialAttack(subAttackType));
             return SpecialAttackList[SpecialAttackList.Count - 1];
         }
 

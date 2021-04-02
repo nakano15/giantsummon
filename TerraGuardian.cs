@@ -362,7 +362,7 @@ namespace giantsummon
         public PrioritaryBehavior PrioritaryBehaviorType = PrioritaryBehavior.None;
         private byte _SubAttack = 0;
         public int SubAttackID { get { return _SubAttack - 1; } }
-        public int SubAttackTime = 0;
+        public int SubAttackTime = 0, SubAttackDamage = 0;
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
         public static int CurrentDrawnOrderID = 0;
@@ -13423,10 +13423,11 @@ namespace giantsummon
 
         public void UseSubAttack(int ID)
         {
-            if (ID >= 254)
+            if (ID >= Base.SpecialAttackList.Count)
                 return;
             _SubAttack = (byte)(ID + 1);
             SubAttackTime = 0;
+            SubAttackDamage = Base.SpecialAttackList[ID].CalculateAttackDamage(this);
             //Main.NewText("Using Sub Attack " + ID);
         }
 
