@@ -14,13 +14,13 @@ namespace giantsummon.Creatures
         /// -Very playful.
         /// -Blames himself for his old partner's demise.
         /// -Bad at protecting people.
-        /// -Extremelly sociable.
+        /// -Extremely sociable.
         /// </summary>
 
         public AlexBase()
         {
             Name = "Alex";
-            Description = "Your new best friend, a very playful one.";
+            Description = "Your new best friend - a very playful one.";
             Size = GuardianSize.Large;
             Width = 68;
             Height = 62;
@@ -370,8 +370,8 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             Mes.Add("Yay! I met more people!");
             Mes.Add("Don't worry, I'll protect you from any danger.");
-            Mes.Add("I'm sure you would like to meet " + AlexRecruitScripts.AlexOldPartner + ", well, she was a bit closed to other people, but she was my best pal, that's what matter, I guess?");
-            Mes.Add("I wonder if " + AlexRecruitScripts.AlexOldPartner + "'s tombstone is alright. I should check it up later?");
+            Mes.Add("I'm sure you would like to meet " + AlexRecruitScripts.AlexOldPartner + ". Well, she was a bit closed off to other people, but she was my best pal. That's what matter, I guess?");
+            Mes.Add("I wonder if " + AlexRecruitScripts.AlexOldPartner + "'s tombstone is alright. Should I check it up later?");
             if (Main.bloodMoon)
             {
                 Mes.Add("Stay near me and you'll be safe.");
@@ -380,17 +380,17 @@ namespace giantsummon.Creatures
             if (Main.eclipse)
             {
                 Mes.Add("I think I saw some of those guys in some movies I watched with " + AlexRecruitScripts.AlexOldPartner + ".");
-                Mes.Add("I don't fear any of those monsters outside, the only thing I fear is the Legion, but It doesn't exists in this world.");
+                Mes.Add("I don't fear any of those monsters outside. The only thing I fear is the Legion, but It doesn't exist in this world.");
             }
             if (Main.dayTime)
             {
                 if (!Main.eclipse)
                 {
                     if (!Main.raining)
-                        Mes.Add("The day seems good enough for playing outside!");
+                        Mes.Add("This day seems good enough for playing outside!");
                     else
-                        Mes.Add("The rain would spoil the fun, If wasn't for the puddles.");
-                    Mes.Add("I still have two AA batteries to be depleted, let's play a game!");
+                        Mes.Add("The rain would spoil all the fun if it weren't for the puddles.");
+                    Mes.Add("I still have two AA batteries to be depleted, so let's play a game!");
                 }
             }
             else
@@ -405,14 +405,14 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("When you are not around, I play some Hide and Seek with [gn:0]. He's really bad at hiding, his tail gives him away, but It's fun to always find him.");
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
-                    Mes.Add("Do you know why [gn:0] eats [nn:" + Terraria.ID.NPCID.Merchant + "]'s trash? I'd join him but, " + AlexRecruitScripts.AlexOldPartner + " teached me that eating trash is bad.");
+                    Mes.Add("Do you know why [gn:0] eats [nn:" + Terraria.ID.NPCID.Merchant + "]'s trash? I'd join him but, " + AlexRecruitScripts.AlexOldPartner + " taught me that eating trash is bad.");
             }
             if (NpcMod.HasGuardianNPC(1))
             {
-                Mes.Add("I fertilized [gn:1]'s yard, and she thanked me by chasing me while swinging her broom on me. I guess we are besties now.");
+                Mes.Add("I fertilized [gn:1]'s yard, and she thanked me by chasing me while swinging her broom at me. I guess we are besties now.");
                 Mes.Add("[gn:1] looked very upset when I was playing with her red cloak. By the way, tell her that you didn't see me if she asks.");
                 if (NpcMod.HasGuardianNPC(2))
-                    Mes.Add("Why [gn:1] watches [gn:2] and I playing, and don't join us in the fun? Would be better than staring, right?");
+                    Mes.Add("Why does [gn:1] watches [gn:2] and I play? Why don't she join us in the fun? That would be better than staring, right?");
             }
             if (NpcMod.HasGuardianNPC(2))
             {
@@ -420,10 +420,10 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(3))
             {
-                Mes.Add("I asked earlier if [gn:3] were using one of his bones. His answer was very rude.");
+                Mes.Add("I asked earlier if [gn:3] was using one of his bones. His answer was very rude.");
                 if (NpcMod.HasGuardianNPC(1))
-                    Mes.Add("Why does [gn:3] and [gn:1] looks a bit sad when meet each other? Aren't they dating?");
-                Mes.Add("I tried cheering [gn:3], he threw a frizbee for me to catch, but when I returned, he wasn't there. Where did he go?");
+                    Mes.Add("Why do [gn:3] and [gn:1] look a bit sad when they meet each other? Aren't they dating?");
+                Mes.Add("I tried to cheer [gn:3] on. He threw a frizbee for me to catch, but when I returned, he wasn't there. Where did he go?");
             }
             if (NpcMod.HasGuardianNPC(4))
             {
@@ -431,22 +431,22 @@ namespace giantsummon.Creatures
                 Mes.Add("I don't really have any fun when playing with [gn:4], because he doesn't seems to be having fun.");
             }
             if (NpcMod.HasGuardianNPC(0) && NpcMod.HasGuardianNPC(2))
-                Mes.Add("I've got [gn:0] and [gn:2] to play with me. I guess my new dream will be everyone in the village to play together.");
+                Mes.Add("I've got [gn:0] and [gn:2] to play with me. I guess my new dream will be for everyone in the village to play together.");
             if (NpcMod.HasGuardianNPC(7))
             {
                 Mes.Add("I think sometimes [gn:7] feels lonely, so I stay nearby to make her feel less lonely.");
-                Mes.Add("I smell a variety of things inside of [gn:7]'s bag, includding food. Can you persuade her to open her bag and show us what is inside?");
+                Mes.Add("I smell a variety of things inside of [gn:7]'s bag, including food. Can you persuade her to open her bag and show us what is inside?");
             }
             if (NpcMod.HasGuardianNPC(8))
             {
-                Mes.Add("I love playing with [gn:8], the other person that played as much with me was " + AlexRecruitScripts.AlexOldPartner + ".");
-                Mes.Add("I'm up to playing some more, do you know if [gn:8] is free?");
+                Mes.Add("I love playing with [gn:8]. The other person that played as much with me was " + AlexRecruitScripts.AlexOldPartner + ".");
+                Mes.Add("I'm up to playing some more. Do you know if [gn:8] is free?");
             }
             if (NpcMod.HasGuardianNPC(Vladimir))
             {
                 Mes.Add("(He's watching the horizon. Maybe he's thinking about something?)");
                 Mes.Add("Have been talking with [gn:"+Vladimir+"] and... No... Forget it... Nevermind what I was saying.");
-                Mes.Add("That [gn:" + Vladimir + "] is a real buddy, he accompany me when I go visit " + AlexRecruitScripts.AlexOldPartner + "'s Tombstone. I don't feel alone when doing that anymore.");
+                Mes.Add("That [gn:" + Vladimir + "] is a real buddy. He accompanies me when I go visit " + AlexRecruitScripts.AlexOldPartner + "'s Tombstone. I don't feel alone when doing that anymore.");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Michelle))
             {
@@ -463,23 +463,23 @@ namespace giantsummon.Creatures
                 Mes.Add("I love playing with [gn:" + Fluffles + "]. She always knows my favorite petting spot.");
                 if (NpcMod.HasGuardianNPC(Rococo))
                 {
-                    Mes.Add("Sometimes [gn:"+Rococo+"] and [gn:"+Fluffles+"] plays with me. It's like a dream came true, they could do that more often.");
+                    Mes.Add("Sometimes [gn:"+Rococo+"] and [gn:"+Fluffles+"] play with me. It's like a dream came true. They could do that more often.");
                 }
             }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("I'm trying hard to aim at the hole.");
-                Mes.Add("Is this how you humans uses toilet? It's very hard for me to use it.");
+                Mes.Add("Is this how you humans use a toilet? It's very hard for me to use it.");
             }
             if (guardian.IsPlayerRoomMate(player))
             {
-                Mes.Add("You'll sleep on my bedroom? That's awesome! I will keep you protected while you sleep.");
+                Mes.Add("You'll sleep in my bedroom? That's awesome! I will keep you protected while you sleep.");
                 Mes.Add("You'll share your bed with me? This is the best day ever!");
             }
             if (guardian.KnockedOut)
             {
                 Mes.Clear();
-                Mes.Add("(He seems to be having pain.)");
+                Mes.Add("(He seems to be in pain.)");
                 Mes.Add("(His wounds aren't letting him rest.)");
                 Mes.Add("I have... To protec.t... " + player.name +"...");
             }
@@ -523,7 +523,7 @@ namespace giantsummon.Creatures
             if (!Main.dayTime)
                 Mes.Add("I don't fear anything, but I'd like to sleep soundly at night.");
             if (Main.bloodMoon)
-                Mes.Add("Looks like I wont have a rest this night. If I had a place to live, I could avoid that.");
+                Mes.Add("Looks like I wont be able to rest tonight. If I had a place to live, I could avoid that.");
 
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -531,9 +531,9 @@ namespace giantsummon.Creatures
         public override string TalkMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("My old partner once said that I had C batteries in the body. What is that supposed to mean?");
+            Mes.Add("My old partner once said that I had C batteries in my body. What is that supposed to mean?");
             Mes.Add("You're the best, let's play a game?");
-            Mes.Add(AlexRecruitScripts.AlexOldPartner + " and I were the best friends every! I should've followed my instincts and stopped her.");
+            Mes.Add(AlexRecruitScripts.AlexOldPartner + " and I were the best friends ever! I should've followed my instincts and stopped her.");
             if (PlayerMod.PlayerHasGuardian(player, 0))
                 Mes.Add("[gn:0] and I are trying to guess who's your best friend. Can you tell me?");
             if(!Main.dayTime && Main.moonPhase == 2)
@@ -554,7 +554,7 @@ namespace giantsummon.Creatures
             if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
             {
                 Mes.Add("No!! I wont lose you too!");
-                Mes.Add("Hang on buddy, I'll lick your wounds, please don't die!");
+                Mes.Add("Hang on buddy, I'll lick your wounds! Please don't die!");
                 Mes.Add("Don't die too! You are the only things for me in the world right now! I can't lose you like "+AlexRecruitScripts.AlexOldPartner+"!");
             }
             else
@@ -585,9 +585,9 @@ namespace giantsummon.Creatures
                     switch (Main.rand.Next(2))
                     {
                         case 0:
-                            return "You woke me up, Is It because you finished my request?";
+                            return "You woke me up. Is It because you finished my request?";
                         case 1:
-                            return "You want something? I have asked for something? Did you completed It?";
+                            return "You want something? I have asked for something? Did you complete It?";
                     }
                     break;
                     //
@@ -614,15 +614,15 @@ namespace giantsummon.Creatures
                 case MessageIDs.RequestPostpone:
                     return "Not now? Try helping me with this later. Woof!";
                 case MessageIDs.RequestFailed:
-                    return "You couldn't do It? Don't worry. *He seems to be trying to cheer you up now*";
+                    return "You couldn't do it? Don't worry. *He seems to be trying to cheer you up now*";
                 case MessageIDs.RestAskForHowLong:
-                    return "Already? Aww... How long we'll rest then?";
+                    return "Already? Aww. How long will we rest then?";
                 case MessageIDs.RestNotPossible:
-                    return "Doesn't looks like the best moment to get a rest.";
+                    return "Doesn't look like the best moment to get a rest.";
                 case MessageIDs.RestWhenGoingSleep:
                     return "I hope you have good dreams.";
                 case MessageIDs.AskPlayerToGetCloserToShopNpc:
-                    return "*Snif snif* [nickname], there is something cool on\n[shop]'s shop! Let's check out.";
+                    return "*Snif snif* Hey [nickname], there is something cool on\n[shop]'s shop! Let's check it out.";
                 case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
                     return "Hey, what is this?";
                 case MessageIDs.GenericYes:
@@ -640,7 +640,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.CancelRequestYesAnswered:
                     return "*Whine whine* Fine... I'm not sad or anything...";
                 case MessageIDs.CancelRequestNoAnswered:
-                    return "*Happily wagging the tail*";
+                    return "*Happily wags their tail*";
             }
             return base.GetSpecialMessage(MessageID);
         }
