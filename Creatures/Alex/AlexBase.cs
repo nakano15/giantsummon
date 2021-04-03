@@ -398,12 +398,12 @@ namespace giantsummon.Creatures
                 if (!Main.bloodMoon)
                 {
                     if (Main.moonPhase == 2)
-                        Mes.Add("This night remembers me of an adventure I had with " + AlexRecruitScripts.AlexOldPartner + ". That makes me miss her.");
+                        Mes.Add("This night reminds me of an adventure I had with " + AlexRecruitScripts.AlexOldPartner + ". That makes me miss her.");
                 }
             }
             if (NpcMod.HasGuardianNPC(0))
             {
-                Mes.Add("When you are not around, I play some Hide and Seek with [gn:0]. He's really bad at hiding, his tail gives him away, but It's fun to always find him.");
+                Mes.Add("When you are not around, I play some Hide and Seek with [gn:0]. He's really bad at hiding. His tail gives him away, but It's fun to always find him.");
                 if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
                     Mes.Add("Do you know why [gn:0] eats [nn:" + Terraria.ID.NPCID.Merchant + "]'s trash? I'd join him but, " + AlexRecruitScripts.AlexOldPartner + " taught me that eating trash is bad.");
             }
