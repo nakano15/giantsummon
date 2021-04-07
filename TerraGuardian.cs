@@ -363,6 +363,7 @@ namespace giantsummon
         private byte _SubAttack = 0;
         public int SubAttackID { get { return _SubAttack - 1; } }
         public int SubAttackTime = 0, SubAttackDamage = 0;
+        public float SubAttackSpeed = 1f;
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
         public static int CurrentDrawnOrderID = 0;
@@ -13427,7 +13428,10 @@ namespace giantsummon
                 return;
             _SubAttack = (byte)(ID + 1);
             SubAttackTime = 0;
-            SubAttackDamage = Base.SpecialAttackList[ID].CalculateAttackDamage(this);
+            SubAttackSpeed = 1f;
+            GuardianSpecialAttack gsa = Base.SpecialAttackList[ID];
+            SubAttackDamage = gsa.CalculateAttackDamage(this);
+            gsa.WhenSubAttackBegins(this);
             //Main.NewText("Using Sub Attack " + ID);
         }
 
@@ -13442,23 +13446,23 @@ namespace giantsummon
                 return;
             }
             GuardianSpecialAttack subattack = Base.SpecialAttackList[SubAttackID];
-            int StackCounter = 0;
+            float StackCounter = 0;
             int LastFrame = -1, CurrentFrame = 0;
             int FrameCount = 0;
             int FrameTime = 0;
             foreach(GuardianSpecialAttackFrame frame in subattack.SpecialAttackFrames)
             {
-                int FrameStart = StackCounter, FrameEnd = StackCounter + frame.Duration;
+                float FrameStart = StackCounter, FrameEnd = StackCounter + (int)(frame.Duration * SubAttackSpeed);
                 if (SubAttackTime >= FrameStart && SubAttackTime < FrameEnd)
                 {
                     CurrentFrame = FrameCount;
-                    FrameTime = SubAttackRightArmFrame - FrameStart;
+                    FrameTime = (int)(SubAttackTime - FrameStart);
                 }
                 if (LastAttackTime >= FrameStart && LastAttackTime < FrameEnd)
                 {
                     LastFrame = FrameCount;
                 }
-                StackCounter += frame.Duration;
+                StackCounter += frame.Duration * SubAttackSpeed;
                 FrameCount++;
             }
             if(CurrentFrame > LastFrame)

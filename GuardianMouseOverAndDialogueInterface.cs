@@ -132,16 +132,13 @@ namespace giantsummon
             }
             else
             {
+                if (ShowImportantMessages(tg))
+                    return;
                 if (PlayerMod.IsGuardianBirthday(MainPlayer, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
                     Message = tg.Base.BirthdayMessage(MainPlayer, tg);
                 else
                 {
-                    string t;
-                    if (tg.Data.CheckForImportantMessages(out t))
-                    {
-                        Message = t;
-                    }
-                    else if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
+                    if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
                         Message = tg.Base.HomelessMessage(MainPlayer, tg);
                     else
                         Message = tg.Base.NormalMessage(MainPlayer, tg);
@@ -188,6 +185,22 @@ namespace giantsummon
                 }
             }
             SetDialogue(Message, tg);
+        }
+
+        public static bool ShowImportantMessages(TerraGuardian tg)
+        {
+            string Message = "";
+            tg.Data.CheckForImportantMessages(out Message);
+            if (Message == "")
+            {
+                SetDialogue(tg.Base.NormalMessage(MainPlayer, tg), tg);
+                GetDefaultOptions(tg);
+                return false;
+            }
+            SetDialogue(Message);
+            Options.Clear();
+            AddOption("Okay", delegate(TerraGuardian tg2) { ShowImportantMessages(tg2); });
+            return true;
         }
 
         public static void Update()
@@ -708,7 +721,14 @@ namespace giantsummon
                                 Mes = data.Base.CompletedRequestMessage(MainPlayer, tg);
                             SetDialogue(Mes, tg);
                             //GiveOptionToCancelRequest = true;
-                            GetDefaultOptions(tg);
+                            //GetDefaultOptions(tg);
+                            Options.Clear();
+                            AddOption("No problem.", delegate (TerraGuardian tg2) {
+                                if(!ShowImportantMessages(tg2))
+                                {
+                                    GetDefaultOptions(tg2);
+                                }
+                            });
                         }
                         else
                         {

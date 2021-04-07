@@ -100,7 +100,7 @@ namespace giantsummon.Creatures
                 Damage = (int)(Damage * tg.MagicDamageMultiplier);
                 return Damage;
             };
-            specialAttack.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame, int Time)
+            specialAttack.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame)
             {
                 if(Frame == 0)
                 {

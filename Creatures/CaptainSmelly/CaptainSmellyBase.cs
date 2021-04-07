@@ -12,6 +12,9 @@ namespace giantsummon.Creatures
     {
         public const string PlasmaFalchionTextureID = "plasmafalchion", PhantomBlinkTextureID = "phantomblink", ScouterTextureID = "scouter", HeadNoScouterTextureID = "headnoscouter";
         public const int NumberOfSwords = 7;
+        public const int StandardFalchion = 0, AmethystFalchion = 1, TopazFalchion = 2, SapphireFalchion = 3, EmeraldFalchion = 4, RubyFalchion = 5, DiamondFalchion = 6;
+
+        private const float TopazFalchionAttackSpeedMult = 1.5f, SapphireFalchionAttackSpeedMult = 0.7f;
 
         public CaptainSmellyBase()
         {
@@ -135,9 +138,52 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(HeadNoScouterTextureID, "head_no_scouter");
         }
 
+        private int GetCalculatedSwordDamage(TerraGuardian tg)
+        {
+            int Damage = 15 + tg.FriendshipLevel;
+            if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].melee)
+            {
+                Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useTime / 60));
+            }
+            CaptainSmellyData data = (CaptainSmellyData)tg.Data;
+            if (data.SwordID > 0)
+                Damage *= 2;
+            switch (data.SwordID)
+            {
+                case AmethystFalchion:
+                    Damage += (int)(tg.MagicDamageMultiplier * Damage * 0.15f);
+                    break;
+            }
+            /*int StrongestDamage = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                if (tg.Inventory[i].type > 0 && tg.Inventory[i].melee && tg.Inventory[i].damage > 0)
+                {
+                    int ThisDamage = (int)(tg.Inventory[i].damage * ((float)tg.Inventory[i].useTime / 60));
+                    if (ThisDamage > StrongestDamage)
+                        StrongestDamage = ThisDamage;
+                }
+            }*/
+            return (int)(Damage * tg.MeleeDamageMultiplier);
+        }
+
+        private void SubAttackBegginingScript(TerraGuardian tg)
+        {
+            CaptainSmellyData data = (CaptainSmellyData)tg.Data;
+            switch (data.SwordID)
+            {
+                case TopazFalchion:
+                    tg.SubAttackSpeed = TopazFalchionAttackSpeedMult;
+                    break;
+                case SapphireFalchion:
+                    tg.SubAttackSpeed = SapphireFalchionAttackSpeedMult;
+                    break;
+            }
+        }
+
         public void SubAttacksSetup()
         {
-            GuardianSpecialAttack special = AddNewSubAttack(); //V Swing
+            GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //V Swing
             special.MinRange = 16;
             special.MaxRange = 52;
             special.CanMove = true;
@@ -148,34 +194,42 @@ namespace giantsummon.Creatures
             AddNewSubAttackFrame(8, -1, -1, 45);
             special.CalculateAttackDamage = delegate (TerraGuardian tg)
             {
-                int Damage = 10;
-                if(tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].melee)
-                {
-                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useTime / 60));
-                }
-                /*int StrongestDamage = 0;
-                for (int i = 0; i < 10; i++)
-                {
-                    if (tg.Inventory[i].type > 0 && tg.Inventory[i].melee && tg.Inventory[i].damage > 0)
-                    {
-                        int ThisDamage = (int)(tg.Inventory[i].damage * ((float)tg.Inventory[i].useTime / 60));
-                        if (ThisDamage > StrongestDamage)
-                            StrongestDamage = ThisDamage;
-                    }
-                }*/
-                return (int)(Damage * tg.MeleeDamageMultiplier);
+                return GetCalculatedSwordDamage(tg);
+            };
+            special.WhenSubAttackBegins = delegate (TerraGuardian tg)
+            {
+                SubAttackBegginingScript(tg);
             };
             special.WhenFrameUpdatesScript = delegate (TerraGuardian tg, int Frame, int Time)
             {
                 if(Frame == 1)
                 {
+                    CaptainSmellyData data = (CaptainSmellyData)tg.Data;
                     Rectangle AttackHitbox = new Rectangle(-16 * tg.Direction + (int)tg.Position.X, -110 + (int)tg.Position.Y, 78, 94);
                     if (tg.LookingLeft)
                         AttackHitbox.X -= AttackHitbox.Width;
                     int Damage = tg.SubAttackDamage;
-                    int CriticalRate = 4;
+                    int CriticalRate = 4 + tg.MeleeCriticalRate;
                     float Knockback = 6f;
-                    for(int n = 0; n < 200; n++)
+                    byte SwordID = data.SwordID;
+                    if (SwordID > 0)
+                    {
+                        switch (SwordID)
+                        {
+                            case AmethystFalchion:
+                                break;
+                            case TopazFalchion:
+                                Knockback += 3f;
+                                break;
+                            case SapphireFalchion:
+                                Knockback *= 0.11f;
+                                break;
+                            case EmeraldFalchion:
+                                CriticalRate += 30;
+                                break;
+                        }
+                    }
+                    for (int n = 0; n < 200; n++)
                     {
                         if(Main.npc[n].active && !Main.npc[n].friendly && !tg.NpcHasBeenHit(n) && Main.npc[n].getRect().Intersects(AttackHitbox))
                         {
@@ -195,6 +249,24 @@ namespace giantsummon.Creatures
                                     NewDamage = (int)(NewDamage * DamageMult);
                                 }
                                 double result = Main.npc[n].StrikeNPC(NewDamage, Knockback, HitDirection, Critical);
+                                if(result > 0)
+                                {
+                                    if (SwordID == AmethystFalchion)
+                                    {
+                                        if (Main.rand.NextDouble() < 0.4)
+                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.ShadowFlame, 10 * 60);
+                                    }
+                                    else if (SwordID == RubyFalchion)
+                                    {
+                                        int HealthRecover = (int)(Math.Max(1, result * 0.05f));
+                                        tg.RestoreHP(HealthRecover);
+                                    }
+                                    else if (SwordID == DiamondFalchion)
+                                    {
+                                        if (Main.rand.NextDouble() < 0.2)
+                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
+                                    }
+                                }
                                 Main.PlaySound(Main.npc[n].HitSound, Main.npc[n].Center);
                                 tg.AddNpcHit(n);
                                 tg.IncreaseDamageStacker((int)result, Main.npc[n].lifeMax);
@@ -204,6 +276,8 @@ namespace giantsummon.Creatures
                                         tg.IncreaseCooldownValue(GuardianCooldownManager.CooldownType.BeetleCounter, (int)result);
                                     tg.OnHitSomething(Main.npc[n]);
                                     tg.AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength); //(float)result
+                                    if(SwordID == AmethystFalchion)
+                                        tg.AddSkillProgress((float)result * 0.15f, GuardianSkills.SkillTypes.Mysticism);
                                     if (Critical)
                                         tg.AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck); //(float)result
                                 }
@@ -216,7 +290,134 @@ namespace giantsummon.Creatures
                     }
                 }
             };
+            //
+            special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee);//GP
+            special.CalculateAttackDamage = delegate (TerraGuardian tg)
+            {
+                return (int)(GetCalculatedSwordDamage(tg) * 1.2f);
+            };
+            special.WhenSubAttackBegins = delegate (TerraGuardian tg)
+            {
+                SubAttackBegginingScript(tg);
+            };
+            special.WhenFrameUpdatesScript = delegate (TerraGuardian tg, int Frame, int Time)
+            {
+                if(Frame == 5)
+                {
+                    CaptainSmellyData data = (CaptainSmellyData)tg.Data;
+                    Rectangle AttackHitbox = new Rectangle(-32 * tg.Direction + (int)tg.Position.X, -102 + (int)tg.Position.Y, 104, 98);
+                    if (tg.LookingLeft)
+                        AttackHitbox.X -= AttackHitbox.Width;
+                    int Damage = tg.SubAttackDamage;
+                    int CriticalRate = 4 + tg.MeleeCriticalRate;
+                    float Knockback = 6f;
+                    byte SwordID = data.SwordID;
+                    if (SwordID > 0)
+                    {
+                        switch (SwordID)
+                        {
+                            case AmethystFalchion:
+                                break;
+                            case TopazFalchion:
+                                Knockback += 3f;
+                                break;
+                            case SapphireFalchion:
+                                Knockback *= 0.11f;
+                                break;
+                            case EmeraldFalchion:
+                                CriticalRate += 30;
+                                break;
+                        }
+                    }
+                    for (int n = 0; n < 200; n++)
+                    {
+                        if (Main.npc[n].active && !Main.npc[n].friendly && !tg.NpcHasBeenHit(n) && Main.npc[n].getRect().Intersects(AttackHitbox))
+                        {
+                            if (!Main.npc[n].dontTakeDamage)
+                            {
+                                int HitDirection = tg.Direction;
+                                if ((HitDirection == -1 && tg.CenterPosition.X < Main.npc[n].Center.X) ||
+                                    (HitDirection == 1 && tg.CenterPosition.X > Main.npc[n].Center.X))
+                                {
+                                    HitDirection *= -1;
+                                }
+                                bool Critical = (Main.rand.Next(100) < CriticalRate);
+                                int NewDamage = Damage;
+                                if (tg.OwnerPos > -1 && !MainMod.DisableDamageReductionByNumberOfCompanions)
+                                {
+                                    float DamageMult = Main.player[tg.OwnerPos].GetModPlayer<PlayerMod>().DamageMod;
+                                    NewDamage = (int)(NewDamage * DamageMult);
+                                }
+                                double result = Main.npc[n].StrikeNPC(NewDamage, Knockback, HitDirection, Critical);
+                                if (result > 0)
+                                {
+                                    if (SwordID == AmethystFalchion)
+                                    {
+                                        if (Main.rand.NextDouble() < 0.4)
+                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.ShadowFlame, 10 * 60);
+                                    }
+                                    else if (SwordID == RubyFalchion)
+                                    {
+                                        int HealthRecover = (int)(Math.Max(1, result * 0.05f));
+                                        tg.RestoreHP(HealthRecover);
+                                    }
+                                    else if (SwordID == DiamondFalchion)
+                                    {
+                                        if (Main.rand.NextDouble() < 0.2)
+                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
+                                    }
+                                }
+                                Main.PlaySound(Main.npc[n].HitSound, Main.npc[n].Center);
+                                tg.AddNpcHit(n);
+                                tg.IncreaseDamageStacker((int)result, Main.npc[n].lifeMax);
+                                if (result > 0)
+                                {
+                                    if (tg.HasFlag(GuardianFlags.BeetleOffenseEffect))
+                                        tg.IncreaseCooldownValue(GuardianCooldownManager.CooldownType.BeetleCounter, (int)result);
+                                    tg.OnHitSomething(Main.npc[n]);
+                                    tg.AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength); //(float)result
+                                    if (SwordID == AmethystFalchion)
+                                        tg.AddSkillProgress((float)result * 0.15f, GuardianSkills.SkillTypes.Mysticism);
+                                    if (Critical)
+                                        tg.AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck); //(float)result
+                                }
+                            }
+                            else
+                            {
 
+                            }
+                        }
+                    }
+                }
+            };
+            special.CanMove = false;
+            for(int i = 46; i < 56; i++)
+            {
+                AddNewSubAttackFrame(6, i, i, i);
+            }
+            //
+            special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Ranged); //Arm Blaster
+            special.CanMove = true;
+            AddNewSubAttackFrame(8, -1, 57, -1);
+            special.WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID)
+            {
+                //Shoot something
+            };
+            special.AnimationReplacer = delegate (TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame)
+            {
+                Vector2 AimPosition = tg.AimDirection.ToVector2() - tg.CenterPosition;
+                float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
+                if (Angle > 2.181662f) //125
+                {
+                    LeftArmFrame = 59;
+                }
+                else if (Angle < 1.134464f) //65
+                {
+                    LeftArmFrame = 58;
+                }
+                if (tg.Velocity.Y != 0)
+                    LeftArmFrame += 3;
+            };
         }
 
         public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
@@ -465,7 +666,8 @@ namespace giantsummon.Creatures
 
         public class CaptainSmellyData : GuardianData
         {
-            public int HoldingWeaponTime = 0, SwordID = 0;
+            public int HoldingWeaponTime = 0;
+            public byte SwordID = 0;
 
             public CaptainSmellyData(int ID, string ModID) : base(ID, ModID)
             {

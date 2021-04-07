@@ -11,8 +11,12 @@ namespace giantsummon
         public SubAttackCombatType combatType = SubAttackCombatType.Melee;
         public bool CanMove = true;
         public float MinRange = 300, MaxRange = 400;
-        public Action<TerraGuardian, int, int> WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID, int FrameTime) { }
-        , WhenFrameUpdatesScript = delegate (TerraGuardian tg, int FrameID, int FrameTime) { };
+        public Action<TerraGuardian, int> WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID) { };
+        public Action<TerraGuardian, int, int> WhenFrameUpdatesScript = delegate (TerraGuardian tg, int FrameID, int FrameTime) { };
+        public Action<TerraGuardian> WhenSubAttackBegins = delegate (TerraGuardian tg)
+        {
+
+        };
         public delegate void AnimationReplaceDel(TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame);
         public AnimationReplaceDel AnimationReplacer = delegate (TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame)
         {
