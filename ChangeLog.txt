@@ -10,3 +10,4 @@ Companions will no longer spam boomerang like items.
 Companions will now know what to do next, after they stop using a furniture at their house.
 Your following companions will now try to better follow you around.
 Changed Alex's dialogues to fix typos and weird writing. -Thank ShadowTiger for this
+Skeleton variants now counts towards requests asking to kill them.

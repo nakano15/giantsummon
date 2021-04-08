@@ -13471,7 +13471,7 @@ namespace giantsummon
                 if (frame.BodyFrame > -1) BodyAnimationFrame = frame.BodyFrame;
                 if (frame.LeftArmFrame > -1) LeftArmAnimationFrame = frame.LeftArmFrame;
                 if (frame.RightArmFrame > -1) RightArmAnimationFrame = frame.RightArmFrame;
-                subattack.WhenFrameBeginsScript(this, CurrentFrame, FrameTime);
+                subattack.WhenFrameBeginsScript(this, CurrentFrame);
             }
             if (SubAttackTime >= StackCounter)
             {

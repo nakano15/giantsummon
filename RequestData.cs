@@ -1274,7 +1274,13 @@ namespace giantsummon
                             m == NPCID.ZombieEskimo || m == NPCID.ArmedZombieEskimo || m == 255 || m == 254 || m == NPCID.BloodZombie;
                     case NPCID.ZombieEskimo:
                         return m == NPCID.ArmedZombieEskimo;
-                    case NPCID.DemonEye:
+                    case NPCID.Skeleton:
+                        return m == NPCID.ArmoredSkeleton || m == NPCID.BigHeadacheSkeleton || m == NPCID.BigMisassembledSkeleton || m == NPCID.BigPantlessSkeleton || m == NPCID.BigSkeleton ||
+                            m == NPCID.BoneThrowingSkeleton || m == NPCID.BoneThrowingSkeleton2 || m == NPCID.BoneThrowingSkeleton3 || m == NPCID.BoneThrowingSkeleton4 ||
+                            m == NPCID.HeadacheSkeleton || m == NPCID.HeavySkeleton || m == NPCID.MisassembledSkeleton || m == NPCID.PantlessSkeleton || m == NPCID.SkeletonAlien ||
+                            m == NPCID.SkeletonArcher || m == NPCID.SkeletonAstonaut || m == NPCID.SkeletonTopHat || m == NPCID.SmallHeadacheSkeleton || m == NPCID.SmallMisassembledSkeleton ||
+                            m == NPCID.SmallPantlessSkeleton || m == NPCID.SmallSkeleton;
+					case NPCID.DemonEye:
                         return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
                     case NPCID.BloodCrawler:
                         return m == NPCID.BloodCrawlerWall;
