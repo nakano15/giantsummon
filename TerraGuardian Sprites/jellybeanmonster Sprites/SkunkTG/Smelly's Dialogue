@@ -1,6 +1,6 @@
-Player Choices: A/B/C
-
 First Meeting:
+
+Player Choices: A/B/C
 
 1."Hello there stranger, I'm captain smelly and my ship was hit by this big rock here while I was scouting this planet.My cadets were tragically killed during the crash and im the only survivor. 
 Before landing here I was scouting this planet and there seems to be lots of rare and useful materials underneath the soil, yeah?"
@@ -24,7 +24,7 @@ RNG Dialogue-
 -If you ever come across any gemstones make sure to share them with me. I want to find out the true power of my blade.
 -Forgot to mention my phantasm device has taken damage also if you have any spare platinum/gold bars you could help fix it. 20 bars is all it would need.
 
-Conditon based dialogue:
+Condition based dialogue:
 While nearby metals or gemstones:
 -My scouter is picking up high volumes of rare materials here just keep up your mining it will be all ours soon enough.
 
@@ -33,7 +33,6 @@ While nearby enemies:
 
 While nearby traps:
 -My scouter is picking up danger signals in this area watchout for traps
-
 
 Reviving:
 Reviving player- Oh no! don't end up like my cadets we have so much more treasure to find!
