@@ -28,6 +28,8 @@ namespace giantsummon
         int[] BuffTypes, BuffTimes;
         BitsByte Zone1, Zone2, Zone3, Zone4;
         int phantasmTime;
+        bool ghostHeal, ghostHurt;
+        float LifeStealRate, GhostDamage;
         //Pets and Summons backup
         /*public bool bunny, penguin, puppy, grinch, turtle, eater, skeletron, hornet, tiki, lizard, parrot, truffle, sapling, cSapling, spider, squashling, wisp, dino,
             babyFaceMonster, slime, eyeSpring, snowman, blackCat, zephyrfish, pygmy, spiderMinion, miniMinotaur;*/
@@ -66,6 +68,10 @@ namespace giantsummon
             Zone4 = player.zone4;
             BuffTypes = (int[])player.buffType.Clone();
             BuffTimes = (int[])player.buffTime.Clone();
+            ghostHeal = player.ghostHeal;
+            ghostHurt = player.ghostHurt;
+            LifeStealRate = player.lifeSteal;
+            GhostDamage = player.ghostDmg;
             
             phantasmTime = player.phantasmTime;
 
@@ -104,6 +110,11 @@ namespace giantsummon
             player.zone2 = guardian.Zone2;
             player.zone3 = guardian.Zone3;
             player.zone4 = guardian.Zone4;
+
+            player.ghostHeal = guardian.HasFlag(GuardianFlags.SpectreHealSetEffect);
+            player.ghostHurt = guardian.HasFlag(GuardianFlags.SpectreSplashSetEffect);
+            player.lifeSteal = guardian.LifeStealRate;
+            player.ghostDmg = guardian.GhostDamage;
         }
 
         /*public void BackupPetSummonData(Player player, TerraGuardian guardian)
@@ -214,6 +225,11 @@ namespace giantsummon
             player.buffTime = BuffTimes;
 
             player.phantasmTime = phantasmTime;
+
+            player.ghostHeal = ghostHeal;
+            player.ghostHurt = ghostHurt;
+            player.lifeSteal = LifeStealRate;
+            player.ghostDmg = GhostDamage;
         }
 
         /// <summary>

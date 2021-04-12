@@ -136,6 +136,11 @@ namespace giantsummon
                     GroundPetsAndBabySlimeAI(projectile);
                     return false;
                 }
+                if(projectile.aiStyle == 52)
+                {
+                    LifeDrainBlobAI(projectile);
+                    return false;
+                }
                 if (projectile.aiStyle == 75)
                 {
                     PhantasmAI(projectile);
@@ -171,7 +176,7 @@ namespace giantsummon
             }
             return base.NewInstance(projectile);
         }
-        
+                
         public override void PostAI(Projectile projectile)
         {
             ProjParent = -1;
@@ -326,7 +331,7 @@ namespace giantsummon
             if (GuardianProj.ContainsKey(projectile.whoAmI))
                 GuardianProj.Remove(projectile.whoAmI);
             TryRestoringPlayerStatus(projectile);
-            if (projectile.aiStyle == 52 && projectile.owner == Main.myPlayer && !Main.player[projectile.owner].moonLeech)
+            if (projectile.aiStyle == 52 && projectile.owner == Main.myPlayer && !IsGuardianProjectile(projectile.whoAmI) && !Main.player[projectile.owner].moonLeech)
             {
                 int HealthValue = (int)projectile.ai[1];
                 Main.player[projectile.owner].GetModPlayer<PlayerMod>().ShareHealthReplenishWithGuardians(HealthValue);

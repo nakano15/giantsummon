@@ -169,6 +169,7 @@ namespace giantsummon
         public byte BeetleOrb = 0;
         private bool WingFlapSound = false;
         public float WingFlightTime = 0, WingMaxFlightTime = 0;
+        public float LifeStealRate = 0, GhostDamage = 0;
         public int RocketTime = 0, RocketMaxTime = 0;
         public float Stealth = 0f;
         public uint Coins
@@ -2607,6 +2608,40 @@ namespace giantsummon
             return Age / 18 * 0.9f + 0.1f;*/
         }
 
+        public void UpdateLifeStealAndGhostDamageRate()
+        {
+            if(GhostDamage > 0)
+            {
+                GhostDamage -= 2.5f;
+                if (GhostDamage < 0)
+                    GhostDamage = 0;
+            }
+            float Rate = (float)MHP / HP;
+            if (Main.expertMode)
+            {
+                if (LifeStealRate < Rate * 70)
+                {
+                    LifeStealRate += Rate * 0.5f;
+                    if (LifeStealRate > Rate * 70)
+                    {
+                        LifeStealRate = Rate * 70f;
+                    }
+                }
+            }
+            else
+            {
+                if (LifeStealRate < Rate * 80)
+                {
+                    LifeStealRate += Rate * 0.6f;
+                    if (LifeStealRate > Rate * 80)
+                    {
+                        LifeStealRate = Rate * 80f;
+                    }
+                }
+            }
+
+        }
+
         public void UpdateExtraStuff()
         {
             if (SetToPlayerSize)
@@ -2625,6 +2660,7 @@ namespace giantsummon
                     UpdateStatus = true;
                 }
             }
+            UpdateLifeStealAndGhostDamageRate();
             if (WorldMod.DayChange)
             {
                 AgeScale = GetAgeSize();
