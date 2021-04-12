@@ -99,7 +99,10 @@ namespace giantsummon
         public List<ItemDefinition> DualwieldableItems = MainMod.GetDefaultDualwieldableItems();// { get { return MainMod.DualwieldWhitelist; } set { MainMod.DualwieldWhitelist = value; } }
 
         [Label("Item Attack Range.")]
-        [Tooltip("Here contains a list of maximum range to use items. Add a row to items that have limited flight range, and set a pixel distance to It.\nIf the item is not here, then the mod will use default AI setting for range.")]
+        [Tooltip("Here contains a list of maximum range to use items. Add a row to items that have limited flight range, and set a pixel distance to It.\n" +
+            "If the item is not here, then the mod will use default AI setting for range.\n" +
+            "Do not setup the attack ranges here, instead, add the items you want to change attack range, save and then close the game.\n" +
+            "Then go to \"My Documents/My Games/Terraria/ModLoader/Mod Configs\" and open \"giantsummon_ServerConfigMod.json\".\nFind the items you added on \"ItemAttackRange\", and set the range there, instead.")]
         [Range(0, 99999)]
         public Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> ItemAttackRange = MainMod.GetDefaultItemRanges();// { get { return MainMod.ItemAttackRange; } set { MainMod.ItemAttackRange = value; } }
 
