@@ -28,7 +28,6 @@ Gp(Projectile)- Blade Wave that does decent damage at the start but loses power 
 Psv- Very high base knockback on weapon swings but slower attack speed, 
 Gp(Projectile)- Sends sharp topaz shards that pierce threw targets but collides with blocks and applies bleeding debuff
 
-
 >Energized Sapphire
 Psv- Gives AttackSpeed Bonus but knock back is very low and PF damage is reduced by 15% to compensate for dps 
 Gp(Projectile)- Sends out a energy missle that explodes on contact and applies electrified debuff
@@ -36,7 +35,6 @@ Gp(Projectile)- Sends out a energy missle that explodes on contact and applies e
 >Bloody Ruby
 Psv-Gives lifedrain on sword swings
 Gp(Cast on self)-Sends out whiplike wave that drains enemies of their hp and heals smelly for 20hp per enemy hit(has a sweet spot that gives 40 hp instead on 3rd frame)
-
 
 >Critical Emerald
 Psv-Gives 50% crit chance
