@@ -356,7 +356,7 @@ namespace giantsummon
         public static MobTypes GetBossDifficulty(NPC npc, int DifficultyMod = 0)
         {
             int SpawnDifficulty = 0;
-            bool HasTitanGuardian = false;
+            //bool HasTitanGuardian = false;
             for (int p = 0; p < 255; p++)
             {
                 if (Main.player[p].active)
@@ -364,8 +364,8 @@ namespace giantsummon
                     foreach (TerraGuardian guardian in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Where(x => x.Active))
                     {
                         SpawnDifficulty += guardian.LifeFruitHealth * 3 + guardian.LifeCrystalHealth;
-                        if (guardian.HasFlag(GuardianFlags.TitanGuardian))
-                            HasTitanGuardian = true;
+                        //if (guardian.HasFlag(GuardianFlags.TitanGuardian))
+                        //    HasTitanGuardian = true;
                     }
                 }
             }

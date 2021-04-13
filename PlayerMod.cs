@@ -2851,6 +2851,26 @@ namespace giantsummon
             }
             layers.Add(l);
             //For debug purpose only.
+            /*l = new PlayerLayer(mod.Name, "Debug: Nearby Tiles slope types", delegate (PlayerDrawInfo pdi)
+            {
+                if (Main.gameMenu)
+                    return;
+                int MinX = (int)player.Center.X / 16 - 20, MaxX = MinX + 41,
+                MinY = (int)player.Center.Y / 16 - 20, MaxY = MinY + 41;
+                for(int y = MinY; y < MaxY; y++)
+                {
+                    for(int x = MinX; x < MaxX; x++)
+                    {
+                        Vector2 TextPosition = new Vector2(x * 16 + 8, y * 16 + 8) - Main.screenPosition;
+                        Tile tile = Framing.GetTileSafely(x, y);
+                        if (tile != null)
+                        {
+                            Utils.DrawBorderString(Main.spriteBatch, "" + tile.slope(), TextPosition, Color.Red, 1f, 0.5f, 0.5f);
+                        }
+                    }
+                }
+            });
+            layers.Add(l);*/
             /*l = new PlayerLayer(mod.Name, "Debug: Housing Furnitures Bounds", delegate (PlayerDrawInfo pdi)
             {
                 foreach (WorldMod.GuardianHouseInfos hi in WorldMod.HouseInfos)

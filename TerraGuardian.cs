@@ -658,9 +658,59 @@ namespace giantsummon
         public float MinionSlotCount = 0;
         public int OwnerPos = -1;
         public int RefPlayer { get { if (OwnerPos > -1) { return OwnerPos; } return 0; } }
-        public byte LifeCrystalHealth { get { if (MainMod.SharedCrystalValues && OwnerPos > -1) return Main.player[OwnerPos].GetModPlayer<PlayerMod>().LifeCrystalsUsed; return Data.LifeCrystalHealth; } set { Data.LifeCrystalHealth = value; } }
-        public byte LifeFruitHealth { get { if (MainMod.SharedCrystalValues && OwnerPos > -1) return Main.player[OwnerPos].GetModPlayer<PlayerMod>().LifeFruitsUsed; return Data.LifeFruitHealth; } set { Data.LifeFruitHealth = value; } }
-        public byte ManaCrystals { get { if (MainMod.SharedCrystalValues && OwnerPos > -1) return Main.player[OwnerPos].GetModPlayer<PlayerMod>().ManaCrystalsUsed; return Data.ManaCrystals; } set { Data.ManaCrystals = value; } }
+        public byte LifeCrystalHealth
+        {
+            get
+            {
+                if (MainMod.SharedCrystalValues && !Main.gameMenu)
+                {
+                    if (OwnerPos > -1)
+                    {
+                        return Main.player[OwnerPos].GetModPlayer<PlayerMod>().LifeCrystalsUsed;
+                    }
+                    else if (Main.netMode == 0)
+                    {
+                        return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeCrystalsUsed;
+                    }
+                }
+                return Data.LifeCrystalHealth;
+            }
+            set { Data.LifeCrystalHealth = value; }
+        }
+        public byte LifeFruitHealth
+        {
+            get
+            {
+                if (MainMod.SharedCrystalValues && !Main.gameMenu)
+                {
+                    if (OwnerPos > -1)
+                    {
+                        return Main.player[OwnerPos].GetModPlayer<PlayerMod>().LifeFruitsUsed;
+                    }
+                    else if (Main.netMode == 0)
+                    {
+                        return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeFruitsUsed;
+                    }
+                }
+                return Data.LifeFruitHealth;
+            }
+            set { Data.LifeFruitHealth = value; }
+        }
+        public byte ManaCrystals
+        {
+            get
+            {
+                if (MainMod.SharedCrystalValues && !Main.gameMenu)
+                {
+                    if (OwnerPos > -1)
+                        return Main.player[OwnerPos].GetModPlayer<PlayerMod>().ManaCrystalsUsed;
+                    else if (Main.netMode == 0)
+                        return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ManaCrystalsUsed;
+                }
+                return Data.ManaCrystals;
+            }
+            set { Data.ManaCrystals = value; }
+        }
         public const int MaxLifeCrystals = 15, MaxLifeFruit = 20; //-
         public bool UpdateStatus = true, UpdateWeapons = true;
         public int HealthRegenPower = 0, HealthRegenTime = 0, ManaRegenTime = 0, ManaRegenBonus = 0;
@@ -5724,7 +5774,7 @@ namespace giantsummon
                     for (int y = uy; y < ly; y++)
                     {
                         Tile tile = Framing.GetTileSafely(MyX + X * CheckDirection, y);
-                        if (tile.active() && Main.tileSolid[tile.type])
+                        if (tile.active() && Main.tileSolid[tile.type] && !Terraria.ID.TileID.Sets.Platforms[tile.type])
                         {
                             Tile uppertile = Framing.GetTileSafely(MyX + X * CheckDirection, y - 1);
                             if (!uppertile.active() || !Main.tileSolid[uppertile.type])
@@ -6731,6 +6781,17 @@ namespace giantsummon
             }
         }
 
+        public bool IsCompanionAtHome
+        {
+            get
+            {
+                WorldMod.GuardianTownNpcState TownNpcState = GetTownNpcInfo;
+                if (TownNpcState == null)
+                    return false;
+                return TownNpcState.IsAtHome(Position);
+            }
+        }
+
         public bool NewIdleBehavior()
         {
             if (!IsAttackingSomething && TalkPlayerID > -1)
@@ -6923,7 +6984,12 @@ namespace giantsummon
                             }
                             else
                             {
-                                if (IdleActionTime <= 0 || (CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome))
+                                if (!AtHome)
+                                {
+                                    if(CurrentIdleAction != IdleActions.GoHome)
+                                        ChangeIdleAction(IdleActions.GoHome, 5);
+                                }
+                                else if (IdleActionTime <= 0 || (CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome))
                                 {
                                     if (CurrentIdleAction != IdleActions.Wait || IdleActionTime <= 0)
                                     {
@@ -7202,21 +7268,24 @@ namespace giantsummon
             {
                 case IdleActions.Wait:
                 case IdleActions.Wander:
-                    {
-                        if (UsingFurniture)
-                        {
-                            if (action != IdleActions.Wait)// || Framing.GetTileSafely(furniturex, furniturey).type == Terraria.ID.TileID.Beds)
-                            {
-                                LeaveFurniture();
-                            }
-                        }
-                    }
+                    if (UsingFurniture)
+                        LeaveFurniture();
                     break;
                 case IdleActions.UseNearbyFurniture:
-                    UseNearbyFurniture();
+                    if(!UsingFurniture)
+                        UseNearbyFurniture();
                     break;
                 case IdleActions.UseNearbyFurnitureHome:
-                    UseNearbyFurniture(9, ushort.MaxValue, false, true);
+                    if (IsCompanionAtHome)
+                    {
+                        if (!UsingFurniture)
+                            UseNearbyFurniture(9, ushort.MaxValue, false, true);
+                    }
+                    else
+                    {
+                        ChangeIdleAction(IdleActions.UseNearbyFurniture, Time);
+                        return;
+                    }
                     break;
                 case IdleActions.TryGoingSleep:
                     if (UsingFurniture)
@@ -10040,7 +10109,40 @@ namespace giantsummon
                 {
                     LeaveFurniture();
                 }
-                if (Math.Abs(BottomDistanceY) >= 48 && LeaderSpeedY == 0)
+                bool IsOnSameGroundAsPlayer = false;
+                {
+                    int MyPositionX = (int)Position.X / 16, MyPositionY = (int)Position.Y / 16,
+                        PlayerPositionX = (int)LeaderCenterX / 16, PlayerPositionY = (int)LeaderBottom / 16;
+                    for (int attempt = 0; attempt < 20; attempt++)
+                    {
+                        Tile tile = Framing.GetTileSafely(MyPositionX, MyPositionY);
+                        if (tile.active() && Main.tileSolid[tile.type])
+                        {
+                            MyPositionY--;
+                        }
+                        else
+                        {
+                            Tile undertile = Framing.GetTileSafely(MyPositionX, MyPositionY + 1);
+                            if (!undertile.active() || !Main.tileSolid[undertile.type])
+                            {
+                                MyPositionY++;
+                            }
+                            else
+                            {
+                                if (MyPositionX < PlayerPositionX)
+                                    MyPositionX++;
+                                else
+                                    MyPositionX--;
+                            }
+                        }
+                        if (MyPositionX == PlayerPositionX && MyPositionY >= PlayerPositionY - 1 && MyPositionY <= PlayerPositionY + 1)
+                        {
+                            IsOnSameGroundAsPlayer = true;
+                            break;
+                        }
+                    }
+                }
+                if (Math.Abs(BottomDistanceY) >= 48 && !IsOnSameGroundAsPlayer && LeaderSpeedY == 0)
                 {
                     if (Math.Abs(PositionDifference.X) >= 8)
                     {
@@ -10081,7 +10183,9 @@ namespace giantsummon
                                             }
                                             else //How to recognize stairs?
                                             {
-                                                PlatformAbove = true;
+                                                byte SlopeType = tile.slope();
+                                                if (SlopeType != 1 && SlopeType != 2)
+                                                    PlatformAbove = true;
                                             }
                                         }
                                         if (PlatformAbove || BlockedAbove)
@@ -10090,7 +10194,7 @@ namespace giantsummon
                                 }
                                 if (!BlockedAbove && PlatformAbove)
                                     Jump = true;
-                                else if (BlockedAbove)
+                                else if (BlockedAbove && Math.Abs(PositionDifference.X) >= 8)
                                 {
                                     if (PositionDifference.X < 0)
                                         MoveLeft = true;
@@ -10174,7 +10278,7 @@ namespace giantsummon
                         Jump = true;
                         WingFlightTime++;
                     }
-                    else
+                    /*else
                     {
                         if(false && Collision.CanHitLine(TopLeftPosition, CollisionWidth, CollisionHeight, new Vector2(LeaderCenterX - 2, LeaderBottom - CollisionHeight * 0.5f), 4, 4))
                         {
@@ -10220,7 +10324,7 @@ namespace giantsummon
                             else
                                 MoveLeft = true;
                         }
-                    }
+                    }*/
                 }
                 else if (Breath < BreathMax && !TryFlying && !TrySwimming && Wet && !LeaderWet)
                 {
