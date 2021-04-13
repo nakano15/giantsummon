@@ -363,7 +363,7 @@ namespace giantsummon
         public PrioritaryBehavior PrioritaryBehaviorType = PrioritaryBehavior.None;
         private byte _SubAttack = 0;
         public int SubAttackID { get { return _SubAttack - 1; } }
-        public int SubAttackTime = 0, SubAttackDamage = 0;
+        public int SubAttackTime = 0, SubAttackFrame = 0, SubAttackDamage = 0;
         public float SubAttackSpeed = 1f;
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
@@ -13568,8 +13568,16 @@ namespace giantsummon
                 return;
             _SubAttack = (byte)(ID + 1);
             SubAttackTime = 0;
+            SubAttackFrame = 0;
             SubAttackSpeed = 1f;
             GuardianSpecialAttack gsa = Base.SpecialAttackList[ID];
+            int ManaCost = (int)(gsa.ManaCost * this.ManaCostMult);
+            if(ManaCost > MP)
+            {
+                _SubAttack = 0;
+                return;
+            }
+            this.MP -= ManaCost;
             SubAttackDamage = gsa.CalculateAttackDamage(this);
             gsa.WhenSubAttackBegins(this);
             //Main.NewText("Using Sub Attack " + ID);
@@ -13613,6 +13621,7 @@ namespace giantsummon
                 if (frame.RightArmFrame > -1) RightArmAnimationFrame = frame.RightArmFrame;
                 subattack.WhenFrameBeginsScript(this, CurrentFrame);
             }
+            SubAttackFrame = CurrentFrame;
             if (SubAttackTime >= StackCounter)
             {
                 _SubAttack = 0;
@@ -16303,6 +16312,10 @@ namespace giantsummon
                 AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
             }
             DoAction.Draw(this);
+            if (SubAttackInUse)
+            {
+                Base.SpecialAttackList[SubAttackID].WhenCompanionIsBeingDrawn(this, SubAttackFrame, SubAttackTime);
+            }
             //DrawBuffWheel(); //Will live forever in our memory... Said nobody.
             /*Rectangle DisplayPosition = WeaponCollision;
             DisplayPosition.X -= (int)Main.screenPosition.X;

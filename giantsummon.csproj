@@ -191,7 +191,12 @@
     <Compile Include="PathFinder.cs" />
     <Compile Include="PlayerDataBackup.cs" />
     <Compile Include="PlayerItems\StaffOfRenew.cs" />
+    <Compile Include="Projectiles\TopazGP .cs" />
+    <Compile Include="Projectiles\SapphireGP .cs" />
+    <Compile Include="Projectiles\EmeraldGP .cs" />
+    <Compile Include="Projectiles\AmethystGP.cs" />
     <Compile Include="Projectiles\BloodVomit.cs" />
+    <Compile Include="Projectiles\CannonBlast.cs" />
     <Compile Include="Projectiles\CrimsonFlameProjectile.cs" />
     <Compile Include="Projectiles\ZombieFart.cs" />
     <Compile Include="RenameGuardianCommand.cs" />
@@ -322,6 +327,7 @@
     <Content Include="Creatures\Alexander\left_arm.png" />
     <Content Include="Creatures\Alexander\right_arm.png" />
     <Content Include="Creatures\CaptainSmelly\body.png" />
+    <Content Include="Creatures\CaptainSmelly\DiamondGP.png" />
     <Content Include="Creatures\CaptainSmelly\head.png" />
     <Content Include="Creatures\CaptainSmelly\head_no_scouter.png" />
     <Content Include="Creatures\CaptainSmelly\left_arm.png" />
@@ -329,6 +335,7 @@
     <Content Include="Creatures\CaptainSmelly\plasma_falchion.png" />
     <Content Include="Creatures\CaptainSmelly\right_arm.png" />
     <Content Include="Creatures\CaptainSmelly\right_arm_front.png" />
+    <Content Include="Creatures\CaptainSmelly\RubyGP.png" />
     <Content Include="Creatures\CaptainSmelly\scouter.png" />
     <Content Include="Creatures\Glenn\body.png" />
     <Content Include="Creatures\Glenn\body_front.png" />
@@ -527,8 +534,13 @@
     <Content Include="Npcs\BrutusNPC.png" />
     <Content Include="Npcs\ZombieGuardian.png" />
     <Content Include="PlayerItems\StaffOfRenew.png" />
+    <Content Include="Projectiles\AmethystGP.png" />
     <Content Include="Projectiles\BloodVomit.png" />
+    <Content Include="Projectiles\CannonBlast.png" />
     <Content Include="Projectiles\CrimsonFlameProjectile.png" />
+    <Content Include="Projectiles\EmeraldGP.png" />
+    <Content Include="Projectiles\SapphireGP.png" />
+    <Content Include="Projectiles\TopazGP.png" />
     <Content Include="Projectiles\ZombieFart.png" />
   </ItemGroup>
   <ItemGroup>
