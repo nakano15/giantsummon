@@ -8,41 +8,43 @@ TG= terra guardian
 Weapons:
 
 >Plasma Falchion-Starting weapon that can get added effects upon using a gemstone on it
--Starting damage = 15 (1+ extra Damage per freindship level of tg)
--Scales off of weapon in 1st inventory slot
+-Base damage = 15 
+-Scales off of weapon in 1st inventory slot of TG
 
->Arm Blaster-Simple ranged weapon that requires mana to use
+>Arm Blaster-Simple ranged weapon that requires 1 mana per shot
 -Starting damage- 5(+1 damage per freinship level of tg)
 -is rapid fire
 
 Gemstone Tiers-
 Applies to all tiers>
+PF gains a new abilty depending on gemstone and is able to use ability during Hswing attack
 Gain 1.5x damage multiplier on PF upon adding a gemstone
 
 >Mystic Amethyst
-Psv- Does Additional Magic Damage, applies Shadowflame  debuff
-Gp- Blade Wave that does decent damage at the start but loses power the further it travels, travels fast, and bypasses blocks
+Psv- applies Shadowflame debuff
+Gp(Projectile)- Blade Wave that does decent damage at the start but loses power the further it travels, travels fast, and bypasses blocks
 
 >Sharp Topaz
-Psv- High base knockback on weapon swings but slower attack speed, 
-Gp- Sends sharp topaz shards that pierce threw targets but collides with blocks and applies bleeding debuff
+Psv- Very high base knockback on weapon swings but slower attack speed, 
+Gp(Projectile)- Sends sharp topaz shards that pierce threw targets but collides with blocks and applies bleeding debuff
 
 
 >Energized Sapphire
-Psv- Gives AttackSpeed Bonus but knock back is very low and PF damage is reduced by 15%
-Gp- Sends out a energy missle that explodes on contact and applies electrified debuff
+Psv- Gives AttackSpeed Bonus but knock back is very low and PF damage is reduced by 15% to compensate for dps 
+Gp(Projectile)- Sends out a energy missle that explodes on contact and applies electrified debuff
 
 >Bloody Ruby
 Psv-Gives lifedrain on sword swings
-Gp-Sends out whiplike wave that drains enemies of their hp and heals smelly for 20hp per enemy hit 
+Gp(Cast on self)-Sends out whiplike wave that drains enemies of their hp and heals smelly for 20hp per enemy hit(has a sweet spot that gives 40 hp instead on 3rd frame)
+
 
 >Critical Emerald
-Psv-Gives higher base crit Chance
-Gp-Tornado that has high crit chance and hits multiple times for 20 damage per tick
+Psv-Gives 50% crit chance
+Gp(Projectile)-Slow moving Tornado that has high crit chance and hits 20 times for 20 damage per tick
 
 >Shining Diamond
-Psv- Has a chance to cause dazed debuff to eneimes hit by PF
-GP- A quick flash that stuns enemies for 2 seconds(Cooldown 10 seconds)
+Psv- Has a 35% to cause dazed debuff to eneimes hit by PF
+GP(Cast infront)- A quick flash that stuns enemies for 2 seconds(Cooldown 10 seconds)
 
 Items:
 Phantom device- Allows usage of phantasm blitz attack
@@ -58,3 +60,5 @@ Super moves:
 Phantasm Blitz- A super quick dash attack that has a 1.5x multiplier added to whatever her current weapon damage is and grants intangibility to Smelly during attack
 -Can be used 1 time per 10 seconds(7 on tier 5 of phantom device)
 -Can be used multiple times in quick succession upon upgrading phantom device
+Condition for when it is supposed to be used:
+Smelly uses PB as soon as she encounters a enemy that is 7 blocks far and it goes on cooldown. When off cooldown it is immediately casted again.
