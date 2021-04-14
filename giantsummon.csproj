@@ -191,13 +191,13 @@
     <Compile Include="PathFinder.cs" />
     <Compile Include="PlayerDataBackup.cs" />
     <Compile Include="PlayerItems\StaffOfRenew.cs" />
-    <Compile Include="Projectiles\TopazGP .cs" />
-    <Compile Include="Projectiles\SapphireGP .cs" />
-    <Compile Include="Projectiles\EmeraldGP .cs" />
+    <Compile Include="Projectiles\EmeraldGP.cs" />
+    <Compile Include="Projectiles\SapphireGP.cs" />
     <Compile Include="Projectiles\AmethystGP.cs" />
     <Compile Include="Projectiles\BloodVomit.cs" />
     <Compile Include="Projectiles\CannonBlast.cs" />
     <Compile Include="Projectiles\CrimsonFlameProjectile.cs" />
+    <Compile Include="Projectiles\TopazGP.cs" />
     <Compile Include="Projectiles\ZombieFart.cs" />
     <Compile Include="RenameGuardianCommand.cs" />
     <Compile Include="MainMod.cs" />
