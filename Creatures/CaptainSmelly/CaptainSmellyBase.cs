@@ -20,6 +20,7 @@ namespace giantsummon.Creatures
         public CaptainSmellyBase()
         {
             Name = "CaptainSmelly";
+            PossibleNames = new string[] { "Cpt. Smelly" };
             Description = "";
             Size = GuardianSize.Large;
             Width = 22;
@@ -46,6 +47,8 @@ namespace giantsummon.Creatures
             DrinksBeverage = true;
             DontUseHeavyWeapons = true;
             SpecialAttackBasedCombat = true;
+            UsesRightHandByDefault = true;
+            ForceWeaponUseOnMainHand = true;
             SetTerraGuardian();
 
             //Animation Frames
@@ -309,16 +312,25 @@ namespace giantsummon.Creatures
             {
                 return (int)(GetCalculatedSwordDamage(tg) * 1.2f);
             };
+            const int AnimationTime = 4;
+            special.CanMove = false;
+            for (int i = 46; i < 56; i++)
+            {
+                AddNewSubAttackFrame(AnimationTime, i, i, i);
+            }
             special.WhenSubAttackBegins = delegate (TerraGuardian tg)
             {
                 SubAttackBegginingScript(tg);
             };
             special.WhenFrameUpdatesScript = delegate (TerraGuardian tg, int Frame, int Time)
             {
+            };
+            special.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame)
+            {
                 if (Frame == 5)
                 {
                     CaptainSmellyData data = (CaptainSmellyData)tg.Data;
-                    Rectangle AttackHitbox = new Rectangle(-32 * tg.Direction + (int)tg.Position.X, -102 + (int)tg.Position.Y, 104, 98);
+                    Rectangle AttackHitbox = new Rectangle((int)(-32 * tg.Direction * tg.Scale) + (int)tg.Position.X, (int)(-102 * tg.Scale+ tg.Position.Y), (int)(104 * tg.Scale), (int)(98 * tg.Scale));
                     if (tg.LookingLeft)
                         AttackHitbox.X -= AttackHitbox.Width;
                     int Damage = tg.SubAttackDamage;
@@ -330,15 +342,41 @@ namespace giantsummon.Creatures
                         switch (SwordID)
                         {
                             case AmethystFalchion:
+                                {
+                                    int p = Projectile.NewProjectile(tg.CenterPosition, new Vector2(8f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.AmethystGP>(),
+                                        Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
+                                    Main.projectile[p].scale = tg.Scale;
+                                    Main.projectile[p].netUpdate = true;
+                                }
                                 break;
                             case TopazFalchion:
-                                Knockback += 3f;
+                                {
+                                    Knockback += 3f;
+                                    int p = Projectile.NewProjectile(tg.CenterPosition, new Vector2(4f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.TopazGP>(),
+                                        Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
+                                    Main.projectile[p].scale = tg.Scale;
+                                    Main.projectile[p].netUpdate = true;
+                                }
                                 break;
                             case SapphireFalchion:
-                                Knockback *= 0.11f;
+                                {
+                                    Knockback *= 0.11f;
+                                    int p = Projectile.NewProjectile(tg.CenterPosition, new Vector2(8f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.SapphireGP>(),
+                                        Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
+                                    Main.projectile[p].scale = tg.Scale;
+                                    Main.projectile[p].netUpdate = true;
+                                }
                                 break;
                             case EmeraldFalchion:
-                                CriticalRate += 30;
+                                {
+                                    CriticalRate += 30;
+                                    Vector2 SpawnPosition = tg.Position;
+                                    SpawnPosition.Y -= 24 * tg.Scale;
+                                    int p = Projectile.NewProjectile(SpawnPosition, new Vector2(1f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.EmeraldGP>(),
+                                        Damage, Knockback * 0.9f, tg.GetSomeoneToSpawnProjectileFor);
+                                    Main.projectile[p].scale = tg.Scale;
+                                    Main.projectile[p].netUpdate = true;
+                                }
                                 break;
                         }
                     }
@@ -371,8 +409,16 @@ namespace giantsummon.Creatures
                                     }
                                     else if (SwordID == RubyFalchion)
                                     {
-                                        int HealthRecover = (int)(Math.Max(1, result * 0.05f));
+                                        int HealthRecover = 20;
+                                        Rectangle SweetSpotPosition = new Rectangle((int)(tg.Position.X + tg.Direction * 48 * tg.Scale), (int)(tg.CenterPosition.Y - 40 * tg.Scale), (int)(32 * tg.Scale), (int)(32 * tg.Scale));
+                                        if (tg.LookingLeft)
+                                            SweetSpotPosition.X -= SweetSpotPosition.Width;
+                                        if (Main.npc[n].getRect().Intersects(SweetSpotPosition))
+                                        {
+                                            HealthRecover = 40;
+                                        }
                                         tg.RestoreHP(HealthRecover);
+                                        tg.AddBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.DrainingHealth>(), 60);
                                     }
                                     else if (SwordID == DiamondFalchion)
                                     {
@@ -408,26 +454,53 @@ namespace giantsummon.Creatures
                 CaptainSmellyData data = (CaptainSmellyData)tg.Data;
                 switch (data.SwordID)
                 {
-                    case AmethystFalchion:
-
-                        break;
-                    case TopazFalchion:
-                        break;
-                    case SapphireFalchion:
-                        break;
-                    case EmeraldFalchion:
-                        break;
                     case RubyFalchion:
+                        {
+                            if(Frame >= 4)
+                            {
+                                int WhipFrame = Frame - 4;
+                                Texture2D texture = sprites.GetExtraTexture(RubyGPTextureID);
+                                if(WhipFrame >= 0 && WhipFrame < 6)
+                                {
+                                    GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, tg.CenterPosition - Main.screenPosition,
+                                        new Rectangle(160 * WhipFrame, 0, 160, 160), Color.White, 0f, new Vector2(80, 80), tg.Scale, 
+                                        (tg.LookingLeft ? SpriteEffects.FlipHorizontally: SpriteEffects.None));
+                                    TerraGuardian.DrawFront.Add(gdd);
+                                }
+                                if (tg.HasBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.DrainingHealth>()))
+                                {
+                                    int SiphonFrame = Frame - 5;
+                                    if(SiphonFrame >= 0 && SiphonFrame < 7)
+                                    {
+                                        GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, tg.Position - Main.screenPosition,
+                                            new Rectangle(160 * SiphonFrame, 160, 160, 160), Color.White, 0f, new Vector2(80, 160), tg.Scale,
+                                            (tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None));
+                                        TerraGuardian.DrawFront.Add(gdd);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case DiamondFalchion:
+                        {
+                            int FlashFrame = (int)(((Frame - 4) * AnimationTime + Time) * (1f / AnimationTime));
+                            if(FlashFrame >= 0 && FlashFrame < 8)
+                            {
+                                Texture2D texture = sprites.GetExtraTexture(DiamondGPTextureID);
+                                GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, tg.CenterPosition - Main.screenPosition,
+                                    new Rectangle(200 * FlashFrame, 0, 200, 200), Color.White, 0f, new Vector2(100, 100), tg.Scale,
+                                    (tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None));
+                                TerraGuardian.DrawFront.Add(gdd);
+                                FlashFrame++;
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, tg.CenterPosition - Main.screenPosition,
+                                    new Rectangle(200 * FlashFrame, 200, 200, 200), Color.White, 0f, new Vector2(100, 100), tg.Scale,
+                                    (tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None));
+                                TerraGuardian.DrawFront.Add(gdd);
+                            }
+                        }
                         break;
                 }
             };
-            special.CanMove = false;
-            for (int i = 46; i < 56; i++)
-            {
-                AddNewSubAttackFrame(6, i, i, i);
-            }
         }
 
         public void ArmBlasterSetup()
@@ -437,24 +510,35 @@ namespace giantsummon.Creatures
             special.ManaCost = 1;
             special.MinRange = 100;
             special.MaxRange = 1000;
-            AddNewSubAttackFrame(4, -1, 57, -1);
+            AddNewSubAttackFrame(8, -1, 57, -1);
             special.WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID)
             {
                 //Shoot something
                 Vector2 ProjectilePosition = Vector2.Zero;
                 Vector2 AimPosition = tg.AimDirection.ToVector2() - tg.CenterPosition;
                 float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
+                if (tg.LookingLeft)
+                    Angle = (float)Math.PI - Angle;
                 int LeftArmFrame = 57;
-                if (Angle > 2.181662f) //125
+                if (Angle < 0.0174533f * 65)
                 {
-                    LeftArmFrame = 59;
+                    if (tg.Velocity.Y != 0)
+                        LeftArmFrame = 62;
+                    else
+                        LeftArmFrame = 59;
                 }
-                else if (Angle < 1.134464f) //65
+                else if (Angle > 0.0174533f * 125)
                 {
-                    LeftArmFrame = 58;
+                    if (tg.Velocity.Y != 0)
+                        LeftArmFrame = 60;
+                    else
+                        LeftArmFrame = 58;
                 }
-                if (tg.Velocity.Y != 0)
-                    LeftArmFrame += 3;
+                else
+                {
+                    if (tg.Velocity.Y != 0)
+                        LeftArmFrame = 61;
+                }
                 switch (LeftArmFrame)
                 {
                     case 57:
@@ -476,34 +560,58 @@ namespace giantsummon.Creatures
                         ProjectilePosition = new Vector2(45, 30);
                         break;
                 }
-                ProjectilePosition.X -= SpriteWidth / 2;
+                ProjectilePosition.X = SpriteWidth / 2 - ProjectilePosition.X;
                 if (tg.LookingLeft)
                     ProjectilePosition.X *= -1;
-                ProjectilePosition = tg.Position - ProjectilePosition * 2;
+                ProjectilePosition.Y *= -1;
+                ProjectilePosition = tg.Position + ProjectilePosition * tg.Scale;
+                for (int i = 0; i < 4; i++)
+                    Dust.NewDust(ProjectilePosition, 4, 4, Terraria.ID.DustID.Fire);
                 AimPosition.Normalize();
                 int Damage = 5 + tg.FriendshipLevel;
                 //if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].ranged)
                 //    Damage = Damage + tg.Inventory[tg.SelectedItem].damage;
                 Damage = (int)(Damage * tg.RangedDamageMultiplier);
-                int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 9f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
+                int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 14f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
                     Damage, 0.03f, tg.GetSomeoneToSpawnProjectileFor);
+                Main.projectile[ID].scale = tg.Scale;
+                Main.projectile[ID].netUpdate = true;
                 tg.SetProjectileOwnership(ID);
             };
             special.AnimationReplacer = delegate (TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame)
             {
                 Vector2 AimPosition = tg.AimDirection.ToVector2() - tg.CenterPosition;
                 float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
-                if (Angle > 2.181662f) //125
+                if (tg.LookingLeft)
+                    Angle = (float)Math.PI - Angle;
+                if (Angle < 0.0174533f * 65)
                 {
-                    LeftArmFrame = 59;
+                    if (tg.Velocity.Y != 0)
+                        LeftArmFrame = 62;
+                    else
+                        LeftArmFrame = 59;
                 }
-                else if (Angle < 1.134464f) //65
+                else if (Angle > 0.0174533f * 125)
                 {
-                    LeftArmFrame = 58;
+                    if (tg.Velocity.Y != 0)
+                        LeftArmFrame = 60;
+                    else
+                        LeftArmFrame = 58;
                 }
-                if (tg.Velocity.Y != 0)
-                    LeftArmFrame += 3;
+                else
+                {
+                    if (tg.Velocity.Y != 0)
+                        LeftArmFrame = 61;
+                }
             };
+        }
+
+        public override int GuardianSubAttackChoiceAI(TerraGuardian Owner, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight)
+        {
+            int ID = 0;
+            if (Owner.MP > 1 && Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) > 100)
+                ID = 2;
+            return ID;
         }
 
         public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
@@ -660,6 +768,12 @@ namespace giantsummon.Creatures
             int FrameX = 0, FrameY = ((NumberOfSwords - 1) - SwordID) * 2;
             switch (guardian.RightArmAnimationFrame)
             {
+                case 25: //Downed
+                case 26: //Reviving
+                case 75: //Chair
+                case 73: //Throne
+                case 74: //Bed
+                    return;
                 case 20:
                     FrameX = 1;
                     break;

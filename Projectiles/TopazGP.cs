@@ -19,7 +19,6 @@ namespace giantsummon.Projectiles
 
         public override void SetDefaults() //Needs Setup and AI
         {
-            projectile.width = projectile.height = 8;
             projectile.aiStyle = -1;
             projectile.friendly = true;
             projectile.hostile = false;
@@ -28,6 +27,34 @@ namespace giantsummon.Projectiles
             projectile.light = 0f;
             projectile.ignoreWater = false;
             projectile.tileCollide = true;
+            projectile.width = projectile.height = 56;
+            projectile.maxPenetrate = -1;
+        }
+
+        public override void AI()
+        {
+            if (projectile.velocity.X > 0)
+                projectile.direction = 1;
+            else
+                projectile.direction = -1;
+            projectile.position += projectile.velocity;
+        }
+
+        public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+        {
+            target.AddBuff(Terraria.ID.BuffID.Bleeding, 5 * 60);
+        }
+
+        public override void OnHitPlayer(Player target, int damage, bool crit)
+        {
+            target.AddBuff(Terraria.ID.BuffID.Bleeding, 5 * 60);
+        }
+
+        public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+        {
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, new Rectangle(0, 0, 96, 96), Color.White, 0f,
+                new Vector2(48, 48), projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            return false;
         }
     }
 }

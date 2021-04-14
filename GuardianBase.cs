@@ -39,7 +39,7 @@ namespace giantsummon
         public int MaxBreath = 200, BreathCooldown = 7;
         public int BlockRate = 0, DodgeRate = 0;
         public float MountBurdenPercentage = 0.05f;
-        public bool DontUseRightHand = false, ForceWeaponUseOnMainHand = false;
+        public bool UsesRightHandByDefault = false, DontUseRightHand = false, ForceWeaponUseOnMainHand = false;
         public bool DontUseHeavyWeapons = false;
         public bool CanChangeGender = false;
         public bool OneHanded2HWeaponWield = false;
@@ -1301,6 +1301,11 @@ namespace giantsummon
             {
                 Duration = Duration, BodyFrame = BodyAnimationFrame, LeftArmFrame = LeftArmAnimationFrame, RightArmFrame = RightArmAnimationFrame
             });
+        }
+
+        public virtual int GuardianSubAttackChoiceAI(TerraGuardian Owner, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight)
+        {
+            return 0;
         }
 
         public class MessageIDs

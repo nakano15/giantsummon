@@ -4794,10 +4794,6 @@ namespace giantsummon
             bool TargetInAim = false;
             if (AttackingTarget)
                 TargetInAim = MoveCursorToPosition(TargetPosition + TargetVelocity, TargetWidth, TargetHeight);
-            /*else
-            {
-                MoveCursorToPosition(CenterPosition + (TargetPosition - CenterPosition) * 0.5f + TargetVelocity, TargetWidth, TargetHeight);
-            }*/
             if (AvoidCombat)
             {
                 float DistanceFromTarget = 60 + (TargetWidth + Width) * 0.5f;
@@ -4893,7 +4889,7 @@ namespace giantsummon
                 //AimDirection.X = (int)(TargetPosition.X + TargetVelocity.X + TargetWidth * 0.5f);
                 //AimDirection.Y = (int)(TargetPosition.Y + TargetVelocity.Y + TargetHeight * 0.5f);
                 float DistanceDiscount = 8f * AssistSlot;
-                if (ItemAnimationTime == 0 && !Action)
+                if (ItemAnimationTime == 0 && !SubAttackInUse && !Base.SpecialAttackBasedCombat && !Action)
                 {
                     if (TargetOnSight) //Check weapons
                     {
@@ -5054,20 +5050,53 @@ namespace giantsummon
                     }
                     else if (Base.SpecialAttackBasedCombat)
                     {
-                        GuardianSpecialAttack gsa = Base.SpecialAttackList[0];
-                        float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
-                        if (Distance < gsa.MinRange)
+                        if (Base.SpecialAttackList.Count == 0)
+                            return;
+                        int SubAttackPicked = Base.GuardianSubAttackChoiceAI(this, TargetPosition, TargetVelocity, TargetWidth, TargetHeight);
+                        GuardianSpecialAttack gsa = Base.SpecialAttackList[SubAttackPicked];
+                        SelectedItem = -1;
+                        int LastHighestDamage = 0;
+                        for (int i = 0; i < 10; i++)
+                        {
+                            switch (gsa.combatType)
+                            {
+                                case GuardianSpecialAttack.SubAttackCombatType.Melee:
+                                    if(Inventory[i].type > 0 && Inventory[i].melee && Inventory[i].damage > LastHighestDamage)
+                                    {
+                                        SelectedItem = i;
+                                        LastHighestDamage = Inventory[i].damage;
+                                    }
+                                    break;
+                                case GuardianSpecialAttack.SubAttackCombatType.Ranged:
+                                    if (Inventory[i].type > 0 && Inventory[i].ranged && Inventory[i].damage > LastHighestDamage)
+                                    {
+                                        SelectedItem = i;
+                                        LastHighestDamage = Inventory[i].damage;
+                                    }
+                                    break;
+                                case GuardianSpecialAttack.SubAttackCombatType.Magic:
+                                    if (Inventory[i].type > 0 && Inventory[i].magic && Inventory[i].damage > LastHighestDamage)
+                                    {
+                                        SelectedItem = i;
+                                        LastHighestDamage = Inventory[i].damage;
+                                    }
+                                    break;
+                            }
+                        }
+                        float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Position.X + Velocity.X);
+                        if (Distance < gsa.MinRange + TargetWidth * 0.5f)
                         {
                             Retreat = true;
                         }
-                        else if (Distance >= gsa.MaxRange)
+                        else if (Distance >= gsa.MaxRange + TargetWidth * 0.5f)
                         {
                             Approach = true;
                         }
                         else if (!SubAttackInUse)
                         {
-                            UseSubAttack(0);
+                            UseSubAttack(SubAttackPicked);
                         }
+                        Action = false;
                         GoMelee = false;
                     }
                     else
@@ -6905,7 +6934,7 @@ namespace giantsummon
                                         float NearestDistance = float.MaxValue;
                                         for (int n = 0; n < 200; n++)
                                         {
-                                            if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless)
+                                            if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless && Main.npc[n].type != Terraria.ID.NPCID.OldMan)
                                             {
                                                 float Distance = Main.npc[n].Distance(CenterPosition);
                                                 if (Distance < NearestDistance)
@@ -13107,6 +13136,12 @@ namespace giantsummon
 
         public void PickHandToUse(ref HeldHand hand)
         {
+            if (Base.UsesRightHandByDefault)
+            {
+                hand = HeldHand.Right;
+                if (Base.ForceWeaponUseOnMainHand)
+                    return;
+            }
             if (Base.DontUseRightHand || Base.ForceWeaponUseOnMainHand)
             {
                 hand = HeldHand.Left;
@@ -13578,6 +13613,7 @@ namespace giantsummon
                 return;
             }
             this.MP -= ManaCost;
+            LookingLeft = AimDirection.X < Position.X;
             SubAttackDamage = gsa.CalculateAttackDamage(this);
             gsa.WhenSubAttackBegins(this);
             //Main.NewText("Using Sub Attack " + ID);
@@ -13635,6 +13671,7 @@ namespace giantsummon
                 SubAttackBodyFrame = frame.BodyFrame;
                 SubAttackLeftArmFrame = frame.LeftArmFrame;
                 SubAttackRightArmFrame = frame.RightArmFrame;
+                subattack.AnimationReplacer(this, SubAttackFrame, SubAttackTime, ref SubAttackBodyFrame, ref SubAttackLeftArmFrame, ref SubAttackRightArmFrame);
             }
             subattack.WhenFrameUpdatesScript(this, CurrentFrame, FrameTime);
             SubAttackTime++;

@@ -41,6 +41,8 @@ namespace giantsummon.Creatures
             ReverseMount = false;
             DrinksBeverage = false;
             SpecialAttackBasedCombat = true;
+            UsesRightHandByDefault = true;
+            ForceWeaponUseOnMainHand = true;
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
