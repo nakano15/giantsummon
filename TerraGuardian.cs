@@ -6995,16 +6995,13 @@ namespace giantsummon
                             float XDif = Position.X - HouseX, YDif = Position.Y - HouseY - 16;
                             if (MayTryGoingSleep)
                             {
-                                if (IdleActionTime == 0 || CurrentIdleAction != IdleActions.TryGoingSleep)
+                                if (!AtHome)
                                 {
-                                    if (!AtHome)
-                                    {
-                                        ChangeIdleAction(IdleActions.GoHome, 5);
-                                    }
-                                    else
-                                    {
-                                        ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
-                                    }
+                                    ChangeIdleAction(IdleActions.GoHome, 5);
+                                }
+                                else if (IdleActionTime == 0)
+                                {
+                                    ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
                                 }
                                 if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
                                 {
@@ -13607,12 +13604,11 @@ namespace giantsummon
             SubAttackSpeed = 1f;
             GuardianSpecialAttack gsa = Base.SpecialAttackList[ID];
             int ManaCost = (int)(gsa.ManaCost * this.ManaCostMult);
-            if(ManaCost > MP)
+            if(!UseMana(ManaCost))
             {
                 _SubAttack = 0;
                 return;
             }
-            this.MP -= ManaCost;
             LookingLeft = AimDirection.X < Position.X;
             SubAttackDamage = gsa.CalculateAttackDamage(this);
             gsa.WhenSubAttackBegins(this);

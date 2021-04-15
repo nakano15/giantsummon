@@ -565,8 +565,8 @@ namespace giantsummon.Creatures
                     ProjectilePosition.X *= -1;
                 ProjectilePosition.Y *= -1;
                 ProjectilePosition = tg.Position + ProjectilePosition * tg.Scale;
-                for (int i = 0; i < 4; i++)
-                    Dust.NewDust(ProjectilePosition, 4, 4, Terraria.ID.DustID.Fire);
+                //for (int i = 0; i < 4; i++)
+                //    Dust.NewDust(ProjectilePosition, 4, 4, Terraria.ID.DustID.Fire);
                 AimPosition.Normalize();
                 int Damage = 5 + tg.FriendshipLevel;
                 //if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].ranged)

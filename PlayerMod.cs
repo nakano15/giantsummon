@@ -2163,6 +2163,13 @@ namespace giantsummon
                     AssistSlot++;
                 }
             }
+            foreach(TerraGuardian guardian in GetAllGuardianFollowers)
+            {
+                if (guardian.Active)
+                {
+                    guardian.TeleportToPlayer(true);
+                }
+            }
             if (!HasGuardian(4) && MainMod.CanGiveFreeNemesis())
             {
                 AddNewGuardian(4);

@@ -615,7 +615,22 @@ namespace giantsummon
                 return;
             int HPX = townstate.HomeX,
                 HPY = townstate.HomeY;
-            if (HPX > -1 && HPY > -1)
+            if(townstate.HouseInfo != null)
+            {
+                foreach (WorldMod.GuardianHouseInfos.FurnitureInfo fi in townstate.HouseInfo.furnitures)
+                {
+                    if (fi.FurnitureID == Terraria.ID.TileID.Signs || fi.FurnitureID == Terraria.ID.TileID.AnnouncementBox)
+                    {
+                        SignID = Sign.ReadSign(fi.FurnitureX, fi.FurnitureY);
+                        if (SignID > -1)
+                        {
+                            IsAnnouncementBox = fi.FurnitureID == Terraria.ID.TileID.AnnouncementBox;
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (HPX > -1 && HPY > -1)
             {
                 int TileCount = 0;
                 List<KeyValuePair<int, int>> NextTileCheck = new List<KeyValuePair<int, int>>(),

@@ -1356,6 +1356,15 @@ namespace giantsummon
                                     PositionY++;
                             }
                             break;
+                        case Terraria.ID.TileID.Signs:
+                        case Terraria.ID.TileID.AnnouncementBox:
+                        case Terraria.ID.TileID.Tombstones:
+                            {
+                                PositionX -= (tile.frameX / 18) % 2;
+                                PositionY -= tile.frameY / 18;
+                                Add = true;
+                            }
+                            break;
                     }
                     foreach (FurnitureInfo fi in furnitures)
                     {
@@ -1400,6 +1409,15 @@ namespace giantsummon
                                     break;
                                 case Terraria.ID.TileID.Beds:
                                     if (PositionX >= fi.FurnitureX - (fi.FacingLeft ? 1 : 2) && PositionX <= fi.FurnitureX + (fi.FacingLeft ? 2 : 1) && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
+                                    {
+                                        furnitures.RemoveAt(t);
+                                        break;
+                                    }
+                                    break;
+                                case Terraria.ID.TileID.Signs:
+                                case Terraria.ID.TileID.AnnouncementBox:
+                                case Terraria.ID.TileID.Tombstones:
+                                    if(PositionX >= fi.FurnitureX && PositionX < fi.FurnitureX + 1 && PositionY >= fi.FurnitureY &&PositionY < fi.FurnitureY + 1)
                                     {
                                         furnitures.RemoveAt(t);
                                         break;

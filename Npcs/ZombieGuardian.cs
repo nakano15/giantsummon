@@ -575,7 +575,22 @@ namespace giantsummon.Npcs
                                 if (Main.expertMode)
                                     npc.defense *= 2;
                                 npc.knockBackResist = 0;
-                                if (!npc.getRect().Intersects(Target.GetCollision))
+                                if(!Target.TargettingPlayer && Target.Guardian.BeingPulledByPlayer)
+                                {
+                                    Target.Guardian.BeingPulledByPlayer = false;
+                                    Target.SetTargetToPlayer(Main.player[Target.Guardian.OwnerPos]);
+                                    AiState = 4;
+                                    AiValue = 0;
+                                }
+                                if(AiValue < 90)
+                                {
+                                    if(AiValue == 0)
+                                    {
+                                        Main.NewText("The zombie guardian is chattering It's teeth.");
+                                    }
+                                    AiValue++;
+                                }
+                                else if (!npc.getRect().Intersects(Target.GetCollision))
                                 {
                                     MoveForward = true;
                                     //AiValue = 0;
@@ -1080,8 +1095,6 @@ namespace giantsummon.Npcs
         public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
         {
             double newDamage = damage - defense * 0.5;
-            if (crit)
-                newDamage *= 2;
             double DamageDeductor = 0.2 + GetBossLevel() * 0.1;
             damage -= newDamage * (1 - DamageDeductor);
             if (damage < 1)
