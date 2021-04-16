@@ -843,8 +843,6 @@ namespace giantsummon
                     RescueTime = 0;
                 }
             }
-            if (KnockedOut)
-            {
                 if (true || KnockedOutCold)
                     eye = EyeState.Closed;
                 else
@@ -864,7 +862,8 @@ namespace giantsummon
                         player.breath++;
                     }
                 }
-            }
+            if (player.mount != null && player.mount.Active)
+                player.mount.Dismount(player);
             if (player.grapCount > 0)
             {
                 for (int i = 0; i < player.grapCount; i++)

@@ -1444,25 +1444,25 @@ namespace giantsummon
                 case 4:
                     if (WorldGen.crimson)
                     {
-                        DropLoot(Terraria.ID.ItemID.CrimtaneOre, Main.rand.Next(15, 26) * (int)mobType);
+                        DropLoot(Terraria.ID.ItemID.CrimtaneOre, Main.rand.Next(10, 26) * (int)mobType);
                     }
                     else
                     {
-                        DropLoot(Terraria.ID.ItemID.DemoniteOre, Main.rand.Next(15, 26) * (int)mobType);
+                        DropLoot(Terraria.ID.ItemID.DemoniteOre, Main.rand.Next(10, 26) * (int)mobType);
                     }
                     break;
                 case 13:
                 case 14:
                 case 15:
-                    DropLoot(Terraria.ID.ItemID.DemoniteOre, Main.rand.Next(20, 41) * (int)mobType);
-                    DropLoot(Terraria.ID.ItemID.ShadowScale, Main.rand.Next(5, 11) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.DemoniteOre, Main.rand.Next(1, 3) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.ShadowScale, Main.rand.Next(1, 3) * (int)mobType);
                     break;
                 case 267:
-                    DropLoot(Terraria.ID.ItemID.CrimtaneOre, Main.rand.Next(20, 41) * (int)mobType);
-                    DropLoot(Terraria.ID.ItemID.TissueSample, Main.rand.Next(5, 11) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.CrimtaneOre, Main.rand.Next(1, 3) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.TissueSample, Main.rand.Next(1, 3) * (int)mobType);
                     break;
                 case 35:
-                    DropLoot(Terraria.ID.ItemID.Bone, Main.rand.Next(30, 41) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.Bone, Main.rand.Next(10, 21) * (int)mobType);
                     break;
                 case 50:
                     ExtraLootChances.Add(new KeyValuePair<int, float>(256, 33.33f));
@@ -1473,8 +1473,8 @@ namespace giantsummon
                     ExtraLootChances.Add(new KeyValuePair<int, float>(2610, 66.67f));
                     break;
                 case 222:
-                    DropLoot(Terraria.ID.ItemID.BeeWax, Main.rand.Next(20, 31) * (int)mobType);
-                    DropLoot(Terraria.ID.ItemID.Beenade, Main.rand.Next(10, 21) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.BeeWax, Main.rand.Next(10, 21) * (int)mobType);
+                    DropLoot(Terraria.ID.ItemID.Beenade, Main.rand.Next(5, 11) * (int)mobType);
                     DropLoot(Terraria.ID.ItemID.BottledHoney, 5 * (int)mobType);
                     ExtraLootChances.Add(new KeyValuePair<int, float>(Terraria.ID.ItemID.BeeGun, 33.33f));
                     ExtraLootChances.Add(new KeyValuePair<int, float>(Terraria.ID.ItemID.BeeKeeper, 33.33f));

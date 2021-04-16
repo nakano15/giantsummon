@@ -9,3 +9,7 @@ Added another method to find a sign required for Sardine's request.
 	Now It will check if the companion has a house logged. If there is, It will check an internal furniture id counter.
 Change Blue and Brutus left arm position when standing and walking.
 Mabel got a change to her left arm sprite when standing and walking.
+Your character will now be forced off their mount when knocked out.
+Changed Minerva's starter items:
+	Instead of Fruitcake Chakran and Bee Gun, she now begins with Pearlwood Sword and Amethyst Staff.
+Eater of Worlds and Brain of Cthulhu gem versions will now award less extra ore and reagent reward upon killing them and their minions.

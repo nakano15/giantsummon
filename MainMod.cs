@@ -951,6 +951,8 @@ namespace giantsummon
             float BarSize = (float)Main.player[Main.myPlayer].statLife / Main.player[Main.myPlayer].statLifeMax2;
             if (playerMod.RescueTime > 0)
                 BarSize = 0f;
+            if (Main.player[Main.myPlayer].statLife == 1)
+                BarSize = 0f;
             if (BarSize > 1f)
                 BarSize = 1f;
             if (BarSize < 0)

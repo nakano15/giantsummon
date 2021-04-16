@@ -323,6 +323,13 @@ namespace giantsummon
                     NewPos.Y -= Height;
                 return NewPos;
             }
+            set
+            {
+                Vector2 NewPos = value;
+                NewPos.X += Width * 0.5f;
+                NewPos.Y += Height;
+                Position = NewPos;
+            }
         }
         public Vector2 CenterPosition
         {
@@ -7021,9 +7028,15 @@ namespace giantsummon
                                     {
                                         FaceDirection(!LookingLeft);
                                         if (Main.rand.NextDouble() < 0.6f)
-                                            ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 200 + Main.rand.Next(200));
+                                            ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 300 + Main.rand.Next(200));
+                                        else if (Main.rand.NextDouble() < 0.4f)
+                                        {
+                                            ChangeIdleAction(IdleActions.WanderHome, 100 + Main.rand.Next(200));
+                                        }
                                         else
+                                        {
                                             ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
+                                        }
                                     }
                                 }
                             }
@@ -7133,6 +7146,7 @@ namespace giantsummon
                         }
                     }
                     break;
+                case IdleActions.WanderHome:
                 case IdleActions.Wander:
                     {
                         WalkMode = true;
@@ -7168,6 +7182,25 @@ namespace giantsummon
                         }
                         int CheckAheadX = (int)(Position.X + (CollisionWidth * 0.5f + 8) * Direction) / 16,
                             CheckAheadStartY = (int)(Position.Y) / 16;
+                        if (CurrentIdleAction == IdleActions.WanderHome)
+                        {
+                            bool Door = false;
+                            for (int y = 0; y < 4; y++)
+                            {
+                                Tile tile = Framing.GetTileSafely(CheckAheadX, CheckAheadStartY);
+                                if (tile.active() && (tile.type == Terraria.ID.TileID.ClosedDoor || (tile.type == Terraria.ID.TileID.OpenDoor && (tile.frameX >= 18 && tile.frameX <= 36)) ||
+                                    tile.type == Terraria.ID.TileID.TallGateClosed || tile.type == Terraria.ID.TileID.TallGateOpen))
+                                {
+                                    Door = true;
+                                    break;
+                                }
+                            }
+                            if (Door)
+                            {
+                                FaceDirection(!LookingLeft);
+                                break;
+                            }
+                        }
                         byte Gap = 0;
                         for (int height = 0; height < 8; height++)
                         {
@@ -17409,6 +17442,7 @@ namespace giantsummon
             Listening,
             Wait,
             Wander,
+            WanderHome,
             UseNearbyFurniture,
             UseNearbyFurnitureHome,
             TryGoingSleep,

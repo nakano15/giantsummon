@@ -68,8 +68,8 @@ namespace giantsummon.Creatures
             DownedFrame = 19;
             //PetrifiedFrame = 28;
 
-            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.FruitcakeChakram, 1));
-            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.BeeGun, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.PearlwoodSword, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.AmethystStaff, 1));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.BottledHoney, 5));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.BowlofSoup, 5));
 
