@@ -13,3 +13,10 @@ Your character will now be forced off their mount when knocked out.
 Changed Minerva's starter items:
 	Instead of Fruitcake Chakran and Bee Gun, she now begins with Pearlwood Sword and Amethyst Staff.
 Eater of Worlds and Brain of Cthulhu gem versions will now award less extra ore and reagent reward upon killing them and their minions.
+Fixed an issue where your buddies mode companion wasn't receiving health boost correctly.
+You can now have assist companions with you on Buddies Mode.
+	Only your buddy and your character will get bonus status from Buddies Mode.
+	You will need twice the friendship rank to unlock the extra companion allowance.
+	Your buddy will award twice friendship ranks.
+Added an appearing and disappearing effect for the companions.
+	Sadly you'll only hear It :/.

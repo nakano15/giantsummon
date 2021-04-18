@@ -109,35 +109,43 @@ namespace giantsummon
         {
             get
             {
-                int Count = FriendshipLevel;
-                int Allowance = 0;
-                if (Count >= 2)
-                    Allowance++;
-                if (Count >= 6) //5
-                    Allowance++;
-                if (Count >= 12) //8
-                    Allowance++;
-                if (Count >= 18) //10
-                    Allowance++;
-                if (Count >= 25) //14
-                    Allowance++;
-                if (Count >= 32) //14
-                    Allowance++;
-                if (Allowance > MainMod.MaxExtraGuardianFollowers)
-                    Allowance = MainMod.MaxExtraGuardianFollowers;
-                return Allowance;
+                return GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel);
             }
+        }
+        public int GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(int FriendshipLevel)
+        {
+            int Count = (int)(FriendshipLevel * (BuddiesMode ? 0.5f : 1));
+            int Allowance = 0;
+            if (Count >= 2)
+                Allowance++;
+            if (Count >= 6) //5
+                Allowance++;
+            if (Count >= 12) //8
+                Allowance++;
+            if (Count >= 18) //10
+                Allowance++;
+            if (Count >= 25) //14
+                Allowance++;
+            if (Count >= 32)
+                Allowance++;
+            if (Count >= 36)
+                Allowance++;
+            if (Count >= 42)
+                Allowance++;
+            if (Count >= 49)
+                Allowance++;
+            if (Allowance > MainMod.MaxExtraGuardianFollowers)
+                Allowance = MainMod.MaxExtraGuardianFollowers;
+            return Allowance;
         }
 
         public void FriendshipLevelNotification()
         {
             Main.NewText("You reached Friendship Rank " + FriendshipLevel + ".");
-            if (!BuddiesMode)
+            if (GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel) != GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel - 1))//(FriendshipLevel == 2 || FriendshipLevel == 6 || FriendshipLevel == 12 || FriendshipLevel == 18 || FriendshipLevel == 25)
             {
-                if (FriendshipLevel == 2 || FriendshipLevel == 6 || FriendshipLevel == 12 || FriendshipLevel == 18 || FriendshipLevel == 25)
-                {
-                    Main.NewText("You can now have " + (MaxExtraGuardiansAllowed + 1) + " companions following you.");
-                }
+                int CompanionCount = MaxExtraGuardiansAllowed;
+                Main.NewText("You can now have " + (CompanionCount) + " extra companion" + (CompanionCount > 1 ? "s" : "") + " following you.");
             }
         }
         public int GetSummonedGuardianCount
@@ -335,6 +343,11 @@ namespace giantsummon
         public static bool HasBuddiesModeOn(Player player)
         {
             return player.GetModPlayer<PlayerMod>().BuddiesMode;
+        }
+
+        public static GuardianID GetPlayerBuddy(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().BuddiesModeBuddyID;
         }
 
         public override bool CloneNewInstances
@@ -1484,7 +1497,14 @@ namespace giantsummon
                 {
                     g.request.UpdateRequest(g, this);
                     g.UpdateData(this.player);
-                    NewFriendshipCount += g.FriendshipLevel;
+                    if (BuddiesMode && BuddiesModeBuddyID.IsSameID(g))
+                    {
+                        NewFriendshipCount += g.FriendshipLevel * 2;
+                    }
+                    else
+                    {
+                        NewFriendshipCount += g.FriendshipLevel;
+                    }
                 }
                 if (NewFriendshipCount != LastFriendshipCount)
                 {
@@ -1536,6 +1556,10 @@ namespace giantsummon
                     guardian.AddBuff(Terraria.ID.BuffID.SoulDrain, 5);
                 }
                 guardian.AssistSlot = AssistSlot;
+                if (BuddiesMode && BuddiesModeBuddyID.IsSameID(guardian) && AssistSlot > 0)
+                {
+                    ChangeLeaderGuardian(AssistSlot);
+                }
                 guardian.Update(this.player);
                 if (player.whoAmI == Main.myPlayer && guardian.Base.InvalidGuardian)
                 {
@@ -2273,6 +2297,7 @@ namespace giantsummon
                 if (guardian.Distance(player.Center) >= 512f)
                 {
                     guardian.TeleportToPlayer();
+                    guardian.PlayAppearDisappearEffect();
                 }
                 else
                 {
@@ -2360,7 +2385,7 @@ namespace giantsummon
             }
             if (Guardian.Active)
             {
-                if (BuddiesMode && Guardian.MyID == BuddiesModeBuddyID) //Never remove the buddy. NEVER.
+                if (BuddiesMode && BuddiesModeBuddyID.IsSameID(Guardian)) //Never remove the buddy. NEVER.
                 {
                     return;
                 }
@@ -2375,11 +2400,20 @@ namespace giantsummon
                 if (Main.netMode > 0)
                 {
                     Guardian.Active = false;
+                    Guardian.PlayAppearDisappearEffect();
                 }
                 else
                 {
-                    Guardian.OwnerPos = -1;
-                    Guardian.AssistSlot = 0;
+                    if (WorldMod.IsGuardianNpcInWorld(Guardian.MyID))
+                    {
+                        Guardian.OwnerPos = -1;
+                        Guardian.AssistSlot = 0;
+                    }
+                    else
+                    {
+                        Guardian.Active = false;
+                        Guardian.PlayAppearDisappearEffect();
+                    }
                     //Guardian.Spawn();
                 }
                 if (MainMod.NetplaySync && Main.netMode == 1 && Main.myPlayer == player.whoAmI && AssistSlot == 0)

@@ -1363,6 +1363,15 @@ namespace giantsummon
             }
         }
 
+        public void PlayAppearDisappearEffect()
+        {
+            for(int i = 0; i < 40; i++)
+            {
+                Dust.NewDust(TopLeftPosition, Width, Height, 43, Main.rand.Next(-10, 11) * 0.01f);
+            }
+            Main.PlaySound(3, CenterPosition, 5);
+        }
+
         public bool CanApplyFlag(GuardianFlags type)
         {
             bool Has = FlagList.Contains(type);
@@ -1486,6 +1495,16 @@ namespace giantsummon
             Npc,
             Player,
             Guardian
+        }
+
+        public bool IsPlayerBuddy(Player player = null)
+        {
+            if (player is null)
+            {
+                player = Main.player[Main.myPlayer];
+            }
+            PlayerMod pl = player.GetModPlayer<PlayerMod>();
+            return pl.IsBuddiesMode && pl.IsPlayerBuddy(MyID);
         }
 
         public bool NpcHasBeenHit(int id)
@@ -3469,7 +3488,7 @@ namespace giantsummon
                 FriendshipProgression -= MaxFriendshipProgression;
                 FriendshipLevel++;
                 UpdateStatus = true;
-                if (Main.netMode < 2 && OwnerPos == Main.myPlayer && (!PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]) || Main.player[OwnerPos].GetModPlayer<PlayerMod>().IsPlayerBuddy(MyID)))
+                if (Main.netMode < 2 && OwnerPos == Main.myPlayer && (!PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]) || !PlayerMod.GetPlayerBuddy(Main.player[OwnerPos]).IsSameID(this)))
                 {
                     if (FriendshipLevel == Base.CallUnlockLevel && !IsStarter && !PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
                         Main.NewText("You can now call " + this.Name + " to help you.");
@@ -3626,12 +3645,12 @@ namespace giantsummon
                         WingType = Equipments[e].wingSlot;
                 }
             }
-            if (OwnerPos > -1 && PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
+            if (OwnerPos > -1 && PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]) && PlayerMod.GetPlayerBuddy(Main.player[OwnerPos]).IsSameID(this))
             {
                 float HealthMod, DamageMod;
                 int DefenseMod;
                 GetBuddyModeBenefits(out HealthMod, out DamageMod, out DefenseMod);
-                MHP += (int)(HealthMod);
+                MHP += (int)(HealthMod * MHP);
                 MeleeDamageMultiplier += DamageMod;
                 RangedDamageMultiplier += DamageMod;
                 MagicDamageMultiplier += DamageMod;
@@ -8581,7 +8600,7 @@ namespace giantsummon
             TargetID = -1;
             GrabbingPlayer = false;
             UpdateStatus = true;
-            if (OwnerPos == Main.myPlayer && OwnerPos > -1 && AfkCounter >= 180 * 60 && !CreatureAllowsAFK && !PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]))
+            if (OwnerPos == Main.myPlayer && OwnerPos > -1 && AfkCounter >= 180 * 60 && !CreatureAllowsAFK && (!PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]) || !PlayerMod.GetPlayerBuddy(Main.player[OwnerPos]).IsSameID(this)))
             {
                 Main.player[OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian();
                 Main.NewText(this.Name + " has left your battle.", Color.Red);

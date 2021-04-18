@@ -42,5 +42,12 @@ namespace giantsummon
         {
             return ID == this.ID && ModID == this.ModID;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is GuardianID)
+                return IsSameID((GuardianID)obj);
+            return base.Equals(obj);
+        }
     }
 }

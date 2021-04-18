@@ -470,7 +470,7 @@ namespace giantsummon
                 {
                     if (!HideCallDismissButton)
                     {
-                        if (!PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
+                        if (!PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]) || !PlayerMod.GetPlayerBuddy(Main.player[Main.myPlayer]).IsSameID(tg))
                         {
                             if (tg.OwnerPos == Main.myPlayer)
                             {

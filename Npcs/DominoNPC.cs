@@ -472,10 +472,6 @@ namespace giantsummon.Npcs
             {
                 return "*Hey there again. Mind If I extend my shop to this world too?*";
             }
-            else if (PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
-            {
-                return "*I don't really feel like moving to this world, but you can persuade me into staying.*";
-            }
             else if (DominoDismissed)
             {
                 if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID))
@@ -502,10 +498,6 @@ namespace giantsummon.Npcs
             {
                 button = "Sure.";
             }
-            else if (PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
-            {
-                button = "Pay " + RecruitGoldFee() + " Gold Coins.";
-            }
             else if (DialogueStep == 10 || (DominoDismissed && !PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID)))
             {
                 button = "Feel free to.";
@@ -516,23 +508,7 @@ namespace giantsummon.Npcs
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
         {
             bool PlayerHasDomino = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Domino);
-            if (!PlayerHasDomino && PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]))
-            {
-                if (Main.player[Main.myPlayer].SellItem(RecruitGoldFee() * 10000, 1))
-                {
-                    Main.npcChatText = "*It was good to do business with you.*";
-                    PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
-                    if (!PlayerHasDomino) PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
-                    NpcMod.AddGuardianMet(GuardianID, GuardianModID);
-                    WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
-                }
-                else
-                {
-                    Main.npcChatText = "*You seems to be lacking the golds. I'll come back when you get more.*";
-                }
-                return;
-            }
-            else if (PlayerHasDomino || (DominoDismissed && !PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID)))
+            if (PlayerHasDomino || (DominoDismissed && !PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], BrutusID)))
             {
                 Main.npcChatText = "*Thanks mate.*";
                 PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
