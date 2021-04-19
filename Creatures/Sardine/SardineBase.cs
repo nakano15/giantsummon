@@ -31,6 +31,7 @@ namespace giantsummon.Creatures
             FramesInRows = 25;
             //DuckingHeight = 54;
             Age = 25; //6
+            SetBirthday(SEASON_SUMMER, 8);
             Male = true;
             InitialMHP = 80; //320
             LifeCrystalHPBonus = 12;

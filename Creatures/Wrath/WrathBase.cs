@@ -14,14 +14,13 @@ namespace giantsummon.Creatures
             Name = "Wrath";
             PossibleNames = new string[] { "Wrath", "Rage", "Fury", "Irk" };
             Description = "One of the emotion pieces fragments\nof a TerraGuardian. Very volatile.";
-            Size = GuardianSize.Medium;
             Width = 10 * 2;
             Height = 27 * 2;
             SpriteWidth = 64;
             SpriteHeight = 68;
             FramesInRows = 28;
             //DuckingHeight = 54;
-            Age = 15;
+            //Each pig should definitelly have the same size, birthday age and time, so I moved those infos.
             Male = true;
             InitialMHP = 110; //320
             LifeCrystalHPBonus = 15;

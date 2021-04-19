@@ -26,6 +26,7 @@ namespace giantsummon.Creatures
             SpriteHeight = 80;
             FramesInRows = 20;
             Age = 88;
+            SetBirthday(SEASON_SPRING, 28);
             Male = true;
             CalculateHealthToGive(1200, 0.9f, 0.6f); //Lc: 95, LF: 16
             InitialMHP = 125; //1100

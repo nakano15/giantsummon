@@ -34,6 +34,7 @@ namespace giantsummon.Creatures
             SpriteHeight = 112;
             FramesInRows = 17;
             Age = 28;
+            SetBirthday(SEASON_WINTER, 4);
             Male = true;
             InitialMHP = 225; //1400
             LifeCrystalHPBonus = 45;

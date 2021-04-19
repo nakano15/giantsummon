@@ -81,6 +81,7 @@ namespace giantsummon
         }
         public GuardianSize Size = GuardianSize.Medium;
         public int Age = 15;
+        public float Birthday = 0;
         public bool CanDuck = true, ReverseMount = false, DrinksBeverage = true;
         public List<ItemPair> InitialItems = new List<ItemPair>();
         //Animation frames related stuff
@@ -166,6 +167,20 @@ namespace giantsummon
         public void AddTopic(string TopicText, Action TopicMethod, Func<TerraGuardian, PlayerMod, bool> TopicRequirement = null)
         {
             Topics.Add(new DialogueTopic(TopicText, TopicMethod, TopicRequirement));
+        }
+
+        public const byte SEASON_SUMMER = 0, SEASON_AUTUMN = 1, SEASON_WINTER = 2, SEASON_SPRING = 3;
+        /// <summary>
+        /// Aids when setting up the companion birthday.
+        /// </summary>
+        /// <param name="Season">There are 4 seasons, going from 0 to 3.</param>
+        /// <param name="Day">There are 30 days, going from 0 to 29</param>
+        public void SetBirthday(byte Season, byte Day)
+        {
+            Season %= 4;
+            Day %= 30;
+            float DaysInASeason = (int)GuardianData.DaysToYears / 4;
+            Birthday = DaysInASeason * Season + (float)Day / DaysInASeason;
         }
 
         /// <summary>

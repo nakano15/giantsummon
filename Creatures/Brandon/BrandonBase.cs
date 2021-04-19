@@ -19,6 +19,7 @@ namespace giantsummon.Creatures.Brandon
             Name = "Brandon";
             Description = "";
             Age = 21;
+            SetBirthday(SEASON_AUTUMN, 7);
             Male = true;
             Accuracy = 0.59f;
             DrinksBeverage = true;

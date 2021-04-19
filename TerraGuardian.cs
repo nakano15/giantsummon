@@ -1945,6 +1945,8 @@ namespace giantsummon
 
         public void Update(Player Owner = null)
         {
+            System.Diagnostics.Stopwatch FrameTimer = new System.Diagnostics.Stopwatch();
+            FrameTimer.Start();
             if (!Active)
                 return;
             if (Position.X < 0 || Position.Y < 0)
@@ -2292,6 +2294,11 @@ namespace giantsummon
             }
             anchor.pos = Position;
             anchor.pos.Y -= Height;
+            FrameTimer.Stop();
+            if(FrameTimer.Elapsed.TotalSeconds > 1f / 60)
+            {
+                Main.NewText(Name + "'s AI hanged for " + FrameTimer.Elapsed.ToString() + ".");
+            }
         }
 
         public void FloorVisual(bool Falling)
@@ -2660,9 +2667,9 @@ namespace giantsummon
             Main.NewText(Name + " has rebirth to age " + RebirthAge + "!");
         }
 
-        public static float GetAgeDecimalValue(int StartAge, TimeSpan Time, float AgingSpeed = 1f)
+        public static float GetAgeDecimalValue(int StartAge, float BirthdayAge, TimeSpan Time, float AgingSpeed = 1f)
         {
-            return (float)(StartAge * AgingSpeed + (Time.TotalDays * (double)AgingSpeed) / GuardianData.DaysToYears);
+            return (float)(StartAge * AgingSpeed + ((Time.TotalDays - BirthdayAge) * (double)AgingSpeed) / GuardianData.DaysToYears);
         }
 
         public static float GetAgeSizeValue(float Age)

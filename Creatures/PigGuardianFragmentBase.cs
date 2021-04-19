@@ -22,6 +22,9 @@ namespace giantsummon.Creatures
         public PigGuardianFragmentBase(byte PigID)
         {
             this.PigID = PigID;
+            Size = GuardianSize.Medium;
+            Age = 15;
+            SetBirthday(SEASON_AUTUMN, 14);
         }
         
         public bool GetIfIsCloudForm(TerraGuardian guardian)

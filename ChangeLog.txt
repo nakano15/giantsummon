@@ -20,3 +20,7 @@ You can now have assist companions with you on Buddies Mode.
 	Your buddy will award twice friendship ranks.
 Added an appearing and disappearing effect for the companions.
 	Sadly you'll only hear It :/.
+Companions now have their own Birthday day.
+	Their birthday day is based on a virtual season and day system.
+	That actually makes It easier to setup their birthday, since It's only 4 seasons to pick, and 30 days each.
+	The mod still operates by 32 days a year, so there's a method behind this to translate the companion birthday to the mod year duration.

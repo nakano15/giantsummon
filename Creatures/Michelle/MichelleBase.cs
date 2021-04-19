@@ -19,6 +19,7 @@ namespace giantsummon.Creatures
             Name = "Michelle";
             Description = "Your personal TerraGuardians fan girl.";
             Age = 16;
+            SetBirthday(SEASON_SUMMER, 16);
             Male = false;
             Accuracy = 0.27f;
             DrinksBeverage = false;

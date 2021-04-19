@@ -90,8 +90,8 @@ namespace giantsummon
                 if (!Main.dayTime) Time += 54000f;
                 TimeSpan CurrentTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(Time);
                 TimeSpan NextTime = GetLifeTime.Duration() + TimeSpan.FromSeconds(MaxTime - Time);
-                int CurrentAge = (int)(CurrentTime.TotalDays / DaysToYears);
-                int NextAge = (int)(NextTime.TotalDays / DaysToYears);
+                int CurrentAge = (int)((CurrentTime.TotalDays - Base.Birthday) / DaysToYears);
+                int NextAge = (int)((NextTime.TotalDays - Base.Birthday) / DaysToYears);
                 return CurrentAge != NextAge && NextAge > 0;
             }
         }
@@ -100,8 +100,8 @@ namespace giantsummon
             get
             {
                 const float MaxTime = 54000 + 32400;
-                TimeSpan NextTime = GetLifeTime.Duration() + TimeSpan.FromSeconds(MaxTime);
-                return (int)(NextTime.TotalDays / DaysToYears) + (SavedAge > 0 ? SavedAge : Base.Age);
+                TimeSpan NextTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(MaxTime);
+                return (int)((NextTime.TotalDays + Base.Birthday) / DaysToYears) + (SavedAge > 0 ? SavedAge : Base.Age);
             }
         }
         public byte FriendshipGrade
@@ -866,7 +866,7 @@ namespace giantsummon
         {
             TimeSpan CurrentTime = GetLifeTime.Duration();
             TimeSpan NextBirthdayTime = CurrentTime.Duration();
-            NextBirthdayTime = NextBirthdayTime.Subtract(TimeSpan.FromDays(NextBirthdayTime.TotalDays % DaysToYears));
+            NextBirthdayTime = NextBirthdayTime.Subtract(TimeSpan.FromDays((NextBirthdayTime.TotalDays - Base.Birthday) % DaysToYears));
             NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(DaysToYears));
             TimeSpan T = (NextBirthdayTime - CurrentTime);
             //Main.NewText(T.ToString());
@@ -913,12 +913,12 @@ namespace giantsummon
         public int GetAge(bool ByCompanionLifeTimeSpeed = false)
         {
             double AgingFactor = (!ByCompanionLifeTimeSpeed ? (double)Base.GetGroup.AgingSpeed : 1d);
-            return (int)((SavedAge > 0 ? SavedAge : Base.Age) * (ByCompanionLifeTimeSpeed ? 1f : 1f / AgingFactor) + (GetLifeTime.TotalDays * AgingFactor) / DaysToYears);
+            return (int)((SavedAge > 0 ? SavedAge : Base.Age) * (ByCompanionLifeTimeSpeed ? 1f : 1f / AgingFactor) + ((GetLifeTime.TotalDays - Base.Birthday) * AgingFactor) / DaysToYears);
         }
 
         public float GetRealAgeDecimal()
         {
-            return TerraGuardian.GetAgeDecimalValue((SavedAge > 0 ? SavedAge : Base.Age), GetLifeTime, Base.GetGroup.AgingSpeed);
+            return TerraGuardian.GetAgeDecimalValue((SavedAge > 0 ? SavedAge : Base.Age), Base.Birthday, GetLifeTime, Base.GetGroup.AgingSpeed);
             //return (float)((SavedAge > 0 ? SavedAge : Base.Age) * Base.GetGroup.AgingSpeed + (GetLifeTime.TotalDays * (double)Base.GetGroup.AgingSpeed) / DaysToYears);
         }
 

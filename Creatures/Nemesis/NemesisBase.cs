@@ -22,6 +22,7 @@ namespace giantsummon.Creatures
             Name = "Nemesis";
             Description = "It's cryptic to know who the Nemesis is, or was.\nNeither if is a \"he\" or a \"she\".";
             Age = 256;
+            SetBirthday(SEASON_AUTUMN, 3);
             Male = true;
             InitialMHP = 100; //500
             LifeCrystalHPBonus = 20;
