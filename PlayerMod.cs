@@ -1176,8 +1176,8 @@ namespace giantsummon
                                 }
                                 if (player.whoAmI == Main.myPlayer)
                                 {
-                                    Main.BlackFadeIn = 255;
-                                    Main.renderNow = true;
+                                    //Main.BlackFadeIn = 255;
+                                    //Main.renderNow = true;
                                     /*if (Main.netMode == 0)
                                     {
                                         player.active = false;

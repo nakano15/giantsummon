@@ -24,3 +24,9 @@ Companions now have their own Birthday day.
 	Their birthday day is based on a virtual season and day system.
 	That actually makes It easier to setup their birthday, since It's only 4 seasons to pick, and 30 days each.
 	The mod still operates by 32 days a year, so there's a method behind this to translate the companion birthday to the mod year duration.
+Alex recruit npc will no longer crash when meeting a friendly face.
+	Alex will now correctly follow your character when speaking to you.
+	Neither he will try dropping your character on the floor.
+Improved companions target seeking.
+	That should make the game behave better when having several companions living in your world.
+Fixed a bug where companions you just met (and if asked, you allowed them to move in) wouldn't try moving to your world.

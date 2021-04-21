@@ -1945,8 +1945,6 @@ namespace giantsummon
 
         public void Update(Player Owner = null)
         {
-            System.Diagnostics.Stopwatch FrameTimer = new System.Diagnostics.Stopwatch();
-            FrameTimer.Start();
             if (!Active)
                 return;
             if (Position.X < 0 || Position.Y < 0)
@@ -2294,11 +2292,6 @@ namespace giantsummon
             }
             anchor.pos = Position;
             anchor.pos.Y -= Height;
-            FrameTimer.Stop();
-            if(FrameTimer.Elapsed.TotalSeconds > 1f / 60)
-            {
-                Main.NewText(Name + "'s AI hanged for " + FrameTimer.Elapsed.ToString() + ".");
-            }
         }
 
         public void FloorVisual(bool Falling)
@@ -5418,24 +5411,27 @@ namespace giantsummon
         {
             if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos != Main.myPlayer)
                 return;
-            if (KnockedOut && OwnerPos == -1 && IsTownNpc && !GetTownNpcInfo.Homeless && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime) || Breath <= 0))
+            if (KnockedOut)
             {
-                bool IsPlayerNearby = false;
-                for (int i = 0; i < 255; i++)
+                if (OwnerPos == -1 && IsTownNpc && !GetTownNpcInfo.Homeless && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime) || Breath <= 0))
                 {
-                    if (Main.player[i].active && InPerceptionRange(Main.player[i].Center))
+                    bool IsPlayerNearby = false;
+                    for (int i = 0; i < 255; i++)
                     {
-                        IsPlayerNearby = true;
-                        break;
+                        if (Main.player[i].active && InPerceptionRange(Main.player[i].Center))
+                        {
+                            IsPlayerNearby = true;
+                            break;
+                        }
                     }
-                }
-                if (!IsPlayerNearby)
-                {
-                    WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
-                    if (Math.Abs(Position.X - townnpc.HomeX * 16) > 64f || Math.Abs(Position.Y - townnpc.HomeY * 16) > 64)
+                    if (!IsPlayerNearby)
                     {
-                        Position.X = townnpc.HomeX * 16;
-                        Position.Y = townnpc.HomeY * 16;
+                        WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
+                        if (Math.Abs(Position.X - townnpc.HomeX * 16) > 64f || Math.Abs(Position.Y - townnpc.HomeY * 16) > 64)
+                        {
+                            Position.X = townnpc.HomeX * 16;
+                            Position.Y = townnpc.HomeY * 16;
+                        }
                     }
                 }
             }
@@ -9939,15 +9935,14 @@ namespace giantsummon
                     if (NearestMember.Length() == 0)
                         continue;
                     Vector2 NpcCenter = Main.npc[i].Center;
-                    if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
+                    Vector2 MemberCenter = NearestMember.XY() + NearestMember.ZW() * 0.5f;
                     {
-                        Vector2 MemberCenter = NearestMember.XY() + NearestMember.ZW() * 0.5f;
-                        if (Main.npc[i].CanBeChasedBy(null))
+                        float Distance = Main.npc[i].Distance(MemberCenter);
+                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type] || Main.npc[i].boss)
+                            Distance *= 0.5f;
+                        if (Distance < NearestTargetDistance)
                         {
-                            float Distance = Main.npc[i].Distance(MemberCenter);
-                            if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type] || Main.npc[i].boss)
-                                Distance *= 0.5f;
-                            if (Distance < NearestTargetDistance)
+                            if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
                             {
                                 NearestTargetDistance = Distance;
                                 TargetID = i;
@@ -9956,7 +9951,7 @@ namespace giantsummon
                         }
                     }
                 }
-                if (Main.player[i].active && !Main.player[i].dead && IsPlayerHostile(Main.player[i]))
+                if (Main.player[i].active && !Main.player[i].dead && !Main.player[i].GetModPlayer<PlayerMod>().KnockedOutCold && IsPlayerHostile(Main.player[i]))
                 {
                     Vector4 NearestMember = Vector4.Zero;
                     float NearestDistance = float.MaxValue;
@@ -9972,13 +9967,12 @@ namespace giantsummon
                     if (NearestMember.Length() == 0)
                         continue;
                     Vector4 MemberPosition = NearestMember;
-                    if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.player[i].position, Main.player[i].width, Main.player[i].height))
+                    Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
                     {
-                        Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
-                        if (IsPlayerHostile(Main.player[i]) && !Main.player[i].dead && !Main.player[i].GetModPlayer<PlayerMod>().KnockedOutCold)
+                        float Distance = Main.player[i].Distance(MemberCenter);
+                        if (Distance < NearestTargetDistance)
                         {
-                            float Distance = Main.player[i].Distance(MemberCenter);
-                            if (Distance < NearestTargetDistance)
+                            if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.player[i].position, Main.player[i].width, Main.player[i].height))
                             {
                                 NearestTargetDistance = Distance;
                                 TargetID = i;
@@ -10010,15 +10004,17 @@ namespace giantsummon
                         if (NearestMember.Length() == 0)
                             continue;
                         Vector4 MemberPosition = NearestMember;
-                        if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, guardian.TopLeftPosition, guardian.Width, guardian.Height))
+                        Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
                         {
-                            Vector2 MemberCenter = MemberPosition.XY() + MemberPosition.ZW() * 0.5f;
                             float Distance = guardian.Distance(MemberCenter);
                             if (Distance < NearestTargetDistance)
                             {
-                                NearestTargetDistance = Distance;
-                                TargetID = key;
-                                TargetType = TargetTypes.Guardian;
+                                if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, guardian.TopLeftPosition, guardian.Width, guardian.Height))
+                                {
+                                    NearestTargetDistance = Distance;
+                                    TargetID = key;
+                                    TargetType = TargetTypes.Guardian;
+                                }
                             }
                         }
                     }

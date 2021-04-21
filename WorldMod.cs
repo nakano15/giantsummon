@@ -188,7 +188,7 @@ namespace giantsummon
                 }
             }
         }
-        
+
         public static void CheckIfSomeoneCanVisit()
         {
             if ((!Main.dayTime && Main.time >= 3f * 3600) || (Main.dayTime && (Main.time < 2 * 3600 || Main.time >= 4.5 * 3600)))
@@ -336,6 +336,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            MainMod.ScreenColorAlpha = 0;
             HouseInfos.Clear();
             GuardiansMet.Clear();
             GuardianTownNPC.Clear();
@@ -773,6 +774,8 @@ namespace giantsummon
 
         public static bool HasCompanionMetSomeoneWithHighFriendshipLevel(int ID, string ModID)
         {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
             for(int i = 0; i < 255; i++)
             {
                 if (Main.player[i].active && PlayerMod.PlayerHasGuardian(Main.player[i], ID, ModID))

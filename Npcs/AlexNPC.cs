@@ -146,7 +146,10 @@ namespace giantsummon.Npcs
                                 npc.ai[AI_TYPE] = 2;
                                 npc.ai[AI_TIMER] = 0;
                                 MessageTime = 30;
-                                PlayerOnFloor = true;
+                                if (!PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID))
+                                {
+                                    PlayerOnFloor = true;
+                                }
                             }
                         }
                     }
@@ -175,14 +178,6 @@ namespace giantsummon.Npcs
                             {
                                 if (HasAlreadyGuardian)
                                 {
-                                    float XDifference = Main.player[Main.myPlayer].Center.X - npc.Center.X;
-                                    if (Math.Abs(XDifference) > AlexGuardianBase.Width)
-                                    {
-                                        if (XDifference > 0)
-                                            MoveRight = true;
-                                        else
-                                            MoveLeft = true;
-                                    }
                                     switch (DialogueTimer / 5)
                                     {
                                         case 0:
@@ -234,6 +229,17 @@ namespace giantsummon.Npcs
                             if (!HasAlreadyGuardian && DialogueTimer < 12)
                             {
                                 PlayerOnFloor = true;
+                            }
+                            if (HasAlreadyGuardian)
+                            {
+                                float XDifference = Main.player[Main.myPlayer].Center.X - npc.Center.X;
+                                if (Math.Abs(XDifference) > AlexGuardianBase.Width)
+                                {
+                                    if (XDifference > 0)
+                                        MoveRight = true;
+                                    else
+                                        MoveLeft = true;
+                                }
                             }
                             npc.ai[AI_TIMER]++;
                         }
@@ -418,6 +424,7 @@ namespace giantsummon.Npcs
             if (npc.velocity.Y != 0)
             {
                 Frame = AlexGuardianBase.JumpFrame;
+                npc.frameCounter++;
             }
             else if (npc.velocity.X != 0)
             {
@@ -428,9 +435,9 @@ namespace giantsummon.Npcs
                     AnimationSpeed *= -1;
                 }
                 npc.frameCounter += AnimationSpeed / AlexGuardianBase.MaxSpeed;
-                if (npc.frameCounter < 0)
+                while (npc.frameCounter < 0)
                     npc.frameCounter += MaxTime;
-                if (npc.frameCounter >= MaxTime)
+                while (npc.frameCounter >= MaxTime)
                     npc.frameCounter -= MaxTime;
                 Frame = AlexGuardianBase.WalkingFrames[(int)(npc.frameCounter / AlexGuardianBase.WalkAnimationFrameTime)];
             }
@@ -446,6 +453,7 @@ namespace giantsummon.Npcs
                 }
                 else
                 {
+                    npc.frameCounter = 0;
                     Frame = AlexGuardianBase.StandingFrame;
                 }
             }
