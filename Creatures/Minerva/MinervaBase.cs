@@ -238,7 +238,8 @@ namespace giantsummon.Creatures
                 if (NpcMod.HasGuardianNPC(Rococo))
                 {
                     Mes.Add("*The easiest food I make in this place is for [gn:0], he always eats Sweet Potatoes.*");
-                    Mes.Add("*I'm peeling some Sweet Potatoes, [gn:0] may be coming soon to eat something.*");
+                    Mes.Add("*I'm peeling some Sweet Potatoes, because [gn:0] may be coming soon to eat something.*");
+                    Mes.Add("*[gn:0] seems to be very grateful for the food I make everyday. I wonder if he always had something to eat?*");
                 }
                 if (NpcMod.HasGuardianNPC(Blue))
                 {

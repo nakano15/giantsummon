@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 using Terraria;
-using NExperience;
 using Microsoft.Xna.Framework;
 
 namespace giantsummon.Compatibility
@@ -14,16 +13,28 @@ namespace giantsummon.Compatibility
         public static Dictionary<GuardianIdentity, int> SetGuardianLevel = new Dictionary<GuardianIdentity, int>();
         public static bool IsModActive { get { return MainMod.NExperienceMod != null; } }
 
-        public static int GetLevel(GuardianIdentity gi)
+        public static int GetLevel(TerraGuardian tg)
         {
-            if (SetGuardianLevel.ContainsKey(gi)) return SetGuardianLevel[gi];
+            foreach(GuardianIdentity id in SetGuardianLevel.Keys)
+            {
+                if (id.IsSame(tg))
+                    return SetGuardianLevel[id];
+            }
             return -1;
         }
 
-        public static void ChangeLevel(GuardianIdentity gi, int Level)
+        public static void ChangeLevel(TerraGuardian tg, int Level)
         {
-            if (SetGuardianLevel.ContainsKey(gi)) SetGuardianLevel[gi] = Level;
-            else SetGuardianLevel.Add(gi, Level);
+            foreach(GuardianIdentity gi in SetGuardianLevel.Keys)
+            {
+                if(gi.IsSame(tg))
+                {
+                    SetGuardianLevel[gi] = Level;
+                    tg.UpdateStatus = true;
+                    return;
+                }
+            }
+            SetGuardianLevel.Add(new GuardianIdentity(tg), Level);
         }
 
         public static void GiveExpRewardToPlayer(Player player, float Level, float Difficulty, bool ShowTooltip = true)
@@ -38,10 +49,9 @@ namespace giantsummon.Compatibility
 
         public static bool LevelChanged(TerraGuardian Guardian)
         {
-            bool Changed = false;
+            //return false;
             int Level = 1;
-            GuardianIdentity identity = new GuardianIdentity(Guardian);
-            int LastLevel = GetLevel(identity);
+            int LastLevel = GetLevel(Guardian);
             if (Guardian.OwnerPos > -1)
             {
                 Level = Main.player[Guardian.OwnerPos].GetModPlayer<NExperience.PlayerMod>().GetGameModeInfo.Level2;
@@ -53,21 +63,24 @@ namespace giantsummon.Compatibility
                     Level = NExperience.MainMod.LastHighestLeveledNpc;
                 //add level scale script.
             }
-            Changed = LastLevel != Level;
-            ChangeLevel(identity, Level);
-            return Changed;
+            if (Level != LastLevel)
+            {
+                ChangeLevel(Guardian, Level);
+            }
+            return LastLevel != Level;
         }
 
-        public static void ScaleStatus(TerraGuardian Guardian)
+        public static void ScaleStatus(TerraGuardian Guardian) //Causes fps drop issues. The issue causes the fps to absurdly fall, after a number of seconds of gameplay in a world.
         {
-            GameModeBase gamemode = NExperience.MainMod.GetCurrentGameMode;
-            int Level = GetLevel(new GuardianIdentity(Guardian));
-            Dictionary<byte, int> Status = new Dictionary<byte,int>();
+            //return;
+            NExperience.GameModeBase gamemode = NExperience.MainMod.GetCurrentGameMode;
+            int Level = GetLevel(Guardian);
+            Dictionary<byte, int> Status = new Dictionary<byte, int>();
             int PointsCount = gamemode.InitialStatusPoints + (int)(gamemode.StatusPointsPerLevel * (Level - 1)), PointsSpent = 0;
             int TotalStatus = gamemode.Status.Count;
+            int PointsToGive = PointsCount / TotalStatus;
             for (byte s = 0; s < gamemode.Status.Count; s++)
             {
-                int PointsToGive = PointsCount / TotalStatus;
                 if (PointsToGive + PointsSpent > PointsCount)
                 {
                     PointsToGive = PointsCount - PointsSpent;
@@ -75,7 +88,7 @@ namespace giantsummon.Compatibility
                 Status.Add(s, PointsToGive);
                 PointsSpent += PointsToGive;
             }
-            PlayerStatusMod mod;
+            NExperience.PlayerStatusMod mod;
             gamemode.PlayerStatus(Level, Level, Status, out mod);
             Guardian.MHP = (int)((Guardian.MHP + mod.MaxHealthSum) * mod.MaxHealthMult);
             Guardian.MMP = (int)((Guardian.MMP + mod.MaxManaSum) * mod.MaxManaMult);
@@ -84,10 +97,10 @@ namespace giantsummon.Compatibility
             Guardian.MagicDamageMultiplier = (Guardian.MagicDamageMultiplier + mod.MagicDamageSum) * mod.MagicDamageMult;
             Guardian.SummonDamageMultiplier = (Guardian.SummonDamageMultiplier + mod.MinionDamageSum) * mod.MinionDamageMult;
             Guardian.MeleeSpeed = (Guardian.MeleeSpeed + mod.MeleeSpeedSum) * mod.MeleeSpeedMult;
-            if(Guardian.Defense > 0) Guardian.Defense = (int)((Guardian.Defense + mod.DefenseSum) * mod.DefenseMult);
+            if (Guardian.Defense > 0) Guardian.Defense = (int)((Guardian.Defense + mod.DefenseSum) * mod.DefenseMult);
             Guardian.HealthHealMult += mod.MaxHealthMult * Guardian.HealthHealMult;
             Guardian.ManaHealMult += mod.MaxManaMult * Guardian.ManaHealMult;
-            if (!NExperience.MainMod.ItemStatusCapper || !gamemode.AllowLevelCapping)
+            /*if (!NExperience.MainMod.ItemStatusCapper || !gamemode.AllowLevelCapping)
             {
                 if (Guardian.SelectedItem > -1)
                 {
@@ -121,7 +134,7 @@ namespace giantsummon.Compatibility
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }

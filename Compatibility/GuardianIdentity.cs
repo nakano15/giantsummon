@@ -5,21 +5,20 @@ using System.Text;
 
 namespace giantsummon.Compatibility
 {
-    public struct GuardianIdentity //Used to locate the reffered guardian.
+    public struct GuardianIdentity //Used to locate the refered guardian.
     {
-        public int Owner, ID;
-        public string ModID;
+        public GuardianID ID;
+        public int Owner;
 
         public GuardianIdentity(TerraGuardian guardian)
         {
             Owner = guardian.OwnerPos;
-            ID = guardian.ID;
-            ModID = guardian.ModID;
+            ID = guardian.MyID;
         }
 
         public bool IsSame(TerraGuardian guardian)
         {
-            return guardian.OwnerPos == Owner && guardian.ID == ID && guardian.ModID == ModID;
+            return guardian.OwnerPos == Owner && ID.IsSameID(guardian);
         }
     }
 }

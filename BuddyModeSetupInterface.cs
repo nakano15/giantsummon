@@ -41,9 +41,9 @@ namespace giantsummon
             GameModeInfo = new string[]{"The Buddies Mode is a special game mode where you pick a companion you",
                 "will play the game with since the beggining of your adventure, until forever.",
                 "The companion you pick ranges from starter companions, to companions met by other player characters.",
-                "You wont be able to dismiss It, or call assist companions to help you with It activated, so think well.",
-                "Nothing stops you from finding new companions to live in your town, get requests, or give them equipments, though.",
-                "you have 12 in-game hours (12 real life minutes) to decide if you want to try It or not."}; ;
+                "You wont be able to dismiss It, and takes longer to have others following you, so think well.",
+                "Becareful, having extra companions with your will reduce the buddy mode benefits.",
+                "You have 12 in-game hours (12 real life minutes) to decide if you want to try It or not."}; ;
         }
 
         public static void Close()

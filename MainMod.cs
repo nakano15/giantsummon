@@ -721,6 +721,7 @@ namespace giantsummon
 
         public override void PreUpdateEntities()
         {
+            Main.ignoreErrors = false;
             ActiveGuardians = TempActiveGuardians;
             TempActiveGuardians = new Dictionary<int, TerraGuardian>();
         }
@@ -834,6 +835,7 @@ namespace giantsummon
                 }
                 LastChatTime = Main.player[Main.myPlayer].chatOverhead.timeLeft;
             }
+            WorldMod.AnalyzeDrawMoment();
         }
 
         private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs;
@@ -2554,7 +2556,7 @@ namespace giantsummon
         
         public override void PostDrawInterface(SpriteBatch spriteBatch)
         {
-            WorldMod.HasDrawnTownCompanions = false;
+
         }
 
         public override void PostDrawFullscreenMap(ref string mouseText)

@@ -135,13 +135,7 @@ namespace giantsummon
             DelayedWasDay = Main.dayTime;
             DayChange = false;
             HourChange = false;
-            if (Main.time == 0)
-            {
-                AlexRecruitScripts.CheckIfAlexIsInTheWorld();
-                Creatures.MinervaBase.AllowGettingMoreFoodFromMinerva();
-                if (Main.dayTime)
-                    DayChange = true;
-            }
+            bool HasTimeOfDayChanged = false;
             double TimeParser = Main.time;
             if (Main.dayTime)
             {
@@ -153,7 +147,21 @@ namespace giantsummon
                 if (TimeParser >= 24)
                     TimeParser -= 24;
             }
-            if (LastTime != -1 && (int)TimeParser / 3600 != (int)LastTime / 3600)
+            if (Main.time == 0)
+            {
+                AlexRecruitScripts.CheckIfAlexIsInTheWorld();
+                Creatures.MinervaBase.AllowGettingMoreFoodFromMinerva();
+                if (Math.Abs(TimeParser - LastTime) < 30f)
+                {
+                    HasTimeOfDayChanged = true;
+                }
+                if (Main.dayTime && HasTimeOfDayChanged)
+                {
+                    DayChange = true;
+                }
+            }
+            const float HourToFrames = 1f / 3600;
+            if (LastTime != -1 && (int)TimeParser * HourToFrames != (int)LastTime * HourToFrames)
             {
                 HourChange = true;
             }
@@ -191,7 +199,7 @@ namespace giantsummon
 
         public static void CheckIfSomeoneCanVisit()
         {
-            if ((!Main.dayTime && Main.time >= 3f * 3600) || (Main.dayTime && (Main.time < 2 * 3600 || Main.time >= 4.5 * 3600)))
+            if ((!Main.dayTime && (Main.time < 3f * 3600 || Main.time >= 5.5f * 3600)) || (Main.dayTime && (Main.time < 2 * 3600 || Main.time >= 4.5 * 3600)))
             {
                 return;
             }
@@ -199,7 +207,7 @@ namespace giantsummon
             foreach (TerraGuardian tg in GuardianTownNPC)
             {
                 if (tg.GetTownNpcInfo == null)
-                    VisitRate /= 2;
+                    VisitRate *= 0.5f;
             }
             if ((ScheduledVisits.Count > 0 && Main.rand.NextDouble() < 0.5f) || Main.rand.NextDouble() < VisitRate * 0.01665f) //0.00333f
             {
@@ -304,7 +312,7 @@ namespace giantsummon
             int Pos = Main.rand.Next(GuardianTownNPC.Count);
             if (GuardianTownNPC[Pos].GetTownNpcInfo != null)
                 return false;
-            if ((!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && (!Main.dayTime || (Main.dayTime && Main.time < 3f * 3600))))
+            if ((!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && !Main.dayTime))
             {
                 return false;
             }
@@ -555,29 +563,37 @@ namespace giantsummon
 
         public override void PostDrawTiles()
         {
-            if (!HasDrawnTownCompanions)
-            {
-                HasDrawnTownCompanions = true;
-                Main.spriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
-                    Microsoft.Xna.Framework.Graphics.BlendState.AlphaBlend,
-                    Main.DefaultSamplerState,
-                    Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
-                    Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone,
-                    null,
-                    Main.GameViewMatrix.TransformationMatrix);
-                TerraGuardian.CurrentDrawnOrderID = -1000;
-                DrawTownNpcCompanions();
-                Main.spriteBatch.End();
-            }
+            Main.spriteBatch.Begin(Microsoft.Xna.Framework.Graphics.SpriteSortMode.Immediate,
+                Microsoft.Xna.Framework.Graphics.BlendState.AlphaBlend,
+                Main.DefaultSamplerState,
+                Microsoft.Xna.Framework.Graphics.DepthStencilState.None,
+                Microsoft.Xna.Framework.Graphics.RasterizerState.CullNone,
+                null,
+                Main.GameViewMatrix.TransformationMatrix);
+            TerraGuardian.CurrentDrawnOrderID = -1000;
+            DrawTownNpcCompanions(DrawMoment.DrawAfterDrawingTiles);
+            Main.spriteBatch.End();
         }
 
-        public static bool HasDrawnTownCompanions = false;
-
-        public static void DrawTownNpcCompanions()
+        public static void DrawTownNpcCompanions(DrawMoment drawMoment)
         {
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
-                if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || (tg.UsingFurniture && !tg.PlayerMounted) || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
+                if (!(tg.Active && tg.drawMoment == drawMoment))
+                    continue;
+                bool HasDrawMoment = false;
+                foreach (GuardianDrawMoment dm in MainMod.DrawMoment)
+                {
+                    if (dm.GuardianWhoAmID == tg.WhoAmID)
+                    {
+                        HasDrawMoment = true;
+                        break;
+                    }
+                }
+                if (HasDrawMoment)
+                    continue;
+                tg.Draw();
+                /*if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || (tg.UsingFurniture && !tg.PlayerMounted) || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
                 {
                     bool HasDrawMoment = false;
                     foreach (GuardianDrawMoment dm in MainMod.DrawMoment)
@@ -591,6 +607,27 @@ namespace giantsummon
                     if (HasDrawMoment)
                         continue;
                     tg.Draw();
+                }*/
+            }
+        }
+
+        public static void AnalyzeDrawMoment()
+        {
+            bool HasNpcActive = false;
+            foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+            {
+                if (tg.UsingFurniture)
+                {
+                    tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
+                }
+                else if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
+                {
+                    tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
+                    //tg.drawMoment = DrawMoment.DrawBeforeDrawingNpcs;
+                }
+                else
+                {
+                    tg.drawMoment = DrawMoment.DontDraw;
                 }
             }
         }
@@ -803,81 +840,85 @@ namespace giantsummon
             if (Housing_IsRoomCrowded(gb)) return;
             if (!HasCompanionMetSomeoneWithHighFriendshipLevel(GuardianID, ModID))
                 return;
+            bool IsInTheWorld = false;
             for (int npc = 0; npc < GuardianTownNPC.Count; npc++)
             {
                 GuardianTownNpcState townstate = GuardianTownNPC[npc].GetTownNpcInfo;
                 if (townstate != null && townstate.Homeless)
                 {
-                    MoveGuardianToHouse(GuardianTownNPC[npc], X, Y, true);
-                    return;
+                    IsInTheWorld = true;
+                    break;
                 }
             }
             int SpawnX = WorldGen.bestX, SpawnY = WorldGen.bestY;
             Housing_TryGettingPlaceForCompanionToStay(ref SpawnX, ref SpawnY);
             int SpawnXBackup = SpawnX, SpawnYBackup = SpawnY;
-            bool NoPlayerNearby = true;
-            Rectangle rect = new Rectangle(SpawnX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, SpawnY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
-            for (int i = 0; i < 255; i++)
+            if (!IsInTheWorld)
             {
-                if (!Main.player[i].active)
-                    continue;
-                if (Main.player[i].getRect().Intersects(rect))
+                bool NoPlayerNearby = true;
+                Rectangle rect = new Rectangle(SpawnX * 16 + 8 - (int)(NPC.sWidth * 0.5f) - NPC.safeRangeX, SpawnY * 16 + 8 - (int)(NPC.sHeight * 0.5f) - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                for (int i = 0; i < 255; i++)
                 {
-                    NoPlayerNearby = false;
-                    break;
-                }
-            }
-            if (!NoPlayerNearby && SpawnY <= Main.worldSurface)
-            {
-                for (int dist = 1; dist < 500; dist++)
-                {
-                    for (int dir = 0; dir < 2; dir++)
+                    if (!Main.player[i].active)
+                        continue;
+                    if (Main.player[i].getRect().Intersects(rect))
                     {
-                        if (dir == 0)
+                        NoPlayerNearby = false;
+                        break;
+                    }
+                }
+                if (!NoPlayerNearby && SpawnY <= Main.worldSurface)
+                {
+                    for (int dist = 1; dist < 500; dist++)
+                    {
+                        for (int dir = 0; dir < 2; dir++)
                         {
-                            SpawnX = WorldGen.bestX + dist;
-                        }
-                        else
-                        {
-                            SpawnX = WorldGen.bestX - dist;
-                        }
-                        if (SpawnX > 10 && SpawnX < Main.maxTilesX - 10)
-                        {
-                            int YCheck = WorldGen.bestY - dist;
-                            double SurfacePosition = WorldGen.bestY + dist;
-                            if (YCheck < 10) YCheck = 10;
-                            if (SurfacePosition > Main.worldSurface) SurfacePosition = Main.worldSurface;
-                            while (YCheck < SurfacePosition)
+                            if (dir == 0)
                             {
-                                SpawnY = YCheck;
-                                if (!(Main.tile[SpawnX, YCheck].nactive() && Main.tileSolid[Main.tile[SpawnX, YCheck].type]))
+                                SpawnX = WorldGen.bestX + dist;
+                            }
+                            else
+                            {
+                                SpawnX = WorldGen.bestX - dist;
+                            }
+                            if (SpawnX > 10 && SpawnX < Main.maxTilesX - 10)
+                            {
+                                int YCheck = WorldGen.bestY - dist;
+                                double SurfacePosition = WorldGen.bestY + dist;
+                                if (YCheck < 10) YCheck = 10;
+                                if (SurfacePosition > Main.worldSurface) SurfacePosition = Main.worldSurface;
+                                while (YCheck < SurfacePosition)
                                 {
-                                    YCheck++;
-                                    continue;
-                                }
-                                if (!Collision.SolidTiles(SpawnX - 1, SpawnX + 1, YCheck - 3, YCheck - 1))
-                                {
-                                    NoPlayerNearby = true;
-                                    rect = new Rectangle(SpawnX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, YCheck * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
-                                    for (int n = 0; n < 255; n++)
+                                    SpawnY = YCheck;
+                                    if (!(Main.tile[SpawnX, YCheck].nactive() && Main.tileSolid[Main.tile[SpawnX, YCheck].type]))
                                     {
-                                        if (!Main.player[n].active)
-                                            continue;
-                                        if (Main.player[n].getRect().Intersects(rect))
+                                        YCheck++;
+                                        continue;
+                                    }
+                                    if (!Collision.SolidTiles(SpawnX - 1, SpawnX + 1, YCheck - 3, YCheck - 1))
+                                    {
+                                        NoPlayerNearby = true;
+                                        rect = new Rectangle(SpawnX * 16 + 8 - (int)(NPC.sWidth * 0.5f) - NPC.safeRangeX, YCheck * 16 + 8 - (int)(NPC.sHeight * 0.5f) - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                        for (int n = 0; n < 255; n++)
                                         {
-                                            NoPlayerNearby = false;
-                                            break;
+                                            if (!Main.player[n].active)
+                                                continue;
+                                            if (Main.player[n].getRect().Intersects(rect))
+                                            {
+                                                NoPlayerNearby = false;
+                                                break;
+                                            }
                                         }
                                     }
+                                    break;
                                 }
-                                break;
                             }
+                            if (NoPlayerNearby)
+                                break;
                         }
                         if (NoPlayerNearby)
                             break;
                     }
-                    if (NoPlayerNearby)
-                        break;
                 }
             }
             TerraGuardian guardian = null;
@@ -903,10 +944,10 @@ namespace giantsummon
             }
             if (!IsGuardianNpcInWorld(GuardianID, ModID))
             {
-                GuardianTownNPC.Add(guardian);
                 AddTownGuardianNpc(guardian);
             }
-            GuardianTownNpcState npcstate = GuardianNPCsInWorld.First(x => x.CharID.ID == GuardianID && x.CharID.ModID == ModID);
+            guardian.TryFindingTownNpcInfo();
+            GuardianTownNpcState npcstate = guardian.GetTownNpcInfo;
             npcstate.HomeX = SpawnXBackup;
             npcstate.HomeY = SpawnYBackup;
             npcstate.Homeless = false;
@@ -1036,6 +1077,7 @@ namespace giantsummon
             if(townstate == null)
             {
                 AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
+                tg.TryFindingTownNpcInfo();
                 townstate = tg.GetTownNpcInfo;
                 if (townstate == null)
                 {
@@ -1044,9 +1086,9 @@ namespace giantsummon
                     return false;
                 }
             }
-            townstate.Homeless = false;
             int HomeX = WorldGen.bestX, HomeY = WorldGen.bestY;
             Housing_TryGettingPlaceForCompanionToStay(ref HomeX, ref HomeY);
+            townstate.Homeless = false;
             townstate.HomeX = HomeX;
             townstate.HomeY = HomeY;
             townstate.ValidateHouse();
@@ -1363,8 +1405,8 @@ namespace giantsummon
                         case Terraria.ID.TileID.AnnouncementBox:
                         case Terraria.ID.TileID.Tombstones:
                             {
-                                PositionX -= (tile.frameX / 18) % 2;
-                                PositionY -= tile.frameY / 18;
+                                PositionX -= (int)(tile.frameX * (1f / 18)) % 2;
+                                PositionY -= (int)(tile.frameY * (1f / 18));
                                 Add = true;
                             }
                             break;

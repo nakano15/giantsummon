@@ -201,6 +201,7 @@ namespace giantsummon
         private string Nickname = null;
         public string GetNickname { get { if (Nickname == null) return "Terrarian"; return Nickname; } set { Nickname = value; } }
         public bool ReceivedFoodFromMinerva = false;
+        public float BuddiesModeEffective = 1f;
 
         public static int GetPlayerDefenseCount(Player player)
         {
@@ -1490,6 +1491,7 @@ namespace giantsummon
         public void UpdateGuardian()
         {
             DamageMod = 1f;
+            BuddiesModeEffective = 1;
             if (player.whoAmI == Main.myPlayer)
             {
                 int NewFriendshipCount = 0;
@@ -1657,6 +1659,7 @@ namespace giantsummon
                     }
                 }
                 DamageMod = 1f - DamageMod;
+                BuddiesModeEffective = 1f / GuardianSlot;
             }
             if (!FoundFirstTitanGuardian)
                 TitanGuardian = 255;
@@ -2276,7 +2279,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    guardian = new TerraGuardian();
+                    guardian = new TerraGuardian(MyGuardians[Id].ID, MyGuardians[Id].ModID);
                 }
                 guardian.OwnerPos = player.whoAmI;
                 guardian.Active = true;
@@ -2411,6 +2414,9 @@ namespace giantsummon
                     }
                     else
                     {
+                        //Guardian.OwnerPos = -1;
+                        //Guardian.AssistSlot = 0;
+                        //WorldMod.GuardianTownNPC.Add(Guardian);
                         Guardian.Active = false;
                         Guardian.PlayAppearDisappearEffect();
                     }

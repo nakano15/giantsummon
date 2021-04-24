@@ -216,7 +216,13 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            if (guardian.IsUsingToilet)
+            if (guardian.IsUsingBed)
+            {
+                Mes.Add("(You noticed him sniffing a while, and then he slept with a smile on the face.\nI think he knows I'm near him.)");
+                Mes.Add("*Snif.. Snif... Known one... "+player.name+"... Zzzz...*");
+                Mes.Add("(As he sleeps, he says the name of anyone who comes close to him, includding yours.)");
+            }
+            else if (guardian.IsUsingToilet)
             {
                 Mes.Add("*Whatever It is, couldn't wait?*");
                 Mes.Add("*[nickname], I'm trying to process some things here.*");

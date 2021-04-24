@@ -47,7 +47,8 @@ namespace giantsummon
             TargetMemoryCooldown,
             ShopCheckCooldown,
             CarpetFlightTime,
-            SpottingCooldown
+            SpottingCooldown,
+            TownNpcInfoCheckingCooldown
         }
     }
 }

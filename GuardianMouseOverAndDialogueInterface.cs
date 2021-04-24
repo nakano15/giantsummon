@@ -356,13 +356,14 @@ namespace giantsummon
 
         public static void DrawBackgroundPanel(Vector2 Position, int Width, int Height, Color color)
         {
+            int HalfHeight = (int)(Height * 0.5f);
             for (int y = 0; y < 3; y++)
             {
                 for (int x = 0; x < 3; x++)
                 {
-                    int px = (int)Position.X, py = (int)Position.Y, pw = 30, ph = 30,
-                        dx = 0, dy = 0;
                     const int DrawDimension = 30;
+                    int px = (int)Position.X, py = (int)Position.Y, pw = DrawDimension, ph = DrawDimension,
+                        dx = 0, dy = 0, dh = DrawDimension;
                     if (x == 2)
                     {
                         px += Width - pw;
@@ -378,6 +379,12 @@ namespace giantsummon
                     {
                         py += Height - ph;
                         dy = Main.chatBackTexture.Height - DrawDimension;
+                        if(ph > HalfHeight)
+                        {
+                            dy += DrawDimension - HalfHeight;
+                            py += (int)(DrawDimension - HalfHeight);
+                            ph = dh = HalfHeight;
+                        }
                     }
                     else if (y == 1)
                     {
@@ -385,9 +392,16 @@ namespace giantsummon
                         ph = Height - ph * 2;
                         dy = DrawDimension;
                     }
+                    else
+                    {
+                        if(ph > HalfHeight)
+                        {
+                            ph = dh = HalfHeight;
+                        }
+                    }
                     if (pw > 0 && ph > 0)
                     {
-                        Main.spriteBatch.Draw(Main.chatBackTexture, new Rectangle(px, py, pw, ph), new Rectangle(dx, dy, DrawDimension, DrawDimension), color);
+                        Main.spriteBatch.Draw(Main.chatBackTexture, new Rectangle(px, py, pw, ph), new Rectangle(dx, dy, DrawDimension, dh), color);
                     }
                 }
             }

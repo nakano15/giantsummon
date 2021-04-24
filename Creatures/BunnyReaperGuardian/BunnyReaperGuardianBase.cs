@@ -28,12 +28,12 @@ namespace giantsummon.Creatures
             Age = 88;
             SetBirthday(SEASON_SPRING, 28);
             Male = true;
-            CalculateHealthToGive(1200, 0.9f, 0.6f); //Lc: 95, LF: 16
+            //CalculateHealthToGive(1200, 0.9f, 0.6f); //Lc: 95, LF: 16
             InitialMHP = 125; //1100
             LifeCrystalHPBonus = 25;
             LifeFruitHPBonus = 30;
             Accuracy = 0.72f;
-            Mass = 0.7f;
+            Mass = 0.55f;
             MaxSpeed = 4.9f;
             Acceleration = 0.14f;
             SlowDown = 0.42f;
@@ -43,7 +43,7 @@ namespace giantsummon.Creatures
             ReverseMount = false;
             DrinksBeverage = true;
             SleepsAtBed = false;
-            DontUseHeavyWeapons = true;
+            DontUseHeavyWeapons = false;
             SetTerraGuardian();
 
             //Animation Frames

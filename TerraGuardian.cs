@@ -13,10 +13,14 @@ namespace giantsummon
 {
     public class TerraGuardian
     {
+        const float DivisionBy16 = 1f / 16;
+
+        public DrawMoment drawMoment = DrawMoment.DontDraw;
         public List<PathFinder.Breadcrumbs> Paths = new List<PathFinder.Breadcrumbs>();
         public int WhoAmID = 0;
         public static int IDStack = 0;
         public static bool ForceKill = false;
+        public int GuardianTownNpcInfoPosition = -1;
         public int TalkPlayerID = -1;
         public byte AssistSlot = 0;
         public int SavedPosX = -1, SavedPosY = -1; //Redo the path finding if moving to it was interrupted by any way.
@@ -52,7 +56,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        if (_Data != null && Main.netMode == 0 && !Main.gameMenu && Main.player[Main.myPlayer].active && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(_Data.ID))
+                        if (_Data != null && Main.netMode == 0 && !Main.gameMenu && Main.player[Main.myPlayer].active && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGuardian(_Data.ID, _Data.ModID))
                         {
                             return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetGuardian(_Data.ID, _Data.ModID);
                         }
@@ -86,11 +90,15 @@ namespace giantsummon
         {
             get
             {
-                for (int t = 0; t < WorldMod.MaxGuardianNpcsInWorld; t++)
+                if(GuardianTownNpcInfoPosition > -1)
                 {
-                    if (WorldMod.GuardianNPCsInWorld[t] != null && WorldMod.GuardianNPCsInWorld[t].CharID.IsSameID(Data))
+                    if(WorldMod.GuardianNPCsInWorld[GuardianTownNpcInfoPosition] == null)
                     {
-                        return WorldMod.GuardianNPCsInWorld[t];
+                        GuardianTownNpcInfoPosition = -1;
+                    }
+                    else
+                    {
+                        return WorldMod.GuardianNPCsInWorld[GuardianTownNpcInfoPosition];
                     }
                 }
                 return null;
@@ -99,8 +107,8 @@ namespace giantsummon
         private GuardianData _Data;
         public string Name { get { if (Data.Name != null) return Data.Name; else return Base.Name; } set { Data.Name = value; } }
         public string GroupID { get { return Base.GetGroupID; } }
-        public string ModID { get { return Data.ModID; } set { Data.ModID = value; } }
-        public int ID { get { return Data.ID; } set { Data.ID = value; } }
+        public int ID { get { return Data.MyID.ID; } set { Data.MyID.ID = value; } }
+        public string ModID { get { return Data.MyID.ModID; } set { Data.MyID.ModID = value; } }
         public GuardianID MyID { get { return Data.MyID; } set { Data.MyID = value; } }
         public string PersonalNicknameToPlayer { get { return Data.PersonalNicknameToPlayer; } set { Data.PersonalNicknameToPlayer = value; } }
         public GuardianMood Mood { get { return Data.Mood; } }
@@ -375,6 +383,19 @@ namespace giantsummon
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
         public static int CurrentDrawnOrderID = 0;
+
+        public void TryFindingTownNpcInfo()
+        {
+            GuardianTownNpcInfoPosition = -1;
+            for (int t = 0; t < WorldMod.MaxGuardianNpcsInWorld; t++)
+            {
+                if (WorldMod.GuardianNPCsInWorld[t] != null && WorldMod.GuardianNPCsInWorld[t].CharID.IsSameID(Data))
+                {
+                    GuardianTownNpcInfoPosition = t;
+                    return;
+                }
+            }
+        }
 
         public int CollisionWidth
         {
@@ -1146,6 +1167,7 @@ namespace giantsummon
                 if (ModID == "")
                     ModID = MainMod.mod.Name;
                 _Data = GuardianBase.GetGuardianBase(CreateByType, ModID).GetGuardianData(CreateByType, ModID);
+                TryFindingTownNpcInfo();
             }
             WhoAmID = IDStack++;
         }
@@ -1566,18 +1588,18 @@ namespace giantsummon
         public void CheckNearbyTiles()
         {
             int TileCheckValue = GetCooldownValue(GuardianCooldownManager.CooldownType.BiomeCheckStacker);
-            const int TileDimX = 1920 / 16, TileDimY = 1080 / 16, TotalDimRange = TileDimX * TileDimY,
+            const int TileDimX = (int)(1920 * DivisionBy16), TileDimY = (int)(1080 * DivisionBy16), TotalDimRange = TileDimX * TileDimY,
                 TileCheckStartPositionX = -TileDimX / 2, TileCheckStartPositionY = -TileDimY / 2,
                 TileRangeX = TileDimX / (FramesSquaredTileCount / 4), TileRangeY = TileDimY / (FramesSquaredTileCount / 4), MaxRange = TileRangeX * TileRangeY,
                 AFourthTileCount = FramesSquaredTileCount / 4;
-            int TilePositionX = (int)CenterPosition.X / 16 + TileCheckStartPositionX, TilePositionY = (int)CenterPosition.Y / 16 + TileCheckStartPositionY;
+            int TilePositionX = (int)(CenterPosition.X * DivisionBy16) + TileCheckStartPositionX, TilePositionY = (int)(CenterPosition.Y * DivisionBy16) + TileCheckStartPositionY;
             TilePositionX += TileRangeX * (TileCheckValue % AFourthTileCount);
             TilePositionY += TileRangeY * (TileCheckValue / AFourthTileCount);
             for (int y = TilePositionY; y < TilePositionY + TileRangeY; y++)
             {
                 for (int x = TilePositionX; x < TilePositionX + TileRangeX; x++)
                 {
-                    if (x >= Main.leftWorld / 16 && x < Main.rightWorld / 16 && y >= Main.topWorld / 16 && y < Main.bottomWorld / 16)
+                    if (x >= Main.leftWorld * DivisionBy16 && x < Main.rightWorld * DivisionBy16 && y >= Main.topWorld * DivisionBy16 && y < Main.bottomWorld * DivisionBy16)
                     {
                         if (Main.tile[x, y].active())
                         {
@@ -1751,7 +1773,7 @@ namespace giantsummon
             {
                 if (TurnOn)
                 {
-                    GuardingPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
+                    GuardingPosition = new Point((int)(Position.X * DivisionBy16), (int)(Position.Y * DivisionBy16));
                     IsGuardingPlace = false;
                 }
                 else
@@ -1932,7 +1954,7 @@ namespace giantsummon
                     {
                         if (!this.GuardiansSpotted.Contains(key))
                         {
-                            this.DoTrigger(TriggerTypes.GuardianSpotted, key); //Hardly will trigger
+                            this.DoTrigger(TriggerTypes.GuardianSpotted, key);
                         }
                         GuardiansSpotted.Add(key);
                     }
@@ -2208,7 +2230,7 @@ namespace giantsummon
                 IncreaseImmuneTime = true;
             }
             if (!HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
-                AddCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown, 9);
+                AddCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown, 10);
             if (Channeling && !Action)
                 Channeling = false;
             ShowOffHand = OffHandAction;
@@ -2300,7 +2322,7 @@ namespace giantsummon
             TilePosition.Y++;
             if (GravityDirection == -1)
             {
-                TilePosition.Y = (int)(Position.Y - Height - 0.1f) / 16;
+                TilePosition.Y = (int)((Position.Y - Height - 0.1f) * DivisionBy16);
             }
             int TileType = -1;
             for (int x = -1; x < 2; x++)
@@ -2587,7 +2609,7 @@ namespace giantsummon
             return false;
             Player player = Main.player[OwnerPos];
             const int XDistancing = 3, YDistancing = 4;
-            int cx = (int)Position.X / 16, cy = (int)Position.Y / 16;
+            int cx = (int)(Position.X * DivisionBy16), cy = (int)(Position.Y * DivisionBy16);
             bool Change = false;
             bool water = player.adjWater, lava = player.adjLava, honey = player.adjHoney;
             for (int x = cx - XDistancing; x <= cx + XDistancing; x++)
@@ -2728,6 +2750,11 @@ namespace giantsummon
             {
                 //FinalScale *= 3;
             }
+            if(GuardianTownNpcInfoPosition == -1 && !HasCooldown(GuardianCooldownManager.CooldownType.TownNpcInfoCheckingCooldown))
+            {
+                AddCooldown(GuardianCooldownManager.CooldownType.TownNpcInfoCheckingCooldown, Main.rand.Next(3 * 3600, 5 * 3600));
+                TryFindingTownNpcInfo();
+            }
             if (OwnerPos > -1)
             {
                 bool HasFirstSymbol = Main.player[OwnerPos].GetModPlayer<PlayerMod>().HasFirstSymbol;
@@ -2761,7 +2788,7 @@ namespace giantsummon
             }
             if (HasFlag(GuardianFlags.LightPotion) || HasFlag(GuardianFlags.MiningHelmet))
             {
-                Lighting.AddLight((int)CenterPosition.X / 16, (int)CenterPosition.Y / 16, 0.8f, 0.95f, 1f);
+                Lighting.AddLight((int)(CenterPosition.X * DivisionBy16), (int)(CenterPosition.Y * DivisionBy16), 0.8f, 0.95f, 1f);
             }
             if (HasFlag(GuardianFlags.Rabid) && Main.rand.Next(1200) == 0)
             {
@@ -2790,8 +2817,8 @@ namespace giantsummon
             }
             if (HasFlag(GuardianFlags.FlowerBoots) && Velocity.Y == 0)
             {
-                int tx = (int)(CenterPosition.X / 16), ty = (int)((Position.Y - 1) / 16);
-                if (tx >= Main.leftWorld / 16 && tx < Main.rightWorld / 16 && ty >= Main.topWorld / 16 && ty < Main.bottomWorld / 16 - 1)
+                int tx = (int)(CenterPosition.X * DivisionBy16), ty = (int)((Position.Y - 1) * DivisionBy16);
+                if (tx >= Main.leftWorld * DivisionBy16 && tx < Main.rightWorld * DivisionBy16 && ty >= Main.topWorld * DivisionBy16 && ty < Main.bottomWorld * DivisionBy16 - 1)
                 {
                     if (Main.tile[tx, ty] == null)
                     {
@@ -2996,7 +3023,7 @@ namespace giantsummon
             }
             if (ZoneSandstorm)
             {
-                int CenterX = (int)CenterPosition.X / 16, CenterY = (int)CenterPosition.Y / 16;
+                int CenterX = (int)(CenterPosition.X * DivisionBy16), CenterY = (int)(CenterPosition.Y * DivisionBy16);
                 if (Main.tile[CenterX, CenterY].wall == 0)
                 {
                     AddBuff(194, 2);
@@ -3004,7 +3031,7 @@ namespace giantsummon
             }
             if (false && HasCarpet())
             {
-                int TileX = (int)Position.X / 16 - 1, TileY = (int)Position.Y / 16 + 1;
+                int TileX = (int)(Position.X * DivisionBy16) - 1, TileY = (int)(Position.Y * DivisionBy16) + 1;
                 bool HasSolidGround = false;
                 for (int t = 0; t < 2; t++)
                 {
@@ -3152,8 +3179,8 @@ namespace giantsummon
             {
                 RemoveCooldown(GuardianCooldownManager.CooldownType.SpelunkerEffect);
                 const int range = 30;
-                int cx = (int)this.CenterPosition.X / 16,
-                    cy = (int)this.CenterPosition.Y / 16;
+                int cx = (int)(this.CenterPosition.X * DivisionBy16),
+                    cy = (int)(this.CenterPosition.Y * DivisionBy16);
                 for (int x = cx - range; x < cx + range; x++)
                 {
                     for (int y = cy - range; y < cy + range; y++)
@@ -3540,7 +3567,7 @@ namespace giantsummon
                         break;
                 }
                 //LookingLeft = Main.player[OwnerPos].direction == -1;
-                int Result = Hurt(Damage, DamageDirection, false, true, " has been knocked out while protecting " + Main.player[OwnerPos].name + ".");
+                int Result = Hurt(Damage, DamageDirection, false, true, " was slain while protecting " + Main.player[OwnerPos].name + ".");
                 IncreaseDamageStacker(Result, MHP, true);
             }
             return Trigger;
@@ -3554,9 +3581,10 @@ namespace giantsummon
 
         public void GetBuddyModeBenefits(out float HealthBonus, out float DamageBonus, out int DefenseBonus)
         {
-            HealthBonus = FriendshipLevel * 0.01f;
-            DamageBonus = FriendshipLevel * 0.01f;
-            DefenseBonus = (int)(FriendshipLevel * 0.3334f);
+            float Effective = Main.player[OwnerPos].GetModPlayer<PlayerMod>().BuddiesModeEffective;
+            HealthBonus = FriendshipLevel * 0.01f * Effective;
+            DamageBonus = FriendshipLevel * 0.01f * Effective;
+            DefenseBonus = (int)(FriendshipLevel * 0.3334f * Effective);
         }
 
         public void DoUpdateGuardianStatus()
@@ -3605,8 +3633,8 @@ namespace giantsummon
             {
                 MHP = Base.InitialMHP + Base.LifeCrystalHPBonus * LifeCrystalHealth + Base.LifeFruitHPBonus * LifeFruitHealth;
                 MMP = Base.InitialMP + Base.ManaCrystalMPBonus * ManaCrystals;
-                HealthHealMult = (float)(Base.InitialMHP + Base.LifeCrystalHPBonus * 15 + Base.LifeFruitHPBonus * 20) / 500;
-                ManaHealMult = (float)Base.InitialMP / 20;
+                HealthHealMult = (float)(Base.InitialMHP + Base.LifeCrystalHPBonus * 15 + Base.LifeFruitHPBonus * 20) * (1f / 500);
+                ManaHealMult = (float)Base.InitialMP * (1f / 20);
             }
             if (OwnerPos > -1)
                 MHP += (int)(Main.player[OwnerPos].GetModPlayer<PlayerMod>().ExtraMaxHealthValue * HealthHealMult);
@@ -4182,7 +4210,7 @@ namespace giantsummon
                         //Ammo Potion...
                         break;
                     case 113:
-                        MHP += (int)((MHP / Base.LifeFruitHPBonus / Base.LifeCrystalHPBonus * Base.LifeCrystalHPBonus));
+                        MHP += (int)(MHP * 0.2f);
                         AddFlag(GuardianFlags.LifeForcePotion);
                         break;
                     case 114:
@@ -4566,7 +4594,7 @@ namespace giantsummon
                 SavedPosX = X;
                 SavedPosY = Y;
                 PathingInterrupted = false;
-                Paths = PathFinder.DoPathFinding(Position, X, Y, (int)(CalculatedJumpHeight / 16));
+                Paths = PathFinder.DoPathFinding(Position, X, Y, (int)(CalculatedJumpHeight * DivisionBy16));
                 return true;
             }
             return false;
@@ -5455,7 +5483,7 @@ namespace giantsummon
                 //
                 /*if (false && OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease)
                 {
-                    if (CreatePathingTo((int)(Main.screenPosition.X + Main.mouseX) / 16, (int)(Main.screenPosition.Y + Main.mouseY) / 16))
+                    if (CreatePathingTo((int)(Main.screenPosition.X + Main.mouseX) * DivisionBy16, (int)(Main.screenPosition.Y + Main.mouseY) * DivisionBy16))
                         Main.NewText("Success!!");
                     else
                         Main.NewText("Failure...");
@@ -5510,7 +5538,7 @@ namespace giantsummon
                     if (Position.Y <= JumpUntilHeight)
                         JumpUntilHeight = -1;
                 }
-                if (!PlayerMounted && Velocity.Y > 0 && Position.Y / 16 - FallStart > FallHeightTolerance)
+                if (!PlayerMounted && Velocity.Y > 0 && Position.Y * DivisionBy16 - FallStart > FallHeightTolerance)
                 {
                     if (!Jump && HasSolidGroundUnder())
                     {
@@ -5553,7 +5581,7 @@ namespace giantsummon
             if (Velocity.Y != 0 || MoveLeft || MoveRight)
                 return;
             bool OnDamageTile = false;
-            int MinTileX = (int)(Position.X - Width * 0.5f) / 16, MaxTileX = (int)(Position.X + Width * 0.5f) / 16, TileY = (int)(Position.Y) / 16;
+            int MinTileX = (int)((Position.X - Width * 0.5f) * DivisionBy16), MaxTileX = (int)((Position.X + Width * 0.5f) * DivisionBy16), TileY = (int)(Position.Y * DivisionBy16);
             for (int x = MinTileX; x <= MaxTileX; x++)
             {
                 for (int y = 0; y < 2; y++)
@@ -5809,7 +5837,7 @@ namespace giantsummon
             if(MoveRight || MoveLeft)
             {
                 int CheckDirection = MoveLeft ? -1 : 1;
-                int MyX = (int)Position.X / 16, MyY = (int)Position.Y / 16;
+                int MyX = (int)(Position.X * DivisionBy16), MyY = (int)(Position.Y * DivisionBy16);
                 for (int x = 1; x < 4; x++)
                 {
                     for(int y = 0; y < 3; y++)
@@ -5824,10 +5852,10 @@ namespace giantsummon
                 }
                 if (OwnerPos > -1 && Main.player[OwnerPos].Bottom.Y > Position.Y + 8)
                     return;
-                //SaySomething("*Jumping needed.* " + (MaxSpeed * Base.MaxJumpHeight / 16));
+                //SaySomething("*Jumping needed.* " + (MaxSpeed * Base.MaxJumpHeight * DivisionBy16));
                 //There is a hole.
-                int uy = MyY - (int)(JumpSpeed * Base.MaxJumpHeight / 16), ly = MyY + 2;
-                for (int X = 1; X < (MaxSpeed * Base.MaxJumpHeight / 16 * 2); X++)
+                int uy = MyY - (int)(JumpSpeed * Base.MaxJumpHeight * DivisionBy16), ly = MyY + 2;
+                for (int X = 1; X < (MaxSpeed * Base.MaxJumpHeight * DivisionBy16 * 2); X++)
                 {
                     for (int y = uy; y < ly; y++)
                     {
@@ -5855,14 +5883,14 @@ namespace giantsummon
             {
                 return;
             }*/
-            int XStart = (int)Position.X / 16;
-            int YStart = (int)Position.Y / 16,
+            int XStart = (int)(Position.X * DivisionBy16);
+            int YStart = (int)(Position.Y * DivisionBy16),
                 YSum = YStart;
             byte VerticalCheck = 8;
             List<int> XCheck = new List<int>();
             XCheck.Add(XStart);
             XCheck.Add(XStart);
-            float FallHorizontalSpeedSum = MoveSpeed / 16, HorizontalSum = 0f;
+            float FallHorizontalSpeedSum = MoveSpeed * DivisionBy16, HorizontalSum = 0f;
             bool FireProtection = HasFlag(GuardianFlags.FireblocksImmunity);
             int NearestTile = 255;
             int NearestX = 0;
@@ -5934,14 +5962,14 @@ namespace giantsummon
 
         public bool HasPlatformAbove()
         {
-            int FeetX = (int)Position.X / 16, FeetY = (int)Position.Y / 16;
-            FeetX -= (int)((CollisionWidth * 0.5f) / 16) + 1;
+            int FeetX = (int)(Position.X * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
+            FeetX -= (int)((CollisionWidth * 0.5f) * DivisionBy16) + 1;
             bool PlatformAbove = false;
             int PlatformHeight = 0;
-            //Main.NewText("Jump Tile Height = " + (MaxJumpHeight * JumpSpeed) / 16 + 1);
-            for (int x = 0; x < CollisionWidth / 16 + 2; x++)
+            //Main.NewText("Jump Tile Height = " + (MaxJumpHeight * JumpSpeed) * DivisionBy16 + 1);
+            for (int x = 0; x < CollisionWidth * DivisionBy16 + 2; x++)
             {
-                for (int y = 0; y < (MaxJumpHeight * JumpSpeed) / 16 + 1; y++)
+                for (int y = 0; y < (MaxJumpHeight * JumpSpeed) * DivisionBy16 + 1; y++)
                 {
                     int TileX = FeetX + x, TileY = FeetY - y;
                     if (TileY >= 0)
@@ -5968,10 +5996,10 @@ namespace giantsummon
         {
             get
             {
-                int FeetX = (int)Position.X / 16, FeetY = (int)Position.Y / 16;
-                FeetX -= (int)((CollisionWidth * 0.5f) / 16) + 1;
+                int FeetX = (int)(Position.X * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
+                FeetX -= (int)((CollisionWidth * 0.5f) * DivisionBy16) + 1;
                 bool StandingOnPlatform = false;
-                for (int x = 0; x < CollisionWidth / 16 + 2; x++)
+                for (int x = 0; x < CollisionWidth * DivisionBy16 + 2; x++)
                 {
                     for (int y = 0; y < 2; y++)
                     {
@@ -6010,7 +6038,7 @@ namespace giantsummon
 
         public bool HasSolidGroundUnder()
         {
-            int FeetX = (int)Position.X / 16, FeetY = (int)Position.Y / 16;
+            int FeetX = (int)(Position.X * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
             for (int y = 0; y < FallHeightTolerance; y++)
             {
                 int TileY = FeetY + y;
@@ -6030,7 +6058,7 @@ namespace giantsummon
 
         public void CheckForStairways(out bool HasPlatformUnder, out bool HasPlatformAbove)
         {
-            int FeetX = (int)Position.X / 16, FeetY = (int)Position.Y / 16;
+            int FeetX = (int)(Position.X * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
             HasPlatformUnder = false;
             HasPlatformAbove = false;
             int WidthRange = 1;
@@ -6084,7 +6112,7 @@ namespace giantsummon
             List<Point> Found = new List<Point>();
             if (TileType.Length == 0)
                 return Found.ToArray();
-            Point GuardianPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
+            Point GuardianPosition = new Point((int)(Position.X * DivisionBy16), (int)(Position.Y * DivisionBy16));
             WorldMod.GuardianTownNpcState townstate = GetTownNpcInfo;
             if (townstate != null && !townstate.Homeless && AtHome)
             {
@@ -6337,7 +6365,7 @@ namespace giantsummon
             {
                 if (Main.npc[n].active && Main.npc[n].aiStyle == 7 && Main.npc[n].ai[0] == 5)
                 {
-                    int TileX = (int)Main.npc[n].Bottom.X / 16, TileY = (int)Main.npc[n].Bottom.Y / 16;
+                    int TileX = (int)(Main.npc[n].Bottom.X * DivisionBy16), TileY = (int)(Main.npc[n].Bottom.Y * DivisionBy16);
                     if (TileX == x && TileY == y)
                         return true;
                 }
@@ -6452,16 +6480,10 @@ namespace giantsummon
             if (player.SpawnX > -1 && player.SpawnY > -1)
             {
                 WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
-                if (townnpc != null && !townnpc.Homeless)
+                if (townnpc != null && !townnpc.Homeless && townnpc.HouseInfo != null)
                 {
-                    WorldGen.StartRoomCheck(townnpc.HomeX, townnpc.HomeY);
-                    for (int n = 0; n < WorldGen.numRoomTiles; n++)
-                    {
-                        if (WorldGen.roomX[n] == player.SpawnX && (WorldGen.roomY[n] == player.SpawnY || WorldGen.roomY[n] == player.SpawnY - 1))
-                        {
-                            return true;
-                        }
-                    }
+                    if (townnpc.HouseInfo.BelongsToThisHousing(player.SpawnX, player.SpawnY - 1))
+                        return true;
                 }
             }
             return false;
@@ -6667,7 +6689,7 @@ namespace giantsummon
 
         public void TryJumpingTallTiles()
         {
-            int CenterX = (int)Position.X / 16, BottomY = (int)Position.Y / 16;
+            int CenterX = (int)(Position.X * DivisionBy16), BottomY = (int)(Position.Y * DivisionBy16);
             if (!IsBeingControlledByPlayer)
             {
                 if ((!LastJump || JumpHeight > 0) && (MoveLeft || MoveRight))
@@ -6953,7 +6975,7 @@ namespace giantsummon
                             HouseY = (int)Position.Y;
                             if (IdleActionTime <= 0)
                             {
-                                int cx = HouseX / 16, cy = (int)((HouseY - CollisionHeight * 0.5f) / 16);
+                                int cx = (int)(HouseX * DivisionBy16), cy = (int)((HouseY - CollisionHeight * 0.5f) * DivisionBy16);
                                 Tile tile = Framing.GetTileSafely(cx, cy);
                                 if (tile != null)
                                 {
@@ -7041,30 +7063,28 @@ namespace giantsummon
                             {
                                 if (!AtHome)
                                 {
-                                    if(CurrentIdleAction != IdleActions.GoHome)
+                                    if (CurrentIdleAction != IdleActions.GoHome)
                                         ChangeIdleAction(IdleActions.GoHome, 5);
                                 }
-                                else if (IdleActionTime <= 0 || (CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome))
+                                else if (IdleActionTime <= 0)
                                 {
-                                    if (CurrentIdleAction != IdleActions.Wait || IdleActionTime <= 0)
+                                    if (Main.rand.NextDouble() < 0.6f)
+                                        ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 400 + Main.rand.Next(200));
+                                    else if (Main.rand.NextDouble() < 0.4f)
                                     {
-                                        FaceDirection(!LookingLeft);
-                                        if (Main.rand.NextDouble() < 0.6f)
-                                            ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 300 + Main.rand.Next(200));
-                                        else if (Main.rand.NextDouble() < 0.4f)
-                                        {
-                                            ChangeIdleAction(IdleActions.WanderHome, 100 + Main.rand.Next(200));
-                                        }
-                                        else
-                                        {
-                                            ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
-                                        }
+                                        ChangeIdleAction(IdleActions.WanderHome, 100 + Main.rand.Next(200));
+                                    }
+                                    else
+                                    {
+                                        if(CurrentIdleAction == IdleActions.Wait )
+                                            FaceDirection(!LookingLeft);
+                                        ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
                                     }
                                 }
                             }
                             if (Velocity.X == 0 && closeDoor && doorx > -1 && doory > -1)
                             {
-                                int x = (int)(Position.X - CollisionWidth * 0.5f) / 16;
+                                int x = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16);
                                 if (x != doorx && x + 1 != doorx)
                                 {
                                     if (WorldGen.CloseDoor(doorx, doory))
@@ -7202,8 +7222,8 @@ namespace giantsummon
                                 }
                             }
                         }
-                        int CheckAheadX = (int)(Position.X + (CollisionWidth * 0.5f + 8) * Direction) / 16,
-                            CheckAheadStartY = (int)(Position.Y) / 16;
+                        int CheckAheadX = (int)((Position.X + (CollisionWidth * 0.5f + 8) * Direction) * DivisionBy16),
+                            CheckAheadStartY = (int)(Position.Y * DivisionBy16);
                         if (CurrentIdleAction == IdleActions.WanderHome)
                         {
                             bool Door = false;
@@ -7251,8 +7271,8 @@ namespace giantsummon
             IdleActionTime--;
             if (MoveRight || MoveLeft)
             {
-                int TileCheckX = (int)(Position.X) / 16 + 2 * Direction,
-                    TileCheckY = (int)(Position.Y) / 16;
+                int TileCheckX = (int)(Position.X * DivisionBy16) + 2 * Direction,
+                    TileCheckY = (int)(Position.Y * DivisionBy16);
                 bool Pitfall = true;
                 bool HasOpening = false;
                 HasOpening = true;
@@ -7412,13 +7432,13 @@ namespace giantsummon
                     closeDoor = false;
                     return;
                 }
-                float DistanceFromDoor = Math.Abs(Position.X / 16 - doorx);
+                float DistanceFromDoor = Math.Abs(Position.X * DivisionBy16 - doorx);
                 bool ForceCloseDoor = false;
                 if (Velocity.X == 0 && Velocity.Y == 0 && (Position.X - CollisionWidth * 0.5f < doorx * 16 || Position.X + CollisionWidth * 0.5f > (doorx + 1) * 16))
                 {
                     ForceCloseDoor = true;
                 }
-                if (ForceCloseDoor || DistanceFromDoor > Width / 16 + 2)
+                if (ForceCloseDoor || DistanceFromDoor > Width * DivisionBy16 + 2)
                 {
                     Tile doorTile = Framing.GetTileSafely(doorx, doory);
                     if (doorTile != null)
@@ -7429,7 +7449,7 @@ namespace giantsummon
                             {
                                 closeDoor = false;
                             }
-                            else if (DistanceFromDoor > Width / 16 + 3)
+                            else if (DistanceFromDoor > Width * DivisionBy16 + 3)
                             {
                                 closeDoor = false;
                             }
@@ -7440,7 +7460,7 @@ namespace giantsummon
                             {
                                 closeDoor = false;
                             }
-                            else if (DistanceFromDoor > Width / 16 + 3)
+                            else if (DistanceFromDoor > Width * DivisionBy16 + 3)
                             {
                                 closeDoor = false;
                             }
@@ -7468,7 +7488,7 @@ namespace giantsummon
             }
             for (int dx = 0; dx < 2; dx++)
             {
-                int TileX = (int)(TileCheckDir) / 16 + Dir * dx, TileY = (int)(Position.Y) / 16 - 2;
+                int TileX = (int)(TileCheckDir * DivisionBy16) + Dir * dx, TileY = (int)(Position.Y * DivisionBy16) - 2;
                 Tile nextTile = Framing.GetTileSafely(TileX, TileY);
                 if (nextTile != null && nextTile.active() && (nextTile.type == 10 || nextTile.type == 388))
                 {
@@ -8080,6 +8100,10 @@ namespace giantsummon
                 if (HealthRegenPower > 0)
                     HealthRegenPower = 0;
             }*/
+            if(HP >= MHP && HealthRegenPower >= 0)
+            {
+                return;
+            }
             HealthRegenTime++;
             if (HasFlag(GuardianFlags.Bleeding))
             {
@@ -8100,7 +8124,7 @@ namespace giantsummon
             }
             else
             {
-                HealthRegenValue = (float)HealthRegenTime / 300;
+                HealthRegenValue = HealthRegenTime * (1f / 300);
             }
             HealthRegenValue *= (float)MHP / Data.MaxLifeCrystalHealth * 0.85f + 0.15f;
             if (HasFlag(GuardianFlags.CrimsonSetEffect))
@@ -8246,9 +8270,9 @@ namespace giantsummon
             int ManaRegenStack = 0;
             if (!HasCooldown(GuardianCooldownManager.CooldownType.ManaRegenDelay))
             {
-                ManaRegenStack = MMP / 7 + 1 + ManaRegenBonus;
+                ManaRegenStack = (int)(MMP * (1f / 7)) + 1 + ManaRegenBonus;
                 if (Velocity.Y == 0 && Velocity.X == 0)
-                    ManaRegenStack += MMP / 2;
+                    ManaRegenStack += (int)(MMP * 0.5f);
                 float RegenStack = (float)MP / MMP * 0.8f + 0.2f;
                 ManaRegenStack = (int)((ManaRegenStack * RegenStack) * 1.15f);
             }
@@ -8612,7 +8636,7 @@ namespace giantsummon
 
         public void SetFallStart()
         {
-            FallStart = (int)this.Position.Y / 16;
+            FallStart = (int)(this.Position.Y * DivisionBy16);
             IgnoreMass = false;
         }
 
@@ -8968,12 +8992,12 @@ namespace giantsummon
             {
                 if (OwnerIsPlayer)
                 {
-                    GuardingPosition = new Point((int)Main.player[OwnerPos].Center.X / 16, (int)(Main.player[OwnerPos].position.Y + Main.player[OwnerPos].height - 1) / 16);
+                    GuardingPosition = new Point((int)(Main.player[OwnerPos].Center.X * DivisionBy16), (int)((Main.player[OwnerPos].position.Y + Main.player[OwnerPos].height - 1) * DivisionBy16));
                     //if (OwnerIsPlayer) Main.NewText(this.Name + " is now guarding some place.");
                 }
                 else
                 {
-                    GuardingPosition = new Point((int)Position.X / 16, (int)Position.Y / 16);
+                    GuardingPosition = new Point((int)(Position.X * DivisionBy16), (int)(Position.Y * DivisionBy16));
                 }
                 IsGuardingPlace = Guarding;
             }
@@ -10067,8 +10091,8 @@ namespace giantsummon
             bool PlayerMountedButHasControl = PlayerMounted && GuardianHasControlWhenMounted;
             if (false && PlayerMountedButHasControl && OwnerPos > -1 && OwnerPos == Main.myPlayer && Main.player[Main.myPlayer].mouseInterface == false && Main.mouseRight)
             {
-                int MousePositionX = (int)((Main.mouseX + Main.screenWidth) / 16),
-                    MousePositionY = (int)((Main.mouseY + Main.screenHeight) / 16);
+                int MousePositionX = (int)((Main.mouseX + Main.screenWidth) * DivisionBy16),
+                    MousePositionY = (int)((Main.mouseY + Main.screenHeight) * DivisionBy16);
                 if (!GuardingPosition.HasValue || (GuardingPosition.Value.X != MousePositionX))
                 {
                     GuardingPosition = new Point(MousePositionX, MousePositionY);
@@ -10192,8 +10216,8 @@ namespace giantsummon
                 }
                 bool IsOnSameGroundAsPlayer = false;
                 {
-                    int MyPositionX = (int)Position.X / 16, MyPositionY = (int)Position.Y / 16,
-                        PlayerPositionX = (int)LeaderCenterX / 16, PlayerPositionY = (int)LeaderBottom / 16;
+                    int MyPositionX = (int)(Position.X * DivisionBy16), MyPositionY = (int)(Position.Y * DivisionBy16),
+                        PlayerPositionX = (int)(LeaderCenterX * DivisionBy16), PlayerPositionY = (int)(LeaderBottom * DivisionBy16);
                     for (int attempt = 0; attempt < 20; attempt++)
                     {
                         Tile tile = Framing.GetTileSafely(MyPositionX, MyPositionY);
@@ -10246,10 +10270,11 @@ namespace giantsummon
                         {
                             if (BottomDistanceY < 0 && BottomDistanceY > -8 * 16 && ((!Jump && Velocity.Y == 0) || JumpHeight > 0))
                             {
-                                int XStart = (int)(Position.X - CollisionWidth * 0.5f) / 16, XEnd = (int)(Position.X + CollisionWidth * 0.5f) / 16;
+                                int XStart = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), 
+                                    XEnd = (int)((Position.X + CollisionWidth * 0.5f) * DivisionBy16);
                                 bool BlockedAbove = false, PlatformAbove = false;
-                                int YStart = (int)Position.Y / 16;
-                                for (int y = -2; y >= -Math.Abs(BottomDistanceY / 16); y--)
+                                int YStart = (int)(Position.Y * DivisionBy16);
+                                for (int y = -2; y >= -Math.Abs(BottomDistanceY * DivisionBy16); y--)
                                 {
                                     for (int x = XStart; x < XEnd; x++)
                                     {
@@ -10366,13 +10391,13 @@ namespace giantsummon
                             bool HasPlatformAbove = false, HasSolidTile = false;
                             for (int y = 0; y < MaxJumpHeight * JumpSpeed; y++)
                             {
-                                int TileY = (int)CenterPosition.Y / 16 - 1 - y;
-                                if (TileY < Main.topWorld / 16)
+                                int TileY = (int)CenterPosition.Y * DivisionBy16 - 1 - y;
+                                if (TileY < Main.topWorld * DivisionBy16)
                                     break;
                                 HasPlatformAbove = false;
                                 for (int x = 0; x < 2; x++)
                                 {
-                                    int TileX = (int)CenterPosition.X / 16 - 1 + x;
+                                    int TileX = (int)CenterPosition.X * DivisionBy16 - 1 + x;
                                     Tile tile = Framing.GetTileSafely(TileX, TileY);
                                     if (tile.active() && Main.tileSolid[tile.type])
                                     {
@@ -11631,7 +11656,7 @@ namespace giantsummon
                     if (!CheckingAgain)
                     {
                         CheckingAgain = true;
-                        Tile t = Framing.GetTileSafely((int)(Position.X + OffHandPositionX) / 16, (int)(Position.Y + OffHandPositionY) / 16);
+                        Tile t = Framing.GetTileSafely((int)((Position.X + OffHandPositionX) * DivisionBy16), (int)((Position.Y + OffHandPositionY) * DivisionBy16));
                         if (!Ducking && t.active() && Main.tileSolid[t.type])
                         {
                             if (OwnerPos > -1 && !PlayerMounted && Main.player[OwnerPos].Center.Y < Position.Y - Height * 0.5f)
@@ -12219,8 +12244,8 @@ namespace giantsummon
                     if (SelectedItem > -1 && ItemAnimationTime > 0)
                     {
                         Item item = this.Inventory[SelectedItem];
-                        int CenterX = (int)CenterPosition.X / 16, CenterY = (int)CenterPosition.Y / 16;
-                        int TileTargetX = AimDirection.X / 16, TileTargetY = AimDirection.Y / 16;
+                        int CenterX = (int)(CenterPosition.X * DivisionBy16), CenterY = (int)(CenterPosition.Y * DivisionBy16);
+                        int TileTargetX = (int)(AimDirection.X * DivisionBy16), TileTargetY = (int)(AimDirection.Y * DivisionBy16);
                         if (this.Inventory[SelectedItem].pick > 0 || this.Inventory[SelectedItem].axe > 0 || this.Inventory[SelectedItem].hammer > 0)
                         {
                             int ToolUseDistance = (int)((5 + Inventory[SelectedItem].tileBoost) * Scale);
@@ -13232,15 +13257,15 @@ namespace giantsummon
 
         public void CheckForObstacles()
         {
-            int CenterTileX = (int)Position.X / 16, CenterTileY = (int)(Position.Y / 16);
+            int CenterTileX = (int)(Position.X * DivisionBy16), CenterTileY = (int)(Position.Y * DivisionBy16);
             if (Velocity.Y == 0)
             {
                 //if (HasFlag(GuardianFlags.JumpingPitfall))
                 //    RemoveFlag(GuardianFlags.JumpingPitfall);
                 if (MoveRight || MoveLeft)
                 {
-                    int TileCheckX = (int)(Position.X + (int)(Width * 0.25f * Direction)) / 16,
-                        TileCheckY = (int)(Position.Y) / 16;
+                    int TileCheckX = (int)((Position.X + (int)(Width * 0.25f * Direction)) * DivisionBy16),
+                        TileCheckY = (int)(Position.Y * DivisionBy16);
                     bool Pitfall = true;
 
                     for (int y = 0; y < 4; y++)
@@ -13268,7 +13293,7 @@ namespace giantsummon
                                 if (t.active() && (Main.tileSolid[t.type] || Main.tileSolidTop[t.type]))
                                 {
                                     int UpperTileCount = 0;
-                                    int MaxHeight = (CollisionHeight / 16 + 1);
+                                    int MaxHeight = (int)(CollisionHeight * DivisionBy16)+ 1;
                                     for (int u = -1; u < -MaxHeight; u--)
                                     {
                                         Tile upperTile = Framing.GetTileSafely(TileX, TileY + y);
@@ -13304,14 +13329,14 @@ namespace giantsummon
                     }
                 }
             }
-            int FloorX = (int)Position.X / 16,
-                FloorY = (int)Position.Y / 16 + CollisionHeight / 16 + 1;
+            int FloorX = (int)(Position.X * DivisionBy16),
+                FloorY = (int)(Position.Y * DivisionBy16) + 1;
             byte HurtTileReaction = 0;
-            for (int x = -1; x <= (CollisionWidth / 16) + 2; x++)
+            for (int x = -1; x <= (CollisionWidth * DivisionBy16) + 2; x++)
             {
                 int ThisFloorX = FloorX + x * Direction;
                 Tile t = Framing.GetTileSafely(ThisFloorX, FloorY);
-                bool AboveTile = Math.Abs(x) < (Width / 16) + 1;
+                bool AboveTile = Math.Abs(x) < (Width * DivisionBy16) + 1;
                 if (t.active() && Main.tileSolid[t.type])
                 {
                     if (t.type == Terraria.ID.TileID.Spikes || t.type == Terraria.ID.TileID.WoodenSpikes || ((t.type == Terraria.ID.TileID.Hellstone || t.type == Terraria.ID.TileID.HellstoneBrick) && !HasFlag(GuardianFlags.FireblocksImmunity)))
@@ -13334,7 +13359,7 @@ namespace giantsummon
                 bool LeftFail = false, RightFail = false;
                 byte EscapeDirection = 0;
                 byte MaxAttempts = 16;
-                int TileCollisionWidth = CollisionWidth / 16 + 1;
+                int TileCollisionWidth = CollisionWidth * DivisionBy16 + 1;
                 while (EscapeDirection == 0 && MaxAttempts > 0)
                 {
                     for (byte Dir = 0; Dir < 2; Dir++)
@@ -13449,7 +13474,7 @@ namespace giantsummon
                     MayRocket = false;
                     JumpHeight = MaxJumpHeight;
                     Velocity.Y = -JumpSpeed * GravityDirection;
-                    FallStart = (int)(Position.Y / 16);
+                    FallStart = (int)(Position.Y * DivisionBy16);
                     if (GetCooldownValue(GuardianCooldownManager.CooldownType.SwimTime) < 10) AddCooldown(GuardianCooldownManager.CooldownType.SwimTime, 30);
                 }
                 else if (Velocity.Y != 0 && JumpHeight == 0 && ExtraJump < MaxJumpCount && !LastJump)
@@ -13458,7 +13483,7 @@ namespace giantsummon
                     MayRocket = false;
                     ExtraJump++;
                     Velocity.Y = -JumpSpeed * GravityDirection;
-                    FallStart = (int)(Position.Y / 16);
+                    FallStart = (int)(Position.Y * DivisionBy16);
                     if(CurrentJump > 0)
                         IgnoreMass = true;
                     switch (CurrentJump)
@@ -13568,7 +13593,7 @@ namespace giantsummon
                         Velocity.X = -4 * Direction;
                         WallSlideStyle = 0;
                     }
-                    FallStart = (int)(Position.Y / 16);
+                    FallStart = (int)(Position.Y * DivisionBy16);
                 }
                 else if (JumpHeight > 0)
                 {
@@ -14559,9 +14584,9 @@ namespace giantsummon
                 if (HasFlag(GuardianFlags.FeatherfallPotion))
                 {
                     if (MoveUp)
-                        FallSpeed /= 10;
+                        FallSpeed *= 0.1f; // Divided by 10
                     else
-                        FallSpeed /= 3;
+                        FallSpeed *= 0.333f; // Divided by 3
                     SetFallStart();
                     if ((MoveDown && GravityDirection == 1) || (MoveUp && GravityDirection == -1))
                     {
@@ -14631,7 +14656,9 @@ namespace giantsummon
 
         public void UpdateHorizontalMovement()
         {
-            bool UnallowDirectionChange = LockDirection || FreezeItemUseAnimation || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.LightVerticalSwing) || TurnLock > 0);
+            bool UnallowDirectionChange = LockDirection || FreezeItemUseAnimation || 
+                (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.AimingUse || ItemUseType == ItemUseTypes.HeavyVerticalSwing || 
+                ItemUseType == ItemUseTypes.LightVerticalSwing) || TurnLock > 0);
             float MaxSpeed = this.MaxSpeed;
             float Acceleration = this.Acceleration;
             float SlowDown = this.SlowDown;
@@ -14665,7 +14692,7 @@ namespace giantsummon
                 if ((!MoveLeft && !MoveRight) || (Velocity.X > 0 && MoveLeft) || (Velocity.X < 0 && MoveRight))
                 {
                     SpeedFactor = SlowDown;
-                    if(Velocity.X != 0) SetTurnLock();
+                    if(Velocity.X != 0 && TurnLock == 0) SetTurnLock();
                 }
                 if (Ducking)
                     SpeedFactor = 0;
@@ -14746,7 +14773,7 @@ namespace giantsummon
                     Velocity.Y = MathHelper.Clamp(Velocity.Y, -20f, 20);
                     if (Velocity.Y * GravityDirection < 0)
                     {
-                        FallStart = (int)Position.Y / 16;
+                        FallStart = (int)(Position.Y * DivisionBy16);
                     }
                 }
             }
@@ -14775,7 +14802,7 @@ namespace giantsummon
                 Velocity = Vector2.Zero;
             }
             float LastPositionX = this.Position.X;
-            int PositionX = (int)(this.Position.X / 16);
+            int PositionX = (int)(this.Position.X * DivisionBy16);
             bool Fall = DropFromPlatform;
             Point[] TouchingTile = UpdateTouchingTiles();
             Collision_Water(Collision_Lava());
@@ -14816,7 +14843,7 @@ namespace giantsummon
                     Vector2 CurVelocity = Velocity;
                     Velocity = Collision.WaterCollision(CollisionPosition, Velocity, CollisionWidth, CollisionHeight, Fall, false, true);
                     if (Velocity != CurVelocity)
-                        FallStart = (int)(Position.Y / 16);
+                        FallStart = (int)(Position.Y * DivisionBy16);
                 }
                 if (!HasFlag(GuardianFlags.IceSkating) && !FallProtection)
                     CheckForIceBreak();
@@ -14841,7 +14868,7 @@ namespace giantsummon
                 }
                 if (HasFlag(GuardianFlags.UnderwaterJellyfishGlow))
                 {
-                    Lighting.AddLight((int)CenterPosition.X / 16, (int)CenterPosition.Y / 16, 0.9f, 0.2f, 0.6f);
+                    Lighting.AddLight((int)(CenterPosition.X * DivisionBy16), (int)(CenterPosition.Y * DivisionBy16), 0.9f, 0.2f, 0.6f);
                 }
             }
             else
@@ -14868,7 +14895,7 @@ namespace giantsummon
             if (Velocity.Y == 0)
             {
                 AddSkillProgress(Math.Abs(Velocity.X * 0.25f), GuardianSkills.SkillTypes.Athletic);
-                int FallValue = (int)((Position.Y / 16) - FallStart) * GravityDirection;
+                int FallValue = (int)((Position.Y * DivisionBy16) - FallStart) * GravityDirection;
                 if (!FallProtection && FallValue >= FallHeightTolerance && !HasFlag(GuardianFlags.FallDamageImmunity))
                 {
                     FallValue -= FallHeightTolerance;
@@ -14884,14 +14911,14 @@ namespace giantsummon
                         }
                         else
                         {
-                            Main.player[OwnerPos].fallStart = (int)(Main.player[OwnerPos].Center.Y / 16) - FallValue;
+                            Main.player[OwnerPos].fallStart = (int)(Main.player[OwnerPos].Center.Y * DivisionBy16) - FallValue;
                             Main.player[OwnerPos].velocity.Y = FallVelocity;
                         }
                     }
                 }
                 ResetRocket();
                 WingFlightTime = WingMaxFlightTime;
-                FallStart = (int)(Position.Y / 16);
+                FallStart = (int)(Position.Y * DivisionBy16);
                 FallProtection = false;
             }
             else
@@ -14908,11 +14935,11 @@ namespace giantsummon
             WallSlideStyle = 0;
             if (CollisionX && !CollisionY && !SittingOnPlayerMount && !WalkMode && Velocity.Y >= 0)
             {
-                int SolidWallsY = CollisionHeight / 16;
-                int CheckX = (int)(Position.X + (Width * 0.5f + 1) * Direction) / 16;
+                int SolidWallsY = (int)(CollisionHeight * DivisionBy16);
+                int CheckX = (int)((Position.X + (Width * 0.5f + 1) * Direction) * DivisionBy16);
                 for (int y = -SolidWallsY; y < 0; y++)
                 {
-                    int CheckY = (int)(Position.Y) / 16 + y;
+                    int CheckY = (int)(Position.Y * DivisionBy16) + y;
                     if (Main.tile[CheckX, CheckY].active() && Main.tileSolid[Main.tile[CheckX, CheckY].type])
                     {
                         SolidWallsY++;
@@ -14965,8 +14992,8 @@ namespace giantsummon
             }
             if (Velocity.Y > VelocityToBreakIce)
             {
-                int sx = (int)((CollisionPosition.X + Velocity.X) / 16), ex = (int)((CollisionPosition.X + Velocity.X + CollisionWidth) / 16),
-                    py = (int)(Position.Y + 1) / 16;
+                int sx = (int)((CollisionPosition.X + Velocity.X) * DivisionBy16), ex = (int)((CollisionPosition.X + Velocity.X + CollisionWidth) * DivisionBy16),
+                    py = (int)(Position.Y * DivisionBy16);
                 for (int x = sx; x <= ex; x++)
                 {
                     for (int y = py; y <= py + 1; y++)
@@ -16129,15 +16156,15 @@ namespace giantsummon
 
         public void DoLightingColoring(ref Color c)
         {
-            int TileX = (int)CenterPosition.X / 16, TileY = (int)CenterPosition.Y / 16;
+            int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
             //int HeightMargin = (int)Height / 32;
             if (TileY * 16 < Main.screenPosition.Y)
             {
-                TileY = (int)(Main.screenPosition.Y) / 16;
+                TileY = (int)(Main.screenPosition.Y * DivisionBy16);
             }
             if (TileY * 16 > Main.screenHeight + Main.screenPosition.Y)
             {
-                TileY = (int)(Main.screenHeight + Main.screenPosition.Y) / 16;
+                TileY = (int)((Main.screenHeight + Main.screenPosition.Y) * DivisionBy16);
             }
             if (TileY < 0)
                 TileY = 0;
@@ -16247,15 +16274,15 @@ namespace giantsummon
             Color armorColor = Color.White;
             if (!IgnoreLighting)
             {
-                int TileX = (int)CenterPosition.X / 16, TileY = (int)CenterPosition.Y / 16;
+                int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
                 //int HeightMargin = (int)Height / 32;
                 if (TileY * 16 < Main.screenPosition.Y)
                 {
-                    TileY = (int)(Main.screenPosition.Y) / 16;
+                    TileY = (int)(Main.screenPosition.Y * DivisionBy16);
                 }
                 if (TileY * 16 > Main.screenHeight + Main.screenPosition.Y)
                 {
-                    TileY = (int)(Main.screenHeight + Main.screenPosition.Y) / 16;
+                    TileY = (int)((Main.screenHeight + Main.screenPosition.Y) * DivisionBy16);
                 }
                 if (TileY < 0)
                     TileY = 0;
@@ -17238,7 +17265,7 @@ namespace giantsummon
                         MyCenter.Y += ChainDirection.Y;
                         ChainDirection.X = PlayerCenter.X - MyCenter.X;
                         ChainDirection.Y = PlayerCenter.Y - MyCenter.Y;
-                        Color color = Lighting.GetColor((int)MyCenter.X / 16, (int)MyCenter.Y / 16);
+                        Color color = Lighting.GetColor((int)(MyCenter.X * DivisionBy16), (int)(MyCenter.Y * DivisionBy16));
                         GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.PreDrawEffect, Main.chainTexture, MyCenter - Main.screenPosition, null, color, Rotation, new Vector2(Main.chainTexture.Width, Main.chainTexture.Height) * 0.5f, 1f, SpriteEffects.None);
                         AddDrawData(dd, true);
                     }
@@ -17274,7 +17301,7 @@ namespace giantsummon
                         MyCenter.Y += ChainDirection.Y;
                         ChainDirection.X = WofCenter.X - MyCenter.X;
                         ChainDirection.Y = WofCenter.Y - MyCenter.Y;
-                        Color color = Lighting.GetColor((int)MyCenter.X / 16, (int)MyCenter.Y / 16);
+                        Color color = Lighting.GetColor((int)(MyCenter.X * DivisionBy16), (int)(MyCenter.Y * DivisionBy16));
                         GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.PreDrawEffect, Main.chain12Texture, MyCenter - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width, Main.chain12Texture.Height) * 0.5f, 1f, SpriteEffects.None);
                         AddDrawData(dd, false);
                     }
@@ -17320,7 +17347,7 @@ namespace giantsummon
                         if (!Item.noUseGraphic)
                         {
                             bool Inclined = Inclined45Degrees(Item);
-                            int TileX = (int)CenterPosition.X / 16, TileY = (int)CenterPosition.Y / 16;
+                            int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
                             Color c = Lighting.GetColor(TileX, TileY, Color.White);
                             if (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.LightVerticalSwing)
                             {
@@ -17391,7 +17418,7 @@ namespace giantsummon
             {
                 Item Item = Inventory[SelectedOffhand];
                 bool Inclined = Inclined45Degrees(Item);
-                int TileX = (int)CenterPosition.X / 16, TileY = (int)CenterPosition.Y / 16;
+                int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
                 Color c = Lighting.GetColor(TileX, TileY, Color.White);
                 Vector2 ItemOrigin = GetItemOrigin(Item);//giantsummon.GetGuardianItemData(Item.type).ItemOrigin;
                 float NewRotation = OffhandRotation;
@@ -17490,5 +17517,12 @@ namespace giantsummon
     {
         None,
         Jump
+    }
+
+    public enum DrawMoment: byte
+    {
+        DontDraw,
+        DrawAfterDrawingTiles,
+        DrawBeforeDrawingNpcs
     }
 }

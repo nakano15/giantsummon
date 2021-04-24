@@ -1,32 +1,15 @@
-﻿Companions will no longer continue using furnitures when they should be wandering or waiting.
-Fixed bug where companions were jumping when climbing stairs.
-A change were done to the "Shared Maximum Health and Mana?" setting:
-	Now It also affects companion town npcs when you're on singleplayer mode. They will have their max health based on current playable character max health.
-Companions without a house will no longer find the old man a good option of person to stay around during a night.
-Can now setup the companions main hand to be their right hand on their characteristics.
-Companions will now spawn at the same location as your character when you enter a world, with them following you.
-Added another method to find a sign required for Sardine's request.
-	Now It will check if the companion has a house logged. If there is, It will check an internal furniture id counter.
-Change Blue and Brutus left arm position when standing and walking.
-Mabel got a change to her left arm sprite when standing and walking.
-Your character will now be forced off their mount when knocked out.
-Changed Minerva's starter items:
-	Instead of Fruitcake Chakran and Bee Gun, she now begins with Pearlwood Sword and Amethyst Staff.
-Eater of Worlds and Brain of Cthulhu gem versions will now award less extra ore and reagent reward upon killing them and their minions.
-Fixed an issue where your buddies mode companion wasn't receiving health boost correctly.
-You can now have assist companions with you on Buddies Mode.
-	Only your buddy and your character will get bonus status from Buddies Mode.
-	You will need twice the friendship rank to unlock the extra companion allowance.
-	Your buddy will award twice friendship ranks.
-Added an appearing and disappearing effect for the companions.
-	Sadly you'll only hear It :/.
-Companions now have their own Birthday day.
-	Their birthday day is based on a virtual season and day system.
-	That actually makes It easier to setup their birthday, since It's only 4 seasons to pick, and 30 days each.
-	The mod still operates by 32 days a year, so there's a method behind this to translate the companion birthday to the mod year duration.
-Alex recruit npc will no longer crash when meeting a friendly face.
-	Alex will now correctly follow your character when speaking to you.
-	Neither he will try dropping your character on the floor.
-Improved companions target seeking.
-	That should make the game behave better when having several companions living in your world.
-Fixed a bug where companions you just met (and if asked, you allowed them to move in) wouldn't try moving to your world.
+﻿Fixed an stray pixel on Brutus Royal Guard skin.
+Added a penalty for having more than one companion following you on Buddies Mode.
+	That penalty reduces the bonus your character and your buddy will get, based on how many companions are following you.
+Fixed a bug where dismissing companions in certain moments would turn them into Rococos.
+Changed how the town npc companions will be drawn.
+	That will ease how the mod will draw them.
+Made the Rest AI not be cancellable.
+Blue's hat will no longer be shown when she's sleeping and sitting on a throne, when she's actually holding a bunny.
+Fixed an issue where the companion dialogues with only 1 option had a ugly background overlapping when the frame was transparent.
+Alexander will now have a dialogue for when he's using a bed.
+Companions will no longer be restless at home.
+Fixed an issue where health regeneration were still stacking at full health.
+	That caused fps issues when having a large number of companions in the same world.
+Companions are now able to move in to houses in the world they are into, when they are homeless, and you gave them permission to move in.
+Changed a number of divisions for multiplications, to ease memory processing.

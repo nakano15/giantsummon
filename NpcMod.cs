@@ -447,12 +447,8 @@ namespace giantsummon
 
         public override bool PreDraw(NPC npc, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
-            if (!WorldMod.HasDrawnTownCompanions)
-            {
-                WorldMod.HasDrawnTownCompanions = true;
-                TerraGuardian.CurrentDrawnOrderID = -2000;
-                WorldMod.DrawTownNpcCompanions();
-            }
+            TerraGuardian.CurrentDrawnOrderID = -2000;
+            WorldMod.DrawTownNpcCompanions(DrawMoment.DrawBeforeDrawingNpcs);
 
             if (npc.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
             {

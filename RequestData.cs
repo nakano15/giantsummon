@@ -588,7 +588,7 @@ namespace giantsummon
                 int RewardScore = (IsTalkQuest ? 500 : GetRequestBase(gd).RequestScore + 200);
                 if (Compatibility.NExperienceCompatibility.IsModActive)
                 {
-                    Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player.player, 3 + (float)RewardScore / 180, 0.1f);
+                    Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player.player, 3 + (float)RewardScore * (1f / 180), 0.1f);
                 }
                 if (IsTalkQuest)
                 {
@@ -1020,20 +1020,20 @@ namespace giantsummon
             }
             if (ShowDuration && !ForceShowObjective)
             {
-                int Seconds = Time / 60, Minutes = 0, Hours = 0, Days = 0;
+                int Seconds = GetDivisionBy60(Time), Minutes = 0, Hours = 0, Days = 0;
                 if (Seconds >= 60)
                 {
-                    Minutes += Seconds / 60;
+                    Minutes += GetDivisionBy60(Seconds);
                     Seconds -= Minutes * 60;
                 }
                 if (Minutes >= 60)
                 {
-                    Hours += Minutes / 60;
+                    Hours += GetDivisionBy60(Minutes);
                     Minutes -= Hours * 60;
                 }
                 if (Hours >= 24)
                 {
-                    Days += Hours / 24;
+                    Days += (int)(Hours * (1f / 24));
                     Hours -= Days * 24;
                 }
                 string T = "";
@@ -1062,6 +1062,12 @@ namespace giantsummon
                 QuestObjectives.Add("Duration: " + T + ".");
             }
             return QuestObjectives.ToArray();
+        }
+
+        private int GetDivisionBy60(int Value)
+        {
+            float DivisionBy60 = 1f / 60;
+            return (int)(Value * DivisionBy60);
         }
 
         public bool TrySpawningBoss(int PlayerID, int ID, int DifficultyBonus = 0)

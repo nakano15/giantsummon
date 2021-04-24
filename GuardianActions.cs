@@ -430,6 +430,7 @@ namespace giantsummon
                     case ActionIDs.GoSleep:
                         {
                             IgnoreCombat = true;
+                            Cancellable = false;
                             if (guardian.Downed || guardian.KnockedOut)
                             {
                                 MainMod.ScreenColorAlpha = 0;
