@@ -1,15 +1,1 @@
-﻿Fixed an stray pixel on Brutus Royal Guard skin.
-Added a penalty for having more than one companion following you on Buddies Mode.
-	That penalty reduces the bonus your character and your buddy will get, based on how many companions are following you.
-Fixed a bug where dismissing companions in certain moments would turn them into Rococos.
-Changed how the town npc companions will be drawn.
-	That will ease how the mod will draw them.
-Made the Rest AI not be cancellable.
-Blue's hat will no longer be shown when she's sleeping and sitting on a throne, when she's actually holding a bunny.
-Fixed an issue where the companion dialogues with only 1 option had a ugly background overlapping when the frame was transparent.
-Alexander will now have a dialogue for when he's using a bed.
-Companions will no longer be restless at home.
-Fixed an issue where health regeneration were still stacking at full health.
-	That caused fps issues when having a large number of companions in the same world.
-Companions are now able to move in to houses in the world they are into, when they are homeless, and you gave them permission to move in.
-Changed a number of divisions for multiplications, to ease memory processing.
+﻿Made Alex's shading lighter.
