@@ -1327,6 +1327,10 @@ namespace giantsummon
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Accessories.ProvocationBadge>());
             }
+            if (npc.type == Terraria.ID.NPCID.Plantera && Main.rand.Next(50) == 0)
+            {
+                Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Weapons.UprootedTree>());
+            }
             if (npc.type == Terraria.ID.NPCID.WallofFlesh)
                 MainMod.LastWof = false;
             bool SomeGuardianHurt = false, SomeGuardianNeedMana = false;

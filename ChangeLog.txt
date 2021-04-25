@@ -1,1 +1,5 @@
 ﻿Made Alex's shading lighter.
+Wooden Greathammer, Flamberge and Two Handed Sword are now faster.
+Added support to W1k Weapon Scaling.
+Changed how the greatsword weapons behaves, when companions are using them.
+	They will now look better.

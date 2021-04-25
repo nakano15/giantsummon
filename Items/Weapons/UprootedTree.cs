@@ -53,7 +53,7 @@ namespace giantsummon.Items.Weapons
 		{
 			// Add Onfire buff to the NPC for 1 second
 			// 60 frames = 1 second
-			target.AddBuff(BuffID.OnFire, 60);
+			//target.AddBuff(BuffID.OnFire, 60);
 		}
 
 		// Star Wrath/Starfury style weapon. Spawn projectiles from sky that aim towards mouse.

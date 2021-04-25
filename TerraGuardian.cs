@@ -11412,6 +11412,16 @@ namespace giantsummon
             }
         }
 
+        private float GetTwoHandedItemUsePercentage(float Animation)
+        {
+            float Result = Animation * 1.2f - 0.1f;
+            if (Result < 0)
+                Result = 0;
+            else if (Result > 1)
+                Result = 1;
+            return Result;
+        }
+
         public void ItemUseScript()
         {
             if (HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified))
@@ -11793,11 +11803,12 @@ namespace giantsummon
                     if (!PlayerControl)
                         FaceDirection(CenterPosition.X - AimDirection.X >= 0);
                     int Frame = 0;
-                    if (AnimationPercentage < 0.45f)
+                    float ThisAnimationPercentage = GetTwoHandedItemUsePercentage(AnimationPercentage);
+                    if (ThisAnimationPercentage < 0.45f)
                     {
                         Frame = Base.HeavySwingFrames[0];
                     }
-                    else if (AnimationPercentage < 0.65f)
+                    else if (ThisAnimationPercentage < 0.65f)
                     {
                         Frame = Base.HeavySwingFrames[1];
                     }
@@ -11815,7 +11826,7 @@ namespace giantsummon
                         HeldItemHand = HeldHand.Left;
                         GetLeftHandPosition(Frame, out ItemPositionX, out ItemPositionY);
                     }
-                    float RotationValue = (float)Math.Sin(AnimationPercentage * 1.35f) * (300 * AnimationPercentage);
+                    float RotationValue = (float)Math.Sin(ThisAnimationPercentage * 1.35f) * (300 * ThisAnimationPercentage);
                     ItemRotation = MathHelper.ToRadians(-158 + RotationValue);
                     if (InclinedWeapon)
                         ItemRotation -= MathHelper.ToRadians(-45);
@@ -14114,11 +14125,12 @@ namespace giantsummon
                 }
                 else if (ItemUseType == ItemUseTypes.HeavyVerticalSwing)
                 {
-                    if (AnimationPercentage < 0.45f)
+                    float ThisAnimationPercentage = GetTwoHandedItemUsePercentage(AnimationPercentage);
+                    if (ThisAnimationPercentage < 0.45f)
                     {
                         BodyAnimationFrame = Base.HeavySwingFrames[0];
                     }
-                    else if (AnimationPercentage < 0.65f)
+                    else if (ThisAnimationPercentage < 0.65f)
                     {
                         BodyAnimationFrame = Base.HeavySwingFrames[1];
                     }

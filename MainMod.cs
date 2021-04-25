@@ -29,6 +29,7 @@ namespace giantsummon
         public static int GuardianInventoryMenuSubTab = 0;
         public static bool CheckingQuestBrief = false;
         public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true;
+        public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
         public const string VoteLink = ""; //There is no contest
         public static bool HasPlayerAwareOfContestMonthChange = false;
@@ -37,7 +38,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 84, LastModVersion = 84;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -110,8 +111,6 @@ namespace giantsummon
         public static bool ToReviveIsGuardian = false, IsReviving = false;
         public static int ReviveTalkDelay = 0;
         public static int LastEventWave = 0;
-        public const string CustomCompanionCallString = "loadcompanions", CustomStarterCallString = "loadstarters";
-        public static bool TriedLoadingCustomGuardians = false;
         private static Dictionary<string, Group> CompanionGroups = new Dictionary<string, Group>();
         public static float TimeTranslated = 0;
         public static List<GuardianDrawMoment> DrawMoment = new List<GuardianDrawMoment>();
@@ -121,8 +120,41 @@ namespace giantsummon
         public static Vector2 PlayerSoulPosition = Vector2.Zero;
         public static bool SoulSaved = false;
         public static int LastChatTime = 0;
+        public const string CustomCompanionCallString = "loadcompanions", CustomStarterCallString = "loadstarters";
+        public static bool TriedLoadingCustomGuardians = false;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
+
+        public static void EnterSubworld(Compatibility.SubworldLibraryCompatibility.SubworldInfo subWorld)
+        {
+            if(SubworldLibrary == null)
+            {
+                Main.NewText("You don't have Subworld Library installed.", Color.Red);
+                return;
+            }
+            if(CurrentSubworld != null && CurrentSubworld.AnyActive())
+            {
+                Main.NewText("You're currently in a subworld.", Color.Red);
+                return;
+            }
+            CurrentSubworld = subWorld;
+            subWorld.Enter();
+        }
+
+        public static void ExitSubworld()
+        {
+            if (SubworldLibrary == null)
+            {
+                Main.NewText("You don't have Subworld Library installed.", Color.Red);
+                return;
+            }
+            if (CurrentSubworld != null && !CurrentSubworld.AnyActive())
+            {
+                Main.NewText("You're not in a subworld.", Color.Red);
+                return;
+            }
+            SubworldLibrary.Call(new object[] { "Exit" });
+        }
 
         public static Group AddNewGroup(string ID, string Name, float AgingSpeed, bool CustomSprite = true, bool RecognizeAsTerraGuardian = false)
         {
@@ -254,7 +286,7 @@ namespace giantsummon
                 }
             }
         }
-        
+
         public static void GetInitialCompanionsList()
         {
             InitialGuardians.Clear();
@@ -2614,6 +2646,7 @@ namespace giantsummon
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
             AddNewGroup(GuardianBase.TerraGuardianCaitSithGroupID, "Cait Sith Guardian", 1f / 0.272f, true, true);
             AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "G. Dog Guardian", 4.6667f, true, true);
+            GetInitialCompanionsList();
             CommonRequestsDB.PopulateCommonRequestsDB();
             try
             {
@@ -2647,6 +2680,48 @@ namespace giantsummon
             {
                 TerraClassesMod = null;
             }
+        }
+
+        public override void PostSetupContent()
+        {
+            W1kWeaponScalingSupportSetup();
+        }
+
+        private void W1kWeaponScalingSupportSetup()
+        {
+            Mod scaling = ModLoader.GetMod("WWeaponScaling");
+            if (scaling == null)
+                return;
+            /*WEAPON TIERS
+               1 = Wooden
+               2 = Iron
+               3 = Gold
+               4 = Evil
+               5 = Jungle
+               6 = Dungeon
+               7 = Molten
+               8 = Adamantite
+               9 = Hallowed
+               10 = Chlorophyte
+               11 = Post-Plantera
+               12 = Post-Golem
+               13 = Lunar
+               14 = Moon Lord*/
+            scaling.Call(ModContent.ItemType<Items.Weapons.WoodenGreathammer>(), 1, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.WoodenCrossbow>(), 1, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.UprootedTree>(), 11, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.TheStinger>(), 5, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.ScreamingSalamander>(), 7, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.RottenBoomer>(), 4, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.ReallyHeavyChaingun>(), 12, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.MeatMasher>(), 4, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.MahoganyCompositeBow>(), 1, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.JungleStar>(), 5, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.FleshCarver>(), 4, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.Flamberge>(), 7, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.DaylightBane>(), 4, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.ChlorophyteCrescentAxe>(), 10, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.BladeOfLight>(), 9, 1f);
         }
 
         public static string[] GetItemInfo(Item i, TerraGuardian guardian)

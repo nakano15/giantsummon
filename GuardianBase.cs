@@ -1017,7 +1017,6 @@ namespace giantsummon
                 GuardianBaseContainer gbc = new GuardianBaseContainer(modid);
                 GuardianList.Add(modid, gbc);
             }
-            GuardianList[modid].GetGuardian(ID);
             return GuardianList[modid].GetGuardian(ID);
         }
 

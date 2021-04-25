@@ -478,7 +478,29 @@ namespace giantsummon.Creatures
                     Actions.Add(action);
                 }
             }
+            if(MainMod.ShowDebugInfo)
+                Actions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Test Subworld", SubworldTestScript));
             return Actions;
+        }
+
+        public void SubworldTestScript(TerraGuardian tg)
+        {
+            if (MainMod.SubworldLibrary == null)
+            {
+                GuardianMouseOverAndDialogueInterface.SetDialogue("*I can't take you to that world.*");
+            }
+            else
+            {
+                Maps.TestMap map = new Maps.TestMap();
+                if (map.Register())
+                {
+                    map.Enter();
+                }
+                else
+                {
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("*Something went wrong.*");
+                }
+            }
         }
 
         public override string GetSpecialMessage(string MessageID)
