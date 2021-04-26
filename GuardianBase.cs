@@ -95,6 +95,7 @@ namespace giantsummon
         public int[] SittingItemUseFrames = null;
         public int SittingFrame = 0, ChairSittingFrame = -1, ThroneSittingFrame = -1, BedSleepingFrame = -1, ReviveFrame = -1, DownedFrame = -1, PetrifiedFrame = -1;
         public int PlayerMountedArmAnimation = -1;
+        public int BackwardStanding = -1, BackwardRevive = -1;
         public Dictionary<int, int> BodyFrontFrameSwap = new Dictionary<int, int>(), RightArmFrontFrameSwap = new Dictionary<int,int>();
         public float HeavySwingFrameTime = 1f, WalkAnimationFrameTime = 0f;
         public float MaxWalkSpeedTime { get { return WalkAnimationFrameTime * WalkingFrames.Length; } }

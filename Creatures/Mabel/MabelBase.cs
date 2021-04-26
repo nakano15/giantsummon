@@ -73,6 +73,9 @@ namespace giantsummon.Creatures
             ReviveFrame = 23;
             DownedFrame = 24;
 
+            BackwardStanding = 25;
+            BackwardRevive = 26;
+
             //Mounted Position
             MountShoulderPoints.DefaultCoordinate2x = new Point(19, 14);
             MountShoulderPoints.AddFramePoint2x(17, 19, 20);

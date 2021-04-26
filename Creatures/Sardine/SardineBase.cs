@@ -74,6 +74,9 @@ namespace giantsummon.Creatures
             ReviveFrame = 22;
             PetrifiedFrame = 23;
 
+            BackwardStanding = 24;
+            BackwardRevive = 25;
+
             SleepingOffset.X = -2;
 
             SpecificBodyFrontFramePositions = true;

@@ -63,6 +63,9 @@ namespace giantsummon.Creatures
             ReviveFrame = 18;
             //PetrifiedFrame = 23;
 
+            BackwardStanding = 20;
+            BackwardRevive = 21;
+
             SittingPoint2x = new Microsoft.Xna.Framework.Point(17, 21);
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(14, 0);

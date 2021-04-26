@@ -138,6 +138,7 @@ namespace giantsummon
                 Allowance = MainMod.MaxExtraGuardianFollowers;
             return Allowance;
         }
+        public int MyDrawOrderID = 0;
 
         public void FriendshipLevelNotification()
         {
@@ -2652,7 +2653,9 @@ namespace giantsummon
         {
             Back = new List<Terraria.DataStructures.DrawData>();
             Front = new List<Terraria.DataStructures.DrawData>();
-            TerraGuardian.CurrentDrawnOrderID = 0 + player.whoAmI * 100;
+            TerraGuardian.CurrentDrawnOrderID = player.whoAmI * 100;
+            byte Counter = 0;
+            MyDrawOrderID = TerraGuardian.CurrentDrawnOrderID;
             foreach (TerraGuardian g in GetAllGuardianFollowers)
             {
                 if (!g.Active || !g.InCameraRange() || (g.UsingFurniture && !g.PlayerMounted))
@@ -2660,15 +2663,17 @@ namespace giantsummon
                 List<Terraria.DataStructures.DrawData> TrailData = g.GetTrailsDataAsDrawData();
                 g.DrawDataCreation();
                 int BackStack = 0, FurnitureStack = 0;
-                if (g.PlayerControl)
+                if (g.PlayerControl || (KnockedOut && Counter > 0 && g.Base.BackwardRevive > -1))
                 {
                     Front.InsertRange(0, TerraGuardian.GetDrawFrontData);
                     Front.InsertRange(0, TerraGuardian.GetDrawBehindData);
+                    g.MyDrawOrder += 20;
                 }
                 else if (g.KnockedOut)
                 {
                     Back.InsertRange(0, TerraGuardian.GetDrawFrontData);
                     Back.InsertRange(0, TerraGuardian.GetDrawBehindData);
+                    g.MyDrawOrder -= 20;
                 }
                 else if (g.PlayerMounted || g.SittingOnPlayerMount)
                 {
@@ -2698,7 +2703,9 @@ namespace giantsummon
                     }
                 }
                 Back.InsertRange(0, TrailData);
+                Counter++;
             }
+            MyDrawOrderID += (int)(Counter * 0.5f);
         }
 
         public override void ModifyDrawLayers(List<PlayerLayer> layers)

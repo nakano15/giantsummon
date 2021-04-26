@@ -87,6 +87,9 @@ namespace giantsummon.Creatures
             ReviveFrame = 33;
             PetrifiedFrame = 34;
 
+            BackwardStanding = 35;
+            BackwardRevive = 37;
+
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(24, 0);
             //BodyFrontFrameSwap.Add(26, 0);
@@ -929,7 +932,11 @@ namespace giantsummon.Creatures
             bool HasBunnyInInventory = BlueBase.HasBunnyInInventory(guardian);
             if (HasBunnyInInventory && guardian.BodyAnimationFrame != DownedFrame)
             {
-                if (guardian.BodyAnimationFrame != DuckingFrame && guardian.BodyAnimationFrame != ThroneSittingFrame && guardian.BodyAnimationFrame != BedSleepingFrame)
+                if(guardian.BodyAnimationFrame == BackwardStanding)
+                {
+                    guardian.LeftArmAnimationFrame = guardian.RightArmAnimationFrame = guardian.BodyAnimationFrame = 36;
+                }
+                else if (guardian.BodyAnimationFrame != DuckingFrame && guardian.BodyAnimationFrame != ThroneSittingFrame && guardian.BodyAnimationFrame != BedSleepingFrame)
                 {
                     const int BunnyHoldingFrame = 29;
                     if (guardian.BodyAnimationFrame == StandingFrame)

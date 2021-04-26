@@ -77,6 +77,9 @@ namespace giantsummon.Creatures
             DownedFrame = 29;
             PetrifiedFrame = 30;
 
+            BackwardStanding = 32;
+            BackwardRevive = 33;
+
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(14, 0);
 

@@ -75,6 +75,9 @@ namespace giantsummon.Creatures
             ReviveFrame = 20;
             DownedFrame = 21;
 
+            BackwardStanding = 25;
+            BackwardRevive = 26;
+
             SittingPoint = new Point(14 * 2, 23 * 2);
 
             SpecificBodyFrontFramePositions = true;

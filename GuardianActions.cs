@@ -2290,8 +2290,10 @@ namespace giantsummon
                         int TargetWidth = 0, TargetHeight = 0;
                         bool IsPlayer = Players.Count > 0;
                         bool IsMounted = false;
+                        int TargetLayer = 0;
                         if (Players.Count > 0)
                         {
+                            TargetLayer = Players[0].GetModPlayer<PlayerMod>().MyDrawOrderID;
                             TargetPosition = Players[0].position;
                             TargetWidth = Players[0].width;
                             TargetHeight = Players[0].height;
@@ -2300,6 +2302,7 @@ namespace giantsummon
                         }
                         if (Guardians.Count > 0)
                         {
+                            TargetLayer = Guardians[0].MyDrawOrder;
                             TargetPosition = Guardians[0].TopLeftPosition;
                             TargetWidth = Guardians[0].Width;
                             TargetHeight = Guardians[0].Height;
@@ -2322,7 +2325,11 @@ namespace giantsummon
                                     }
                                     else
                                     {
-                                        if (guardian.Base.ReviveFrame > -1)
+                                        if(TargetLayer < guardian.MyDrawOrder && guardian.Base.BackwardRevive > -1)
+                                        {
+                                            Animation = guardian.Base.BackwardRevive;
+                                        }
+                                        else if (guardian.Base.ReviveFrame > -1)
                                         {
                                             Animation = guardian.Base.ReviveFrame;
                                         }

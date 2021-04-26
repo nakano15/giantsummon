@@ -43,64 +43,6 @@ namespace giantsummon.Creatures
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.LesserHealingPotion, 10));
 
             //Animation Frames
-            StandingFrame = 0;
-            WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-            JumpFrame = 9;
-            ItemUseFrames = new int[] { 10, 11, 12, 13 };
-            SittingFrame = 14;
-            ChairSittingFrame = 14;
-            DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 15 });
-            ThroneSittingFrame = 16;
-            BedSleepingFrame = 18;
-            DownedFrame = 15;
-            ReviveFrame = 17;
-
-            SittingPoint2x = new Microsoft.Xna.Framework.Point(15, 24);
-
-            RightArmFrontFrameSwap.Add(0, 0);
-            RightArmFrontFrameSwap.Add(1, 0);
-            RightArmFrontFrameSwap.Add(2, 1);
-            RightArmFrontFrameSwap.Add(3, 2);
-            RightArmFrontFrameSwap.Add(4, 2);
-            RightArmFrontFrameSwap.Add(5, 1);
-            RightArmFrontFrameSwap.Add(6, 0);
-            RightArmFrontFrameSwap.Add(7, 0);
-            RightArmFrontFrameSwap.Add(8, 0);
-            //RightArmFrontFrameSwap.Add(9, 0);
-            //RightArmFrontFrameSwap.Add(10, 0);
-
-            SpecificBodyFrontFramePositions = true;
-            BodyFrontFrameSwap.Add(14, 0);
-            BodyFrontFrameSwap.Add(16, 1);
-            BodyFrontFrameSwap.Add(22, 2);
-            BodyFrontFrameSwap.Add(23, 3);
-
-            //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 10, 3);
-            LeftHandPoints.AddFramePoint2x(11, 22, 9);
-            LeftHandPoints.AddFramePoint2x(12, 23, 17);
-            LeftHandPoints.AddFramePoint2x(13, 22, 20);
-
-            LeftHandPoints.AddFramePoint2x(17, 24, 26);
-
-            //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 15, 3);
-            RightHandPoints.AddFramePoint2x(11, 25, 9);
-            RightHandPoints.AddFramePoint2x(12, 26, 17);
-            RightHandPoints.AddFramePoint2x(13, 23, 20);
-
-            RightHandPoints.AddFramePoint2x(17, 26, 26);
-
-            //Headgear
-            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 11);
-            HeadVanityPosition.AddFramePoint2x(14, 16, 9);
-            HeadVanityPosition.AddFramePoint2x(17, 23, 18);
-            HeadVanityPosition.AddFramePoint2x(22, 16, 9);
-            HeadVanityPosition.AddFramePoint2x(25, 23, 18);
-
-            HeadVanityPosition.AddFramePoint2x(23, -1000, -1000);
-            HeadVanityPosition.AddFramePoint2x(24, -1000, -1000);
-            HeadVanityPosition.AddFramePoint2x(26, -1000, -1000);
 
             GetRequests();
         }

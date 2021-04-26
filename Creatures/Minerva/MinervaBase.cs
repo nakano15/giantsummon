@@ -69,6 +69,9 @@ namespace giantsummon.Creatures
             DownedFrame = 19;
             //PetrifiedFrame = 28;
 
+            BackwardStanding = 28;
+            BackwardRevive = 29;
+
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.PearlwoodSword, 1));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.AmethystStaff, 1));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.BottledHoney, 5));

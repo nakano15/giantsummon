@@ -70,6 +70,9 @@ namespace giantsummon.Creatures
             DownedFrame = 18;
             //PetrifiedFrame = 28;
 
+            BackwardStanding = 20;
+            BackwardRevive = 22;
+
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(11, 0);
 
@@ -458,6 +461,17 @@ namespace giantsummon.Creatures
                 else if (guardian.OffsetY <= -2)
                 {
                     Frame = 1;
+                }
+            }
+            if (Frame == BackwardStanding)
+            {
+                if (guardian.OffsetY >= 2)
+                {
+                    Frame = BackwardStanding + 2;
+                }
+                else if (guardian.OffsetY <= -2)
+                {
+                    Frame = BackwardStanding + 1;
                 }
             }
             if (guardian.Velocity.Y != 0 && Frame == JumpFrame)

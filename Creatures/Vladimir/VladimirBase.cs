@@ -77,6 +77,9 @@ namespace giantsummon.Creatures
             DownedFrame = 26;
             ReviveFrame = 27;
 
+            BackwardStanding = 28;
+            BackwardRevive = 30;
+
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(20, 0);
             BodyFrontFrameSwap.Add(21, 1);
@@ -241,6 +244,8 @@ namespace giantsummon.Creatures
                             Frame = 12;
                         }
                     }
+                    else if (AnimationID == 28)
+                        Frame = 29;
                 }
             }
         }

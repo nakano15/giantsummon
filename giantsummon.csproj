@@ -162,6 +162,7 @@
     <Compile Include="Items\Misc\Note.cs" />
     <Compile Include="Items\Shields\LifeShield.cs" />
     <Compile Include="Items\Shields\DiamondShield.cs" />
+    <Compile Include="Maps\TestMap.cs" />
     <Compile Include="ModGuardianData.cs" />
     <Compile Include="ModTargetting.cs" />
     <Compile Include="NameIDHelper.cs" />
