@@ -685,7 +685,7 @@ namespace giantsummon.Creatures
             switch (MessageID)
             {
                 case MessageIDs.RescueMessage:
-                    return "I'm glad you called, It was fun trying to carry ou here.";
+                    return "I'm glad you called, It was fun trying to carry you here.";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:
                     switch (Main.rand.Next(3))
                     {

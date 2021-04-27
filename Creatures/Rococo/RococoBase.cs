@@ -165,7 +165,7 @@ namespace giantsummon.Creatures
         {
             Random RococoRNG = new Random();
             int PlayerVictories = 0, RococoVictories = 0;
-            Dialogue.ShowDialogue("*[name] says that would like playing Rock Paper and Scissors with you.*");
+            Dialogue.ShowDialogue("*[name] says that accepts playing Rock Paper and Scissors with you.*");
             RestartGame:
             byte PlayerChoice = (byte)Dialogue.ShowDialogueWithOptions("*[name] tells you to be ready.*", new string[] { "Rock", "Paper", "Scissor" });
             Dialogue.ShowDialogueTimed("Rock, Paper, Scissor!!!", null, 60);

@@ -49,6 +49,7 @@ namespace giantsummon.Creatures
             IsNocturnal = true;
             SetTerraGuardian();
             CallUnlockLevel = 5;
+            MountUnlockLevel = 7;
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;

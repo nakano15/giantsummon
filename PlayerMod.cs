@@ -984,9 +984,18 @@ namespace giantsummon
                 if (player.whoAmI == Main.myPlayer)
                 {
                     bool HasDPSDebuff = player.onFire || player.poisoned || player.suffocating;
-                    if (MainMod.StartRescueCountdownWhenKnockedOutCold || HasDPSDebuff || !GetAllGuardianFollowers.Any(x => x.Active && !x.KnockedOutCold && !x.Downed) || player.controlHook)
+                    bool HasCompanionAlive = false;
+                    foreach (TerraGuardian tg in GetAllGuardianFollowers)
                     {
-                        if (ReviveBoost == 0 || player.controlHook || HasDPSDebuff)
+                        if (tg.Active && !tg.KnockedOut && !tg.Downed)
+                        {
+                            HasCompanionAlive = true;
+                            break;
+                        }
+                    }
+                    if ((!MainMod.StartRescueCountdownWhenKnockedOutCold || !HasCompanionAlive) || player.controlHook)
+                    {
+                        if ((MainMod.StartRescueCountdownWhenKnockedOutCold && ReviveBoost == 0) || player.controlHook)
                             RescueTime++;
                         else if (RescueTime > 0)
                             RescueTime--;
@@ -1062,7 +1071,7 @@ namespace giantsummon
                                     }
                                 }
                                 //player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
-                                player.statLife = 1;
+                                player.statLife = 0;
                                 //player.lifeRegen = 100;
                                 //Send to some guardian house and then move It in.
                                 //If the above isn't possible, send to spawn, and place some guardian nearby.

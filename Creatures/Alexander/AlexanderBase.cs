@@ -599,27 +599,27 @@ namespace giantsummon.Creatures
                         Sleuthing = true;
                         guardian.LookingLeft = (Target.Position.X < guardian.Position.X);
                         float LastSleuthPercent = SleuthPercent;
-                        float FillSpeed = guardian.IsUsingBed ? 0.05f : 0.2f;
+                        float FillSpeed = guardian.IsUsingBed ? 0.07f : 0.2f;
                         SleuthPercent += Main.rand.NextFloat() * FillSpeed;
                         if (SleuthPercent >= 100)
                         {
                             AlexanderData data = (AlexanderData)guardian.Data;
                             data.AddIdentifiedGuardian(Target.MyID);
                             InUse = false;
-                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressFinished, "*Okay, so that's how you work.*"));
+                            guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressFinished, "*Okay, so that's how you work.*"), guardian));
                             guardian.UpdateStatus = true;
                         }
                         else if (SleuthPercent >= 70 && LastSleuthPercent < 70)
                         {
-                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressNearlyDone, "*Hm... Interesting...*"));
+                            guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Target.GetMessage(MessageIDs.AlexanderSleuthingProgressNearlyDone, "*Hm... Interesting...*"), guardian));
                         }
                         else if (SleuthPercent >= 35 && LastSleuthPercent < 35)
                         {
-                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingProgress, "*Uh huh...*"));
+                            guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Target.GetMessage(MessageIDs.AlexanderSleuthingProgress, "*Uh huh...*"), guardian));
                         }
                         else if (SleuthPercent > 0 && LastSleuthPercent <= 0)
                         {
-                            guardian.SaySomething(Target.GetMessage(MessageIDs.AlexanderSleuthingStart, "*Let's see how you work...*"));
+                            guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Target.GetMessage(MessageIDs.AlexanderSleuthingStart, "*Let's see how you work...*"), guardian));
                         }
                     }
                 }

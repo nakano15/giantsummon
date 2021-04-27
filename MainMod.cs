@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Terraria.Graphics;
 
 namespace giantsummon
 {
@@ -985,7 +986,7 @@ namespace giantsummon
             float BarSize = (float)Main.player[Main.myPlayer].statLife / Main.player[Main.myPlayer].statLifeMax2;
             if (playerMod.RescueTime > 0)
                 BarSize = 0f;
-            if (Main.player[Main.myPlayer].statLife == 1)
+            if (Main.player[Main.myPlayer].statLife < 1)
                 BarSize = 0f;
             if (BarSize > 1f)
                 BarSize = 1f;
@@ -1090,14 +1091,10 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    if(g.ID == 19)
+                    /*if(g.ID == 19)
                     {
                         Creatures.BunnyReaperGuardianBase.ReaperGuardianData data = (Creatures.BunnyReaperGuardianBase.ReaperGuardianData)g.Data;
                         New.Add("Soul count: " + data.ActiveSouls.Count + "  Souls Caught: " + data.SoulsLoaded);
-                        /*foreach (Creatures.BunnyReaperGuardianBase.ReaperGuardianData.FallenSoul s in data.ActiveSouls)
-                        {
-                            New.Add(" " + s.Position + " v=" + s.Velocity);
-                        }*/
                     }
                     if(g.ID == GuardianBase.Alexander)
                     {
@@ -1107,7 +1104,7 @@ namespace giantsummon
                         {
                             New.Add(identified.ID + ":" + identified.ModID);
                         }
-                    }
+                    }*/
                     //New.Add("Selected Item: " + g.SelectedItem);
                     //New.Add("Action Pressed: " + g.Action);
                 }

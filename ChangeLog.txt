@@ -3,3 +3,12 @@ Wooden Greathammer, Flamberge and Two Handed Sword are now faster.
 Added support to W1k Weapon Scaling.
 Changed how the greatsword weapons behaves, when companions are using them.
 	They will now look better.
+Brutus no longer crashes the game upon accepting to do the steel test.
+Brutus also gained a sprite change.
+Alexander's sleuthing is now faster, when he's analyzing someone who's sleeping.
+Stronger Gem monsters will now be easier to appear, depending on group's summed health increasing items under effect.
+	That's also valid if you set the option to share max health items with your companions.
+Companions can now look at the background when idling.
+	They will look at the background when there's either no wall, or there's transparent walls on their head position.
+Companions gained an animation frame for when they're reviving someone who's drawn behind them.
+Malisha's mount unlock level is now 7.

@@ -7124,6 +7124,25 @@ namespace giantsummon
                             break;
                         case IdleActions.Wait:
                             {
+                                if(Base.BackwardStanding > -1 && Main.rand.NextDouble() < 0.3f)
+                                {
+                                    bool HasWindowOrOpenPlace = false;
+                                    int StartX = (int)(Position.X * DivisionBy16), StartY = (int)((Position.Y - Height) * DivisionBy16);
+                                    for(int x = -1; x < 0; x++)
+                                    {
+                                        Tile tile = Framing.GetTileSafely(StartX + x, StartY);
+                                        if(tile != null && !tile.active() && (tile.wall == 0 || Terraria.ID.WallID.Sets.Transparent[tile.wall]))
+                                        {
+                                            HasWindowOrOpenPlace = true;
+                                            break;
+                                        }
+                                    }
+                                    if (HasWindowOrOpenPlace)
+                                    {
+                                        ChangeIdleAction(IdleActions.LookingAtTheBackground, 200 + Main.rand.Next(200));
+                                        break;
+                                    }
+                                }
                                 if (Main.rand.Next(3) == 0)
                                 {
                                     ChangeIdleAction(IdleActions.UseNearbyFurniture, 1200 + Main.rand.Next(1600));
@@ -13970,7 +13989,14 @@ namespace giantsummon
                 }
                 else
                 {
-                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
+                    if (CurrentIdleAction == IdleActions.LookingAtTheBackground)
+                    {
+                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.BackwardStanding;
+                    }
+                    else
+                    {
+                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
+                    }
                     AnimationTime++;
                 }
             }
@@ -16532,7 +16558,12 @@ namespace giantsummon
                 if (IsLoaded)
                 {
                     float HelmetScale = Scale;
-                    Vector2 HelmetPosition = Base.HeadVanityPosition.GetPositionFromFrameVector(BodyAnimationFrame);
+                    int Frame = BodyAnimationFrame;
+                    if (Frame == Base.BackwardStanding)
+                        Frame = Base.StandingFrame;
+                    if (Frame == Base.BackwardRevive)
+                        Frame = Base.ReviveFrame;
+                    Vector2 HelmetPosition = Base.HeadVanityPosition.GetPositionFromFrameVector(Frame);
                     bool Hide = HelmetPosition.X == HelmetPosition.Y && HelmetPosition.X <= -1000;
                     if (!Hide)
                     {
@@ -17507,7 +17538,8 @@ namespace giantsummon
             UseNearbyFurniture,
             UseNearbyFurnitureHome,
             TryGoingSleep,
-            GoHome
+            GoHome,
+            LookingAtTheBackground
         }
     }
 

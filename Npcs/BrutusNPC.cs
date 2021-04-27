@@ -378,7 +378,7 @@ namespace giantsummon.Npcs
         public void PlayScene(byte Scene)
         {
             this.Scene = Scene;
-            this.SceneTime = 0;
+            SceneTime = 0;
         }
 
         public void StartDamageTest()
@@ -393,7 +393,7 @@ namespace giantsummon.Npcs
             npc.friendly = false;
             npc.dontTakeDamage = false;
             SayMessage("*Show me what you are made of.*");
-            Terraria.Main.CloseNPCChatOrSign();
+            //Main.CloseNPCChatOrSign();
             Idle = false;
             IdleBehaviorTime = 0;
             IdleBehaviorType = 0;
@@ -461,7 +461,11 @@ namespace giantsummon.Npcs
 
         public override void SetChatButtons(ref string button, ref string button2)
         {
-            if (HasBrutusRecruited)
+            if(SteelTestingTime > 0)
+            {
+
+            }
+            else if (HasBrutusRecruited)
             {
                 button = "That's great.";
             }
