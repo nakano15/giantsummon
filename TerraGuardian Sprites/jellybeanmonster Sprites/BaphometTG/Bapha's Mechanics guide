@@ -6,10 +6,13 @@ CF- Crimson Flame
 HF-Hell Flame
 HP-Hell Portal
 
-Combat:
-Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below.
+Basics:
+Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
--When embered Bapha's health regeneration rate increases 
+-When embered Bapha's health regeneration rate increases as well as healing for knocked down players and other terra gaurdian entities.
+-Takes 2x increased damage when wet or submerged in water.(Rain included)
+
+Combat:
 
 Attacks-
 >Hell Splitter- Fire formed blade that slashes twice in one attack dealing 25 base damage each and applies "On Fire" debuff/ "Cursed Inferno" debuff depending if bapha is embered or not.
@@ -23,3 +26,9 @@ Attacks-
 >Crimson Flame- Crimson fire ball that does 40 base damage and causes enemies to gain the "Cursed Inferno" Debuff when getting hit.
 -CF can only be used when Bapha is in ES.
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
+
+>Hell Portal- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
+-HP can be attained by the player doing a quest for bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
+-HP can only be used if Bapha is in embered form
+-In order for bapha to use HP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player
+
