@@ -26,8 +26,8 @@ Basics:
 Combat:
 
 Attacks-
->Hell Splitter(Melee)(Default-Blazing Edge/ Embered-Crimson Edge)- Fire formed blade that slashes twice in one attack dealing 25 base damage each and applies "On Fire" debuff/ "Cursed Inferno" debuff depending if bapha is embered or not.
--HS scales with current weapon equiped dealing 1.5x damage of what the weapon wouldve originally did.
+>Hell Splitter(Melee)(Default-Blazing Edge/ ES-Crimson Edge)- Fire formed blade that slashes twice in one attack dealing 25(50 when in ES) base damage each and applies "On Fire" debuff("Cursed Inferno" debuff if in ES) 
+-HS scales with current weapon equiped dealing 1.2x(1.5x in ES) damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player(Its damage makes up for the inability to raise attack speed)
 -HS's properties change when Bapha is embered, HS gains extra attack range and its attacks apply "Cursed Inferno" debuff 
 -Has knockback value of 4
