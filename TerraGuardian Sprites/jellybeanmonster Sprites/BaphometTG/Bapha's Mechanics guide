@@ -21,6 +21,7 @@ HP= 6000
 MP- 200
 Defense- 30
 KB Resist- 100%
+-Can Fly
 
 Basics:
 >Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
@@ -46,15 +47,17 @@ Attacks-
 >Hell Flame(Ranged)- Fire ball that does 20 base damage by itself with no weapon equiped.
 -15 Mana cost
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
+-Medium Velocity
 -Has knockback value of 3
 
 >Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Cursed Inferno" Debuff when getting hit.
 -30 Mana Cost
 -CF can only be used when Bapha is in ES.
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
+-Very High Velocity
 -Has Knockback value of 6
 
->Hell Portal()- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
+>Hell Portal- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
 - 100 Mana cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in embered form
