@@ -4,14 +4,15 @@ HS-Hell Splitter
 ES-Embered State
 CF- Crimson Flame
 HF-Hell Flame
-HP-Hell Portal
+HeP-Hell Portal
 
 Bapha- Overlord of Hell.
+Guardian Slots taken- 3
 
 Basics:
 >Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
--When embered Bapha's health regeneration rate increases as well as healing for knocked down players and other terra gaurdian entities.
+-When embered Bapha's health regeneration rate increases as well as healing for knocked out players and other terra gaurdian entities.
 -Bapha takes 2x increased damage when wet or submerged in water.(Rain included)
 -When baphas health reaches 0 on surface he is sent back to hell threw a portal, if the player or other Terra guardians dont initiate healing within the next 10 seconds the portal will close and Bapha will respawn back in 10 seconds from the portal closing.
 -If Bapha is recruited and his health reaches 0 while in underworld, instead of being sent threw a portal he reforms back into pentagram orb and is healed to full health immediately after 5 seconds.
@@ -37,9 +38,10 @@ Attacks-
 -Has Knockback value of 6
 
 >Hell Portal()- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
--HP can be attained by the player doing a quest for bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
--HP can only be used if Bapha is in embered form
--In order for bapha to use HP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
+- HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
+- HeP can only be used if Bapha is in embered form
+- In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
+- 1:30 second cooldown upon use
 
 Recruit Conditions-
 1.Player Must have defeated Wall of Flesh boss
