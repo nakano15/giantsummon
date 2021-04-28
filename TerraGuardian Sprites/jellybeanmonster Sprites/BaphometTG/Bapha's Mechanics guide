@@ -8,11 +8,12 @@ HP-Hell Portal
 
 Combat:
 Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below.
--Bapha is unaeffected by all fire debuffs and does not take damage from lava or fire blocks.
+-Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
+-When embered Bapha's health regeneration rate increases 
 
 Attacks-
->Hell Splitter- Fire formed blade that slashes twice in one attack dealing 25 base damage and applies "On Fire" debuff/ "Cursed Inferno" debuff depending if bapha is embered or not.
--HS scales with current weapon equiped dealing 1.2x damage of what the weapon wouldve originally did.
+>Hell Splitter- Fire formed blade that slashes twice in one attack dealing 25 base damage each and applies "On Fire" debuff/ "Cursed Inferno" debuff depending if bapha is embered or not.
+-HS scales with current weapon equiped dealing 1.5x damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player(Its damage makes up for the inability to raise attack speed)
 -HS properties change when embered, changing vfx of HS and causing HS to apply cursed inferno when attacking enemies.
 
