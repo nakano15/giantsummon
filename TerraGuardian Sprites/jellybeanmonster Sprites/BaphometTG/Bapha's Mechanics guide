@@ -9,30 +9,34 @@ HP-Hell Portal
 Bapha- Overlord of Hell.
 
 Basics:
-Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
+>Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
 -When embered Bapha's health regeneration rate increases as well as healing for knocked down players and other terra gaurdian entities.
 -Bapha takes 2x increased damage when wet or submerged in water.(Rain included)
 -When baphas health reaches 0 on surface he is sent back to hell threw a portal, if the player or other Terra guardians dont initiate healing within the next 10 seconds the portal will close and Bapha will respawn back in 10 seconds from the portal closing.
 -If Bapha is recruited and his health reaches 0 while in underworld, instead of being sent threw a portal he reforms back into pentagram orb and is healed to full health immediately after 5 seconds.
 -All underworld enemies are non-hostile to Bapha
+-Bapha naturally has featherfall buff
 
 Combat:
 
 Attacks-
->Hell Splitter- Fire formed blade that slashes twice in one attack dealing 25 base damage each and applies "On Fire" debuff/ "Cursed Inferno" debuff depending if bapha is embered or not.
+>Hell Splitter(Melee)- Fire formed blade that slashes twice in one attack dealing 25 base damage each and applies "On Fire" debuff/ "Cursed Inferno" debuff depending if bapha is embered or not.
 -HS scales with current weapon equiped dealing 1.5x damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player(Its damage makes up for the inability to raise attack speed)
 -HS properties change when embered, changing vfx of HS and causing HS to apply cursed inferno when attacking enemies.
+-Has knockback value of 4
 
->Hell Flame- Fire ball that does 20 base damage by itself with no weapon equiped.
+>Hell Flame(Ranged)- Fire ball that does 20 base damage by itself with no weapon equiped.
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
+-Has knockback value of 3
 
->Crimson Flame- Crimson fire ball that does 40 base damage and causes enemies to gain the "Cursed Inferno" Debuff when getting hit.
+>Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Cursed Inferno" Debuff when getting hit.
 -CF can only be used when Bapha is in ES.
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
+-Has Knockback value of 6
 
->Hell Portal- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
+>Hell Portal()- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
 -HP can be attained by the player doing a quest for bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 -HP can only be used if Bapha is in embered form
 -In order for bapha to use HP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
