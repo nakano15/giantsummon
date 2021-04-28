@@ -5,6 +5,9 @@ GP=Gemstone Power
 Psv=Passive
 TG= terra guardian
 
+Captain Smelly- Space Pirate Captain
+Guardians Slots taken- 4
+
 Weapons:
 
 >Plasma Falchion-Starting weapon that can get added effects upon using a gemstone on it
@@ -62,7 +65,7 @@ tiers>
 5- Tier 4 phantom device + platinum watch + Lightning Boots
 
 Super moves:
-Phantasm Blitz(20 mana cost per use)- A super quick dash attack that has a 1.5x multiplier added to whatever her current weapon damage is and grants intangibility to Smelly during attack
+Phantasm Blitz(20 mana cost per use)- A super quick dash attack that has a 1.2x multiplier added to whatever her current weapon damage is and grants intangibility to Smelly during attack
 -Can be used 1 time per 10 seconds(7 on tier 5 of phantom device)
 -Can be used multiple times in quick succession upon upgrading phantom device
 Condition for when it is supposed to be used:
