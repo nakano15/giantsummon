@@ -9,6 +9,10 @@ HeP-Hell Portal
 Bapha- Overlord of Hell.
 Guardian Slots taken- 3
 
+Defualt Stats:
+HP- 200
+MP- 100
+
 Basics:
 >Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
@@ -29,15 +33,18 @@ Attacks-
 -Has knockback value of 4
 
 >Hell Flame(Ranged)- Fire ball that does 20 base damage by itself with no weapon equiped.
+-15 Mana cost
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
 -Has knockback value of 3
 
 >Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Cursed Inferno" Debuff when getting hit.
+-30 Mana Cost
 -CF can only be used when Bapha is in ES.
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
 -Has Knockback value of 6
 
 >Hell Portal()- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
+- 100 Mana cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in embered form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
