@@ -8,6 +8,10 @@ TG= terra guardian
 Captain Smelly- Space Pirate Captain
 Guardians Slots taken- 4
 
+Defualt Stats:
+Hp- 120
+Mp- 20
+
 Weapons:
 
 >Plasma Falchion-Starting weapon that can get added effects upon using a gemstone on it
@@ -22,7 +26,7 @@ Gemstone Tiers-
 Applies to all tiers>
 PF gains a new abilty depending on gemstone and is able to use ability during Hswing attack (50 mana cost)
 Gain 1.5x damage multiplier on PF upon adding a gemstone
-All gp's scale off of weapon currently equiped they also receive the 1.5x damage multiplier
+All gp's scale off of weapon currently equiped they also receive the 1.2x damage multiplier
 >Mystic Amethyst
 Psv- applies Shadowflame debuff
 Gp(Projectile)- Blade Wave that loses power the further it travels, travels fast, and bypasses blocks
