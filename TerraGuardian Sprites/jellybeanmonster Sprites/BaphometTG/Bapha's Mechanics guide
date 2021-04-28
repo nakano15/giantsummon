@@ -11,6 +11,8 @@ Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
 -When embered Bapha's health regeneration rate increases as well as healing for knocked down players and other terra gaurdian entities.
 -Takes 2x increased damage when wet or submerged in water.(Rain included)
+-When baphas health reaches 0 he is sent back to hell threw a portal, if the player or other Terra guardians dont initiate healing within the next 10 seconds the portal will close and Bapha will respawn back in 10 seconds from the portal closing.
+-If Bapha is recruited and his health reaches 0 while in underworld, instead of being sent threw a portal he reforms back into pentagram orb and is healed to full health immediately after 5 seconds.
 
 Combat:
 
@@ -30,5 +32,12 @@ Attacks-
 >Hell Portal- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
 -HP can be attained by the player doing a quest for bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 -HP can only be used if Bapha is in embered form
--In order for bapha to use HP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player
+-In order for bapha to use HP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
+
+Recruit Conditions-
+1.Player Must have defeated Wall of Flesh boss
+2. Player must interact with pentagram star orb,that spawns after wall of flesh is defeated, in order to have a dialogue which starts a boss fight with Bapha
+3. Baphas health must reach 0 in order for him to be defeated and for the player to be able to interact wit him
+4. Player must accept Baphas condtions for recruitment in order to have him on team
+-if player is defeated by Bapha, Bapha opens a portal nearby players respawn point that can transport players straight to Bapha's location in order to resume boss fight
 
