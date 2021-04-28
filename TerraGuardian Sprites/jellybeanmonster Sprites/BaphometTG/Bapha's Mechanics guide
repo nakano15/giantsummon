@@ -15,6 +15,7 @@ Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit
 -Takes 2x increased damage when wet or submerged in water.(Rain included)
 -When baphas health reaches 0 he is sent back to hell threw a portal, if the player or other Terra guardians dont initiate healing within the next 10 seconds the portal will close and Bapha will respawn back in 10 seconds from the portal closing.
 -If Bapha is recruited and his health reaches 0 while in underworld, instead of being sent threw a portal he reforms back into pentagram orb and is healed to full health immediately after 5 seconds.
+-All underworld enemies are non-hostile to bapha
 
 Combat:
 
