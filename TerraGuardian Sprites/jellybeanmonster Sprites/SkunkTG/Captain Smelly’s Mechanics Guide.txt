@@ -10,7 +10,7 @@ Guardians Slots taken- 4
 
 Defualt Stats:
 Hp- 120
-Mp- 20
+Mp- 40
 
 Weapons:
 
@@ -19,14 +19,15 @@ Weapons:
 -Scales off of weapon in 1st inventory slot of TG
 
 >Arm Blaster-Simple ranged weapon that requires 1 mana per shot
--Starting damage- 5(+1 damage per freinship level of tg)
+-Starting damage- 5
 -is rapid fire
+-Knockback value- 3
 
 Gemstone Tiers-
 Applies to all tiers>
 PF gains a new abilty depending on gemstone and is able to use ability during Hswing attack (50 mana cost)
-Gain 1.5x damage multiplier on PF upon adding a gemstone
-All gp's scale off of weapon currently equiped they also receive the 1.2x damage multiplier
+Gain 1.2x damage multiplier on PF upon adding a gemstone
+All gp's scale off of weapon currently equiped.
 >Mystic Amethyst
 Psv- applies Shadowflame debuff
 Gp(Projectile)- Blade Wave that loses power the further it travels, travels fast, and bypasses blocks
@@ -45,7 +46,7 @@ Gp(Cast on self)-Sends out whiplike wave that drains enemies of their hp and hea
 
 >Critical Emerald
 Psv-Gives 50% crit chance
-Gp(Projectile)-Slow moving Tornado that has high crit chance and hits 20 times for 20 damage per tick
+Gp(Projectile)-Slow moving Tornado that has high crit chance and hits 20 times for 50% of total current weapon damage per hit
 
 >Shining Diamond
 Psv- Has a 35% to cause dazed debuff to eneimes hit by PF
@@ -69,8 +70,9 @@ tiers>
 5- Tier 4 phantom device + platinum watch + Lightning Boots
 
 Super moves:
-Phantasm Blitz(20 mana cost per use)- A super quick dash attack that has a 1.2x multiplier added to whatever her current weapon damage is and grants intangibility to Smelly during attack
--Can be used 1 time per 10 seconds(7 on tier 5 of phantom device)
+Phantasm Blitz(20 mana cost per use)- A super quick dash attack that has a 1.2x multiplier added to whatever her current weapon damage is and grants intangibility to
+Smelly during attack
+-Can be used 1 time per 10 seconds(7 seconds on tier 5 of phantom device)
 -Can be used multiple times in quick succession upon upgrading phantom device
 Condition for when it is supposed to be used:
-Smelly uses PB as soon as she encounters a enemy that is 7 blocks far and it goes on cooldown. When off cooldown it is immediately casted again.
+Smelly uses PB as soon as she encounters a enemy that is atleast 7 blocks far. When off cooldown it is immediately casted again.
