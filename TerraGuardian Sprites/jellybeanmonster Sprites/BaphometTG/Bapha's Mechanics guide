@@ -5,6 +5,9 @@ ES-Embered State
 CF- Crimson Flame
 HF-Hell Flame
 HeP-Hell Portal
+HP- Hit Points
+MP- Mana Points
+KB- Knock Back
 
 Bapha- Overlord of Hell.
 Guardian Slots taken- 3
@@ -13,9 +16,16 @@ Defualt Stats:
 HP- 200
 MP- 50
 
+Boss Fight Stats:
+HP= 6000
+MP- 200
+Defense- 30
+KB Resist- 100%
+
 Basics:
 >Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
->Demonic Presence(Passive)- Bapha attracts hell creatures to periodically spawn close to where bapha is.
+>Demonic Presence(Passive)- Bapha attracts hell creatures to periodically spawn close to where bapha is.(10% Chance)
+>Crimson ignite(Passive)- While in embered form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does 2% max health bonus damage to the target.
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
 -When embered Bapha's health regeneration rate increases as well as healing for knocked out players and other terra gaurdian entities.
 -Bapha takes 5x increased damage when wet or submerged in water additionally can not get into Embered State.(Rain included)
