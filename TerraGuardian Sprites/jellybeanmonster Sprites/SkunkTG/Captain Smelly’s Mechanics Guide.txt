@@ -12,6 +12,9 @@ Defualt Stats:
 Hp- 120
 Mp- 40
 
+Basics:
+-Smelly Naturally has featherfall buff
+
 Weapons:
 
 >Plasma Falchion-Starting weapon that can get added effects upon using a gemstone on it
