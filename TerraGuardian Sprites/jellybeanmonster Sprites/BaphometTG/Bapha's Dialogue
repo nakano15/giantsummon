@@ -1,1 +1,14 @@
 Dialogue:
+
+Conditions:
+
+Before Boss Fight(Pentagram Orb NPC):
+"The orb is surging with immense power... Do you wish to release the Demon inside?" (Yes or no response)
+WARNING! a Boss fight will insue upon opening the orb it is recommended the challenger be well equipped for a intense battle.
+
+After defeating Bapha:
+1-"I have been imprisoned for several millennia. Your combat ability is phenomenal. There are very few that can compete with my overwhelming power but you will go down as one who matched the overlord of Hell."
+2-"Though you have defeated me in battle you cannot kill me as i am immortal. Your skills are remarkable you could make a great servant."
+3-"How about we form a allaince for the time being? We would be unstoppable as allies dont you say?"
+4-Yes answer- "Yes indeed!, with you by my side the surface will be at the mercy of our power!"
+5-No Answer- "Although you refuse a great offer of mine i respect your decision as a competent challenger. Whenever you wish to form a alliance i will be here."
