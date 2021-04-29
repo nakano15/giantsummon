@@ -10,7 +10,8 @@ namespace giantsummon
         public List<GuardianSpecialAttackFrame> SpecialAttackFrames = new List<GuardianSpecialAttackFrame>();
         public SubAttackCombatType combatType = SubAttackCombatType.Melee;
         public bool CanMove = true;
-        public float MinRange = 300, MaxRange = 400;
+        public float MinRange = 10, MaxRange = 400;
+        public int Cooldown = 0;
         public int ManaCost = 0;
         public Action<TerraGuardian, int> WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID) { };
         public Action<TerraGuardian, int, int> WhenFrameUpdatesScript = delegate (TerraGuardian tg, int FrameID, int FrameTime) { },
@@ -28,6 +29,11 @@ namespace giantsummon
         public GuardianSpecialAttack(SubAttackCombatType subAttackCombatType = SubAttackCombatType.Melee)
         {
             this.combatType = subAttackCombatType;
+        }
+
+        public void SetCooldown(int s, int m = 0, int h = 0)
+        {
+            Cooldown = s * 60 + m * 3600 + h * (3600 * 3600);
         }
 
         public enum SubAttackCombatType

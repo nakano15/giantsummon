@@ -88,14 +88,14 @@ namespace giantsummon.Creatures
             RightArmFrontFrameSwap.Add(46, 12);
             RightArmFrontFrameSwap.Add(47, 12);
             RightArmFrontFrameSwap.Add(48, 12);
-            RightArmFrontFrameSwap.Add(49, 12);
-            RightArmFrontFrameSwap.Add(50, 13);
-            RightArmFrontFrameSwap.Add(51, 14);
-            RightArmFrontFrameSwap.Add(52, 15);
-            RightArmFrontFrameSwap.Add(53, 15);
-            RightArmFrontFrameSwap.Add(54, 15);
+            RightArmFrontFrameSwap.Add(49, 13);
+            RightArmFrontFrameSwap.Add(50, 14);
+            RightArmFrontFrameSwap.Add(51, 15);
+            RightArmFrontFrameSwap.Add(52, 16);
+            RightArmFrontFrameSwap.Add(53, 17);
+            RightArmFrontFrameSwap.Add(54, 17);
             RightArmFrontFrameSwap.Add(55, 15);
-            RightArmFrontFrameSwap.Add(56, 15);
+            RightArmFrontFrameSwap.Add(56, 16);
             //
             RightArmFrontFrameSwap.Add(57, 1);
             RightArmFrontFrameSwap.Add(58, 1);
@@ -105,16 +105,16 @@ namespace giantsummon.Creatures
             RightArmFrontFrameSwap.Add(61, 3);
             RightArmFrontFrameSwap.Add(62, 3);
             //
-            RightArmFrontFrameSwap.Add(63, 16);
-            RightArmFrontFrameSwap.Add(64, 16);
-            RightArmFrontFrameSwap.Add(65, 16);
-            RightArmFrontFrameSwap.Add(66, 16);
-            RightArmFrontFrameSwap.Add(67, 17);
-            RightArmFrontFrameSwap.Add(68, 17);
-            RightArmFrontFrameSwap.Add(69, 17);
-            RightArmFrontFrameSwap.Add(70, 17);
-            RightArmFrontFrameSwap.Add(71, 17);
-            RightArmFrontFrameSwap.Add(72, 17);
+            RightArmFrontFrameSwap.Add(63, 20);
+            RightArmFrontFrameSwap.Add(64, 20);
+            RightArmFrontFrameSwap.Add(65, 20);
+            RightArmFrontFrameSwap.Add(66, 20);
+            RightArmFrontFrameSwap.Add(67, 21);
+            RightArmFrontFrameSwap.Add(68, 21);
+            RightArmFrontFrameSwap.Add(69, 21);
+            RightArmFrontFrameSwap.Add(70, 21);
+            RightArmFrontFrameSwap.Add(71, 21);
+            RightArmFrontFrameSwap.Add(72, 21);
 
             //Left Arm
             LeftHandPoints.AddFramePoint2x(57, 46, 44);
@@ -145,16 +145,69 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(DiamondGPTextureID, "DiamondGP");
         }
 
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> NewOptions = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            NewOptions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Weapon Infusion", delegate (TerraGuardian tg)
+            {
+                GuardianMouseOverAndDialogueInterface.Options.Clear();
+                GuardianMouseOverAndDialogueInterface.SetDialogue("What should I infuse my weapon with?");
+                for(byte i = 0; i < NumberOfSwords; i++)
+                {
+                    byte InfusionID = i;
+                    string Mes = "";
+                    switch (i)
+                    {
+                        case 0:
+                            Mes = "Remove Infusion";
+                            break;
+                        case 1:
+                            Mes = "Infuse with Amethyst";
+                            break;
+                        case 2:
+                            Mes = "Infuse with Topaz";
+                            break;
+                        case 3:
+                            Mes = "Infuse with Sapphire";
+                            break;
+                        case 4:
+                            Mes = "Infuse with Emerald";
+                            break;
+                        case 5:
+                            Mes = "Infuse with Ruby";
+                            break;
+                        case 6:
+                            Mes = "Infuse with Diamond";
+                            break;
+                    }
+                    GuardianMouseOverAndDialogueInterface.AddOption(Mes, delegate (TerraGuardian tg2)
+                    {
+                        CaptainSmellyData data = (CaptainSmellyData)tg2.Data;
+                        data.HoldingWeaponTime = 150;
+                        data.SwordID = InfusionID;
+                        GuardianMouseOverAndDialogueInterface.SetDialogue("Done. What else?");
+                        GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
+                    });
+                }
+                GuardianMouseOverAndDialogueInterface.AddOption("Nevermind", delegate (TerraGuardian tg2)
+                {
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("Thanks for wasting my time.");
+                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
+                });
+            }));
+            return NewOptions;
+        }
+
         private int GetCalculatedSwordDamage(TerraGuardian tg)
         {
-            int Damage = 15 + tg.FriendshipLevel;
+            int Damage = 15;
             if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].melee)
             {
                 Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useTime / 60));
             }
             CaptainSmellyData data = (CaptainSmellyData)tg.Data;
             if (data.SwordID > 0)
-                Damage *= 2;
+                Damage = (int)(Damage * 1.2f);
             switch (data.SwordID)
             {
                 case AmethystFalchion:
@@ -309,11 +362,14 @@ namespace giantsummon.Creatures
         public void GPSetup()
         {
             GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //GP
+            //special.SetCooldown(15);
+            special.MinRange = 0;
+            special.MaxRange = 62;
             special.CalculateAttackDamage = delegate (TerraGuardian tg)
             {
-                return (int)(GetCalculatedSwordDamage(tg) * 1.2f);
+                return (int)(GetCalculatedSwordDamage(tg));
             };
-            const int AnimationTime = 4;
+            const int AnimationTime = 6;
             special.CanMove = false;
             for (int i = 46; i < 56; i++)
             {
@@ -484,7 +540,7 @@ namespace giantsummon.Creatures
                         break;
                     case DiamondFalchion:
                         {
-                            int FlashFrame = (int)(((Frame - 4) * AnimationTime + Time) * (1f / AnimationTime));
+                            int FlashFrame = (int)(((Frame - 4) * AnimationTime + Time) * (1f / AnimationTime) * 0.5f);
                             if(FlashFrame >= 0 && FlashFrame < 8)
                             {
                                 Texture2D texture = sprites.GetExtraTexture(DiamondGPTextureID);
@@ -569,9 +625,9 @@ namespace giantsummon.Creatures
                 //for (int i = 0; i < 4; i++)
                 //    Dust.NewDust(ProjectilePosition, 4, 4, Terraria.ID.DustID.Fire);
                 AimPosition.Normalize();
-                int Damage = 5 + tg.FriendshipLevel;
-                //if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].ranged)
-                //    Damage = Damage + tg.Inventory[tg.SelectedItem].damage;
+                int Damage = 5;
+                if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].ranged)
+                    Damage = Damage + (int)(tg.Inventory[tg.SelectedItem].damage * 0.35f);
                 Damage = (int)(Damage * tg.RangedDamageMultiplier);
                 int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 14f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
                     Damage, 0.03f, tg.GetSomeoneToSpawnProjectileFor);
@@ -607,11 +663,65 @@ namespace giantsummon.Creatures
             };
         }
 
-        public override int GuardianSubAttackChoiceAI(TerraGuardian Owner, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight)
+        public override int GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight,
+            ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
             int ID = 0;
-            if (Owner.MP > 1 && Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) > 100)
+            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) - (TargetWidth + Owner.Width) * 0.5f,
+                DistanceYUpper = TargetPosition.Y - Owner.Position.Y,
+                DistanceYLower = TargetPosition.Y + TargetHeight - Owner.Position.Y;
+            bool InRangeForBlaster = Owner.MP > 1 && Distance > 100;
+            DefaultBehavior = false;
+            switch (tactic)
+            {
+                case CombatTactic.Charge:
+                    if (Distance > 52)
+                    {
+                        Approach = true;
+                        Retreat = false;
+                    }
+                    else if(Distance < 16)
+                    {
+                        Approach = false;
+                        Retreat = true;
+                    }
+                    break;
+                case CombatTactic.Assist:
+                    if (InRangeForBlaster)
+                    {
+                        if (Distance > 52)
+                        {
+                            Retreat = true;
+                            Approach = false;
+                        }
+                    }
+                    else
+                    {
+                        Approach = true;
+                        Retreat = false;
+                    }
+                    break;
+                case CombatTactic.Snipe:
+                    if(Distance < 280)
+                    {
+                        Retreat = true;
+                        Approach = false;
+                    }
+                    else if (Distance > 320)
+                    {
+                        Retreat = false;
+                        Approach = true;
+                    }
+                    break;
+            }
+            if (Distance < 62 && DistanceYLower >= -98 && DistanceYUpper < 18 && !Owner.SubAttackInCooldown(1))
+            {
+                ID = 1;
+            }
+            else if (!(Distance < 52 && DistanceYLower >= -90 && DistanceYUpper < 4))
+            {
                 ID = 2;
+            }
             return ID;
         }
 

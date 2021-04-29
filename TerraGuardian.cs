@@ -379,6 +379,7 @@ namespace giantsummon
         private byte _SubAttack = 0;
         public int SubAttackID { get { return _SubAttack - 1; } }
         public int SubAttackTime = 0, SubAttackFrame = 0, SubAttackDamage = 0;
+        private Dictionary<byte, int> SubAttackCooldown = new Dictionary<byte, int>();
         public float SubAttackSpeed = 1f;
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
@@ -5106,7 +5107,9 @@ namespace giantsummon
                     {
                         if (Base.SpecialAttackList.Count == 0)
                             return;
-                        int SubAttackPicked = Base.GuardianSubAttackChoiceAI(this, TargetPosition, TargetVelocity, TargetWidth, TargetHeight);
+                        bool ExecuteBehavior;
+                        int SubAttackPicked = Base.GuardianSubAttackBehaviorAI(this, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight,
+                            ref Approach, ref Retreat, ref Jump, ref MoveDown, out ExecuteBehavior);
                         GuardianSpecialAttack gsa = Base.SpecialAttackList[SubAttackPicked];
                         SelectedItem = -1;
                         int LastHighestDamage = 0;
@@ -5137,18 +5140,26 @@ namespace giantsummon
                                     break;
                             }
                         }
-                        float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Position.X + Velocity.X);
+                        float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Position.X + Velocity.X) - Width * 0.5f;
                         if (Distance < gsa.MinRange + TargetWidth * 0.5f)
                         {
-                            Retreat = true;
+                            if(ExecuteBehavior) Retreat = true;
                         }
                         else if (Distance >= gsa.MaxRange + TargetWidth * 0.5f)
                         {
-                            Approach = true;
+                            if (ExecuteBehavior) Approach = true;
                         }
                         else if (!SubAttackInUse)
                         {
                             UseSubAttack(SubAttackPicked);
+                            if (SubAttackInUse)
+                            {
+                                if (TargetPosition.X + TargetWidth * 0.5f > Position.X)
+                                    LookingLeft = false;
+                                else
+                                    LookingLeft = true;
+                                LockDirection = true;
+                            }
                         }
                         Action = false;
                         GoMelee = false;
@@ -7027,7 +7038,7 @@ namespace giantsummon
                                     {
                                         if (Main.rand.NextDouble() < 0.333f)
                                         {
-                                            ChangeIdleAction(IdleActions.UseNearbyFurniture, 400 + Main.rand.Next(200));
+                                            ChangeIdleAction(IdleActions.UseNearbyFurniture, 400 + Main.rand.Next(800));
                                         }
                                         else
                                         {
@@ -7069,7 +7080,7 @@ namespace giantsummon
                                 else if (IdleActionTime <= 0)
                                 {
                                     if (Main.rand.NextDouble() < 0.6f)
-                                        ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 400 + Main.rand.Next(200));
+                                        ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 800 + Main.rand.Next(600));
                                     else if (Main.rand.NextDouble() < 0.4f)
                                     {
                                         ChangeIdleAction(IdleActions.WanderHome, 100 + Main.rand.Next(200));
@@ -13714,7 +13725,7 @@ namespace giantsummon
             SubAttackSpeed = 1f;
             GuardianSpecialAttack gsa = Base.SpecialAttackList[ID];
             int ManaCost = (int)(gsa.ManaCost * this.ManaCostMult);
-            if(!UseMana(ManaCost))
+            if(SubAttackCooldown.ContainsKey(_SubAttack) || !UseMana(ManaCost))
             {
                 _SubAttack = 0;
                 return;
@@ -13725,10 +13736,25 @@ namespace giantsummon
             //Main.NewText("Using Sub Attack " + ID);
         }
 
+        public bool SubAttackInCooldown(byte ID)
+        {
+            return SubAttackCooldown.ContainsKey((byte)(ID + 1));
+        }
+
         public void UpdateSubAttack()
         {
+            byte[] CooldownKeys = SubAttackCooldown.Keys.ToArray();
+            foreach(byte k in CooldownKeys)
+            {
+                SubAttackCooldown[k]--;
+                if(SubAttackCooldown[k] <= 0)
+                {
+                    SubAttackCooldown.Remove(k);
+                }
+            }
             if (!SubAttackInUse)
                 return;
+            LockDirection = true;
             int LastAttackTime = SubAttackTime - 1;
             if(SubAttackTime == 0 && SubAttackID >= Base.SpecialAttackList.Count)
             {
@@ -13766,6 +13792,10 @@ namespace giantsummon
             SubAttackFrame = CurrentFrame;
             if (SubAttackTime >= StackCounter)
             {
+                if(subattack.Cooldown > 0)
+                {
+                    SubAttackCooldown.Add(_SubAttack, subattack.Cooldown);
+                }
                 _SubAttack = 0;
                 NpcHit.Clear();
                 PlayerHit.Clear();

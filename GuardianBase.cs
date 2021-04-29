@@ -1318,8 +1318,10 @@ namespace giantsummon
             });
         }
 
-        public virtual int GuardianSubAttackChoiceAI(TerraGuardian Owner, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight)
+        public virtual int GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight,
+            ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
+            DefaultBehavior = true;
             return 0;
         }
 

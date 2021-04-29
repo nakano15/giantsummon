@@ -52,7 +52,8 @@ namespace giantsummon.Projectiles
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, new Rectangle(0, 0, 96, 96), Color.White, 0f,
+            Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos, new Rectangle(0, 0, 58, 54), Color.White, 0f,
                 new Vector2(48, 48), projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return false;
         }
