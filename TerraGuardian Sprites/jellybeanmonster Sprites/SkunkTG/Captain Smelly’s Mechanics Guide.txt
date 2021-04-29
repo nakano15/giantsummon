@@ -6,6 +6,7 @@ Psv=Passive
 TG= terra guardian
 
 Captain Smelly- Space Pirate Captain
+Age- 32
 Guardians Slots taken- 4
 
 Defualt Stats:
