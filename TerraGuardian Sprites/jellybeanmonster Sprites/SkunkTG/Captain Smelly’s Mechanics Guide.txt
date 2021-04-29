@@ -24,6 +24,7 @@ Weapons:
 
 >Arm Blaster-Simple ranged weapon that requires 1 mana per shot
 -Starting damage- 5
+-Scales with 35% of equiped weapons total damage
 -is rapid fire
 -Knockback value- 3
 
