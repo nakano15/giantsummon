@@ -888,26 +888,6 @@ namespace giantsummon
             return "*[name] says to not worry, you'll be well soon.*";
         }
 
-        public virtual void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)
-        {
-
-        }
-
-        public virtual void GuardianActionUpdateAnimation(TerraGuardian guardian, GuardianActions action, ref bool UsingLeftArm, ref bool UsingRightArm)
-        {
-
-        }
-
-        /// <summary>
-        /// Called after an action specific to this companion is being drawn.
-        /// </summary>
-        /// <param name="guardian">The guardian that called the action.</param>
-        /// <param name="action">The action being executed</param>
-        public virtual void GuardianActionDraw(TerraGuardian guardian, GuardianActions action)
-        {
-
-        }
-
         /// <summary>
         /// This method allows you to change the animation frame the companion will play, depending on the conditions you make.
         /// Depending on how the animation of your companion works, check which Body Part the script has been called for, before changing Frame.

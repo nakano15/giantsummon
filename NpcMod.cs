@@ -330,23 +330,24 @@ namespace giantsummon
             LatestMobType = MobTypes.Normal;
             if (GuardianCount > 1 || HasTitan)
             {
-                if (HighestLevelMobType < MobTypes.Epic && SpawnDifficulty >= TotalHealthBoost * 4 && SpawnChanceBooster * 0.01f >= Main.rand.NextDouble() * (32)) // && Main.rand.Next(3600) < SpawnDifficulty - TotalHealthBoost * 5)
+                float Chance = Main.rand.NextFloat();
+                if (HighestLevelMobType < MobTypes.Epic && SpawnDifficulty >= TotalHealthBoost * 2.5f && SpawnChanceBooster * (1f / 1024f) >= Chance) // && Main.rand.Next(3600) < SpawnDifficulty - TotalHealthBoost * 5)
                 {
                     LatestMobType = MobTypes.Epic;
                 }
-                else if (HighestLevelMobType < MobTypes.Legendary && SpawnDifficulty >= TotalHealthBoost * 3 && SpawnChanceBooster * 0.125f >= Main.rand.NextDouble() * (18))
+                else if (HighestLevelMobType < MobTypes.Legendary && SpawnDifficulty >= TotalHealthBoost * 2 && SpawnChanceBooster * (1f / 256) >= Chance)
                 {
                     LatestMobType = MobTypes.Legendary;
                 }
-                else if (HighestLevelMobType < MobTypes.Champion && SpawnDifficulty >= TotalHealthBoost * 2 && SpawnChanceBooster * 0.25f >= Main.rand.NextDouble() * (12))
+                else if (HighestLevelMobType < MobTypes.Champion && SpawnDifficulty >= TotalHealthBoost * 1.5f && SpawnChanceBooster * (1f / 32) >= Chance)
                 {
                     LatestMobType = MobTypes.Champion;
                 }
-                else if (SpawnDifficulty >= TotalHealthBoost && SpawnChanceBooster * 0.5f >= Main.rand.NextDouble() * 4)
+                else if (SpawnDifficulty >= TotalHealthBoost && SpawnChanceBooster * (1f / 16) >= Chance)
                 {
                     LatestMobType = MobTypes.Elite;
                 }
-                else if (SpawnDifficulty >= MaxLifeCrystalBoost * 0.3f && SpawnChanceBooster >= Main.rand.NextDouble() * 2)
+                else if (SpawnDifficulty >= MaxLifeCrystalBoost * 0.3f && SpawnChanceBooster * (1f / 4) >= Chance)
                 {
                     LatestMobType = MobTypes.Veteran;
                 }

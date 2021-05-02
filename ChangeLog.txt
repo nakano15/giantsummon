@@ -12,3 +12,13 @@ Companions can now look at the background when idling.
 	They will look at the background when there's either no wall, or there's transparent walls on their head position.
 Companions gained an animation frame for when they're reviving someone who's drawn behind them.
 Malisha's mount unlock level is now 7.
+Revamped how the bounty exp reward is given, for NExperience Mod players:
+	It no longer increases the reward level for every 250 points of value on your loot. (That's like the same as 2 silver and 50 copper coins)
+	Now gives reward based on 10000 points of value of your loot. (Like 1 gold coin)
+	Pre-Hardmode exp reward level was increased from 5 to 10, and Hardmode exp reward was increased from 15 to 25.
+		That reward must be treated like as if the exp given is a percentage, but depending on your game mode, It will receive a reduction on exp reward level.
+Companion Actions are now split from their action and base info scripts.
+	Now each action, either global for all companions, or specific for the companion, has their own class and script file.
+	That allows creating variables specific for the action, and also removes lists each action contained, for possible variable values one could need for the action to happen.
+Changed how the gem monsters spawning works.
+	That may make gem monster spawning more interesting.

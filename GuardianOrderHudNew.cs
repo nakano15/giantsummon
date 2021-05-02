@@ -362,7 +362,7 @@ namespace giantsummon
                         {
                             if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
                             {
-                                if (GuardianActions.TeleportWithPlayerCommand(guardians[g]))
+                                if (GuardianActions.TeleportWithPlayerCommand(guardians[g], player.player))
                                     break;
                             }
                         }

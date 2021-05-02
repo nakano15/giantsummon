@@ -200,7 +200,7 @@ namespace giantsummon.Creatures
                 {
                     if (guardian.OwnerPos == -1 || guardian.HasPlayerAFK)
                     {
-                        guardian.StartNewGuardianAction(FullMoonBehaviorID);
+                        guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksFullMoonBehavior(), FullMoonBehaviorID);
                     }
                 }
             }
@@ -627,14 +627,14 @@ namespace giantsummon.Creatures
                     Player player = Main.player[Value];
                     if (!guardian.DoAction.InUse && !guardian.IsPlayerHostile(player))
                     {
-                        guardian.StartNewGuardianAction(new ZacksPullSomeoneAction(player), PullSomeoneID);
+                        guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(player), PullSomeoneID);
                     }
                     return true;
                 case TriggerTypes.GuardianDowned:
                     TerraGuardian tg = MainMod.ActiveGuardians[Value];
                     if (!guardian.DoAction.InUse && !guardian.IsGuardianHostile(tg))
                     {
-                        guardian.StartNewGuardianAction(new ZacksPullSomeoneAction(tg), PullSomeoneID);
+                        guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(tg), PullSomeoneID);
                     }
                     return true;
             }*/
@@ -642,86 +642,6 @@ namespace giantsummon.Creatures
         }
 
         public const int FullMoonBehaviorID = 0, PullSomeoneID = 1;
-
-        public override void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)
-        {
-            if (!action.IsGuardianSpecificAction)
-                return;
-            switch (action.ID)
-            {
-                case FullMoonBehaviorID:
-                    {
-                        if (Main.dayTime || Main.time >= 28800)
-                        {
-                            action.InUse = false;
-                            return;
-                        }
-                        if (guardian.OwnerPos > -1 && guardian.AfkCounter < 60)
-                        {
-                            action.InUse = false;
-                            return;
-                        }
-                        if (guardian.IsAttackingSomething)
-                            return;
-                        const byte TimeVariableID = 0, BehaviorVariableID = 1;
-                        int Time = action.GetIntegerValue(TimeVariableID),
-                            Behavior = action.GetIntegerValue(BehaviorVariableID);
-                        switch (Behavior)
-                        {
-                            case 0: //Wander
-                                {
-                                    if (Time <= 0)
-                                    {
-                                        Tile tile = Framing.GetTileSafely((int)guardian.Position.X / 16, (int)guardian.CenterPosition.Y / 16);
-                                        if (tile.wall > 0)
-                                        {
-                                            Time = 400;
-                                        }
-                                        else if (guardian.HasDoorOpened)
-                                        {
-                                            Time = 50;
-                                        }
-                                        else
-                                        {
-                                            Behavior = 1;
-                                            Time = 2000;
-                                            break;
-                                        }
-                                    }
-                                    if (guardian.OwnerPos == -1)
-                                    {
-                                        guardian.WalkMode = true;
-                                        if (guardian.LookingLeft)
-                                            guardian.MoveLeft = true;
-                                        else
-                                            guardian.MoveRight = true;
-                                    }
-                                    Time--;
-                                }
-                                break;
-                            case 1: //Howl
-                                {
-                                    if (Time <= 0)
-                                    {
-                                        guardian.LookingLeft = Main.rand.NextDouble() < 0.5;
-                                        Behavior = 0;
-                                        Time = 400;
-                                        break;
-                                    }
-                                    if (Time == 890 || Time == 1300 || Time == 1900)
-                                    {
-                                        guardian.SaySomething("Aw.. Aw... Woo...");
-                                    }
-                                    Time--;
-                                }
-                                break;
-                        }
-                        action.SetIntegerValue(TimeVariableID, Time);
-                        action.SetIntegerValue(BehaviorVariableID, Behavior);
-                    }
-                    break;
-            }
-        }
 
         public override string GetSpecialMessage(string MessageID)
         {
@@ -813,164 +733,6 @@ namespace giantsummon.Creatures
                     return "*No, I'm not seeking a bone, I was just checking... Things.*";
             }
             return base.GetSpecialMessage(MessageID);
-        }
-
-        public class ZacksPullSomeoneAction : GuardianActions
-        {
-            public ZacksPullSomeoneAction(Player player)
-            {
-                Players.Add(player);
-            }
-
-            public ZacksPullSomeoneAction(TerraGuardian guardian)
-            {
-                Guardians.Add(guardian);
-            }
-
-            public Vector2 PullStartPosition = Vector2.Zero;
-            public const int PullMaxTime = 45; //Like his miniboss version
-
-            public override void Update(TerraGuardian Me)
-            {
-                if (Time >= PullMaxTime)
-                {
-                    if (Time == PullMaxTime)
-                    {
-                        if (Players.Count > 0)
-                        {
-                            PullStartPosition = Players[0].Center;
-                        }
-                        else if (Guardians.Count > 0)
-                        {
-                            PullStartPosition = Guardians[0].CenterPosition;
-                        }
-                    }
-                    if (Players.Count > 0)
-                    {
-                        Player player = Players[0];
-                        Vector2 MoveDirection = Me.CenterPosition - player.Center;
-                        MoveDirection.Normalize();
-                        Me.LookingLeft = player.Center.X < Me.Position.X;
-                        player.position += MoveDirection * 8f;
-                        player.fallStart = (int)player.position.Y / 16;
-                        if (player.getRect().Intersects(Me.HitBox))
-                        {
-                            player.velocity = Vector2.Zero;
-                            InUse = false;
-                        }
-                    }
-                    else if (Guardians.Count > 0)
-                    {
-                        TerraGuardian guardian = Guardians[0];
-                        Vector2 MoveDirection = Me.CenterPosition - guardian.CenterPosition;
-                        MoveDirection.Normalize();
-                        Me.LookingLeft = guardian.Position.X < Me.Position.X;
-                        guardian.Position += MoveDirection * 8f;
-                        guardian.SetFallStart();
-                        if (guardian.HitBox.Intersects(Me.HitBox))
-                        {
-                            guardian.Velocity = Vector2.Zero;
-                            InUse = false;
-                        }
-                    }
-                }
-            }
-
-            public override void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
-            {
-                int HandFrame = 0;
-                if (Time < 5)
-                {
-                    HandFrame = 14;
-                }
-                else if (Time < 10)
-                {
-                    HandFrame = 15;
-                }
-                else if (Time < 15)
-                {
-                    HandFrame = 16;
-                }
-                else if (Time < 20)
-                {
-                    HandFrame = 17;
-                }
-                if (Time >= PullMaxTime)
-                {
-                    HandFrame = 15;
-                }
-                if (!UsingRightArmAnimation)
-                    guardian.RightArmAnimationFrame = HandFrame;
-                else if (!UsingLeftArmAnimation)
-                    guardian.LeftArmAnimationFrame = HandFrame;
-            }
-
-            public override void Draw(TerraGuardian guardian)
-            {
-                Vector2 EndPosition = Vector2.Zero;
-                if (Players.Count > 0)
-                {
-                    EndPosition = Players[0].Center;
-                }
-                else if (Guardians.Count > 0)
-                {
-                    EndPosition = Guardians[0].CenterPosition;
-                }
-                if (Time < PullMaxTime)
-                {
-                    float Percentage = (float)Time / PullMaxTime;
-                    EndPosition = guardian.CenterPosition + (EndPosition - guardian.CenterPosition) * Percentage;
-                }
-                GuardianDrawData[] gdds = DrawIntestine(guardian, EndPosition);
-                for (int gdd = 0; gdd < TerraGuardian.DrawFront.Count; gdd++)
-                {
-                    if (TerraGuardian.DrawFront[gdd].textureType == GuardianDrawData.TextureType.TGLeftArm)
-                    {
-                        TerraGuardian.DrawFront.InsertRange(gdd, gdds);
-                        return;
-                    }
-                }
-                for (int gdd = 0; gdd < TerraGuardian.DrawBehind.Count; gdd++)
-                {
-                    if (TerraGuardian.DrawBehind[gdd].textureType == GuardianDrawData.TextureType.TGLeftArm)
-                    {
-                        TerraGuardian.DrawBehind.InsertRange(gdd, gdds);
-                        return;
-                    }
-                }
-            }
-
-            public GuardianDrawData[] DrawIntestine(TerraGuardian Guardian, Vector2 ChainEndPosition)
-            {
-                Vector2 ChainStartPosition = Guardian.CenterPosition;
-                ChainStartPosition.X -= 8 * Guardian.Direction;
-                ChainStartPosition.Y -= 8;
-                float DifX = ChainStartPosition.X - ChainEndPosition.X, DifY = ChainStartPosition.Y - ChainEndPosition.Y;
-                bool DrawMoreChain = true;
-                float Rotation = (float)Math.Atan2(DifY, DifX) - 1.57f;
-                List<GuardianDrawData> gdds = new List<GuardianDrawData>();
-                while (DrawMoreChain)
-                {
-                    float sqrt = (float)Math.Sqrt(DifX * DifX + DifY * DifY);
-                    if (sqrt < 40)
-                        DrawMoreChain = false;
-                    else
-                    {
-                        sqrt = (float)Main.chain12Texture.Height / sqrt;
-                        DifX *= sqrt;
-                        DifY *= sqrt;
-                        ChainEndPosition.X += DifX;
-                        ChainEndPosition.Y += DifY;
-                        DifX = ChainStartPosition.X - ChainEndPosition.X;
-                        DifY = ChainStartPosition.Y - ChainEndPosition.Y;
-                        Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)ChainEndPosition.X / 16, (int)ChainEndPosition.Y / 16);
-                        GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.chain12Texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width * 0.5f, Main.chain12Texture.Height * 0.5f), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
-                        gdds.Add(gdd);
-                        //Main.spriteBatch.Draw(Main.chain12Texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width * 0.5f, Main.chain12Texture.Height * 0.5f), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);
-                    }
-                }
-                return gdds.ToArray();
-            }
         }
     }
 }

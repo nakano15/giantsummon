@@ -2678,12 +2678,13 @@ namespace giantsummon
                     Front.InsertRange(0, TerraGuardian.GetDrawBehindData);
                     g.MyDrawOrder += 20;
                 }
-                else if (g.KnockedOut)
+                /*else if (g.KnockedOut)
                 {
+                    FurnitureStack += TerraGuardian.GetDrawFrontData.Count + TerraGuardian.GetDrawBehindData.Count - 1;
                     Back.InsertRange(0, TerraGuardian.GetDrawFrontData);
                     Back.InsertRange(0, TerraGuardian.GetDrawBehindData);
                     g.MyDrawOrder -= 20;
-                }
+                }*/
                 else if (g.PlayerMounted || g.SittingOnPlayerMount)
                 {
                     Back.AddRange(TerraGuardian.GetDrawBehindData);

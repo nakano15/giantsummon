@@ -52,6 +52,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\BuySomethingFromNpcShopAction.cs" />
+    <Compile Include="Actions\JoinPlayerMountAction.cs" />
+    <Compile Include="Actions\LaunchPlayerAction.cs" />
+    <Compile Include="Actions\LiftPlayerAction.cs" />
+    <Compile Include="Actions\MountPutPlayerDownAction.cs" />
+    <Compile Include="Actions\OpenGiftBoxAction.cs" />
+    <Compile Include="Actions\PickupPlayerMountAction.cs" />
+    <Compile Include="Actions\RestAction.cs" />
+    <Compile Include="Actions\ResurrectPlayerAction.cs" />
+    <Compile Include="Actions\ReviveSomeoneAction.cs" />
+    <Compile Include="Actions\SellItemsAction.cs" />
+    <Compile Include="Actions\TeleportWithPlayerToTownAction.cs" />
+    <Compile Include="Actions\ThrowPotionAction.cs" />
+    <Compile Include="Actions\UseBuffPotionsAction.cs" />
+    <Compile Include="Actions\UseSkillResetItemAction.cs" />
+    <Compile Include="Actions\UseStatusIncreaseItemsAction.cs" />
     <Compile Include="AlexRecruitScripts.cs" />
     <Compile Include="BuddyModeSetupInterface.cs" />
     <Compile Include="BuffData.cs" />
@@ -84,9 +100,13 @@
     <Compile Include="Compatibility\SubworldLibraryCompatibility.cs" />
     <Compile Include="Compatibility\TerraClassesCompatibility.cs" />
     <Compile Include="ConfigMod.cs" />
+    <Compile Include="Creatures\Alexander\SleuthAction.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
+    <Compile Include="Creatures\Alex\HealingLickAction.cs" />
     <Compile Include="Creatures\Bapha\BaphaBase.cs" />
+    <Compile Include="Creatures\Blue\FullMoonHowlingBehavior.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
+    <Compile Include="Creatures\Brutus\ProtectModeAction.cs" />
     <Compile Include="Creatures\BunnyReaperGuardian\BunnyReaperGuardianBase.cs" />
     <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
     <Compile Include="Creatures\CaptainSmelly\CaptainSmellyBase.cs" />
@@ -97,6 +117,7 @@
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\Minerva\MinervaBase.cs" />
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
+    <Compile Include="Creatures\Vladimir\HugAction.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />
     <Compile Include="Creatures\Bree\BreeBase.cs" />
@@ -109,6 +130,8 @@
     <Compile Include="Creatures\Sardine\SardineBase.cs" />
     <Compile Include="Creatures\Wrath\WrathBase.cs" />
     <Compile Include="Creatures\Zacks\ZacksBase.cs" />
+    <Compile Include="Creatures\Zacks\ZacksFullMoonBehavior.cs" />
+    <Compile Include="Creatures\Zacks\ZacksPullSomeoneAction.cs" />
     <Compile Include="Dialogue.cs" />
     <Compile Include="DialogueChain.cs" />
     <Compile Include="Group.cs" />

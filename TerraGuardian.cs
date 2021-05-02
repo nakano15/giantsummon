@@ -2096,7 +2096,7 @@ namespace giantsummon
                 else
                 {
                     //StuckTimer = 0;
-                    DoAction.Update(this);
+                    DoAction.UpdateAction(this);
                 }
             }
             if (ItemAnimationTime == 0)
@@ -6907,14 +6907,6 @@ namespace giantsummon
                             LookingLeft = false;
                     }
                 }
-                if(OwnerPos > -1)
-                {
-                    PlayerMod pm = Main.player[OwnerPos].GetModPlayer<PlayerMod>();
-                    if (ChargeAhead)
-                        pm.FollowFrontOrder++;
-                    else
-                        pm.FollowBackOrder++;
-                }
                 return true;
             }
             if (CurrentIdleAction == IdleActions.Listening)
@@ -6923,6 +6915,8 @@ namespace giantsummon
             }
             if (OwnerPos > -1 && !Main.player[OwnerPos].ghost && (!HasPlayerAFK || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
+                CurrentIdleAction = IdleActions.Wait;
+                IdleActionTime = 50;
                 return false;
             }
             bool IsTownNpc = OwnerPos == -1;
@@ -10179,6 +10173,13 @@ namespace giantsummon
         {
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
             Player Owner = Main.player[OwnerPos];
+            {
+                PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
+                if (ChargeAhead)
+                    pm.FollowFrontOrder++;
+                else
+                    pm.FollowBackOrder++;
+            }
             Vector2 PositionDifference = Vector2.Zero;
             float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0, LeaderSpeedY = 0;
             int LeaderHeight = 1;
@@ -16494,7 +16495,7 @@ namespace giantsummon
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PosDrawEffect, ConfusionTexture, EffectPosition - Main.screenPosition, Color.White);
                 AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
             }
-            DoAction.Draw(this);
+            DoAction.DrawAction(this);
             if (SubAttackInUse)
             {
                 Base.SpecialAttackList[SubAttackID].WhenCompanionIsBeingDrawn(this, SubAttackFrame, SubAttackTime);

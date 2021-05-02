@@ -10,6 +10,8 @@ namespace giantsummon.Creatures
 {
     public class BlueBase : GuardianBase
     {
+        public const int FullMoonBehaviorID = 0;
+
         public const byte RedHoodOutfitID = 1, CloaklessOutfitID = 2;
         public const string RedHoodSkinOutfitID = "red_hood_outfit", RedHoodSkinOutfitBodyFrontID = "red_hood_outfit_body_f";
 
@@ -632,6 +634,7 @@ namespace giantsummon.Creatures
             {
 
             }
+            Mes.Add("*[name] tells you of a Terrarian she met, named beaverrac. She said that found weird that he didn't talked with her, beside there were a lot of weird things happening around too.");
             if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
             {
                 Mes.Add("*[name] is stealing all the spotlights of the party.*");
@@ -999,88 +1002,6 @@ namespace giantsummon.Creatures
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
-        public const int FullMoonBehaviorID = 0;
-
-        public override void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)
-        {
-            if (!action.IsGuardianSpecificAction)
-                return;
-            switch (action.ID)
-            {
-                case FullMoonBehaviorID:
-                    {
-                        if (Main.dayTime || Main.time >= 28800)
-                        {
-                            action.InUse = false;
-                            return;
-                        }
-                        if (guardian.OwnerPos > -1 && guardian.AfkCounter < 60)
-                        {
-                            action.InUse = false;
-                            return;
-                        }
-                        if (guardian.IsAttackingSomething)
-                            return;
-                        const byte TimeVariableID = 0, BehaviorVariableID = 1;
-                        int Time = action.GetIntegerValue(TimeVariableID), 
-                            Behavior = action.GetIntegerValue(BehaviorVariableID);
-                        switch (Behavior)
-                        {
-                            case 0: //Wander
-                                {
-                                    if (Time <= 0)
-                                    {
-                                        Tile tile = Framing.GetTileSafely((int)guardian.Position.X / 16, (int)guardian.CenterPosition.Y / 16);
-                                        if (tile.wall > 0)
-                                        {
-                                            Time = 400;
-                                        }
-                                        else if (guardian.HasDoorOpened)
-                                        {
-                                            Time = 50;
-                                        }
-                                        else
-                                        {
-                                            Behavior = 1;
-                                            Time = 2000;
-                                            break;
-                                        }
-                                    }
-                                    if (guardian.OwnerPos == -1)
-                                    {
-                                        guardian.WalkMode = true;
-                                        if (guardian.LookingLeft)
-                                            guardian.MoveLeft = true;
-                                        else
-                                            guardian.MoveRight = true;
-                                    }
-                                    Time--;
-                                }
-                                break;
-                            case 1: //Howl
-                                {
-                                    if (Time <= 0)
-                                    {
-                                        guardian.LookingLeft = Main.rand.NextDouble() < 0.5;
-                                        Behavior = 0;
-                                        Time = 400;
-                                        break;
-                                    }
-                                    if (Time == 890 || Time == 1300 || Time == 1900)
-                                    {
-                                        guardian.SaySomething("Awooooooo!!!");
-                                    }
-                                    Time--;
-                                }
-                                break;
-                        }
-                        action.SetIntegerValue(TimeVariableID, Time);
-                        action.SetIntegerValue(BehaviorVariableID, Behavior);
-                    }
-                    break;
-            }
-        }
-
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
             if (!guardian.DoAction.InUse)
@@ -1089,7 +1010,7 @@ namespace giantsummon.Creatures
                 {
                     if (guardian.OwnerPos == -1 || guardian.HasPlayerAFK)
                     {
-                        guardian.StartNewGuardianAction(FullMoonBehaviorID);
+                        guardian.StartNewGuardianAction(new Creatures.Blue.FullMoonHowlingBehavior(), FullMoonBehaviorID);
                     }
                 }
             }

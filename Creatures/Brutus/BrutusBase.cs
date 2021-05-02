@@ -263,7 +263,7 @@ namespace giantsummon.Creatures
                     }
                     if (!guardian.DoAction.InUse || !guardian.DoAction.IsGuardianSpecificAction || guardian.DoAction.ID != ProtectModeID)
                     {
-                        guardian.StartNewGuardianAction(ProtectModeID).SetIntegerValue(99, Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut ? 1 : 0);
+                        guardian.StartNewGuardianAction(new Creatures.Brutus.ProtectModeAction(Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut), ProtectModeID);
                         if (!GuardianJustWokeUp)
                         {
                             switch (Main.rand.Next(3))
@@ -897,145 +897,7 @@ namespace giantsummon.Creatures
         {
             if (!guardian.DoAction.InUse && guardian.OwnerPos > -1 && (guardian.AfkCounter >= ProtectModeAutoTriggerTime || Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut))
             {
-                guardian.StartNewGuardianAction(ProtectModeID).SetIntegerValue(99, Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut ? 1 : 0);
-            }
-        }
-
-        public override void GuardianActionUpdate(TerraGuardian guardian, GuardianActions action)
-        {
-            if (action.IsGuardianSpecificAction)
-            {
-                switch (action.ID)
-                {
-                    case ProtectModeID:
-                        {
-                            if (guardian.OwnerPos == -1)
-                            {
-                                action.InUse = false;
-                                return;
-                            }
-                            if (action.GetIntegerValue(99) == 0 && guardian.AfkCounter < 60)
-                            {
-                                action.InUse = false;
-                                return;
-                            }
-                            const byte CurrentActionID = 0;
-                            int Action = action.GetIntegerValue(CurrentActionID);
-                            Player defended = Main.player[guardian.OwnerPos];
-                            const int Offset = 7 * 2;
-                            float DefendX = defended.Center.X - Offset * defended.direction;
-                            if (Action == 0)
-                            {
-                                if (guardian.PlayerMounted || guardian.SittingOnPlayerMount)
-                                {
-                                    Action = 1;
-                                }
-                                else
-                                {
-                                    guardian.MoveLeft = guardian.MoveRight = false;
-                                    if (guardian.Position.X + guardian.Velocity.X * 0.5f > DefendX)
-                                        guardian.MoveLeft = true;
-                                    else
-                                        guardian.MoveRight = true;
-                                    if (Math.Abs(guardian.Position.X - DefendX) < 5 && Math.Abs(guardian.Velocity.X) < 3f)
-                                    {
-                                        Action = 1;
-                                        if (defended.GetModPlayer<PlayerMod>().ControllingGuardian)
-                                        {
-                                            if (defended.GetModPlayer<PlayerMod>().Guardian.ModID == MainMod.mod.Name)
-                                            {
-                                                switch (defended.GetModPlayer<PlayerMod>().Guardian.ID)
-                                                {
-                                                    case GuardianBase.Domino:
-                                                        {
-                                                            switch (Main.rand.Next(5))
-                                                            {
-                                                                case 0:
-                                                                    guardian.SaySomething("*I'm only protecting him because of you, [nickname].*");
-                                                                    break;
-                                                                case 1:
-                                                                    guardian.SaySomething("*Of anyone you could take direct control, It had to be him?*");
-                                                                    break;
-                                                                case 2:
-                                                                    guardian.SaySomething("*Is this some kind of karma?*");
-                                                                    break;
-                                                                case 3:
-                                                                    guardian.SaySomething("*Okay, what have I done to you, [nickname]?*");
-                                                                    break;
-                                                                case 4:
-                                                                    guardian.SaySomething("*It's funny how I'm treating his wounds, instead of beating his face.*");
-                                                                    break;
-                                                            }
-                                                        }
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else if (Action == 1)
-                            {
-                                if (!guardian.PlayerMounted && !guardian.SittingOnPlayerMount)
-                                {
-                                    guardian.Position.X = DefendX;
-                                    if (!guardian.IsAttackingSomething)
-                                    {
-                                        guardian.LookingLeft = defended.direction == -1;
-                                    }
-                                }
-                                guardian.Jump = false;
-                                if (!guardian.SittingOnPlayerMount)
-                                    guardian.MoveDown = true;
-                                guardian.OffHandAction = true;
-                                PlayerMod pm = defended.GetModPlayer<PlayerMod>();
-                                if (pm.ControllingGuardian)
-                                {
-                                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
-                                    if (pm.Guardian.KnockedOut)
-                                        pm.Guardian.ReviveBoost++;
-                                    else
-                                    {
-                                        if (guardian.AfkCounter < ProtectModeAutoTriggerTime && action.GetIntegerValue(99) == 1)
-                                            action.InUse = false;
-                                    }
-                                }
-                                else
-                                {
-                                    defended.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
-                                    if (pm.KnockedOut)
-                                        pm.ReviveBoost++;
-                                    else
-                                    {
-                                        if (guardian.AfkCounter < ProtectModeAutoTriggerTime && action.GetIntegerValue(99) == 1)
-                                            action.InUse = false;
-                                    }
-                                }
-                            }
-                            action.SetIntegerValue(CurrentActionID, Action);
-                        }
-                        break;
-                }
-            }
-        }
-
-        public override void GuardianActionUpdateAnimation(TerraGuardian guardian, GuardianActions action, ref bool UsingLeftArm, ref bool UsingRightArm)
-        {
-            if (action.IsGuardianSpecificAction)
-            {
-                switch (action.ID)
-                {
-                    case ProtectModeID:
-                        {
-                            const byte CurrentActionID = 0;
-                            int Action = action.GetIntegerValue(CurrentActionID);
-                            if (Action == 1 && guardian.SittingOnPlayerMount && !UsingRightArm)
-                            {
-                                guardian.RightArmAnimationFrame = 1;
-                            }
-                        }
-                        break;
-                }
+                guardian.StartNewGuardianAction(new Creatures.Brutus.ProtectModeAction(Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut), ProtectModeID);
             }
         }
 

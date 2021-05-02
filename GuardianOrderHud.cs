@@ -359,7 +359,7 @@ namespace giantsummon
                 case Orders.TeleportWithPlayerToTown:
                     action = delegate(TerraGuardian g)
                     {
-                        if (GuardianActions.TeleportWithPlayerCommand(g))
+                        if (GuardianActions.TeleportWithPlayerCommand(g, Main.player[g.OwnerPos]))
                             SomeoneExecutedAction = true;
                     };
                     break;

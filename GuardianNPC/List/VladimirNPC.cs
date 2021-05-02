@@ -63,7 +63,7 @@ namespace giantsummon.GuardianNPC.List
                     Guardian.DoAction.InUse = false;
 
                     Main.npcChatText = (((Creatures.VladimirBase)Guardian.Base).GetEndHugMessage(Guardian));
-                    Guardian.DoAction.Players[0].Bottom = Guardian.Position;
+                    ((Creatures.Vladimir.HugAction)Guardian.DoAction).Target.Bottom = Guardian.Position;
                 }
                 else if (!Guardian.DoAction.InUse)
                 {
@@ -74,10 +74,8 @@ namespace giantsummon.GuardianNPC.List
                     }
                     else
                     {
-                        GuardianActions ga = Guardian.StartNewGuardianAction(0);
-                        if (ga != null)
+                        if (Guardian.StartNewGuardianAction(new Creatures.Vladimir.HugAction(Main.player[Main.myPlayer]), 0))
                         {
-                            ga.Players.Add(Main.player[Main.myPlayer]);
                             Main.npcChatText = "*Press Jump button If you want me to stop.*";
                         }
                     }

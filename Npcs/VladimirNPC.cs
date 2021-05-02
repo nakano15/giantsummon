@@ -569,10 +569,8 @@ namespace giantsummon.Npcs
                             {
                                 if (tg.ID == GuardianID && tg.ModID == GuardianModID)
                                 {
-                                    GuardianActions ga = tg.StartNewGuardianAction(0);
-                                    if (ga != null)
+                                    if (tg.StartNewGuardianAction(new Creatures.Vladimir.HugAction(Main.player[HuggedPlayer]), 0))
                                     {
-                                        ga.Players.Add(player);
                                         Main.npcChatText = "*Thank you! I will try finding me a empty house to move in, but first, I will wait until ask me to stop hugging you.*";
                                     }
                                     else
