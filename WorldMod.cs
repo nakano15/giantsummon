@@ -613,7 +613,6 @@ namespace giantsummon
 
         public static void AnalyzeDrawMoment()
         {
-            bool HasNpcActive = false;
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
                 if (tg.UsingFurniture)
@@ -622,8 +621,14 @@ namespace giantsummon
                 }
                 else if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
                 {
-                    tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
-                    //tg.drawMoment = DrawMoment.DrawBeforeDrawingNpcs;
+                    if (MainMod.NpcInCameraRange)
+                    {
+                        tg.drawMoment = DrawMoment.DrawBeforeDrawingNpcs;
+                    }
+                    else
+                    {
+                        tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
+                    }
                 }
                 else
                 {

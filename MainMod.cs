@@ -29,7 +29,7 @@ namespace giantsummon
         public static byte SelectedGuardian = 0;
         public static int GuardianInventoryMenuSubTab = 0;
         public static bool CheckingQuestBrief = false;
-        public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true;
+        public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true;
         public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
         public const string VoteLink = ""; //There is no contest
@@ -39,7 +39,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 84, LastModVersion = 84;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -123,6 +123,7 @@ namespace giantsummon
         public static int LastChatTime = 0;
         public const string CustomCompanionCallString = "loadcompanions", CustomStarterCallString = "loadstarters";
         public static bool TriedLoadingCustomGuardians = false;
+        public static bool NpcInCameraRange = false;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -762,6 +763,21 @@ namespace giantsummon
         public override void MidUpdateNPCGore()
         {
             NpcMod.RestorePlayersPosition();
+            CheckIfThereIsNpcInCameraRange();
+        }
+
+        public void CheckIfThereIsNpcInCameraRange()
+        {
+            Rectangle rect = new Rectangle((int)Main.screenPosition.X - 800, (int)Main.screenPosition.Y - 800, Main.screenWidth + 1600, Main.screenHeight + 1600);
+            NpcInCameraRange = false;
+            for (int n = 0; n < 200; n++)
+            {
+                if(Main.npc[n].active && rect.Intersects(Main.npc[n].getRect()))
+                {
+                    NpcInCameraRange = true;
+                    return;
+                }
+            }
         }
 
         public override void MidUpdatePlayerNPC()

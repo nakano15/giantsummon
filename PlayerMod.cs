@@ -2672,7 +2672,7 @@ namespace giantsummon
                 List<Terraria.DataStructures.DrawData> TrailData = g.GetTrailsDataAsDrawData();
                 g.DrawDataCreation();
                 int BackStack = 0, FurnitureStack = 0;
-                if (g.PlayerControl || (KnockedOut && Counter > 0 && g.Base.BackwardRevive > -1))
+                if (g.PlayerControl || (MainMod.ShowBackwardAnimations && KnockedOut && Counter > 0 && g.Base.BackwardRevive > -1))
                 {
                     Front.InsertRange(0, TerraGuardian.GetDrawFrontData);
                     Front.InsertRange(0, TerraGuardian.GetDrawBehindData);

@@ -22,3 +22,5 @@ Companion Actions are now split from their action and base info scripts.
 	That allows creating variables specific for the action, and also removes lists each action contained, for possible variable values one could need for the action to happen.
 Changed how the gem monsters spawning works.
 	That may make gem monster spawning more interesting.
+Fixed Blue's outfit behaving like some kind of.... Shield.
+Reduced the follow distancing of the companions, from 48 pixels to 20.

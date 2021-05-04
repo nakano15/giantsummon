@@ -7129,7 +7129,7 @@ namespace giantsummon
                             break;
                         case IdleActions.Wait:
                             {
-                                if(Base.BackwardStanding > -1 && Main.rand.NextDouble() < 0.3f)
+                                if(MainMod.ShowBackwardAnimations && Base.BackwardStanding > -1 && Main.rand.NextDouble() < 0.2f)
                                 {
                                     bool HasWindowOrOpenPlace = false;
                                     int StartX = (int)(Position.X * DivisionBy16), StartY = (int)((Position.Y - Height) * DivisionBy16);
@@ -10180,6 +10180,7 @@ namespace giantsummon
                 else
                     pm.FollowBackOrder++;
             }
+            const int Distance = 20; //48
             Vector2 PositionDifference = Vector2.Zero;
             float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0, LeaderSpeedY = 0;
             int LeaderHeight = 1;
@@ -10220,14 +10221,14 @@ namespace giantsummon
             bool Confused = HasFlag(GuardianFlags.Confusion) && OwnerPos > -1;
             /*if (ChargeAhead)
             {
-                PositionDifference.X += (48f + Math.Abs(Owner.velocity.X)) * Owner.direction * (Confused ? -1 : 1);
+                PositionDifference.X += (Distance + Math.Abs(Owner.velocity.X)) * Owner.direction * (Confused ? -1 : 1);
             }*/
             float DistanceMult = IsAttackingSomething ? 1.5f : 1f, 
-                  DistanceBonus = 48 * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
+                  DistanceBonus = Distance * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
             float BottomDistanceY = LeaderBottom - Position.Y;
             if (ChargeAhead)
             {
-                PositionDifference.X += (48f + Math.Abs(Owner.velocity.X) + DistanceBonus) * Owner.direction * (Confused ? -1 : 1);
+                PositionDifference.X += (Distance + Math.Abs(Owner.velocity.X) + DistanceBonus) * Owner.direction * (Confused ? -1 : 1);
                 XDiscount = DistanceBonus + 20;
             }
             PositionDifference -= Position;
@@ -10342,7 +10343,7 @@ namespace giantsummon
                         }
                     }
                 }
-                else if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 48 + DistanceBonus - XDiscount)
+                else if (Math.Abs(PositionDifference.X - LeaderSpeedX) > Distance + DistanceBonus - XDiscount)
                 {
                     if (PositionDifference.X < 0)
                         MoveLeft = true;
@@ -10370,7 +10371,7 @@ namespace giantsummon
                 }
                 else if (LeaderSpeedX != 0)
                 {
-                    if (Math.Abs(PositionDifference.X - LeaderSpeedX) > 36 + DistanceBonus - XDiscount)
+                    if (Math.Abs(PositionDifference.X - LeaderSpeedX) > Distance * 0.75f + DistanceBonus - XDiscount) //36
                     {
                         if (Position.X < LeaderCenterX)
                         {

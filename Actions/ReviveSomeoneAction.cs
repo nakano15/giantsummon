@@ -49,7 +49,6 @@ namespace giantsummon.Actions
             }
             if (guardian.ItemAnimationTime > 0)
                 return;
-            const byte IReviveTime = 0;
             Vector2 TargetPosition = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
             bool TryReaching = false;
@@ -276,7 +275,7 @@ namespace giantsummon.Actions
                         }
                         else
                         {
-                            if (TargetLayer < guardian.MyDrawOrder && guardian.Base.BackwardRevive > -1)
+                            if (MainMod.ShowBackwardAnimations && TargetLayer < guardian.MyDrawOrder && guardian.Base.BackwardRevive > -1)
                             {
                                 Animation = guardian.Base.BackwardRevive;
                             }

@@ -42,6 +42,11 @@ namespace giantsummon
         [Tooltip("Turns on the new order system. You just have to press the order button to call It, and navigate by pressing the dpad number keys. When off, uses the old system, where you hold down the key, then moves to the option.")]
         [DefaultValue(true)]
         public bool UseNewOrderSystem { get { return MainMod.TestNewOrderHud; } set { MainMod.TestNewOrderHud = value; } }
+
+        [Label("Show Companions Backward Animations?")]
+        [Tooltip("Useful in case you don't feel okay with them.")]
+        [DefaultValue(true)]
+        public bool ShowBackwardAnimations { get { return MainMod.ShowBackwardAnimations = true; } set { MainMod.ShowBackwardAnimations = value; } }
     }
     [Label("Server Settings")]
     public class ServerConfigMod : ModConfig
