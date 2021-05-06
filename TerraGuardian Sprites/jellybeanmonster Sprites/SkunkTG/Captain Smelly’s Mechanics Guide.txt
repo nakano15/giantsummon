@@ -52,7 +52,7 @@ Gp(Cast on self)-Sends out whiplike wave that drains enemies of their hp and hea
 
 >Critical Emerald
 Psv-Gives 50% crit chance
-Gp(Projectile)-Slow moving Tornado that has high crit chance and hits 20 times for 50% of total current weapon damage per hit
+Gp(Projectile)-Slow moving Tornado that is garunteed to be a critical hit and hits 20 times for 25% of total current weapon damage per hit
 
 >Shining Diamond
 Psv- Has a 35% to cause dazed debuff to eneimes hit by PF
