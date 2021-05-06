@@ -400,7 +400,9 @@ namespace giantsummon.Creatures
                         {
                             case AmethystFalchion:
                                 {
-                                    int p = Projectile.NewProjectile(tg.CenterPosition, new Vector2(8f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.AmethystGP>(),
+                                    Vector2 SpawnPos = tg.Position;
+                                    SpawnPos.Y -= 39 * tg.Scale; //78
+                                    int p = Projectile.NewProjectile(SpawnPos, new Vector2(16f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.AmethystGP>(),
                                         Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
                                     Main.projectile[p].scale = tg.Scale;
                                     Main.projectile[p].netUpdate = true;
@@ -428,7 +430,7 @@ namespace giantsummon.Creatures
                                 {
                                     CriticalRate += 30;
                                     Vector2 SpawnPosition = tg.Position;
-                                    SpawnPosition.Y -= 24 * tg.Scale;
+                                    SpawnPosition.Y -= 36 * tg.Scale; //78
                                     int p = Projectile.NewProjectile(SpawnPosition, new Vector2(1f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.EmeraldGP>(),
                                         Damage, Knockback * 0.9f, tg.GetSomeoneToSpawnProjectileFor);
                                     Main.projectile[p].scale = tg.Scale;
@@ -466,15 +468,18 @@ namespace giantsummon.Creatures
                                     }
                                     else if (SwordID == RubyFalchion)
                                     {
-                                        int HealthRecover = 20;
-                                        Rectangle SweetSpotPosition = new Rectangle((int)(tg.Position.X + tg.Direction * 48 * tg.Scale), (int)(tg.CenterPosition.Y - 40 * tg.Scale), (int)(32 * tg.Scale), (int)(32 * tg.Scale));
+                                        float HealthRecover = 0.1f;
+                                        Rectangle SweetSpotPosition = new Rectangle((int)(tg.Position.X + tg.Direction * (48 + 40) * tg.Scale), (int)(tg.CenterPosition.Y - 40 * tg.Scale), (int)(32 * tg.Scale), (int)(32 * tg.Scale));
                                         if (tg.LookingLeft)
                                             SweetSpotPosition.X -= SweetSpotPosition.Width;
                                         if (Main.npc[n].getRect().Intersects(SweetSpotPosition))
                                         {
-                                            HealthRecover = 40;
+                                            HealthRecover = 0.5f;
                                         }
-                                        tg.RestoreHP(HealthRecover);
+                                        if(HealthRecover * result >= 1)
+                                            tg.RestoreHP((int)(HealthRecover * result));
+                                        else
+                                            tg.RestoreHP(1);
                                         tg.AddBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.DrainingHealth>(), 60);
                                     }
                                     else if (SwordID == DiamondFalchion)
@@ -519,7 +524,9 @@ namespace giantsummon.Creatures
                                 Texture2D texture = sprites.GetExtraTexture(RubyGPTextureID);
                                 if(WhipFrame >= 0 && WhipFrame < 6)
                                 {
-                                    GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, tg.CenterPosition - Main.screenPosition,
+                                    Vector2 WhipPos = tg.CenterPosition - Main.screenPosition;
+                                    WhipPos.X += 40 * tg.Direction;
+                                    GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, WhipPos,
                                         new Rectangle(160 * WhipFrame, 0, 160, 160), Color.White, 0f, new Vector2(80, 80), tg.Scale, 
                                         (tg.LookingLeft ? SpriteEffects.FlipHorizontally: SpriteEffects.None));
                                     TerraGuardian.DrawFront.Add(gdd);
@@ -876,7 +883,7 @@ namespace giantsummon.Creatures
 
         public void PlaceSwordSpriteAt(int Position, bool DrawBehind, int SwordID, TerraGuardian guardian, Vector2 DrawPosition, Color color, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
         {
-            int FrameX = 0, FrameY = ((NumberOfSwords - 1) - SwordID) * 2;
+            int FrameX = 0, FrameY = 0;
             switch (guardian.RightArmAnimationFrame)
             {
                 case 25: //Downed
@@ -968,6 +975,7 @@ namespace giantsummon.Creatures
                 FrameY += FrameX / FramesInRows;
                 FrameX -= FrameY * FramesInRows;
             }
+            FrameY += ((NumberOfSwords - 1) - SwordID) * 2;
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(PlasmaFalchionTextureID), DrawPosition, new Rectangle(FrameX * SpriteWidth, FrameY * SpriteHeight, SpriteWidth, SpriteHeight), color, Rotation, Origin, Scale, seffect);
             if (DrawBehind)
                 TerraGuardian.DrawBehind.Insert(Position, gdd);

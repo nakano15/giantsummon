@@ -12,6 +12,9 @@ namespace giantsummon.Projectiles
 {
     public class AmethystGP : ModProjectile
     {
+        public const int LifeTime = 30;
+        public const float LifeTimeFrameDecimal = 1f / LifeTime;
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Amethyst Gemstone Power");
@@ -22,13 +25,14 @@ namespace giantsummon.Projectiles
             projectile.aiStyle = -1;
             projectile.friendly = true;
             projectile.hostile = false;
-            projectile.timeLeft = 90;
+            projectile.timeLeft = LifeTime;
             projectile.alpha = 255;
             projectile.light = 1.1f;
             projectile.ignoreWater = false;
             projectile.tileCollide = false;
             projectile.width = 40;
             projectile.height = 74;
+            projectile.maxPenetrate = projectile.penetrate = -1;
         }
 
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
@@ -48,12 +52,12 @@ namespace giantsummon.Projectiles
             else
                 projectile.direction = -1;
             projectile.position += projectile.velocity;
-            projectile.velocity.X *= 0.9f;
+            projectile.velocity.X *= 0.95f;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            int FrameX = (int)(10 - projectile.timeLeft * 0.9f);
+            int FrameX = (int)(10 - 10 * projectile.timeLeft * LifeTimeFrameDecimal);
             Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
             spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos - Main.screenPosition, new Rectangle(FrameX * 96, 0, 96, 96), Color.White, 0f, 
                 new Vector2(48, 48), projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);

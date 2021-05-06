@@ -57,7 +57,7 @@ namespace giantsummon.Projectiles
             else
             {
                 Frame++;
-                if (Frame >= 11 * 3)
+                if (Frame >=  (9 + 11) * 3)
                     projectile.Kill();
             }
         }
@@ -77,7 +77,8 @@ namespace giantsummon.Projectiles
             if (Detonated)
                 return;
             this.Detonated = true;
-            Frame = 0;
+            projectile.velocity = Vector2.Zero;
+            Frame = 9;
             projectile.timeLeft = 180;
             if (ProjMod.IsGuardianProjectile(projectile.whoAmI))
             {
@@ -110,8 +111,14 @@ namespace giantsummon.Projectiles
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            int FrameX = (int)(Frame * 0.3334f);
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, new Rectangle(FrameX * 96, Detonated? 96 : 0, 96, 96), Color.White, 0f,
+            int FrameX = (int)(Frame * 0.3334f), FrameY = 0;
+            if(FrameX > 18)
+            {
+                FrameY += (int)(FrameX * 0.05263157894736842105263157894737f);
+                FrameX -= FrameY * 19;
+            }
+            Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition;
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos, new Rectangle(FrameX * 96, FrameY * 96, 96, 96), Color.White, 0f,
                 new Vector2(48, 48), projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return false;
         }

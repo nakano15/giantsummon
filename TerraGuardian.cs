@@ -294,7 +294,7 @@ namespace giantsummon
             {
                 Vector2 p = Position;
                 p.X += OffsetX;
-                p.Y += OffsetY + Base.CharacterPositionYDiscount;
+                p.Y += OffsetY + Base.CharacterPositionYDiscount * Scale;
                 return p;
             }
         }

@@ -1,26 +1,3 @@
-﻿Made Alex's shading lighter.
-Wooden Greathammer, Flamberge and Two Handed Sword are now faster.
-Added support to W1k Weapon Scaling.
-Changed how the greatsword weapons behaves, when companions are using them.
-	They will now look better.
-Brutus no longer crashes the game upon accepting to do the steel test.
-Brutus also gained a sprite change.
-Alexander's sleuthing is now faster, when he's analyzing someone who's sleeping.
-Stronger Gem monsters will now be easier to appear, depending on group's summed health increasing items under effect.
-	That's also valid if you set the option to share max health items with your companions.
-Companions can now look at the background when idling.
-	They will look at the background when there's either no wall, or there's transparent walls on their head position.
-Companions gained an animation frame for when they're reviving someone who's drawn behind them.
-Malisha's mount unlock level is now 7.
-Revamped how the bounty exp reward is given, for NExperience Mod players:
-	It no longer increases the reward level for every 250 points of value on your loot. (That's like the same as 2 silver and 50 copper coins)
-	Now gives reward based on 10000 points of value of your loot. (Like 1 gold coin)
-	Pre-Hardmode exp reward level was increased from 5 to 10, and Hardmode exp reward was increased from 15 to 25.
-		That reward must be treated like as if the exp given is a percentage, but depending on your game mode, It will receive a reduction on exp reward level.
-Companion Actions are now split from their action and base info scripts.
-	Now each action, either global for all companions, or specific for the companion, has their own class and script file.
-	That allows creating variables specific for the action, and also removes lists each action contained, for possible variable values one could need for the action to happen.
-Changed how the gem monsters spawning works.
-	That may make gem monster spawning more interesting.
-Fixed Blue's outfit behaving like some kind of.... Shield.
-Reduced the follow distancing of the companions, from 48 pixels to 20.
+﻿Brutus revive back animation got a review on the sprite.
+	His outfit also received the missing sprite for that frame, too.
+Fixed leopold's right arm being very visible when standing backward.
