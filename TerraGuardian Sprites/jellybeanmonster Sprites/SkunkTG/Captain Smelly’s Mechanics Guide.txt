@@ -39,11 +39,11 @@ Psv- applies Shadowflame debuff
 Gp(Projectile)- Blade Wave that loses power the further it travels, travels fast, and bypasses blocks and enemies 
 
 >Sharp Topaz
-Psv- Very high base knockback on weapon swings but slower attack speed, 
-Gp(Projectile)- Sends sharp topaz shards that pierce threw targets but collides with blocks and applies bleeding debuff
+Psv- Super high base knockback on weapon swings but slower attack speed, 
+Gp(Projectile)- Sends sharp topaz shards that pierce threw targets but collides with blocks and applies bleeding debuff and cuts targets defense stat by 15% per projectile for 10 seconds.(The defence cut can stack together as long as all the topaz shards hit, so if all 4 hit the 15% defence cut can turn into 60%)
 
 >Energized Sapphire
-Psv- Gives AttackSpeed Bonus but knock back is very low and PF damage is reduced by 15% to compensate for dps 
+Psv- Gives large Attack Speed Bonus but knock back is very low and PF damage is reduced by 15% to compensate for dps 
 Gp(Projectile)- Sends out a energy missle that explodes on contact and applies electrified debuff
 
 >Bloody Ruby
