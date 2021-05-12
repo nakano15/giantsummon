@@ -9,7 +9,7 @@ Captain Smelly- Space Pirate Captain
 Age- 32
 Guardians Slots taken- 4
 
-Defualt Stats:
+Initial Stats:
 Hp- 120
 Mp- 40
 
