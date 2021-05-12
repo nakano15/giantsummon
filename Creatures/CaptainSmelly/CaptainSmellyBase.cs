@@ -30,12 +30,13 @@ namespace giantsummon.Creatures
             SpriteWidth = 160;
             SpriteHeight = 140;
             FramesInRows = 12;
-            Age = 22;
+            Age = 32;
             SetBirthday(SEASON_SUMMER, 1);
             Male = false;
-            InitialMHP = 100; //1100
+            InitialMHP = 150; //1100
             LifeCrystalHPBonus = 20;
             LifeFruitHPBonus = 5;
+			InitialMMP = 40;
             Accuracy = 0.72f;
             Mass = 0.7f;
             MaxSpeed = 4.9f;
@@ -436,7 +437,7 @@ namespace giantsummon.Creatures
                                 {
                                     CriticalRate += 30;
                                     Vector2 SpawnPosition = tg.PositionWithOffset;
-                                    SpawnPosition.Y -= 38 * tg.Scale; //78
+                                    SpawnPosition.Y -= 40 * tg.Scale; //78
                                     int p = Projectile.NewProjectile(SpawnPosition, new Vector2(1f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.EmeraldGP>(),
                                         (int)(Damage * 0.25f), Knockback * 0.9f, tg.GetSomeoneToSpawnProjectileFor);
                                     Main.projectile[p].scale = tg.Scale;
@@ -641,15 +642,16 @@ namespace giantsummon.Creatures
                     ProjectilePosition.X *= -1;
                 ProjectilePosition.Y = -SpriteHeight + ProjectilePosition.Y;
                 ProjectilePosition = tg.PositionWithOffset + ProjectilePosition * tg.Scale;
-                for (int i = 0; i < 4; i++)
-                    Dust.NewDust(ProjectilePosition, 2, 2, 132);
                 AimPosition.Normalize();
+                for (int i = 0; i < 4; i++)
+                    Dust.NewDust(ProjectilePosition, 2, 2, 132, AimPosition.X, AimPosition.Y);
                 int Damage = 5;
                 if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].ranged)
                     Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.35f);
                 Damage = (int)(Damage * tg.RangedDamageMultiplier);
                 int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 14f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
                     Damage, 0.03f, tg.GetSomeoneToSpawnProjectileFor);
+                Main.PlaySound(2, tg.CenterPosition, 20);
                 Main.projectile[ID].scale = tg.Scale;
                 Main.projectile[ID].netUpdate = true;
                 tg.SetProjectileOwnership(ID);

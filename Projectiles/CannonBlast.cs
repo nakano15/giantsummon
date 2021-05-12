@@ -40,6 +40,14 @@ namespace giantsummon.Projectiles
                 Frame -= 12;
         }
 
+        public override void Kill(int timeLeft)
+        {
+            for(int i = 0; i < 8; i++)
+            {
+                Dust.NewDust(projectile.position, projectile.width, projectile.height, 132);
+            }
+        }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
