@@ -1,3 +1,4 @@
 ﻿Brutus revive back animation got a review on the sprite.
 	His outfit also received the missing sprite for that frame, too.
 Fixed leopold's right arm being very visible when standing backward.
+Companions using a Umbrella will no longer take fall damage when slowly falling from higher places.

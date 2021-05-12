@@ -29,17 +29,13 @@ namespace giantsummon.Projectiles
             projectile.light = 0f;
             projectile.ignoreWater = false;
             projectile.tileCollide = true;
-            projectile.maxPenetrate = 20;
+            projectile.penetrate = projectile.maxPenetrate = 20;
             projectile.width = 76;
             projectile.height = 76;
         }
 
         public override void AI()
         {
-            if (projectile.velocity.X > 0)
-                projectile.direction = 1;
-            else
-                projectile.direction = -1;
             projectile.position += projectile.velocity;
             Frame++;
             if(Frame >= 10 * 3)
@@ -52,8 +48,9 @@ namespace giantsummon.Projectiles
         {
             int FrameX = (int)(Frame * 0.3334f);
             Vector2 Position = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, new Rectangle(FrameX * 76, 0, 76, 80), Color.White, 0f,
-                new Vector2(38, 40), projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            Color color = Lighting.GetColor((int)(Position.X * (1f / 16)), (int)(Position.Y * (1f / 16)));
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, new Rectangle(FrameX * 76, 0, 76, 80), color, 0f,
+                new Vector2(38, 40), projectile.scale, SpriteEffects.None, 0);
             return false;
         }
     }

@@ -588,7 +588,7 @@ namespace giantsummon
                 int RewardScore = (IsTalkQuest ? 500 : GetRequestBase(gd).RequestScore + 200);
                 if (Compatibility.NExperienceCompatibility.IsModActive)
                 {
-                    Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player.player, 3 + (float)RewardScore * (1f / 180), 0.1f);
+                    Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player.player, 3 + (float)RewardScore * (1f / 180), 0.1f, true, NExperience.ExpReceivedPopText.ExpSource.Quest);
                 }
                 if (IsTalkQuest)
                 {

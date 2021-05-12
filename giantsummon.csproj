@@ -88,6 +88,7 @@
     <Compile Include="Buffs\LightWound.cs" />
     <Compile Include="Buffs\Love.cs" />
     <Compile Include="Buffs\Protecting.cs" />
+    <Compile Include="Buffs\ShardPierce.cs" />
     <Compile Include="Buffs\Sleeping.cs" />
     <Compile Include="Buffs\VeryFatigued.cs" />
     <Compile Include="Buffs\VeryWounded.cs" />
@@ -310,6 +311,7 @@
     <Content Include="Buffs\HeavyInjury.png" />
     <Content Include="Buffs\Hug.png" />
     <Content Include="Buffs\Injury.png" />
+    <Content Include="Buffs\ShardPierce.png" />
     <Content Include="Buffs\LightFatigue.png" />
     <Content Include="Buffs\LightWound.png" />
     <Content Include="Buffs\Love.png" />

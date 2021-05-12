@@ -27,7 +27,8 @@ namespace giantsummon.Projectiles
             projectile.light = 0f;
             projectile.ignoreWater = false;
             projectile.tileCollide = true;
-            projectile.width = projectile.height = 56;
+            projectile.width = 20;
+            projectile.height = 14;
             projectile.maxPenetrate = -1;
         }
 
@@ -43,6 +44,11 @@ namespace giantsummon.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             target.AddBuff(Terraria.ID.BuffID.Bleeding, 5 * 60);
+            target.AddBuff(ModContent.BuffType<Buffs.ShardPierce>(), 10 * 60);
+            NpcMod n = target.GetGlobalNPC<NpcMod>();
+            n.ShardDebuffCount++;
+            if (n.ShardDebuffCount > 4)
+                n.ShardDebuffCount = 4;
         }
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
@@ -52,9 +58,10 @@ namespace giantsummon.Projectiles
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition;
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos, new Rectangle(0, 0, 58, 54), Color.White, 0f,
-                new Vector2(58, 54) * 0.5f, projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+            Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
+            Color color = Lighting.GetColor((int)(ProjPos.X * (1f / 16)), (int)(ProjPos.Y * (1f / 16)));
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos - Main.screenPosition, null, color, 0f,
+                new Vector2(10, 7), projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return false;
         }
     }

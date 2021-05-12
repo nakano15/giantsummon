@@ -400,7 +400,7 @@ namespace giantsummon.Creatures
                         {
                             case AmethystFalchion:
                                 {
-                                    Vector2 SpawnPos = tg.Position;
+                                    Vector2 SpawnPos = tg.PositionWithOffset;
                                     SpawnPos.Y -= 39 * tg.Scale; //78
                                     int p = Projectile.NewProjectile(SpawnPos, new Vector2(16f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.AmethystGP>(),
                                         Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
@@ -411,10 +411,16 @@ namespace giantsummon.Creatures
                             case TopazFalchion:
                                 {
                                     Knockback += 3f;
-                                    int p = Projectile.NewProjectile(tg.CenterPosition, new Vector2(4f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.TopazGP>(),
-                                        Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
-                                    Main.projectile[p].scale = tg.Scale;
-                                    Main.projectile[p].netUpdate = true;
+                                    for (int s = 0; s < 4; s++)
+                                    {
+                                        Vector2 ShardSpawnPosition = tg.PositionWithOffset;
+                                        ShardSpawnPosition.X += Main.rand.Next((int)(tg.Width * -0.5f), (int)(tg.Width * 0.5f));
+                                        ShardSpawnPosition.Y -= Main.rand.Next(8, tg.Height - 8);
+                                        int p = Projectile.NewProjectile(ShardSpawnPosition, new Vector2(4f * tg.Direction, 0), 
+                                            Terraria.ModLoader.ModContent.ProjectileType<Projectiles.TopazGP>(), (int)(Damage * 0.25f), Knockback, tg.GetSomeoneToSpawnProjectileFor);
+                                        Main.projectile[p].scale = tg.Scale;
+                                        Main.projectile[p].netUpdate = true;
+                                    }
                                 }
                                 break;
                             case SapphireFalchion:
@@ -429,10 +435,10 @@ namespace giantsummon.Creatures
                             case EmeraldFalchion:
                                 {
                                     CriticalRate += 30;
-                                    Vector2 SpawnPosition = tg.Position;
-                                    SpawnPosition.Y -= 36 * tg.Scale; //78
+                                    Vector2 SpawnPosition = tg.PositionWithOffset;
+                                    SpawnPosition.Y -= 38 * tg.Scale; //78
                                     int p = Projectile.NewProjectile(SpawnPosition, new Vector2(1f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.EmeraldGP>(),
-                                        Damage, Knockback * 0.9f, tg.GetSomeoneToSpawnProjectileFor);
+                                        (int)(Damage * 0.25f), Knockback * 0.9f, tg.GetSomeoneToSpawnProjectileFor);
                                     Main.projectile[p].scale = tg.Scale;
                                     Main.projectile[p].netUpdate = true;
                                 }
@@ -475,6 +481,11 @@ namespace giantsummon.Creatures
                                         if (Main.npc[n].getRect().Intersects(SweetSpotPosition))
                                         {
                                             HealthRecover = 0.5f;
+                                            Main.PlaySound(1, tg.CenterPosition);
+                                            for(int i = 0; i < 25; i++)
+                                            {
+                                                Dust.NewDust(Main.npc[n].position, Main.npc[n].width, Main.npc[n].height, Terraria.ID.DustID.Blood);
+                                            }
                                         }
                                         if(HealthRecover * result >= 1)
                                             tg.RestoreHP((int)(HealthRecover * result));
@@ -581,27 +592,27 @@ namespace giantsummon.Creatures
                 Vector2 ProjectilePosition = Vector2.Zero;
                 Vector2 AimPosition = tg.AimDirection.ToVector2() - tg.CenterPosition;
                 float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
-                if (tg.LookingLeft)
+                if (AimPosition.X < 0)
                     Angle = (float)Math.PI - Angle;
                 int LeftArmFrame = 57;
-                if (Angle < 0.0174533f * 65)
+                if(Angle < 30 * 0.017453f) //Middle
                 {
                     if (tg.Velocity.Y != 0)
-                        LeftArmFrame = 62;
-                    else
-                        LeftArmFrame = 59;
+                        LeftArmFrame = 61;
                 }
-                else if (Angle > 0.0174533f * 125)
+                else if (AimPosition.Y > 0) //Down
                 {
                     if (tg.Velocity.Y != 0)
                         LeftArmFrame = 60;
                     else
                         LeftArmFrame = 58;
                 }
-                else
+                else //Up
                 {
                     if (tg.Velocity.Y != 0)
-                        LeftArmFrame = 61;
+                        LeftArmFrame = 62;
+                    else
+                        LeftArmFrame = 59;
                 }
                 switch (LeftArmFrame)
                 {
@@ -624,17 +635,18 @@ namespace giantsummon.Creatures
                         ProjectilePosition = new Vector2(45, 30);
                         break;
                 }
-                ProjectilePosition.X = SpriteWidth / 2 - ProjectilePosition.X;
+                ProjectilePosition *= 2;
+                ProjectilePosition.X = ProjectilePosition.X - SpriteWidth * 0.5f;
                 if (tg.LookingLeft)
                     ProjectilePosition.X *= -1;
-                ProjectilePosition.Y *= -1;
-                ProjectilePosition = tg.Position + ProjectilePosition * tg.Scale;
-                //for (int i = 0; i < 4; i++)
-                //    Dust.NewDust(ProjectilePosition, 4, 4, Terraria.ID.DustID.Fire);
+                ProjectilePosition.Y = -SpriteHeight + ProjectilePosition.Y;
+                ProjectilePosition = tg.PositionWithOffset + ProjectilePosition * tg.Scale;
+                for (int i = 0; i < 4; i++)
+                    Dust.NewDust(ProjectilePosition, 2, 2, 132);
                 AimPosition.Normalize();
                 int Damage = 5;
                 if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].ranged)
-                    Damage = Damage + (int)(tg.Inventory[tg.SelectedItem].damage * 0.35f);
+                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.35f);
                 Damage = (int)(Damage * tg.RangedDamageMultiplier);
                 int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 14f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
                     Damage, 0.03f, tg.GetSomeoneToSpawnProjectileFor);
@@ -646,26 +658,27 @@ namespace giantsummon.Creatures
             {
                 Vector2 AimPosition = tg.AimDirection.ToVector2() - tg.CenterPosition;
                 float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
-                if (tg.LookingLeft)
+                if (AimPosition.X < 0)
                     Angle = (float)Math.PI - Angle;
-                if (Angle < 0.0174533f * 65)
+                LeftArmFrame = 57;
+                if (Angle < 30 * 0.017453f) //Middle
                 {
                     if (tg.Velocity.Y != 0)
-                        LeftArmFrame = 62;
-                    else
-                        LeftArmFrame = 59;
+                        LeftArmFrame = 61;
                 }
-                else if (Angle > 0.0174533f * 125)
+                else if (AimPosition.Y > 0) //Down
                 {
                     if (tg.Velocity.Y != 0)
                         LeftArmFrame = 60;
                     else
                         LeftArmFrame = 58;
                 }
-                else
+                else //Up
                 {
                     if (tg.Velocity.Y != 0)
-                        LeftArmFrame = 61;
+                        LeftArmFrame = 62;
+                    else
+                        LeftArmFrame = 59;
                 }
             };
         }
@@ -725,7 +738,7 @@ namespace giantsummon.Creatures
             {
                 ID = 1;
             }
-            else if (!(Distance < 52 && DistanceYLower >= -90 && DistanceYUpper < 4))
+            else if (!(Distance < 52 && DistanceYLower >= -90 && DistanceYUpper < 4 && Owner.TargetInAim))
             {
                 ID = 2;
             }

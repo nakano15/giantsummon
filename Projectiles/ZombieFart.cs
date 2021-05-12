@@ -63,24 +63,12 @@ namespace giantsummon.Projectiles
                     {
                         Main.player[p].AddBuff(Terraria.ID.BuffID.Suffocation, 5);
                         Main.player[p].AddBuff(Terraria.ID.BuffID.Weak, (Main.expertMode ? 75 : 15) * 60);
+                        Main.player[p].AddBuff(Terraria.ID.BuffID.Slow, 5);
+                        Main.player[p].AddBuff(Terraria.ID.BuffID.Stinky, 60 * 10);
                         if (Main.expertMode)
                             Main.player[p].AddBuff(Terraria.ID.BuffID.Poisoned, 60);
                     }
                 }
-                /*TerraGuardian Guardian = Main.player[p].GetModPlayer<PlayerMod>().Guardian;
-                if (Guardian.Active && !Guardian.Downed)
-                {
-                    Vector2 NosePosition = Guardian.CenterPosition;
-                    NosePosition.Y -= Guardian.Height * 0.25f;
-                    if (NosePosition.X >= ScaledPosition.X && NosePosition.X < ScaledPosition.X + projectile.width * projectile.scale &&
-                        NosePosition.Y >= ScaledPosition.Y && NosePosition.Y < ScaledPosition.Y + projectile.height * projectile.scale)
-                    {
-                        Guardian.AddBuff(Terraria.ID.BuffID.Suffocation, 5);
-                        Guardian.AddBuff(Terraria.ID.BuffID.Weak, (Main.expertMode ? 75 : 15) * 60);
-                        if (Main.expertMode)
-                            Guardian.AddBuff(Terraria.ID.BuffID.Poisoned, 60);
-                    }
-                }*/
             }
             foreach (int g in MainMod.ActiveGuardians.Keys)
             {
@@ -94,6 +82,8 @@ namespace giantsummon.Projectiles
                     {
                         Guardian.AddBuff(Terraria.ID.BuffID.Suffocation, 5);
                         Guardian.AddBuff(Terraria.ID.BuffID.Weak, (Main.expertMode ? 75 : 15) * 60);
+                        Guardian.AddBuff(Terraria.ID.BuffID.Slow, 5);
+                        Guardian.AddBuff(Terraria.ID.BuffID.Stinky, 60 * 10);
                         if (Main.expertMode)
                             Guardian.AddBuff(Terraria.ID.BuffID.Poisoned, 60);
                     }

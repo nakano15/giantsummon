@@ -20,6 +20,7 @@ namespace giantsummon
         public short KbResistance = 1000;
         public bool RechargingKbResist = false;
         public static MobTypes LatestMobType = MobTypes.Normal;
+        public byte ShardDebuffCount = 0;
 
         public override bool CloneNewInstances
         {
@@ -226,6 +227,11 @@ namespace giantsummon
             }
             LatestMobType = npc.GetGlobalNPC<NpcMod>().mobType;
             return base.PreAI(npc);
+        }
+
+        public override void ResetEffects(NPC npc)
+        {
+            ShardDebuffCount = 0;
         }
 
         public override void SetDefaults(NPC npc)
@@ -784,6 +790,10 @@ namespace giantsummon
 
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref int damage, ref float knockback, ref bool crit)
         {
+            if(ShardDebuffCount > 0)
+            {
+                damage += (int)((npc.defense * 0.5f) * ShardDebuffCount * 0.15f);
+            }
             if (!MainMod.DisableDamageReductionByNumberOfCompanions)
             {
                 float DamageMod = player.GetModPlayer<PlayerMod>().DamageMod;
@@ -1630,6 +1640,10 @@ namespace giantsummon
                 {
                     npc.defense += DefenseBonus;
                 }
+            }
+            if(ShardDebuffCount > 0 && !npc.HasBuff(ModContent.BuffType<Buffs.ShardPierce>()))
+            {
+                ShardDebuffCount = 0;
             }
         }
 

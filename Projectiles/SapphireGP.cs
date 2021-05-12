@@ -32,6 +32,7 @@ namespace giantsummon.Projectiles
             projectile.light = 0f;
             projectile.ignoreWater = false;
             projectile.tileCollide = false;
+            projectile.penetrate = 100;
         }
 
         public override void AI()
@@ -43,7 +44,16 @@ namespace giantsummon.Projectiles
                 else
                     projectile.direction = -1;
                 projectile.position += projectile.velocity;
-                if (OnTileCollide(projectile.velocity))
+                bool Collides = false;
+                for (int x = 0; x < 2; x++) {
+                    Tile tile = Framing.GetTileSafely((int)((projectile.position.X + (x == 0 ? 0 : projectile.width)) * (1f / 16)), (int)(projectile.Center.Y * (1f / 16)));
+                    if(tile == null || (tile.active() && Main.tileSolid[tile.type]))
+                    {
+                        Collides = true;
+                        break;
+                    }
+                }
+                if (Collides)
                 {
                     Detonate();
                 }
@@ -91,7 +101,7 @@ namespace giantsummon.Projectiles
                         double dmg = Main.player[t].Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" didn't survived a electric explosion."), projectile.damage, projectile.direction, true);
                         if(dmg > 0) Main.player[t].AddBuff(Terraria.ID.BuffID.Electrified, 5 * 60);
                     }
-                    if(t < 200 && Main.npc[t].active && tg.IsNpcHostile(Main.npc[t]) && Main.npc[t].getRect().Intersects(ExplosionRange))
+                    if(t < 200 && Main.npc[t].active && tg.IsNpcHostile(Main.npc[t]) && !Main.npc[t].dontTakeDamage && Main.npc[t].getRect().Intersects(ExplosionRange))
                     {
                         double dmg = Main.npc[t].StrikeNPC(projectile.damage, projectile.knockBack, projectile.direction);
                         if (dmg > 0) Main.npc[t].AddBuff(Terraria.ID.BuffID.Electrified, 5 * 60);
@@ -107,6 +117,7 @@ namespace giantsummon.Projectiles
                     }
                 }
             }
+            projectile.friendly = projectile.hostile = false;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -117,8 +128,17 @@ namespace giantsummon.Projectiles
                 FrameY += (int)(FrameX * 0.05263157894736842105263157894737f);
                 FrameX -= FrameY * 19;
             }
-            Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f - Main.screenPosition;
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos, new Rectangle(FrameX * 96, FrameY * 96, 96, 96), Color.White, 0f,
+            Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
+            Color color = Color.White;
+            if (!Detonated)
+            {
+                color = Lighting.GetColor((int)(ProjPos.X * (1f / 16)), (int)(ProjPos.Y * (1f / 16)));
+            }
+            else
+            {
+                Lighting.AddLight(ProjPos, 0, 0.86f, 1.67f);
+            }
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos - Main.screenPosition, new Rectangle(FrameX * 96, FrameY * 96, 96, 96), Color.White, 0f,
                 new Vector2(48, 48), projectile.scale, projectile.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
             return false;
         }

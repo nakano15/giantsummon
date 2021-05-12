@@ -203,7 +203,7 @@ namespace giantsummon.Creatures
                 if (TailTexture == null)
                     return;
                 GuardianDrawData dd;
-                if (guardian.BodyAnimationFrame == HeavySwingFrames[0])
+                if (guardian.BodyAnimationFrame == HeavySwingFrames[0] || guardian.BodyAnimationFrame == BackwardRevive || guardian.BodyAnimationFrame == BackwardStanding)
                 {
                     rect.Y += rect.Height * 2;
                     dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
@@ -219,14 +219,13 @@ namespace giantsummon.Creatures
             }
             else
             {
-                if (guardian.BodyAnimationFrame == HeavySwingFrames[0])
+                if (guardian.BodyAnimationFrame == HeavySwingFrames[0] || guardian.BodyAnimationFrame == BackwardRevive || guardian.BodyAnimationFrame == BackwardStanding)
                 {
                     Rectangle rect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
                     Microsoft.Xna.Framework.Graphics.Texture2D TailTexture = sprites.GetExtraTexture("tails");
                     if (TailTexture == null)
                         return;
-                    GuardianDrawData dd;
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                    GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, TailTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                     guardian.AddDrawData(dd, true);
                 }
             }

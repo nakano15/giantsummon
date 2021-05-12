@@ -12,6 +12,7 @@ namespace giantsummon.Projectiles
 {
     public class CannonBlast : ModProjectile
     {
+        byte Frame = 0;
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Cannon Blast");
@@ -19,7 +20,7 @@ namespace giantsummon.Projectiles
 
         public override void SetDefaults()
         {
-            projectile.width = projectile.height = 8;
+            projectile.width = projectile.height = 20;
             projectile.aiStyle = -1;
             projectile.friendly = true;
             projectile.hostile = false;
@@ -33,13 +34,18 @@ namespace giantsummon.Projectiles
         public override void AI()
         {
             projectile.position += projectile.velocity;
-            projectile.rotation = (int)Math.Atan2(projectile.velocity.Y, projectile.velocity.X);
+            projectile.rotation = (float)Math.Atan2(projectile.velocity.Y, projectile.velocity.X);
+            Frame++;
+            if (Frame >= 12)
+                Frame -= 12;
         }
 
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
-            spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, null, Color.White, projectile.rotation,
-                new Vector2(5, 5), projectile.scale, SpriteEffects.None, 0);
+            Vector2 ProjPos = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
+            Lighting.AddLight(ProjPos, 0.160f * 1.75f, 0.248f * 1.75f, 0.248f * 1.75f);
+            spriteBatch.Draw(Main.projectileTexture[projectile.type], ProjPos - Main.screenPosition, new Rectangle(58 * (int)(Frame * 0.25f), 0, 58, 20), Color.White, projectile.rotation,
+                new Vector2(48, 10), projectile.scale, SpriteEffects.None, 0);
             return false;
         }
     }

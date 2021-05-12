@@ -14718,9 +14718,11 @@ namespace giantsummon
                 if (SelectedItem > -1 && Inventory[SelectedItem].type == 946 || SelectedOffhand > -1 && Inventory[SelectedOffhand].type == 946)
                 {
                     if (Velocity.Y * GravityDirection > 2f)
+                    {
                         Velocity.Y = 2f * GravityDirection;
+                        SetFallStart();
+                    }
                 }
-                //SetFallStart();
             }
         }
 
