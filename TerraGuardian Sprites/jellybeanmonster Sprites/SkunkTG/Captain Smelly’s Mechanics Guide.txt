@@ -10,7 +10,7 @@ Age- 32
 Guardians Slots taken- 4
 
 Initial Stats:
-Hp- 120
+Hp- 150
 Mp- 40
 
 Basics:
