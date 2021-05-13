@@ -492,6 +492,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*Remember when I promissed to keep all your town citizens safe? May I do an exception for [gn:" + Domino + "]?*");
                 Mes.Add("*Hey, do you have any laws against smuggling in your world? I would be glad to arrest [gn:" + Domino + "] for that.*");
                 Mes.Add("*[gn:" + Domino + "] always managed to escape from the guards on the Ether Realm somehow. I never managed to find out how.*");
+                Mes.Add("*Keep an eye close on [gn:"+Domino+"]. If that mutt does something you disapprove, come tell me.*");
             }
             if (NpcMod.HasGuardianNPC(Leopold))
             {

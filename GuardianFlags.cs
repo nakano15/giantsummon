@@ -186,6 +186,7 @@ namespace giantsummon
         HealthGoesToZeroWhenKod,
         HideKOBar,
         DryadBane,
-        NotPulledWhenKOd
+        NotPulledWhenKOd,
+        DisableMountSharing
     }
 }

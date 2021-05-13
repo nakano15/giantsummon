@@ -18,7 +18,7 @@ namespace giantsummon.Creatures
             Height = 27 * 2;
             SpriteWidth = 64;
             SpriteHeight = 68;
-            FramesInRows = 28;
+            FramesInRows = 30;
             //DuckingHeight = 54;
             //Each pig should definitelly have the same size, birthday age and time, so I moved those infos.
             Male = true;

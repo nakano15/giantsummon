@@ -1388,7 +1388,7 @@ namespace giantsummon
                             else
                             {
                                 int frameX = tile.frameX % 72;
-                                if (tile.frameX < 72)
+                                if (FacingLeft)
                                 {
                                     if (frameX < 18)
                                         PositionX++;

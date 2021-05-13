@@ -424,6 +424,7 @@ namespace giantsummon
             }
             if (KnockedOut)
             {
+                player.noKnockback = true;
                 if (!NegativeReviveBoost)
                 {
                     player.lifeRegen += ReviveBoost * 5;

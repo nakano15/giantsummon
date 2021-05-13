@@ -69,7 +69,7 @@ namespace giantsummon
                     OrderList.Add(Orders.GetOffMyMount);
                 if ((SpecificGuardian != 255 && !GuardianDoingAction && Guardian.HasMagicMirror && !Guardian.PlayerControl) || (SpecificGuardian == 255 && guardians.Any(x => x.Active && !x.DoAction.InUse && x.HasMagicMirror && !x.PlayerControl)))
                     OrderList.Add(Orders.TeleportWithPlayerToTown);
-                if (Main.player[Main.myPlayer].mount.Active && !Guardian.DoAction.InUse && !Guardian.PlayerMounted && !Guardian.PlayerControl && !Guardian.SittingOnPlayerMount)
+                if (Main.player[Main.myPlayer].mount.Active && !Guardian.DoAction.InUse && !Guardian.PlayerMounted && !Guardian.PlayerControl && !Guardian.SittingOnPlayerMount && !Guardian.HasFlag(GuardianFlags.DisableMountSharing))
                     OrderList.Add(Orders.JoinMyMount);
                 if (!Guardian.PlayerMounted && !Guardian.DoAction.InUse && !MainMod.Gameplay2PMode && Guardian.HasFlag(GuardianFlags.PlayerControl))
                     OrderList.Add(Orders.PlayerControl);

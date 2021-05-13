@@ -1066,35 +1066,51 @@ namespace giantsummon.Npcs
                 damage = (int)(damage * 0.5f);
         }
 
+        public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
+        {
+            if (Main.rand.Next(2) == 0)
+                SayMessage("*I can't... Fight... Anymore...*");
+            else
+                SayMessage("*You... Were better...*");
+        }
+
+        public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
+        {
+            if (Main.rand.Next(2) == 0)
+                SayMessage("*Grr... It's easy when you're far away. No fair!*");
+            else
+                SayMessage("*You... Cheated... Krr...*");
+        }
+
         public void PigStatus(out int HP, out int Damage, out int Defense)
         {
             if (NPC.downedGolemBoss)
             {
-                HP = 16000;
+                HP = 18500;
                 Damage = 150;
                 Defense = 50;
             }
             else if (NPC.downedMechBossAny)
             {
-                HP = 30000;
+                HP = 35000;
                 Damage = 90;
                 Defense = 35;
             }
             else if (Main.hardMode)
             {
-                HP = 10000;
+                HP = 15000;
                 Damage = 60;
                 Defense = 25;
             }
             else if (NPC.downedBoss3)
             {
-                HP = 6000;
+                HP = 8000;
                 Damage = 40;
                 Defense = 20;
             }
             else
             {
-                HP = 2000;
+                HP = 4000;
                 Damage = 20;
                 Defense = 10;
             }

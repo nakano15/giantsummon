@@ -3261,6 +3261,8 @@ namespace giantsummon
 
         public void DoSitOnPlayerMount(bool Value)
         {
+            if (Value && HasFlag(GuardianFlags.DisableMountSharing))
+                return;
             SittingOnPlayerMount = Value;
             PlayerMounted = false;
             PlayerControl = false;
@@ -5110,55 +5112,58 @@ namespace giantsummon
                         bool ExecuteBehavior;
                         int SubAttackPicked = Base.GuardianSubAttackBehaviorAI(this, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight,
                             ref Approach, ref Retreat, ref Jump, ref MoveDown, out ExecuteBehavior);
-                        GuardianSpecialAttack gsa = Base.SpecialAttackList[SubAttackPicked];
-                        SelectedItem = -1;
-                        int LastHighestDamage = 0;
-                        for (int i = 0; i < 10; i++)
+                        if (SubAttackPicked > -1)
                         {
-                            switch (gsa.combatType)
+                            GuardianSpecialAttack gsa = Base.SpecialAttackList[SubAttackPicked];
+                            SelectedItem = -1;
+                            int LastHighestDamage = 0;
+                            for (int i = 0; i < 10; i++)
                             {
-                                case GuardianSpecialAttack.SubAttackCombatType.Melee:
-                                    if(Inventory[i].type > 0 && Inventory[i].melee && Inventory[i].damage > LastHighestDamage)
-                                    {
-                                        SelectedItem = i;
-                                        LastHighestDamage = Inventory[i].damage;
-                                    }
-                                    break;
-                                case GuardianSpecialAttack.SubAttackCombatType.Ranged:
-                                    if (Inventory[i].type > 0 && Inventory[i].ranged && Inventory[i].damage > LastHighestDamage)
-                                    {
-                                        SelectedItem = i;
-                                        LastHighestDamage = Inventory[i].damage;
-                                    }
-                                    break;
-                                case GuardianSpecialAttack.SubAttackCombatType.Magic:
-                                    if (Inventory[i].type > 0 && Inventory[i].magic && Inventory[i].damage > LastHighestDamage)
-                                    {
-                                        SelectedItem = i;
-                                        LastHighestDamage = Inventory[i].damage;
-                                    }
-                                    break;
+                                switch (gsa.combatType)
+                                {
+                                    case GuardianSpecialAttack.SubAttackCombatType.Melee:
+                                        if (Inventory[i].type > 0 && Inventory[i].melee && Inventory[i].damage > LastHighestDamage)
+                                        {
+                                            SelectedItem = i;
+                                            LastHighestDamage = Inventory[i].damage;
+                                        }
+                                        break;
+                                    case GuardianSpecialAttack.SubAttackCombatType.Ranged:
+                                        if (Inventory[i].type > 0 && Inventory[i].ranged && Inventory[i].damage > LastHighestDamage)
+                                        {
+                                            SelectedItem = i;
+                                            LastHighestDamage = Inventory[i].damage;
+                                        }
+                                        break;
+                                    case GuardianSpecialAttack.SubAttackCombatType.Magic:
+                                        if (Inventory[i].type > 0 && Inventory[i].magic && Inventory[i].damage > LastHighestDamage)
+                                        {
+                                            SelectedItem = i;
+                                            LastHighestDamage = Inventory[i].damage;
+                                        }
+                                        break;
+                                }
                             }
-                        }
-                        float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Position.X + Velocity.X) - Width * 0.5f;
-                        if (Distance < gsa.MinRange + TargetWidth * 0.5f)
-                        {
-                            if(ExecuteBehavior) Retreat = true;
-                        }
-                        else if (Distance >= gsa.MaxRange + TargetWidth * 0.5f)
-                        {
-                            if (ExecuteBehavior) Approach = true;
-                        }
-                        else if (!SubAttackInUse)
-                        {
-                            UseSubAttack(SubAttackPicked);
-                            if (SubAttackInUse)
+                            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Position.X + Velocity.X) - Width * 0.5f;
+                            if (Distance < gsa.MinRange + TargetWidth * 0.5f)
                             {
-                                if (TargetPosition.X + TargetWidth * 0.5f > Position.X)
-                                    LookingLeft = false;
-                                else
-                                    LookingLeft = true;
-                                LockDirection = true;
+                                if (ExecuteBehavior) Retreat = true;
+                            }
+                            else if (Distance >= gsa.MaxRange + TargetWidth * 0.5f)
+                            {
+                                if (ExecuteBehavior) Approach = true;
+                            }
+                            else if (!SubAttackInUse)
+                            {
+                                UseSubAttack(SubAttackPicked);
+                                if (SubAttackInUse)
+                                {
+                                    if (TargetPosition.X + TargetWidth * 0.5f > Position.X)
+                                        LookingLeft = false;
+                                    else
+                                        LookingLeft = true;
+                                    LockDirection = true;
+                                }
                             }
                         }
                         Action = false;
@@ -6341,9 +6346,13 @@ namespace giantsummon
                         {
                             furniturex = x;
                             furniturey = y;
+                            bool FacingLeft = tile.frameX < 72;
                             int framex = (tile.frameX / 18) % 4,
                                 framey = (tile.frameY / 18) % 2;
-                            furniturex += 2 - framex;
+                            if(FacingLeft)
+                                furniturex += 1 - framex;
+                            else
+                                furniturex += 2 - framex;
                             furniturey += 1 - framey;
                         }
                         break;
@@ -10783,7 +10792,7 @@ namespace giantsummon
                 }
             }
 
-            if (HitDirection != 0 && (!HasFlag(GuardianFlags.KnockbackImmunity) || HP <= 0))
+            if (HitDirection != 0 && !KnockedOut && (!HasFlag(GuardianFlags.KnockbackImmunity) || HP <= 0))
             {
                 Velocity.X = 4.5f * HitDirection;
                 Velocity.Y = -3.5f;
@@ -13735,7 +13744,6 @@ namespace giantsummon
             LookingLeft = AimDirection.X < Position.X;
             SubAttackDamage = gsa.CalculateAttackDamage(this);
             gsa.WhenSubAttackBegins(this);
-            //Main.NewText("Using Sub Attack " + ID);
         }
 
         public bool SubAttackInCooldown(byte ID)

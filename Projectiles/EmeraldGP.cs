@@ -24,7 +24,7 @@ namespace giantsummon.Projectiles
             projectile.aiStyle = -1;
             projectile.friendly = true;
             projectile.hostile = false;
-            projectile.timeLeft = 300;
+            projectile.timeLeft = 600;
             projectile.alpha = 255;
             projectile.light = 0f;
             projectile.ignoreWater = false;
@@ -44,11 +44,23 @@ namespace giantsummon.Projectiles
             }
         }
 
+        public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+        {
+            crit = true;
+        }
+
+        public override void ModifyHitPlayer(Player target, ref int damage, ref bool crit)
+        {
+            crit = true;
+        }
+
         public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
         {
             int FrameX = (int)(Frame * 0.3334f);
             Vector2 Position = projectile.position + new Vector2(projectile.width, projectile.height) * 0.5f;
             Color color = Lighting.GetColor((int)(Position.X * (1f / 16)), (int)(Position.Y * (1f / 16)));
+            if (projectile.timeLeft < 30)
+                color *= projectile.timeLeft * (1f / 30);
             spriteBatch.Draw(Main.projectileTexture[projectile.type], projectile.position - Main.screenPosition, new Rectangle(FrameX * 76, 0, 76, 80), color, 0f,
                 new Vector2(38, 40), projectile.scale, SpriteEffects.None, 0);
             return false;

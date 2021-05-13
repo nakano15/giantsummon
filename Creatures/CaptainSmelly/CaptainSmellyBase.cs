@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ModLoader.IO;
 
 namespace giantsummon.Creatures
 {
@@ -36,7 +37,7 @@ namespace giantsummon.Creatures
             InitialMHP = 150; //1100
             LifeCrystalHPBonus = 20;
             LifeFruitHPBonus = 5;
-			InitialMMP = 40;
+			InitialMP = 40;
             Accuracy = 0.72f;
             Mass = 0.7f;
             MaxSpeed = 4.9f;
@@ -52,6 +53,9 @@ namespace giantsummon.Creatures
             UsesRightHandByDefault = true;
             ForceWeaponUseOnMainHand = true;
             SetTerraGuardian();
+
+            this.MountUnlockLevel = 255;
+            this.ControlUnlockLevel = 255;
 
             //Animation Frames
             StandingFrame = 0;
@@ -136,6 +140,12 @@ namespace giantsummon.Creatures
             SubAttacksSetup();
         }
 
+        public override void Attributes(TerraGuardian g)
+        {
+            g.AddFlag(GuardianFlags.FeatherfallPotion);
+            g.AddFlag(GuardianFlags.DisableMountSharing);
+        }
+
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
             sprites.AddExtraTexture(PlasmaFalchionTextureID, "plasma_falchion");
@@ -153,7 +163,7 @@ namespace giantsummon.Creatures
             {
                 GuardianMouseOverAndDialogueInterface.Options.Clear();
                 GuardianMouseOverAndDialogueInterface.SetDialogue("What should I infuse my weapon with?");
-                for(byte i = 0; i < NumberOfSwords; i++)
+                for (byte i = 0; i < NumberOfSwords; i++)
                 {
                     byte InfusionID = i;
                     string Mes = "";
@@ -190,6 +200,12 @@ namespace giantsummon.Creatures
                         GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
                     });
                 }
+                GuardianMouseOverAndDialogueInterface.AddOption("Infuse Weapon?", delegate (TerraGuardian tg2)
+                {
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("I can infuse my Falchion with gemstone powers to cause different effects when I use it.\n" +
+                        "I need to have a gemstone before I can do the infusion.");
+                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
+                });
                 GuardianMouseOverAndDialogueInterface.AddOption("Nevermind", delegate (TerraGuardian tg2)
                 {
                     GuardianMouseOverAndDialogueInterface.SetDialogue("Thanks for wasting my time.");
@@ -202,19 +218,19 @@ namespace giantsummon.Creatures
         private int GetCalculatedSwordDamage(TerraGuardian tg)
         {
             int Damage = 15;
-            if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].melee)
+            if (tg.SelectedItem > -1)
             {
                 Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useTime / 60));
             }
             CaptainSmellyData data = (CaptainSmellyData)tg.Data;
             if (data.SwordID > 0)
                 Damage = (int)(Damage * 1.2f);
-            switch (data.SwordID)
+            /*switch (data.SwordID)
             {
                 case AmethystFalchion:
                     Damage += (int)(tg.MagicDamageMultiplier * Damage * 0.15f);
                     break;
-            }
+            }*/
             /*int StrongestDamage = 0;
             for (int i = 0; i < 10; i++)
             {
@@ -252,7 +268,7 @@ namespace giantsummon.Creatures
         public void VSwingSetup()
         {
             GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //V Swing
-            special.MinRange = 16;
+            special.MinRange = 0;//16;
             special.MaxRange = 52;
             special.CanMove = true;
             for (int i = 43; i < 45; i++)
@@ -363,7 +379,7 @@ namespace giantsummon.Creatures
         public void GPSetup()
         {
             GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //GP
-            //special.SetCooldown(15);
+            special.SetCooldown(15);
             special.MinRange = 0;
             special.MaxRange = 62;
             special.CalculateAttackDamage = delegate (TerraGuardian tg)
@@ -395,6 +411,7 @@ namespace giantsummon.Creatures
                     int CriticalRate = 4 + tg.MeleeCriticalRate;
                     float Knockback = 6f;
                     byte SwordID = data.SwordID;
+                    Main.PlaySound(2, tg.CenterPosition, 1);
                     if (SwordID > 0)
                     {
                         switch (SwordID)
@@ -405,6 +422,7 @@ namespace giantsummon.Creatures
                                     SpawnPos.Y -= 39 * tg.Scale; //78
                                     int p = Projectile.NewProjectile(SpawnPos, new Vector2(16f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.AmethystGP>(),
                                         Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
+                                    Main.PlaySound(2, tg.CenterPosition, 101);
                                     Main.projectile[p].scale = tg.Scale;
                                     Main.projectile[p].netUpdate = true;
                                 }
@@ -421,6 +439,7 @@ namespace giantsummon.Creatures
                                             Terraria.ModLoader.ModContent.ProjectileType<Projectiles.TopazGP>(), (int)(Damage * 0.25f), Knockback, tg.GetSomeoneToSpawnProjectileFor);
                                         Main.projectile[p].scale = tg.Scale;
                                         Main.projectile[p].netUpdate = true;
+                                        Main.PlaySound(2, tg.CenterPosition, 101);
                                     }
                                 }
                                 break;
@@ -431,6 +450,7 @@ namespace giantsummon.Creatures
                                         Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
                                     Main.projectile[p].scale = tg.Scale;
                                     Main.projectile[p].netUpdate = true;
+                                    Main.PlaySound(2, tg.CenterPosition, 39);
                                 }
                                 break;
                             case EmeraldFalchion:
@@ -584,7 +604,7 @@ namespace giantsummon.Creatures
             GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Ranged); //Arm Blaster
             special.CanMove = true;
             special.ManaCost = 1;
-            special.MinRange = 100;
+            special.MinRange = 0;//100;
             special.MaxRange = 1000;
             AddNewSubAttackFrame(8, -1, 57, -1);
             special.WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID)
@@ -646,7 +666,7 @@ namespace giantsummon.Creatures
                 for (int i = 0; i < 4; i++)
                     Dust.NewDust(ProjectilePosition, 2, 2, 132, AimPosition.X, AimPosition.Y);
                 int Damage = 5;
-                if (tg.SelectedItem > -1 && tg.Inventory[tg.SelectedItem].ranged)
+                if (tg.SelectedItem > -1)
                     Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.35f);
                 Damage = (int)(Damage * tg.RangedDamageMultiplier);
                 int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 14f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
@@ -688,8 +708,8 @@ namespace giantsummon.Creatures
         public override int GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight,
             ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
-            int ID = 0;
-            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) - (TargetWidth + Owner.Width) * 0.5f,
+            int ID = -1;
+            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) - (TargetWidth) * 0.5f,
                 DistanceYUpper = TargetPosition.Y - Owner.Position.Y,
                 DistanceYLower = TargetPosition.Y + TargetHeight - Owner.Position.Y;
             bool InRangeForBlaster = Owner.MP > 1 && Distance > 100;
@@ -736,14 +756,19 @@ namespace giantsummon.Creatures
                     }
                     break;
             }
-            if (Distance < 62 && DistanceYLower >= -98 && DistanceYUpper < 18 && !Owner.SubAttackInCooldown(1))
+            if (!Owner.SubAttackInCooldown(1) && Distance < 62 && DistanceYLower >= -98 && DistanceYUpper < 18)
             {
                 ID = 1;
             }
-            else if (!(Distance < 52 && DistanceYLower >= -90 && DistanceYUpper < 4 && Owner.TargetInAim))
+            else if (Distance < 52 && DistanceYLower >= -90 && DistanceYUpper < 4)
+            {
+                ID = 0;
+            }
+            else
             {
                 ID = 2;
             }
+            //Owner.SaySomething("Using " + ID);
             return ID;
         }
 
@@ -1006,6 +1031,17 @@ namespace giantsummon.Creatures
             public CaptainSmellyData(int ID, string ModID) : base(ID, ModID)
             {
 
+            }
+
+            public override void SaveCustom(TagCompound tag, int UniqueID)
+            {
+                tag.Add(UniqueID + "_SmellySwordID", SwordID);
+            }
+
+            public override void LoadCustom(TagCompound tag, int ModVersion, int UniqueID)
+            {
+                if(ModVersion > 85)
+                    SwordID = tag.GetByte(UniqueID + "_SmellySwordID");
             }
         }
     }
