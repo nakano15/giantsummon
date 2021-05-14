@@ -29,10 +29,10 @@ While nearby metals or gemstones:
 -My scouter is picking up high volumes of rare materials here just keep up your mining it will be all ours soon enough.
 
 While nearby enemies:
--My scouter is showing high levels of hostile energy, look out for a ambush
+-My scouter is showing a hostile entities, look out for a ambush.
 
 While nearby traps:
--My scouter is picking up danger signals in this area watchout for traps
+-My scouter is picking up danger signals in this area watchout for traps.
 
 Reviving:
 Reviving player- Oh no! don't end up like my cadets we have so much more treasure to find!
