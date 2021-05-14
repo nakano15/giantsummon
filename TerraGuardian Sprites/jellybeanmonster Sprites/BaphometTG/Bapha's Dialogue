@@ -22,12 +22,17 @@ RNG Dialogue-
 - "If your wondering how old i am you would be out of luck because i dont know my age either, Ive been idle for so long i lost count. But im several milliena at least.
 
 Reviving Player:
-- "I didnt expect you to turn to such a weakling"
-- "Rise again, we have unfinished bussiness"
+- "I didnt expect you to turn to such a weakling, stand up!"
+- "Rise again!, we have unfinished bussiness"
 
+Player reviving:
+- "IM IMMORTAL!"
+- "If you think you can defeat me your more delusional than ever!"
 
 Quest Dialogue:
 - "If you were to kill 666 hell spawn, i would grant you access to dozens of my minions through a portal."
-
 Quest completed:
 - "Well done, my minions shall serve you well."
+
+Terra guardian specific interactions:
+
