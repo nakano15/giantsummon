@@ -110,6 +110,7 @@ namespace giantsummon.Actions
                                 float WalkTime = 16f / guardian.MoveSpeed;
                                 int Time = (int)((Math.Abs(ResultPosition.X - guardian.CenterPosition.X) + Math.Abs(ResultPosition.Y - guardian.CenterPosition.Y)) * WalkTime) / (16 * 16) + 60 * 7;
                                 TeleportTime = Time;
+                                //Main.NewText("Teleport time: " + Math.Round((float)Time / 60, 1) + "s.");
                                 LastWasPlayerMounted = guardian.PlayerMounted;
                                 if (guardian.PlayerMounted)
                                     guardian.ToggleMount(true);
@@ -527,10 +528,8 @@ namespace giantsummon.Actions
                             {
                                 TeleportTime = 60 * 5;
                             }
-                            int Time = TeleportTime;
-                            if (Time > 0)
+                            if (Time < TeleportTime)
                             {
-                                Time--;
                                 TeleportedEffects = true;
                             }
                             else

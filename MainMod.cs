@@ -39,7 +39,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 85, LastModVersion = 84;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -887,7 +887,7 @@ namespace giantsummon
             WorldMod.AnalyzeDrawMoment();
         }
 
-        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs;
+        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
@@ -904,13 +904,14 @@ namespace giantsummon
                     hsi = new LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, InterfaceScaleType.UI);
                     gsi = new LegacyGameInterfaceLayer("Terra Guardians: Selection Interface", DrawGuardianSelectionInterface, InterfaceScaleType.UI);
                     goi = new LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, InterfaceScaleType.UI);
-                    gmi = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, InterfaceScaleType.UI);
-                    dnagd = new LegacyGameInterfaceLayer("Terra Guardians: Chat Messages Interface", DrawNpcsAndGuardianChatMessages, InterfaceScaleType.UI);
-                    dgrb = new LegacyGameInterfaceLayer("Terra Guardians: Revive Bar Interface", DrawGuardianReviveBar, InterfaceScaleType.UI);
+                    gmi = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, InterfaceScaleType.Game);
+                    dnagd = new LegacyGameInterfaceLayer("Terra Guardians: Chat Messages Interface", DrawNpcsAndGuardianChatMessages, InterfaceScaleType.Game);
+                    dgrb = new LegacyGameInterfaceLayer("Terra Guardians: Revive Bar Interface", DrawGuardianReviveBar, InterfaceScaleType.Game);
                     dgdi = new LegacyGameInterfaceLayer("Terra Guardians: Dialogue Inteface", DrawGuardianDialogueInterface, InterfaceScaleType.UI);
-                    dgmo = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, InterfaceScaleType.UI);
+                    dgmo = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, InterfaceScaleType.Game);
                     dghmi = new LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, InterfaceScaleType.UI);
                     dcs = new LegacyGameInterfaceLayer("Terra Guardians: Colored Screen", DrawColoredScreen, InterfaceScaleType.UI);
+                    umos = new LegacyGameInterfaceLayer("Terra Guardians: Update Mouse Over Revive", UpdateMouseOverScript, InterfaceScaleType.Game);
                     bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
                     {
                         BuddyModeSetupInterface.Draw();
@@ -943,6 +944,7 @@ namespace giantsummon
                 layers.Insert(HealthBarLayer - 1, hsi);
                 layers.Insert(EntityHealthBarLayer, dgrb);
                 layers.Insert(TownNpcHeadBannersLayer, dghmi);
+                layers.Insert(TownNpcHeadBannersLayer, umos);
                 bool RemoveHealthBarAndInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
                 for (int l = 0; l < layers.Count; l++)
                 {
@@ -960,6 +962,12 @@ namespace giantsummon
             {
 
             }
+        }
+
+        public static bool UpdateMouseOverScript()
+        {
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().UpdateMouseOverSystem();
+            return true;
         }
 
         public static bool DrawColoredScreen()

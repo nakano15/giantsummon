@@ -762,8 +762,10 @@ namespace giantsummon
             }
         }
 
-        public void UpdateReviveSystem()
+        public void UpdateMouseOverSystem()
         {
+            if (player.dead || KnockedOut)
+                return;
             bool Reviving = player.controlUseItem && player.itemAnimation == 0;
             int SelectedOne = -1;
             bool SelectedIsGuardian = false;
@@ -1815,8 +1817,6 @@ namespace giantsummon
 
         public override void SetControls()
         {
-            if (player.whoAmI == Main.myPlayer && !player.dead && !KnockedOut)
-                UpdateReviveSystem();
             if (player.whoAmI == Main.myPlayer && KnockedOut) //Controls
             {
                 if (KnockedOutCold && player.controlHook && !MainMod.PlayersDontDiesAfterDownedDefeat)

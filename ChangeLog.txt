@@ -5,3 +5,4 @@ Companions using a Umbrella will no longer take fall damage when slowly falling 
 Fixed Wrath's spritesheet issues.
 	That will also affect the battle you have with him, so he's no longer invisible when moving.
 Your character and companions will no longer receive knockback when attacked while knocked out.
+Companions will no longer go missing when you tell them to sell items.
