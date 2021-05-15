@@ -209,31 +209,18 @@ namespace giantsummon
             {
                 AddOption("Close", CloseDialogueButtonAction);
             }
-            SomeoneMouseOver = false;
-            int LastMouseOverGuardian = MouseOverGuardian;
-            MouseOverGuardian = -1;
-            int[] Keys = MainMod.ActiveGuardians.Keys.ToArray();
-            float MouseX = Main.mouseX + Main.screenPosition.X,
-                MouseY = Main.mouseY + Main.screenPosition.Y;
-            foreach (int key in Keys)
+            //UpdateMouseOver();
+            //UpdateDialogueMouse();
+            PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            if (!player.KnockedOut && !player.IsTalkingToAGuardian && SomeoneMouseOver)
             {
-                if (!MainMod.ActiveGuardians[key].IsPlayerHostile(Main.player[Main.myPlayer]))
-                {
-                    float Left = MainMod.ActiveGuardians[key].Position.X - MainMod.ActiveGuardians[key].Width * 0.5f,
-                        Bottom = MainMod.ActiveGuardians[key].Position.Y,
-                        Right = Left + MainMod.ActiveGuardians[key].Width,
-                        Top = Bottom - MainMod.ActiveGuardians[key].Height;
-                    if (MouseX >= Left && MouseX < Right && MouseY >= Top && MouseY < Bottom)
-                    {
-                        SomeoneMouseOver = true;
-                        MouseOverGuardian = key;
-                    }
-                }
+                if (DialogueDelayTime < DialogueMaxDelayTime)
+                    DialogueDelayTime++;
             }
-            if (LastMouseOverGuardian != MouseOverGuardian)
-            {
-                DialogueDelayTime = 0;
-            }
+        }
+
+        public static void UpdateDialogueMouse()
+        {
             PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
             if (!player.IsTalkingToAGuardian && GuardianShopInterface.ShopOpen)
                 GuardianShopInterface.ShopOpen = false;
@@ -246,14 +233,15 @@ namespace giantsummon
             {
                 if (SomeoneMouseOver)
                 {
-                    if (DialogueDelayTime < DialogueMaxDelayTime)
-                        DialogueDelayTime++;
+                    //if (DialogueDelayTime < DialogueMaxDelayTime)
+                    //    DialogueDelayTime++;
                     if (!player.IsTalkingToAGuardian || player.TalkingGuardianPosition != MouseOverGuardian)
                     {
                         if (Main.mouseRight && Main.mouseRightRelease)
                         {
                             TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
-                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg) && ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1))
+                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg) && ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1) && 
+                                (!tg.DoAction.InUse || (!tg.DoAction.Invisibility && !tg.DoAction.Inactivity)))
                             {
                                 StartDialogue(tg);
                             }
@@ -273,7 +261,8 @@ namespace giantsummon
                     return;
                 }
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut)
+                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut || 
+                    (tg.DoAction.InUse && (tg.DoAction.Invisibility || tg.DoAction.Inactivity)))
                 {
                     player.IsTalkingToAGuardian = false;
                     if (Main.playerInventory)
@@ -314,6 +303,40 @@ namespace giantsummon
                 ClickedOnce = false;
         }
 
+        public static void UpdateMouseOver()
+        {
+            SomeoneMouseOver = false;
+            int LastMouseOverGuardian = MouseOverGuardian;
+            MouseOverGuardian = -1;
+            float MouseX = Main.mouseX + Main.screenPosition.X,
+                MouseY = Main.mouseY + Main.screenPosition.Y;
+            {
+                int[] Keys = MainMod.ActiveGuardians.Keys.ToArray();
+                foreach (int key in Keys)
+                {
+                    if (!MainMod.ActiveGuardians[key].IsPlayerHostile(Main.player[Main.myPlayer]))
+                    {
+                        float Left = MainMod.ActiveGuardians[key].Position.X - MainMod.ActiveGuardians[key].Width * 0.5f,
+                            Bottom = MainMod.ActiveGuardians[key].Position.Y,
+                            Right = Left + MainMod.ActiveGuardians[key].Width,
+                            Top = Bottom - MainMod.ActiveGuardians[key].Height;
+                        if (MouseX >= Left && MouseX < Right && MouseY >= Top && MouseY < Bottom)
+                        {
+                            if (!MainMod.ActiveGuardians[key].DoAction.InUse || MainMod.ActiveGuardians[key].DoAction.Inactivity || MainMod.ActiveGuardians[key].DoAction.Invisibility)
+                            {
+                                SomeoneMouseOver = true;
+                                MouseOverGuardian = key;
+                            }
+                        }
+                    }
+                }
+            }
+            if (LastMouseOverGuardian != MouseOverGuardian)
+            {
+                DialogueDelayTime = 0;
+            }
+        }
+
         public static bool IsInChattingRange(TerraGuardian tg)
         {
             if (DialogueCloseCheckDelayTime > 0)
@@ -330,6 +353,7 @@ namespace giantsummon
 
         public static void DrawMouseOver()
         {
+            UpdateMouseOver();
             if (SomeoneMouseOver && MainMod.ActiveGuardians.ContainsKey(MouseOverGuardian))
             {
                 TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
@@ -409,6 +433,7 @@ namespace giantsummon
 
         public static void DrawDialogue()
         {
+            UpdateDialogueMouse();
             if (!MainPlayer.GetModPlayer<PlayerMod>().IsTalkingToAGuardian || GuardianManagement.Active)
                 return;
             if (GuardianShopInterface.ShopOpen)

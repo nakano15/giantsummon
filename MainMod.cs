@@ -988,6 +988,31 @@ namespace giantsummon
         public static bool DrawGuardianMouseOverInterface()
         {
             GuardianMouseOverAndDialogueInterface.DrawMouseOver();
+            if (ToReviveID > -1)
+            {
+                string MouseOverText = "";
+                Vector2 Position = Vector2.Zero;
+                if (ToReviveIsGuardian)
+                {
+                    if (ActiveGuardians.ContainsKey(ToReviveID))
+                    {
+                        MouseOverText = (IsReviving ? "Reviving " : "Revive ") + ActiveGuardians[ToReviveID].ReferenceName;
+                        Position = ActiveGuardians[ToReviveID].Position;
+                        Position.Y += 22;
+                    }
+                }
+                else
+                {
+                    MouseOverText = (IsReviving ? "Reviving " : "Revive ") + Main.player[ToReviveID].name;
+                    Position = Main.player[ToReviveID].position;
+                    Position.X += Main.player[ToReviveID].width * 0.5f;
+                    Position.Y += Main.player[ToReviveID].height + 22;
+                }
+                if(MouseOverText != "")
+                {
+                    Utils.DrawBorderString(Main.spriteBatch, MouseOverText, Position - Main.screenPosition, Color.White, 1f, 0.5f, 0f);
+                }
+            }
             return true;
         }
 
@@ -1556,20 +1581,6 @@ namespace giantsummon
             if (GuardianManagement.Active || GuardianShopInterface.ShopOpen)
                 return true;
             string MouseOverText = "";
-            if (ToReviveID > -1)
-            {
-                if (ToReviveIsGuardian)
-                {
-                    if (ActiveGuardians.ContainsKey(ToReviveID))
-                    {
-                        MouseOverText = (IsReviving ? "Reviving " : "Revive ") + ActiveGuardians[ToReviveID].ReferenceName;
-                    }
-                }
-                else
-                {
-                    MouseOverText = (IsReviving ? "Reviving " : "Revive ") + Main.player[ToReviveID].name;
-                }
-            }
             const int InventoryMenuButtons = 8;
             PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
             TerraGuardian Guardian = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian;

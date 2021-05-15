@@ -213,7 +213,7 @@ namespace giantsummon
                                     AddOptionHolder();
                                     AddOption(Option.OptionType.MountGuardian, (SelectedGuardian == 255 && Guardians.Any(x => x.Active && (x.HasFlag(GuardianFlags.AllowMount) || x.PlayerMounted))) ||
                                         (SelectedGuardian != 255 && (Guardians[SelectedGuardian].HasFlag(GuardianFlags.AllowMount) || Guardians[SelectedGuardian].PlayerMounted)));
-                                    AddOption(Option.OptionType.ShareMount, player.player.mount.Active && !Guardians[SelectedGuardian].HasFlag(GuardianFlags.DisableMountSharing) && (SelectedGuardian == 255 || !player.GetAllGuardianFollowers[SelectedGuardian].PlayerControl));
+                                    AddOption(Option.OptionType.ShareMount, player.player.mount.Active && (SelectedGuardian == 255 || (!player.GetAllGuardianFollowers[SelectedGuardian].PlayerControl && !player.GetAllGuardianFollowers[SelectedGuardian].HasFlag(GuardianFlags.DisableMountSharing))));
                                     AddOption(Option.OptionType.TeleportWithPlayer,
                                         ((SelectedGuardian == 255 && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && x.HasMagicMirror)) ||
                                         (SelectedGuardian != 255 && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers[SelectedGuardian].HasMagicMirror)));
