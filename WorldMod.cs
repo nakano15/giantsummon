@@ -352,7 +352,8 @@ namespace giantsummon
             {
                 GuardianNPCsInWorld[i] = null;
             }
-            Compatibility.NExperienceCompatibility.ResetOnWorldLoad();
+            if(Compatibility.NExperienceCompatibility.IsModActive)
+                Compatibility.NExperienceCompatibility.ResetOnWorldLoad();
             GuardianBountyQuest.Reset();
             AlexRecruitScripts.SpawnedTombstone = false;
             LastTime = -1;

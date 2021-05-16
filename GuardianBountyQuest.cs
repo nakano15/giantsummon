@@ -450,7 +450,7 @@ namespace giantsummon
                 }
                 if (Compatibility.NExperienceCompatibility.IsModActive)
                 {
-                    Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player, (Main.hardMode ? 25 : 10) + (float)ValueStack / 10000, 0.15f, true, NExperience.ExpReceivedPopText.ExpSource.Quest);
+                    Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player, (Main.hardMode ? 25 : 10) + (float)ValueStack / 10000, 0.15f, true, 5); //NExperience.ExpReceivedPopText.ExpSource.Quest
                 }
                 BountyProgress[player.name] = BountyRewardRedeemed;
                 return true;

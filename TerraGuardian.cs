@@ -2018,9 +2018,10 @@ namespace giantsummon
             {
                 AddBuff(28, 2);
             }
-            if (Compatibility.NExperienceCompatibility.IsModActive && Compatibility.NExperienceCompatibility.LevelChanged(this))
+            if (Compatibility.NExperienceCompatibility.IsModActive)
             {
-                UpdateStatus = true;
+                if(Compatibility.NExperienceCompatibility.LevelChanged(this))
+                    UpdateStatus = true;
             }
             if (UpdateStatus || MainMod.ForceUpdateGuardiansStatus)
                 DoUpdateGuardianStatus();

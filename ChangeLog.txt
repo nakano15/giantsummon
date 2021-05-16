@@ -1,1 +1,1 @@
-﻿
+﻿Fixed issue where the mod wasn't loading correctly due to the absence of NExperience mod installed.

@@ -37,9 +37,9 @@ namespace giantsummon.Compatibility
             SetGuardianLevel.Add(new GuardianIdentity(tg), Level);
         }
 
-        public static void GiveExpRewardToPlayer(Player player, float Level, float Difficulty, bool ShowTooltip = true, NExperience.ExpReceivedPopText.ExpSource Source = NExperience.ExpReceivedPopText.ExpSource.Other)
+        public static void GiveExpRewardToPlayer(Player player, float Level, float Difficulty, bool ShowTooltip = true, byte Source = (byte)NExperience.ExpReceivedPopText.ExpSource.Other)
         {
-            player.GetModPlayer<NExperience.PlayerMod>().GetExpReward(Level, Difficulty, Source, ShowTooltip);
+            player.GetModPlayer<NExperience.PlayerMod>().GetExpReward(Level, Difficulty, (NExperience.ExpReceivedPopText.ExpSource)Source, ShowTooltip);
         }
 
         public static void ResetOnWorldLoad()
@@ -70,9 +70,8 @@ namespace giantsummon.Compatibility
             return LastLevel != Level;
         }
 
-        public static void ScaleStatus(TerraGuardian Guardian) //Causes fps drop issues. The issue causes the fps to absurdly fall, after a number of seconds of gameplay in a world.
+        public static void ScaleStatus(TerraGuardian Guardian)
         {
-            //return;
             NExperience.GameModeBase gamemode = NExperience.MainMod.GetCurrentGameMode;
             int Level = GetLevel(Guardian);
             Dictionary<byte, int> Status = new Dictionary<byte, int>();
