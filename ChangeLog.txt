@@ -1,9 +1,1 @@
-﻿Brutus revive back animation got a review on the sprite.
-	His outfit also received the missing sprite for that frame, too.
-Fixed leopold's right arm being very visible when standing backward.
-Companions using a Umbrella will no longer take fall damage when slowly falling from higher places.
-Fixed Wrath's spritesheet issues.
-	That will also affect the battle you have with him, so he's no longer invisible when moving.
-Your character and companions will no longer receive knockback when attacked while knocked out.
-Companions will no longer go missing when you tell them to sell items.
-You can no longer start dialogue with companions invisible or inactive by actions.
+﻿
