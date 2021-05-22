@@ -1,1 +1,6 @@
-﻿Fixed issue where the mod wasn't loading correctly due to the absence of NExperience mod installed.
+﻿Increased the range at which companions will move away from your position in combat.
+	It went from 368 pixels to 500.
+Alexander will no longer try sleuthing himself.
+Fixed an weird issue where companions couldn't go sleep.
+Also fixed an issue where companions were unable to use bed correctly, depending on the direction the bed is facing.
+Companions should now better know that they are at home.

@@ -2942,7 +2942,7 @@ namespace giantsummon
                     if (hi.HouseStartX > -1)
                     {
                         Vector2 StartPosition = new Vector2(hi.HouseStartX, hi.HouseStartY) * 16 - Main.screenPosition,
-                        EndPosition = new Vector2(hi.HouseEndX, hi.HouseEndY) * 16 - Main.screenPosition;
+                        EndPosition = new Vector2(hi.HouseEndX - 1, hi.HouseEndY - 1) * 16 - Main.screenPosition;
                         Main.spriteBatch.Draw(Main.blackTileTexture, StartPosition, null, Color.Red);
                         Main.spriteBatch.Draw(Main.blackTileTexture, EndPosition, null, Color.Blue);
                     }

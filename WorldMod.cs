@@ -1383,13 +1383,13 @@ namespace giantsummon
                             }
                             break;
                         case Terraria.ID.TileID.Beds:
-                            FacingLeft = tile.frameX < 72;
-                            if (tile.frameY % 36 >= 18 && ((tile.frameX < 72 && tile.frameX % 72 == 18) || (tile.frameX >= 72 && tile.frameX % 72 == 36)))
+                            //FacingLeft = tile.frameX < 72;
+                            if (tile.frameY % 36 >= 18 && tile.frameX % 72 == 36)
                                 Add = true;
                             else
                             {
                                 int frameX = tile.frameX % 72;
-                                if (FacingLeft)
+                                /*if (FacingLeft)
                                 {
                                     if (frameX < 18)
                                         PositionX++;
@@ -1397,12 +1397,12 @@ namespace giantsummon
                                         PositionX--;
                                 }
                                 else
-                                {
+                                {*/
                                     if (frameX < 36)
                                         PositionX++;
                                     else if (frameX > 36)
                                         PositionX--;
-                                }
+                                //}
                                 if (tile.frameY % 36 < 18)
                                     PositionY++;
                             }
@@ -1573,7 +1573,7 @@ namespace giantsummon
                     return true;
                 }
                 return FeetPosition.X >= HouseInfo.HouseStartX * 16 && FeetPosition.X <= HouseInfo.HouseEndX * 16 &&
-                    FeetPosition.Y >= HouseInfo.HouseStartY * 16 && FeetPosition.Y <= HouseInfo.HouseEndY * 16;
+                    FeetPosition.Y >= HouseInfo.HouseStartY * 16 && FeetPosition.Y <= (HouseInfo.HouseEndY + 1) * 16;
             }
 
             public void ValidateHouse()

@@ -357,7 +357,7 @@ namespace giantsummon.Creatures
                     {
                         TerraGuardian tg = MainMod.ActiveGuardians[Value];
                         AlexanderData data = (AlexanderData)guardian.Data;
-                        if (!guardian.DoAction.InUse && tg.Base.IsTerraGuardian && !data.WasGuardianIdentified(tg))
+                        if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && !data.WasGuardianIdentified(tg))
                         {
                             if (guardian.StartNewGuardianAction(new Creatures.Alexander.SleuthAction(tg), 0))
                                 return true;
@@ -368,7 +368,7 @@ namespace giantsummon.Creatures
                     {
                         TerraGuardian tg = MainMod.ActiveGuardians[Value];
                         AlexanderData data = (AlexanderData)guardian.Data;
-                        if (!guardian.DoAction.InUse && tg.Base.IsTerraGuardian && tg.IsUsingBed && !data.WasGuardianIdentified(tg))
+                        if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && tg.IsUsingBed && !data.WasGuardianIdentified(tg))
                         {
                             if (guardian.StartNewGuardianAction(new Creatures.Alexander.SleuthAction(tg), 0))
                                 return true;

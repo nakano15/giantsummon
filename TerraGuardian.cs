@@ -5323,7 +5323,8 @@ namespace giantsummon
             {
                 Vector2 PlayerPosition = Main.player[OwnerPos].Center;
                 float Distance = Math.Abs(PlayerPosition.X - Position.X);
-                if (Distance >= 368f)
+                const float MaxAwayDistance = 500; //368f
+                if (Distance >= MaxAwayDistance)
                 {
                     MoveLeft = MoveRight = false;
                     if (PlayerPosition.X - Position.X > 0)
@@ -5335,7 +5336,7 @@ namespace giantsummon
                         MoveLeft = true;
                     }
                 }
-                else if (Distance >= 368f - 32)
+                else if (Distance >= MaxAwayDistance - 32)
                 {
                     if (PlayerPosition.X - Position.X > 0)
                     {
@@ -6146,7 +6147,7 @@ namespace giantsummon
                     if (TileType.Contains(furniture.FurnitureID))
                     {
                         int x = furniture.FurnitureX, y = furniture.FurnitureY;
-                        if(!AnyoneUsingFurniture(x, y + 1))
+                        if(!AnyoneUsingFurniture(x, y))
                         {
                             Found.Add(new Point(x, y));
                         }
@@ -6337,8 +6338,8 @@ namespace giantsummon
                             int FramesY = (tile.type == Terraria.ID.TileID.Thrones ? 4 : 2);
                             furniturex = x;
                             furniturey = y;
-                            int framex = (tile.frameX / 18) % 3,
-                                framey = (tile.frameY / 18) % FramesY;
+                            int framex = (int)(tile.frameX * (1f / 18)) % 3,
+                                framey = (int)(tile.frameY * (1f / 18)) % FramesY;
                             furniturex += 1 - framex;
                             furniturey += (FramesY - 1) - framey;
                         }
@@ -6348,12 +6349,9 @@ namespace giantsummon
                             furniturex = x;
                             furniturey = y;
                             bool FacingLeft = tile.frameX < 72;
-                            int framex = (tile.frameX / 18) % 4,
-                                framey = (tile.frameY / 18) % 2;
-                            if(FacingLeft)
-                                furniturex += 1 - framex;
-                            else
-                                furniturex += 2 - framex;
+                            int framex = (int)(tile.frameX * (1f / 18)) % 4,
+                                framey = (int)(tile.frameY * (1f / 18)) % 2;
+                            furniturex += 2 - framex;
                             furniturey += 1 - framey;
                         }
                         break;
@@ -6535,7 +6533,9 @@ namespace giantsummon
                     UsingFurniture = false;
                     return;
                 }
-                if (Math.Abs(Position.X - TileCenterX) > 8)
+                if (tile.type == Terraria.ID.TileID.Beds)
+                    TileCenterX -= 8;
+                if (Math.Abs(Position.X + Velocity.X - TileCenterX) > 4)
                 {
                     MoveLeft = MoveRight = false;
                     if (CenterPosition.X < TileCenterX)
@@ -6549,11 +6549,21 @@ namespace giantsummon
                 }
                 else
                 {
-                    UsingFurniture = true;
-                    if (closeDoor && doorx > -1 && doory > -1)
+                    if (Velocity.X < 1)
                     {
-                        WorldGen.CloseDoor(doorx, doory);
-                        closeDoor = false;
+                        if (AnyoneUsingFurniture(furniturex, furniturey))
+                        {
+                            LeaveFurniture(false);
+                        }
+                        else
+                        {
+                            UsingFurniture = true;
+                            if (closeDoor && doorx > -1 && doory > -1)
+                            {
+                                WorldGen.CloseDoor(doorx, doory);
+                                closeDoor = false;
+                            }
+                        }
                     }
                 }
                 if (UsingFurniture)
@@ -6627,6 +6637,8 @@ namespace giantsummon
                                 {
                                     bool BedFacingLeft = tile.frameX < 18 * 4;
                                     RestPosition.X += Base.SleepingOffset.X * (BedFacingLeft ? -1 : 1);
+                                    //if (BedFacingLeft)
+                                    //    RestPosition.X += 18;
                                     RestPosition.Y += Base.SleepingOffset.Y;
                                     LookingLeft = BedFacingLeft;
                                 }
