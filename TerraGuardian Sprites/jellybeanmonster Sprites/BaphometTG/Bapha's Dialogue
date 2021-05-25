@@ -15,10 +15,10 @@ After defeating Bapha:
 
 After recruited(General Dialogue):
 RNG Dialogue-
-- "
-- "I need a heat source to bring out full potential.."
+- "So when will the conquest begin? I didn't come to the surface to be friendly I CAME TO SEE IT BURN!!!"
+- "I need a heat source to bring out full potential... Lava or hellstone would be nice to have"
 - "The surface needs some tuning, adding a bit of fire should do the trick"
-- "Ever had a lava bath? What?!, you say that it burns? Thats the best part Haha!"
+- "Ever had a lava bath? What?!, you say it burns? Thats the best part Hahaha!"
 - "If your wondering how old i am you would be out of luck because i dont know my age either, Ive been idle for so long i lost count. But im several milliena at least.
 
 Reviving Player:
@@ -26,8 +26,10 @@ Reviving Player:
 - "Rise again!, we have unfinished bussiness"
 
 Player reviving:
-- "IM IMMORTAL!"
 - "If you think you can defeat me your more delusional than ever!"
+
+Revive with no help:
+- "IM IMMORTAL!"
 
 Quest Dialogue:
 - "If you were to kill 666 hell spawn, i would grant you access to dozens of my minions through a portal."
@@ -37,14 +39,21 @@ Quest completed:
 Terra guardian specific interactions:
 
 Wrath- 
-> "Such rage can be useful in combat, wonder if he can control it"
-
-Rococco-
->
+> "Rage can be useful in combat, wonder if he can control it"
 
 Brutus-
-> "Serving justice will get you no where, I have crushed plenty of knights before. It was fun watching them burn! hahahaha!"
-> "I love torching Martyrs alive!, let them cry in agony as their righteousness fades with the flame!"
+> "Serving justice will get you no where brutus, I have crushed plenty of knights before. It was fun watching them burn! hahahaha!"
+> "I love torching Martyrs!, let them cry in agony as their righteousness fades with the flame!"
+
+Dog TG's-
+>Dont stick your nose in the wrong place, you might get burnt haha!
+
+Leopold-
+> Wonder if the leopold ever tried learning demonic magic? could serve useful for tearing enemies apart.
+
+Malisha-
+> Malisha would make a great discple for me. Her expirements show that she can be remorseless and sadistic, which is perfect for my kind of magic hehehehe.
+
 
 
 
