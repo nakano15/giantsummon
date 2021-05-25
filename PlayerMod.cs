@@ -1403,7 +1403,18 @@ namespace giantsummon
         public void EnterDownedState(bool Friendly = false)
         {
             KnockedOut = true;
-            player.statLife += player.statLifeMax2 / 2;
+            if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
+            {
+                if (MainMod.PlayersDontDiesAfterDownedDefeat)
+                {
+                    player.statLife = 0;
+                    KnockedOutCold = true;
+                }
+            }
+            else
+            {
+                player.statLife += player.statLifeMax2 / 2;
+            }
             if (player.mount.Active)
                 player.mount.Dismount(player);
             player.pulley = false;
@@ -1476,7 +1487,7 @@ namespace giantsummon
                 player.statLife = 0;
                 KnockedOut = KnockedOutCold = false;
             }
-            else if (FriendlyDuelDefeat || (MainMod.PlayersGetKnockedOutUponDefeat && !player.dead && !KnockedOut && !player.lavaWet && player.breath > 0 && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.PlayersDontDiesAfterDownedDefeat)))
+            else if (FriendlyDuelDefeat || (MainMod.PlayersGetKnockedOutUponDefeat && !player.dead && !KnockedOut && !player.lavaWet && player.breath > 0 && !player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()) && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.PlayersDontDiesAfterDownedDefeat)))
             {
                 FriendlyDuelDefeat = false;
                 EnterDownedState();

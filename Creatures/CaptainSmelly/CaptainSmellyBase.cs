@@ -161,12 +161,41 @@ namespace giantsummon.Creatures
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> NewOptions = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
             NewOptions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Weapon Infusion", delegate (TerraGuardian tg)
             {
+                CaptainSmellyData data = (CaptainSmellyData)tg.Data;
                 GuardianMouseOverAndDialogueInterface.Options.Clear();
-                GuardianMouseOverAndDialogueInterface.SetDialogue("What should I infuse my weapon with?");
+                {
+                    string Mes = "";
+                    switch (data.SwordID)
+                    {
+                        case StandardFalchion:
+                            Mes = "My Falchion is not infused with anything.";
+                            break;
+                        case AmethystFalchion:
+                            Mes = "My Falchion is infused with Amethyst power.";
+                            break;
+                        case TopazFalchion:
+                            Mes = "My Falchion is infused with Topaz power.";
+                            break;
+                        case SapphireFalchion:
+                            Mes = "My Falchion is infused with Sapphire power.";
+                            break;
+                        case EmeraldFalchion:
+                            Mes = "My Falchion is infused with Emerald power.";
+                            break;
+                        case RubyFalchion:
+                            Mes = "My Falchion is infused with Ruby power.";
+                            break;
+                        case DiamondFalchion:
+                            Mes = "My Falchion is infused with Diamond power.";
+                            break;
+                    }
+                    GuardianMouseOverAndDialogueInterface.SetDialogue(Mes + "\nWhat should I infuse my weapon with?\nGem will be used upon changing Infusion.");
+                }
                 for (byte i = 0; i < NumberOfSwords; i++)
                 {
                     byte InfusionID = i;
                     string Mes = "";
+                    int ItemID = 0;
                     switch (i)
                     {
                         case 0:
@@ -174,31 +203,50 @@ namespace giantsummon.Creatures
                             break;
                         case 1:
                             Mes = "Infuse with Amethyst";
+                            ItemID = Terraria.ID.ItemID.Amethyst;
                             break;
                         case 2:
                             Mes = "Infuse with Topaz";
+                            ItemID = Terraria.ID.ItemID.Topaz;
                             break;
                         case 3:
                             Mes = "Infuse with Sapphire";
+                            ItemID = Terraria.ID.ItemID.Sapphire;
                             break;
                         case 4:
                             Mes = "Infuse with Emerald";
+                            ItemID = Terraria.ID.ItemID.Emerald;
                             break;
                         case 5:
                             Mes = "Infuse with Ruby";
+                            ItemID = Terraria.ID.ItemID.Ruby;
                             break;
                         case 6:
                             Mes = "Infuse with Diamond";
+                            ItemID = Terraria.ID.ItemID.Diamond;
                             break;
                     }
-                    GuardianMouseOverAndDialogueInterface.AddOption(Mes, delegate (TerraGuardian tg2)
+                    if ((i == 0 && data.SwordID > 0) || (ItemID > 0 && Main.player[Main.myPlayer].HasItem(ItemID)))
                     {
-                        CaptainSmellyData data = (CaptainSmellyData)tg2.Data;
-                        data.HoldingWeaponTime = 150;
-                        data.SwordID = InfusionID;
-                        GuardianMouseOverAndDialogueInterface.SetDialogue("Done. What else?");
-                        GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
-                    });
+                        GuardianMouseOverAndDialogueInterface.AddOption(Mes, delegate (TerraGuardian tg2)
+                        {
+                            int item = ItemID;
+                            for(int j = 0; j < 50; j++)
+                            {
+                                if(Main.player[Main.myPlayer].inventory[j].type == item)
+                                {
+                                    Main.player[Main.myPlayer].inventory[j].stack--;
+                                    if (Main.player[Main.myPlayer].inventory[j].stack <= 0)
+                                        Main.player[Main.myPlayer].inventory[j].SetDefaults(0);
+                                    break;
+                                }
+                            }
+                            data.HoldingWeaponTime = 150;
+                            data.SwordID = InfusionID;
+                            GuardianMouseOverAndDialogueInterface.SetDialogue("Done. What else?");
+                            GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
+                        });
+                    }
                 }
                 GuardianMouseOverAndDialogueInterface.AddOption("Infuse Weapon?", delegate (TerraGuardian tg2)
                 {
@@ -1021,6 +1069,106 @@ namespace giantsummon.Creatures
                 TerraGuardian.DrawBehind.Insert(Position, gdd);
             else
                 TerraGuardian.DrawFront.Insert(Position, gdd);
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("Before coming to this planet i was a space pirate captain, going around taking things from other worlds.");
+            Mes.Add("My weapons are a plasma falchion and arm blaster. I stole both from a ship me and my crew hijacked while traversing space.");
+            Mes.Add("Unfortunately I am the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we will find.");
+            Mes.Add("My plasma falchion seems to have a empty socket for a gemstone to fit in wonder what it would do?");
+            Mes.Add("If you ever come across any gemstones make sure to share them with me. I want to find out the true power of my blade.");
+            Mes.Add("Forgot to mention my phantasm device has taken damage also if you have any spare platinum/gold bars you could help fix it. 20 bars is all it would need."); //Should be conditional.
+            bool AnyMetal = false, AnyGemstone = false;
+            if (Main.screenTileCounts[Terraria.ID.TileID.Topaz] > 0 ||
+                Main.screenTileCounts[Terraria.ID.TileID.Amethyst] > 0 ||
+                Main.screenTileCounts[Terraria.ID.TileID.Sapphire] > 0 ||
+                Main.screenTileCounts[Terraria.ID.TileID.Emerald] > 0 ||
+                Main.screenTileCounts[Terraria.ID.TileID.Ruby] > 0 ||
+                Main.screenTileCounts[Terraria.ID.TileID.Diamond] > 0 ||
+                Main.screenTileCounts[Terraria.ID.TileID.AmberGemspark] > 0)
+            {
+                AnyGemstone = true;
+            }
+            else
+            {
+                for (int i = 0; i < Main.screenTileCounts.Length; i++)
+                {
+                    if (Terraria.ID.TileID.Sets.Ore[i] && Main.screenTileCounts[i] > 0)
+                    {
+                        AnyMetal = true;
+                        break;
+                    }
+                }
+            }
+            if(AnyGemstone || AnyMetal)
+            {
+                Mes.Add("My scouter is picking up high volumes of rare materials here just keep up your mining it will be all ours soon enough.");
+            }
+            for(int n = 0; n < 200; n++)
+            {
+                if(Main.npc[n].active && Main.npc[n].damage > 0 && !Main.npc[n].friendly)
+                {
+                    Mes.Add("My scouter is showing a hostile entities, look out for a ambush.");
+                    break;
+                }
+            }
+            if(Main.screenTileCounts[Terraria.ID.TileID.Traps] > 0 || Main.screenTileCounts[Terraria.ID.TileID.GeyserTrap] > 0)
+            {
+                Mes.Add("My scouter is picking up danger signals in this area watchout for traps.");
+            }
+            if(PlayerMod.HasGuardianSummoned(player, Rococo))
+            {
+                Mes.Add("Even though the racoon is a weird one, he sure does have some combat skill.");
+                Mes.Add("I cant understand what the racoon is saying can you translate it for me, yeah?");
+            }
+            if(PlayerMod.HasGuardianSummoned(player, Blue))
+            {
+                Mes.Add("Blue reminds me of one of my cadets that died in the crash....Red his name was....ironic.. and he was a wolf....");
+            }
+            if(PlayerMod.HasGuardianSummoned(player, Zacks))
+            {
+                Mes.Add("Zacks reminds me of one of my cadets that died in the crash...Red his name was...kinda ironic since he was a wolf also");
+            }
+            if(PlayerMod.HasGuardianSummoned(player, Bree) && PlayerMod.GetPlayerGuardian(player, Bree).SkinID != Creatures.BreeBase.BaglessSkinID)
+            {
+                Mes.Add("I wonder whats in the white cats bag...Something valuable probably...");
+            }
+            if(PlayerMod.HasGuardianSummoned(player, Domino))
+            {
+                Mes.Add("This mouse looks like he might sell some black market supplies.");
+            }
+            if(PlayerMod.HasGuardianSummoned(player, Brutus))
+            {
+                Mes.Add("This guy reminds me of space patrol, i have been dodging them for years now and will do so again if he tries something.");
+            }
+            if(PlayerMod.PlayerHasGuardianSummoned(player, Alex) || PlayerMod.PlayerHasGuardianSummoned(player, Alexander) || PlayerMod.PlayerHasGuardianSummoned(player, Daphne))
+            {
+                Mes.Add("Tell this mutt to stop sniffing me! i know i dont smell the best but its annoying feeling wet noses touch my tail.");
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            if (IsPlayer)
+            {
+                return "Oh no! don't end up like my cadets we have so much more treasure to find!";
+            }
+            return base.ReviveMessage(Guardian, IsPlayer, RevivePlayer, ReviveGuardian);
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.ReviveByOthersHelp:
+                    return "Once more im in debt to you I hope my performance in combat wont be this lackluster next time...";
+                case MessageIDs.RevivedByRecovery:
+                    return "A helping hand would have been useful you know....";
+            }
+            return base.GetSpecialMessage(MessageID);
         }
 
         public class CaptainSmellyData : GuardianData

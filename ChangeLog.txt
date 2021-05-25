@@ -4,3 +4,7 @@ Alexander will no longer try sleuthing himself.
 Fixed an weird issue where companions couldn't go sleep.
 Also fixed an issue where companions were unable to use bed correctly, depending on the direction the bed is facing.
 Companions should now better know that they are at home.
+Getting knocked out while having the "Heavy Injury" debuff will now instantly send one to knocked out cold state, or die instantly, depending on mod options.
+Companions can now say things when they are revived.
+	The things they say differs depending on wether they got help to be revived or not.
+The dash cooldown of companions will be resetted when It stops.

@@ -10,6 +10,7 @@ namespace giantsummon.Creatures
     public class BreeBase : GuardianBase
     {
         public const string BagTextureID = "bag";
+        public const int BaglessSkinID = 1;
 
         /// <summary>
         /// -A bit grumpy.
@@ -130,7 +131,7 @@ namespace giantsummon.Creatures
 
         public void LoadSkinList()
         {
-            AddSkin(1, "Bagless", delegate(GuardianData gd, Player player)
+            AddSkin(BaglessSkinID, "Bagless", delegate(GuardianData gd, Player player)
             {
                 return gd.HasPersonalRequestBeenCompleted(0);
             });
@@ -687,6 +688,13 @@ namespace giantsummon.Creatures
                     return "*Alright, I now know you.*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Wait, what are you going to do with that frying pan?*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "Yes, thank you. Maybe being around you all isn't that bad.";
+                    return "I really hope you didn't tried anything other than to help me.";
+                case MessageIDs.RevivedByRecovery:
+                    return "Who leaves a damsel bleeding on the ground? You?";
             }
             return base.GetSpecialMessage(MessageID);
         }

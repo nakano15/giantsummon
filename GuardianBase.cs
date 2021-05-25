@@ -1354,6 +1354,8 @@ namespace giantsummon
                 AlexanderSleuthingProgress = "Mes.Alexander.SleuthProgress1",
                 AlexanderSleuthingProgressNearlyDone = "Mes.Alexander.SleuthProgress2",
                 AlexanderSleuthingProgressFinished = "Mes.Alexander.SleuthProgressFinished";
+            public const string ReviveByOthersHelp = "Mes.Revive.HelpedByOthers",
+                RevivedByRecovery = "Mes.Revive.Alone";
         }
         
         public enum GuardianEffect

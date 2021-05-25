@@ -8696,7 +8696,7 @@ namespace giantsummon
             else
             {
                 HP += MHP / 2;
-                if (HP <= 0)
+                if (HP <= 0 || HasBuff(ModContent.BuffType<giantsummon.Buffs.HeavyInjury>()))
                 {
                     if (MainMod.GuardiansDontDiesAfterDownedDefeat)
                         KnockedOutCold = true;
@@ -8754,7 +8754,15 @@ namespace giantsummon
             Rotation = 0f;
             CombatText.NewText(HitBox, Color.Green, "Revived!", true);
             if (OwnerPos == Main.myPlayer)
-                Main.NewText(Name + " woke up!", Color.Green);
+            {
+                string Mes = GetMessage(ReviveBoost > 0 ? GuardianBase.MessageIDs.ReviveByOthersHelp : GuardianBase.MessageIDs.RevivedByRecovery);
+                if(Mes != "")
+                {
+                    SaySomething(Mes);
+                }
+            }
+            //    Main.NewText(Name + " woke up!", Color.Green);
+
             ImmuneTime = (HasFlag(GuardianFlags.ImprovedImmuneTime) ? 120 : 60) * 3;
             UpdateStatus = true;
         }
@@ -14803,7 +14811,7 @@ namespace giantsummon
                     if (Velocity.X > MaxSpeed)
                         Velocity.X = MaxSpeed;
                 }
-                else
+                else if(Velocity.X != 0)
                 {
                     if (Velocity.X > SlowDown)
                         Velocity.X -= SlowDown;
@@ -14812,6 +14820,11 @@ namespace giantsummon
                     else if(Velocity.X != 0)
                     {
                         Velocity.X = 0;
+                        DashCooldown = 30;
+                    }
+                    else
+                    {
+                        DashCooldown = 30;
                     }
                 }
             }

@@ -303,6 +303,11 @@ namespace giantsummon.Creatures
                     return "Okay. You no longer need to do It.";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "Then It was just a mistake of what to say.";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return "Brought back.";
+                case MessageIDs.RevivedByRecovery:
+                    return "I returned.";
             }
             return base.GetSpecialMessage(MessageID);
         }

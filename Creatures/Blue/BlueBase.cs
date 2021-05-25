@@ -1110,6 +1110,11 @@ namespace giantsummon.Creatures
                     return "*Okay... Done. Maybe for future planning...*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ah... No.. That's not what you're thinking!*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return "*She thanked everyone for the help.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*She said that she's fine now, if someone were wondering.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -731,6 +731,13 @@ namespace giantsummon.Creatures
                     return "*I hope none of them entered my nose.*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*No, I'm not seeking a bone, I was just checking... Things.*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Thanks for fixing my body.*";
+                    return "*I can move again. I don't know what you did, but Thank you.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*My body moves again, good.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -338,6 +338,13 @@ namespace giantsummon.Creatures
                     return "*What?! How can you think of attacking me? I'm trying to save you!*";
                 case MessageIDs.LeopoldMessage3:
                     return "*Save me? I'm following that Terrarian because I want, and also because he asked me to.*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*THANK YOU!!! There's no other way I can express this!*";
+                    return "*This rage is of happiness, believe It or not!*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*I hate you all! Why didn't you helped me?!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

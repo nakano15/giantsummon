@@ -730,6 +730,15 @@ namespace giantsummon.Creatures
                     return "*[name] shows you a sad face, and then say that It's fine.*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*[name] shows a little smile.*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if(Main.rand.NextDouble() <= 0.5f)
+                    {
+                        return "*[name] thanks you all.*";
+                    }
+                    return "*[name] seems happy for the help.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*[name] says that he's fine.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -892,6 +892,15 @@ namespace giantsummon.Creatures
                     return "*Okay... It was confusing due to the many scents, but I think It's done.*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Wh-what? No, I'm not here for a hug!*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.bloodMoon)
+                        return "*I was fine on my own!*";
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*You helped me? I'm so happy now.*";
+                    return "*I'm so glad to have so many good people around.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*I'm feeling better now.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -800,6 +800,13 @@ namespace giantsummon.Creatures
                     return "*I'm so glad I wont need to identify her again.*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Uh oh... HEEEEELP!!*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Awww... You remembered me... Thank you.*";
+                    return "*You couldn't go on without me, couldn't you?*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*Okay, who will be the first one I'll turn into a frog?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

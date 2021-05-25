@@ -523,6 +523,13 @@ namespace giantsummon.Creatures
                     return "*Okay... You're relieved of my task. Now if you don't mind, I have business to do.*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*Go do that, [nickname].*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*I don't owe you anything, right?*";
+                    return "*Okay, thanks. Happy now?*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*I'm fine now, not thanks for you.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -588,6 +588,13 @@ namespace giantsummon.Creatures
                     return "*Sigh.. Okay. But be sure not to drop my request in the future.*";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*I knew I could count on you, [nickname].*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Ow ow ow... Be careful, I'm still a bit hurt...*";
+                    return "*Thanks to you, my geniality still lives.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*Ow, okay... I think I'm fine now.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

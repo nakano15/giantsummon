@@ -990,6 +990,15 @@ namespace giantsummon.Creatures
                     return "*Ok, I think that's enough info, better I move on!*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ah... Uh.. Sleeping again? What a shame!*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*It wasn't necessary... Thanks anyway...*";
+                    return "*It takes much more to take me down, but I apreciate your help.*";
+                case MessageIDs.RevivedByRecovery:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Alright, now's my turn.*";
+                    return "*That is It?! I'm still standing!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

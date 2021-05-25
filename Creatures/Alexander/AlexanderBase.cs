@@ -496,6 +496,15 @@ namespace giantsummon.Creatures
                     return "*Shh... It will be hard to rescue you if the Terrarian realizes that we are talking.*";
                 case MessageIDs.LeopoldMessage3:
                     return "*The Terrarian is already listening to us talking, and we're not their hostages. You're worrying way too much.*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*You all did good. Thanks.*";
+                    return "*I apreciate the help, I really mean It.*";
+                case MessageIDs.RevivedByRecovery:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*You could have helped me. I'm fine now, by the way.*";
+                    return "*That was because of my sleuthing, right?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

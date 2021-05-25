@@ -559,6 +559,13 @@ namespace giantsummon.Creatures
                     return "*Phew... It's over. My heart can stop beating fast now.*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ah... No! My nose is fine... It's just... Nothing.*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Oh! My hero! Thank you!*";
+                    return "*Thank you, I'm so glad to have you around.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*Ouch... It still hurts... But I can still walk..*";
             }
             return base.GetSpecialMessage(MessageID);
         }

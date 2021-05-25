@@ -491,6 +491,13 @@ namespace giantsummon.Creatures
                     return "*Whine whine* Fine... I'm not sad or anything...";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*Happily wags their tail*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "Thank you, Buddy-Buddy!";
+                    return "I've got the best pack ever!";
+                case MessageIDs.RevivedByRecovery:
+                    return "*Whine whine whine* You guys could have helped me...";
             }
             return base.GetSpecialMessage(MessageID);
         }

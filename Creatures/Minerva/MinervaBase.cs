@@ -468,6 +468,13 @@ namespace giantsummon.Creatures
                     return "*Eww... This smell... I'm glad I already identified you but... Ugh..*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*Ah... Eh... Good morning?*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*I... Um... Thank you...*";
+                    return "*I'm thankful for your help.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*...*";
             }
             return "";
         }

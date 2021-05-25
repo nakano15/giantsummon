@@ -382,6 +382,11 @@ namespace giantsummon.Creatures
                     return "Okay, I'll be in charge of this then.";
                 case MessageIDs.CancelRequestNoAnswered:
                     return "Oh... Be sure to give me an update when you do what I asked for.";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return "Thanks! Like... Really. Thanks!";
+                case MessageIDs.RevivedByRecovery:
+                    return "I'm fine! I'm fine... Ow...";
             }
             return base.GetSpecialMessage(MessageID);
         }

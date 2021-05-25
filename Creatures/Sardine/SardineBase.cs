@@ -768,6 +768,13 @@ namespace giantsummon.Creatures
                     return "*I see... So you have the scent of many dead creatures...*";
                 case MessageIDs.AlexanderSleuthingFail:
                     return "*What am I doing...? Uh... Checking your pulse. You seems alive! Phew...*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "So glad to have you guys around.";
+                    return "I'm fine, thanks for the help.";
+                case MessageIDs.RevivedByRecovery:
+                    return "I still stand.";
             }
             return base.GetSpecialMessage(MessageID);
         }

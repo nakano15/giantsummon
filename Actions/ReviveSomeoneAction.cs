@@ -30,6 +30,16 @@ namespace giantsummon.Actions
             TargetIsPlayer = false;
         }
 
+        public static bool IsRevivingThisGuardian(TerraGuardian OneBeingRevived, TerraGuardian OneToCheck)
+        {
+            if(OneToCheck.DoAction.InUse && !OneToCheck.DoAction.IsGuardianSpecificAction && OneToCheck.DoAction.ID == (int)ActionIDs.ReviveSomeone)
+            {
+                ReviveSomeoneAction action = (ReviveSomeoneAction)OneToCheck.DoAction;
+                return action.ReviveGuardian.WhoAmID == OneBeingRevived.WhoAmID;
+            }
+            return false;
+        }
+
         public override void Update(TerraGuardian guardian)
         {
             if (guardian.furniturex > -1)
