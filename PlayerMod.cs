@@ -766,7 +766,7 @@ namespace giantsummon
         {
             if (player.dead || KnockedOut)
                 return;
-            bool Reviving = player.controlUseItem && player.itemAnimation == 0;
+            bool Reviving = Main.mouseLeft && player.itemAnimation <= 0;
             int SelectedOne = -1;
             bool SelectedIsGuardian = false;
             float MouseX = Main.mouseX + Main.screenPosition.X, MouseY = Main.mouseY + Main.screenPosition.Y;
@@ -803,7 +803,7 @@ namespace giantsummon
                     if (!g.Downed && g.KnockedOut && !g.IsPlayerHostile(player) &&
                         MouseX >= g.Position.X - g.Width * 0.5f && MouseX < g.Position.X + g.Width * 0.5f &&
                         MouseY >= g.Position.Y - g.Height * 0.5f && MouseY < g.Position.Y && 
-                        (!g.KnockedOut || !g.HasFlag(GuardianFlags.CantReceiveHelpOnReviving)) &&
+                        !g.HasFlag(GuardianFlags.CantReceiveHelpOnReviving) &&
                         rect.Intersects(g.HitBox))
                     {
                         SelectedOne = key;
@@ -1413,7 +1413,12 @@ namespace giantsummon
             }
             else
             {
-                player.statLife += player.statLifeMax2 / 2;
+                float LifeMaxValue = 0.5f;
+                if (player.HasBuff(ModContent.BuffType<giantsummon.Buffs.Injury>()))
+                {
+                    LifeMaxValue = 0.25f;
+                }
+                player.statLife += (int)(player.statLifeMax2 * LifeMaxValue);
             }
             if (player.mount.Active)
                 player.mount.Dismount(player);
@@ -1460,7 +1465,7 @@ namespace giantsummon
             player.statLife = (int)((player.statLifeMax2 / 2 + ReviveBoost * 10) * HealthRestoreValue);
             CombatText.NewText(player.getRect(), Color.Cyan, "Revived!", true);
             player.immuneTime = (player.longInvince ? 120 : 60) * 3;
-            player.immune = true;
+            //player.immune = true;
         }
 
         public static bool IsPlayerDead(Player player)
@@ -1494,8 +1499,9 @@ namespace giantsummon
                 TriggerHandler.FirePlayerDownedTrigger(player.Center, player, (int)damage, pvp);
                 return false;
             }
-            else if (MainMod.PlayersDontDiesAfterDownedDefeat && !player.dead && KnockedOut)
+            else if (MainMod.PlayersDontDiesAfterDownedDefeat && !player.dead)
             {
+                KnockedOut = true;
                 KnockedOutCold = true;
                 player.statLife = 0;
                 return false;

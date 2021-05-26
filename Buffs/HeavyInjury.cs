@@ -11,7 +11,7 @@ namespace giantsummon.Buffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Heavy Injury");
-            Description.SetDefault("The pain hinders the character.\nLower health after revive.");
+            Description.SetDefault("The pain hinders the character.\nLower health after revive.\nEntering Ko'd state will instantly defeat you.");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = false;

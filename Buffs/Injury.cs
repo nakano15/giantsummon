@@ -11,7 +11,7 @@ namespace giantsummon.Buffs
         public override void SetDefaults()
         {
             DisplayName.SetDefault("Injury");
-            Description.SetDefault("Body is still recovering from injury.");
+            Description.SetDefault("Body is still recovering from injury.\nYou will have only 25% of max health restored upon entering Ko'd state.");
             Main.debuff[Type] = true;
             Main.pvpBuff[Type] = false;
             Main.buffNoSave[Type] = false;

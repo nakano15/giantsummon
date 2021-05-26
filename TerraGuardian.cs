@@ -8695,7 +8695,10 @@ namespace giantsummon
             }
             else
             {
-                HP += MHP / 2;
+                float LifeMaxValue = 0.5f;
+                if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Injury>()))
+                    LifeMaxValue = 0.25f;
+                HP += (int)(MHP * LifeMaxValue);
                 if (HP <= 0 || HasBuff(ModContent.BuffType<giantsummon.Buffs.HeavyInjury>()))
                 {
                     if (MainMod.GuardiansDontDiesAfterDownedDefeat)

@@ -8,3 +8,6 @@ Getting knocked out while having the "Heavy Injury" debuff will now instantly se
 Companions can now say things when they are revived.
 	The things they say differs depending on wether they got help to be revived or not.
 The dash cooldown of companions will be resetted when It stops.
+Fixed bug where you couldn't revive companions.
+Changed some conditionals to see if fixes an issue where you can't interact with some companions, if they just executed some action.
+"Injury" debuff now reduces the maximum health gained upon entering downed state to 25%, instead of 50%.

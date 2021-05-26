@@ -1140,6 +1140,10 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
+                    if (g.KnockedOut)
+                    {
+                        New.Add(g.Name+"'s Revive Boost: " + g.ReviveBoost);
+                    }
                     /*if(g.ID == 19)
                     {
                         Creatures.BunnyReaperGuardianBase.ReaperGuardianData data = (Creatures.BunnyReaperGuardianBase.ReaperGuardianData)g.Data;

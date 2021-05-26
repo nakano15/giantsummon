@@ -322,7 +322,7 @@ namespace giantsummon
                             Top = Bottom - MainMod.ActiveGuardians[key].Height;
                         if (MouseX >= Left && MouseX < Right && MouseY >= Top && MouseY < Bottom)
                         {
-                            if (!MainMod.ActiveGuardians[key].DoAction.InUse || MainMod.ActiveGuardians[key].DoAction.Inactivity || MainMod.ActiveGuardians[key].DoAction.Invisibility)
+                            if (!MainMod.ActiveGuardians[key].DoAction.InUse || (!MainMod.ActiveGuardians[key].DoAction.Inactivity && !MainMod.ActiveGuardians[key].DoAction.Invisibility))
                             {
                                 SomeoneMouseOver = true;
                                 MouseOverGuardian = key;
