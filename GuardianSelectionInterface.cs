@@ -667,7 +667,7 @@ namespace giantsummon
                         }
                     }
                 }
-                if(Selected > -1)
+                //if(Selected > -1) //?
                 {
                     Vector2 CloseButtonPosition = InterfacePosition;
                     CloseButtonPosition.X += Width - 4;

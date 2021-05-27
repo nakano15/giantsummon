@@ -1,13 +1,3 @@
-﻿Increased the range at which companions will move away from your position in combat.
-	It went from 368 pixels to 500.
-Alexander will no longer try sleuthing himself.
-Fixed an weird issue where companions couldn't go sleep.
-Also fixed an issue where companions were unable to use bed correctly, depending on the direction the bed is facing.
-Companions should now better know that they are at home.
-Getting knocked out while having the "Heavy Injury" debuff will now instantly send one to knocked out cold state, or die instantly, depending on mod options.
-Companions can now say things when they are revived.
-	The things they say differs depending on wether they got help to be revived or not.
-The dash cooldown of companions will be resetted when It stops.
-Fixed bug where you couldn't revive companions.
-Changed some conditionals to see if fixes an issue where you can't interact with some companions, if they just executed some action.
-"Injury" debuff now reduces the maximum health gained upon entering downed state to 25%, instead of 50%.
+﻿Idle action while companions looks at the background now last longer.
+It's no longer necessary to have a companion selected on the Guardian Selection Interface, to be able to use the Close button.
+Fixed the mod not recognizing the last frames from Bree's animations.

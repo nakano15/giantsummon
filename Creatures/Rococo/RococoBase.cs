@@ -165,7 +165,7 @@ namespace giantsummon.Creatures
         {
             Random RococoRNG = new Random();
             int PlayerVictories = 0, RococoVictories = 0;
-            Dialogue.ShowDialogue("*[name] says that accepts playing Rock Paper and Scissors with you.*");
+            Dialogue.ShowDialogueWithContinue("*[name] says that accepts playing Rock Paper and Scissors with you.*");
             RestartGame:
             byte PlayerChoice = (byte)Dialogue.ShowDialogueWithOptions("*[name] tells you to be ready.*", new string[] { "Rock", "Paper", "Scissor" });
             Dialogue.ShowDialogueTimed("Rock, Paper, Scissor!!!", null, 60);
@@ -209,17 +209,17 @@ namespace giantsummon.Creatures
             switch (Winner)
             {
                 case 0:
-                    Dialogue.ShowDialogue("It's a tie!");
+                    Dialogue.ShowDialogueWithContinue("It's a tie!");
                     VictoryMessage = "*[name] feels funny about having picked the same as you.*";
                     break;
                 case 1:
                     PlayerVictories++;
-                    Dialogue.ShowDialogue("You won!");
+                    Dialogue.ShowDialogueWithContinue("You won!");
                     VictoryMessage = "*[name] doesn't seems that happy about losing, but tries to laugh to relieve the frustration.*";
                     break;
                 case 2:
                     RococoVictories++;
-                    Dialogue.ShowDialogue("[name] won!");
+                    Dialogue.ShowDialogueWithContinue("[name] won!");
                     VictoryMessage = "*[name] seems very radiant about winning, he's even filled with joy.*";
                     break;
             }
@@ -753,8 +753,8 @@ namespace giantsummon.Creatures
 			TerraGuardian Rococo = Dialogue.DialogueParticipants[0];
 			if(Rococo.FriendshipGrade < 2)
 			{
-				Dialogue.ShowDialogue("*[name] seems a bit uncomfortable of speaking about that.*");
-				Dialogue.ShowDialogue("*[name] replies saying that doesn't want to recall how was his life in the Ether Realm.*");
+				Dialogue.ShowDialogueWithContinue("*[name] seems a bit uncomfortable of speaking about that.*");
+				Dialogue.ShowDialogueWithContinue("*[name] replies saying that doesn't want to recall how was his life in the Ether Realm.*");
 				Dialogue.ShowEndDialogueMessage("*[name] only tells you that he likes a lot more his life here than there.*", false);
 				return;
 			}
@@ -770,10 +770,10 @@ namespace giantsummon.Creatures
 					//Rococo's past was like of a beggar, and with people not giving him attention on the ether realm.
 					break;
 				case 1:
-					Dialogue.ShowDialogue("*[name] said that after leaving the town, he wandered by several places.*");
-					Dialogue.ShowDialogue("*[name] tells that met the Guide when travelling around the world.*");
-					Dialogue.ShowDialogue("*[name] says that the Guide got spooked when he saw "+Rococo.Name+", until the Guide asked if he was friendly.*");
-					Dialogue.ShowDialogue("*[name] told that laughed very happily for meeting a human, and then was making company to him.*");
+					Dialogue.ShowDialogueWithContinue("*[name] said that after leaving the town, he wandered by several places.*");
+					Dialogue.ShowDialogueWithContinue("*[name] tells that met the Guide when travelling around the world.*");
+					Dialogue.ShowDialogueWithContinue("*[name] says that the Guide got spooked when he saw "+Rococo.Name+", until the Guide asked if he was friendly.*");
+					Dialogue.ShowDialogueWithContinue("*[name] told that laughed very happily for meeting a human, and then was making company to him.*");
 					break;
 			}
 			PickedOption = Dialogue.ShowDialogueWithOptions("*[name] asked you if you have any other question.*", Options);

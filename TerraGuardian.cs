@@ -7166,7 +7166,7 @@ namespace giantsummon
                                     }
                                     if (HasWindowOrOpenPlace)
                                     {
-                                        ChangeIdleAction(IdleActions.LookingAtTheBackground, 200 + Main.rand.Next(200));
+                                        ChangeIdleAction(IdleActions.LookingAtTheBackground, 600 + Main.rand.Next(200));
                                         break;
                                     }
                                 }

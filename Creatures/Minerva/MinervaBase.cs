@@ -520,42 +520,42 @@ namespace giantsummon.Creatures
                 case 0:
                     {
                         ItemToGet = Terraria.ID.ItemID.BowlofSoup;
-                        Dialogue.ShowDialogue("*I hope you enjoy It... The mushroom and the goldfish are fresh.*");
+                        Dialogue.ShowDialogueWithContinue("*I hope you enjoy It... The mushroom and the goldfish are fresh.*");
                         GotFood = true;
                     }
                     break;
                 case 1:
                     {
                         ItemToGet = Terraria.ID.ItemID.CookedFish;
-                        Dialogue.ShowDialogue("*The fish were caught last morning... I hope they're at your taste.*");
+                        Dialogue.ShowDialogueWithContinue("*The fish were caught last morning... I hope they're at your taste.*");
                         GotFood = true;
                     }
                     break;
                 case 2:
                     {
                         ItemToGet = Terraria.ID.ItemID.CookedShrimp;
-                        Dialogue.ShowDialogue("*The shrimps were caught some time ago and are fresh... Enjoy your meal.*");
+                        Dialogue.ShowDialogueWithContinue("*The shrimps were caught some time ago and are fresh... Enjoy your meal.*");
                         GotFood = true;
                     }
                     break;
                 case 3:
                     {
                         ItemToGet = Terraria.ID.ItemID.PumpkinPie;
-                        Dialogue.ShowDialogue("*The pie is still fresh... I hope you like It.*");
+                        Dialogue.ShowDialogueWithContinue("*The pie is still fresh... I hope you like It.*");
                         GotFood = true;
                     }
                     break;
                 case 4:
                     {
                         ItemToGet = Terraria.ID.ItemID.Sashimi;
-                        Dialogue.ShowDialogue("*I'm not really experienced with that... So I kind of bought that from the Travelling Merchant, instead.*");
+                        Dialogue.ShowDialogueWithContinue("*I'm not really experienced with that... So I kind of bought that from the Travelling Merchant, instead.*");
                         GotFood = true;
                     }
                     break;
                 case 5:
                     {
                         ItemToGet = Terraria.ID.ItemID.GrubSoup;
-                        Dialogue.ShowDialogue("*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*");
+                        Dialogue.ShowDialogueWithContinue("*Probably is not as horrible as you may think... Tell me what do you think when you eat. Me? Of course I wont put any of that on my mouth!*");
                         GotFood = true;
                     }
                     break;

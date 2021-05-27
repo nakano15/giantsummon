@@ -118,7 +118,40 @@ namespace giantsummon
             SelectedOption = 0;
         }
 
-        public static void ShowDialogue(string Text, TerraGuardian Speaker = null)
+        /// <summary>
+        /// Shows a message and resets dialogue options, but doesn't adds any option.
+        /// </summary>
+        /// <param name="Text">The message the speaker says.</param>
+        /// <param name="Speaker">The companion who speakes this. Leaving as null picks the last speaker.</param>
+        public static void ShowDialogueOnly(string Text, TerraGuardian Speaker = null)
+        {
+            if (Speaker == null)
+                Speaker = LastSpeaker;
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian = true;
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition = Speaker.WhoAmID;
+            PlayerFaceGuardian(Speaker);
+            ProceedButtonPressed = false;
+            GuardianMouseOverAndDialogueInterface.SetDialogue(Text, Speaker);
+            GuardianMouseOverAndDialogueInterface.Options.Clear();
+        }
+
+        /// <summary>
+        /// Adds an option to the dialogue.
+        /// </summary>
+        /// <param name="Text">The text of the option, displayed on the list.</param>
+        /// <param name="OptionAction">The action of the option. The TerraGuardian attribute in the action is the speaker.</param>
+        public static void AddOption(string Text, Action<TerraGuardian> OptionAction)
+        {
+            GuardianMouseOverAndDialogueInterface.AddOption(Text, OptionAction);
+        }
+
+        /// <summary>
+        /// Shows a message dialogue, with only Continue as option.
+        /// This dialogue will wait until the player press Continue before continuing the dialogue script.
+        /// </summary>
+        /// <param name="Text">The message the speaker says.</param>
+        /// <param name="Speaker">The companion who speakes this. Leaving as null picks the last speaker.</param>
+        public static void ShowDialogueWithContinue(string Text, TerraGuardian Speaker = null)
         {
             if (Speaker == null)
                 Speaker = LastSpeaker;
@@ -137,6 +170,12 @@ namespace giantsummon
                 Thread.Sleep(100);
         }
 
+        /// <summary>
+        /// Shows a message dialogue, with only End as option.
+        /// </summary>
+        /// <param name="Text">The message the speaker says.</param>
+        /// <param name="CloseDialogue">Set to true, will close the dialogue with this companion. Setting to false, returns to the default dialogue and options of the companion.</param>
+        /// <param name="Speaker">The companion who speakes this. Leaving as null picks the last speaker.</param>
         public static void ShowEndDialogueMessage(string Text, bool CloseDialogue = true, TerraGuardian Speaker = null)
         {
             if (Speaker == null)
