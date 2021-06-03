@@ -451,11 +451,16 @@ namespace giantsummon
         }
 
         public static List<GuardianDrawData> GuardianPostDrawData = new List<GuardianDrawData>();
+        public static bool DrawnCompanionsInFrontOfNpcs = false;
 
         public override bool PreDraw(NPC npc, Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
-            TerraGuardian.CurrentDrawnOrderID = -2000;
-            WorldMod.DrawTownNpcCompanions(DrawMoment.DrawBeforeDrawingNpcs);
+            if (!DrawnCompanionsInFrontOfNpcs)
+            {
+                DrawnCompanionsInFrontOfNpcs = true;
+                TerraGuardian.CurrentDrawnOrderID = -2000;
+                WorldMod.DrawTownNpcCompanions(DrawMoment.DrawBeforeDrawingNpcs);
+            }
 
             if (npc.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
             {
@@ -471,7 +476,7 @@ namespace giantsummon
             {
                 Main.ninjaTexture = MainMod.TrappedCatTexture;
             }
-            if(GuardianPostDrawData.Count > 0)
+            if (GuardianPostDrawData.Count > 0)
                 GuardianPostDrawData.Clear();
             foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
             {

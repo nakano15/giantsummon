@@ -1,3 +1,10 @@
 ﻿Idle action while companions looks at the background now last longer.
 It's no longer necessary to have a companion selected on the Guardian Selection Interface, to be able to use the Close button.
 Fixed the mod not recognizing the last frames from Bree's animations.
+Fixed a drawing issue related to companions that should be drawn behind npcs.
+	That will reduce severelly fps drop in your world, caused large number of npcs on your screen.
+Companions will no longer be drawn when they shouldn't, like when far away from screen.
+Added a chair sitting frame for Domino.
+	His feet will no longer pass through the floor when sitting on a chair.
+The mod will now show the correct damage value for weapons equipped on companions.
+Neutral damage now exists for TerraGuardians.

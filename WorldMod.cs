@@ -616,19 +616,26 @@ namespace giantsummon
         {
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
-                if (tg.UsingFurniture)
+                if (tg.InCameraRange())
                 {
-                    tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
-                }
-                else if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
-                {
-                    if (MainMod.NpcInCameraRange)
+                    if (tg.UsingFurniture)
                     {
-                        tg.drawMoment = DrawMoment.DrawBeforeDrawingNpcs;
+                        if (MainMod.NpcInCameraRange)
+                        {
+                            tg.drawMoment = DrawMoment.DrawBeforeDrawingNpcs;
+                        }
+                        else
+                        {
+                            tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
+                        }
+                    }
+                    else if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned))
+                    {
+                        tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
                     }
                     else
                     {
-                        tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
+                        tg.drawMoment = DrawMoment.DontDraw;
                     }
                 }
                 else

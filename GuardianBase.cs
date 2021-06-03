@@ -1305,6 +1305,48 @@ namespace giantsummon
             return 0;
         }
 
+        public void InjectTextureBefore(GuardianDrawData.TextureType textureType, GuardianDrawData DrawDatas)
+        {
+            InjectTexturesAt(textureType, new GuardianDrawData[] { DrawDatas }, null);
+        }
+
+        public void InjectTextureAfter(GuardianDrawData.TextureType textureType, GuardianDrawData DrawDatas)
+        {
+            InjectTexturesAt(textureType, null, new GuardianDrawData[] { DrawDatas });
+        }
+
+        public void InjectTexturesBefore(GuardianDrawData.TextureType textureType, GuardianDrawData[] DrawDatas)
+        {
+            InjectTexturesAt(textureType, DrawDatas, null);
+        }
+
+        public void InjectTexturesAfter(GuardianDrawData.TextureType textureType, GuardianDrawData[] DrawDatas)
+        {
+            InjectTexturesAt(textureType, null, DrawDatas);
+        }
+
+        public void InjectTexturesAt(GuardianDrawData.TextureType textureType, GuardianDrawData[] PreDraw, GuardianDrawData[] PostDraw)
+        {
+            for (int i = 0; i < TerraGuardian.DrawBehind.Count; i++)
+            {
+                if (TerraGuardian.DrawBehind[i].textureType == textureType)
+                {
+                    if (PostDraw != null) TerraGuardian.DrawBehind.InsertRange(i + 1, PostDraw);
+                    if (PreDraw != null) TerraGuardian.DrawBehind.InsertRange(i, PreDraw);
+                    break;
+                }
+            }
+            for (int i = 0; i < TerraGuardian.DrawFront.Count; i++)
+            {
+                if (TerraGuardian.DrawFront[i].textureType == textureType)
+                {
+                    if (PostDraw != null) TerraGuardian.DrawFront.InsertRange(i + 1, PostDraw);
+                    if (PreDraw != null) TerraGuardian.DrawFront.InsertRange(i, PreDraw);
+                    break;
+                }
+            }
+        }
+
         public class MessageIDs
         {
             public const string LeopoldMessage1 = "Mes.LeopoldAnswer1";

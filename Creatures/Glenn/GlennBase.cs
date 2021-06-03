@@ -336,7 +336,10 @@ namespace giantsummon.Creatures
         public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("Come on... Wake up...");
+            Mes.Add("This isn't good... This isn't good...");
+            Mes.Add("Too much blood...");
+            Mes.Add("Is this how I do that?");
+            Mes.Add("So many wounds.");
             return Mes[Main.rand.Next(Mes.Count)];
         }
     }

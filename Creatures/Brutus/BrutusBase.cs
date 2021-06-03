@@ -260,6 +260,7 @@ namespace giantsummon.Creatures
                         guardian.ExitDownedState();
                         guardian.HP = (int)(guardian.MHP * 0.2f);
                         GuardianJustWokeUp = true;
+                        guardian.SaySomething("*Urgh... I'm not dead yet...*");
                     }
                     if (!guardian.DoAction.InUse || !guardian.DoAction.IsGuardianSpecificAction || guardian.DoAction.ID != ProtectModeID)
                     {

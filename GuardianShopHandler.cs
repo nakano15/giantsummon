@@ -60,7 +60,6 @@ namespace giantsummon
 
         public static void LoadShops(Terraria.ModLoader.IO.TagCompound tag, int ModVersion)
         {
-            //Shops.Clear();
             int ShopCount = tag.GetInt("Shop_Count");
             for (int s = 0; s < ShopCount; s++)
             {
@@ -68,11 +67,11 @@ namespace giantsummon
                 int OwnerID = tag.GetInt(ShopTag + "OwnerID");
                 string OwnerModID = tag.GetString(ShopTag + "OwnerModID");
                 GuardianBase gb = GuardianBase.GetGuardianBase(OwnerID, OwnerModID);
-                GuardianShop shop = GuardianShopHandler.GetShop(OwnerID, OwnerModID);
+                GuardianShop shop = GetShop(OwnerID, OwnerModID);
                 if (shop == null)
                 {
                     gb.SetupShop(OwnerID, OwnerModID);
-                    shop = GuardianShopHandler.GetShop(OwnerID, OwnerModID);
+                    shop = GetShop(OwnerID, OwnerModID);
                 }
                 if (shop != null)
                 {
@@ -236,9 +235,11 @@ namespace giantsummon
 
             public GuardianShopItem AddNewItem(int ItemID, int Price = -1, string Name = "", int FixedSellStack = 1)
             {
+                Main.NewText("Tried to add ID zero item to shop.", 200, 128, 0);
                 GuardianShopItem item = new GuardianShopItem();
                 item.SetItemForSale(ItemID, Price, Name, FixedSellStack);
-                Items.Add(item);
+                if(ItemID > 0)
+                    Items.Add(item);
                 return item;
             }
         }
@@ -276,8 +277,12 @@ namespace giantsummon
                             return Main.bloodMoon;
                         case DisponibilityTime.Eclipse:
                             return Main.eclipse;
+                        case DisponibilityTime.EarlyNight:
+                            return !Main.dayTime && Main.time < 16200;
                         case DisponibilityTime.LateNight:
                             return !Main.dayTime && Main.time >= 16200;
+                        case DisponibilityTime.EarlyDay:
+                            return Main.dayTime && Main.time < 27000;
                         case DisponibilityTime.Afternoon:
                             return Main.dayTime && Main.time >= 27000;
                         case DisponibilityTime.LunarApocalypse:
@@ -298,7 +303,7 @@ namespace giantsummon
 
             public void SetToBeRandomlySold(float TimedSaleChance)
             {
-                this.disponibility = DisponibilityTime.Timed;
+                disponibility = DisponibilityTime.Timed;
                 this.TimedSaleChance = TimedSaleChance;
             }
 
@@ -317,9 +322,9 @@ namespace giantsummon
                     this.Price = Price;
                 }
                 if (Name != "")
-                    this.ItemName = Name;
+                    ItemName = Name;
                 else
-                    this.ItemName = SoldItem.Name;
+                    ItemName = SoldItem.Name;
                 SellStack = SellFixedStack;
             }
 
@@ -328,8 +333,10 @@ namespace giantsummon
                 Anytime,
                 Timed,
                 Day,
+                EarlyDay,
                 Afternoon,
                 Night,
+                EarlyNight,
                 LateNight,
                 Bloodmoon,
                 Eclipse,

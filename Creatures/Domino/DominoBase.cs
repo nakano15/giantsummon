@@ -56,15 +56,16 @@ namespace giantsummon.Creatures
             DuckingFrame = 14;
             DuckingSwingFrames = new int[] { 15, 16, 14 };
             SittingFrame = 17;
+            ChairSittingFrame = 18;
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12 });
-            ThroneSittingFrame = 18;
-            BedSleepingFrame = 19;
+            ThroneSittingFrame = 19;
+            BedSleepingFrame = 20;
             SleepingOffset.X = 16;
-            ReviveFrame = 20;
-            DownedFrame = 21;
+            ReviveFrame = 21;
+            DownedFrame = 22;
 
-            BackwardStanding = 23;
-            BackwardRevive = 24;
+            BackwardStanding = 24;
+            BackwardRevive = 25;
 
             BodyFrontFrameSwap.Add(17, 0);
             SpecificBodyFrontFramePositions = true;
@@ -85,7 +86,7 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(15, 30, 11);
             LeftHandPoints.AddFramePoint2x(16, 42, 16);
 
-            LeftHandPoints.AddFramePoint2x(20, 43, 40);
+            LeftHandPoints.AddFramePoint2x(21, 43, 40);
 
             //Right Arm
             RightHandPoints.AddFramePoint2x(10, 17, 5);
@@ -101,7 +102,7 @@ namespace giantsummon.Creatures
             HeadVanityPosition.DefaultCoordinate2x = new Point(23, 11);
             HeadVanityPosition.AddFramePoint2x(14, 35, 17);
 
-            HeadVanityPosition.AddFramePoint2x(20, 35, 17);
+            HeadVanityPosition.AddFramePoint2x(21, 35, 17);
 
             RequestList();
         }

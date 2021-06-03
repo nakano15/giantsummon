@@ -59,8 +59,8 @@ namespace giantsummon
                     Main.playerInventory = true;
                     if (HasSale)
                         LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreSaleHappeningMessage);
-                    if(LastStoreMessage == "")
-                        LastStoreMessage = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.StoreOpenMessage);
+                    if (LastStoreMessage == "")
+                        LastStoreMessage = tg.GetMessage(GuardianBase.MessageIDs.StoreOpenMessage);
                     if (LastStoreMessage == "")
                         LastStoreMessage = "*That is what I have for sale.*";
                 }

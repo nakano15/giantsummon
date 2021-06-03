@@ -2502,9 +2502,10 @@ namespace giantsummon
             }
             if (HoverItem != null && HoverItem.type != 0)
             {
-                List<string> ItemInfo = new List<string>();
+
+                //List<string> ItemInfo = new List<string>();
                 //ItemInfo.Add(HoverItem.HoverName);
-                ItemInfo.AddRange(GetItemInfo(HoverItem, Guardian));
+                //ItemInfo.AddRange(GetItemInfo(HoverItem, Guardian));
                 /*Vector2 TextPos = new Vector2(Main.mouseX + 16, Main.mouseY + 16);
                 foreach (string s in ItemInfo)
                 {
@@ -2624,7 +2625,7 @@ namespace giantsummon
         
         public override void PostDrawInterface(SpriteBatch spriteBatch)
         {
-
+            NpcMod.DrawnCompanionsInFrontOfNpcs = false;
         }
 
         public override void PostDrawFullscreenMap(ref string mouseText)
@@ -2764,17 +2765,29 @@ namespace giantsummon
         {
             List<string> Text = new List<string>();
             Text.Add(i.HoverName);
+            Text.Add("Info based on " + guardian.Name + ".");
             if (i.damage > 0)
             {
                 int DamageValue = i.damage;
                 if (guardian.Active)
                 {
-                    DamageValue = (int)(DamageValue * guardian.MeleeDamageMultiplier);
+                    float Multiplier = guardian.NeutralDamageMultiplier;
+                    if (i.melee)
+                        Multiplier = guardian.MeleeDamageMultiplier;
+                    if (i.ranged)
+                        Multiplier = guardian.RangedDamageMultiplier;
+                    if (i.magic)
+                        Multiplier = guardian.MagicDamageMultiplier;
+                    if (i.summon)
+                        Multiplier = guardian.SummonDamageMultiplier;
+                    if (i.thrown)
+                        Multiplier = guardian.RangedDamageMultiplier;
+                    DamageValue = (int)(DamageValue * Multiplier);
                 }
                 string DamageType = " Neutral";
                 if (i.melee)
                     DamageType = " Melee";
-                if (i.ranged)
+                if (i.ranged || i.thrown)
                     DamageType = " Ranged";
                 if (i.magic)
                     DamageType = " Magic";

@@ -678,7 +678,7 @@ namespace giantsummon
         public int SelectedItem = 0, SelectedOffhand = -1, LastSelectedItem = -2, LastSelectedOffhand = -2;
         public float OffhandRotation = 0f;
         public ItemUseTypes ItemUseType = ItemUseTypes.HeavyVerticalSwing;
-        public float MeleeDamageMultiplier = 1, RangedDamageMultiplier = 1, MagicDamageMultiplier = 1, SummonDamageMultiplier = 1;
+        public float MeleeDamageMultiplier = 1, RangedDamageMultiplier = 1, MagicDamageMultiplier = 1, SummonDamageMultiplier = 1, NeutralDamageMultiplier = 1f;
         public float MeleeKnockback = 1f, RangedKnockback = 1f;
         public float ShotSpeedMult = 1f;
         public float ManaCostMult = 1f;
@@ -1803,7 +1803,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    DoForceKill(" blacked out.");
+                    DoForceKill(" couldn't resist longer...");
                 }
             }
             MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
@@ -1873,14 +1873,6 @@ namespace giantsummon
                     DoForceKill(" turned into ash.");
                 }
             }
-            /*for (int p = 0; p < 255; p++)
-            {
-                if (Main.player[p].active && !Main.player[p].dead && Main.player[p].velocity.X == 0 && Main.player[p].velocity.Y == 0 && !IsPlayerHostile(Main.player[p]) && 
-                    !Main.player[p].GetModPlayer<PlayerMod>().KnockedOut && Main.player[p].getRect().Intersects(HitBox))
-                {
-                    ReviveBoost += 2;
-                }
-            }*/
         }
 
         public void AddDrawMomentToPlayer(Player player)
@@ -3650,7 +3642,7 @@ namespace giantsummon
             BreathMax = Base.MaxBreath;
             MaxMinions = 1;
             MaxSentries = 1;
-            MeleeDamageMultiplier = RangedDamageMultiplier = MagicDamageMultiplier = SummonDamageMultiplier = 1f;
+            MeleeDamageMultiplier = RangedDamageMultiplier = MagicDamageMultiplier = SummonDamageMultiplier = NeutralDamageMultiplier = 1f;
             MeleeCriticalRate = RangedCriticalRate = MagicCriticalRate = 0;
             MeleeKnockback = RangedKnockback = 1f;
             ManaCostMult = 1f;
@@ -8756,7 +8748,7 @@ namespace giantsummon
             HP = (int)((MHP / 2 + ReviveBoost * 10) * HealthRegenValue);
             Rotation = 0f;
             CombatText.NewText(HitBox, Color.Green, "Revived!", true);
-            if (OwnerPos == Main.myPlayer)
+            if (OwnerPos == Main.myPlayer || OwnerPos == -1)
             {
                 string Mes = GetMessage(ReviveBoost > 0 ? GuardianBase.MessageIDs.ReviveByOthersHelp : GuardianBase.MessageIDs.RevivedByRecovery);
                 if(Mes != "")
@@ -11111,6 +11103,8 @@ namespace giantsummon
             }
             else if (Inventory[SelectedItem].summon)
                 DamageMult *= SummonDamageMultiplier;
+            else
+                DamageMult *= NeutralDamageMultiplier;
             return DamageMult;// *ItemScaleMod(I, true);
         }
 
@@ -14601,7 +14595,7 @@ namespace giantsummon
                     if (PositionFrame == Base.LeftHandPoints.DefaultCoordinate)
                     {
                         PositionFrame = Base.LeftHandPoints.GetPositionFromFramePoint(Base.ItemUseFrames[2]);
-                        MountPosition.Y = Owner.position.Y + Owner.height + 6;// -12;
+                        MountPosition.Y = Owner.position.Y + Owner.height + 6 + Owner.gfxOffY;// -12;
                         MountPosition.X += Owner.Center.X - (12 + 2) * Direction;
                         MountPosition.Y += -SpriteHeight + PositionFrame.Y;
                     }
@@ -14609,7 +14603,7 @@ namespace giantsummon
                     {
                         MountPosition.X = Owner.Center.X - 10 * Direction;
                         MountPosition.X += (PositionFrame.X - (int)(Base.SpriteWidth * 0.5f)) * Direction;
-                        MountPosition.Y = Owner.position.Y + 56 - 30 - (PositionFrame.Y - Base.SpriteHeight) * Scale - 12; // -12;
+                        MountPosition.Y = Owner.position.Y + 56 - 30 - (PositionFrame.Y - Base.SpriteHeight) * Scale - 12 + Owner.gfxOffY; // -12;
                     }
                     if (Owner.mount.Active && !PlayerMounted)
                     {

@@ -97,31 +97,37 @@ namespace giantsummon.Items
                     {
                         DamageText += "melee ";
                         HadDamageBefore = true;
-                        DamageBonus += guardian.MeleeDamageMultiplier - 1f;
+                        DamageBonus = guardian.MeleeDamageMultiplier;
                     }
-                    if (item.ranged)
+                    else if (item.ranged || item.thrown)
                     {
                         if (HadDamageBefore)
                             DamageText += ", ";
                         HadDamageBefore = true;
                         DamageText += "ranged ";
-                        DamageBonus += guardian.RangedDamageMultiplier - 1f;
+                        DamageBonus = guardian.RangedDamageMultiplier;
                     }
-                    if (item.magic)
+                    else if (item.magic)
                     {
                         if (HadDamageBefore)
                             DamageText += ", ";
                         HadDamageBefore = true;
                         DamageText += "magic ";
-                        DamageBonus += guardian.MagicDamageMultiplier - 1f;
+                        DamageBonus = guardian.MagicDamageMultiplier;
                     }
-                    if (item.summon)
+                    else if (item.summon)
                     {
                         if (HadDamageBefore)
                             DamageText += ", ";
                         HadDamageBefore = true;
                         DamageText += "summon ";
-                        DamageBonus += guardian.SummonDamageMultiplier - 1f;
+                        DamageBonus = guardian.SummonDamageMultiplier;
+                    }
+                    else
+                    {
+                        HadDamageBefore = true;
+                        DamageText += "neutral ";
+                        DamageBonus = guardian.NeutralDamageMultiplier;
                     }
                     DamageText = (int)(item.damage * DamageBonus) + " " + DamageText + "damage";
                     tooltips.Insert(1, new TooltipLine(this.mod, "GuardianWeaponDamage", DamageText));

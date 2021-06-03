@@ -95,6 +95,7 @@ namespace giantsummon.Compatibility
             Guardian.RangedDamageMultiplier = (Guardian.RangedDamageMultiplier + mod.RangedDamageSum) * mod.RangedDamageMult;
             Guardian.MagicDamageMultiplier = (Guardian.MagicDamageMultiplier + mod.MagicDamageSum) * mod.MagicDamageMult;
             Guardian.SummonDamageMultiplier = (Guardian.SummonDamageMultiplier + mod.MinionDamageSum) * mod.MinionDamageMult;
+            Guardian.NeutralDamageMultiplier = (Guardian.NeutralDamageMultiplier + mod.NeutralDamageSum) * mod.NeutralDamageMult;
             Guardian.MeleeSpeed = (Guardian.MeleeSpeed + mod.MeleeSpeedSum) * mod.MeleeSpeedMult;
             if (Guardian.Defense > 0) Guardian.Defense = (int)((Guardian.Defense + mod.DefenseSum) * mod.DefenseMult);
             Guardian.HealthHealMult += mod.MaxHealthMult * Guardian.HealthHealMult;
