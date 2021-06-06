@@ -1162,7 +1162,7 @@ namespace giantsummon
 
         public TerraGuardian(int CreateByType = -1, string ModID = "")
         {
-            AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, Main.rand.Next(60));
+            AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, 60);
             if (CreateByType != -1)
             {
                 if (ModID == "")
@@ -3060,11 +3060,6 @@ namespace giantsummon
             {
                 GuardianMoodAndStatus();
             }
-            if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos == Main.myPlayer)
-            {
-                bool ControlChange = (MoveUp != LastMoveUp || MoveRight != LastMoveRight || MoveDown != LastMoveDown || MoveLeft != LastMoveLeft || Jump != LastJump);
-                NetMod.SendGuardianKeyChange(Main.player[OwnerPos], -1, Main.myPlayer);
-            }
             UpdateSpelunkerGlowstickEffect();
             Base.GuardianUpdateScript(this);
             UpdateComfortStack();
@@ -3263,10 +3258,6 @@ namespace giantsummon
             {
                 Position.X = Main.player[OwnerPos].position.X + Main.player[OwnerPos].width * 0.5f;
                 Position.Y = Main.player[OwnerPos].position.Y + Main.player[OwnerPos].height - 1;
-            }
-            if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos == Main.myPlayer)
-            {
-                NetMod.SendGuardianStateCommand(Main.player[OwnerPos], 2, OwnerPos, -1);
             }
         }
 
@@ -9074,10 +9065,6 @@ namespace giantsummon
                         if (PlayerMounted)
                             ToggleMount(true, false);
                         PlayerControl = true;
-                        if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos == Main.myPlayer)
-                        {
-                            NetMod.SendGuardianStateCommand(Main.player[OwnerPos], 1, OwnerPos, -1);
-                        }
                     }
                     else
                     {
@@ -9089,10 +9076,6 @@ namespace giantsummon
                     PlayerControl = false;
                     Main.player[OwnerPos].position.X = Position.X - Main.player[OwnerPos].width * 0.5f;
                     Main.player[OwnerPos].position.Y = Position.Y - Main.player[OwnerPos].height * GravityDirection;
-                    if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos == Main.myPlayer)
-                    {
-                        NetMod.SendGuardianStateCommand(Main.player[OwnerPos], 1, OwnerPos, -1);
-                    }
                 }
 			}
 		}
@@ -9131,10 +9114,6 @@ namespace giantsummon
                     PlayerMounted = false;
                     UpdateStatus = true;
                     GuardianHasControlWhenMounted = false;
-                    if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos == Main.myPlayer)
-                    {
-                        NetMod.SendGuardianStateCommand(Main.player[OwnerPos], 0, OwnerPos, -1);
-                    }
                     return true;
                 }
                 else
@@ -9143,10 +9122,6 @@ namespace giantsummon
                     {
                         PlayerMounted = true;
                         UpdateStatus = true;
-                        if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos == Main.myPlayer)
-                        {
-                            NetMod.SendGuardianStateCommand(Main.player[OwnerPos], 0, OwnerPos, -1);
-                        }
                         return true;
                     }
                     else
@@ -11652,10 +11627,6 @@ namespace giantsummon
                     NpcHit.Clear();
                     TriggerItem = true;
                     ToolTrigger = true;
-                    if (MainMod.NetplaySync && Main.netMode == 1 && OwnerPos == Main.myPlayer)
-                    {
-                        NetMod.SendGuardianItemUse(Main.player[OwnerPos], -1, OwnerPos);
-                    }
                 }
             }
             if (FreezeItemUseAnimation)

@@ -2842,11 +2842,6 @@ namespace giantsummon
             return Text.ToArray();
         }
 
-        public override void HandlePacket(System.IO.BinaryReader reader, int whoAmI)
-        {
-            NetMod.ReceiveMessage(reader, whoAmI);
-        }
-
         public enum GuardianItemSlotButtons
         {
             Nothing = -1,

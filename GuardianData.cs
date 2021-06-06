@@ -606,6 +606,8 @@ namespace giantsummon
 
         public GuardianData(int ID = -1, string ModID = "")
         {
+            if (Main.rand == null)
+                Main.rand = new Terraria.Utilities.UnifiedRandom();
             if (ID != -1)
             {
                 this.ID = ID;

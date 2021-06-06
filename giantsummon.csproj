@@ -190,7 +190,6 @@
     <Compile Include="ModGuardianData.cs" />
     <Compile Include="ModTargetting.cs" />
     <Compile Include="NameIDHelper.cs" />
-    <Compile Include="NetMod.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Npcs\AlexanderNPC.cs" />
     <Compile Include="Npcs\AlexNPC.cs" />

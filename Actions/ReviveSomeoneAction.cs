@@ -156,6 +156,7 @@ namespace giantsummon.Actions
                 }
                 if (IsMountedPlayer || new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))//(MainMod.RectangleIntersects(guardian.TopLeftPosition, guardian.Width, guardian.Height, TargetPosition, TargetWidth, TargetHeight))
                 {
+                    guardian.Jump = false;
                     if (Math.Abs(guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f)) < 8)
                     {
                         if (Math.Abs(guardian.Velocity.X) < 2f)

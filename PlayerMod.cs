@@ -1803,35 +1803,6 @@ namespace giantsummon
             return true;
         }
 
-        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
-        {
-            if (!MainMod.NetplaySync)
-                return;
-            if (newPlayer)
-            {
-                for (int p = 0; p < MainMod.PlayerGuardianSync.Count; p++)
-                {
-                    if (MainMod.PlayerGuardianSync[p].Key == fromWho)
-                        MainMod.PlayerGuardianSync.RemoveAt(p);
-                }
-                NetMod.SendGuardianData(player, SelectedGuardian, toWho, fromWho);
-                NetMod.SendGuardianBehaviorFlags(player, SelectedGuardian, toWho, fromWho);
-                for (int i = 0; i < 50; i++)
-                {
-                    NetMod.SendGuardianInventoryItem(player, SelectedGuardian, i, toWho, fromWho);
-                }
-                for (int e = 0; e < 9; e++)
-                {
-                    NetMod.SendGuardianEquippedItem(player, SelectedGuardian, e, toWho, fromWho);
-                }
-                for (int s = 0; s < Guardian.SkillList.Count; s++)
-                {
-                    NetMod.SendGuardianSkillProgress(player, SelectedGuardian, s, toWho, fromWho);
-                }
-            }
-            NetMod.SendGuardianSummonState(player, SelectedGuardian, toWho, fromWho);
-        }
-
         public override void SetControls()
         {
             if (player.whoAmI == Main.myPlayer && KnockedOut) //Controls
@@ -2347,36 +2318,6 @@ namespace giantsummon
                     }
                     Main.NewText("You can give it orders by pressing '" + OrderKeys + "' key, and navigating with the number buttons. You can undo an order step by pressing '" + OrderKeys + "' again. You can also change order call key on the input settings.");
                 }
-                if (MainMod.NetplaySync && Main.netMode == 1 && player.whoAmI == Main.myPlayer && AssistSlot == 0)
-                {
-                    for (byte p = 0; p < 255; p++)
-                    {
-                        if (p == player.whoAmI)
-                            continue;
-                        if (!Main.player[p].active)
-                            continue;
-                        bool AlreadySync = MainMod.HasSyncFlag(p, Id);
-                        if (!AlreadySync)
-                            NetMod.SendGuardianData(player, Id, p);
-                        NetMod.SendGuardianSummonState(player, Id, p);
-                        if (!AlreadySync)
-                        {
-                            NetMod.SendGuardianBehaviorFlags(player, Id, p);
-                            for (int i = 0; i < 50; i++)
-                            {
-                                NetMod.SendGuardianInventoryItem(player, Id, i, p);
-                            }
-                            for (int e = 0; e < 9; e++)
-                            {
-                                NetMod.SendGuardianEquippedItem(player, Id, e, p);
-                            }
-                            for (int s = 0; s < guardian.SkillList.Count; s++)
-                            {
-                                NetMod.SendGuardianSkillProgress(player, Id, s, p);
-                            }
-                        }
-                    }
-                }
             }
             else
             {
@@ -2450,8 +2391,6 @@ namespace giantsummon
                     }
                     //Guardian.Spawn();
                 }
-                if (MainMod.NetplaySync && Main.netMode == 1 && Main.myPlayer == player.whoAmI && AssistSlot == 0)
-                    NetMod.SendGuardianSummonState(player, SelectedGuardian, -1, player.whoAmI);
                 if (AssistSlot == 0)
                     SelectedGuardian = -1;
                 else
