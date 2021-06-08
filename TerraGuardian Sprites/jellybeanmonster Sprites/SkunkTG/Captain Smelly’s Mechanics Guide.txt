@@ -70,7 +70,7 @@ Tiers>
 5-Can be used 5 times in quick succession and the cooldown is reduced to 5 seconds
 Crafting recipe:
 tiers>
-1- 15 platinum/gold bars + broken phantom device or 20 plat/gold bars
+1- 15 platinum/gold bars + broken phantom device or 20 plat/gold bars if the broken phantom device is deleted or missing
 2- Tier 1 phantom device + 1 mana crystal
 3- Tier 2 phantom device + 2 mana cystals 
 4- Tier 3 phantom device + 3 mana crystals + 10 Cobalt bars
