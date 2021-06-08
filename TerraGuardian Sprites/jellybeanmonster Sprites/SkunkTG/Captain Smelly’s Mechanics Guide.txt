@@ -73,13 +73,13 @@ tiers>
 1- 15 platinum/gold bars + broken phantom device or 20 plat/gold bars
 2- Tier 1 phantom device + 1 mana crystal
 3- Tier 2 phantom device + 2 mana cystals 
-4- Tier 3 phantom device + 3 mana crystals
-5- Tier 4 phantom device + platinum watch + Lightning Boots
+4- Tier 3 phantom device + 3 mana crystals + 10 Cobalt bars
+5- Tier 4 phantom device + platinum watch + Lightning Boots + 10 Chlorphyte bars
 
 Super moves:
 Phantasm Blitz(20 mana cost per use)- A super quick dash attack that has a 1.2x multiplier added to whatever her current weapon damage is and grants intangibility to
 Smelly during attack
--Can be used 1 time per 10 seconds(7 seconds on tier 5 of phantom device)
+-Can be used 1 time per 10 seconds(5 seconds on tier 5 of phantom device)
 -Can be used multiple times in quick succession upon upgrading phantom device
 Condition for when it is supposed to be used:
 Smelly uses PB as soon as she encounters a enemy that is atleast 7 blocks far. When off cooldown it is immediately casted again.
