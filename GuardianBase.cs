@@ -680,6 +680,16 @@ namespace giantsummon
         }
 
         /// <summary>
+        /// Called when the companion status is resetted, before changing the status.
+        /// Attributes is called sometime after this.
+        /// </summary>
+        /// <param name="guardian">The companion reference.</param>
+        public virtual void GuardianResetStatus(TerraGuardian guardian)
+        {
+
+        }
+
+        /// <summary>
         /// Is called before the sprites list is populated. Use this if you only wants to draw something behind the companion sprites.
         /// Use TerraGuardian.DrawFront list to modify what is going to be drawn in front of the player, when the player is mounted.
         /// Use TerraGuardian.DrawBehind list to modify what is going to be drawn behind of the player, when the player is mounted.

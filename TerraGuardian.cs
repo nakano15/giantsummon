@@ -1590,9 +1590,9 @@ namespace giantsummon
         {
             int TileCheckValue = GetCooldownValue(GuardianCooldownManager.CooldownType.BiomeCheckStacker);
             const int TileDimX = (int)(1920 * DivisionBy16), TileDimY = (int)(1080 * DivisionBy16), TotalDimRange = TileDimX * TileDimY,
-                TileCheckStartPositionX = -TileDimX / 2, TileCheckStartPositionY = -TileDimY / 2,
-                TileRangeX = TileDimX / (FramesSquaredTileCount / 4), TileRangeY = TileDimY / (FramesSquaredTileCount / 4), MaxRange = TileRangeX * TileRangeY,
-                AFourthTileCount = FramesSquaredTileCount / 4;
+                TileCheckStartPositionX = (int)(-TileDimX * 0.5f), TileCheckStartPositionY = (int)(-TileDimY * 0.5f),
+                TileRangeX = (int)(TileDimX / (FramesSquaredTileCount * 0.25f)), TileRangeY = (int)(TileDimY / (FramesSquaredTileCount * 0.25f)), MaxRange = TileRangeX * TileRangeY,
+                AFourthTileCount = (int)(FramesSquaredTileCount * 0.25f);
             int TilePositionX = (int)(CenterPosition.X * DivisionBy16) + TileCheckStartPositionX, TilePositionY = (int)(CenterPosition.Y * DivisionBy16) + TileCheckStartPositionY;
             TilePositionX += TileRangeX * (TileCheckValue % AFourthTileCount);
             TilePositionY += TileRangeY * (TileCheckValue / AFourthTileCount);
@@ -1602,7 +1602,7 @@ namespace giantsummon
                 {
                     if (x >= Main.leftWorld * DivisionBy16 && x < Main.rightWorld * DivisionBy16 && y >= Main.topWorld * DivisionBy16 && y < Main.bottomWorld * DivisionBy16)
                     {
-                        if (Main.tile[x, y].active())
+                        if (Main.tile[x, y] != null && Main.tile[x, y].active())
                         {
                             AddTileCount(Main.tile[x, y].type);
                         }
@@ -1958,6 +1958,8 @@ namespace giantsummon
             this.GuardiansSpotted = GuardiansSpotted;
         }
 
+        private static bool LoadedWorldRegion = true;
+
         public void Update(Player Owner = null)
         {
             if (!Active)
@@ -1995,6 +1997,7 @@ namespace giantsummon
                 if (!talkPlayer.active || talkPlayer.dead || !pm.IsTalkingToAGuardian || pm.TalkingGuardianPosition != WhoAmID)
                     TalkPlayerID = -1;
             }
+            LoadedWorldRegion = Main.tile[(int)(Position.X * 0.0625f), (int)(Position.Y * 0.0625f)] != null;
             OffsetX = OffsetY = 0;
             MainMod.AddActiveGuardian(this);
             WalkMode = false;
@@ -2021,7 +2024,8 @@ namespace giantsummon
             CountNearbyNpcs();
             if (Position.X == 0 && Position.Y == 0)
                 Spawn();
-            BehaviorHandler();
+            if(LoadedWorldRegion)
+                BehaviorHandler();
             if (HasFlag(GuardianFlags.Confusion))
             {
                 bool MovingLeft = MoveLeft, MovingRight = MoveRight, MovingUp = MoveUp, MovingDown = MoveDown;
@@ -2103,9 +2107,12 @@ namespace giantsummon
                     Ducking = false;
                 }
             }
-            if(mount.Active)
-                UpdateMount();
-            UpdateHorizontalMovement();
+            if (LoadedWorldRegion)
+            {
+                if (mount.Active)
+                    UpdateMount();
+                UpdateHorizontalMovement();
+            }
             if (Velocity.Y == 0)
             {
                 bool MayDash = !SittingOnPlayerMount && !MountedOnPlayer;
@@ -2119,7 +2126,8 @@ namespace giantsummon
                 }
             }
             LockDirection = false;
-            UpdateVerticalMovement();
+            if(LoadedWorldRegion)
+                UpdateVerticalMovement();
             if (OwnerPos > -1 && (Downed || Main.player[OwnerPos].dead))
             {
                 PlayerControl = PlayerMounted = false;
@@ -2141,7 +2149,7 @@ namespace giantsummon
             {
                 UpdateMountedPosition();
                 bool WofPassing = CheckForPassingWof();
-                if (!WofPassing && !IsBeingPulledByPlayer())
+                if (LoadedWorldRegion && !WofPassing && !IsBeingPulledByPlayer())
                 {
                     CheckForObstacles();
                     UpdateCollision();
@@ -2150,19 +2158,20 @@ namespace giantsummon
                 HitBox.Y = (int)(Position.Y);
                 if (GravityDirection > 0)
                     HitBox.Y -= HitBox.Height;
-                if (OwnerPos != -1)
+                if (LoadedWorldRegion && OwnerPos != -1)
                     CheckNearbyTiles();
                 CheckForNpcContact();
                 MagicMirrorTrigger = false;
                 ItemUseScript();
                 CheckForOutOfBounds();
                 bool MayRocket = Jump && !LastJump;
-                JumpControl(ref MayRocket);
+                if(LoadedWorldRegion)
+                    JumpControl(ref MayRocket);
                 if (RocketTime < RocketMaxTime)
                     MayRocket = true;
                 if (Velocity.Y == 0)
                     MayRocket = false;
-                if (!HasFlag(GuardianFlags.Frozen) && !HasFlag(GuardianFlags.Petrified) && !MoveDown)
+                if (LoadedWorldRegion && !HasFlag(GuardianFlags.Frozen) && !HasFlag(GuardianFlags.Petrified) && !MoveDown)
                 {
                     WingMovement();
                     RocketMovement(MayRocket);
@@ -2809,7 +2818,7 @@ namespace giantsummon
                         break;
                 }
             }
-            if (HasFlag(GuardianFlags.FlowerBoots) && Velocity.Y == 0)
+            if (LoadedWorldRegion && HasFlag(GuardianFlags.FlowerBoots) && Velocity.Y == 0)
             {
                 int tx = (int)(CenterPosition.X * DivisionBy16), ty = (int)((Position.Y - 1) * DivisionBy16);
                 if (tx >= Main.leftWorld * DivisionBy16 && tx < Main.rightWorld * DivisionBy16 && ty >= Main.topWorld * DivisionBy16 && ty < Main.bottomWorld * DivisionBy16 - 1)
@@ -3015,7 +3024,7 @@ namespace giantsummon
                         Stealth = 1f;
                 }
             }
-            if (ZoneSandstorm)
+            if (LoadedWorldRegion && ZoneSandstorm)
             {
                 int CenterX = (int)(CenterPosition.X * DivisionBy16), CenterY = (int)(CenterPosition.Y * DivisionBy16);
                 if (Main.tile[CenterX, CenterY].wall == 0)
@@ -3023,7 +3032,7 @@ namespace giantsummon
                     AddBuff(194, 2);
                 }
             }
-            if (false && HasCarpet())
+            /*if (LoadedWorldRegion && HasCarpet())
             {
                 int TileX = (int)(Position.X * DivisionBy16) - 1, TileY = (int)(Position.Y * DivisionBy16) + 1;
                 bool HasSolidGround = false;
@@ -3043,7 +3052,7 @@ namespace giantsummon
                         Velocity.Y = -(Mass + 0.5f);
                     SetFallStart();
                 }
-            }
+            }*/
             if (SunflowerNearby)
                 AddBuff(Terraria.ID.BuffID.Sunflower, 5);
             if (ZoneWaterCandle)
@@ -3062,7 +3071,8 @@ namespace giantsummon
             }
             UpdateSpelunkerGlowstickEffect();
             Base.GuardianUpdateScript(this);
-            UpdateComfortStack();
+            if(LoadedWorldRegion)
+                UpdateComfortStack();
             ManageTrail();
             ManagePulse();
             //FloorVisual(Velocity.Y != 0);
@@ -3595,6 +3605,7 @@ namespace giantsummon
                 Scale = FinalScale = AgeScale;
             TrailLength = TrailDelay = 0;
             PulsePower = 0;
+            Base.GuardianResetStatus(this);
 
             DashSpeed = 0;
             WingMaxFlightTime = 0;
@@ -5429,7 +5440,6 @@ namespace giantsummon
                     }
                     else
                     {
-                        //Main.NewText("Attempting to revive : " + MainMod.ActiveGuardians[Priority].Name);
                         GuardianActions.TryRevivingGuardian(this, MainMod.ActiveGuardians[Priority]);
                     }
                 }
@@ -13314,7 +13324,7 @@ namespace giantsummon
                         for (int x = 0; x < 2; x++)
                         {
                             Tile t = Framing.GetTileSafely(TileCheckX + x * Direction, TileCheckY + y);
-                            if (t.active() && (Main.tileSolid[t.type] || Main.tileSolidTop[t.type]))
+                            if (t != null && t.active() && (Main.tileSolid[t.type] || Main.tileSolidTop[t.type]))
                             {
                                 Pitfall = false;
                             }
@@ -13331,7 +13341,7 @@ namespace giantsummon
                                     break;
                                 int TileX = TileCheckX + x * Direction, TileY = TileCheckY + y;
                                 Tile t = Framing.GetTileSafely(TileX, TileY);
-                                if (t.active() && (Main.tileSolid[t.type] || Main.tileSolidTop[t.type]))
+                                if (t != null && t.active() && (Main.tileSolid[t.type] || Main.tileSolidTop[t.type]))
                                 {
                                     int UpperTileCount = 0;
                                     int MaxHeight = (int)(CollisionHeight * DivisionBy16)+ 1;
@@ -13378,7 +13388,7 @@ namespace giantsummon
                 int ThisFloorX = FloorX + x * Direction;
                 Tile t = Framing.GetTileSafely(ThisFloorX, FloorY);
                 bool AboveTile = Math.Abs(x) < (Width * DivisionBy16) + 1;
-                if (t.active() && Main.tileSolid[t.type])
+                if (t != null && t.active() && Main.tileSolid[t.type])
                 {
                     if (t.type == Terraria.ID.TileID.Spikes || t.type == Terraria.ID.TileID.WoodenSpikes || ((t.type == Terraria.ID.TileID.Hellstone || t.type == Terraria.ID.TileID.HellstoneBrick) && !HasFlag(GuardianFlags.FireblocksImmunity)))
                     {
@@ -13411,7 +13421,7 @@ namespace giantsummon
                         byte Attempt = 5;
                         while (Attempt > 0)
                         {
-                            if (t.active() && Main.tileSolid[t.type])
+                            if (t != null && t.active() && Main.tileSolid[t.type])
                             {
 
                             }
@@ -13738,6 +13748,22 @@ namespace giantsummon
         public bool SubAttackInCooldown(byte ID)
         {
             return SubAttackCooldown.ContainsKey((byte)(ID + 1));
+        }
+
+        public void ResetSubAttackCooldown(byte ID)
+        {
+            if(SubAttackInCooldown(ID))
+            {
+                SubAttackCooldown.Remove((byte)(ID + 1));
+            }
+        }
+
+        public void ChangeSubAttackCooldown (byte ID, int Time)
+        {
+            if (SubAttackInCooldown(ID))
+            {
+                SubAttackCooldown[(byte)(ID + 1)] = Time;
+            }
         }
 
         public void UpdateSubAttack()

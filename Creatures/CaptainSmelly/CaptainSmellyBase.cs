@@ -15,6 +15,7 @@ namespace giantsummon.Creatures
             RubyGPTextureID = "rubygp", DiamondGPTextureID = "diamondgp";
         public const int NumberOfSwords = 7;
         public const int StandardFalchion = 0, AmethystFalchion = 1, TopazFalchion = 2, SapphireFalchion = 3, EmeraldFalchion = 4, RubyFalchion = 5, DiamondFalchion = 6;
+        public const int VerticalSwingSubAttack = 0, GPSubAttack = 1, ArmBlasterSubAttack = 2, PhantomRushSubAttack = 3;
 
         private const float TopazFalchionAttackSpeedMult = 1.5f, SapphireFalchionAttackSpeedMult = 0.7f;
 
@@ -138,12 +139,355 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(26, 53, 52);
 
             SubAttacksSetup();
+            TopicList();
+        }
+
+        public void TopicList()
+        {
+            AddTopic("Repair Phantom Device", delegate ()
+            {
+                CaptainSmellyData data = (CaptainSmellyData)Dialogue.GetSpeaker().Data;
+                switch (data.PhantomDeviceMiniquestProgress)
+                {
+                    case 0: //Broken
+                        {
+                            const int BarCount = 15;
+                            Dialogue.ShowDialogueOnly("It will give us some work. It isn't unrepairable, though.\n" +
+                                "I will need " + BarCount + " Platinum or Gold Bars to repair it.");
+                            int GoldBarCount = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar),
+                            PlatinumBarCount = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar);
+                            if (GoldBarCount >= BarCount ||
+                                PlatinumBarCount >= BarCount)
+                            {
+                                Dialogue.AddOption("I got the items.", delegate (TerraGuardian tg)
+                                {
+                                    bool IsGoldBarTheStackThatPassedMaxBarCount = GoldBarCount >= BarCount;
+                                    if (IsGoldBarTheStackThatPassedMaxBarCount)
+                                    {
+                                        Dialogue.TakeItem(Terraria.ID.ItemID.GoldBar, BarCount);
+                                    }
+                                    else
+                                    {
+                                        Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumBar, BarCount);
+                                    }
+                                    data.PhantomDeviceMiniquestProgress = 1;
+                                    Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>());
+                                    Dialogue.ShowEndDialogueMessage("Great. I managed to fix It. I will now be able to use Phantom Dash.\n" +
+                                        "I can upgrade It to allow me to better use the Phantom Dash.", false);
+                                });
+                            }
+                            Dialogue.AddOption("I'll try gathering them.", delegate (TerraGuardian tg)
+                            {
+                                Dialogue.ShowEndDialogueMessage("Alright.", false);
+                            });
+                        }
+                        break;
+                    case 1: //Tier 1
+                        {
+                            const int ManaCrystalNecessary = 1;
+                            Dialogue.ShowDialogueOnly("For this upgrade, not only I will need the Phantom Device Tier 1, but will also need " + ManaCrystalNecessary + " mana crystal.");
+                            if (Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>()) &&
+                            Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalNecessary)
+                            {
+                                Dialogue.AddOption("Here's everything.", delegate (TerraGuardian tg)
+                                {
+                                    Dialogue.TakeItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>());
+                                    Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
+                                    Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>());
+                                    Dialogue.ShowEndDialogueMessage("Not bad! The Phantom Device got improved.\n" +
+                                        "I can improve It some more, if you're up to It.\n" +
+                                        "I can make use of Phantom Rush if I equip that in one of my accessory slots.", false);
+                                    data.PhantomDeviceMiniquestProgress = 2;
+                                });
+                            }
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>())){
+                                Dialogue.AddOption("I lost the Phantom Device...", delegate(TerraGuardian tg)
+                                {
+                                    const int BarCount = 20, GoldCoinCount = 10;
+                                    Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + BarCount + " Gold or Platinum Bars.\n" +
+                                        "And since you managed to lose my Phantom Device, you'll have to give me "+ GoldCoinCount + " Gold Coins.");
+                                    bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount,
+                                         HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= BarCount;
+                                    if ((HasGoldBars || HasPlatinumBars) && Dialogue.GetPlayerCoinValues() >= Dialogue.GetCoinValues(0, 0, GoldCoinCount))
+                                    {
+                                        Dialogue.AddOption("Here... Take It...", delegate(TerraGuardian tg2)
+                                        {
+                                            if (HasGoldBars)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.GoldBar, BarCount);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumBar, BarCount);
+                                            Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
+                                            Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>());
+                                            Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                        });
+                                    }
+                                    Dialogue.AddOption("Nah, too expensive.", delegate(TerraGuardian tg2)
+                                    {
+                                        Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                    });
+                                });
+                            }
+                            Dialogue.AddOption("Too hard...", delegate (TerraGuardian tg)
+                            {
+                                Dialogue.ShowEndDialogueMessage("How? Serious?", false);
+                            });
+                        }
+                        break;
+                    case 2: //Tier 2
+                        {
+                            const int ManaCrystalNecessary = 2;
+                            Dialogue.ShowDialogueOnly("You know the drill. I will need a Phantom Device Tier 2, but will also need " + ManaCrystalNecessary + " mana crystals.");
+                            if (Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>()) &&
+                            Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalNecessary)
+                            {
+                                Dialogue.AddOption("Here's everything.", delegate (TerraGuardian tg)
+                                {
+                                    Dialogue.TakeItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>());
+                                    Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
+                                    Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>());
+                                    Dialogue.ShowEndDialogueMessage("It looks even better than the last one!\n" +
+                                        "But I think we can still do better.", false);
+                                    data.PhantomDeviceMiniquestProgress = 3;
+                                });
+                            }
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>()))
+                            {
+                                Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
+                                {
+                                    const int BarCount = 20, GoldCoinCount = 20, ManaCrystalCount = 1;
+                                    Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + BarCount + " Gold or Platinum Bars and "+ManaCrystalCount+" Mana Crystal.\n" +
+                                        "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                    bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount,
+                                         HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= BarCount;
+                                    if ((HasGoldBars || HasPlatinumBars) && Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalCount && 
+                                    Dialogue.GetPlayerCoinValues() >= Dialogue.GetCoinValues(0, 0, GoldCoinCount))
+                                    {
+                                        Dialogue.AddOption("Here... Take It...", delegate (TerraGuardian tg2)
+                                        {
+                                            if (HasGoldBars)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.GoldBar, BarCount);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumBar, BarCount);
+                                            Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalCount);
+                                            Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
+                                            Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>());
+                                            Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                        });
+                                    }
+                                    Dialogue.AddOption("Nah, too expensive.", delegate (TerraGuardian tg2)
+                                    {
+                                        Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                    });
+                                });
+                            }
+                            Dialogue.AddOption("Too hard...", delegate (TerraGuardian tg)
+                            {
+                                Dialogue.ShowEndDialogueMessage("Bad luck with fallen stars?", false);
+                            });
+                        }
+                        break;
+                    case 3: //Tier 3
+                        {
+                            const int ManaCrystalNecessary = 3, BarsNecessary = 10;
+                            Dialogue.ShowDialogueOnly("We'll need a Phantom Device Tier 3 for this one, " +BarsNecessary+ " Cobalt or Palladium Bars, and also " + ManaCrystalNecessary + " mana crystals for this upgrade.");
+                            bool HasCobaltBars = Dialogue.CountItem(Terraria.ID.ItemID.CobaltBar) >= BarsNecessary,
+                                 HasPalladiumBars = Dialogue.CountItem(Terraria.ID.ItemID.PalladiumBar) >= BarsNecessary;
+                            if (Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>()) &&
+                            (HasCobaltBars || HasPalladiumBars) &&
+                            Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalNecessary)
+                            {
+                                Dialogue.AddOption("Here's everything.", delegate (TerraGuardian tg)
+                                {
+                                    if (HasCobaltBars)
+                                        Dialogue.TakeItem(Terraria.ID.ItemID.CobaltBar, BarsNecessary);
+                                    else
+                                        Dialogue.TakeItem(Terraria.ID.ItemID.PalladiumBar, BarsNecessary);
+                                    Dialogue.TakeItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>());
+                                    Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
+                                    Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>());
+                                    Dialogue.ShowEndDialogueMessage("This is amazing! It's even better than before!\n" +
+                                        "I think I can overclock this. May be dangerous, but we can try. Right?", false);
+                                    data.PhantomDeviceMiniquestProgress = 4;
+                                });
+                            }
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>()))
+                            {
+                                Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
+                                {
+                                    const int BarCount = 20, GoldCoinCount = 30, ManaCrystalCount = 3;
+                                    Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + BarCount + " Gold or Platinum Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
+                                        "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                    bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount,
+                                         HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= BarCount;
+                                    if ((HasGoldBars || HasPlatinumBars) && Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalCount &&
+                                    Dialogue.GetPlayerCoinValues() >= Dialogue.GetCoinValues(0, 0, GoldCoinCount))
+                                    {
+                                        Dialogue.AddOption("Here... Take It...", delegate (TerraGuardian tg2)
+                                        {
+                                            if (HasGoldBars)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.GoldBar, BarCount);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumBar, BarCount);
+                                            Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalCount);
+                                            Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
+                                            Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>());
+                                            Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                        });
+                                    }
+                                    Dialogue.AddOption("Nah, too expensive.", delegate (TerraGuardian tg2)
+                                    {
+                                        Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                    });
+                                });
+                            }
+                            Dialogue.AddOption("Too hard...", delegate (TerraGuardian tg)
+                            {
+                                Dialogue.ShowEndDialogueMessage("You're just lazy, aren't you?", false);
+                            });
+                        }
+                        break;
+                    case 4: //Tier 4
+                        {
+                            const int BarCount = 10;
+                            Dialogue.ShowDialogueOnly("To overclock the Phantom Device, I'll need a Tier 4 version of It, a Gold or Platinum Watch, and a Lightning Boots.\n" +
+                                "And also " + BarCount + " Chlorophyte Bars.");
+                            bool HasGoldWatch = Dialogue.HasItem(Terraria.ID.ItemID.GoldWatch);
+                            bool HasPlatinumWatch = Dialogue.HasItem(Terraria.ID.ItemID.PlatinumWatch);
+                            if (Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>()) &&
+                            (HasGoldWatch || HasPlatinumWatch) && Dialogue.CountItem(Terraria.ID.ItemID.ChlorophyteBar) >= 10 && Dialogue.HasItem(Terraria.ID.ItemID.LightningBoots))
+                            {
+                                Dialogue.AddOption("Here's everything.", delegate (TerraGuardian tg)
+                                {
+                                    Dialogue.TakeItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>());
+                                    if (HasGoldWatch)
+                                    {
+                                        Dialogue.TakeItem(Terraria.ID.ItemID.GoldWatch);
+                                    }
+                                    else
+                                    {
+                                        Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumWatch);
+                                    }
+                                    Dialogue.TakeItem(Terraria.ID.ItemID.ChlorophyteBar, BarCount);
+                                    Dialogue.TakeItem(Terraria.ID.ItemID.LightningBoots);
+                                    Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier5>());
+                                    Dialogue.ShowEndDialogueMessage("Look at this! It's beautiful! I will cause so much damage with this thing.", false);
+                                    data.PhantomDeviceMiniquestProgress = 5;
+                                });
+                            }
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>()))
+                            {
+                                Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
+                                {
+                                    const int SecondBarCount = 20, GoldCoinCount = 40, ManaCrystalCount = 7, HMBarCount = 10;
+                                    Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + SecondBarCount + " Gold or Platinum Bars, "+HMBarCount+" Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
+                                        "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                    bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= SecondBarCount,
+                                         HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= SecondBarCount;
+                                    bool HasCobaltBars = Dialogue.CountItem(Terraria.ID.ItemID.CobaltBar) >= HMBarCount,
+                                         HasPalladiumBars = Dialogue.CountItem(Terraria.ID.ItemID.PalladiumBar) >= HMBarCount;
+                                    if ((HasGoldBars || HasPlatinumBars) && (HasCobaltBars || HasPalladiumBars) && Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalCount &&
+                                    Dialogue.GetPlayerCoinValues() >= Dialogue.GetCoinValues(0, 0, GoldCoinCount))
+                                    {
+                                        Dialogue.AddOption("Here... Take It...", delegate (TerraGuardian tg2)
+                                        {
+                                            if (HasGoldBars)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.GoldBar, SecondBarCount);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumBar, SecondBarCount);
+                                            if (HasCobaltBars)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.CobaltBar, HMBarCount);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PalladiumBar, HMBarCount);
+                                            Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalCount);
+                                            Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
+                                            Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>());
+                                            Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                        });
+                                    }
+                                    Dialogue.AddOption("Nah, too expensive.", delegate (TerraGuardian tg2)
+                                    {
+                                        Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                    });
+                                });
+                            }
+                            Dialogue.AddOption("Too hard...", delegate (TerraGuardian tg)
+                            {
+                                Dialogue.ShowEndDialogueMessage("You're just lazy, aren't you?", false);
+                            });
+                        }
+                        break;
+                    case 5: //Tier 5
+                        {
+                            Dialogue.ShowDialogueOnly("There's no more upgrades I can do on the Phantom Device.");
+                            if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier5>()))
+                            {
+                                Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
+                                {
+                                    const int SecondBarCount = 20, GoldCoinCount = 50, ManaCrystalCount = 7, HMBarCount = 10, ChlorophyteBarCount = 10;
+                                    Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + SecondBarCount + " Gold or Platinum Bars, " + HMBarCount + " Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
+                                        "I will also need a Gold or Platinum Watch, and a Lightning Boots.\n" +
+                                        "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                    bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= SecondBarCount,
+                                         HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= SecondBarCount;
+                                    bool HasCobaltBars = Dialogue.CountItem(Terraria.ID.ItemID.CobaltBar) >= HMBarCount,
+                                         HasPalladiumBars = Dialogue.CountItem(Terraria.ID.ItemID.PalladiumBar) >= HMBarCount;
+                                    bool HasGoldWatch = Dialogue.HasItem(Terraria.ID.ItemID.GoldWatch),
+                                        HasPlatinumWatch = Dialogue.HasItem(Terraria.ID.ItemID.PlatinumWatch);
+                                    if ((HasGoldBars || HasPlatinumBars) && (HasCobaltBars || HasPalladiumBars) && (HasGoldWatch || HasPlatinumWatch) && Dialogue.HasItem(Terraria.ID.ItemID.LightningBoots) &&
+                                    Dialogue.CountItem(Terraria.ID.ItemID.ChlorophyteBar) >= ChlorophyteBarCount && Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalCount &&
+                                    Dialogue.GetPlayerCoinValues() >= Dialogue.GetCoinValues(0, 0, GoldCoinCount))
+                                    {
+                                        Dialogue.AddOption("Here... Take It...", delegate (TerraGuardian tg2)
+                                        {
+                                            if (HasGoldBars)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.GoldBar, SecondBarCount);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumBar, SecondBarCount);
+                                            if (HasCobaltBars)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.CobaltBar, HMBarCount);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PalladiumBar, HMBarCount);
+                                            if (HasGoldWatch)
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.GoldWatch);
+                                            else
+                                                Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumWatch);
+                                            Dialogue.TakeItem(Terraria.ID.ItemID.LightningBoots);
+                                            Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalCount);
+                                            Dialogue.TakeItem(Terraria.ID.ItemID.ChlorophyteBar, ChlorophyteBarCount);
+                                            Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
+                                            Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier5>());
+                                            Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                        });
+                                    }
+                                    Dialogue.AddOption("Nah, too expensive.", delegate (TerraGuardian tg2)
+                                    {
+                                        Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                    });
+                                });
+                            }
+                            Dialogue.AddOption("Let's talk about something else, then.", delegate(TerraGuardian tg)
+                            {
+                                Dialogue.ShowEndDialogueMessage("What else you want to talk about?");
+                            });
+                        }
+                        break;
+                }
+            }, delegate (TerraGuardian tg, PlayerMod p)
+             {
+                 CaptainSmellyData data = (CaptainSmellyData)tg.Data;
+                 return data.PhantomDeviceMiniquestProgress >= 0;
+             });
         }
 
         public override void Attributes(TerraGuardian g)
         {
             g.AddFlag(GuardianFlags.FeatherfallPotion);
             g.AddFlag(GuardianFlags.DisableMountSharing);
+        }
+
+        public override void GuardianResetStatus(TerraGuardian guardian)
+        {
+            (guardian.Data as CaptainSmellyData).DeviceID = 0;
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -159,6 +503,19 @@ namespace giantsummon.Creatures
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> NewOptions = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            {
+                CaptainSmellyData data = (CaptainSmellyData)guardian.Data;
+                if(data.PhantomDeviceMiniquestProgress == -1)
+                {
+                    GuardianMouseOverAndDialogueInterface.DialogueOption option = new GuardianMouseOverAndDialogueInterface.DialogueOption("What is that thing you're carrying.", 
+                        delegate(TerraGuardian tg)
+                        {
+                            data.PhantomDeviceMiniquestProgress = 0;
+                            Dialogue.ShowEndDialogueMessage("*That thing is the Phantom Device. It broke during the crash, and now It needs repair.*", false);
+                        });
+                    NewOptions.Add(option);
+                }
+            }
             NewOptions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Weapon Infusion", delegate (TerraGuardian tg)
             {
                 CaptainSmellyData data = (CaptainSmellyData)tg.Data;
@@ -311,6 +668,130 @@ namespace giantsummon.Creatures
             VSwingSetup();
             GPSetup();
             ArmBlasterSetup();
+            PhantomRushSetup();
+        }
+
+        public void PhantomRushSetup()
+        {
+            GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee);
+            special.MinRange = 0;
+            special.MaxRange = 200;
+            special.ManaCost = 20;
+            special.CanMove = false;
+            special.Cooldown = 10 * 60;
+            for (int i = 63; i < 73; i++)
+            {
+                AddNewSubAttackFrame(3, i, i, i);
+            }
+            special.WhenSubAttackBegins = delegate (TerraGuardian tg)
+            {
+                tg.TrailDelay = 3;
+                tg.TrailLength = 5;
+            };
+            special.WhenFrameUpdatesScript = delegate (TerraGuardian tg, int Frame, int Time)
+            {
+                tg.Velocity = Vector2.Zero;
+                if (Frame >= 4)
+                {
+                    tg.ImmuneTime = 30;
+                    tg.ImmuneNoBlink = true;
+                    //tg.Velocity.X = tg.Direction * 10;
+                    tg.Position.X += tg.Direction * 20;
+                    if (Collision.SolidCollision(tg.TopLeftPosition, tg.CollisionWidth, tg.CollisionHeight))
+                    {
+                        if (tg.LookingLeft)
+                        {
+                            tg.Position.X = (int)(tg.Position.X * 0.0625f) * 16 + 16 + tg.CollisionWidth * 0.5f;
+                        }
+                        else
+                        {
+                            tg.Position.X = (int)(tg.Position.X * 0.0625f) * 16 + tg.CollisionWidth - tg.CollisionWidth * 0.5f;
+                        }
+                    }
+                    /*float Stack = 0f;
+                    for(int i = 0; i < 3; i++)
+                    {
+                        float SumX = i * 16;
+                        if (Collision.SolidCollision(tg.TopLeftPosition + new Vector2(SumX, 0), tg.CollisionWidth, tg.CollisionHeight))
+                        {
+                            if (tg.LookingLeft)
+                            {
+                                tg.Position.X = SumX + 16 + tg.CollisionWidth * 0.5f;
+                            }
+                            else
+                            {
+                                tg.Position.X = SumX + tg.CollisionWidth - tg.CollisionWidth * 0.5f;
+                            }
+                            Stack = 0;
+                            break;
+                        }
+                        Stack += 16;
+                        if (Stack > 40)
+                            Stack = 40;
+                    }
+                    tg.Position.X += Stack * tg.Direction;*/
+                    Rectangle rect = tg.HitBox;
+                    int Damage = (int)(GetCalculatedSwordDamage(tg) * 1.2f);
+                    float Knockback = 1.5f;
+                    int CriticalRate = 65 + tg.MeleeCriticalRate;
+                    int SwordID = (tg.Data as CaptainSmellyData).SwordID;
+                    for (int n = 0; n < 200; n++)
+                    {
+                        if (Main.npc[n].active && !Main.npc[n].friendly && !tg.NpcHasBeenHit(n) && Main.npc[n].getRect().Intersects(rect))
+                        {
+                            if (!Main.npc[n].dontTakeDamage)
+                            {
+                                int HitDirection = tg.Direction;
+                                if ((HitDirection == -1 && tg.CenterPosition.X < Main.npc[n].Center.X) ||
+                                    (HitDirection == 1 && tg.CenterPosition.X > Main.npc[n].Center.X))
+                                {
+                                    HitDirection *= -1;
+                                }
+                                bool Critical = (Main.rand.Next(100) < CriticalRate);
+                                int NewDamage = Damage;
+                                if (tg.OwnerPos > -1 && !MainMod.DisableDamageReductionByNumberOfCompanions)
+                                {
+                                    float DamageMult = Main.player[tg.OwnerPos].GetModPlayer<PlayerMod>().DamageMod;
+                                    NewDamage = (int)(NewDamage * DamageMult);
+                                }
+                                double result = Main.npc[n].StrikeNPC(NewDamage, Knockback, HitDirection, Critical);
+                                if (result > 0)
+                                {
+                                    if (SwordID == AmethystFalchion)
+                                    {
+                                        if (Main.rand.NextDouble() < 0.4)
+                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.ShadowFlame, 10 * 60);
+                                    }
+                                    else if (SwordID == RubyFalchion)
+                                    {
+                                        int HealthRecover = (int)(Math.Max(1, result * 0.05f));
+                                        tg.RestoreHP(HealthRecover);
+                                    }
+                                    else if (SwordID == DiamondFalchion)
+                                    {
+                                        if (Main.rand.NextDouble() < 0.2)
+                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
+                                    }
+                                }
+                                Main.PlaySound(Main.npc[n].HitSound, Main.npc[n].Center);
+                                tg.AddNpcHit(n);
+                                tg.IncreaseDamageStacker((int)result, Main.npc[n].lifeMax);
+                                if (result > 0)
+                                {
+                                    if (tg.HasFlag(GuardianFlags.BeetleOffenseEffect))
+                                        tg.IncreaseCooldownValue(GuardianCooldownManager.CooldownType.BeetleCounter, (int)result);
+                                    tg.OnHitSomething(Main.npc[n]);
+                                    tg.AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength); //(float)result
+                                    if (SwordID == AmethystFalchion)
+                                        tg.AddSkillProgress((float)result * 0.15f, GuardianSkills.SkillTypes.Mysticism);
+                                    if (Critical)
+                                        tg.AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck); //(float)result
+                                }
+                            }
+                        }
+                    }
+                }
+            };
         }
 
         public void VSwingSetup()
@@ -804,7 +1285,12 @@ namespace giantsummon.Creatures
                     }
                     break;
             }
-            if (!Owner.SubAttackInCooldown(1) && Distance < 62 && DistanceYLower >= -98 && DistanceYUpper < 18)
+            CaptainSmellyData data = (CaptainSmellyData)Owner.Data;
+            if(data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6  && DistanceYLower > -Owner.Height && DistanceYUpper <= Owner.Height)
+            {
+                ID = 3;
+            }
+            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 && DistanceYLower >= -98 && DistanceYUpper < 18)
             {
                 ID = 1;
             }
@@ -847,6 +1333,28 @@ namespace giantsummon.Creatures
             else if(data.HoldingWeaponTime > 0)
             {
                 data.HoldingWeaponTime--;
+            }
+            if(data.DeviceID > 0)
+            {
+                if(guardian.SubAttackInCooldown(PhantomRushSubAttack))
+                {
+                    if(data.PhantomDeviceUseTimes < data.DeviceID)
+                    {
+                        data.PhantomDeviceUseTimes++;
+                        if(data.PhantomDeviceUseTimes < data.DeviceID)
+                           guardian.ResetSubAttackCooldown(PhantomRushSubAttack);
+                    }
+                    else if(data.DeviceID == 5 && data.PhantomDeviceUseTimes == 5)
+                    {
+                        data.PhantomDeviceUseTimes = 6;
+                        guardian.ChangeSubAttackCooldown(PhantomRushSubAttack, 5 * 60);
+                    }
+                }
+                else
+                {
+                    if(data.PhantomDeviceUseTimes >= data.DeviceID)
+                        data.PhantomDeviceUseTimes = 0;
+                }
             }
         }
 
@@ -900,7 +1408,7 @@ namespace giantsummon.Creatures
                             {
                                 PlaceScouterSpriteAt(i, DrawnBehind, guardian, DrawPosition, color, Rotation, Origin, Scale, seffect);
                             }
-                            if (guardian.BodyAnimationFrame >= 63 && guardian.BodyAnimationFrame < 71)
+                            if (guardian.BodyAnimationFrame >= 63 && guardian.BodyAnimationFrame < 72)
                                 PlacePhantomBlinkSpriteAt(i, DrawnBehind, guardian, DrawPosition, color, Rotation, Origin, Scale, seffect);
                         }
                         break;
@@ -935,23 +1443,9 @@ namespace giantsummon.Creatures
         public void PlacePhantomBlinkSpriteAt(int Position, bool DrawBehind, TerraGuardian guardian, Vector2 DrawPosition, Color color, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
         {
             Position++;
-            int Frame = 0;
-            switch (guardian.BodyAnimationFrame)
-            {
-                case 64:
-                    Frame = 1;
-                    break;
-                case 65:
-                case 66:
-                    Frame = 2;
-                    break;
-                case 67:
-                case 68:
-                case 69:
-                case 70:
-                    Frame = 3;
-                    break;
-            }
+            int Frame = guardian.BodyAnimationFrame - 63;
+            if (Frame >= 8)
+                return;
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(PhantomBlinkTextureID), DrawPosition, new Rectangle(Frame * SpriteWidth, 0, SpriteWidth, SpriteHeight), color, Rotation, Origin, Scale, seffect);
             if (DrawBehind)
                 TerraGuardian.DrawBehind.Insert(Position, gdd);
@@ -1174,7 +1668,9 @@ namespace giantsummon.Creatures
         public class CaptainSmellyData : GuardianData
         {
             public int HoldingWeaponTime = 0;
-            public byte SwordID = 0;
+            public byte SwordID = 0, DeviceID = 0;
+            public byte PhantomDeviceUseTimes = 0;
+            public sbyte PhantomDeviceMiniquestProgress = -1;
 
             public CaptainSmellyData(int ID, string ModID) : base(ID, ModID)
             {
@@ -1184,12 +1680,16 @@ namespace giantsummon.Creatures
             public override void SaveCustom(TagCompound tag, int UniqueID)
             {
                 tag.Add(UniqueID + "_SmellySwordID", SwordID);
+                tag.Add(UniqueID + "_SmellyDeviceQuestStep", (int)PhantomDeviceMiniquestProgress);
             }
 
             public override void LoadCustom(TagCompound tag, int ModVersion, int UniqueID)
             {
-                if(ModVersion > 85)
+                if (ModVersion > 85)
+                {
                     SwordID = tag.GetByte(UniqueID + "_SmellySwordID");
+                    PhantomDeviceMiniquestProgress = (sbyte)tag.GetInt(UniqueID + "_SmellyDeviceQuestStep");
+                }
             }
         }
     }

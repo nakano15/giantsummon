@@ -19,13 +19,14 @@ namespace giantsummon.Items.Accessories
 			item.height = 44;           //Weapon's texture's height
 			item.value = Item.buyPrice(0,0,25);           //The value of the weapon
 			item.rare = 0;              //The rarity of the weapon, from -1 to 13
-            ItemStatusScript = (delegate(TerraGuardian Guardian)
-            {
-                Guardian.AddFlag(GuardianFlags.Tanking);
-            });
 		}
 
-		public override void AddRecipes()
+        public override void ItemStatusScript(TerraGuardian g)
+        {
+            g.AddFlag(GuardianFlags.Tanking);
+        }
+
+        public override void AddRecipes()
         {
             /*ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(491, 1);

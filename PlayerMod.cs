@@ -2293,7 +2293,7 @@ namespace giantsummon
                 guardian.Scale = guardian.ScaleMult;
                 guardian.LastFriendshipLevel = guardian.FriendshipLevel;
                 if (AssistSlot == 0)
-                    this.Guardian = guardian;
+                    Guardian = guardian;
                 else
                     AssistGuardians[AssistSlot - 1] = guardian;
                 if (guardian.Distance(player.Center) >= 512f)

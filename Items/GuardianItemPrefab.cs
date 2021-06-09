@@ -12,7 +12,6 @@ namespace giantsummon.Items
         public Vector2 ItemOrigin = Vector2.Zero;
         public Point ShotSpawnPosition = Point.Zero;
         public float ProjectileFallRate = 0f;
-        public Action<TerraGuardian> ItemStatusScript = delegate(TerraGuardian g) { };
         public HeldHand hand = HeldHand.Both;
         public bool Heavy = false, Shield = false, OffHandItem = false;
         public int BlockRate = 0;
@@ -26,6 +25,11 @@ namespace giantsummon.Items
         }
 
         public virtual void ItemUpdateScript(TerraGuardian g)
+        {
+
+        }
+
+        public virtual void ItemStatusScript(TerraGuardian g)
         {
 
         }

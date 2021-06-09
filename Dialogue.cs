@@ -15,7 +15,7 @@ namespace giantsummon
         public static TerraGuardian[] DialogueParticipants = new TerraGuardian[0];
         public static bool IsDialogue = false;
         public static Thread DialogueThread;
-        private static TerraGuardian LastSpeaker;
+        private static TerraGuardian LastSpeaker { get { return GuardianMouseOverAndDialogueInterface.Speaker; } set { GuardianMouseOverAndDialogueInterface.Speaker = value; } }
         public static bool ProceedButtonPressed = false;
         private static int SelectedOption = 0;
         public static Vector2 GatherCenter { get {
@@ -42,6 +42,154 @@ namespace giantsummon
             GatherAroundPlayer,
             GatherAroundGuardian,
             GatherAroundPosition
+        }
+
+        /// <summary>
+        /// Removes a specified number of an item from your inventory.
+        /// </summary>
+        /// <param name="ItemID">Id of the item to remove stacks.</param>
+        /// <param name="Stack">How many stacks of that item you want to remove.</param>
+        public static void TakeItem(int ItemID, int Stack = 1)
+        {
+            if(Stack < 1)
+            {
+                return;
+            }
+            Player player = Main.player[Main.myPlayer];
+            for (int i = 0; i < 58; i++)
+            {
+                if (player.inventory[i].type == ItemID)
+                {
+                    int StackToTake = Stack;
+                    if(player.inventory[i].stack < Stack)
+                    {
+                        StackToTake = player.inventory[i].stack;
+                    }
+                    player.inventory[i].stack -= StackToTake;
+                    if (player.inventory[i].stack == 0)
+                        player.inventory[i].SetDefaults(0);
+                    Stack -= StackToTake;
+                    if (Stack <= 0)
+                        return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tells how many of that item you have in the inventory.
+        /// </summary>
+        /// <param name="ItemID">ID of the item to count from inventory.</param>
+        /// <returns>Returns the number of that item you have in the inventory.</returns>
+        public static int CountItem(int ItemID)
+        {
+            Player player = Main.player[Main.myPlayer];
+            int Count = 0;
+            for (int i = 0; i < 58; i++)
+            {
+                if (player.inventory[i].type == ItemID)
+                    Count += player.inventory[i].stack;
+            }
+            return Count;
+        }
+
+        /// <summary>
+        /// Tells if the player has that item on the inventory.
+        /// It doesn't tells how many stacks of the item you have.
+        /// If you want to get the number of that item, use CountItem instead.
+        /// </summary>
+        /// <param name="ItemID">ID of the item to check if you have.</param>
+        /// <returns>Returns true if you have at least one of that item in the inventory.</returns>
+        public static bool HasItem(int ItemID)
+        {
+            Player player = Main.player[Main.myPlayer];
+            for (int i = 0; i < 58; i++)
+            {
+                if (player.inventory[i].type == ItemID)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Creates an item at the player position.
+        /// Unless you plan on spawning that item with multiple stacks, there isn't the need of setting Stack value.
+        /// </summary>
+        /// <param name="ID">ID of the item to spawn.</param>
+        /// <param name="Stack">The number of that item to give.</param>
+        public static void GiveItem(int ID, int Stack = 1)
+        {
+            if (Stack < 1)
+                return; //Why?
+            Player player = Main.player[Main.myPlayer];
+            Item.NewItem(player.getRect(), ID, Stack);
+        }
+
+        /// <summary>
+        /// Tries taking coins from the player inventory.
+        /// Returns true if success.
+        /// </summary>
+        /// <param name="Value">The value in coins to take.</param>
+        /// <returns>Returns true when successfull.</returns>
+        public static bool TakeCoins(int Value)
+        {
+            return Main.player[Main.myPlayer].BuyItem(Value);
+        }
+
+        /// <summary>
+        /// Give a value in coins to the player.
+        /// </summary>
+        /// <param name="Value">The value in coins to give to the player.</param>
+        public static void GiveCoins(int Value)
+        {
+            Main.player[Main.myPlayer].SellItem(Value, 1);
+        }
+
+        /// <summary>
+        /// Convert coin count into their value.
+        /// Useful for methods that involves coin usage.
+        /// </summary>
+        /// <param name="Copper">The number of copper coins.</param>
+        /// <param name="Silver">The number of silver coins.</param>
+        /// <param name="Gold">The number of gold coins.</param>
+        /// <param name="Platinum">The number of platinum coins.</param>
+        /// <returns>Returns the result in value of all coin counts given.</returns>
+        public static int GetCoinValues(int Copper, int Silver = 0, int Gold = 0, int Platinum = 0)
+        {
+            return Copper + Silver * 100 + Gold * 10000 + Platinum * 1000000;
+        }
+
+        /// <summary>
+        /// Gets the value in coins on the player inventory.
+        /// </summary>
+        /// <returns>Returns the value of all coins in the inventory.</returns>
+        public static int GetPlayerCoinValues()
+        {
+            Player player = Main.player[Main.myPlayer];
+            int Value = 0;
+            for(int i = 0; i < 58; i++)
+            {
+                switch (player.inventory[i].type)
+                {
+                    case Terraria.ID.ItemID.CopperCoin:
+                        Value += player.inventory[i].value;
+                        break;
+                    case Terraria.ID.ItemID.SilverCoin:
+                        Value += player.inventory[i].value * 100;
+                        break;
+                    case Terraria.ID.ItemID.GoldCoin:
+                        Value += player.inventory[i].value * 10000;
+                        break;
+                    case Terraria.ID.ItemID.PlatinumCoin:
+                        Value += player.inventory[i].value * 1000000;
+                        break;
+                }
+            }
+            return Value;
+        }
+
+        public static TerraGuardian GetSpeaker()
+        {
+            return GuardianMouseOverAndDialogueInterface.Speaker;
         }
 
         public static void AddParticipant(TerraGuardian tg)
@@ -113,7 +261,6 @@ namespace giantsummon
         private static void EndDialogues()
         {
             IsDialogue = false;
-            LastSpeaker = null;
             DialogueParticipants = new TerraGuardian[0];
             SelectedOption = 0;
         }
@@ -143,6 +290,14 @@ namespace giantsummon
         public static void AddOption(string Text, Action<TerraGuardian> OptionAction)
         {
             GuardianMouseOverAndDialogueInterface.AddOption(Text, OptionAction);
+        }
+
+        /// <summary>
+        /// Resets the option list. ShowDialogueOnly already does that naturally.
+        /// </summary>
+        public static void ResetOptions()
+        {
+            GuardianMouseOverAndDialogueInterface.Options.Clear();
         }
 
         /// <summary>
@@ -194,16 +349,20 @@ namespace giantsummon
             {
                 //GuardianMouseOverAndDialogueInterface.AddOption("Return", delegate(TerraGuardian tg)
                 //{
-                    GuardianMouseOverAndDialogueInterface.Options.Clear();
-                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Speaker);
-                    ProceedButtonPressed = true;
+                GuardianMouseOverAndDialogueInterface.Options.Clear();
+                GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Speaker);
+                ProceedButtonPressed = true;
                 //});
             }
-            while (!ProceedButtonPressed)
+            if (Thread.CurrentThread == DialogueThread)
             {
-                Thread.Sleep(100);
+                while (!ProceedButtonPressed)
+                {
+                    Thread.Sleep(100);
+                }
+                ProceedButtonPressed = false;
+                DialogueThread.Interrupt();
             }
-            Thread.CurrentThread.Interrupt();
         }
 
         public static int ShowDialogueWithOptions(string Text, string[] Options, TerraGuardian Speaker = null)

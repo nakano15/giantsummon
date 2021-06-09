@@ -19,11 +19,11 @@ namespace giantsummon.Items.Accessories
             item.height = 24;           //Weapon's texture's height
             item.value = Item.buyPrice(0, 25);           //The value of the weapon
             item.rare = Terraria.ID.ItemRarityID.LightPurple;              //The rarity of the weapon, from -1 to 13
-            ItemStatusScript = (delegate(TerraGuardian Guardian)
-            {
-                Guardian.AddFlag(GuardianFlags.CanDualWield);
-            });
         }
 
-	}
+        public override void ItemStatusScript(TerraGuardian g)
+        {
+            g.AddFlag(GuardianFlags.CanDualWield);
+        }
+    }
 }

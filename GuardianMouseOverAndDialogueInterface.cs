@@ -81,6 +81,7 @@ namespace giantsummon
         public static void StartDialogue(TerraGuardian tg)
         {
             Speaker = tg;
+            
             HideCallDismissButton = false;
             GuardianShopInterface.ShopOpen = false;
             Main.CancelHairWindow();

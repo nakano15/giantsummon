@@ -226,6 +226,27 @@ namespace giantsummon
                 npc.damage = npc.defDamage;
             }
             LatestMobType = npc.GetGlobalNPC<NpcMod>().mobType;
+            if (npc.HasBuff(BuffID.Dazed))
+            {
+                switch (npc.aiStyle) //https://terraria.fandom.com/wiki/AI
+                {
+                    case 1:
+                    case 3:
+                    case 8:
+                    case 13:
+                    case 16:
+                    case 18:
+                    case 19:
+                    case 22:
+                    case 23:
+                    case 25:
+                    case 38:
+                    case 39:
+                    case 40:
+                    case 41:
+                        return false;
+                }
+            }
             return base.PreAI(npc);
         }
 

@@ -111,6 +111,13 @@
     <Compile Include="Creatures\BunnyReaperGuardian\BunnyReaperGuardianBase.cs" />
     <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
     <Compile Include="Creatures\CaptainSmelly\CaptainSmellyBase.cs" />
+    <Compile Include="Creatures\CaptainSmelly\PhantomDeviceQuest.cs" />
+    <Compile Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier5.cs" />
+    <Compile Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier4.cs" />
+    <Compile Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier3.cs" />
+    <Compile Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier2.cs" />
+    <Compile Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier1.cs" />
+    <Compile Include="Creatures\CaptainSmelly\PhantomDevices\BrokenPhantomDevice.cs" />
     <Compile Include="Creatures\Glenn\GlennBase.cs" />
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
@@ -355,6 +362,12 @@
     <Content Include="Creatures\CaptainSmelly\head.png" />
     <Content Include="Creatures\CaptainSmelly\head_no_scouter.png" />
     <Content Include="Creatures\CaptainSmelly\left_arm.png" />
+    <Content Include="Creatures\CaptainSmelly\PhantomDevices\BrokenPhantomDevice.png" />
+    <Content Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier1.png" />
+    <Content Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier2.png" />
+    <Content Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier3.png" />
+    <Content Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier4.png" />
+    <Content Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier5.png" />
     <Content Include="Creatures\CaptainSmelly\phantom_blink.png" />
     <Content Include="Creatures\CaptainSmelly\plasma_falchion.png" />
     <Content Include="Creatures\CaptainSmelly\right_arm.png" />

@@ -22,10 +22,14 @@ namespace giantsummon.Items.Shields
             ItemOrigin = new Vector2(8, 10);
             BlockRate = 10;
             Shield = true;
-            ItemStatusScript = (delegate(TerraGuardian g) { g.MHP += 100; });
 		}
 
-		public override void AddRecipes()
+        public override void ItemStatusScript(TerraGuardian g)
+        {
+            g.MHP += 100;
+        }
+
+        public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(Terraria.ID.ItemID.LifeCrystal, 20);

@@ -19,23 +19,24 @@ namespace giantsummon.Items.Accessories
 			item.height = 52;
             item.value = Item.sellPrice(0, 12);           //The value of the weapon
 			item.rare = Terraria.ID.ItemRarityID.Orange;              //The rarity of the weapon, from -1 to 13
-            ItemStatusScript = (delegate(TerraGuardian Guardian)
-            {
-                if (!Guardian.Base.IsTerraGuardian)
-                    return;
-                Guardian.ScaleMult *= 3;
-                Guardian.MHP = (int)(Guardian.MHP * 1.8f);
-                Guardian.MeleeDamageMultiplier += Guardian.MeleeDamageMultiplier * 0.2f;
-                Guardian.RangedDamageMultiplier += Guardian.RangedDamageMultiplier * 0.2f;
-                Guardian.MagicDamageMultiplier += Guardian.MagicDamageMultiplier * 0.2f;
-                Guardian.SummonDamageMultiplier += Guardian.SummonDamageMultiplier * 0.2f;
-                Guardian.Defense += (int)(Guardian.Defense * 0.2f);
-                //Guardian.DefenseRate += Guardian.DefenseRate * 0.2f;
-                Guardian.MeleeSpeed += Guardian.MeleeSpeed * 0.2f;
-                Guardian.MoveSpeed -= Guardian.MoveSpeed * 0.1f;
-                Guardian.Aggro += 300;
-                Guardian.AddFlag(GuardianFlags.TitanGuardian);
-            });
 		}
-	}
+
+        public override void ItemStatusScript(TerraGuardian g)
+        {
+            if (!g.Base.IsTerraGuardian)
+                return;
+            g.ScaleMult *= 3;
+            g.MHP = (int)(g.MHP * 1.8f);
+            g.MeleeDamageMultiplier += g.MeleeDamageMultiplier * 0.2f;
+            g.RangedDamageMultiplier += g.RangedDamageMultiplier * 0.2f;
+            g.MagicDamageMultiplier += g.MagicDamageMultiplier * 0.2f;
+            g.SummonDamageMultiplier += g.SummonDamageMultiplier * 0.2f;
+            g.Defense += (int)(g.Defense * 0.2f);
+            //Guardian.DefenseRate += Guardian.DefenseRate * 0.2f;
+            g.MeleeSpeed += g.MeleeSpeed * 0.2f;
+            g.MoveSpeed -= g.MoveSpeed * 0.1f;
+            g.Aggro += 300;
+            g.AddFlag(GuardianFlags.TitanGuardian);
+        }
+    }
 }

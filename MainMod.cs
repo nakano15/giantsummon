@@ -37,9 +37,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 85, LastModVersion = 85;
+        public const int ModVersion = 86, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -788,26 +788,35 @@ namespace giantsummon
                 NemesisFadeEffect -= NemesisFadeCooldown + NemesisFadingTime;
             for (int Assists = 0; Assists < MaxExtraGuardianFollowers + 1; Assists++)
             {
+                if (Main.netMode > 0)
+                    break;
                 List<PlayerDataBackup> DataBackup = new List<PlayerDataBackup>();
                 bool[] PlayerWasActive = new bool[255];
+                bool AtLeastOne = false;
                 for (int p = 0; p < 255; p++)
                 {
                     PlayerWasActive[p] = Main.player[p].active;
                     if (Main.player[p].active)
                     {
-                        TerraGuardian g = Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers[Assists];
-                        if (g.Active && !g.Downed && !g.PlayerMounted && !g.SittingOnPlayerMount && (Math.Abs(Main.player[p].Center.X - g.CenterPosition.X) >= NPC.sWidth * 2 || Math.Abs(Main.player[p].Center.Y - g.CenterPosition.Y) >= NPC.sHeight * 2))// && Main.player[p].Distance(Main.player[p].GetModPlayer<PlayerMod>().Guardian.CenterPosition) >= 1512f)
+                        PlayerMod pm = Main.player[p].GetModPlayer<PlayerMod>();
+                        if (pm != null)
                         {
-                            PlayerDataBackup db = new PlayerDataBackup(Main.player[p], Main.player[p].GetModPlayer<PlayerMod>().Guardian);
-                            DataBackup.Add(db);
-                        }
-                        else
-                        {
-                            Main.player[p].active = false;
+                            TerraGuardian g = pm.GetAllGuardianFollowers[Assists];
+                            if (g.Active && !g.Downed && !g.PlayerMounted && !g.SittingOnPlayerMount && (Math.Abs(Main.player[p].Center.X - g.CenterPosition.X) >= NPC.sWidth * 2 || Math.Abs(Main.player[p].Center.Y - g.CenterPosition.Y) >= NPC.sHeight * 2))// && Main.player[p].Distance(Main.player[p].GetModPlayer<PlayerMod>().Guardian.CenterPosition) >= 1512f)
+                            {
+                                PlayerDataBackup db = new PlayerDataBackup(Main.player[p], Main.player[p].GetModPlayer<PlayerMod>().Guardian);
+                                DataBackup.Add(db);
+                                AtLeastOne = true;
+                            }
+                            else
+                            {
+                                Main.player[p].active = false;
+                            }
                         }
                     }
                 }
-                NPC.SpawnNPC();
+                if(AtLeastOne)
+                    NPC.SpawnNPC();
                 for (int p = 0; p < 255; p++)
                 {
                     Main.player[p].active = PlayerWasActive[p];
@@ -1143,6 +1152,12 @@ namespace giantsummon
                     if (g.KnockedOut)
                     {
                         New.Add(g.Name+"'s Revive Boost: " + g.ReviveBoost);
+                    }
+                    if(g.ID == 22)
+                    {
+                        Creatures.CaptainSmellyBase.CaptainSmellyData data = (Creatures.CaptainSmellyBase.CaptainSmellyData)g.Data;
+                        New.Add(g.Name + "'s Device ID: " + data.DeviceID);
+                        New.Add("\t Device Use Time: " + data.PhantomDeviceUseTimes);
                     }
                     /*if(g.ID == 19)
                     {
