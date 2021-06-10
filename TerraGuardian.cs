@@ -295,6 +295,12 @@ namespace giantsummon
                 Vector2 p = Position;
                 p.X += OffsetX;
                 p.Y += OffsetY + Base.CharacterPositionYDiscount * Scale;
+                if (mount.Active)
+                {
+                    p.Y -= mount.HeightBoost;
+                    //p.X -= ((Base.SittingPoint.X - 8) * Scale - Width * 0.5f) * Direction;
+                    p.Y -= ((Base.SittingPoint.Y + 8) * Scale - Height);
+                }
                 return p;
             }
         }
@@ -811,7 +817,7 @@ namespace giantsummon
         public bool BehindWall = false;
         public BitsByte Zone1 = new BitsByte(), Zone2 = new BitsByte(), Zone3 = new BitsByte(), Zone4 = new BitsByte();
         private bool SunflowerNearby = false, LifeCrystalChainNearby = false;
-        public Mount mount = new Mount();
+        public GuardianMount mount = new GuardianMount();
         public int ActivityCount = 0;
 
         public bool ZoneDungeon
@@ -1959,6 +1965,7 @@ namespace giantsummon
         }
 
         private static bool LoadedWorldRegion = true;
+        //private byte Counter = 0;
 
         public void Update(Player Owner = null)
         {
@@ -1997,6 +2004,12 @@ namespace giantsummon
                 if (!talkPlayer.active || talkPlayer.dead || !pm.IsTalkingToAGuardian || pm.TalkingGuardianPosition != WhoAmID)
                     TalkPlayerID = -1;
             }
+            /*if(!mount.Active && Counter < 120)
+            {
+                Counter++;
+                if(Counter == 1)
+                    RideMount(Terraria.ID.MountID.Bunny);
+            }*/
             LoadedWorldRegion = Main.tile[(int)(Position.X * 0.0625f), (int)(Position.Y * 0.0625f)] != null;
             OffsetX = OffsetY = 0;
             MainMod.AddActiveGuardian(this);
@@ -2109,8 +2122,6 @@ namespace giantsummon
             }
             if (LoadedWorldRegion)
             {
-                if (mount.Active)
-                    UpdateMount();
                 UpdateHorizontalMovement();
             }
             if (Velocity.Y == 0)
@@ -2522,64 +2533,6 @@ namespace giantsummon
                     }
                 }
             }
-        }
-
-        public float MountedVerticalPositionBonus
-        {
-            get
-            {
-                if (!mount.Active)
-                    return 0;
-                return (SpriteHeight - Base.SittingPoint.Y - 16 - mount.PlayerOffset - mount.YOffset + 6);
-                float NewPosition = -(-SpriteHeight + Base.SittingPoint.Y) - (mount.PlayerOffset * 2); // -(mount.PlayerOffsetHitbox * 2) * Scale;//(mount.PlayerOffsetHitbox * 2) * Scale +
-                return NewPosition;
-            }
-        }
-
-        public void DrawMount(Vector2 Position, Color DrawColor, SpriteEffects seffects)
-        {
-            /*Player dummy = Main.player[255];
-            Vector2 NewPosition = Position + Main.screenPosition;//Position + Main.screenPosition;
-            //NewPosition.X -= this.Width * 0.5f;// +mount.XOffset * Direction;
-            //NewPosition.Y -= Height; //mount.PlayerOffsetHitbox * 2 - It's his fault!
-            using (PlayerDataBackup pdb = new PlayerDataBackup(dummy, this))
-            {
-                int heightbkp = dummy.height;
-                dummy.height = 42 + mount.HeightBoost;
-                NewPosition.Y -= dummy.height;
-                List<Terraria.DataStructures.DrawData> pre = new List<Terraria.DataStructures.DrawData>(),
-                    pos = new List<Terraria.DataStructures.DrawData>();
-                Mount mountbkp = dummy.mount;
-                dummy.mount = this.mount;
-                //
-                dummy.mount.Draw(pre, 0, dummy, NewPosition, DrawColor, seffects, 0f);
-                dummy.mount.Draw(pre, 1, dummy, NewPosition, DrawColor, seffects, 0f);
-                dummy.mount.Draw(pos, 2, dummy, NewPosition, DrawColor, seffects, 0f);
-                dummy.mount.Draw(pos, 3, dummy, NewPosition, DrawColor, seffects, 0f);
-                //
-                dummy.mount = mountbkp;
-                foreach (Terraria.DataStructures.DrawData dd in pre)
-                {
-                    AddDrawData(dd, false);
-                }
-                foreach (Terraria.DataStructures.DrawData dd in pos)
-                {
-                    AddDrawData(dd, true);
-                }
-                dummy.height = heightbkp;
-            }*/
-        }
-
-        public void UpdateMount()
-        {
-            Player dummy = Main.player[255];
-            Mount mountBackup = dummy.mount;
-            dummy.mount = mount;
-            using (PlayerDataBackup pdb = new PlayerDataBackup(dummy, this))
-            {
-                this.mount.UpdateEffects(dummy); //There is some error related to tmodloader here.
-            }
-            dummy.mount = mountBackup;
         }
 
         public void HandleHermesBootsEffect()
@@ -11435,25 +11388,15 @@ namespace giantsummon
 
         public void RideMount(int ID)
         {
-            using (PlayerDataBackup pdb = new PlayerDataBackup(Main.player[255], this))
+            if(mount.CanMount(ID, this))
             {
-                if (Main.player[255].mount == null)
-                    Main.player[255].mount = new Mount();
-                if (mount.CanMount(ID, Main.player[255]))
-                {
-                    mount.SetMount(ID, Main.player[255], false);
-                }
+                mount.SetMount(ID, this, false);
             }
         }
 
         public void Dismount()
         {
-            if (!this.mount.Active)
-                return;
-            using (PlayerDataBackup pdb = new PlayerDataBackup(Main.player[255], this))
-            {
-                mount.Dismount(Main.player[255]);
-            }
+            mount.Dismount(this);
         }
 
         private float GetTwoHandedItemUsePercentage(float Animation)
@@ -13874,6 +13817,7 @@ namespace giantsummon
             else if (SittingOnPlayerMount || mount.Active || (PlayerMounted && Base.ReverseMount)) NewState = AnimationState.RidingMount;
             else if (WallSlideStyle > 0) NewState = AnimationState.WallSliding;
             else if (Velocity.X != 0) NewState = AnimationState.Moving;
+            UpdateMountAnimation();
             if (NewState != LastAnimationState)
                 AnimationTime = 0;
             LastAnimationState = NewState;
@@ -14157,6 +14101,70 @@ namespace giantsummon
                 }
             }
             ApplyFrameAnimationChangeScripts();
+            UpdateMountAnimation();
+        }
+
+        public void UpdateMountAnimation()
+        {
+            if (mount.Active)
+            {
+                if (Velocity.Y != 0f)
+                {
+                    if (this.mount.FlyTime > 0 && JumpHeight == 0 && Jump && !this.mount.CanHover)
+                    {
+                        if (this.mount.Type == 0)
+                        {
+                            if (!LookingLeft)
+                            {
+                                if (Main.rand.Next(4) == 0)
+                                {
+                                    int num14 = Dust.NewDust(new Vector2(CenterPosition.X - 22f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    Main.dust[num14].velocity *= 0.1f;
+                                    Main.dust[num14].noLight = true;
+                                }
+                                if (Main.rand.Next(4) == 0)
+                                {
+                                    int num15 = Dust.NewDust(new Vector2(CenterPosition.X + 12f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    Main.dust[num15].velocity *= 0.1f;
+                                    Main.dust[num15].noLight = true;
+                                }
+                            }
+                            else
+                            {
+                                if (Main.rand.Next(4) == 0)
+                                {
+                                    int num16 = Dust.NewDust(new Vector2(CenterPosition.X - 32f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    Main.dust[num16].velocity *= 0.1f;
+                                    Main.dust[num16].noLight = true;
+                                }
+                                if (Main.rand.Next(4) == 0)
+                                {
+                                    int num17 = Dust.NewDust(new Vector2(CenterPosition.X + 2f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    Main.dust[num17].velocity *= 0.1f;
+                                    Main.dust[num17].noLight = true;
+                                }
+                            }
+                        }
+                        mount.UpdateFrame(this, 3, Velocity);
+                    }
+                    else if (Wet)
+                    {
+                        mount.UpdateFrame(this, 4, Velocity);
+                    }
+                    else
+                    {
+                        mount.UpdateFrame(this, 2, Velocity);
+                    }
+                }
+                else if (Velocity.X == 0f)
+                {
+                    this.mount.UpdateFrame(this, 0, Velocity);
+                }
+                else
+                {
+                    this.mount.UpdateFrame(this, 1, Velocity);
+                }
+            }
         }
 
         private void UpdateItemUseAnimationEffect(HeldHand Hand)
@@ -16358,7 +16366,7 @@ namespace giantsummon
             }
             TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             Vector2 NewPosition = PositionWithOffset - Main.screenPosition; //Position - Main.screenPosition;
-            NewPosition.Y += (gfxOffY) * Scale * GravityDirection + 2 + MountedVerticalPositionBonus;
+            NewPosition.Y += (gfxOffY) * Scale * GravityDirection + 2;
             if (!Base.IsCustomSpriteCharacter)
                 NewPosition.Y += 2;
             Vector2 Origin = new Vector2(SpriteWidth * 0.5f, SpriteHeight);
@@ -16472,7 +16480,6 @@ namespace giantsummon
             c *= Alpha;
             DrawWings(seffect, armorColor);
             Base.GuardianPreDrawScript(this, NewPosition, c, armorColor, Rotation, Origin, Scale, seffect);
-            GuardianDrawData dd;
             if (Base.IsCustomSpriteCharacter)
             {
                 DrawTerraGuardianData(NewPosition, c, armorColor, Origin, seffect, Shader);
@@ -16481,7 +16488,22 @@ namespace giantsummon
             {
                 DrawTerrarianData(NewPosition, seffect, c, armorColor, IgnoreLighting);
             }
+            if (mount.Active)
+            {
+                List<GuardianDrawData> gdds = new List<GuardianDrawData>();
+                gdds.AddRange(mount.Draw(0, this, NewPosition + Main.screenPosition, c, seffect, 0f));
+                gdds.AddRange(mount.Draw(1, this, NewPosition + Main.screenPosition, c, seffect, 0f));
+                DrawBehind.AddRange(gdds);
+            }
+            if (mount.Active)
+            {
+                List<GuardianDrawData> gdds = new List<GuardianDrawData>();
+                gdds.AddRange(mount.Draw(2, this, NewPosition + Main.screenPosition, c, seffect, 0f));
+                gdds.AddRange(mount.Draw(3, this, NewPosition + Main.screenPosition, c, seffect, 0f));
+                DrawFront.AddRange(gdds);
+            }
             Base.GuardianPostDrawScript(this, NewPosition, c, armorColor, Rotation, Origin, Scale, seffect);
+            GuardianDrawData dd;
             if (HasFlag(GuardianFlags.Frozen))
             {
                 int HigherSize = Width;
@@ -16649,8 +16671,6 @@ namespace giantsummon
             catch { }
             DrawChains();
             DrawWofExtras();
-            if (mount.Active)
-                DrawMount(NewPosition, c, seffect);
             if (Base.sprites.BodyFrontSprite != null) // (SittingOnPlayerMount || PlayerMounted) && 
             {
                 if (Base.SpecificBodyFrontFramePositions)
@@ -16858,8 +16878,6 @@ namespace giantsummon
             DrawWings(seffect, ArmorColoring);
             DrawChains();
             DrawWofExtras();
-            if (mount.Active)
-                DrawMount(Position, ArmorColoring, seffect);
             GuardianDrawData dd;
             if (!HideLegs)
             {
@@ -16956,7 +16974,7 @@ namespace giantsummon
         public void DrawSocialMessages()
         {
             Vector2 NewPosition = Position - Main.screenPosition;
-            NewPosition.Y += (gfxOffY + 2) * Scale * GravityDirection + MountedVerticalPositionBonus;
+            NewPosition.Y += (gfxOffY + 2) * Scale * GravityDirection;
             if (!Base.IsCustomSpriteCharacter)
                 NewPosition.Y += 2;
             if (EmotionDisplayTime > 0)

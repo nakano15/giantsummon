@@ -1159,6 +1159,7 @@ namespace giantsummon
                         New.Add(g.Name + "'s Device ID: " + data.DeviceID);
                         New.Add("\t Device Use Time: " + data.PhantomDeviceUseTimes);
                     }
+                    New.Add(g.Name + "'s mount is active?  " + g.mount.Active);
                     /*if(g.ID == 19)
                     {
                         Creatures.BunnyReaperGuardianBase.ReaperGuardianData data = (Creatures.BunnyReaperGuardianBase.ReaperGuardianData)g.Data;

@@ -325,8 +325,11 @@ namespace giantsummon
                         {
                             if (!MainMod.ActiveGuardians[key].DoAction.InUse || (!MainMod.ActiveGuardians[key].DoAction.Inactivity && !MainMod.ActiveGuardians[key].DoAction.Invisibility))
                             {
-                                SomeoneMouseOver = true;
-                                MouseOverGuardian = key;
+                                if (!MainMod.ActiveGuardians[key].KnockedOut || !MainMod.ActiveGuardians[key].HasFlag(GuardianFlags.CantReceiveHelpOnReviving))
+                                {
+                                    SomeoneMouseOver = true;
+                                    MouseOverGuardian = key;
+                                }
                             }
                         }
                     }

@@ -180,6 +180,8 @@ namespace giantsummon
             PlArmorArm,
             PlArmorLegs,
 
+            Mount,
+
             Wings
         }
     }
