@@ -137,7 +137,7 @@ namespace giantsummon.Creatures
             });
             AddOutfit(DamselOutfitID, "Damsel", delegate (GuardianData gd, Player player)
             {
-                return false;
+                return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
             });
         }
 

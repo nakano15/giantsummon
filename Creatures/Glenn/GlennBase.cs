@@ -187,6 +187,8 @@ namespace giantsummon.Creatures
                     {
                         if (!Main.raining)
                             Mes.Add("Enjoying the sun, [nickname]?");
+                        else
+                            Mes.Add("Playing in the rain, [nickname]?");
                         Mes.Add("I tried to stare at the sun once. It was a horrible idea. I don't recommend doing that though, even more if you use glasses.");
                         Mes.Add("Hey [nickname], wanna play a game?");
                     }
@@ -205,6 +207,7 @@ namespace giantsummon.Creatures
                         Mes.Add("I'm enjoying the gentle wind of the night.");
                         Mes.Add("I could read a book during this night, or play some game.");
                         if (Main.moonPhase != 4) Mes.Add("The moon is soooooooooo brighty...");
+                        else Mes.Add("Where did the moon go?");
                     }
                 }
                 if (Main.raining)
@@ -341,6 +344,95 @@ namespace giantsummon.Creatures
             Mes.Add("Is this how I do that?");
             Mes.Add("So many wounds.");
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "Don't worry! You're at my house right now, It's safe in here.";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    if (Main.rand.NextDouble() <= 0.5)
+                        return "[nickname].. It's too late for me to stay awaken.";
+                    return "Yawn... Couldn't you wait until the morning?";
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    return "..Oh... Did you do my request... Or what?";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "You're calling me to go on an adventure? Yay! Let's go!";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "There's way too many people in your group, I can't seem to fit in It.";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "... My parents teached me not to follow strangers..";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "Awww... But It was so fun...";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "Here?! This place is dangerous! How can I get to home from here?";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "W-what?! Uh... I guess.. I should try to survive my way home, then.";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "Oh, okay. Then let's continue the adventure.";
+                case MessageIDs.RequestAccepted:
+                    return "Amazing!";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "Mom and dad teached me not to get myself overloaded with many stuffs to do, maybe you shouldn't either.";
+                case MessageIDs.RequestRejected:
+                    return "Aww man....";
+                case MessageIDs.RequestPostpone:
+                    return "Not now? Oh... Fine...";
+                case MessageIDs.RequestFailed:
+                    return "You couldn't do It...?";
+                case MessageIDs.RestAskForHowLong:
+                    return "Rest? Okay. But for how long?";
+                case MessageIDs.RestNotPossible:
+                    return "Now?! Not now.";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "I'll take the window!";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "Woah! That thing [shop] is selling looks interesting. Let's check It out.";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "Ok, this... Then this...";
+                case MessageIDs.GenericYes:
+                    return "Yup!";
+                case MessageIDs.GenericNo:
+                    return "No.";
+                case MessageIDs.GenericThankYou:
+                    return "Yeah, Thank you!";
+                case MessageIDs.ChatAboutSomething:
+                    return "Huh? Okay, what do you want to know?";
+                case MessageIDs.NevermindTheChatting:
+                    return "Cool. Anything else?";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "You can't do what I asked? Are you serious?!";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "Aww... Now I will have to do It...";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "Phew.... Then try completting It.";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "Hm... What can I discover about you...";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "Many books... Video games.... Wait, does that even exists?";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "A portrait of his family...";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "Okay, I think that's enough information.";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "Ouch... Ow! You didn't needed to scratch my nose.";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return "That was so horrible! I'm glad you guys helped me out.";
+                case MessageIDs.RevivedByRecovery:
+                    return "Ouch... Everything, from head to feet, hurts...";
+                //
+                case MessageIDs.LeopoldMessage1:
+                    return "Uh... What is your problem?";
+                case MessageIDs.LeopoldMessage2:
+                    return "*My problem?! What do you mean by that? Why you're following that Terrarian?*";
+                case MessageIDs.LeopoldMessage3:
+                    return "They called me for an adventure, and I'm following them.";
+            }
+            return base.GetSpecialMessage(MessageID);
         }
     }
 }

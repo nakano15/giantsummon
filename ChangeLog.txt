@@ -1,3 +1,4 @@
 ﻿Fixed Sardine backward revive animation not showing correctly.
 Fluffles no longer receives fall damage.
 Fixed a number of issues related to dialogues. Gladly, there was no way of people triggering them.
+Bree's new outfit is now acquireable.

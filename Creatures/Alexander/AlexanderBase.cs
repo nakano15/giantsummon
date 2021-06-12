@@ -159,6 +159,21 @@ namespace giantsummon.Creatures
             }
         }
 
+        public static bool HasAlexanderSleuthedGuardian(Player player, int GuardianID, string ModID = "")
+        {
+            if (ModID == "") ModID = MainMod.mod.Name;
+            if(PlayerMod.PlayerHasGuardian(player, Alexander))
+            {
+                AlexanderData data = (AlexanderData)PlayerMod.GetPlayerGuardian(player, Alexander);
+                foreach (GuardianID id in data.IdentifiedGuardians)
+                {
+                    if (id.IsSameID(GuardianID, ModID))
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public void ApplySleuthGuardianStatusBonus(TerraGuardian g, GuardianID id)
         {
             if (id.ModID == MainMod.mod.Name)
@@ -211,6 +226,9 @@ namespace giantsummon.Creatures
                         break;
                     case Daphne:
                         g.CoverRate += 0.02f;
+                        break;
+                    case Glenn:
+                        g.Accuracy += 0.03f;
                         break;
                 }
             }

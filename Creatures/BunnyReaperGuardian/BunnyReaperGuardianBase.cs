@@ -732,7 +732,6 @@ namespace giantsummon.Creatures
                 Mes.Add("*If you take me with you on your adventures, I can hold onto your and your allies souls until you resurrect.*");
             }
 
-
             if (Main.dayTime)
             {
                 if (Main.eclipse)
@@ -917,6 +916,117 @@ namespace giantsummon.Creatures
             Mes.Add("*I shall not allow this.*");
             Mes.Add("*Your time is not now.*");
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*Your time didn't came yet, I'll help ensure that.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*I was just taking a quick rest. I can't really sleep.*";
+                        case 1:
+                            return "*Hm... Need something, [nickname]? I was taking some rest.*";
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return "*I was waiting for you. Did you do what I asked you to do?*";
+                        case 1:
+                            return "*Hm... Did you do what I asked?*";
+                    }
+                    break;
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*I don't mind joining your group. That will reduce the amount of stray souls in the world.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*...No... It's way too crowded for me right now.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*Sorry, but I preffer to stay here for now.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*I don't mind leaving the group here, but would be better if I leaved the group on a safe place.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*I'll return to my house, then. Safe travels, [nickname].*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*I'll try returning to the village, then. Safe travels, [nickname].*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*Sorry, but now is the not the best moment for that.*";
+                case MessageIDs.RequestAccepted:
+                    if (Main.rand.NextDouble() <= 0.5)
+                        return "*I'm glad you accepted. I will be waiting here.*";
+                    return "*Thank you. Please be safe while doing my request.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*Stress actually can kill a person too, take care of the other requests you have before taking mine.*";
+                case MessageIDs.RequestRejected:
+                    if (Main.rand.NextDouble() <= 0.5)
+                        return "*It's fine. I can try doing that later, anyways.*";
+                    return "*Hm... I also thought that the request wasn't very doable.*";
+                case MessageIDs.RequestPostpone:
+                    return "*Got some more important matters? Okay.*";
+                case MessageIDs.RequestFailed:
+                    return "*I really didn't liked the result of that...*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*Feeling tired? Well, then I agree with that idea too. How long?*";
+                case MessageIDs.RestNotPossible:
+                    return "*That sounds like a bad idea right now.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    if (Main.rand.NextDouble() <= 0.5)
+                        return "*I can keep a watch while you rest. I don't sleep anyways.*";
+                    return "*I hope I don't cause you to remain awaken during the rest.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*[shop] has something interesting... Let's check it out.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*Wait a minute while I shop for a few things...*";
+                case MessageIDs.GenericYes:
+                    return "*Yes.*";
+                case MessageIDs.GenericNo:
+                    return "*No...*";
+                case MessageIDs.GenericThankYou:
+                    return "*Thank you. Safe travels.*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*Curious about me? Or is it about life in general? I don't know if I can answer your questions.*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*No more doubts? Okay. Want to talk about something else?*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*The request is too much for you? If you want I can relieve you from that.*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Very well. I'll carry on my request then.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Alright. If you change your mind, or anything change related to my request, come see me.*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Is he asleep...? Let me try...*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*This smell... What is this...*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*My heart is pounding so fast... I need to calm down...*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*Whew... It's done... And reeeeally scary too!*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Yikes!! So scary!*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() <= 0.5f)
+                        return "You're a kind soul. Thank you.";
+                    return "*I apreciate the help.*";
+                case MessageIDs.RevivedByRecovery:
+                    if (Main.rand.NextDouble() <= 0.5)
+                        return "*I always return.*";
+                    return "*You can't get rid of me for long.*";
+                    //
+                case MessageIDs.LeopoldMessage1:
+                    return "*We're not slaves.*";
+                case MessageIDs.LeopoldMessage2:
+                    return "*Oh my... The Terrarian even enslaved a Reaper! Things are more serious than I thought!*";
+                case MessageIDs.LeopoldMessage3:
+                    return "*I already said that we're not slaves. We're aiding the Terrarian on their quest.*";
+            }
+            return base.GetSpecialMessage(MessageID);
         }
 
         public class ReaperGuardianData : GuardianData

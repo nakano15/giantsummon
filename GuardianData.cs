@@ -173,6 +173,16 @@ namespace giantsummon
             }
         }
 
+        public bool HasItem(int ItemID)
+        {
+            for (int i = 0; i < Inventory.Length; i++)
+            {
+                if (Inventory[i].type == ItemID)
+                    return true;
+            }
+            return false;
+        }
+
         public void UpdateMood()
         {
             Mood.UpdateMood();

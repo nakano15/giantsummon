@@ -739,18 +739,32 @@ namespace giantsummon
 
         public override void SetupShop(int type, Chest shop, ref int nextSlot)
         {
-            if (type == Terraria.ID.NPCID.Dryad)
+            switch (type)
             {
-                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.RenameCard>());
-            }
-            if (type == Terraria.ID.NPCID.PartyGirl)
-            {
-                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Misc.BirthdayPresent>());
-            }
-            if (type == Terraria.ID.NPCID.Merchant)
-            {
-                if(MainMod.UsingGuardianNecessitiesSystem)
-                    shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.FirstAidKit>());
+                case NPCID.Dryad:
+                    {
+                        shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.RenameCard>());
+                    }
+                    break;
+                case NPCID.PartyGirl:
+                    {
+                        shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Misc.BirthdayPresent>());
+                    }
+                    break;
+                case NPCID.Merchant:
+                    {
+                        if (MainMod.UsingGuardianNecessitiesSystem)
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.FirstAidKit>());
+                    }
+                    break;
+                case NPCID.Clothier:
+                    {
+                        if(Main.dayTime && !Main.raining && Main.moonPhase % 4 < 2)
+                        {
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
+                        }
+                    }
+                    break;
             }
         }
         
