@@ -7,11 +7,16 @@ TG= terra guardian
 
 Captain Smelly- Space Pirate Captain
 Age- 32
-Guardians Slots taken- 4
+Guardians Slots taken- 3(how many guardians this tg would be worth on team)
 
 Initial Stats:
 Hp- 150
-Mp- 40
+Mp- 100
+
+Life Crystal Bonus- 25
+Life fruit bonus-10
+Mana Crystal bonus-
+Mana fruit bonus- 15
 
 Basics:
 -Smelly Naturally has featherfall buff
