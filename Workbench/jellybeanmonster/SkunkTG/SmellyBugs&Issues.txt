@@ -1,5 +1,8 @@
 Captain smelly current bugs and issues:
 
+Healing AI:
+-(Fix)Tg does not use potions nor do they throw potions to heal the player when low
+
 Death AI-
 -(Fix)When smelly dies her sword spins around while she falls off screen
 -(Fix)When smelly dies a clone of her stays on screen while the other one flies of screen to die, both have the spinning sword bug apon death
