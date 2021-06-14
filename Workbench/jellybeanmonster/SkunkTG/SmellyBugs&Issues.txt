@@ -28,7 +28,7 @@ Phantom device:
 
 Arm Blaster:
 -(Fix)Damage should be scaling with 35% of currently equiped weapons total damage(Currently does not. Also it shouldnt be based on the kind of weapon(melee, magic, ranged etc. All of them should effect the blasters damage))
-(New)
+(New)- Each blast has added damage bonus of 25% of current enemy health(Example if enemy currently has 100 health then the blast gets a added damage bonus of 25)(Side note: Current health != Max health)
 -(Tweak)Mana cost- 1 mana --->> 2 mana
 
 Weapon infusions:
