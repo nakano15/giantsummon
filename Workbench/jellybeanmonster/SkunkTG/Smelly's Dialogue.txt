@@ -15,6 +15,9 @@ Choices> (A)Give materials/(B)I dont have the materials right now/C No
 3. A Response(Recruit)- Thank you, these materials will be put to good use. Rest assured you won't be disappointed. Now then im ready for adventure when you are.
 3. B/C Response(Conditions not met)- Oh that's unfortunate. IF you ever stumble apon the metals please consider supplying them to me as I will be left stranded and defenseless here on a foriegn planet.
 
+Already Met dialogue: "Ahoy there mate, are you back to recruit me on your ventures yeah?"
+
+
 After recruited(General/Self dialogue):
 RNG Dialogue-
 -Before coming to this planet i was a space pirate captain, going around taking things from other worlds.
