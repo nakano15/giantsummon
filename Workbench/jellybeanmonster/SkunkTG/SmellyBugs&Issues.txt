@@ -25,6 +25,7 @@ Arm Blaster:
 
 Weapon infusions:
 -(Tweak)Damage multiplier for all weapon infusions upgraded from 1.2x --->> 1.5x 
+-(Tweak)Gemstone should not be consumed upon infusion.(This is so players wont waste thier rare gems when they make mistakes choosing wrong infusion)
 
 Ruby:
 -(Tweak)V swing heal percentage- 5% total damage dealt --->> 2% total damage dealt
