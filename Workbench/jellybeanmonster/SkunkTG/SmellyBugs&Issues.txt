@@ -29,7 +29,7 @@ Weapon infusions:
 Ruby:
 -(Tweak)V swing heal percentage- 5% total damage dealt --->> 2% total damage dealt
 -(New/Rework)H swing heal percentage rework- Total damage dealt % heal --->> Max Health % heal(Healing percentage restored is based on smelly's max hp)
--(New/Rework)- H swing max health heal %- 5% max health heal on swing, 50% max health restored when hitting sweat spot
+-(New/Rework)- H swing max health heal %- 5% max health heal per enemy hit, 50% max health restored when hitting sweat spot
 
 Amethyst:
 -(Tweak)Gemstone power vfx change- Energy wave sprite should be slightly bigger to match smellys height
