@@ -1,5 +1,8 @@
 Captain smelly current bugs and issues:
 
+Follow AI: 
+-(Fix)Tg follows player too closely causing the chain grabble effect to happen way to often from such a short distance away
+
 Healing AI:
 -(Fix)Tg does not use potions nor do they throw potions to heal the player when low
 
@@ -18,9 +21,14 @@ Hostile AI:
 Phantom device:
 -(Tweak)Make sprite in game bigger for players to see, its kinda hard to see right now
 -(Tweak)Phantom device tiers 2-4 should all be adding to smelly's max mana.(tier 2-20 max mana, tier 3-40 max mana, tier 4-60 max mana)
+-(Tweak)Change description of the items(Tiers 1-5):
+"Allows Smelly to use Phantom Blitz attack [placeholder/amount of times depending on which tier it is]"
+(Tweak)Broken Phantom Device should already be in smellys inventory or should be in her accessory slot upon meeting
+(Tweak)Broken Phantom device description change: "Item that allows smelly to use phantom blitz attack, it is broken and needs repair"
 
 Arm Blaster:
 -(Fix)Damage should be scaling with 35% of currently equiped weapons total damage(Currently does not. Also it shouldnt be based on the kind of weapon(melee, magic, ranged etc. All of them should effect the blasters damage))
+(New)
 -(Tweak)Mana cost- 1 mana --->> 2 mana
 
 Weapon infusions:
@@ -34,7 +42,7 @@ Ruby:
 
 Amethyst:
 -(Tweak)Gemstone power vfx change- Energy wave sprite should be slightly bigger to match smellys height
--(Tweak)Gemstone projectile should travel faster and have a longer life span on screen
+-(Tweak)Gemstone projectile should have a longer life span on screen
 
 Topaz:
 -(Tweak)Base knockback value on v swing- 3 --->> 15
@@ -50,11 +58,11 @@ Sapphire:
 -(Fix)Gemstone projectile explosion should hit multiple enemies
 
 Emerald:
--(Tweak)Critical chance on sword swings- 50% 
--(New)Critical Damage Multiplier Bonus- 3.0x  
--(Fix)Gemstone Projectile should not be disapearing after hitting one enemy, should have multiple hits(20 times) each hit dealing 25% of total weapon damage plus it being a garunteed critical hit every time
--(Tweak)-Gemstone Projectile vfx should be alot bigger about the size of vladamir and hitbox should match the size change
--(Tweak/possible)If its possible for the project tile to travel across block surfaces without disapearing then make it act like a real tornado except it last only until its 20 hits are done
+-(Tweak)Critical chance on sword swings- 30% --->> 50% 
+-(Tweak)Critical Damage Multiplier Bonus- 3.0x  
+-(Fix/Tweak)Gemstone Projectile should not be disapearing after hitting one enemy, should have multiple hits each hit dealing 25% of total weapon damage plus it being a garunteed critical hit every time(The tornado should have a 3 second duration)
+-(Tweak)-Gemstone Projectile sprite should be alot bigger about the size of vladamir and hitbox should match the size change
+-(Tweak/Rework)-Tornado bypasses blocks and enemies
 
 Diamond:
 -(Tweak)- Dazzed debuff chance on sword swings- 35% --->> 50%
