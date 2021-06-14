@@ -49,7 +49,7 @@ Sapphire:
 -(Fix)Gemstone projectile explosion should hit multiple enemies
 
 Emerald:
--(Tweak)Critical chance on sword swings- 50% --->> 75%
+-(Tweak)Critical chance on sword swings- 50% 
 -(New)Critical Damage Multiplier Bonus- 3.0x  
 -(Fix)Gemstone Projectile should not be disapearing after hitting one enemy, should have multiple hits(20 times) each hit dealing 25% of total weapon damage plus it being a garunteed critical hit every time
 -(Tweak)-Gemstone Projectile vfx should be alot bigger about the size of vladamir and hitbox should match the size change
