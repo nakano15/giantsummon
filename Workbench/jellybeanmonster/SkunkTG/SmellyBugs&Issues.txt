@@ -1,0 +1,70 @@
+Captain smelly current bugs and issues:
+
+Death AI-
+-(Fix)When smelly dies her sword spins around while she falls off screen
+-(Fix)When smelly dies a clone of her stays on screen while the other one flies of screen to die, both have the spinning sword bug apon death
+
+Hostile AI:
+-(Fix)Enemey detection is very low causing tg to not attack eariler when threat is atleast 10 blocks near(very inconsistent depending on which combat mode you have on)
+-(Fix)Tg does not basic attack/v swing as often as it should in 1st and 2nd combat modes and rarely ever basic attacks while in air if at all really
+-(Fix)Tg gltiches out making it not melee attack at all when in 1st and 2nd combat modes, even when enemies are right in her face(She looks back and forward constantly while not melee attacking, mostly happens when she is out of mana)
+-(Fix)Tg allows too much space to be had while in 2nd combat mode. This means she rarely ever melee attacks and will constantly choose to run away and shoot instead of like other guardians where they are ok with meleeing excpet they know the right distance to attack without getting hit, perfectly spacing themselves.
+-(Tweak)3rd attack mode seems the most consistent of the three allowing her to basic attack and range attack but the inconsistency comes when she cant space her attacks right sometimes just enough to not be in range of getting melee attacked from enemies.(Overall its the best mode for now atleast)
+-(Fix)Tg does not at all jump to melee attack enemies in air(She stands there not even ranged attacking sometimes)
+
+Phantom device:
+-(Tweak)Make sprite in game bigger for players to see, its kinda hard to see right now
+-(Tweak)Phantom device tiers 2-4 should all be adding to smelly's max mana.(tier 2-20 max mana, tier 3-40 max mana, tier 4-60 max mana)
+
+Arm Blaster:
+-(Fix)Damage should be scaling with 35% of currently equiped weapons total damage(Currently does not. Also it shouldnt be based on the kind of weapon(melee, magic, ranged etc. All of them should effect the blasters damage))
+-(Tweak)Mana cost- 1 mana --->> 2 mana
+
+Weapon infusions:
+-(Tweak)Damage multiplier for all weapon infusions upgraded from 1.2x --->> 1.5x 
+
+Ruby:
+-(Tweak)V swing heal percentage- 5% total damage dealt --->> 2% total damage dealt
+-(New/Rework)H swing heal percentage rework- Total damage dealt % heal --->> Max Health % heal(Healing percentage restored is based on smelly's max hp)
+-(New/Rework)- H swing max health heal %- 15% max health heal on swing, 50% max health restored when hitting sweat spot
+
+Amethyst:
+-(Tweak)Gemstone power vfx change- Energy wave sprite should be slightly bigger to match smellys height
+-(Tweak)Gemstone projectile should travel faster and have a longer life span on screen
+
+Topaz:
+-(Tweak)Base knockback value on v swing- 3 --->> 15
+-(Tweak)Base knockback value on h swing- 9 --->> 20
+-(Fix)Gemstone projectile does not pierce enemies at all possibly do to a bug
+
+Sapphire:
+-(Tweak)Damage penalty- -15% --->> 20% 
+-(New)Sword Attacks give 1 mana per swing
+-(Tweak)Knockback value- Increase to 5
+-(Tweak)-Increase attack speed even more by 2.0x of what it already is in current code
+-(Tweak)Gemstone projectile explosion hitbox radius and vfx increase to 4x4 blocks
+-(Fix)Gemstone projectile explosion should hit multiple enemies
+
+Emerald:
+-(Tweak)Critical chance on sword swings- 50% --->> 75%
+-(New)Critical Damage Multiplier Bonus- 3.0x  
+-(Fix)Gemstone Projectile should not be disapearing after hitting one enemy, should have multiple hits(20 times) each hit dealing 25% of total weapon damage plus it being a garunteed critical hit every time
+-(Tweak)-Gemstone Projectile vfx should be alot bigger about the size of vladamir and hitbox should match the size change
+-(Tweak/possible)If its possible for the project tile to travel across block surfaces without disapearing then make it act like a real tornado except it last only until its 20 hits are done
+
+Diamond:
+-(Tweak)- Dazzed debuff chance on sword swings- 35% --->> 50%
+-(New)Sword Strikes do a additional 1.5% max health bonus damage.
+-(New)Gemstone power now has a added burst damage effect that deals 15% max health unresisted/true damage and has 100% chance to confuse
+
+Special attack Phantom Blitz:
+-(Fix)Damage doesn't seem to be effected by multiplier
+-(Tweak)Phantom Blitz bonus damage multiplier- 1.2 --->> 2.0x
+-(Fix)Does not show sword sprite at all while dahing with default blade and any infusion.
+-(Fix)Does not show afterimage effect as if she had the ninja set consistentely at all.(It is very very rare happening in every like 50-100 dashes)
+-(Tweak/Fix)Every usable dash should consistently happen right after another meaning they take priority over all other attacks before she gets to use v or h swing, and arm blaster. So basically if she had 3 charges of PB then they should all be used in conjuction right after one another for maximum effiency, instead of her doing 1 sometimes then basic attack and using another dash after the basic attack.
+-(Tweak)Smelly should be Intagible/Invicible from beginning to end of the PB attack animation to ensure she is able to use more dashes consistently with higher usages
+-(Possibility)If its possible for PB to be used in all 8 direction I would like to see what it looks like
+
+
+
