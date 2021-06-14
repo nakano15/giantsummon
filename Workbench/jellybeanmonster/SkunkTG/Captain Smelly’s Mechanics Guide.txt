@@ -39,7 +39,7 @@ Weapons:
 Gemstone Tiers-
 Applies to all tiers>
 PF gains a new abilty depending on gemstone and is able to use ability during Hswing attack (50 mana cost)
-Gain 1.2x damage multiplier on PF upon adding a gemstone
+Gain 1.5x damage multiplier on PF upon adding a gemstone
 All gp's scale off of weapon currently equiped.
 
 >Mystic Amethyst
@@ -68,8 +68,8 @@ Psv- Has a 35% to cause dazed debuff to eneimes hit by PF
 GP(Cast infront)- A quick flash that stuns enemies for 2 seconds(Cooldown 10 seconds)
 
 Items:
-Phantom device- Allows usage of phantasm blitz attack
--Can be upgraded to allow for multiple usages of phantasm blitz and reduce startup time
+Phantom device- Allows usage of phantom blitz attack
+-Can be upgraded to allow for multiple usages of phantom blitz and reduce startup time
 Tiers>
 1-Can be used 1 time 
 2-Can be used 2 times in quick succession/gives 20 mana bonus
@@ -85,7 +85,7 @@ tiers>
 5- Tier 4 phantom device + platinum watch + Lightning Boots + 10 Chlorphyte bars
 
 Super moves:
-Phantasm Blitz(20 mana cost per use)- A super quick dash attack that has a 1.2x multiplier added to whatever her current weapon damage is and grants intangibility to
+Phantom Blitz(20 mana cost per use)- A super quick dash attack that has a 1.2x multiplier added to whatever her current weapon damage is and grants intangibility to
 Smelly during attack
 -Can be used 1 time per 10 seconds(5 seconds on tier 5 of phantom device)
 -Can be used multiple times in quick succession upon upgrading phantom device
