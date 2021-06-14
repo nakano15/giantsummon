@@ -57,7 +57,7 @@ Emerald:
 
 Diamond:
 -(Tweak)- Dazzed debuff chance on sword swings- 35% --->> 50%
--(New)Sword Strikes do a additional 1.5% max health bonus damage.
+-(New)Sword Strikes do a additional 5% max health bonus damage.
 -(New)Gemstone power now has a added burst damage effect that deals 15% max health unresisted/true damage and has 100% chance to confuse
 
 Special attack Phantom Blitz:
