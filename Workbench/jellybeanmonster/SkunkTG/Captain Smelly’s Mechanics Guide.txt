@@ -11,12 +11,12 @@ Guardians Slots taken- 3(how many guardians this tg would be worth on team)
 
 Initial Stats:
 Hp- 150
-Mp- 100
+Mp- 50
 
 Life Crystal Bonus- 25
 Life fruit bonus-10
-Mana Crystal bonus-
-Mana fruit bonus- 15
+Mana Crystal bonus-20
+Mana fruit bonus- 10
 
 Basics:
 -Smelly Naturally has featherfall buff
@@ -64,7 +64,7 @@ Psv-Gives 50% crit chance
 Gp(Projectile)-Slow moving Tornado that is garunteed to be a critical hit and hits 20 times for 25% of total current weapon damage per hit
 
 >Shining Diamond
-Psv- Has a 75% to cause dazed debuff to eneimes hit by PF
+Psv- Has a 75% to cause dazed debuff to eneimes hit by PF. Additionally sword attacks deal a bonus 2% max health damage.
 GP(Cast infront)- A quick flash that does 10% max health true damage with a 100% Confuse chance for 2 seconds.
 
 Items:
