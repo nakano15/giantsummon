@@ -64,8 +64,9 @@ Special attack Phantom Blitz:
 -(Fix)Damage doesn't seem to be effected by multiplier
 -(Tweak)Phantom Blitz bonus damage multiplier- 1.2 --->> 2.0x
 -(Fix)Does not show sword sprite at all while dahing with default blade and any infusion.
+-(Fix)Dash frames dont seem to go through all frames of the actual attack particularly the frames 5-9 of the dash attack.(Seems like the move only alternates bewteen frames 1-4.Its kinda hard to tell because the move is very fast but it could just be because of the issue above were you dont see the sword during the attack) 
 -(Fix)Does not show afterimage effect as if she had the ninja set consistentely at all.(It is very very rare happening in every like 50-100 dashes)
--(Tweak/Fix)Every usable dash should consistently happen right after another meaning they take priority over all other attacks before she gets to use v or h swing, and arm blaster. So basically if she had 3 charges of PB then they should all be used in conjuction right after one another for maximum effiency, instead of her doing 1 sometimes then basic attack and using another dash after the basic attack.
+-(Tweak/Fix)Every usable dash should consistently happen right after another meaning they take priority over all other attacks before she gets to use v or h swing, and arm blaster. So basically if she had 3 charges of PB then they should all be used in conjuction right after one another for maximum effiency, instead of her doing 1 sometimes then basic attack and using another dash after the basic attack.(The move is overall pretty consistently used one after another its just not done 100% of the time)
 -(Tweak)Smelly should be Intagible/Invicible from beginning to end of the PB attack animation to ensure she is able to use more dashes consistently with higher usages
 -(Possibility)If its possible for PB to be used in all 8 direction I would like to see what it looks like
 
