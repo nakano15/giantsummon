@@ -102,8 +102,8 @@ namespace giantsummon.Actions
                 guardian.GetTargetInformation(out EnemyPosition, out EnemyWidth, out EnemyHeight);
                 EnemyPosition.X += EnemyWidth * 0.5f;
                 EnemyPosition.Y += EnemyHeight * 0.5f;
-                if (IsMountedPlayer || (Math.Abs(EnemyPosition.X - guardian.Position.X) < 168f + EnemyWidth * 0.5f &&
-                    Math.Abs(EnemyPosition.Y - guardian.CenterPosition.Y) < 168f + EnemyHeight * 0.5f))
+                if (IsMountedPlayer || (Math.Abs(EnemyPosition.X - guardian.Position.X) < 168f + (EnemyWidth + guardian.Width) * 0.5f &&
+                    Math.Abs(EnemyPosition.Y - guardian.CenterPosition.Y) < 168f + (EnemyHeight + guardian.Height) * 0.5f))
                 {
                     RepelingEnemies = true;
                     IgnoreCombat = false;

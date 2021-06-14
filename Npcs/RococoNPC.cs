@@ -68,7 +68,7 @@ namespace giantsummon.Npcs
             string mes = "";
             if (PlayerHasRococo)
             {
-                mes = "*Hey buddy, good to see you again.*";
+                mes = "*He tells you that is good to see you again.*";
             }
             else if (!RejectedOnce && !AcceptedOnce)
             {

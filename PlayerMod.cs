@@ -996,9 +996,10 @@ namespace giantsummon
                             break;
                         }
                     }
-                    if ((!MainMod.StartRescueCountdownWhenKnockedOutCold || !HasCompanionAlive) || player.controlHook)
+                    bool ForceReviveCooldown = player.lavaWet || player.breath <= 0|| player.controlHook;
+                    if ((!MainMod.StartRescueCountdownWhenKnockedOutCold || !HasCompanionAlive) || ForceReviveCooldown)
                     {
-                        if ((MainMod.StartRescueCountdownWhenKnockedOutCold && ReviveBoost == 0) || player.controlHook)
+                        if ((MainMod.StartRescueCountdownWhenKnockedOutCold && ReviveBoost == 0) || ForceReviveCooldown)
                             RescueTime++;
                         else if (RescueTime > 0)
                             RescueTime--;

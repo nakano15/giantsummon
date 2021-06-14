@@ -139,7 +139,8 @@ namespace giantsummon
             Minerva = 17,
             Daphne = 18,
             Bapha = 20,
-            Glenn = 21;
+            Glenn = 21,
+            CaptainSmelly = 22;
 
         public struct DialogueTopic
         {

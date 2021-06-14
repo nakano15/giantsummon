@@ -798,7 +798,7 @@ namespace giantsummon.Creatures
         {
             GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //V Swing
             special.MinRange = 0;//16;
-            special.MaxRange = 52;
+            special.MaxRange = 99; //52
             special.CanMove = true;
             for (int i = 43; i < 45; i++)
             {
@@ -1286,6 +1286,8 @@ namespace giantsummon.Creatures
                     break;
             }
             CaptainSmellyData data = (CaptainSmellyData)Owner.Data;
+            if (DistanceYLower <= Owner.Height && (Owner.Velocity.Y == 0 || Owner.JumpHeight > 0))
+                Jump = true;
             if(data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6  && DistanceYLower > -Owner.Height && DistanceYUpper <= Owner.Height)
             {
                 ID = 3;

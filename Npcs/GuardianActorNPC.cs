@@ -38,7 +38,7 @@ namespace giantsummon.Npcs
         public float XOffSet = 0, YOffset = 0;
         private float AgeScale = 1f;
 
-        public GuardianActorNPC(int ID, string ModID, string Alias = "")
+        public GuardianActorNPC(int ID, string ModID = "", string Alias = "")
         {
             this.GuardianID = ID;
             this.GuardianModID = ModID;
@@ -57,7 +57,7 @@ namespace giantsummon.Npcs
         public override void SetDefaults()
         {
             npc.width = Base.Width;
-            npc.height = Base.Height;
+            npc.height = Base.Height - Base.CharacterPositionYDiscount;
             npc.damage = 0;
             npc.defense = 0;
             npc.lifeMax = Base.InitialMHP;
@@ -354,7 +354,7 @@ namespace giantsummon.Npcs
                 DrawPos.X += XOffSet;
                 DrawPos.Y += YOffset;
                 DrawPos.X += npc.width * 0.5f;
-                DrawPos.Y += npc.height;
+                DrawPos.Y += npc.height + Base.CharacterPositionYDiscount;
                 DrawPos.Y += 2;
                 Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = (npc.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
                 if (FlipVertically)

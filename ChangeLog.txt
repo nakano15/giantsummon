@@ -2,3 +2,4 @@
 Fluffles no longer receives fall damage.
 Fixed a number of issues related to dialogues. Gladly, there was no way of people triggering them.
 Bree's new outfit is now acquireable.
+Rescue cooldown will now be forced when your character is knocked out cold inside lava or from drowning.
