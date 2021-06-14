@@ -64,8 +64,8 @@ Psv-Gives 50% crit chance
 Gp(Projectile)-Slow moving Tornado that is garunteed to be a critical hit and hits 20 times for 25% of total current weapon damage per hit
 
 >Shining Diamond
-Psv- Has a 35% to cause dazed debuff to eneimes hit by PF
-GP(Cast infront)- A quick flash that stuns enemies for 2 seconds(Cooldown 10 seconds)
+Psv- Has a 75% to cause dazed debuff to eneimes hit by PF
+GP(Cast infront)- A quick flash that does 10% max health true damage with a 100% Confuse chance for 2 seconds.
 
 Items:
 Phantom device- Allows usage of phantom blitz attack
