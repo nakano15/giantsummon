@@ -1,14 +1,14 @@
 Captain smelly current bugs and issues:
 
 Follow AI: 
--(Fix)Tg follows player too closely causing the chain grabble effect to happen way to often from such a short distance away
+-(Fix)Tg follows player too closely causing the chain grabble effect to happen way to often from such a short distance away.(Happens a lot in combat which makes tg somewhat handicapped when she keeps getting chained back from being 5 blocks away melee attacking a enemy)
 
 Healing AI:
 -(Fix)Tg does not use potions nor do they throw potions to heal the player when low
 
 Death AI-
 -(Fix)When smelly dies her sword spins around while she falls off screen
--(Fix)When smelly dies a clone of her stays on screen while the other one flies of screen to die, both have the spinning sword bug apon death
+-(Fix)When smelly dies a clone of her stays on screen while the other one flies of screen, both have the spinning sword issue apon death
 
 Hostile AI:
 -(Fix)Enemey detection is very low causing tg to not attack eariler when threat is atleast 10 blocks near(very inconsistent depending on which combat mode you have on)
@@ -19,12 +19,14 @@ Hostile AI:
 -(Fix)Tg does not at all jump to melee attack enemies in air(She stands there not even ranged attacking sometimes)
 
 Phantom device:
--(Tweak)Make sprite in game bigger for players to see, its kinda hard to see right now
+-(Tweak)Make sprite in game slightly bigger for players to see easier, its kinda hard to see right now
 -(Tweak)Phantom device tiers 2-4 should all be adding to smelly's max mana.(tier 2-20 max mana, tier 3-40 max mana, tier 4-60 max mana)
 -(Tweak)Change description of the items(Tiers 1-5):
 "Allows Smelly to use Phantom Blitz attack [placeholder/amount of times depending on which tier it is]"
 (Tweak)Broken Phantom Device should already be in smellys inventory or should be in her accessory slot upon meeting
 (Tweak)Broken Phantom device description change: "Item that allows smelly to use phantom blitz attack, it is broken and needs repair"
+(Fix)Smelly does not take into account if she has any of the phantom device tiers and instead will tell the player they lost her item even when she has it in inventory or in her accessory slot.
+
 
 Arm Blaster:
 -(Fix)Damage should be scaling with 35% of currently equiped weapons total damage(Currently does not. Also it shouldnt be based on the kind of weapon(melee, magic, ranged etc. All of them should effect the blasters damage))
@@ -33,7 +35,7 @@ Arm Blaster:
 
 Weapon infusions:
 -(Tweak)Damage multiplier for all weapon infusions upgraded from 1.2x --->> 1.5x 
--(Tweak)Gemstone should not be consumed upon infusion.(This is so players wont waste thier rare gems when they make mistakes choosing wrong infusion)
+-(Tweak)Gemstone should not be consumed upon infusion.(This is so players wont waste thier rare gems when they make mistakes choosing wrong infusion or they would like to try another infusion without quickly losing all their gems in the process)
 
 Ruby:
 -(Tweak)V swing heal percentage- 5% total damage dealt --->> 2% total damage dealt
@@ -47,7 +49,7 @@ Amethyst:
 Topaz:
 -(Tweak)Base knockback value on v swing- 3 --->> 15
 -(Tweak)Base knockback value on h swing- 9 --->> 20
--(Fix)Gemstone projectile does not pierce enemies at all possibly do to a bug
+-(Fix)Gemstone projectile does not pierce enemies at all possibly do to a bug with vanilla terraria
 
 Sapphire:
 -(Tweak)Damage penalty- -15% --->> 20% 
@@ -77,7 +79,7 @@ Special attack Phantom Blitz:
 -(Fix)Does not show afterimage effect as if she had the ninja set consistentely at all.(It is very very rare happening in every like 50-100 dashes)
 -(Tweak/Fix)Every usable dash should consistently happen right after another meaning they take priority over all other attacks before she gets to use v or h swing, and arm blaster. So basically if she had 3 charges of PB then they should all be used in conjuction right after one another for maximum effiency, instead of her doing 1 sometimes then basic attack and using another dash after the basic attack.(The move is overall pretty consistently used one after another its just not done 100% of the time)
 -(Tweak)Smelly should be Intagible/Invicible from beginning to end of the PB attack animation to ensure she is able to use more dashes consistently with higher usages
--(Possibility)If its possible for PB to be used in all 8 direction I would like to see what it looks like
+-(Rework/Possibility)If its possible for PB to be used in all 8 direction It would help to fight enemies who are airborne
 
 
 
