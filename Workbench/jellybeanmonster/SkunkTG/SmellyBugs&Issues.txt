@@ -52,7 +52,7 @@ Topaz:
 -(Fix)Gemstone projectile does not pierce enemies at all possibly do to a bug with vanilla terraria
 
 Sapphire:
--(Tweak)Damage penalty- -15% --->> 20% 
+-(Tweak)Damage penalty- -15% --->> -20% 
 -(New)Sword Attacks give 1 mana per swing
 -(Tweak)Knockback value- Increase to 5
 -(Tweak)-Increase attack speed even more by 2.0x of what it already is in current code
