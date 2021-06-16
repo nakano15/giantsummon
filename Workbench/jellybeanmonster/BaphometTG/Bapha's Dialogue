@@ -3,8 +3,8 @@ Dialogue:
 Conditions:
 
 Before Boss Fight(Pentagram Orb NPC):
-"The orb is surging with immense power... Do you wish to release the Demon inside?" (Yes or no response)
-WARNING! a Boss fight will insue upon opening the orb it is recommended the challenger be well equipped for a intense battle.
+1-"The orb is surging with immense power... Do you wish to release the Demon inside?" (Yes or no response)
+2-(Yes response)WARNING! a Boss fight will insue upon opening the orb it is recommended the challenger be well equipped for a intense battle.
 
 After defeating Bapha:
 1- "I have been imprisoned for several millennia. Your combat ability is phenomenal. There are very few that can compete with my overwhelming power but you will go down as one who matched the overlord of Hell."
