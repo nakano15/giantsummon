@@ -48,20 +48,20 @@ Attacks-
 -HS scales with current weapon equiped dealing 1.2x(1.5x in ES) damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player(Its damage makes up for the inability to raise attack speed)
 -HS's properties change when Bapha is embered, HS gains extra attack range, a new vfx and its attacks apply "Cursed Inferno" debuff 
--Has knockback value of 4
+-Has knockback value of 5
 
 >Hell Flame(Ranged)- Fire ball that does 20 base damage by itself with no weapon equiped.
 -15 Mana cost
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
 -Medium Velocity
--Has knockback value of 3
+-Has knockback value of 5
 
 >Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Cursed Inferno" Debuff when getting hit.
 -30 Mana Cost
 -CF can only be used when Bapha is in ES.
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
 -Very High Velocity
--Has Knockback value of 6
+-Has Knockback value of 10
 
 >Hell Portal- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
 - 100 Mana cost
