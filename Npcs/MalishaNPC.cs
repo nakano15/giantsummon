@@ -368,7 +368,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.playerInTown && !Main.dayTime && MalishaCanSpawn && !NpcMod.HasGuardianNPC(GuardianBase.Malisha) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Malisha) && Main.time > 19800 && !NPC.AnyNPCs(ModContent.NPCType<MalishaNPC>()))
+            if (!spawnInfo.water && !spawnInfo.playerInTown && !Main.dayTime && MalishaCanSpawn && !NpcMod.HasGuardianNPC(GuardianBase.Malisha) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianBase.Malisha) && Main.time > 19800 && !NPC.AnyNPCs(ModContent.NPCType<MalishaNPC>()))
             {
                 return (float)(Main.time - 19800) / 54000;
             }

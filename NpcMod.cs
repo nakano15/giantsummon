@@ -666,7 +666,7 @@ namespace giantsummon
                     PlayerPositionBackup[p] = Main.player[p].position;
                     PlayerDeadStatusBackup[p] = Main.player[p].dead;
                     PlayerWetBackup[p] = Main.player[p].wet;
-                    if (npc.type != ModContent.NPCType<Npcs.ZombieGuardian>() && npc.type != ModContent.NPCType<Npcs.BlueNPC>() && npc.type != ModContent.NPCType<Npcs.BrutusNPC>() && npc.type != ModContent.NPCType<Npcs.AlexNPC>() && npc.type != ModContent.NPCType<Npcs.VladimirNPC>() && npc.type != ModContent.NPCType<GuardianNPC.List.BearNPC>()
+                    if (npc.type != ModContent.NPCType<Npcs.ZombieGuardian>() && npc.type != ModContent.NPCType<Npcs.BlueNPC>() && npc.type != ModContent.NPCType<Npcs.BrutusNPC>() && npc.type != ModContent.NPCType<Npcs.AlexNPC>() && npc.type != ModContent.NPCType<Npcs.VladimirNPC>()
                          && npc.type != ModContent.NPCType<Npcs.WrathNPC>() && npc.type != ModContent.NPCType<Npcs.GhostFoxGuardianNPC>() && npc.type != ModContent.NPCType<Npcs.AlexanderNPC>())
                     {
                         TerraGuardian PlayerGuardian = null;

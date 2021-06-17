@@ -200,7 +200,9 @@ namespace giantsummon.Creatures
                                     data.PhantomDeviceMiniquestProgress = 2;
                                 });
                             }
-                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>())){
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>()) &&
+                            !Dialogue.GuardianHasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier1>(), CaptainSmelly))
+                            {
                                 Dialogue.AddOption("I lost the Phantom Device...", delegate(TerraGuardian tg)
                                 {
                                     const int BarCount = 20, GoldCoinCount = 10;
@@ -250,7 +252,8 @@ namespace giantsummon.Creatures
                                     data.PhantomDeviceMiniquestProgress = 3;
                                 });
                             }
-                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>()))
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>()) &&
+                            !Dialogue.GuardianHasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier2>(), CaptainSmelly))
                             {
                                 Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
                                 {
@@ -310,7 +313,8 @@ namespace giantsummon.Creatures
                                     data.PhantomDeviceMiniquestProgress = 4;
                                 });
                             }
-                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>()))
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>()) &&
+                            !Dialogue.GuardianHasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier3>(), CaptainSmelly))
                             {
                                 Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
                                 {
@@ -374,7 +378,8 @@ namespace giantsummon.Creatures
                                     data.PhantomDeviceMiniquestProgress = 5;
                                 });
                             }
-                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>()))
+                            else if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>()) &&
+                            !Dialogue.GuardianHasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier4>(), CaptainSmelly))
                             {
                                 Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
                                 {
@@ -419,7 +424,8 @@ namespace giantsummon.Creatures
                     case 5: //Tier 5
                         {
                             Dialogue.ShowDialogueOnly("There's no more upgrades I can do on the Phantom Device.");
-                            if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier5>()))
+                            if (!Dialogue.HasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier5>()) &&
+                            !Dialogue.GuardianHasItem(Terraria.ModLoader.ModContent.ItemType<CaptainSmelly.PhantomDevices.PhantomDeviceTier5>(), CaptainSmelly))
                             {
                                 Dialogue.AddOption("I lost the Phantom Device...", delegate (TerraGuardian tg)
                                 {
@@ -629,7 +635,7 @@ namespace giantsummon.Creatures
             }
             CaptainSmellyData data = (CaptainSmellyData)tg.Data;
             if (data.SwordID > 0)
-                Damage = (int)(Damage * 1.2f);
+                Damage = (int)(Damage * 1.5f);
             /*switch (data.SwordID)
             {
                 case AmethystFalchion:
@@ -742,8 +748,8 @@ namespace giantsummon.Creatures
                             if (!Main.npc[n].dontTakeDamage)
                             {
                                 int HitDirection = tg.Direction;
-                                if ((HitDirection == -1 && tg.CenterPosition.X < Main.npc[n].Center.X) ||
-                                    (HitDirection == 1 && tg.CenterPosition.X > Main.npc[n].Center.X))
+                                if ((HitDirection == -1 && tg.Position.X < Main.npc[n].Center.X) ||
+                                    (HitDirection == 1 && tg.Position.X > Main.npc[n].Center.X))
                                 {
                                     HitDirection *= -1;
                                 }
@@ -832,13 +838,13 @@ namespace giantsummon.Creatures
                             case AmethystFalchion:
                                 break;
                             case TopazFalchion:
-                                Knockback += 3f;
+                                Knockback += 12f;
                                 break;
                             case SapphireFalchion:
                                 Knockback *= 0.11f;
                                 break;
                             case EmeraldFalchion:
-                                CriticalRate += 30;
+                                CriticalRate += 50;
                                 break;
                         }
                     }
@@ -849,8 +855,8 @@ namespace giantsummon.Creatures
                             if (!Main.npc[n].dontTakeDamage)
                             {
                                 int HitDirection = tg.Direction;
-                                if ((HitDirection == -1 && tg.CenterPosition.X < Main.npc[n].Center.X) ||
-                                    (HitDirection == 1 && tg.CenterPosition.X > Main.npc[n].Center.X))
+                                if ((HitDirection == -1 && tg.Position.X < Main.npc[n].Center.X) ||
+                                    (HitDirection == 1 && tg.Position.X > Main.npc[n].Center.X))
                                 {
                                     HitDirection *= -1;
                                 }
@@ -958,7 +964,7 @@ namespace giantsummon.Creatures
                                 break;
                             case TopazFalchion:
                                 {
-                                    Knockback += 3f;
+                                    Knockback += 12f;
                                     for (int s = 0; s < 4; s++)
                                     {
                                         Vector2 ShardSpawnPosition = tg.PositionWithOffset;
@@ -984,7 +990,7 @@ namespace giantsummon.Creatures
                                 break;
                             case EmeraldFalchion:
                                 {
-                                    CriticalRate += 30;
+                                    CriticalRate += 50;
                                     Vector2 SpawnPosition = tg.PositionWithOffset;
                                     SpawnPosition.Y -= 40 * tg.Scale; //78
                                     int p = Projectile.NewProjectile(SpawnPosition, new Vector2(1f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.EmeraldGP>(),
@@ -1002,8 +1008,8 @@ namespace giantsummon.Creatures
                             if (!Main.npc[n].dontTakeDamage)
                             {
                                 int HitDirection = tg.Direction;
-                                if ((HitDirection == -1 && tg.CenterPosition.X < Main.npc[n].Center.X) ||
-                                    (HitDirection == 1 && tg.CenterPosition.X > Main.npc[n].Center.X))
+                                if ((HitDirection == -1 && tg.Position.X < Main.npc[n].Center.X) ||
+                                    (HitDirection == 1 && tg.Position.X > Main.npc[n].Center.X))
                                 {
                                     HitDirection *= -1;
                                 }
@@ -1025,7 +1031,7 @@ namespace giantsummon.Creatures
                                     else if (SwordID == RubyFalchion)
                                     {
                                         float HealthRecover = 0.1f;
-                                        Rectangle SweetSpotPosition = new Rectangle((int)(tg.Position.X + tg.Direction * (48 + 40) * tg.Scale), (int)(tg.CenterPosition.Y - 40 * tg.Scale), (int)(32 * tg.Scale), (int)(32 * tg.Scale));
+                                        Rectangle SweetSpotPosition = new Rectangle((int)(tg.Position.X + tg.Direction * (48 + 40) * tg.Scale), (int)(tg.CenterY - 40 * tg.Scale), (int)(32 * tg.Scale), (int)(32 * tg.Scale));
                                         if (tg.LookingLeft)
                                             SweetSpotPosition.X -= SweetSpotPosition.Width;
                                         if (Main.npc[n].getRect().Intersects(SweetSpotPosition))
@@ -1132,7 +1138,7 @@ namespace giantsummon.Creatures
         {
             GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Ranged); //Arm Blaster
             special.CanMove = true;
-            special.ManaCost = 1;
+            special.ManaCost = 2;
             special.MinRange = 0;//100;
             special.MaxRange = 1000;
             AddNewSubAttackFrame(8, -1, 57, -1);
@@ -1238,9 +1244,9 @@ namespace giantsummon.Creatures
             ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
             int ID = -1;
-            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) - (TargetWidth) * 0.5f,
-                DistanceYUpper = TargetPosition.Y - Owner.Position.Y,
-                DistanceYLower = TargetPosition.Y + TargetHeight - Owner.Position.Y;
+            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - TargetVelocity.X - Owner.Position.X),
+                DistanceYUpper = Owner.Position.Y - TargetPosition.Y,
+                DistanceYLower = Owner.Position.Y - TargetPosition.Y + TargetHeight;
             bool InRangeForBlaster = Owner.MP > 1 && Distance > 100;
             DefaultBehavior = false;
             switch (tactic)
@@ -1286,17 +1292,17 @@ namespace giantsummon.Creatures
                     break;
             }
             CaptainSmellyData data = (CaptainSmellyData)Owner.Data;
-            if (DistanceYLower <= Owner.Height && (Owner.Velocity.Y == 0 || Owner.JumpHeight > 0))
-                Jump = true;
-            if(data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6  && DistanceYLower > -Owner.Height && DistanceYUpper <= Owner.Height)
+            //if (DistanceYLower <= Owner.Height && (Owner.Velocity.Y == 0 || Owner.JumpHeight > 0))
+            //    Jump = true;
+            if (data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6 + TargetWidth * 0.5f && DistanceYLower < Owner.Height && DistanceYUpper <= Owner.Height)
             {
                 ID = 3;
             }
-            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 && DistanceYLower >= -98 && DistanceYUpper < 18)
+            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 + TargetWidth * 0.5f && DistanceYLower < 98 && DistanceYUpper < 18)
             {
                 ID = 1;
             }
-            else if (Distance < 52 && DistanceYLower >= -90 && DistanceYUpper < 4)
+            else if (Distance < 52 + TargetWidth * 0.5f && DistanceYLower < 90 && DistanceYUpper < 4)//DistanceYLower <= 90 && DistanceYUpper <= 4)
             {
                 ID = 0;
             }
@@ -1304,7 +1310,7 @@ namespace giantsummon.Creatures
             {
                 ID = 2;
             }
-            //Owner.SaySomething("Using " + ID);
+            if(Owner.Velocity.Y == 0)Main.NewText("DistanceX: "+Distance+" DistanceY: " + DistanceYUpper + "~" + DistanceYLower);
             return ID;
         }
 
@@ -1400,7 +1406,7 @@ namespace giantsummon.Creatures
                     //case GuardianDrawData.TextureType.TGRightArm:
                     case GuardianDrawData.TextureType.TGRightArmFront:
                         {
-                            if (UsingWeapon)
+                            if (UsingWeapon && !guardian.Downed)
                                 PlaceSwordSpriteAt(i, DrawnBehind, data.SwordID, guardian, DrawPosition, color, Rotation, Origin, Scale, seffect);
                         }
                         break;
@@ -1424,7 +1430,7 @@ namespace giantsummon.Creatures
                     //case GuardianDrawData.TextureType.TGRightArm:
                     case GuardianDrawData.TextureType.TGRightArmFront:
                         {
-                            if (UsingWeapon)
+                            if (UsingWeapon && !guardian.Downed)
                                 PlaceSwordSpriteAt(i, DrawnBehind, data.SwordID, guardian, DrawPosition, color, Rotation, Origin, Scale, seffect);
                         }
                         break;

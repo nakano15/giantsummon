@@ -496,7 +496,7 @@ namespace giantsummon.Npcs
         
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            bool MaySpawn = !NpcMod.HasMetGuardian(1) && !NpcMod.HasGuardianNPC(1) && !NPC.AnyNPCs(npc.type);
+            bool MaySpawn = !spawnInfo.water && !NpcMod.HasMetGuardian(1) && !NpcMod.HasGuardianNPC(1) && !NPC.AnyNPCs(npc.type);
             //return 0;
             return (MaySpawn ? 1 : 0f);
         }

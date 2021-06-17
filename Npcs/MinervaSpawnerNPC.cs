@@ -13,7 +13,7 @@ namespace giantsummon.Npcs
         {
             get
             {
-                return "giantsummon/GuardianNPC/BlankNPC";
+                return "giantsummon/Npcs/Blank";
             }
         }
 

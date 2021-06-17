@@ -38,7 +38,7 @@ namespace giantsummon
                     if (HasItem)
                     {
                         Item dummyItem = new Item();
-                        dummyItem.SetDefaults(item.ItemID);
+                        dummyItem.SetDefaults(item.ItemID, true);
                         bool IsModItem = dummyItem.modItem != null;
                         tag.Add(ItemTag + "ismoditem", IsModItem);
                         if (IsModItem)
@@ -100,7 +100,7 @@ namespace giantsummon
                                 if (ItemInternalName != null)
                                 {
                                     Item anotheritem = new Item();
-                                    anotheritem.SetDefaults(item.ItemID);
+                                    anotheritem.SetDefaults(item.ItemID, true);
                                     if (anotheritem.modItem == null || anotheritem.modItem.Name != ItemInternalName || anotheritem.modItem.mod.Name != ItemModInternalName)
                                         continue;
                                 }
@@ -311,7 +311,7 @@ namespace giantsummon
             {
                 this.ItemID = ItemID;
                 Item SoldItem = new Item();
-                SoldItem.SetDefaults(ItemID);
+                SoldItem.SetDefaults(ItemID, true);
                 UniqueItem = SoldItem.maxStack == 1;
                 if (Price == -1)
                 {

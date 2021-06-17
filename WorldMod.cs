@@ -320,7 +320,7 @@ namespace giantsummon
             for (int p = 0; p < 255; p++)
             {
                 Player player = Main.player[p];
-                if (player.active && Math.Abs(player.Center.X - GuardianTownNPC[Pos].Position.X) < NPC.sWidth && Math.Abs(player.Center.Y - GuardianTownNPC[Pos].CenterPosition.Y) < NPC.sHeight)
+                if (player.active && Math.Abs(player.Center.X - GuardianTownNPC[Pos].Position.X) < NPC.sWidth && Math.Abs(player.Center.Y - GuardianTownNPC[Pos].CenterY) < NPC.sHeight)
                 {
                     HasPlayerNearby = true;
                     break;
@@ -614,6 +614,7 @@ namespace giantsummon
 
         public static void AnalyzeDrawMoment()
         {
+            MainMod.CompanionsToShowArrowFor.Clear();
             foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
             {
                 if (tg.InCameraRange())
@@ -640,6 +641,10 @@ namespace giantsummon
                 }
                 else
                 {
+                    Vector2 CameraCenter = MainMod.GetScreenCenter;
+                    if (Math.Abs(tg.Position.X - CameraCenter.X) < Main.screenWidth + 800 &&
+                        Math.Abs(tg.CenterY - CameraCenter.Y) < Main.screenHeight + 600)
+                        MainMod.CompanionsToShowArrowFor.Add(tg);
                     tg.drawMoment = DrawMoment.DontDraw;
                 }
             }

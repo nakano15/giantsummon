@@ -159,8 +159,15 @@ namespace giantsummon.Npcs
             }
         }
 
+        private bool FirstFrame = true;
+
         public override void AI()
         {
+            if (FirstFrame)
+            {
+                Main.NewText(Main.player[Main.myPlayer].name + " noticed someone " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of their position.");
+                FirstFrame = false;
+            }
             bool SomeoneTalkingToMe = false;
             for(int i = 0; i < 255; i++)
             {
@@ -194,7 +201,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && spawnInfo.player.ZoneMeteor && !NPC.AnyNPCs(ModContent.NPCType<SmellyNPC>()))
+            if (!spawnInfo.water && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && spawnInfo.player.ZoneMeteor && !NPC.AnyNPCs(ModContent.NPCType<SmellyNPC>()))
             {
                 return 1f / 6;
             }

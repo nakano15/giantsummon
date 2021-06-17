@@ -753,7 +753,7 @@ namespace giantsummon
             foreach (TerraGuardian g in WorldMod.GuardianTownNPC)
             {
                 if (g.Position.X >= Center.X - NPC.sWidth * 0.5f && g.Position.X < Center.X + NPC.sWidth * 0.5f &&
-                    g.CenterPosition.Y >= Center.Y - NPC.sHeight * 0.5f && g.CenterPosition.Y < Center.Y + NPC.sHeight * 0.5f)
+                    g.CenterY >= Center.Y - NPC.sHeight * 0.5f && g.CenterY < Center.Y + NPC.sHeight * 0.5f)
                 {
                     TerraGuardiansNearby++;
                     if(g.OwnerPos == -1)

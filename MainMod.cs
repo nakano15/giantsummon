@@ -15,7 +15,7 @@ namespace giantsummon
 	public class MainMod : Mod
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
-            GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture;
+            GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture;
         public static Texture2D EyeTexture;
         public static Texture2D TacticsBarTexture, TacticsIconsTexture;
         public static Texture2D TrappedCatTexture;
@@ -124,6 +124,7 @@ namespace giantsummon
         public const string CustomCompanionCallString = "loadcompanions", CustomStarterCallString = "loadstarters";
         public static bool TriedLoadingCustomGuardians = false;
         public static bool NpcInCameraRange = false;
+        public static List<TerraGuardian> CompanionsToShowArrowFor = new List<TerraGuardian>();
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -802,7 +803,7 @@ namespace giantsummon
                         if (pm != null)
                         {
                             TerraGuardian g = pm.GetAllGuardianFollowers[Assists];
-                            if (g.Active && !g.Downed && !g.PlayerMounted && !g.SittingOnPlayerMount && (Math.Abs(Main.player[p].Center.X - g.CenterPosition.X) >= NPC.sWidth * 2 || Math.Abs(Main.player[p].Center.Y - g.CenterPosition.Y) >= NPC.sHeight * 2))// && Main.player[p].Distance(Main.player[p].GetModPlayer<PlayerMod>().Guardian.CenterPosition) >= 1512f)
+                            if (g.Active && !g.Downed && !g.PlayerMounted && !g.SittingOnPlayerMount && (Math.Abs(Main.player[p].Center.X - g.Position.X) >= NPC.sWidth * 2 || Math.Abs(Main.player[p].Center.Y - g.CenterY) >= NPC.sHeight * 2))// && Main.player[p].Distance(Main.player[p].GetModPlayer<PlayerMod>().Guardian.CenterPosition) >= 1512f)
                             {
                                 PlayerDataBackup db = new PlayerDataBackup(Main.player[p], Main.player[p].GetModPlayer<PlayerMod>().Guardian);
                                 DataBackup.Add(db);
@@ -896,7 +897,7 @@ namespace giantsummon
             WorldMod.AnalyzeDrawMoment();
         }
 
-        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos;
+        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
@@ -921,6 +922,7 @@ namespace giantsummon
                     dghmi = new LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, InterfaceScaleType.UI);
                     dcs = new LegacyGameInterfaceLayer("Terra Guardians: Colored Screen", DrawColoredScreen, InterfaceScaleType.UI);
                     umos = new LegacyGameInterfaceLayer("Terra Guardians: Update Mouse Over Revive", UpdateMouseOverScript, InterfaceScaleType.Game);
+                    dngh = new LegacyGameInterfaceLayer("Terra Guardians: Draw Nearby Guardian Head", DrawCompanionPointingArrow, InterfaceScaleType.UI);
                     bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
                     {
                         BuddyModeSetupInterface.Draw();
@@ -954,6 +956,7 @@ namespace giantsummon
                 layers.Insert(EntityHealthBarLayer, dgrb);
                 layers.Insert(TownNpcHeadBannersLayer, dghmi);
                 layers.Insert(TownNpcHeadBannersLayer, umos);
+                layers.Insert(0, dngh);
                 bool RemoveHealthBarAndInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
                 for (int l = 0; l < layers.Count; l++)
                 {
@@ -2551,6 +2554,24 @@ namespace giantsummon
             }
         }
 
+        public static bool DrawCompanionPointingArrow()
+        {
+            Vector2 DrawCenter = GetScreenCenter;
+            foreach(TerraGuardian tg in CompanionsToShowArrowFor)
+            {
+                Vector2 PointingDirection = tg.CenterPosition - DrawCenter;
+                float Rotation = (float)Math.Atan2(PointingDirection.Y, PointingDirection.X);
+                PointingDirection.Normalize();
+                PointingDirection.X *= Main.screenWidth * 0.4f;
+                PointingDirection.Y *= Main.screenHeight * 0.4f;
+                PointingDirection.X += Main.screenWidth * 0.5f;
+                PointingDirection.Y += Main.screenHeight * 0.5f;
+                Main.spriteBatch.Draw(GuideArrowTexture, PointingDirection, null, Color.White, Rotation + 1.570796f, new Vector2(16, 32), 1f, SpriteEffects.None, 0);
+                tg.DrawHead(PointingDirection);
+            }
+            return true;
+        }
+
         public static int DrawBar(Vector2 Position, int Length, out int hoveritem)
         {
             int ReturnedValue = -1;
@@ -2689,6 +2710,7 @@ namespace giantsummon
                 CrownTexture = GetTexture("Interface/Crown");
                 GuardianStatusIconTexture = GetTexture("Interface/GuardianStatusIcon");
                 HideButtonTexture = GetTexture("Interface/HideButton");
+                GuideArrowTexture = GetTexture("Interface/GuideArrow");
                 if (Main.rand.NextDouble() < 0.5)
                 {
                     Main.instance.Window.Title = GetTitleText;

@@ -125,6 +125,49 @@ namespace giantsummon
         }
 
         /// <summary>
+        /// Tells how many of that item you have in the inventory.
+        /// </summary>
+        /// <param name="ItemID">ID of the item to count from inventory.</param>
+        /// <returns>Returns the number of that item you have in the inventory.</returns>
+        public static int CountItemFromGuardian(int ItemID, int GuardianID, string ModID = "")
+        {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
+            if (!PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, ModID))
+                return 0;
+            GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, ModID);
+            int Count = 0;
+            for (int i = 0; i < 50; i++)
+            {
+                if (gd.Inventory[i].type == ItemID)
+                    Count += gd.Inventory[i].stack;
+            }
+            return Count;
+        }
+
+        /// <summary>
+        /// Tells if the player has that item on the inventory.
+        /// It doesn't tells how many stacks of the item you have.
+        /// If you want to get the number of that item, use CountItem instead.
+        /// </summary>
+        /// <param name="ItemID">ID of the item to check if you have.</param>
+        /// <returns>Returns true if you have at least one of that item in the inventory.</returns>
+        public static bool GuardianHasItem(int ItemID, int GuardianID, string ModID = "")
+        {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
+            if (!PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, ModID))
+                return false;
+            GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, ModID);
+            for (int i = 0; i < 50; i++)
+            {
+                if (gd.Inventory[i].type == ItemID)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Tries taking coins from the player inventory.
         /// Returns true if success.
         /// </summary>

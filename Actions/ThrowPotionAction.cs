@@ -53,7 +53,7 @@ namespace giantsummon.Actions
             }
             if (Time == 0) //Pick potion, if there is one
             {
-                guardian.LookingLeft = target.Center.X < guardian.CenterPosition.X;
+                guardian.LookingLeft = target.Center.X < guardian.Position.X;
             }
             else
             {

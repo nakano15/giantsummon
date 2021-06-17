@@ -27,7 +27,7 @@ namespace giantsummon.Actions
                     if (StepStart)
                     {
                         if (Main.rand.NextDouble() < 0.01f)
-                            Main.PlaySound(29, (int)guardian.CenterPosition.X, (int)guardian.CenterPosition.Y, 89);
+                            Main.PlaySound(29, (int)guardian.Position.X, (int)guardian.CenterY, 89);
                         guardian.DisplayEmotion(TerraGuardian.Emotions.Question);
                         int ItemPosition = BoxPosition;
                         BoxID = guardian.Inventory[BoxPosition].type;

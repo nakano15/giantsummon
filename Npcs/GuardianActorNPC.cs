@@ -15,7 +15,7 @@ namespace giantsummon.Npcs
         {
             get
             {
-                return "giantsummon/GuardianNPC/BlankNPC";
+                return "giantsummon/Npcs/Blank";
             }
         }
         public string NpcAlias = "";
@@ -42,6 +42,8 @@ namespace giantsummon.Npcs
         {
             this.GuardianID = ID;
             this.GuardianModID = ModID;
+            if (Main.gameMenu)
+                return;
             if (Alias != "")
                 NpcAlias = Alias;
             else

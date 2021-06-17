@@ -525,7 +525,7 @@ namespace giantsummon.Creatures
                 }
                 else
                 {
-                    bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && Main.tile[(int)(guardian.CenterPosition.X) / 16, (int)(guardian.CenterPosition.Y / 16)].wall == 0;
+                    bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && Main.tile[(int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))].wall == 0;
                     if (ReduceOpacity)
                     {
                         const float MinOpacity = 0.2f;

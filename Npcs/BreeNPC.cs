@@ -127,7 +127,7 @@ namespace giantsummon.Npcs
                 {
                     guardian = PlayerMod.GetPlayerSummonedGuardian(player, 2);
                     bool IsSardineToTheLeft = guardian.Position.X - npc.Center.X < 0;
-                    if (Math.Abs(guardian.CenterPosition.X - npc.Center.X) >= 96)
+                    if (Math.Abs(guardian.Position.X - npc.Center.X) >= 96)
                     {
                         if (!IsSardineToTheLeft)
                         {
@@ -600,7 +600,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
+            if (!spawnInfo.water && Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
             {
                 return (float)(Main.time - 27000) / 432000 * 0.333f;
             }

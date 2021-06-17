@@ -626,7 +626,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (CanSpawnLeopold && Main.dayTime && !Main.eclipse && Main.invasionSize <= 0 && !NPC.AnyNPCs(ModContent.NPCType<LeopoldNPC>()) ? 0.03125f : 0);
+            return (!spawnInfo.water && CanSpawnLeopold && Main.dayTime && !Main.eclipse && Main.invasionSize <= 0 && !NPC.AnyNPCs(ModContent.NPCType<LeopoldNPC>()) ? 0.03125f : 0);
         }
 
         public enum SceneIDs

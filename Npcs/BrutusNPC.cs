@@ -488,7 +488,7 @@ namespace giantsummon.Npcs
                 if (HasBrutusRecruited)
                 {
                     NpcMod.AddGuardianMet(6);
-                    npc.Transform(ModContent.NPCType<GuardianNPC.List.LionGuardian>());
+                    WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Brutus);
                 }
                 else
                 {

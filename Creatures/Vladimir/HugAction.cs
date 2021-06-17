@@ -212,9 +212,11 @@ namespace giantsummon.Creatures.Vladimir
                             guardian.IncreaseFriendshipProgress(1);
                         }
                         string Message = GuardianMouseOverAndDialogueInterface.MessageParser(Main.rand.Next(10) == 0 ? guardian.Base.TalkMessage(Target, guardian) : guardian.Base.NormalMessage(Target, guardian), guardian);
-                        if (Target.talkNPC > -1 && Main.npc[Target.talkNPC].type == ModContent.NPCType<GuardianNPC.List.BearNPC>())
+                        //if (Target.talkNPC > -1 && Main.npc[Target.talkNPC].type == ModContent.NPCType<GuardianNPC.List.BearNPC>())
+                        //PlayerMod pm = Target.GetModPlayer<PlayerMod>();
+                        if(pm.IsTalkingToAGuardian && pm.TalkingGuardianPosition == guardian.WhoAmID)
                         {
-                            Main.npcChatText = Message;
+                            GuardianMouseOverAndDialogueInterface.SetDialogue(Message);
                         }
                         else
                         {

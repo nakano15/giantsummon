@@ -355,7 +355,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (((spawnInfo.player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0) ||
+            if (!spawnInfo.water && ((spawnInfo.player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0) ||
                 (spawnInfo.player.position.Y >= Main.worldSurface * 16)) && !spawnInfo.playerSafe && !spawnInfo.playerInTown && CanGhostFoxSpawn(spawnInfo.player) && 
                 !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type) && Main.rand.NextDouble() < GetSpawnRate)
             {

@@ -441,7 +441,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.playerInTown && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && CanSpawnDomino(spawnInfo.player) && !NPC.AnyNPCs(ModContent.NPCType<DominoNPC>()))
+            if (!spawnInfo.water && !spawnInfo.playerInTown && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && CanSpawnDomino(spawnInfo.player) && !NPC.AnyNPCs(ModContent.NPCType<DominoNPC>()))
             {
                 return 0.00390625f;
             }

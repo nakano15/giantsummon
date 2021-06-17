@@ -35,7 +35,7 @@ namespace giantsummon.PlayerItems
             {
                 foreach (TerraGuardian guardian in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
-                    if (guardian.Active && Math.Abs(player.Center.X - guardian.Position.X) < NPC.sWidth && Math.Abs(player.Center.Y - guardian.CenterPosition.Y) < NPC.sHeight)
+                    if (guardian.Active && Math.Abs(player.Center.X - guardian.Position.X) < NPC.sWidth && Math.Abs(player.Center.Y - guardian.CenterY) < NPC.sHeight)
                     {
                         int HealthRestore = (int)(guardian.Base.InitialMHP * 0.02f * guardian.HealthHealMult * player.magicDamage);
                         if (HealthRestore < 1) HealthRestore = 1;

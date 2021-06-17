@@ -92,7 +92,7 @@ namespace giantsummon
             Main.mouseX += guardian.AimDirection.X - (Main.mouseX + (int)Main.screenPosition.X);
             Main.mouseY += guardian.AimDirection.Y - (Main.mouseY + (int)Main.screenPosition.Y);
             if (guardian.GravityDirection < 0)
-                Main.mouseY += (int)(guardian.AimDirection.Y - guardian.CenterPosition.Y) * 2;
+                Main.mouseY += (int)(guardian.AimDirection.Y - guardian.CenterY) * 2;
             player.frostArmor = guardian.HasFlag(GuardianFlags.FrostSetEffect);
             player.meleeEnchant = guardian.MeleeEnchant;
             player.itemAnimation = guardian.ItemAnimationTime;

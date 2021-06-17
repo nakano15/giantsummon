@@ -10,7 +10,7 @@ namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Can be used 5 times in a quick succession by Captain Smelly.\nCooldown reduced to 5 seconds.");
+            Tooltip.SetDefault("Allows Smelly to use Phantom Blitz attack 5 times.");
         }
 
         public override void SetDefaults()

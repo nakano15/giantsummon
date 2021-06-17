@@ -194,7 +194,7 @@ namespace giantsummon
                         {
                             if (guardian.Base.GuardianWhenAttackedProjectile(guardian, projectile.damage, false, projectile))
                             {
-                                int DamageDealt = guardian.Hurt(projectile.damage, projectile.Center.X < guardian.CenterPosition.X ? 1 : -1, false, false, " was slain by a " + projectile.Name + ".");
+                                int DamageDealt = guardian.Hurt(projectile.damage, projectile.Center.X < guardian.Position.X ? 1 : -1, false, false, " was slain by a " + projectile.Name + ".");
                                 if (DamageDealt > 0)
                                 {
                                     TrySimulatingProjectileDamageOnGuardian(projectile, guardian);

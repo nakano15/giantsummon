@@ -57,7 +57,7 @@ namespace giantsummon.Creatures.Alex
                     else
                     {
                         guardian.MoveLeft = guardian.MoveRight = false;
-                        if (TargetPosition.X + TargetWidth * 0.5f - guardian.CenterPosition.X < 0)
+                        if (TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0)
                         {
                             guardian.MoveLeft = true;
                         }

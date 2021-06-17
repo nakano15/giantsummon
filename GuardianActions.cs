@@ -232,7 +232,7 @@ namespace giantsummon
             else
             {
                 guardian.MoveLeft = guardian.MoveRight = false;
-                if (player.Center.X < guardian.CenterPosition.X)
+                if (player.Center.X < guardian.Position.X)
                     guardian.MoveLeft = true;
                 else
                     guardian.MoveRight = true;

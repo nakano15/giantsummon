@@ -31,7 +31,7 @@ namespace giantsummon.Creatures.Zacks
                     {
                         if (Time <= 0)
                         {
-                            Tile tile = Framing.GetTileSafely((int)guardian.Position.X / 16, (int)guardian.CenterPosition.Y / 16);
+                            Tile tile = Framing.GetTileSafely((int)guardian.Position.X / 16, (int)guardian.CenterY / 16);
                             if (tile.wall > 0)
                             {
                                 Time = 400;

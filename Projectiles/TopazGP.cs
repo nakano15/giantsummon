@@ -29,7 +29,7 @@ namespace giantsummon.Projectiles
             projectile.tileCollide = true;
             projectile.width = 20;
             projectile.height = 14;
-            projectile.maxPenetrate = -1;
+            projectile.maxPenetrate = projectile.penetrate = -1;
         }
 
         public override void AI()

@@ -489,7 +489,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!NpcMod.HasGuardianNPC(GuardianBase.Alexander) && !NpcMod.HasMetGuardian(GuardianBase.Alexander) && AlexanderConditionMet && 
+            if (!spawnInfo.water && !NpcMod.HasGuardianNPC(GuardianBase.Alexander) && !NpcMod.HasMetGuardian(GuardianBase.Alexander) && AlexanderConditionMet && 
                 spawnInfo.player.ZoneDungeon && !NPC.AnyNPCs(ModContent.NPCType<AlexanderNPC>()))
             {
                 return 1f / 500;

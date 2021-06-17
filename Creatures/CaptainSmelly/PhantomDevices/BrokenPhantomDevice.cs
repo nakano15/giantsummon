@@ -10,7 +10,7 @@ namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("It broke during the fall.");
+            Tooltip.SetDefault("Item that allows smelly to use phantom blitz attack, it is broken and needs repair.");
         }
 
         public override void SetDefaults()

@@ -288,6 +288,7 @@ namespace giantsummon
         public int MessageTime = 0;
         public List<GuardianFlags> FlagList = new List<GuardianFlags>();
         public Vector2 Position = Vector2.Zero, Velocity = Vector2.Zero;
+        public float CenterY { get { return Position.Y - Height * 0.5f * GravityDirection; } }
         public Vector2 PositionWithOffset
         {
             get
@@ -1599,7 +1600,7 @@ namespace giantsummon
                 TileCheckStartPositionX = (int)(-TileDimX * 0.5f), TileCheckStartPositionY = (int)(-TileDimY * 0.5f),
                 TileRangeX = (int)(TileDimX / (FramesSquaredTileCount * 0.25f)), TileRangeY = (int)(TileDimY / (FramesSquaredTileCount * 0.25f)), MaxRange = TileRangeX * TileRangeY,
                 AFourthTileCount = (int)(FramesSquaredTileCount * 0.25f);
-            int TilePositionX = (int)(CenterPosition.X * DivisionBy16) + TileCheckStartPositionX, TilePositionY = (int)(CenterPosition.Y * DivisionBy16) + TileCheckStartPositionY;
+            int TilePositionX = (int)(Position.X * DivisionBy16) + TileCheckStartPositionX, TilePositionY = (int)(CenterY * DivisionBy16) + TileCheckStartPositionY;
             TilePositionX += TileRangeX * (TileCheckValue % AFourthTileCount);
             TilePositionY += TileRangeY * (TileCheckValue / AFourthTileCount);
             for (int y = TilePositionY; y < TilePositionY + TileRangeY; y++)
@@ -1629,7 +1630,7 @@ namespace giantsummon
         {
             Point CenterTilePoint = CenterPosition.ToTileCoordinates();
             ZoneDungeon = false;
-            if (CenterPosition.Y >= Main.worldSurface * 16 && GetTileCount(MainMod.DungeonTileIDs) >= 250)
+            if (CenterY >= Main.worldSurface * 16 && GetTileCount(MainMod.DungeonTileIDs) >= 250)
             {
                 ZoneDungeon = Main.wallDungeon[(int)Main.tile[CenterTilePoint.X, CenterTilePoint.Y].wall];
             }
@@ -1657,7 +1658,7 @@ namespace giantsummon
             ZoneSandstorm = ((double)CenterTilePoint.Y <= Main.worldSurface && this.ZoneDesert && !this.ZoneBeach && Terraria.GameContent.Events.Sandstorm.Happening);
             ZoneTowerSolar = this.ZoneTowerVortex = this.ZoneTowerNebula = this.ZoneTowerStardust = false;
             ZoneOldOneArmy = false;
-            if (ZoneDesert && CenterPosition.Y > 3200)
+            if (ZoneDesert && CenterY > 3200)
             {
                 if (Terraria.ID.WallID.Sets.Conversion.Sandstone[(int)tile.wall] || Terraria.ID.WallID.Sets.Conversion.HardenedSand[(int)tile.wall])
                     ZoneUndergroundDesert = true;
@@ -1902,8 +1903,8 @@ namespace giantsummon
         public bool InCameraRange()
         {
             Vector2 CameraCenter = MainMod.GetScreenCenter;
-            return (Math.Abs(Position.X - CameraCenter.X) < (Main.screenWidth + SpriteWidth) * 0.5f + 200 &&
-                Math.Abs(CenterPosition.Y - CameraCenter.Y) < (Main.screenHeight + SpriteHeight) * 0.5f + 150);
+            return (Math.Abs(Position.X - CameraCenter.X) < (Main.screenWidth + SpriteWidth) * 0.5f + 20 &&
+                Math.Abs(CenterY - CameraCenter.Y) < (Main.screenHeight + SpriteHeight) * 0.5f + 15);
         }
 
         public void UpdatePerception()
@@ -2544,11 +2545,11 @@ namespace giantsummon
                 int dust;
                 if (Velocity.Y == 0)
                 {
-                    dust = Dust.NewDust(new Vector2(TopLeftPosition.X, Position.Y - 4), Width, 8, 31, 0, 0, 100, default(Color), 1.4f);
+                    dust = Dust.NewDust(new Vector2(Position.X - Width * 0.5f, Position.Y - 4), Width, 8, 31, 0, 0, 100, default(Color), 1.4f);
                 }
                 else
                 {
-                    dust = Dust.NewDust(new Vector2(TopLeftPosition.X, CenterPosition.Y - 8), Width, 16, 31, 0, 0, 100, default(Color), 1.4f);
+                    dust = Dust.NewDust(new Vector2(Position.X - Width * 0.5f, CenterY - 8), Width, 16, 31, 0, 0, 100, default(Color), 1.4f);
                 }
                 Main.dust[dust].velocity *= 0.1f;
                 Main.dust[dust].scale *= 1f + Main.rand.Next(20) * 0.01f;
@@ -2744,7 +2745,7 @@ namespace giantsummon
             }
             if (HasFlag(GuardianFlags.LightPotion) || HasFlag(GuardianFlags.MiningHelmet))
             {
-                Lighting.AddLight((int)(CenterPosition.X * DivisionBy16), (int)(CenterPosition.Y * DivisionBy16), 0.8f, 0.95f, 1f);
+                Lighting.AddLight((int)(Position.X * DivisionBy16), (int)(CenterY * DivisionBy16), 0.8f, 0.95f, 1f);
             }
             if (HasFlag(GuardianFlags.Rabid) && Main.rand.Next(1200) == 0)
             {
@@ -2773,7 +2774,7 @@ namespace giantsummon
             }
             if (LoadedWorldRegion && HasFlag(GuardianFlags.FlowerBoots) && Velocity.Y == 0)
             {
-                int tx = (int)(CenterPosition.X * DivisionBy16), ty = (int)((Position.Y - 1) * DivisionBy16);
+                int tx = (int)(Position.X * DivisionBy16), ty = (int)((Position.Y - 1) * DivisionBy16);
                 if (tx >= Main.leftWorld * DivisionBy16 && tx < Main.rightWorld * DivisionBy16 && ty >= Main.topWorld * DivisionBy16 && ty < Main.bottomWorld * DivisionBy16 - 1)
                 {
                     if (Main.tile[tx, ty] == null)
@@ -2979,7 +2980,7 @@ namespace giantsummon
             }
             if (LoadedWorldRegion && ZoneSandstorm)
             {
-                int CenterX = (int)(CenterPosition.X * DivisionBy16), CenterY = (int)(CenterPosition.Y * DivisionBy16);
+                int CenterX = (int)(Position.X * DivisionBy16), CenterY = (int)(this.CenterY * DivisionBy16);
                 if (Main.tile[CenterX, CenterY].wall == 0)
                 {
                     AddBuff(194, 2);
@@ -3131,8 +3132,8 @@ namespace giantsummon
             {
                 RemoveCooldown(GuardianCooldownManager.CooldownType.SpelunkerEffect);
                 const int range = 30;
-                int cx = (int)(this.CenterPosition.X * DivisionBy16),
-                    cy = (int)(this.CenterPosition.Y * DivisionBy16);
+                int cx = (int)(this.Position.X * DivisionBy16),
+                    cy = (int)(this.CenterY * DivisionBy16);
                 for (int x = cx - range; x < cx + range; x++)
                 {
                     for (int y = cy - range; y < cy + range; y++)
@@ -3354,8 +3355,8 @@ namespace giantsummon
                         {
                             WofTongued = true;
                         }
-                        if ((wof.direction < 0 && CenterPosition.X > wof.Center.X + 40) ||
-                            (wof.direction > 0 && CenterPosition.X < wof.Center.X - 40))
+                        if ((wof.direction < 0 && Position.X > wof.Center.X + 40) ||
+                            (wof.direction > 0 && Position.X < wof.Center.X - 40))
                             WofTongued = true;
                     }
                     if (WofTongued)
@@ -3363,7 +3364,7 @@ namespace giantsummon
                         WofTongued = true;
                         GotByWofTongue = true;
                         Action = false;
-                        float difx = wof.Center.X - CenterPosition.X, dify = wof.Center.Y - CenterPosition.Y;
+                        float difx = wof.Center.X - Position.X, dify = wof.Center.Y - CenterY;
                         float Distance = (wof.Center - CenterPosition).Length();
                         if (Distance > 3000)
                         {
@@ -3496,7 +3497,7 @@ namespace giantsummon
         public bool TriggerCover(int Damage, int DamageDirection)
         {
             bool Trigger = false;
-            if (!Downed && Main.rand.NextDouble() * 100 < CoverRate && Math.Abs(CenterPosition.X - Main.player[OwnerPos].Center.X) < 1248f && Math.Abs(CenterPosition.Y - Main.player[OwnerPos].Center.Y) < 768f && !GrabbingPlayer && !PlayerControl)
+            if (!Downed && Main.rand.NextDouble() * 100 < CoverRate && Math.Abs(Position.X - Main.player[OwnerPos].Center.X) < 1248f && Math.Abs(CenterY - Main.player[OwnerPos].Center.Y) < 768f && !GrabbingPlayer && !PlayerControl)
             {
                 Trigger = true;
                 CombatText.NewText(Main.player[OwnerPos].getRect(), Color.Silver, "Cover");
@@ -3758,7 +3759,7 @@ namespace giantsummon
 
         public void CheckForInformationAccs(Player player)
         {
-            if (Math.Abs(player.Center.X - CenterPosition.X) >= NPC.sWidth || Math.Abs(player.Center.Y - CenterPosition.Y) >= NPC.sHeight)
+            if (Math.Abs(player.Center.X - Position.X) >= NPC.sWidth || Math.Abs(player.Center.Y - CenterY) >= NPC.sHeight)
                 return;
             List<int> IdList = new List<int>();
             for (int eq = 0; eq < 8; eq++)
@@ -4811,7 +4812,7 @@ namespace giantsummon
                         DistanceFromTarget = 200;
                         break;
                 }
-                float Distance = Math.Abs(CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X);
+                float Distance = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X);
                 AttackingTarget = false;
                 if (Distance < DistanceFromTarget)
                 {
@@ -4822,7 +4823,7 @@ namespace giantsummon
                     MoveLeft = MoveRight = false;
                     if (Velocity.Length() == 0)
                     {
-                        LookingLeft = CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f >= 0;
+                        LookingLeft = Position.X - TargetPosition.X + TargetWidth * 0.5f >= 0;
                     }
                 }
             }
@@ -5055,66 +5056,69 @@ namespace giantsummon
                     }
                     else if (Base.SpecialAttackBasedCombat)
                     {
-                        if (Base.SpecialAttackList.Count == 0)
-                            return;
-                        bool ExecuteBehavior;
-                        int SubAttackPicked = Base.GuardianSubAttackBehaviorAI(this, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight,
-                            ref Approach, ref Retreat, ref Jump, ref MoveDown, out ExecuteBehavior);
-                        if (SubAttackPicked > -1)
+                        if (!Action)
                         {
-                            GuardianSpecialAttack gsa = Base.SpecialAttackList[SubAttackPicked];
-                            SelectedItem = -1;
-                            int LastHighestDamage = 0;
-                            for (int i = 0; i < 10; i++)
+                            if (Base.SpecialAttackList.Count == 0)
+                                return;
+                            bool ExecuteBehavior;
+                            int SubAttackPicked = Base.GuardianSubAttackBehaviorAI(this, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight,
+                                ref Approach, ref Retreat, ref Jump, ref MoveDown, out ExecuteBehavior);
+                            if (SubAttackPicked > -1)
                             {
-                                switch (gsa.combatType)
+                                GuardianSpecialAttack gsa = Base.SpecialAttackList[SubAttackPicked];
+                                SelectedItem = -1;
+                                int LastHighestDamage = 0;
+                                for (int i = 0; i < 10; i++)
                                 {
-                                    case GuardianSpecialAttack.SubAttackCombatType.Melee:
-                                        if (Inventory[i].type > 0 && Inventory[i].melee && Inventory[i].damage > LastHighestDamage)
-                                        {
-                                            SelectedItem = i;
-                                            LastHighestDamage = Inventory[i].damage;
-                                        }
-                                        break;
-                                    case GuardianSpecialAttack.SubAttackCombatType.Ranged:
-                                        if (Inventory[i].type > 0 && Inventory[i].ranged && Inventory[i].damage > LastHighestDamage)
-                                        {
-                                            SelectedItem = i;
-                                            LastHighestDamage = Inventory[i].damage;
-                                        }
-                                        break;
-                                    case GuardianSpecialAttack.SubAttackCombatType.Magic:
-                                        if (Inventory[i].type > 0 && Inventory[i].magic && Inventory[i].damage > LastHighestDamage)
-                                        {
-                                            SelectedItem = i;
-                                            LastHighestDamage = Inventory[i].damage;
-                                        }
-                                        break;
+                                    switch (gsa.combatType)
+                                    {
+                                        case GuardianSpecialAttack.SubAttackCombatType.Melee:
+                                            if (Inventory[i].type > 0 && Inventory[i].melee && Inventory[i].damage > LastHighestDamage)
+                                            {
+                                                SelectedItem = i;
+                                                LastHighestDamage = Inventory[i].damage;
+                                            }
+                                            break;
+                                        case GuardianSpecialAttack.SubAttackCombatType.Ranged:
+                                            if (Inventory[i].type > 0 && Inventory[i].ranged && Inventory[i].damage > LastHighestDamage)
+                                            {
+                                                SelectedItem = i;
+                                                LastHighestDamage = Inventory[i].damage;
+                                            }
+                                            break;
+                                        case GuardianSpecialAttack.SubAttackCombatType.Magic:
+                                            if (Inventory[i].type > 0 && Inventory[i].magic && Inventory[i].damage > LastHighestDamage)
+                                            {
+                                                SelectedItem = i;
+                                                LastHighestDamage = Inventory[i].damage;
+                                            }
+                                            break;
+                                    }
+                                }
+                                float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Position.X + Velocity.X) - Width * 0.5f;
+                                if (Distance < gsa.MinRange + TargetWidth * 0.5f)
+                                {
+                                    if (ExecuteBehavior) Retreat = true;
+                                }
+                                else if (Distance >= gsa.MaxRange + TargetWidth * 0.5f)
+                                {
+                                    if (ExecuteBehavior) Approach = true;
+                                }
+                                else if (!SubAttackInUse)
+                                {
+                                    UseSubAttack(SubAttackPicked);
+                                    if (SubAttackInUse)
+                                    {
+                                        if (TargetPosition.X + TargetWidth * 0.5f > Position.X)
+                                            LookingLeft = false;
+                                        else
+                                            LookingLeft = true;
+                                        LockDirection = true;
+                                    }
                                 }
                             }
-                            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Position.X + Velocity.X) - Width * 0.5f;
-                            if (Distance < gsa.MinRange + TargetWidth * 0.5f)
-                            {
-                                if (ExecuteBehavior) Retreat = true;
-                            }
-                            else if (Distance >= gsa.MaxRange + TargetWidth * 0.5f)
-                            {
-                                if (ExecuteBehavior) Approach = true;
-                            }
-                            else if (!SubAttackInUse)
-                            {
-                                UseSubAttack(SubAttackPicked);
-                                if (SubAttackInUse)
-                                {
-                                    if (TargetPosition.X + TargetWidth * 0.5f > Position.X)
-                                        LookingLeft = false;
-                                    else
-                                        LookingLeft = true;
-                                    LockDirection = true;
-                                }
-                            }
+                            Action = false;
                         }
-                        Action = false;
                         GoMelee = false;
                     }
                     else
@@ -5512,8 +5516,8 @@ namespace giantsummon
             }
             else
             {
-                if (Math.Abs(CenterPosition.X - Main.player[OwnerPos].Center.X) > (Main.screenWidth + Width) * 0.5f ||
-                    Math.Abs(CenterPosition.Y - Main.player[OwnerPos].Center.Y) > (Main.screenHeight + Height) * 0.5f)
+                if (Math.Abs(Position.X - Main.player[OwnerPos].Center.X) > (Main.screenWidth + Width) * 0.5f ||
+                    Math.Abs(CenterY - Main.player[OwnerPos].Center.Y) > (Main.screenHeight + Height) * 0.5f)
                     IncreaseStuckTimer();
                 CheckIfSomeoneNeedsRevive(true);
                 if (PlayerControl) TogglePlayerControl();
@@ -6484,7 +6488,7 @@ namespace giantsummon
                 if (Math.Abs(Position.X + Velocity.X - TileCenterX) > 4)
                 {
                     MoveLeft = MoveRight = false;
-                    if (CenterPosition.X < TileCenterX)
+                    if (Position.X < TileCenterX)
                     {
                         MoveRight = true;
                     }
@@ -7921,7 +7925,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    if (Main.player[OwnerPos].Center.X < CenterPosition.X)
+                    if (Main.player[OwnerPos].Center.X < Position.X)
                     {
                         MoveLeft = true;
                     }
@@ -7938,7 +7942,7 @@ namespace giantsummon
         {
             Player player = Main.player[OwnerPos];
             GrabbingPlayer = false;
-            player.position.X = CenterPosition.X - player.width * 0.5f;
+            player.position.X = Position.X - player.width * 0.5f;
             player.position.Y = Position.Y - player.height - 1;
         }
 
@@ -9148,9 +9152,9 @@ namespace giantsummon
             bool Approach = false, Retreat = false, Attack = false, GoMelee = false;
             Vector2 SquaredDistance = new Vector2(TargetPosition.X + TargetWidth * 0.5f, TargetPosition.Y + TargetHeight * 0.5f) - CenterPosition;
             int MeleeRange = (int)(GetMeleeWeaponRangeX());
-            bool InMeleeRangeX = Math.Abs(CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f) < MeleeRange + TargetWidth * 0.5f;// && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -(MeleeRange + TargetWidth * 0.5f);
-            bool TooCloseMeleeRangeX = Math.Abs(CenterPosition.X - TargetPosition.X + TargetWidth * 0.5f) < (Width + TargetWidth) * 0.5f + 28; // && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -((Width + TargetWidth) * 0.5f + 28);
-            bool InMeleeRangeY = CenterPosition.Y - (TargetPosition.Y + TargetHeight) >= -(MeleeRange + TargetHeight * 0.5f) && CenterPosition.Y - TargetPosition.Y < MeleeRange + TargetHeight * 0.5f;
+            bool InMeleeRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < MeleeRange + TargetWidth * 0.5f;// && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -(MeleeRange + TargetWidth * 0.5f);
+            bool TooCloseMeleeRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < (Width + TargetWidth) * 0.5f + 28; // && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -((Width + TargetWidth) * 0.5f + 28);
+            bool InMeleeRangeY = CenterY - (TargetPosition.Y + TargetHeight) >= -(MeleeRange + TargetHeight * 0.5f) && CenterY - TargetPosition.Y < MeleeRange + TargetHeight * 0.5f;
             bool InMeleeRange = InMeleeRangeX && InMeleeRangeY;
             bool PanicMode = HP < MHP * 0.25f;
             float Distance = SquaredDistance.Length();
@@ -9388,7 +9392,7 @@ namespace giantsummon
                 {
                     DoDuck = true;
                 }*/
-                if (GoingMelee && InMeleeRangeX && !InMeleeRangeY && TargetPosition.Y >= CenterPosition.Y)
+                if (GoingMelee && InMeleeRangeX && !InMeleeRangeY && TargetPosition.Y >= CenterY)
                 {
                     DoDuck = true;
                     Attack = true;
@@ -10715,7 +10719,7 @@ namespace giantsummon
                 {
                     if (HasFlag(GuardianFlags.Petrified))
                     {
-                        Main.PlaySound(0, (int)CenterPosition.X, (int)CenterPosition.Y, 1, 1f, 0f);
+                        Main.PlaySound(0, (int)Position.X, (int)CenterY, 1, 1f, 0f);
                         PlayingAnotherSound = true;
                     }
                     else if (HasFlag(GuardianFlags.FrostSetEffect))
@@ -10724,12 +10728,12 @@ namespace giantsummon
                     }
                     else if (!HideWereForm && (HasFlag(GuardianFlags.Werewolf) || Inventory.Take(10).Any(x => x.type == Terraria.ID.ItemID.MoonCharm)))
                     {
-                        Main.PlaySound(3, (int)CenterPosition.X, (int)CenterPosition.Y, 6, 1f, 0f);
+                        Main.PlaySound(3, (int)Position.X, (int)CenterY, 6, 1f, 0f);
                         PlayingAnotherSound = true;
                     }
                     else if (HasFlag(GuardianFlags.NecroSetEffect))
                     {
-                        Main.PlaySound(3, (int)CenterPosition.X, (int)CenterPosition.Y, 2, 1f, 0f);
+                        Main.PlaySound(3, (int)Position.X, (int)CenterY, 2, 1f, 0f);
                         PlayingAnotherSound = true;
                     }
                 }
@@ -10757,14 +10761,14 @@ namespace giantsummon
             {
                 for (int n = 0; n < 3; n++)
                 {
-                    float x = CenterPosition.X + Main.rand.Next(-400, 401),
-                          y = TopLeftPosition.Y - Main.rand.Next(500, 801);
-                    Vector2 MoveDir = new Vector2(CenterPosition.X - x + Main.rand.Next(-100, 101),
-                        CenterPosition.Y - y);
+                    float x = Position.X + Main.rand.Next(-400, 401),
+                          y = Position.Y - Height - Main.rand.Next(500, 801);
+                    Vector2 MoveDir = new Vector2(Position.X - x + Main.rand.Next(-100, 101),
+                        CenterY - y);
                     MoveDir.Normalize();
                     int proj = Projectile.NewProjectile(x, y, MoveDir.X * 23, MoveDir.Y * 23, 92, 30, 5f, RefPlayer, 0, 0);
                     SetProjectileOwnership(proj);
-                    Main.projectile[proj].ai[1] = this.TopLeftPosition.Y;
+                    Main.projectile[proj].ai[1] = Position.Y - Height;
                 }
             }
             if (HasFlag(GuardianFlags.BeeCounter))
@@ -10787,7 +10791,7 @@ namespace giantsummon
                 {
                     float speedX = (float)Main.rand.Next(-35, 36) * 0.02f;
                     float speedY = (float)Main.rand.Next(-35, 36) * 0.02f;
-                    int proj = Projectile.NewProjectile(CenterPosition.X, CenterPosition.Y, speedX, speedY, (StrongBee ? 566 : 181), 7 + (StrongBee ? Main.rand.Next(1, 4) : Main.rand.Next(2)), 0f, RefPlayer, 0f, 0f);
+                    int proj = Projectile.NewProjectile(Position.X, CenterY, speedX, speedY, (StrongBee ? 566 : 181), 7 + (StrongBee ? Main.rand.Next(1, 4) : Main.rand.Next(2)), 0f, RefPlayer, 0f, 0f);
                     SetProjectileOwnership(proj);
                 }
             }
@@ -11766,7 +11770,7 @@ namespace giantsummon
                 {
                     HeldItemHand = HeldHand.Both;
                     if (!PlayerControl)
-                        FaceDirection(CenterPosition.X - AimDirection.X >= 0);
+                        FaceDirection(Position.X - AimDirection.X >= 0);
                     if (AnimationPercentage >= 0.4f)
                     {
                         WeaponCollision.X = (int)(PositionWithOffset.X + (Width * 0.25f) * Direction);
@@ -11784,7 +11788,7 @@ namespace giantsummon
                 else if (ItemUseType == ItemUseTypes.HeavyVerticalSwing)
                 {
                     if (!PlayerControl)
-                        FaceDirection(CenterPosition.X - AimDirection.X >= 0);
+                        FaceDirection(Position.X - AimDirection.X >= 0);
                     int Frame = 0;
                     float ThisAnimationPercentage = GetTwoHandedItemUsePercentage(AnimationPercentage);
                     if (ThisAnimationPercentage < 0.45f)
@@ -11836,7 +11840,7 @@ namespace giantsummon
                 else if (ItemUseType == ItemUseTypes.LightVerticalSwing)
                 {
                     if (!PlayerControl)
-                        FaceDirection(CenterPosition.X - AimDirection.X >= 0);
+                        FaceDirection(Position.X - AimDirection.X >= 0);
                     byte Frame = 0;
                     int AnimationFrame = 0;
                     if (SittingOnPlayerMount && Base.SittingItemUseFrames != null)
@@ -11938,8 +11942,8 @@ namespace giantsummon
                         float ShotDirection = (float)Main.rand.NextDouble() * 6.283185307179586f;
                         float DistanceAccuracy = 5 * ((CenterPosition - AimDirection.ToVector2()).Length() * 0.0625f);
                         Vector2 AimDirectionChange = AimDirection.ToVector2() + ShotDirection.ToRotationVector2() * (DistanceAccuracy - Accuracy * DistanceAccuracy);
-                        LookingLeft = CenterPosition.X - AimDirection.X >= 0;
-                        float AngleChecker = MathHelper.WrapAngle((float)Math.Atan2((CenterPosition.Y - AimDirectionChange.Y) * GravityDirection, CenterPosition.X - AimDirectionChange.X));
+                        LookingLeft = Position.X - AimDirection.X >= 0;
+                        float AngleChecker = MathHelper.WrapAngle((float)Math.Atan2((CenterY - AimDirectionChange.Y) * GravityDirection, Position.X - AimDirectionChange.X));
                         float ArmAngle = CalculateAimingUseAnimation(AngleChecker);
                         //if (GravityDirection < 0)
                         //    ArmAngle *= -1;
@@ -12158,8 +12162,8 @@ namespace giantsummon
                                 if (!PlayerHasBeenHit(t) && Main.player[t].getRect().Intersects(WeaponCollision) && CanHit(Main.player[t].position, Main.player[t].width, Main.player[t].height))
                                 {
                                     int HitDirection = Direction;
-                                    if ((HitDirection == -1 && CenterPosition.X < Main.player[t].Center.X) ||
-                                        (HitDirection == 1 && CenterPosition.X > Main.player[t].Center.X))
+                                    if ((HitDirection == -1 && Position.X < Main.player[t].Center.X) ||
+                                        (HitDirection == 1 && Position.X > Main.player[t].Center.X))
                                     {
                                         HitDirection *= -1;
                                     }
@@ -12185,8 +12189,8 @@ namespace giantsummon
                             if (!Main.npc[t].dontTakeDamage)
                             {
                                 int HitDirection = Direction;
-                                if ((HitDirection == -1 && CenterPosition.X < Main.npc[t].Center.X) ||
-                                    (HitDirection == 1 && CenterPosition.X > Main.npc[t].Center.X))
+                                if ((HitDirection == -1 && Position.X < Main.npc[t].Center.X) ||
+                                    (HitDirection == 1 && Position.X > Main.npc[t].Center.X))
                                 {
                                     HitDirection *= -1;
                                 }
@@ -12238,7 +12242,7 @@ namespace giantsummon
                     if (SelectedItem > -1 && ItemAnimationTime > 0)
                     {
                         Item item = this.Inventory[SelectedItem];
-                        int CenterX = (int)(CenterPosition.X * DivisionBy16), CenterY = (int)(CenterPosition.Y * DivisionBy16);
+                        int CenterX = (int)(Position.X * DivisionBy16), CenterY = (int)(this.CenterY * DivisionBy16);
                         int TileTargetX = (int)(AimDirection.X * DivisionBy16), TileTargetY = (int)(AimDirection.Y * DivisionBy16);
                         if (this.Inventory[SelectedItem].pick > 0 || this.Inventory[SelectedItem].axe > 0 || this.Inventory[SelectedItem].hammer > 0)
                         {
@@ -12640,7 +12644,7 @@ namespace giantsummon
             if (ProjID == 9)
             {
                 ShotSpawnPosition.X = Position.X + Main.rand.Next(201) * -Direction + AimDirection.X - Position.X;
-                ShotSpawnPosition.Y = CenterPosition.Y - 600f;
+                ShotSpawnPosition.Y = CenterY - 600f;
                 Damage *= 2;
                 ProjKnockback = 0;
             }
@@ -12680,7 +12684,7 @@ namespace giantsummon
             //ItemRotation = AimDirection.ToRotation();
             Vector2 MovementDirection = AimDirectionChange - ShotSpawnPosition;
             //float AngleChecker = MathHelper.WrapAngle((float)Math.Atan2((CenterPosition.Y - AimDirectionChange.Y) * GravityDirection, CenterPosition.X - AimDirectionChange.X));
-            ItemRotation = ((float)Math.Atan2((CenterPosition.Y - AimDirectionChange.Y) * GravityDirection, CenterPosition.X - AimDirectionChange.X));
+            ItemRotation = ((float)Math.Atan2((CenterY - AimDirectionChange.Y) * GravityDirection, Position.X - AimDirectionChange.X));
             if (i.type == Terraria.ID.ItemID.Boomstick)
             {
                 ShotCount = Main.rand.Next(3, 5);
@@ -12797,8 +12801,8 @@ namespace giantsummon
                     Arrows++;
                 for (int shot = 0; shot < Arrows; shot++)
                 {
-                    Vector2 ProjSpawnPos = new Vector2(Main.rand.Next(201) * -Direction + AimDirection.X, CenterPosition.Y - 600);
-                    ProjSpawnPos.X = (ProjSpawnPos.X * 10 + CenterPosition.X) / 11f + Main.rand.Next(-100, 101);
+                    Vector2 ProjSpawnPos = new Vector2(Main.rand.Next(201) * -Direction + AimDirection.X, CenterY - 600);
+                    ProjSpawnPos.X = (ProjSpawnPos.X * 10 + Position.X) / 11f + Main.rand.Next(-100, 101);
                     ProjSpawnPos.Y -= 150 * shot;
                     float projvelx = AimDirection.X - ProjSpawnPos.X, projvely = AimDirection.Y - ProjSpawnPos.Y;
                     if(projvely < 0)
@@ -13484,11 +13488,11 @@ namespace giantsummon
                     {
                         case 1:
                             JumpHeight = MaxJumpHeight * 3;
-                            Main.PlaySound(16, (int)this.CenterPosition.X, (int)this.CenterPosition.Y, 1, 1f, 0f);
+                            Main.PlaySound(16, (int)this.Position.X, (int)this.CenterY, 1, 1f, 0f);
                             break;
                         case 2:
                             JumpHeight = (int)(MaxJumpHeight * 1.5);
-                            Main.PlaySound(16, (int)this.CenterPosition.X, (int)this.CenterPosition.Y, 1, 1f, 0f);
+                            Main.PlaySound(16, (int)this.Position.X, (int)this.CenterY, 1, 1f, 0f);
                             break;
                         case 3:
                             JumpHeight = MaxJumpHeight * 2;
@@ -13514,7 +13518,7 @@ namespace giantsummon
                         case 4:
                             JumpHeight = (int)(MaxJumpHeight * 1.25);
                             {
-                                Main.PlaySound(16, (int)this.CenterPosition.X, (int)this.CenterPosition.Y, 1, 1f, 0f);
+                                Main.PlaySound(16, (int)this.Position.X, (int)this.CenterY, 1, 1f, 0f);
                                 for (int j = 0; j < 30; j++)
                                 {
                                     int num3 = Dust.NewDust(new Vector2(this.Position.X, this.Position.Y), this.Width, 12, 253, this.Velocity.X * 0.3f, this.Velocity.Y * 0.3f, 100, default(Color), 1.5f);
@@ -13539,7 +13543,7 @@ namespace giantsummon
                         case 5:
                             JumpHeight = (int)(MaxJumpHeight * 0.75);
                             {
-                                Main.PlaySound(16, (int)CenterPosition.X, (int)CenterPosition.Y, 1, 1f, 0f);
+                                Main.PlaySound(16, (int)Position.X, (int)CenterY, 1, 1f, 0f);
                                 for (int m = 0; m < 10; m++)
                                 {
                                     int num10 = Dust.NewDust(new Vector2(Position.X - 18f, Position.Y - 16f), 102, 32, 16, -this.Velocity.X * 0.5f, this.Velocity.Y * 0.5f, 100, default(Color), 1.5f);
@@ -14118,13 +14122,13 @@ namespace giantsummon
                             {
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    int num14 = Dust.NewDust(new Vector2(CenterPosition.X - 22f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    int num14 = Dust.NewDust(new Vector2(Position.X - 22f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
                                     Main.dust[num14].velocity *= 0.1f;
                                     Main.dust[num14].noLight = true;
                                 }
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    int num15 = Dust.NewDust(new Vector2(CenterPosition.X + 12f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    int num15 = Dust.NewDust(new Vector2(Position.X + 12f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
                                     Main.dust[num15].velocity *= 0.1f;
                                     Main.dust[num15].noLight = true;
                                 }
@@ -14133,13 +14137,13 @@ namespace giantsummon
                             {
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    int num16 = Dust.NewDust(new Vector2(CenterPosition.X - 32f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    int num16 = Dust.NewDust(new Vector2(Position.X - 32f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
                                     Main.dust[num16].velocity *= 0.1f;
                                     Main.dust[num16].noLight = true;
                                 }
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    int num17 = Dust.NewDust(new Vector2(CenterPosition.X + 2f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
+                                    int num17 = Dust.NewDust(new Vector2(Position.X + 2f, Position.Y - 6f), 20, 10, 64, Velocity.X * 0.25f, Velocity.Y * 0.25f, 255, default(Color), 1f);
                                     Main.dust[num17].velocity *= 0.1f;
                                     Main.dust[num17].noLight = true;
                                 }
@@ -14976,7 +14980,7 @@ namespace giantsummon
                 }
                 if (HasFlag(GuardianFlags.UnderwaterJellyfishGlow))
                 {
-                    Lighting.AddLight((int)(CenterPosition.X * DivisionBy16), (int)(CenterPosition.Y * DivisionBy16), 0.9f, 0.2f, 0.6f);
+                    Lighting.AddLight((int)(Position.X * DivisionBy16), (int)(CenterY * DivisionBy16), 0.9f, 0.2f, 0.6f);
                 }
             }
             else
@@ -15070,9 +15074,9 @@ namespace giantsummon
                 {
                     StuckTimer = 0;
                 }
-                else if ((MoveRight && StuckCheckX < CenterPosition.X) || (MoveLeft && StuckCheckX > CenterPosition.X))
+                else if ((MoveRight && StuckCheckX < Position.X) || (MoveLeft && StuckCheckX > Position.X))
                 {
-                    StuckCheckX = CenterPosition.X;
+                    StuckCheckX = Position.X;
                 }
                 else
                 {
@@ -15083,7 +15087,7 @@ namespace giantsummon
 
         public void SetStuckCheckPositionToMe()
         {
-            StuckCheckX = CenterPosition.X;
+            StuckCheckX = Position.X;
         }
 
         public void CheckForIceBreak()
@@ -16264,7 +16268,7 @@ namespace giantsummon
 
         public void DoLightingColoring(ref Color c)
         {
-            int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
+            int TileX = (int)(Position.X * DivisionBy16), TileY = (int)(CenterY * DivisionBy16);
             //int HeightMargin = (int)Height / 32;
             if (TileY * 16 < Main.screenPosition.Y)
             {
@@ -16382,7 +16386,7 @@ namespace giantsummon
             Color armorColor = Color.White;
             if (!IgnoreLighting)
             {
-                int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
+                int TileX = (int)(Position.X * DivisionBy16), TileY = (int)(CenterY * DivisionBy16);
                 //int HeightMargin = (int)Height / 32;
                 if (TileY * 16 < Main.screenPosition.Y)
                 {
@@ -16482,11 +16486,11 @@ namespace giantsummon
             Base.GuardianPreDrawScript(this, NewPosition, c, armorColor, Rotation, Origin, Scale, seffect);
             if (Base.IsCustomSpriteCharacter)
             {
-                DrawTerraGuardianData(NewPosition, c, armorColor, Origin, seffect, Shader);
+                DrawTerraGuardianData(NewPosition, c, armorColor, Origin, seffect, Rotation, Shader);
             }
             else
             {
-                DrawTerrarianData(NewPosition, seffect, c, armorColor, IgnoreLighting);
+                DrawTerrarianData(NewPosition, seffect, Rotation, c, armorColor, IgnoreLighting);
             }
             if (mount.Active)
             {
@@ -16622,7 +16626,7 @@ namespace giantsummon
             }
         }
 
-        public void DrawTerraGuardianData(Vector2 NewPosition, Color c, Color armorColor, Vector2 Origin, SpriteEffects seffect, int Shader)
+        public void DrawTerraGuardianData(Vector2 NewPosition, Color c, Color armorColor, Vector2 Origin, SpriteEffects seffect, float Rotation, int Shader)
         {
             Rectangle rect = GetAnimationFrameRectangle(RightArmAnimationFrame);
             GuardianDrawData dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, Base.sprites.RightArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);
@@ -16797,7 +16801,7 @@ namespace giantsummon
                 gdd.Draw(Main.spriteBatch);
         }
 
-        public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, Color color, Color armorColor, bool IgnoreLightingColor)
+        public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, float Rotation, Color color, Color armorColor, bool IgnoreLightingColor)
         {
             Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56), 
                 bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56), 
@@ -17470,7 +17474,7 @@ namespace giantsummon
                         if (!Item.noUseGraphic)
                         {
                             bool Inclined = Inclined45Degrees(Item);
-                            int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
+                            int TileX = (int)(this.Position.X * DivisionBy16), TileY = (int)(CenterY * DivisionBy16);
                             Color c = Lighting.GetColor(TileX, TileY, Color.White);
                             if (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.LightVerticalSwing)
                             {
@@ -17541,7 +17545,7 @@ namespace giantsummon
             {
                 Item Item = Inventory[SelectedOffhand];
                 bool Inclined = Inclined45Degrees(Item);
-                int TileX = (int)(CenterPosition.X * DivisionBy16), TileY = (int)(CenterPosition.Y * DivisionBy16);
+                int TileX = (int)(this.Position.X * DivisionBy16), TileY = (int)(CenterY * DivisionBy16);
                 Color c = Lighting.GetColor(TileX, TileY, Color.White);
                 Vector2 ItemOrigin = GetItemOrigin(Item);//giantsummon.GetGuardianItemData(Item.type).ItemOrigin;
                 float NewRotation = OffhandRotation;

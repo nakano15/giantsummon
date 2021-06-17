@@ -160,7 +160,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (Main.dayTime && !NpcMod.HasGuardianNPC(0) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 0) && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<RococoNPC>()))
+            if (!spawnInfo.water && Main.dayTime && !NpcMod.HasGuardianNPC(0) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 0) && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<RococoNPC>()))
             {
                 return (float)(Main.time - 27000) / 432000 * 0.5f;
             }

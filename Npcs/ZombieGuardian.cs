@@ -152,7 +152,7 @@ namespace giantsummon.Npcs
                             TerraGuardian Guardian = Main.player[i].GetModPlayer<PlayerMod>().Guardian;
                             if (Guardian.Active && !Guardian.Downed)
                             {
-                                if (Math.Abs(Guardian.CenterPosition.X - npc.Center.X) >= 368f || Math.Abs(Guardian.CenterPosition.Y - npc.Center.Y) >= 256f)
+                                if (Math.Abs(Guardian.Position.X - npc.Center.X) >= 368f || Math.Abs(Guardian.CenterY - npc.Center.Y) >= 256f)
                                 {
                                     Pull(i, true);
                                 }
@@ -1315,7 +1315,7 @@ namespace giantsummon.Npcs
         {
             float Chance = 0;
             bool HasZacks = false;
-            if (!NpcMod.HasMetGuardian(3) && !NPC.AnyNPCs(ModContent.NPCType<ZombieGuardian>()) && !NPC.AnyNPCs(ModContent.NPCType<GuardianNPC.List.ZombieWolfGuardian>()) && (Main.bloodMoon || (!Main.dayTime && PlayerMod.PlayerHasGuardian(spawnInfo.player, 3))) && Math.Abs(spawnInfo.player.Center.X / 16 - Main.spawnTileX) >= Main.maxTilesX / 3 && !spawnInfo.player.ZoneUnderworldHeight && !spawnInfo.player.ZoneDirtLayerHeight && !spawnInfo.player.ZoneRockLayerHeight)
+            if (!spawnInfo.water && !NpcMod.HasMetGuardian(3) && !NPC.AnyNPCs(ModContent.NPCType<ZombieGuardian>()) && (Main.bloodMoon || (!Main.dayTime && PlayerMod.PlayerHasGuardian(spawnInfo.player, 3))) && Math.Abs(spawnInfo.player.Center.X / 16 - Main.spawnTileX) >= Main.maxTilesX / 3 && !spawnInfo.player.ZoneUnderworldHeight && !spawnInfo.player.ZoneDirtLayerHeight && !spawnInfo.player.ZoneRockLayerHeight)
             {
                 Chance = 0.03f;
                 if (spawnInfo.player.GetModPlayer<PlayerMod>().KnockedOut)
