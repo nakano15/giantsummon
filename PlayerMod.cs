@@ -2291,7 +2291,7 @@ namespace giantsummon
                 if (guardian.furniturex > -1)
                     guardian.LeaveFurniture();
                 guardian.DoUpdateGuardianStatus();
-                guardian.Scale = guardian.ScaleMult;
+                guardian.Scale = guardian.ScaleMult * guardian.GetAgeSize();
                 guardian.LastFriendshipLevel = guardian.FriendshipLevel;
                 if (AssistSlot == 0)
                     Guardian = guardian;
@@ -2381,6 +2381,7 @@ namespace giantsummon
                     {
                         Guardian.OwnerPos = -1;
                         Guardian.AssistSlot = 0;
+                        Guardian.DoUpdateGuardianStatus();
                     }
                     else
                     {
@@ -2686,7 +2687,7 @@ namespace giantsummon
                 return;
             }
             PlayerLayer l;
-            if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
+            if (!Main.gameMenu && HasGhostFoxHauntDebuff)
             {
                 l = new PlayerLayer(mod.Name, "Ghost Fox Guardian Haunt", delegate (PlayerDrawInfo pdi)
                 {
@@ -2715,8 +2716,8 @@ namespace giantsummon
                             seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.None;
                         FluffelPosition.X *= -1f;
                     }
-                    HauntPosition.Y += player.height + gb.SpriteHeight - FluffelPosition.Y - 30;
-                    HauntPosition.X += FluffelPosition.X;
+                    HauntPosition.Y += player.height + (gb.SpriteHeight - FluffelPosition.Y - 30) * gb.GetScale;
+                    HauntPosition.X += FluffelPosition.X * gb.GetScale;
                     //HauntPosition.Y += ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
                     Vector2 Origin = new Vector2(gb.SpriteWidth * 0.5f, gb.SpriteHeight);
                     Rectangle DrawFrame = new Rectangle((PlayerKOd ? ReviveFrame : Frame) * gb.SpriteWidth, 0, gb.SpriteWidth, gb.SpriteHeight);

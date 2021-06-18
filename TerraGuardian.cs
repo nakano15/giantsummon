@@ -3554,7 +3554,7 @@ namespace giantsummon
             MaxFallSpeed = DefaultMaxFallSpeed * ((1f / 0.3f) * Base.Mass);
             JumpSpeed = Base.JumpSpeed;
             FallHeightTolerance = 15;
-            ScaleMult = Base.Scale;
+            ScaleMult = Base.GetScale;
             bool LastAgeScaleWas0 = AgeScale == 0;
             AgeScale = GetAgeSize();
             if (LastAgeScaleWas0)
@@ -6551,10 +6551,13 @@ namespace giantsummon
                                     SittingOffset = Base.SpriteWidth - SittingOffset;
                                 SittingOffset -= Base.SpriteWidth * 0.5f;
                                 SittingPosition.X -= SittingOffset * Scale;
-                                SittingPosition.Y -= (Base.SittingPoint.Y - SpriteHeight) * Scale;
+                                float YDistancing = (Base.SittingPoint.Y - SpriteHeight) * Scale;
+                                //if (YDistancing > 8)
+                                //    YDistancing = 8;
+                                SittingPosition.Y -= YDistancing;
                                 Position = SittingPosition;
-                                if (Position.Y > (furniturey + 3) * 16 + 2)
-                                    Position.Y = (furniturey + 3) * 16 + 2;
+                                //if (Position.Y > (furniturey + 3) * 16 + 2)
+                                //    Position.Y = (furniturey + 3) * 16 + 2;
                             }
                             break;
                         case Terraria.ID.TileID.Thrones:

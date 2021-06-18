@@ -260,6 +260,29 @@ namespace giantsummon
                     DisplayGuardian.LastFriendshipLevel = DisplayGuardian.FriendshipLevel;
                     DisplayGuardian.LastFriendshipValue = DisplayGuardian.FriendshipProgression;
                     DisplayGuardian.UpdateAnimation();
+                    if (LastSelected != Selected)
+                    {
+                        Name = DisplayGuardian.Name;
+                        if (DisplayGuardian.Data._Name != null)
+                        {
+                            Name += " (" + DisplayGuardian.Base.Name + ")";
+                        }
+                        Age = DisplayGuardian.Data.GetAgeString();
+                        Time = DisplayGuardian.Data.GetTime();
+                        ModName = DisplayGuardian.Data.ModID;
+                        Mod mod = ModLoader.GetMod(ModName);
+                        if (mod != null)
+                            ModName = mod.DisplayName;
+                        DisplayGuardian.Scale = DisplayGuardian.GetAgeSize() * DisplayGuardian.Base.GetScale;
+                        if (DisplayGuardian.Data.IsBirthday)
+                        {
+                            BirthdayTime = "Turns " + DisplayGuardian.Data.GetBirthdayAge + " years old today.";
+                        }
+                        else
+                        {
+                            BirthdayTime = "Birthday in " + DisplayGuardian.Data.TimeUntilBirthdayString();
+                        }
+                    }
                     DisplayGuardian.Draw(true);
                     {
                         Vector2 CrownPosition = new Vector2(TabStartX, InterfacePosition.Y + 8 + 8);
@@ -293,29 +316,6 @@ namespace giantsummon
                         Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Base.GetPopularityContestsThirdPlace().ToString(), CrownPosition, Color.White);
                     }
                     float ElementStartY = ElementPosition.Y;
-                    if (LastSelected != Selected)
-                    {
-                        Name = DisplayGuardian.Name;
-                        if (DisplayGuardian.Data._Name != null)
-                        {
-                            Name += " (" + DisplayGuardian.Base.Name + ")";
-                        }
-                        Age = DisplayGuardian.Data.GetAgeString();
-                        Time = DisplayGuardian.Data.GetTime();
-                        ModName = DisplayGuardian.Data.ModID;
-                        Mod mod = ModLoader.GetMod(ModName);
-                        if (mod != null)
-                            ModName = mod.DisplayName;
-                        DisplayGuardian.Scale = DisplayGuardian.GetAgeSize();
-                        if (DisplayGuardian.Data.IsBirthday)
-                        {
-                            BirthdayTime = "Turns " + DisplayGuardian.Data.GetBirthdayAge + " years old today.";
-                        }
-                        else
-                        {
-                            BirthdayTime = "Birthday in " + DisplayGuardian.Data.TimeUntilBirthdayString();
-                        }
-                    }
                     ElementPosition.X = (int)ElementPosition.X;
                     ElementPosition.Y = (int)ElementPosition.Y + 24;
                     {

@@ -984,7 +984,7 @@ namespace giantsummon
 
         public static bool Housing_IsRoomTallEnoughForGuardian(GuardianBase gb)
         {
-            bool CanMoveIn = gb.Height / 16 <= WorldGen.roomY2 - WorldGen.roomY1;
+            bool CanMoveIn = (int)(gb.Height * gb.GetScale) / 16 <= WorldGen.roomY2 - WorldGen.roomY1; //(gb.Height * gb.Scale)
             return CanMoveIn;
         }
         
@@ -1088,7 +1088,7 @@ namespace giantsummon
             }
             if (!Housing_IsRoomTallEnoughForGuardian(tg.Base))
             {
-                if (!Silent) Main.NewText("House is too small! Needs to be " + (tg.Height / 16) + " tiles tall.", new Color(255, 240, 20), false);
+                if (!Silent) Main.NewText("House is too small! Needs to be " + ((int)(tg.Height * tg.Scale) / 16) + " tiles tall.", new Color(255, 240, 20), false);
                 return false;
             }
             GuardianTownNpcState townstate = tg.GetTownNpcInfo;

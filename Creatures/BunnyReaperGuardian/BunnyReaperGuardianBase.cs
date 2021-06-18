@@ -24,6 +24,7 @@ namespace giantsummon.Creatures
             //DuckingHeight = 62;
             SpriteWidth = 64;
             SpriteHeight = 80;
+            Scale = 60f / 66;
             FramesInRows = 20;
             Age = 88;
             SetBirthday(SEASON_SPRING, 28);

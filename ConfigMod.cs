@@ -64,6 +64,11 @@ namespace giantsummon
         [Tooltip("Requests no longer give Ether Heart and Ether Fruit when turned on.")]
         public bool ClassicMode { get { return MainMod.NoEtherItems; } set { MainMod.NoEtherItems = value; } }
 
+        [Label("Scale Companions to their intended size?")]
+        [Tooltip("Each companion may have a set scale change value. That scale value changes their in-game size. That also affects the height required for their houses.")]
+        [DefaultValue(true)]
+        public bool ScaleCompanions { get { return MainMod.UseCompanionsDefinedScaleChange; } set { MainMod.UseCompanionsDefinedScaleChange = value; } }
+
         [Label("Disable damage reduction by companion count?")]
         [Tooltip("To make the mod still be fun to play, there is a minor damage reduction applied to everyone when having multiple companions. Disable this if the mod gets unbearable or way too harder for you to play.")]
         public bool DisableDamageReduction { get { return MainMod.DisableDamageReductionByNumberOfCompanions; } set { MainMod.DisableDamageReductionByNumberOfCompanions = value; } }

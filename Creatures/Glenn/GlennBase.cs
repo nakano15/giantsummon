@@ -18,6 +18,7 @@ namespace giantsummon.Creatures
             Height = 38;
             SpriteWidth = 64;
             SpriteHeight = 56;
+            Scale = 32f / 38;
             FramesInRows = 25;
             //DuckingHeight = 54;
             Age = 14; //3

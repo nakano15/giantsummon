@@ -47,6 +47,12 @@ namespace giantsummon.Npcs
             npc.aiStyle = -1;
             npc.boss = true;
             music = Terraria.ID.MusicID.Boss2;
+            if (!Main.gameMenu)
+            {
+                npc.scale = Base.GetScale;
+                npc.width = (int)(npc.width * npc.scale);
+                npc.height = (int)(npc.height * npc.scale);
+            }
         }
 
         private int AiState { get { return (int)npc.ai[0]; } set { npc.ai[0] = value; } }

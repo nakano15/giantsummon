@@ -29,7 +29,7 @@ namespace giantsummon
         public static byte SelectedGuardian = 0;
         public static int GuardianInventoryMenuSubTab = 0;
         public static bool CheckingQuestBrief = false;
-        public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true;
+        public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true, UseCompanionsDefinedScaleChange = true;
         public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
         public const string VoteLink = ""; //There is no contest

@@ -19,6 +19,7 @@ namespace giantsummon.Creatures
             Height = 84;
             SpriteWidth = 96;
             SpriteHeight = 96;
+            Scale = 96f / 84;
             Age = 26;
             SetBirthday(SEASON_SPRING, 22);
             Male = true;

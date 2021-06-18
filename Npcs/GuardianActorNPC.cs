@@ -115,7 +115,7 @@ namespace giantsummon.Npcs
                     AgeScale = TerraGuardian.GetAgeSizeValue(AgeValue);
                 }
             }
-            npc.scale = AgeScale * Base.Scale;
+            npc.scale = AgeScale * Base.GetScale;
             if (MessageTime > 0) MessageTime--;
             float Acceleration = Base.Acceleration, MaxSpeed = Base.MaxSpeed, Deceleration = Base.SlowDown,
                 JumpSpeed = Base.JumpSpeed;

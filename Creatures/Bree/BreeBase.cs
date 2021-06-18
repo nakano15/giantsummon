@@ -31,6 +31,7 @@ namespace giantsummon.Creatures
             Height = 46;
             SpriteWidth = 64;
             SpriteHeight = 64;
+            Scale = 38f / 46;
             FramesInRows = 23;
             //DuckingHeight = 54;
             Age = 23; //5
@@ -237,8 +238,11 @@ namespace giantsummon.Creatures
                         gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, bodyRect, color, Rotation, Origin, Scale, seffect);
                         InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
                         bodyRect.Y += bodyRect.Height;
-                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, bodyRect, color, Rotation, Origin, Scale, seffect);
-                        InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        if (TerraGuardian.HeadSlot == 0)
+                        {
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, bodyRect, color, Rotation, Origin, Scale, seffect);
+                            InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        }
                         bodyRect.Y += bodyRect.Height;
                         gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, bodyRect, color, Rotation, Origin, Scale, seffect);
                         InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);

@@ -32,6 +32,7 @@ namespace giantsummon.Creatures
             //DuckingHeight = 52;
             SpriteWidth = 96;
             SpriteHeight = 96;
+            Scale = 107f / 86;
             Age = 16;
             Size = GuardianSize.Medium;
             Age = 15;
