@@ -22,6 +22,7 @@ namespace giantsummon.Creatures
             Size = GuardianSize.Large;
             Width = 22;
             Height = 90;
+            Scale = 1.5f;
             SpriteWidth = 112;
             SpriteHeight = 128;
             FramesInRows = 17;
@@ -156,7 +157,6 @@ namespace giantsummon.Creatures
 
         public override void Attributes(TerraGuardian g)
         {
-            g.ScaleMult *= 1.5f;
             g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
             g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
             g.AddFlag(GuardianFlags.HideKOBar);

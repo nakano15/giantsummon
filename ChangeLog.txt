@@ -10,3 +10,7 @@ Fixed Domino's store.
 Companions data will no longer load with their recruit npcs data.
 	That not only fixes the bug mentioned above, but also eases the memory usage of the mod.
 Companion recruit npcs will no longer spawn underwater.
+Changed how the Mass of the companion works:
+	Instead of changing how much the gravity affects the companion, It now affects their max fall speed.
+	Higher mass = higher possible fall speed.
+Companions that want to go sleep and have no bed in their houses, will no longer be restless during the night.

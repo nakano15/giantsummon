@@ -633,11 +633,12 @@ namespace giantsummon
         public float DashSpeed = 0f;
         public int DashCooldown = 0;
         public byte RocketType = 0;
-        public const float MaxFallSpeed = 10f;
+        public const float DefaultMaxFallSpeed = 10f;
         public float AnimationTime = 0f;
         public int BodyAnimationFrame = 0, LeftArmAnimationFrame = 0, RightArmAnimationFrame = 0;
         public int MaxJumpHeight = 15;
         public int FallHeightTolerance = 15;
+        public float MaxFallSpeed = DefaultMaxFallSpeed;
         public float JumpSpeed = 7.08f;
         public float JumpHeight = 0;
         public bool IgnoreMass = false;
@@ -2081,7 +2082,7 @@ namespace giantsummon
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = false;
             }
-            if (IsUsingBed || IsUsingThrone || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0))
+            if ((UsingFurniture && (IsUsingBed || IsUsingBench || IsUsingThrone)) || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0))
             {
                 OffHandAction = false;
             }
@@ -3546,13 +3547,14 @@ namespace giantsummon
             HitBox.Height = Height;
             MoveSpeed = 1f;
             MaxSpeed = Base.MaxSpeed;
-            Mass = Base.Mass;
+            Mass = 0.3f;//Base.Mass;
             Acceleration = Base.Acceleration;
             SlowDown = Base.SlowDown;
             MaxJumpHeight = Base.MaxJumpHeight;
+            MaxFallSpeed = DefaultMaxFallSpeed * ((1f / 0.3f) * Base.Mass);
             JumpSpeed = Base.JumpSpeed;
             FallHeightTolerance = 15;
-            ScaleMult = 1f;
+            ScaleMult = Base.Scale;
             bool LastAgeScaleWas0 = AgeScale == 0;
             AgeScale = GetAgeSize();
             if (LastAgeScaleWas0)
@@ -6548,9 +6550,11 @@ namespace giantsummon
                                 if (LookingLeft)
                                     SittingOffset = Base.SpriteWidth - SittingOffset;
                                 SittingOffset -= Base.SpriteWidth * 0.5f;
-                                SittingPosition.X -= SittingOffset;
+                                SittingPosition.X -= SittingOffset * Scale;
                                 SittingPosition.Y -= (Base.SittingPoint.Y - SpriteHeight) * Scale;
                                 Position = SittingPosition;
+                                if (Position.Y > (furniturey + 3) * 16 + 2)
+                                    Position.Y = (furniturey + 3) * 16 + 2;
                             }
                             break;
                         case Terraria.ID.TileID.Thrones:
@@ -6568,7 +6572,6 @@ namespace giantsummon
                                     SittingPosition.X += SitPointX;
                                 }
                                 Position = SittingPosition;
-                                //Position.Y -= 10 - (10 * Scale);
                             }
                             break;
                         case Terraria.ID.TileID.Beds:
@@ -7402,11 +7405,11 @@ namespace giantsummon
                         }
                         else if (Main.rand.NextDouble() < 0.4f)
                         {
-                            ChangeIdleAction(IdleActions.Wait, 200 + Main.rand.Next(200));
+                            ChangeIdleAction(IdleActions.Wait, 400 + Main.rand.Next(600));
                         }
                         else
                         {
-                            ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 200 + Main.rand.Next(200));
+                            ChangeIdleAction(IdleActions.UseNearbyFurnitureHome, 800 + Main.rand.Next(600));
                         }
                     }
                     break;
