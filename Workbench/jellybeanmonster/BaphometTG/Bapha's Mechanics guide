@@ -25,21 +25,25 @@ Mana fruit gain-10
 Boss Fight Stats:
 HP= 6000
 MP- 200
-Defense- 30
+Defense- 50
 KB Resist- 100%
 -Can Fly
 
 Basics:
->Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
->Demonic Presence(Passive)- Bapha attracts hell creatures to periodically spawn close to where bapha is.(10% Chance)
->Crimson ignite(Passive)- While in embered form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does 2% max health bonus damage to the target.
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
--When embered Bapha's health regeneration rate increases as well as healing for knocked out players and other terra gaurdian entities.
+-When "Embered" Bapha's health regeneration rate increases by 2.0x as well as healing for knocked out players and other terra gaurdian entities.(Recruited version only does not apply to boss form)
 -Bapha takes 5x increased damage when wet or submerged in water additionally can not get into Embered State.(Rain included)
--When baphas health reaches 0 on surface he is sent back to hell threw a portal, if the player or other Terra guardians dont initiate healing within the next 10 seconds the portal will close and Bapha will respawn back in 10 seconds from the portal closing.
+-When baphas health reaches 0 on surface or any other place besides hell, he is sent back to hell threw a portal.
 -If Bapha is recruited and his health reaches 0 while in underworld, instead of being sent threw a portal he reforms back into pentagram orb and is healed to full health immediately after 5 seconds.
--All underworld enemies are non-hostile to Bapha
--Bapha naturally has featherfall buff
+
+
+Buffs and Debuffs(are applied through certain attacks below):
+>Demonic Presence(Passive)- Bapha attracts hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form) / also -All underworld enemies are non-hostile to Bapha(if possible)
+>Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
+>(New)Crimson ignite(Debuff)(Embered form only)- While in embered form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does additional 10% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
+>(New)Crimson Conflagration(Debuff)(Embered form only)- Flame that does 1% max health true damage every 0.5 seconds and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
+>Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
+>Featherfall(Passive)
 
 Combat:
 
@@ -47,8 +51,8 @@ Attacks-
 >Hell Splitter(Melee)(Default-Blazing Edge/ ES-Crimson Edge)- Fire formed blade that slashes twice in one attack dealing 25(50 when in ES) base damage each and applies "On Fire" debuff("Cursed Inferno" debuff if in ES) 
 -HS scales with current weapon equiped dealing 1.2x(1.5x in ES) damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player(Its damage makes up for the inability to raise attack speed)
--HS's properties change when Bapha is embered, HS gains extra attack range, a new vfx and its attacks apply "Cursed Inferno" debuff 
--Has knockback value of 5
+-HS's properties change when Bapha is embered, HS gains extra attack range, a new vfx and its attacks apply "Crimson Conflagration" debuff 
+-Has knockback value of 6
 
 >Hell Flame(Ranged)- Fire ball that does 20 base damage by itself with no weapon equiped.
 -15 Mana cost
@@ -56,14 +60,14 @@ Attacks-
 -Medium Velocity
 -Has knockback value of 5
 
->Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Cursed Inferno" Debuff when getting hit.
+>Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when getting hit.
 -30 Mana Cost
 -CF can only be used when Bapha is in ES.
 -(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
 -Very High Velocity
 -Has Knockback value of 10
 
->Hell Portal- Opens a portal to the underworld which produces 20 freindly hell spawn enemies over 10 seconds that help the player in combat.
+>Hell Portal- Opens a portal to the underworld which produces 20 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
 - 100 Mana cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in embered form
