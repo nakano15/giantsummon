@@ -4,6 +4,7 @@ HS-Hell Splitter
 ES-Embered State
 CF- Crimson Flame
 HF-Hell Flame
+SS- Scarlet Shredder
 HeP-Hell Portal
 HP- Hit Points
 MP- Mana Points
@@ -15,7 +16,7 @@ Guardian Slots taken- 3
 
 Initial Stats:
 HP- 400
-MP- 50
+MP- 100
 Life Crystal gain- 100
 Life Fruit- 5
 Mana Crystal gain-30
@@ -24,7 +25,7 @@ Mana fruit gain-10
 
 Boss Fight Stats:
 HP= 6000
-MP- 200
+MP- 666
 Defense- 50
 KB Resist- 100%
 -Can Fly
@@ -43,7 +44,9 @@ Buffs and Debuffs(are applied through certain attacks below):
 >(New)Crimson ignite(Debuff)(Embered form only)- While in embered form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does additional 10% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
 >(New)Crimson Conflagration(Debuff)(Embered form only)- Flame that does 1% max health true damage every 0.5 seconds and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
 >Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
+>Diablo numeral(debuff)- if both projectiles from "Scarlet shredder" manage to hit the same target the target receives 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
 >Featherfall(Passive)
+
 
 Combat:
 
@@ -67,12 +70,25 @@ Attacks-
 -Very High Velocity
 -Has Knockback value of 10
 
->Hell Portal- Opens a portal to the underworld which produces 20 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
+Ultimate techniques:
+
+>Scarlet Shredder(Embered technique)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
+-Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears)
+-Damage is static and does not scale with equiped weapons
+-333 damage per projectile equiling 666 if both hit
+-Applies "diablo numeral" debuff if both projectiles hit the same target
+-Bypasses blocks and completely ignores defense value of target
+-has very limitied tracking ai
+-150 mana cost
+-Has knockback value of 10
+-15 second cooldown
+
+>Hell Portal(Embered technique)- Opens a portal to the underworld which produces 20 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
 - 100 Mana cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in embered form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
-- 1:30 second cooldown upon use
+- 2:30 cooldown upon use
 
 Recruit Conditions-
 1.Player Must have defeated Wall of Flesh boss
