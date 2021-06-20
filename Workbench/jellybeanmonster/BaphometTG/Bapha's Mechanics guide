@@ -14,26 +14,35 @@ Bapha- Overlord of Hell.
 Age- Unknown (Likely above 100,000 years)
 Guardian Slots taken- 3
 
-Initial Stats:
-HP- 400
-MP- 100
+Recruited Stats:
+HP- 666
+MP- 200
 Life Crystal gain- 100
 Life Fruit- 5
 Mana Crystal gain-30
 Mana fruit gain-10
 
-
 Boss Fight Stats:
-HP= 6000
+Classic mode:
+HP= 20,000
 MP- 666
-Defense- 50
+Damage- (Based on attack used as described in "Attacks" section)
+Defense- 20
+KB Resist- 100%
+-Can Fly
+
+Expert Mode:
+HP= 40,000
+MP- 800
+Damage- (Based on attack used as described in "Attacks" section)
+Defense- 40
 KB Resist- 100%
 -Can Fly
 
 Basics:
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
 -When "Embered" Bapha's health regeneration rate increases by 2.0x as well as healing for knocked out players and other terra gaurdian entities.(Recruited version only does not apply to boss form)
--Bapha takes 5x increased damage when wet or submerged in water additionally can not get into Embered State.(Rain included)
+-Bapha takes 10x increased damage when wet or submerged in water additionally can not get into Embered State.(Rain included)
 -When baphas health reaches 0 on surface or any other place besides hell, he is sent back to hell threw a portal.
 -If Bapha is recruited and his health reaches 0 while in underworld, instead of being sent threw a portal he reforms back into pentagram orb and is healed to full health immediately after 5 seconds.
 
@@ -51,11 +60,11 @@ Buffs and Debuffs(are applied through certain attacks below):
 Combat:
 
 Attacks-
->Hell Splitter(Melee)(Default-Blazing Edge/ ES-Crimson Edge)- Fire formed blade that slashes twice in one attack dealing 25(50 when in ES) base damage each and applies "On Fire" debuff("Cursed Inferno" debuff if in ES) 
+>Hell Splitter(Melee)(Default-Blazing Edge/ ES-Crimson Edge)- Fire formed blade that slashes twice in one attack dealing 25(50 when in ES) base damage each and applies "On Fire" debuff("Crimson Conflagration" debuff if in ES) 
 -HS scales with current weapon equiped dealing 1.2x(1.5x in ES) damage of what the weapon wouldve originally did.
--HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player(Its damage makes up for the inability to raise attack speed)
--HS's properties change when Bapha is embered, HS gains extra attack range, a new vfx and its attacks apply "Crimson Conflagration" debuff 
--Has knockback value of 6
+-HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player
+-HS's properties change when Bapha is embered, HS gains extra attack range, new vfx and its attacks apply "Crimson Conflagration" debuff 
+-Has knockback value of 7
 
 >Hell Flame(Ranged)- Fire ball that does 20 base damage by itself with no weapon equiped.
 -15 Mana cost
@@ -65,9 +74,9 @@ Attacks-
 
 >Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when getting hit.
 -30 Mana Cost
--CF can only be used when Bapha is in ES.
--(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
--Very High Velocity
+-can only be casted when ES is active
+-Base damage stacks with whatever current weapon damage is
+-High Velocity
 -Has Knockback value of 10
 
 Ultimate techniques:
@@ -95,5 +104,4 @@ Recruit Conditions-
 2. Player must interact with pentagram star orb,that spawns after wall of flesh is defeated, in order to have a dialogue which starts a boss fight with Bapha
 3. Baphas health must reach 0 in order for him to be defeated and for the player to be able to interact wit him
 4. Player must accept Baphas condtions for recruitment in order to have him on team
--if player is defeated by Bapha, Bapha opens a portal nearby players respawn point that can transport players straight to Bapha's location in order to resume boss fight
 
