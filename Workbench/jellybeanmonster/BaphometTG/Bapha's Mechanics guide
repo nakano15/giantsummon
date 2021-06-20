@@ -76,12 +76,12 @@ Ultimate techniques:
 -Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears)
 -Damage is static and does not scale with equiped weapons
 -333 damage per projectile equiling 666 if both hit
--Applies "diablo numeral" debuff if both projectiles hit the same target
+-Applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
 -Bypasses blocks and completely ignores defense value of target
 -has very limitied tracking ai
 -150 mana cost
 -Has knockback value of 10
--15 second cooldown
+-20 second cooldown
 
 >Hell Portal(Embered technique)- Opens a portal to the underworld which produces 20 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
 - 100 Mana cost
