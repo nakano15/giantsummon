@@ -781,6 +781,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*[name] just said \"I'm going to catch you\", she must be dreaming that she's playing with [gn:" + Sardine + "].*");
                 Mes.Add("*[name] seems to be dreaming about camping with other people.*");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*[name] stares with a scared face at the ghost behind you.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

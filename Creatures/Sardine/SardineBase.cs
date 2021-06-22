@@ -526,8 +526,13 @@ namespace giantsummon.Creatures
                 }
                 else
                 {
-                    Mes.Add("I'm home! I brought all those treasures for us. (He must be dreaming about returning home For someone.)");
+                    Mes.Add("I'm home! I brought all those treasures for us. (He must be dreaming about returning home for someone.)");
                 }
+            }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("Yikes, you're being haunted by a ghost? What does she want?");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

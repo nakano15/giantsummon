@@ -332,6 +332,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*I was unable to caught [gn:" + Nemesis + "] scent, no matter how hard I tried. I really hope he isn't the one I'm looking for.*");
                 }
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*I don't mean to alarm you, but there is a ghost behind you.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

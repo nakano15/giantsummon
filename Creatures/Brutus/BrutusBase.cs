@@ -597,6 +597,11 @@ namespace giantsummon.Creatures
                 Mes.Add("(His bad breath from his snoring reaches your nose, making you plug It.)");
                 Mes.Add("(He's sleeping like a stone, you wonder if you could wake him up whenever something happens.)");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*[nickname], there is... A ghost... On your shoulder...*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

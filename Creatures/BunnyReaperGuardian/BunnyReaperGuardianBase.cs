@@ -859,6 +859,11 @@ namespace giantsummon.Creatures
                 }
                 Mes.Add("*That kid, [gn:"+Glenn+"], is very curious and talkative. Anyways, It's not everyday one have a reaper as neighbor.*");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*Yes, I see that ghost. I can't remove It from you, but I can help killing what killed her to free you.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

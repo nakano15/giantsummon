@@ -298,6 +298,11 @@ namespace giantsummon.Creatures
                 Mes.Add("(She's staring at you with a angry face, better not bother her.)");
                 Mes.Add("(Her eyes are closed, anger is seen on her face, and she's seems to be trying to breath calmly. If I want to talk to her, better I do that cautiously.)");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*..You came wanting some food? Does she wants some too...?*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

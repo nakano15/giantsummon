@@ -686,6 +686,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*I want to help everybody... Hug everyone... In need..* (He says when sleeping)");
                 Mes.Add("(He seems to be having nightmares)");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*That person in your shoulder looks sad. Does she needs a hug?*");
+            }
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
 

@@ -11014,14 +11014,14 @@ namespace giantsummon
                 for (int i = 0; i < 50; i++)
                 {
                     int type2 = this.Inventory[i].type;
-                    if (type2 == 282 || type2 == 286 || type2 == 3002 || type2 == 3112)
+                    if (type2 == 282 || type2 == 286 || type2 == 523 || type2 == 1333 || type2 == 3002 || type2 == 3112)
                     {
                         SelectedOffhand = i;
                         break;
                     }
                     if (!Wet)
                     {
-                        if (type2 == 8 || type2 == 427 || type2 == 428 || type2 == 429 || type2 == 430 || type2 == 431 || type2 == 432 || type2 == 433 || type2 == 523 || type2 == 974 || type2 == 1245 || type2 == 1333 || type2 == 2274 || type2 == 3004 || type2 == 3045 || type2 == 3114)
+                        if (type2 == 8 || type2 == 427 || type2 == 428 || type2 == 429 || type2 == 430 || type2 == 431 || type2 == 432 || type2 == 433 || type2 == 974 || type2 == 1245 || type2 == 2274 || type2 == 3004 || type2 == 3045 || type2 == 3114)
                         {
                             SelectedOffhand = i;
                             break;
@@ -13220,7 +13220,7 @@ namespace giantsummon
                 Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
                 Lighting.AddLight(position11, 1.05f, 0.95f, 0.55f);
             }
-            if (item.type == 3002)
+            if (item.type == 3112)
             {
                 Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
                 Lighting.AddLight(position11, 1f, 0.6f, 0.85f);

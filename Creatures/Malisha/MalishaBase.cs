@@ -537,6 +537,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*I've just learned this spell, I'm glad you offered yourself help me test It...* (Run [gn:" + Leopold + "], Run!)");
                 }
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*You've got quite an accessory, [nickname]. Hahaha.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

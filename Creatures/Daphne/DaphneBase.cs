@@ -193,6 +193,11 @@ namespace giantsummon.Creatures
             }
             if (Main.moonPhase == 0)
                 Mes.Add("Awoooooooooo~!!");
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*She's not staring at you*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

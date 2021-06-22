@@ -554,6 +554,11 @@ namespace giantsummon.Creatures
                 Mes.Add("Eek!! Turn the other side!");
                 Mes.Add("Do you really have to enter here and talk to me while I'm using the toilet?");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("Go away! I don't want to carry your burden.");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

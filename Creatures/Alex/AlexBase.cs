@@ -340,6 +340,11 @@ namespace giantsummon.Creatures
                 Mes.Add("No... Don't go... No... (He seems to be having a nightmare)");
                 Mes.Add("(You can hear his silent snores.)");
             }
+            if(FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("Who's she? Is she friendly? Can she play with me?");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

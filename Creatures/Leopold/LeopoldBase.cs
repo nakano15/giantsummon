@@ -363,6 +363,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*Wait! What is in that flask! No! I wont drink it! NO! NOOOO!! (I think [gn:" + Malisha + "] appeared on his dream)*");
                 }
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*Yaaaaaaaaaaaah- Oh no, now I gotta wipe myself.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

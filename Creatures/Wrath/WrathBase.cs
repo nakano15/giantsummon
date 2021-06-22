@@ -184,6 +184,11 @@ namespace giantsummon.Creatures
                 Mes.Add("(He doesn't seems to be having a very peaceful sleep, because of the constant movements he does.)");
                 Mes.Add("(It looks like he's fighting against someone in his sleep.)");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*Does It look like I'm the same as her? I'm alive!*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

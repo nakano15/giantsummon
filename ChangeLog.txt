@@ -29,3 +29,6 @@ Sardine will be counted as met once you rescue him from King Slime.
 	He will also say something after being saved.
 Changed one of Sardine's greet message, so It no longer gives the idea that you just rescued him from King Slime.
 	Imagine this: You go to a world where Sardine is living with a character who didn't met him. If you spoke with him, there would be 50% of chance of him mentioning the King Slime.
+Companions now react to when you're haunted.
+Fixed issue where Leopold's backward revive sprite was actually showing frontal body revive sprite.
+Bouncy Glowsticks will now produce light, when equipped by the companions.

@@ -370,6 +370,11 @@ namespace giantsummon.Creatures
                 }
                 Mes.Add("*" + player.name + "...* (Looked like she was going to ask something in her sleep)");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*Who's she, [nickname]? Did you met a new friend?*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

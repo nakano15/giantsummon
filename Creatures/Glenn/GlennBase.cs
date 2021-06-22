@@ -303,13 +303,30 @@ namespace giantsummon.Creatures
                     Mes.Add("I saw [gn:" + Malisha + "] the other day by her house, she was offering me candies. I didn't accepted them, because I just lunched.");
                 }
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*Gah! Ghost!*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string TalkMessage(Player player, TerraGuardian guardian)
         {
+            bool SardineMet = PlayerMod.PlayerHasGuardian(player, GuardianBase.Sardine),
+                BreeMet = PlayerMod.PlayerHasGuardian(player, GuardianBase.Bree);
             List<string> Mes = new List<string>();
-            Mes.Add("");
+            Mes.Add("There's so many games I play. Which ones do you play?");
+            Mes.Add("I like reading fantasy books: It feels like life.");
+            Mes.Add("What kind of places have you visited? I discovered some as I travelled to here.");
+            if (SardineMet && BreeMet)
+            {
+                Mes.Add("I fear when my parents argue, since I don't like thinking about them breaking up.");
+            }
+            if (SardineMet)
+            {
+                Mes.Add("Do you think I'll be a great adventurer, like my father?");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

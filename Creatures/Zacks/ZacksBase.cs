@@ -491,6 +491,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*Go back before It's too late! Things here are dreadful even for me!*");
                 Mes.Add("*You don't know what I'm passing through here.*");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*I don't think that just because I'm dead, I can comunicate with her. Sorry.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

@@ -583,6 +583,11 @@ namespace giantsummon.Creatures
                 Mes.Add("(You got startled when he looked at your direction and smiled.)");
                 Mes.Add("(He seems to be sleeping fine.)");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*[name] seems about scared of the ghost on your shoulders.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

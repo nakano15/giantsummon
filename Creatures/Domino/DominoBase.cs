@@ -347,6 +347,11 @@ namespace giantsummon.Creatures
                 Mes.Add("(He seems to be counting something.)");
                 Mes.Add("*A few more crates... Here the change...* (He's doing deals in his dreams)");
             }
+            if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+            {
+                Mes.Clear();
+                Mes.Add("*I think I have the right thing to solve your ghost problem, but It will cost you a lot.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
