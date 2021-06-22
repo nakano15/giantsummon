@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace giantsummon
 {
-    public class GuardianPlayerAccessoryEffects
+    public class GuardianAccessoryEffects
     {
         public static void ApplyAccessoryEffect(TerraGuardian guardian, Item i)
         {

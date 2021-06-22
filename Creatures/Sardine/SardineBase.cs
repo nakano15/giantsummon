@@ -321,7 +321,7 @@ namespace giantsummon.Creatures
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "Hey! I nearly killed that King Slime. Oh well, nevermind...";
+                return "Hey, aren't you an adventurer? Cool! I am too!";
             return "Tarararan-Taran! Meet the worlds biggest smallest bounty hunter ever! Me!";
         }
 

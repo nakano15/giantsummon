@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace giantsummon.Items.Accessories
 {
-    public class BlueHairclip :ModItem
+    public class BlueHairclip : GuardianItemPrefab
     {
         public override void SetStaticDefaults()
         {
@@ -28,6 +28,13 @@ namespace giantsummon.Items.Accessories
             player.meleeCrit += 5;
             player.rangedCrit += 5;
             player.magicCrit += 5;
+        }
+
+        public override void ItemStatusScript(TerraGuardian g)
+        {
+            g.MeleeCriticalRate += 5;
+            g.RangedCriticalRate += 5;
+            g.MagicCriticalRate += 5;
         }
     }
 }

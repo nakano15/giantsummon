@@ -100,6 +100,9 @@ namespace giantsummon.Compatibility
             if (Guardian.Defense > 0) Guardian.Defense = (int)((Guardian.Defense + mod.DefenseSum) * mod.DefenseMult);
             Guardian.HealthHealMult += mod.MaxHealthMult * Guardian.HealthHealMult;
             Guardian.ManaHealMult += mod.MaxManaMult * Guardian.ManaHealMult;
+            Guardian.DodgeRate += mod.DodgeRate;
+            Guardian.MeleeKnockback = (Guardian.MeleeKnockback + mod.KnockbackSum) * mod.KnockbackMult;
+            Guardian.RangedKnockback = (Guardian.RangedKnockback + mod.KnockbackSum) * mod.KnockbackMult;
             /*if (!NExperience.MainMod.ItemStatusCapper || !gamemode.AllowLevelCapping)
             {
                 if (Guardian.SelectedItem > -1)

@@ -96,10 +96,12 @@
     <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
     <Compile Include="CommonRequestsDB.cs" />
+    <Compile Include="Compatibility\CompatibilityHooks.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
     <Compile Include="Compatibility\SubworldLibraryCompatibility.cs" />
     <Compile Include="Compatibility\TerraClassesCompatibility.cs" />
+    <Compile Include="Compatibility\ThoriumCompatibility.cs" />
     <Compile Include="ConfigMod.cs" />
     <Compile Include="Creatures\Alexander\SleuthAction.cs" />
     <Compile Include="Creatures\Alex\AlexBase.cs" />
@@ -144,6 +146,7 @@
     <Compile Include="DialogueChain.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GuardianArmorAndSetEffects.cs" />
+    <Compile Include="GuardianAttackTypeInfo.cs" />
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
     <Compile Include="GuardianDrawData.cs" />

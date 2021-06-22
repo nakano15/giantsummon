@@ -159,11 +159,13 @@ namespace giantsummon
                 {
                     DayChange = true;
                 }
+                TriggerHandler.FireDayNightChange(Main.dayTime);
             }
             const float HourToFrames = 1f / 3600;
             if (LastTime != -1 && (int)TimeParser * HourToFrames != (int)LastTime * HourToFrames)
             {
                 HourChange = true;
+                TriggerHandler.FireHourChange((int)(TimeParser * HourToFrames));
             }
             LastTime = TimeParser;
             MainMod.TimeTranslated = (float)TimeParser;

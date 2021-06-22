@@ -87,7 +87,8 @@ namespace giantsummon
         {
             foreach (int key in MainMod.ActiveGuardians.Keys)
             {
-                if (Position == Vector2.Zero || MainMod.ActiveGuardians[key].InPerceptionRange(Position) || ((trigger == TriggerTypes.GuardianDies || trigger == TriggerTypes.GuardianDowned ||
+                if (Position == Vector2.Zero || MainMod.ActiveGuardians[key].InPerceptionRange(Position) || 
+                    ((trigger == TriggerTypes.GuardianDies || trigger == TriggerTypes.GuardianDowned || 
                     trigger == TriggerTypes.GuardianHurt || trigger == TriggerTypes.GuardianSpotted) && Value != key))
                 {
                     MainMod.ActiveGuardians[key].DoTrigger(trigger, Value, Value2, Value3, Value4, Value5);

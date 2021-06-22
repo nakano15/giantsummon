@@ -784,7 +784,8 @@ namespace giantsummon
                             if (proj.type >= 390 && proj.type <= 392 && (double)proj.localAI[0] > 0.0)
                                 num2 += 400;
                         }
-                        if (guardian.RocketTime > 0)
+                        num2 += guardian.Height - 42;
+                        if (guardian.HasCooldown(GuardianCooldownManager.CooldownType.RocketDelay))
                             proj.ai[0] = 1f;
                         Vector2 vector2 = new Vector2(proj.position.X + (float)proj.width * 0.5f, proj.position.Y + (float)proj.height * 0.5f);
                         float num3 = guardian.Position.X - vector2.X;

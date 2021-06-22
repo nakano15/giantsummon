@@ -199,7 +199,7 @@ namespace giantsummon.Creatures
             {
                 if (Main.moonPhase == 0 && !Main.bloodMoon && Main.time >= 3600)
                 {
-                    if (guardian.OwnerPos == -1 || guardian.HasPlayerAFK)
+                    if (guardian.OwnerPos == -1 || guardian.IsPlayerIdle)
                     {
                         guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksFullMoonBehavior(), FullMoonBehaviorID);
                     }

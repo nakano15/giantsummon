@@ -20,7 +20,7 @@ namespace giantsummon
                     tooltips.Insert(1, new TooltipLine(this.mod, "GuardianHealingValue", "Restores " + (int)(item.healLife * guardian.HealthHealMult) + " Guardian Health."));
                 }
             }
-            GuardianPlayerAccessoryEffects.CheckForAccessoryDescriptionChanges(item, tooltips);
+            GuardianAccessoryEffects.CheckForAccessoryDescriptionChanges(item, tooltips);
         }
 
         public override bool OnPickup(Item item, Player player)

@@ -14,3 +14,18 @@ Changed how the Mass of the companion works:
 	Instead of changing how much the gravity affects the companion, It now affects their max fall speed.
 	Higher mass = higher possible fall speed.
 Companions that want to go sleep and have no bed in their houses, will no longer be restless during the night.
+Fixed Slime summon not working as intended for companions.
+Fixed an issue where Blue Hairclip wasn't giving status to companions using It.
+Updated mod to work with latest NExperience Mod update.
+	Knockback and Dodge rate will now be affected by NExperience game mode status changes.
+Fixed the Guardian Selection Interface scroll bar.
+Changed how the following companions idle behavior will work:
+	It is no longer attached to the afk checker.
+	Using items will not reset the counter.
+	Companions will no longer leave idle state if has passed 10 seconds since timer begun, and your character didn't moved 5 tiles horizontally.
+	If Easier Idle at town option is on, companions will go idle behavior after 30 seconds, instead of 15.
+Sardine will be counted as met once you rescue him from King Slime.
+	That will make so even if you don't speak to him, and he leaves the world, he will be able to visit your world again.
+	He will also say something after being saved.
+Changed one of Sardine's greet message, so It no longer gives the idea that you just rescued him from King Slime.
+	Imagine this: You go to a world where Sardine is living with a character who didn't met him. If you spoke with him, there would be 50% of chance of him mentioning the King Slime.

@@ -57,7 +57,7 @@ namespace giantsummon
             oldGamePadState = GamePad.GetState(controlPort);
         public static bool Gameplay2PMode = false;
         public static bool MoveLeftPress = false, MoveRightPress = false, MoveUpPress = false, MoveDownPress = false, UseItemPress = false, JumpPress = false;
-        public static Mod NExperienceMod, KalciphozMod, SubworldLibrary, TerraClassesMod;
+        public static Mod NExperienceMod, KalciphozMod, SubworldLibrary, TerraClassesMod, ThoriumMod;
         public static bool TestForceGuardianOnFront = false;
         public static Main MainHook { get { return Main.instance; } }
         public static bool LastWof = false;
@@ -2723,38 +2723,12 @@ namespace giantsummon
             AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "G. Dog Guardian", 4.6667f, true, true);
             GetInitialCompanionsList();
             CommonRequestsDB.PopulateCommonRequestsDB();
-            try
-            {
-                NExperienceMod = ModLoader.GetMod("NExperience");
-            }
-            catch
-            {
-                NExperienceMod = null;
-            }
-            try
-            {
-                KalciphozMod = ModLoader.GetMod("kRPG");
-            }
-            catch
-            {
-                KalciphozMod = null;
-            }
-            try
-            {
-                SubworldLibrary = ModLoader.GetMod("SubworldLibrary");
-            }
-            catch
-            {
-                SubworldLibrary = null;
-            }
-            try
-            {
-                TerraClassesMod = ModLoader.GetMod("TerraClasses");
-            }
-            catch
-            {
-                TerraClassesMod = null;
-            }
+            //
+            NExperienceMod = ModLoader.GetMod("NExperience");
+            KalciphozMod = ModLoader.GetMod("kRPG");
+            SubworldLibrary = ModLoader.GetMod("SubworldLibrary");
+            TerraClassesMod = ModLoader.GetMod("TerraClasses");
+            ThoriumMod = ModLoader.GetMod("ThoriumMod");
         }
 
         public override void PostSetupContent()

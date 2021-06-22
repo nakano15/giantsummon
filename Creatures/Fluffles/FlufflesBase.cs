@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace giantsummon.Creatures
 {
@@ -105,6 +106,15 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(18, 33, 33);
 
             //WingPosition
+        }
+
+        public static bool IsHauntedByFluffles(Player player)
+        {
+            return player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.BeeHaunt>()) ||
+                player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>()) ||
+                player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.MeatHaunt>()) ||
+                player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.SawHaunt>()) ||
+                player.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.SkullHaunt>());
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)

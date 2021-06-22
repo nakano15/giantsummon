@@ -1454,8 +1454,26 @@ namespace giantsummon
             {
                 TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Center.Y, GuardianBase.Sardine);
                 tg.AddBuff(Terraria.ID.BuffID.Slimed, 300);
+                switch (Main.rand.Next(5)) {
+                    default:
+                        tg.SaySomething("*Heavily breathing* Soo good to be able to breath again.");
+                        break;
+                    case 1:
+                        tg.SaySomething("Eww, It will take a long time for me to lick all that out. At least tastes good.");
+                        break;
+                    case 2:
+                        tg.SaySomething("Hey, I nearly killed it! Oh, well, whatever. You helped too..");
+                        break;
+                    case 3:
+                        tg.SaySomething("So glad to be out of that, my skin was itching.");
+                        break;
+                    case 4:
+                        tg.SaySomething("Please don't tell about this to other bounty hunters.");
+                        break;
+                }
                 //int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<GuardianNPC.List.CatGuardian>());
                 //((GuardianNPC.GuardianNPCPrefab)Main.npc[npcpos].modNPC).Guardian.AddBuff(Terraria.ID.BuffID.Slimed, 300);
+                AddGuardianMet(GuardianBase.Sardine);
                 TrappedCatKingSlime = -1;
             }
             if (GuardianBountyQuest.TargetMonsterID > 0)

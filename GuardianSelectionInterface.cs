@@ -161,6 +161,7 @@ namespace giantsummon
                     ElementPosition.X -= 8f * ScaleX;
                     //Draw scroll bar
                     int MaxHeight = Height - 48;
+                    int ExtraScrollHeight = GuardianList.Length - MaxGuardiansY;
                     float ScrollbarSize = ((float)MaxGuardiansY / GuardianList.Length);
                     if (ScrollbarSize > 1f)
                         ScrollbarSize = 1f;
@@ -183,7 +184,7 @@ namespace giantsummon
                     DrawRectangle(ButtonPos.X + 8 - 2, ButtonPos.Y + 6, 4, 2, foreground);
                     DrawRectangle(ButtonPos.X + 8 - 3, ButtonPos.Y + 8, 6, 2, foreground);
                     DrawRectangle(ButtonPos.X + 8 - 4, ButtonPos.Y + 10, 8, 2, foreground);
-                    ButtonPos.Y += 16 + (MaxHeight - ScrollbarSize) * ScrollY;
+                    ButtonPos.Y += 16 + (MaxHeight - ScrollbarSize) * (ScrollY * (1f / ExtraScrollHeight));
                     DrawRectangle(ButtonPos.X, ButtonPos.Y, 16, (int)ScrollbarSize, Color.Blue);
                     background = Color.Blue;
                     foreground = Color.Gray;
