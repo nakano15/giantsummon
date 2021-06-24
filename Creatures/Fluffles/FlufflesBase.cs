@@ -10,7 +10,7 @@ namespace giantsummon.Creatures
 {
     public class FlufflesBase : GuardianBase
     {
-        private static Dictionary<int, float> KnockoutAlpha = new Dictionary<int, float>();
+        public const string FoxSoulTextureID = "foxsoul";
 
         public FlufflesBase()
         {
@@ -106,6 +106,16 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(18, 33, 33);
 
             //WingPosition
+        }
+
+        public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
+        {
+            return new FlufflesData(ID, ModID);
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(FoxSoulTextureID, "FoxSoul");
         }
 
         public static bool IsHauntedByFluffles(Player player)
@@ -226,6 +236,33 @@ namespace giantsummon.Creatures
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
+        {
+            switch (trigger)
+            {
+                case TriggerTypes.GuardianDowned:
+                    {
+                        if(Value == guardian.WhoAmID)
+                        {
+                            SpawnSoul(guardian);
+                        }
+                    }
+                    break;
+            }
+            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+        }
+
+        public void SpawnSoul(TerraGuardian guardian)
+        {
+            FlufflesData data = (FlufflesData)guardian.Data;
+            data.SoulPosition = guardian.CenterPosition;
+            data.SoulPosition.Y += guardian.Height * 0.25f;
+            data.SoulPosition.X += guardian.Direction * guardian.Width * 0.25f;
+            data.SoulVelocity = Vector2.Zero;
+            data.SoulAttached = false;
+            data.SoulOpacity = 0f;
         }
 
         public override string TalkMessage(Player player, TerraGuardian guardian)
@@ -399,7 +436,8 @@ namespace giantsummon.Creatures
             g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
             g.AddFlag(GuardianFlags.HideKOBar);
             g.AddFlag(GuardianFlags.FallDamageImmunity);
-            //g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
+            g.AddFlag(GuardianFlags.CantDie);
+            g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
             //g.TrailLength += 2;
             //if(g.TrailDelay == 0)
             //    g.TrailDelay = 4;
@@ -427,8 +465,8 @@ namespace giantsummon.Creatures
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
         {
             float KoAlpha = 1, ColorMod = 0;
-            if(KnockoutAlpha.ContainsKey(guardian.WhoAmID))
-                KoAlpha = KnockoutAlpha[guardian.WhoAmID];
+            FlufflesData data = (FlufflesData)guardian.Data;
+            KoAlpha = data.KnockoutAlpha;
             ColorMod = GetColorMod;
             foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
             {
@@ -459,6 +497,13 @@ namespace giantsummon.Creatures
                 {
                     gdd.color = GhostfyColor(gdd.color, KoAlpha, ColorMod);
                 }
+            }
+            if(data.SoulOpacity > 0)
+            {
+                GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.Effect, sprites.GetExtraTexture(FoxSoulTextureID), data.SoulPosition - Main.screenPosition, 
+                    new Rectangle(16 * (int)(data.SoulFrame * 0.25f), 0, 16, 20), Color.White * data.SoulOpacity * 0.75f, 0f, new Vector2(8, 10), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
+                Main.playerDrawData.Add(gdd.GetDrawData());
+                //TerraGuardian.DrawFront.Add(gdd);
             }
         }
 
@@ -506,59 +551,173 @@ namespace giantsummon.Creatures
 
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
+            FlufflesData data = (FlufflesData)guardian.Data;
             if (!guardian.KnockedOut && !guardian.MountedOnPlayer && !guardian.UsingFurniture && guardian.Velocity.Y == 0) //guardian.BodyAnimationFrame != ReviveFrame
                 guardian.OffsetY -= ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
             guardian.ReviveBoost += 2;
-            if (!KnockoutAlpha.ContainsKey(guardian.WhoAmID))
+            if (guardian.KnockedOut)
             {
-                KnockoutAlpha.Add(guardian.WhoAmID, (guardian.KnockedOut ? 0 : 1f));
-            }
-            else
-            {
-                if (guardian.KnockedOut)
+                if (data.KnockoutAlpha > 0)
                 {
-                    if (KnockoutAlpha[guardian.WhoAmID] > 0)
+                    data.KnockoutAlpha -= 0.005f;
+                    if (data.KnockoutAlpha <= 0)
                     {
-                        KnockoutAlpha[guardian.WhoAmID] -= 0.005f;
-                        if (KnockoutAlpha[guardian.WhoAmID] < 0)
-                            KnockoutAlpha[guardian.WhoAmID] = 0;
-                    }
-                    else
-                    {
-                        if (guardian.OwnerPos > -1)
+                        data.KnockoutAlpha = 0;
+                        if(guardian.OwnerPos == -1)
                         {
-                            Player player = Main.player[guardian.OwnerPos];
-                            guardian.Position.X = player.Center.X;
-                            guardian.Position.Y = player.position.Y + player.height - 1;
-                            guardian.LookingLeft = player.direction < 0;
+                            guardian.WofFood = false;
+                            guardian.RemoveBuff(Terraria.ID.BuffID.Horrified);
+                            guardian.Spawn();
                         }
                     }
                 }
                 else
                 {
-                    bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && Main.tile[(int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))].wall == 0;
-                    if (ReduceOpacity)
+                    if (guardian.OwnerPos > -1)
                     {
-                        const float MinOpacity = 0.2f;
-                        if (KnockoutAlpha[guardian.WhoAmID] > MinOpacity)
-                        {
-                            KnockoutAlpha[guardian.WhoAmID] -= 0.005f;
-                            if (KnockoutAlpha[guardian.WhoAmID] < MinOpacity)
-                                KnockoutAlpha[guardian.WhoAmID] = MinOpacity;
-                        }else if(KnockoutAlpha[guardian.WhoAmID] < MinOpacity)
-                        {
-                            KnockoutAlpha[guardian.WhoAmID] += 0.005f;
-                            if (KnockoutAlpha[guardian.WhoAmID] > MinOpacity)
-                                KnockoutAlpha[guardian.WhoAmID] = MinOpacity;
-                        }
+                        Player player = Main.player[guardian.OwnerPos];
+                        guardian.Position.X = player.Center.X;
+                        guardian.Position.Y = player.position.Y + player.height - 1;
+                        guardian.LookingLeft = player.direction < 0;
                     }
-                    else if (KnockoutAlpha[guardian.WhoAmID] < 1)
+                    else
                     {
-                        KnockoutAlpha[guardian.WhoAmID] += 0.005f;
-                        if (KnockoutAlpha[guardian.WhoAmID] > 1)
-                            KnockoutAlpha[guardian.WhoAmID] = 1;
+
                     }
                 }
+            }
+            else
+            {
+                bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && Main.tile[(int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))].wall == 0;
+                if (ReduceOpacity)
+                {
+                    const float MinOpacity = 0.2f;
+                    if (data.KnockoutAlpha > MinOpacity)
+                    {
+                        data.KnockoutAlpha -= 0.005f;
+                        if (data.KnockoutAlpha < MinOpacity)
+                            data.KnockoutAlpha = MinOpacity;
+                    }
+                    else if (data.KnockoutAlpha < MinOpacity)
+                    {
+                        data.KnockoutAlpha += 0.005f;
+                        if (data.KnockoutAlpha > MinOpacity)
+                            data.KnockoutAlpha = MinOpacity;
+                    }
+                }
+                else if (data.KnockoutAlpha < 1)
+                {
+                    data.KnockoutAlpha += 0.005f;
+                    if (data.KnockoutAlpha > 1)
+                        data.KnockoutAlpha = 1;
+                }
+            }
+            if (guardian.KnockedOut)
+            {
+                if (data.SoulOpacity < 1f)
+                {
+                    data.SoulOpacity += 1f / 60;
+                    if (data.SoulOpacity > 1)
+                        data.SoulOpacity = 1f;
+                }
+                else if(guardian.OwnerPos > -1)
+                {
+                    Player player = Main.player[guardian.OwnerPos];
+                    if (data.SoulAttached)
+                    {
+                        data.SoulPosition = player.Center;
+                        data.SoulPosition.X += 4 * player.direction;
+                        data.SoulPosition.Y += 2 * player.gravDir;
+                    }
+                    else if (data.KnockoutAlpha <= 0)
+                    {
+                        float Distance = player.Center.X - data.SoulPosition.X;
+                        const float MaxSoulMoveSpeed = 6f;
+                        bool AtPointHorizontally = false, AtPointVertically = false;
+                        if (Math.Abs(Distance) < 20)
+                        {
+                            data.SoulVelocity.X *= 0.7f;
+                            AtPointHorizontally = Math.Abs(data.SoulVelocity.X) < 1f;
+                        }
+                        else
+                        {
+                            if (Distance < 0)
+                            {
+                                data.SoulVelocity.X -= 0.15f;
+                                if (data.SoulVelocity.X < -MaxSoulMoveSpeed)
+                                    data.SoulVelocity.X = -MaxSoulMoveSpeed;
+                            }
+                            else
+                            {
+                                data.SoulVelocity.X += 0.15f;
+                                if (data.SoulVelocity.X > MaxSoulMoveSpeed)
+                                    data.SoulVelocity.X = MaxSoulMoveSpeed;
+                            }
+                        }
+                        Distance = player.Center.Y - data.SoulPosition.Y;
+                        if (Math.Abs(Distance) < 28)
+                        {
+                            data.SoulVelocity.Y *= 0.7f;
+                            AtPointVertically = Math.Abs(data.SoulVelocity.Y) < 1f;
+                        }
+                        else
+                        {
+                            if (Distance < 0)
+                            {
+                                data.SoulVelocity.Y -= 0.15f;
+                                if (data.SoulVelocity.Y < -MaxSoulMoveSpeed)
+                                    data.SoulVelocity.Y = -MaxSoulMoveSpeed;
+                            }
+                            else
+                            {
+                                data.SoulVelocity.Y += 0.15f;
+                                if (data.SoulVelocity.Y > MaxSoulMoveSpeed)
+                                    data.SoulVelocity.Y = MaxSoulMoveSpeed;
+                            }
+                        }
+                        data.SoulPosition += data.SoulVelocity;
+                        if (AtPointHorizontally && AtPointVertically)
+                        {
+                            data.SoulAttached = true;
+                        }
+                    }
+                }
+                else
+                {
+
+                }
+            }
+            else
+            {
+                if (data.SoulOpacity > 0)
+                {
+                    data.SoulOpacity -= 1f / 60;
+                    if (data.SoulOpacity < 0)
+                        data.SoulOpacity = 0f;
+                }
+            }
+            if(data.SoulOpacity > 0)
+            {
+                Lighting.AddLight(data.SoulPosition, new Vector3(0.82f, 2.17f, 1.61f) * 0.33f * data.SoulOpacity);
+                data.SoulFrame++;
+                if (data.SoulFrame >= 4 * 6)
+                    data.SoulFrame -= 4 * 6;
+                if (Main.rand.Next(3) == 0)
+                    Dust.NewDust(data.SoulPosition - new Vector2(8, 10), 16, 20, 75, 0f, -0.5f); //CursedTorchID
+            }
+        }
+
+        public class FlufflesData : GuardianData
+        {
+            public Vector2 SoulPosition = Vector2.Zero, SoulVelocity = Vector2.Zero;
+            public bool SoulAttached = false;
+            public float SoulOpacity = 0f;
+            public float KnockoutAlpha = 0f;
+            public byte SoulFrame = 0;
+
+            public FlufflesData(int ID, string ModID = "") : base(ID, ModID)
+            {
+
             }
         }
     }

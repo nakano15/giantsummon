@@ -187,6 +187,7 @@ namespace giantsummon
         HideKOBar,
         DryadBane,
         NotPulledWhenKOd,
-        DisableMountSharing
+        DisableMountSharing,
+        CantDie
     }
 }

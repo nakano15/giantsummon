@@ -39,7 +39,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 86, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1156,11 +1156,19 @@ namespace giantsummon
                     {
                         New.Add(g.Name+"'s Revive Boost: " + g.ReviveBoost);
                     }
-                    if(g.ID == 22)
+                    if (g.ID == 22)
                     {
                         Creatures.CaptainSmellyBase.CaptainSmellyData data = (Creatures.CaptainSmellyBase.CaptainSmellyData)g.Data;
                         New.Add(g.Name + "'s Device ID: " + data.DeviceID);
                         New.Add("\t Device Use Time: " + data.PhantomDeviceUseTimes);
+                    }
+                    if (g.ID == GuardianBase.Fluffles)
+                    {
+                        Creatures.FlufflesBase.FlufflesData data = (Creatures.FlufflesBase.FlufflesData)g.Data;
+                        New.Add("Soul Position: " + data.SoulPosition);
+                        New.Add("Soul Velocity: " + data.SoulVelocity);
+                        New.Add("Soul Opacity: " + data.SoulOpacity);
+                        New.Add("Soul Attached? " + data.SoulAttached);
                     }
                     New.Add(g.Name + "'s mount is active?  " + g.mount.Active);
                     /*if(g.ID == 19)

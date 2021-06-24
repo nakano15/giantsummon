@@ -154,6 +154,7 @@
     <Compile Include="GuardianHand.cs" />
     <Compile Include="GuardianHouseManagementInterface.cs" />
     <Compile Include="GuardianID.cs" />
+    <Compile Include="GuardianItemSlotFlag.cs" />
     <Compile Include="GuardianManagement.cs" />
     <Compile Include="GuardianMood.cs" />
     <Compile Include="GuardianMoodBase.cs" />
@@ -334,6 +335,7 @@
     <Content Include="Creatures\BunnyReaperGuardian\body.png" />
     <Content Include="Creatures\BunnyReaperGuardian\body_front.png" />
     <Content Include="Creatures\BunnyReaperGuardian\head.png" />
+    <Content Include="Creatures\BunnyReaperGuardian\head_p.png" />
     <Content Include="Creatures\BunnyReaperGuardian\left_arm.png" />
     <Content Include="Creatures\BunnyReaperGuardian\mouth.png" />
     <Content Include="Creatures\BunnyReaperGuardian\mouth_lit.png" />
@@ -364,6 +366,7 @@
     <Content Include="Creatures\CaptainSmelly\right_arm_front.png" />
     <Content Include="Creatures\CaptainSmelly\RubyGP.png" />
     <Content Include="Creatures\CaptainSmelly\scouter.png" />
+    <Content Include="Creatures\Fluffles\FoxSoul.png" />
     <Content Include="Creatures\Glenn\body.png" />
     <Content Include="Creatures\Glenn\body_front.png" />
     <Content Include="Creatures\Glenn\head.png" />

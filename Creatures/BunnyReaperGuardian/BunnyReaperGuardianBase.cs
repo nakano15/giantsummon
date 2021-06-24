@@ -12,7 +12,7 @@ namespace giantsummon.Creatures
     public class BunnyReaperGuardianBase : GuardianBase
     {
         public const string SkeletonBodyID = "skeletonbody", SkeletonLeftArmID = "skeletonlarm", SkeletonRightArmID = "skeletonrarm", 
-            MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe";
+            MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe", HeadPlasmaID = "head_plasma";
 
         public BunnyReaperGuardianBase()
         {
@@ -51,7 +51,7 @@ namespace giantsummon.Creatures
             StandingFrame = 0;
             WalkingFrames = new int[] { 2, 3, 4, 5, 6, 7, 8, 9 };
             JumpFrame = PlayerMountedArmAnimation = 10;
-            //HeavySwingFrames = new int[] { 14, 15, 16 };
+            HeavySwingFrames = new int[] { 11, 12, 14 };
             ItemUseFrames = new int[] { 11, 12, 13, 14 };
             //DuckingFrame = 23;
             //DuckingSwingFrames = new int[] { 24, 25, 26 };
@@ -134,6 +134,7 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(MouthID, "mouth");
             sprites.AddExtraTexture(MouthLitID, "mouth_lit");
             sprites.AddExtraTexture(ScytheID, "scythe");
+            sprites.AddExtraTexture(HeadPlasmaID, "head_p");
         }
 
         public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
@@ -165,78 +166,74 @@ namespace giantsummon.Creatures
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
             ReaperGuardianData data = (ReaperGuardianData)guardian.Data;
-            if (guardian.SelectedOffhand > -1 || (guardian.ItemAnimationTime > 0 && guardian.HeldItemHand == HeldHand.Right) || guardian.KnockedOut)
+            bool CantHoldScythe = (guardian.SelectedOffhand > -1 || (guardian.ItemAnimationTime > 0 && (guardian.HeldItemHand == HeldHand.Right || guardian.HeldItemHand == HeldHand.Both)) || guardian.KnockedOut);
+            if (data.HoldingScythe && CantHoldScythe)
             {
-                if (data.HoldingScythe)
-                    DetachScythe(guardian, data);
-                else
-                {
-                    Vector2 MoveDirection = (guardian.CenterPosition - data.ScythePosition);
-                    float MaxSpeed = (guardian.Velocity.Length() + 1);
-                    if (MaxSpeed < 3)
-                        MaxSpeed = 3;
-                    if (MoveDirection.Length() < 20)
-                    {
-                        //data.ScytheSpeed *= 0.1f;
-                        //data.ScytheSpeed *= 0.33f;
-                    }
-                    else
-                    {
-                        MoveDirection.Normalize();
-                        data.ScytheSpeed += MoveDirection* 0.1f;
-                    }
-                    float Velocity = data.ScytheSpeed.Length();
-                    if (Velocity > MaxSpeed)
-                    {
-                        data.ScytheSpeed.Normalize();
-                        data.ScytheSpeed *= MaxSpeed;
-                        Velocity = MaxSpeed;
-                    }
-                    data.ScythePosition += data.ScytheSpeed;
-                    if (MoveDirection.X < 0)
-                        data.ScytheRotation -= Velocity * 0.01f;
-                    else
-                        data.ScytheRotation += Velocity * 0.01f;
-                }
+                DetachScythe(guardian, data);
             }
             else
             {
+                if (CantHoldScythe)
+                    data.ScythePickupDelay = 150;
                 if (!data.HoldingScythe)
                 {
                     Vector2 MoveDirection = (guardian.CenterPosition - data.ScythePosition);
-                    if (MoveDirection.Length() < 2)
+                    const float MaxMoveSpeed = 8f, MoveSpeed = 0.15f;
+                    bool AtXPosition = false, AtYPosition = false;
+                    if (Math.Abs(MoveDirection.X) < guardian.Width * 0.5f)
                     {
-                        data.HoldingScythe = true;
+                        if (Math.Abs(data.ScytheSpeed.X) > 1f)
+                            data.ScytheSpeed *= 0.8f;
+                        AtXPosition = true;
                     }
                     else
                     {
-                        if (MoveDirection.Length() < 20)
-                        {
-                            MoveDirection.Normalize();
-                            data.ScytheSpeed = MoveDirection * 0.9f;
-                        }
-                        else
-                        {
-                            MoveDirection.Normalize();
-                            data.ScytheSpeed += MoveDirection * 0.33f;
-                        }
-                        float Velocity = data.ScytheSpeed.Length();
-                        if (Velocity > 8f)
-                        {
-                            data.ScytheSpeed.Normalize();
-                            data.ScytheSpeed *= 8f;
-                            Velocity = 8f;
-                        }
-                        data.ScythePosition += data.ScytheSpeed;
                         if (MoveDirection.X < 0)
-                            data.ScytheRotation -= Velocity * 0.01f;
+                        {
+                            data.ScytheSpeed.X -= MoveSpeed;
+                            if (data.ScytheSpeed.X < -MaxMoveSpeed)
+                                data.ScytheSpeed.X = -MaxMoveSpeed;
+                        }
                         else
-                            data.ScytheRotation += Velocity * 0.01f;
+                        {
+                            data.ScytheSpeed.X += MoveSpeed;
+                            if (data.ScytheSpeed.X > MaxMoveSpeed)
+                                data.ScytheSpeed.X = MaxMoveSpeed;
+                        }
                     }
+                    if (Math.Abs(MoveDirection.Y) < guardian.Height * 0.5f)
+                    {
+                        if (Math.Abs(data.ScytheSpeed.Y) > 1f)
+                            data.ScytheSpeed *= 0.8f;
+                        AtYPosition = true;
+                    }
+                    else
+                    {
+                        if (MoveDirection.Y < 0)
+                        {
+                            data.ScytheSpeed.Y -= MoveSpeed;
+                            if (data.ScytheSpeed.Y < -MaxMoveSpeed)
+                                data.ScytheSpeed.Y = -MaxMoveSpeed;
+                        }
+                        else
+                        {
+                            data.ScytheSpeed.Y += MoveSpeed;
+                            if (data.ScytheSpeed.Y > MaxMoveSpeed)
+                                data.ScytheSpeed.Y = MaxMoveSpeed;
+                        }
+                    }
+                    data.ScythePosition += data.ScytheSpeed;
+                    if (data.ScythePickupDelay == 0 && AtXPosition && AtYPosition)
+                    {
+                        data.HoldingScythe = true;
+                    }
+                    data.ScytheRotation += data.ScytheSpeed.Length() * 0.025f * guardian.Direction;
                 }
             }
             if (data.MouthOpenTime > 0)
                 data.MouthOpenTime--;
+            if (data.ScythePickupDelay > 0)
+                data.ScythePickupDelay--;
             const float MaxSoulSpeed = 8f;
             Vector2 SoulEndPos = GetMouthPosition(guardian.BodyAnimationFrame) * guardian.Scale;
             SoulEndPos.X -= guardian.SpriteWidth * 0.5f;
@@ -404,6 +401,7 @@ namespace giantsummon.Creatures
 
         public void DetachScythe(TerraGuardian guardian,  ReaperGuardianData data)
         {
+            data.ScythePickupDelay = 150;
             data.HoldingScythe = false;
             data.ScythePosition = guardian.GetGuardianRightHandPosition;
             data.ScytheRotation = 0;
@@ -489,6 +487,21 @@ namespace giantsummon.Creatures
             }
             Texture2D ScytheTexture = sprites.GetExtraTexture(ScytheID);
             return new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, ScytheTexture, ScythePosition, new Rectangle(ScytheType * 66, 0, 66, 66), color, ScytheRotation, ScytheOrigin, Scale, ScytheEffect);
+        }
+
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, SpriteEffects seffect, ref List<GuardianDrawData> gdds)
+        {
+            ReaperGuardianData data = (ReaperGuardianData)guardian.Data;
+            Color NewColor = Lighting.GetColor((int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16)));
+            float MinOpacity = (float)data.SoulsLoaded / (2500 + data.SoulsLoaded);
+            float OpacityRate = (1f - (Math.Max(MinOpacity, (float)(NewColor.R + NewColor.G + NewColor.B) / (255 * 3))));
+            Color PlasmaOpacity = Color.White * OpacityRate;
+            Vector2 DrawPos = DrawPosition;
+            DrawPos.Y -= 2;
+            DrawPos.X -= 6;
+            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, sprites.GetExtraTexture(HeadPlasmaID), DrawPos, null, PlasmaOpacity,
+                0f,Vector2.Zero, 1f, seffect);
+            gdds.Add(gdd);
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
@@ -689,6 +702,8 @@ namespace giantsummon.Creatures
                     return new Vector2(32, 34);
                 case 18:
                     return new Vector2(42, 40);
+                case 19:
+                    return new Vector2(27, 38);
             }
             return new Vector2(40, 34);
         }
@@ -713,7 +728,7 @@ namespace giantsummon.Creatures
         {
             List<string> Mes = new List<string>();
             Mes.Add("*My body consists of a kind of plasma, which I use to carry the souls I save. When It's filled enough, I deliver them to their destination.*");
-            Mes.Add("*You can only see my body in dark places. If there's light, you can actually see my bones.*");
+            Mes.Add("*You can only see my body in dark places. If there's light, you can only see my bones.*");
             Mes.Add("*The reason why I'm missing a pelvis and my legs, is related to when I died.*");
             Mes.Add("*Depending on the amount of souls I save, they make my body look like the universe full of stars.*");
 
@@ -723,6 +738,17 @@ namespace giantsummon.Creatures
 
             Mes.Add("*It may not look like It, but I like seeing children around. It makes me proud of my job.*");
             Mes.Add("*Don't worry if you see me watching over the children playing. You should be more worried about the creatures that could interrupt their fun.*");
+
+            if(Lighting.Brightness((int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))) < 0.5f)
+            {
+                Mes.Add("*Don't fear me in this form, I'm still the same person you've met.*");
+                Mes.Add("*My skeletal form is less spooky to people than this form, so I avoid letting people see me in the dark.*");
+            }
+            if (!((ReaperGuardianData)guardian.Data).HoldingScythe)
+            {
+                Mes.Add("*This scythe will not hurt anyone by It's own, don't worry.*");
+                Mes.Add("*I recommend you not to stay too close to my scythe.*");
+            }
 
             if (player.difficulty == 2)
             {
@@ -1050,6 +1076,7 @@ namespace giantsummon.Creatures
             public Vector2 ScythePosition = Vector2.Zero, ScytheSpeed = Vector2.Zero;
             public float ScytheRotation = 0f;
             public bool ScytheFacingLeft = false;
+            public byte ScythePickupDelay = 0;
 
             public ReaperGuardianData(int ID, string ModID) : base(ID, ModID)
             {

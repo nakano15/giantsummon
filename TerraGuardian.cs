@@ -682,6 +682,7 @@ namespace giantsummon
         public TargetTypes TargetType = TargetTypes.Npc;
         public Item[] Equipments { get { return Data.Equipments; } set { Data.Equipments = value; } }
         public Item[] Inventory { get { return Data.Inventory; } set { Data.Inventory = value; } }
+        public GuardianItemSlotFlag[] InventorySlotFlags { get { return Data.InventorySlotFlags; } set { Data.InventorySlotFlags = value; } }
         public Item BodyDye { get { return Data.BodyDye; } set { Data.BodyDye = value; } }
         public int SelectedItem = 0, SelectedOffhand = -1, LastSelectedItem = -2, LastSelectedOffhand = -2;
         public float OffhandRotation = 0f;
@@ -5493,15 +5494,16 @@ namespace giantsummon
                     if(!CanDualWield)
                         OffHandAction = true;
                     CheckForLifeCrystals();
-                    if (!SittingOnPlayerMount)
+                    if (!SittingOnPlayerMount && !PlayerMounted)
                     {
                         TryJumpingTallTiles();
-                        CheckIfNeedsJumping();
+                        CheckIfIsSafeAhead();
+                        //CheckIfNeedsJumping();
                         CheckIfIsSteppingOnDamageTiles();
+                        TryLandingOnSafeSpot();
                     }
                     //if (OwnerPos > -1 && AssistSlot == 0 && Main.player[OwnerPos].dead)
                     ///    GuardianActions.UseResurrectOnPlayer(this, Main.player[OwnerPos]);
-                    TryLandingOnSafeSpot();
                 }
                 if (JumpUntilHeight > -1)
                 {
@@ -5553,6 +5555,130 @@ namespace giantsummon
                     }
                 }
             }*/
+        }
+
+        public void CheckIfIsSafeAhead()
+        {
+            if(Velocity.X == 0 && !MoveLeft && !MoveRight)
+            {
+                return;
+            }
+            float PredictedMoveSpeed = Math.Abs(Velocity.X);
+            //if (MoveLeft || MoveRight)
+            //    PredictedMoveSpeed += MoveSpeed;
+            byte DistXCheck = (byte)(2 + (PredictedMoveSpeed * 0.6f) * DivisionBy16);
+            int Direction = Velocity.X == 0 ? (MoveLeft ? -1 : 1) : Velocity.X > 0 ? 1 : -1;
+            int CenterX = (int)(Position.X * DivisionBy16), 
+                CenterY = (int)(Position.Y * DivisionBy16) - 2;
+            bool HasPitfall = false, HasDangerousTileBellow = false;
+            const int FallCheckDistY = 12;
+            bool FireBlockProtection = HasFlag(GuardianFlags.FireblocksImmunity);
+            byte Distance = 0;
+            byte GapDistance = 0;
+            if (PrioritaryBehaviorType != PrioritaryBehavior.Jump)
+            {
+                for (byte x = 0; x <= DistXCheck; x++)
+                {
+                    byte Dangerous = 0;
+                    bool SolidTile = false;
+                    for (int CheckX = 0; CheckX < 2; CheckX++)
+                    {
+                        for (int y = 0; y < FallCheckDistY; y++)
+                        {
+                            int TileX = (x + CheckX) * Direction + CenterX,
+                                TileY = CenterY + y;
+                            Tile tile = Framing.GetTileSafely(TileX, TileY);
+                            if (tile != null)
+                            {
+                                if (tile.lava() || MainMod.IsDangerousTile(TileX, TileY, FireBlockProtection))
+                                {
+                                    Dangerous++;
+                                    break;
+                                }
+                                else if (tile.active() && Main.tileSolid[tile.type])
+                                {
+                                    SolidTile = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (Dangerous == 2)
+                    {
+                        HasDangerousTileBellow = true;
+                        Distance = x;
+                        break;
+                    }
+                    if (!SolidTile)
+                    {
+                        if(GapDistance == 0)
+                            Distance = x;
+                        GapDistance++;
+                        DistXCheck++;
+                        if (DistXCheck >= 12)
+                            break;
+                        if(GapDistance >= 4)
+                        {
+                            HasPitfall = true;
+                            break;
+                        }
+                        continue;
+                        //HasPitfall = true;
+                        //break;
+                    }
+                    else
+                    {
+                        GapDistance = 0;
+                    }
+                    Distance++;
+                }
+            }
+            float OwnerY = 0;
+            if (OwnerPos > -1)
+            {
+                OwnerY = Main.player[OwnerPos].position.Y + 42;
+            }
+            CheckIfNeedsJumping();
+            //if (HasPitfall)
+            //{
+                if (PrioritaryBehaviorType == PrioritaryBehavior.Jump)
+                    return;
+            //}
+            if (HasDangerousTileBellow || (HasPitfall && OwnerY - 64 < Position.Y))
+            {
+                if (Distance <= 1)
+                {
+                    if(Velocity.X == 0)
+                    {
+                        LookingLeft = MoveLeft;
+                    }
+                    MoveRight = false;
+                    MoveLeft = false;
+                    if(OwnerPos > -1)
+                    {
+                        if(Math.Abs(Main.player[OwnerPos].Center.X - Position.X) >= 12 * 16 | 
+                            Math.Abs(Main.player[OwnerPos].Center.Y - CenterY) >= 12 * 16)
+                        {
+                            IncreaseStuckTimer();
+                        }
+                    }
+                }
+                else
+                {
+                    MoveRight = false;
+                    MoveLeft = false;
+                    if (Velocity.X > 0)
+                    {
+                        MoveLeft = true;
+                    }
+                    else
+                    {
+                        MoveRight = true;
+                    }
+                }
+                //if (Math.Abs(PredictedMoveSpeed * DivisionBy16 - Distance) < 1 && OwnerY - 32 < Position.Y)
+                //    Jump = true;
+            }
         }
 
         public void CheckIfIsSteppingOnDamageTiles()
@@ -6704,7 +6830,7 @@ namespace giantsummon
 
         public void CheckIfCanSummon()
         {
-            if (OwnerPos == -1 || ItemAnimationTime > 0 || NumMinions >= MaxMinions || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            if (OwnerPos == -1 || ItemAnimationTime > 0 || MinionSlotCount >= MaxMinions || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
                 return;
             }
@@ -8693,7 +8819,7 @@ namespace giantsummon
                 HP += (int)(MHP * LifeMaxValue);
                 if (HP <= 0 || HasBuff(ModContent.BuffType<giantsummon.Buffs.HeavyInjury>()))
                 {
-                    if (MainMod.GuardiansDontDiesAfterDownedDefeat)
+                    if (MainMod.GuardiansDontDiesAfterDownedDefeat || HasFlag(GuardianFlags.CantDie))
                         KnockedOutCold = true;
                     else
                         Knockout(" wasn't able to endure the damage.");
@@ -8701,6 +8827,8 @@ namespace giantsummon
             }
             if (PlayerMounted)
                 ToggleMount(true, false);
+            if (KnockedOutCold && HasFlag(GuardianFlags.CantBeKnockedOutCold))
+                KnockedOutCold = false;
             TriggerHandler.FireGuardianDownedTrigger(this.CenterPosition, this, 0, false);
             UpdateStatus = true;
             DoAction.InUse = false;
@@ -8770,11 +8898,11 @@ namespace giantsummon
 
         public void Knockout(string DeathText = "")
         {
-            if (ForceKill)
+            if (ForceKill && !HasFlag(GuardianFlags.CantDie))
             {
                 ForceKill = false;
             }
-            else if (FriendlyDuelDefeat || (MainMod.GuardiansGetKnockedOutUponDefeat && !KnockedOut && (HP + MHP / 2 > 0 || MainMod.GuardiansDontDiesAfterDownedDefeat)))
+            else if (FriendlyDuelDefeat || HasFlag(GuardianFlags.CantDie) || (MainMod.GuardiansGetKnockedOutUponDefeat && !KnockedOut && (HP + MHP / 2 > 0 || MainMod.GuardiansDontDiesAfterDownedDefeat)))
             {
                 FriendlyDuelDefeat = false;
                 EnterDownedState();
@@ -10573,10 +10701,10 @@ namespace giantsummon
                                     }
                                 }
                                 if (((Position.X > Main.npc[n].Center.X && Main.npc[n].direction > 0 && LookingLeft) ||
-                                    (Position.X <= Main.npc[n].Center.X && Main.npc[n].direction < 0 && !LookingLeft)) ||
-                                ForcePetrify || (Collision.CanHitLine(CenterPosition, 1, 1, Main.npc[n].Center, 1, 1) ||
+                                    (Position.X <= Main.npc[n].Center.X && Main.npc[n].direction < 0 && !LookingLeft) ||
+                                ForcePetrify) && ((Collision.CanHitLine(CenterPosition, 1, 1, Main.npc[n].Center, 1, 1) ||
                                     Collision.CanHitLine(Main.npc[n].Center - Vector2.UnitY * 16, 1, 1, CenterPosition, 1, 1) ||
-                                    Collision.CanHitLine(Main.npc[n].Center + Vector2.UnitY * 8, 1, 1, CenterPosition, 1, 1)))
+                                    Collision.CanHitLine(Main.npc[n].Center + Vector2.UnitY * 8, 1, 1, CenterPosition, 1, 1))))
                                 {
                                     int DebuffDuration = 60;
                                     if (NearDeath)
@@ -12816,11 +12944,11 @@ namespace giantsummon
                 MovementDirection.X += Main.rand.Next(-50, 51) * 0.03f;
                 MovementDirection.Y += Main.rand.Next(-50, 51) * 0.03f;
             }
-            if (ProjID == 12)
+            /*if (ProjID == 12)
             {
                 ShotSpawnPosition.X += 3 * MovementDirection.X;
                 ShotSpawnPosition.Y += 3 * MovementDirection.Y;
-            }
+            }*/
             if (i.type == 3029)
             {
                 ItemRotation = (float)Math.Atan2((AimDirection.Y - 1000f) * Direction, AimDirectionChange.X * -Direction);
@@ -12957,6 +13085,14 @@ namespace giantsummon
                 ShotSpread = 6;
                 Damage = (int)(Damage * 0.7f);
                 SpeedBonusPerShot = 0.5f;
+            }
+            if(i.type == 2535)
+            {
+                Vector2 SpawnRotation = Vector2.Zero.RotatedBy(1.570796705062866);
+                CreateProjectile(AimDirection + SpawnRotation, SpawnRotation, ProjID, Damage, ProjKnockback);
+                SpawnRotation = Vector2.Zero.RotatedBy(-Math.PI);
+                CreateProjectile(AimDirection + SpawnRotation, SpawnRotation, ProjID + 1, Damage, ProjKnockback);
+                MayShot = false;
             }
             //GuardianItemUseEffects.ShotSpawnEffect(this, i, ProjID, Damage, ProjSpeed, ProjKnockback, ShotSpawnPosition, MovementDirection, out MayShot);
             if (MayShot)

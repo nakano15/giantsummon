@@ -32,3 +32,13 @@ Changed one of Sardine's greet message, so It no longer gives the idea that you 
 Companions now react to when you're haunted.
 Fixed issue where Leopold's backward revive sprite was actually showing frontal body revive sprite.
 Bouncy Glowsticks will now produce light, when equipped by the companions.
+Fixed some dialogue issues with Brutus reactions to your character health.
+Fixed a bug where the Star Cannon shots were spawning way too far from the weapon.
+Fixed an issue where the Optic Staff were only generating only one eye.
+Companions will now check the correct variable when checking if they can invoke more summons.
+Companions will no longer be petrified anytime the Medusa uses her petrification stare.
+What happens when Fluffles goes knocked out state has changed:
+	Now her health goes to 0.
+	Can't be killed.
+	If she's your companion, she turns into a ghostly fire, that flies towards your character, and then stays closer to your character until she recovers.
+	If she's a town companion, she will respawn at a her spawn point.

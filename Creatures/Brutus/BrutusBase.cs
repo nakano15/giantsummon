@@ -266,6 +266,7 @@ namespace giantsummon.Creatures
                     if (!guardian.DoAction.InUse || !guardian.DoAction.IsGuardianSpecificAction || guardian.DoAction.ID != ProtectModeID)
                     {
                         guardian.StartNewGuardianAction(new Creatures.Brutus.ProtectModeAction(Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut), ProtectModeID);
+                        string PlayerNickname = PlayerMod.GetPlayerNicknameGivenByGuardian(Main.player[Value], guardian.MyID);
                         if (!GuardianJustWokeUp)
                         {
                             switch (Main.rand.Next(3))
@@ -274,10 +275,10 @@ namespace giantsummon.Creatures
                                     guardian.SaySomething("*Hang on! I'm coming!*");
                                     break;
                                 case 1:
-                                    guardian.SaySomething("*[nickname]!*");
+                                    guardian.SaySomething("*" + PlayerNickname + "!*");
                                     break;
                                 case 2:
-                                    guardian.SaySomething("*No! [nickname]! I'm coming!*");
+                                    guardian.SaySomething("*No! " + PlayerNickname + "! I'm coming!*");
                                     break;
                             }
                         }
@@ -286,10 +287,10 @@ namespace giantsummon.Creatures
                             switch (Main.rand.Next(3))
                             {
                                 case 0:
-                                    guardian.SaySomething("*Ugh... [nickname]...*");
+                                    guardian.SaySomething("*Ugh... " + PlayerNickname + "...*");
                                     break;
                                 case 1:
-                                    guardian.SaySomething("*[nickname]... I'm... Coming...*");
+                                    guardian.SaySomething("*" + PlayerNickname + "... I'm... Coming...*");
                                     break;
                                 case 2:
                                     guardian.SaySomething("*... I... Can't fall... Yet...*");
@@ -304,6 +305,7 @@ namespace giantsummon.Creatures
                 if (Value == guardian.OwnerPos)
                 {
                     Player player = Main.player[Value];
+                    string PlayerNickname = PlayerMod.GetPlayerNicknameGivenByGuardian(player, guardian.MyID);
                     if (player.statLife < player.statLifeMax2 * 0.3f && player.statLife + Value2 >= player.statLifeMax2 * 0.3f)
                     {
                         if (guardian.KnockedOut && !guardian.KnockedOutCold)
@@ -311,13 +313,13 @@ namespace giantsummon.Creatures
                             switch (Main.rand.Next(3))
                             {
                                 case 0:
-                                    guardian.SaySomething("*[nickname]! Go now! Save yourself!*");
+                                    guardian.SaySomething("*"+PlayerNickname+"! Go now! Save yourself!*");
                                     break;
                                 case 1:
-                                    guardian.SaySomething("*I'll distract It [nickname]! Go! My contract is worth nothing if you die.*");
+                                    guardian.SaySomething("*I'll distract them, " + PlayerNickname + "! Go! My contract is worth nothing if you die.*");
                                     break;
                                 case 2:
-                                    guardian.SaySomething("*[nickname], run! I'll try distracting that creature.*");
+                                    guardian.SaySomething("*" + PlayerNickname + ", run! I'll try distracting that creature.*");
                                     break;
                             }
                         }
@@ -328,13 +330,13 @@ namespace giantsummon.Creatures
                                 switch (Main.rand.Next(3))
                                 {
                                     case 0:
-                                        guardian.SaySomething("*[nickname]! Damn...*");
+                                        guardian.SaySomething("*" + PlayerNickname + "! Damn...*");
                                         break;
                                     case 1:
-                                        guardian.SaySomething("*Maybe placing you on my shoulder wasn't a good idea.*");
+                                        guardian.SaySomething("*Maybe having you on my shoulder wasn't a good idea.*");
                                         break;
                                     case 2:
-                                        guardian.SaySomething("*[nickname], are you okay?*");
+                                        guardian.SaySomething("*" + PlayerNickname + ", are you okay?*");
                                         break;
                                 }
                             }
@@ -343,10 +345,10 @@ namespace giantsummon.Creatures
                                 switch (Main.rand.Next(3))
                                 {
                                     case 0:
-                                        guardian.SaySomething("*[nickname], move to behind me.*");
+                                        guardian.SaySomething("*" + PlayerNickname + ", move to behind me.*");
                                         break;
                                     case 1:
-                                        guardian.SaySomething("*[nickname], let me lure that creature attention while you heal.*");
+                                        guardian.SaySomething("*" + PlayerNickname + ", let me lure that creature attention while you heal.*");
                                         break;
                                     case 2:
                                         guardian.SaySomething("*Watch your health! Get yourself behind me before It's too late.*");

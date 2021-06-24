@@ -204,7 +204,44 @@ namespace giantsummon
         public bool ReceivedFoodFromMinerva = false;
         public float BuddiesModeEffective = 1f;
 
-        public static int GetPlayerDefenseCount(Player player)
+        public string GetNicknameGivenByGuardian(GuardianID ID)
+        {
+            return GetNicknameGivenByGuardian(ID.ID, ID.ModID);
+        }
+
+            public string GetNicknameGivenByGuardian(int ID, string ModID = "")
+        {
+            if(HasGuardian(ID, ModID))
+            {
+                return GetNicknameGivenByGuardian(GetGuardian(ID, ModID));
+            }
+            return GetNickname;
+        }
+
+            public string GetNicknameGivenByGuardian(TerraGuardian tg)
+        {
+            return GetNicknameGivenByGuardian(tg.Data);
+        }
+
+            public string GetNicknameGivenByGuardian(GuardianData gd)
+        {
+            string Nickname = gd.PersonalNicknameToPlayer;
+            if (Nickname == null)
+                return GetNickname;
+            return Nickname;
+        }
+
+        public static string GetPlayerNicknameGivenByGuardian(Player player, int ID, string ModID = "")
+        {
+            return player.GetModPlayer<PlayerMod>().GetNicknameGivenByGuardian(ID, ModID);
+        }
+
+        public static string GetPlayerNicknameGivenByGuardian(Player player, GuardianID ID)
+        {
+            return player.GetModPlayer<PlayerMod>().GetNicknameGivenByGuardian(ID);
+        }
+
+            public static int GetPlayerDefenseCount(Player player)
         {
             int Def = 0;
             for (int i = 0; i < 3; i++)

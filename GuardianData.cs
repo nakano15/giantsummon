@@ -47,6 +47,7 @@ namespace giantsummon
         public uint Coins = 0;
         public Item[] Equipments = new Item[9]; //3 body equipments and 6 accessories
         public Item[] Inventory = new Item[50];
+        public GuardianItemSlotFlag[] InventorySlotFlags = new GuardianItemSlotFlag[50];
         public byte SkinID = 0, OutfitID = 0; //Skin handles changing the body of the guardians. Outfits gives clothings to them.
         public Item BodyDye = new Item();
         public List<GuardianCooldownManager> Cooldowns = new List<GuardianCooldownManager>();
