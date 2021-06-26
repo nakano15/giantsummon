@@ -18,6 +18,7 @@ namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
             item.value = 100;
             item.stack = 1;
             item.accessory = true;
+            item.scale = 1.25f;
         }
 
         public override void ItemStatusScript(TerraGuardian g)

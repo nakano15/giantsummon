@@ -631,7 +631,7 @@ namespace giantsummon.Creatures
             int Damage = 15;
             if (tg.SelectedItem > -1)
             {
-                Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useTime / 60));
+                Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useAnimation / tg.Inventory[tg.SelectedItem].useTime));
             }
             CaptainSmellyData data = (CaptainSmellyData)tg.Data;
             if (data.SwordID > 0)
@@ -1142,6 +1142,16 @@ namespace giantsummon.Creatures
             special.MinRange = 0;//100;
             special.MaxRange = 1000;
             AddNewSubAttackFrame(8, -1, 57, -1);
+            special.CalculateAttackDamage = delegate (TerraGuardian tg)
+            {
+                int Damage = 5;
+                if (tg.SelectedItem > -1)
+                {
+                    float Dps = (float)tg.Inventory[tg.SelectedItem].useAnimation / (float)tg.Inventory[tg.SelectedItem].useTime;
+                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * Dps * 0.35f);
+                }
+                return (int)(Damage * tg.RangedDamageMultiplier);
+            };
             special.WhenFrameBeginsScript = delegate (TerraGuardian tg, int FrameID)
             {
                 //Shoot something
@@ -1200,10 +1210,7 @@ namespace giantsummon.Creatures
                 AimPosition.Normalize();
                 for (int i = 0; i < 4; i++)
                     Dust.NewDust(ProjectilePosition, 2, 2, 132, AimPosition.X, AimPosition.Y);
-                int Damage = 5;
-                if (tg.SelectedItem > -1)
-                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.35f);
-                Damage = (int)(Damage * tg.RangedDamageMultiplier);
+                int Damage = tg.SubAttackDamage;
                 int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 14f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
                     Damage, 0.03f, tg.GetSomeoneToSpawnProjectileFor);
                 Main.PlaySound(2, tg.CenterPosition, 20);
@@ -1244,7 +1251,7 @@ namespace giantsummon.Creatures
             ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
             int ID = -1;
-            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Owner.Position.X),
+            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Owner.Position.X + Owner.Velocity.X),
                 DistanceYTargetTop = Owner.Position.Y - TargetPosition.Y,
                 DistanceYTargetBottom = Owner.Position.Y - TargetPosition.Y + TargetHeight;
             bool InRangeForBlaster = Owner.MP > 1 && Distance > 100;
@@ -1266,7 +1273,7 @@ namespace giantsummon.Creatures
                 case CombatTactic.Assist:
                     if (InRangeForBlaster)
                     {
-                        if (Distance > 52 + TargetWidth * 0.5f)
+                        if (Distance < 52 + TargetWidth * 0.5f)
                         {
                             Retreat = true;
                             Approach = false;

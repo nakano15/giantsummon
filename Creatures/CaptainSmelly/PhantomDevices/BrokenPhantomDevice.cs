@@ -17,6 +17,7 @@ namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
         {
             item.value = 1;
             item.stack = 1;
+            item.scale = 1.25f;
         }
     }
 }
