@@ -1244,20 +1244,20 @@ namespace giantsummon.Creatures
             ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
             int ID = -1;
-            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - TargetVelocity.X - Owner.Position.X),
-                DistanceYUpper = Owner.Position.Y - TargetPosition.Y,
-                DistanceYLower = Owner.Position.Y - TargetPosition.Y + TargetHeight;
+            float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f + TargetVelocity.X - Owner.Position.X),
+                DistanceYTargetTop = Owner.Position.Y - TargetPosition.Y,
+                DistanceYTargetBottom = Owner.Position.Y - TargetPosition.Y + TargetHeight;
             bool InRangeForBlaster = Owner.MP > 1 && Distance > 100;
             DefaultBehavior = false;
             switch (tactic)
             {
                 case CombatTactic.Charge:
-                    if (Distance > 52)
+                    if (Distance > 52 + TargetWidth * 0.5f)
                     {
                         Approach = true;
                         Retreat = false;
                     }
-                    else if(Distance < 16)
+                    else if(Distance < 38 + TargetWidth * 0.5f)
                     {
                         Approach = false;
                         Retreat = true;
@@ -1266,7 +1266,7 @@ namespace giantsummon.Creatures
                 case CombatTactic.Assist:
                     if (InRangeForBlaster)
                     {
-                        if (Distance > 52)
+                        if (Distance > 52 + TargetWidth * 0.5f)
                         {
                             Retreat = true;
                             Approach = false;
@@ -1294,15 +1294,15 @@ namespace giantsummon.Creatures
             CaptainSmellyData data = (CaptainSmellyData)Owner.Data;
             //if (DistanceYLower <= Owner.Height && (Owner.Velocity.Y == 0 || Owner.JumpHeight > 0))
             //    Jump = true;
-            if (data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6 + TargetWidth * 0.5f && DistanceYLower < Owner.Height && DistanceYUpper <= Owner.Height)
+            if (data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6 + TargetWidth * 0.5f && DistanceYTargetBottom < Owner.Height && DistanceYTargetTop <= Owner.Height)
             {
                 ID = 3;
             }
-            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 + TargetWidth * 0.5f && DistanceYLower < 98 && DistanceYUpper < 18)
+            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 + TargetWidth * 0.5f && DistanceYTargetBottom >= -98 && DistanceYTargetTop >= -18)
             {
                 ID = 1;
             }
-            else if (Distance < 52 + TargetWidth * 0.5f && DistanceYLower < 90 && DistanceYUpper < 4)//DistanceYLower <= 90 && DistanceYUpper <= 4)
+            else if (Distance < 52 + TargetWidth * 0.5f && DistanceYTargetBottom >= -90 && DistanceYTargetTop >= -4)//DistanceYLower <= 90 && DistanceYUpper <= 4)
             {
                 ID = 0;
             }
@@ -1310,7 +1310,7 @@ namespace giantsummon.Creatures
             {
                 ID = 2;
             }
-            if(Owner.Velocity.Y == 0)Main.NewText("DistanceX: "+Distance+" DistanceY: " + DistanceYUpper + "~" + DistanceYLower);
+            //if(Owner.Velocity.Y == 0)Main.NewText("DistanceX: "+Distance+" DistanceY: " + DistanceYTargetTop + "~" + DistanceYTargetBottom);
             return ID;
         }
 

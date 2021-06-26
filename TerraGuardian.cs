@@ -5068,7 +5068,7 @@ namespace giantsummon
                     }
                     else if (Base.SpecialAttackBasedCombat)
                     {
-                        if (!Action)
+                        if (!Action && ItemUseTime == 0)
                         {
                             if (Base.SpecialAttackList.Count == 0)
                                 return;
@@ -5129,7 +5129,6 @@ namespace giantsummon
                                     }
                                 }
                             }
-                            Action = false;
                         }
                         GoMelee = false;
                     }

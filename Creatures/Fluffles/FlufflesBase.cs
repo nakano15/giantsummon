@@ -625,9 +625,11 @@ namespace giantsummon.Creatures
                     Player player = Main.player[guardian.OwnerPos];
                     if (data.SoulAttached)
                     {
-                        data.SoulPosition = player.Center;
-                        data.SoulPosition.X += 4 * player.direction;
-                        data.SoulPosition.Y += 2 * player.gravDir;
+                        Vector2 EndPosition = player.Center;
+                        EndPosition.X += 4 * player.direction;
+                        EndPosition.Y += 2 * player.gravDir;
+                        data.SoulPosition.X += (EndPosition.X - data.SoulPosition.X) * 0.8f;
+                        data.SoulPosition.Y += (EndPosition.Y - data.SoulPosition.Y) * 0.8f;
                     }
                     else if (data.KnockoutAlpha <= 0)
                     {
@@ -636,8 +638,8 @@ namespace giantsummon.Creatures
                         bool AtPointHorizontally = false, AtPointVertically = false;
                         if (Math.Abs(Distance) < 20)
                         {
-                            data.SoulVelocity.X *= 0.7f;
-                            AtPointHorizontally = Math.Abs(data.SoulVelocity.X) < 1f;
+                            data.SoulVelocity.X *= 0.3f;
+                            AtPointHorizontally = true; // Math.Abs(data.SoulVelocity.X) < 1f;
                         }
                         else
                         {
@@ -657,8 +659,8 @@ namespace giantsummon.Creatures
                         Distance = player.Center.Y - data.SoulPosition.Y;
                         if (Math.Abs(Distance) < 28)
                         {
-                            data.SoulVelocity.Y *= 0.7f;
-                            AtPointVertically = Math.Abs(data.SoulVelocity.Y) < 1f;
+                            data.SoulVelocity.Y *= 0.3f;
+                            AtPointVertically = true; //Math.Abs(data.SoulVelocity.Y) < 1f;
                         }
                         else
                         {
