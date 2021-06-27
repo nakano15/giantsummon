@@ -8,15 +8,15 @@ Nickname change(makes it 1 step easier):
 (Tweak)"Talk about other things" --->> "Can I nickname you?"
 
 Common RNG Dialogue Changes/Issues:
-(Fix/Tweak)-"My scouter is showing a hostile entities, look out for a ambush."--->> Change "look" to "watch"(Does not seem to be corelating to enemy detection at all. Seems like she just says it as a regular dialogue that doesn't have a condition to show up only when enemies are in atleast 10-20 block radius.)
+(Fix/Tweak)-"My scouter is showing hostile entities, look out for a ambush."--->> Change "look" to "watch"(Does not seem to be corelating to enemy detection at all. Seems like she just says it as a regular dialogue that doesn't have a condition to show up only when enemies are in atleast 10-15 block radius.)
 (Tweak)-"Unfortunately I am the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we will find." --->> Change "we" to "I"
 (Rework/Tweak)-"My plasma falchion seems to have a empty socket for a gemstone to fit in wonder what it would do?" (This should be conditional to only happen if there is no infusion currently on smellys sword)
 (New)- "I wonder if amber can be used as a infusion?......Probably not since it contains fossilized creatures, I will need to test it in the future "
 (New)- "Shredding threw enemies gets me excited knowing they will drop loot"
-(New)- "I guess im retired from pillaging as my only real family is dead now. This world will be my last plunder land, I'll be sure to make it enjoyable."
-(Remove/Cut)-My weapons are a plasma falchion and arm blaster. I stole both from a ship me and my crew hijacked while traversing space.
-(New)- "The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live y'know? some people are just collateral damage to my pillage."
-(New)- "Growing up poor really effects me. My undying thrist for more will never fade because I know what its like not to have anything.
+(New)- "I guess im retired from space travel as my only family is dead now. This world will be my last plunder land, I'll be sure to make it enjoyable."
+(Remove)-"My weapons are a plasma falchion and arm blaster. I stole both from a ship me and my crew hijacked while traversing space."
+(New)- "The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live ya'know? some people are just collateral damage to my pillage."
+(New)- "As a young gal I never had nothing, thieving has been ingrained in me since childhood"
 
 Weapon Infusion dialogue:
 (New)-"What does Weapon infusion do?" Option now gives description of which each gemstone does to the sword
