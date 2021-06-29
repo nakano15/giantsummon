@@ -558,34 +558,48 @@ namespace giantsummon.Creatures
                 {
                     byte InfusionID = i;
                     string Mes = "";
+                    string Description = "";
                     int ItemID = 0;
                     switch (i)
                     {
                         case 0:
                             Mes = "Remove Infusion";
+                            Description = "Removes any infusion from the weapon.";
                             break;
                         case 1:
                             Mes = "Infuse with Amethyst";
+                            Description = "Amethyst: Passive-Sword attacks apply shadowflame debuff. \n"+
+                                "Gem Power-Blade wave that does damage and bypasses enemies and blocks.";
                             ItemID = Terraria.ID.ItemID.Amethyst;
                             break;
                         case 2:
                             Mes = "Infuse with Topaz";
+                            Description = "Topaz- Passive: Sword attacks gain tremendous knock back but attack speed is lowered. \n" +
+"                               Gem Power-Flings Topaz shards that peirce enemies shredding armor value and applying bleeding debuff.";
                             ItemID = Terraria.ID.ItemID.Topaz;
                             break;
                         case 3:
                             Mes = "Infuse with Sapphire";
+                            Description = "Sapphire: Passive- Gain exponential amount of attack speed but lowers damage output by -20%. \n" +
+                                "Gem Power-Fires a energy missle that explodes on contact dealing AOE damage and applying electried debuff.";
                             ItemID = Terraria.ID.ItemID.Sapphire;
                             break;
                         case 4:
                             Mes = "Infuse with Emerald";
+                            Description = "Emerald: Passive- Gains 50% critical chance on sword attacks additonally critical strikes receive a 3x damage boost(3x damage boost applies to gem power also)\n" +
+                                "Gem Power-Conjures up a slow moving tornado that hits many times in a 3 second duration, each hit is a garunteed critical strike that scales with 25 % of total weapon damage";
                             ItemID = Terraria.ID.ItemID.Emerald;
                             break;
                         case 5:
                             Mes = "Infuse with Ruby";
+                            Description = "Ruby: Passive- Attacks gain lifesteal \n" +
+                                "Gem Power-Whiplike attack that drains enemies of their hp and heals smelly for 5 % of her max health per enemy hit additionally if the sweat spot of the attack hits 50 % max health is restored";
                             ItemID = Terraria.ID.ItemID.Ruby;
                             break;
                         case 6:
                             Mes = "Infuse with Diamond";
+                            Description = "Diamond: Passive- Sword attacks deal 5% max health bonus damage, additionally all sword strikes have a 50% chance to cause dazzed debuff\n" +
+                                "Gem Power-Shines bright flash that does 10 % max health true damage with 100 % chance to cause confused debuff.";
                             ItemID = Terraria.ID.ItemID.Diamond;
                             break;
                     }
@@ -593,25 +607,32 @@ namespace giantsummon.Creatures
                     {
                         GuardianMouseOverAndDialogueInterface.AddOption(Mes, delegate (TerraGuardian tg2)
                         {
-                            int item = ItemID;
-                            for(int j = 0; j < 50; j++)
+                            if (Dialogue.ShowDialogueWithOptions(Description + "\n\nShould I infuse my falchion with this gem?", new string[] { "Yes", "No" }) == 0)
                             {
-                                if(Main.player[Main.myPlayer].inventory[j].type == item)
+                                int item = ItemID;
+                                for (int j = 0; j < 50; j++)
                                 {
-                                    Main.player[Main.myPlayer].inventory[j].stack--;
-                                    if (Main.player[Main.myPlayer].inventory[j].stack <= 0)
-                                        Main.player[Main.myPlayer].inventory[j].SetDefaults(0);
-                                    break;
+                                    if (Main.player[Main.myPlayer].inventory[j].type == item)
+                                    {
+                                        Main.player[Main.myPlayer].inventory[j].stack--;
+                                        if (Main.player[Main.myPlayer].inventory[j].stack <= 0)
+                                            Main.player[Main.myPlayer].inventory[j].SetDefaults(0);
+                                        break;
+                                    }
                                 }
+                                data.HoldingWeaponTime = 150;
+                                data.SwordID = InfusionID;
+                                GuardianMouseOverAndDialogueInterface.SetDialogue("Done. What else?");
                             }
-                            data.HoldingWeaponTime = 150;
-                            data.SwordID = InfusionID;
-                            GuardianMouseOverAndDialogueInterface.SetDialogue("Done. What else?");
+                            else
+                            {
+                                GuardianMouseOverAndDialogueInterface.SetDialogue("Well, anything else then?");
+                            }
                             GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
                         });
                     }
                 }
-                GuardianMouseOverAndDialogueInterface.AddOption("Infuse Weapon?", delegate (TerraGuardian tg2)
+                GuardianMouseOverAndDialogueInterface.AddOption("What does Weapon infusion do?", delegate (TerraGuardian tg2)
                 {
                     GuardianMouseOverAndDialogueInterface.SetDialogue("I can infuse my Falchion with gemstone powers to cause different effects when I use it.\n" +
                         "I need to have a gemstone before I can do the infusion.");
@@ -636,22 +657,6 @@ namespace giantsummon.Creatures
             CaptainSmellyData data = (CaptainSmellyData)tg.Data;
             if (data.SwordID > 0)
                 Damage = (int)(Damage * 1.5f);
-            /*switch (data.SwordID)
-            {
-                case AmethystFalchion:
-                    Damage += (int)(tg.MagicDamageMultiplier * Damage * 0.15f);
-                    break;
-            }*/
-            /*int StrongestDamage = 0;
-            for (int i = 0; i < 10; i++)
-            {
-                if (tg.Inventory[i].type > 0 && tg.Inventory[i].melee && tg.Inventory[i].damage > 0)
-                {
-                    int ThisDamage = (int)(tg.Inventory[i].damage * ((float)tg.Inventory[i].useTime / 60));
-                    if (ThisDamage > StrongestDamage)
-                        StrongestDamage = ThisDamage;
-                }
-            }*/
             return (int)(Damage * tg.MeleeDamageMultiplier);
         }
 
@@ -882,7 +887,7 @@ namespace giantsummon.Creatures
                                     }
                                     else if (SwordID == DiamondFalchion)
                                     {
-                                        if (Main.rand.NextDouble() < 0.2)
+                                        if (Main.rand.NextDouble() < 0.5)
                                             Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
                                     }
                                 }
@@ -999,6 +1004,11 @@ namespace giantsummon.Creatures
                                     Main.projectile[p].netUpdate = true;
                                 }
                                 break;
+                            case DiamondFalchion:
+                                {
+                                    Damage += (int)(tg.MHP * 0.05f);
+                                }
+                                break;
                         }
                     }
                     for (int n = 0; n < 200; n++)
@@ -1051,7 +1061,7 @@ namespace giantsummon.Creatures
                                     }
                                     else if (SwordID == DiamondFalchion)
                                     {
-                                        if (Main.rand.NextDouble() < 0.2)
+                                        if (Main.rand.NextDouble() < 0.5)
                                             Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
                                     }
                                 }
@@ -1584,11 +1594,18 @@ namespace giantsummon.Creatures
         {
             List<string> Mes = new List<string>();
             Mes.Add("Before coming to this planet i was a space pirate captain, going around taking things from other worlds.");
-            Mes.Add("My weapons are a plasma falchion and arm blaster. I stole both from a ship me and my crew hijacked while traversing space.");
-            Mes.Add("Unfortunately I am the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we will find.");
-            Mes.Add("My plasma falchion seems to have a empty socket for a gemstone to fit in wonder what it would do?");
+            Mes.Add("Unfortunately I am the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures I will find.");
+            CaptainSmellyData data = (CaptainSmellyData)guardian.Data;
+            if(data.SwordID == 0)
+                Mes.Add("My plasma falchion seems to have a empty socket for a gemstone to fit in wonder what it would do?");
+            Mes.Add("I wonder if amber can be used as a infusion?......Probably not since it contains fossilized creatures, I will need to test it in the future ");
+            Mes.Add("Shredding threw enemies gets me excited knowing they will drop loot");
+            Mes.Add("I guess im retired from space travel as my only family is dead now. This world will be my last plunder land, I'll be sure to make it enjoyable.");
+            Mes.Add("The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live ya'know? some people are just collateral damage to my pillage.");
+            Mes.Add("As a young gal I never had nothing, thieving has been ingrained in me since childhood");
             Mes.Add("If you ever come across any gemstones make sure to share them with me. I want to find out the true power of my blade.");
-            Mes.Add("Forgot to mention my phantasm device has taken damage also if you have any spare platinum/gold bars you could help fix it. 20 bars is all it would need."); //Should be conditional.
+            if(data.PhantomDeviceMiniquestProgress == -1)
+                Mes.Add("My phantom device has been broken, if you have any spare platinum/gold bars you could help fix it.");
             bool AnyMetal = false, AnyGemstone = false;
             if (Main.screenTileCounts[Terraria.ID.TileID.Topaz] > 0 ||
                 Main.screenTileCounts[Terraria.ID.TileID.Amethyst] > 0 ||
@@ -1619,13 +1636,13 @@ namespace giantsummon.Creatures
             {
                 if(Main.npc[n].active && Main.npc[n].damage > 0 && !Main.npc[n].friendly)
                 {
-                    Mes.Add("My scouter is showing a hostile entities, look out for a ambush.");
+                    Mes.Add("My scouter is showing a hostile entities, watch out for a ambush.");
                     break;
                 }
             }
             if(Main.screenTileCounts[Terraria.ID.TileID.Traps] > 0 || Main.screenTileCounts[Terraria.ID.TileID.GeyserTrap] > 0)
             {
-                Mes.Add("My scouter is picking up danger signals in this area watchout for traps.");
+                Mes.Add("My scouter is picking up danger signals in this area watch out for traps.");
             }
             if(PlayerMod.HasGuardianSummoned(player, Rococo))
             {

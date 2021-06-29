@@ -85,6 +85,7 @@ namespace giantsummon
 
         public static void FireTrigger(Vector2 Position, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
+            List<TerraGuardian> tgs = new List<TerraGuardian>();
             foreach (int key in MainMod.ActiveGuardians.Keys)
             {
                 if (Position == Vector2.Zero || MainMod.ActiveGuardians[key].InPerceptionRange(Position) || 
@@ -92,8 +93,10 @@ namespace giantsummon
                     trigger == TriggerTypes.GuardianHurt || trigger == TriggerTypes.GuardianSpotted) && Value != key))
                 {
                     MainMod.ActiveGuardians[key].DoTrigger(trigger, Value, Value2, Value3, Value4, Value5);
+                    tgs.Add(MainMod.ActiveGuardians[key]);
                 }
             }
+            TerraGuardian.DoTriggerGroup(tgs, trigger, Value, Value2, Value3, Value4, Value5);
         }
     }
 

@@ -35,7 +35,6 @@ namespace giantsummon.Creatures
             Scale = 107f / 86;
             Age = 16;
             Size = GuardianSize.Medium;
-            Age = 15;
             SetBirthday(SEASON_AUTUMN, 12);
             Male = true;
             InitialMHP = 185; //1275

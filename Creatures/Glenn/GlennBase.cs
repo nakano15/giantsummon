@@ -21,7 +21,7 @@ namespace giantsummon.Creatures
             Scale = 32f / 38;
             FramesInRows = 25;
             //DuckingHeight = 54;
-            Age = 14; //3
+            Age = 11;
             SetBirthday(SEASON_WINTER, 25);
             Male = true;
             InitialMHP = 70; //280

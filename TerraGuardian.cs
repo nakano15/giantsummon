@@ -8472,11 +8472,19 @@ namespace giantsummon
                 MP = MMP;
         }
 
+        public static void DoTriggerGroup(IEnumerable<TerraGuardian> terraguardians, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0f)
+        {
+            //Add here actions that can only be triggered by one of those.
+            switch (trigger)
+            {
+
+            }
+        }
+
         public void DoTrigger(TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
         {
             if (!Base.WhenTriggerActivates(this, trigger, Value, Value2, Value3, Value4, Value5))
                 return;
-            //TODO - It's missing script here. There should be default behavior scripts depending on the triggers.
             switch (trigger)
             {
                 case TriggerTypes.PlayerHurt:

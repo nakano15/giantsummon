@@ -43,3 +43,4 @@ What happens when Fluffles goes knocked out state has changed:
 	If she's your companion, she turns into a ghostly fire, that flies towards your character, and then stays closer to your character until she recovers.
 	If she's a town companion, she will respawn at a her spawn point.
 Companions will now avoid trying to jump off cliffs and at lava.
+Zacks age is now 16, instead of 15.
