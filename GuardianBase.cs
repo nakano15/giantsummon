@@ -143,7 +143,8 @@ namespace giantsummon
             Daphne = 18,
             Bapha = 20,
             Glenn = 21,
-            CaptainSmelly = 22;
+            CaptainSmelly = 22,
+            Cinnamon = 23;
 
         public struct DialogueTopic
         {
@@ -1137,6 +1138,9 @@ namespace giantsummon
                         break;
                     case 22:
                         gb = new CaptainSmellyBase();
+                        break;
+                    case 23:
+                        gb = new CinnamonBase();
                         break;
                 }
             }

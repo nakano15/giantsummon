@@ -42,7 +42,7 @@ namespace giantsummon.Creatures.Brandon
         public override string NormalMessage(Terraria.Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("What?");
+            Mes.Add("");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

@@ -120,6 +120,7 @@
     <Compile Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier2.cs" />
     <Compile Include="Creatures\CaptainSmelly\PhantomDevices\PhantomDeviceTier1.cs" />
     <Compile Include="Creatures\CaptainSmelly\PhantomDevices\BrokenPhantomDevice.cs" />
+    <Compile Include="Creatures\Cinnamon\CinnamonBase.cs" />
     <Compile Include="Creatures\Glenn\GlennBase.cs" />
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
@@ -366,6 +367,12 @@
     <Content Include="Creatures\CaptainSmelly\right_arm_front.png" />
     <Content Include="Creatures\CaptainSmelly\RubyGP.png" />
     <Content Include="Creatures\CaptainSmelly\scouter.png" />
+    <Content Include="Creatures\Cinnamon\body.png" />
+    <Content Include="Creatures\Cinnamon\body_front.png" />
+    <Content Include="Creatures\Cinnamon\head.png" />
+    <Content Include="Creatures\Cinnamon\left_arm.png" />
+    <Content Include="Creatures\Cinnamon\right_arm.png" />
+    <Content Include="Creatures\Cinnamon\right_arm_front.png" />
     <Content Include="Creatures\Fluffles\FoxSoul.png" />
     <Content Include="Creatures\Glenn\body.png" />
     <Content Include="Creatures\Glenn\body_front.png" />
