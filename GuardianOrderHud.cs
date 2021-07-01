@@ -73,7 +73,7 @@ namespace giantsummon
                     OrderList.Add(Orders.JoinMyMount);
                 if (!Guardian.PlayerMounted && !Guardian.DoAction.InUse && !MainMod.Gameplay2PMode && Guardian.HasFlag(GuardianFlags.PlayerControl))
                     OrderList.Add(Orders.PlayerControl);
-                if (!Guardian.PlayerControl && !Guardian.DoAction.InUse && Guardian.HasFlag(GuardianFlags.AllowMount) && (Guardian.PlayerMounted || (Guardian.Base.ReverseMount && !player.GuardianMountingOnPlayer) || (!Guardian.Base.ReverseMount && !player.MountedOnGuardian)))
+                if (!Guardian.PlayerControl && !Guardian.DoAction.InUse && Guardian.HasFlag(GuardianFlags.AllowMount) && (Guardian.PlayerMounted || (Guardian.ReverseMount && !player.GuardianMountingOnPlayer) || (!Guardian.ReverseMount && !player.MountedOnGuardian)))
                     OrderList.Add(Orders.Mount);
                 if (Guardian.Inventory.Any(x => x.buffType > 0) && !Guardian.DoAction.InUse)
                     OrderList.Add(Orders.UseBuffPotions);

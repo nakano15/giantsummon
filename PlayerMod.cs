@@ -36,7 +36,7 @@ namespace giantsummon
                 TerraGuardian g = null;
                 foreach (TerraGuardian guardian in GetAllGuardianFollowers)
                 {
-                    if (guardian.Active && guardian.PlayerMounted && !guardian.Base.ReverseMount)
+                    if (guardian.Active && guardian.PlayerMounted && !guardian.ReverseMount)
                     {
                         g = guardian;
                     }
@@ -63,7 +63,7 @@ namespace giantsummon
                 TerraGuardian[] Guardians = GetAllGuardianFollowers;
                 foreach (TerraGuardian g in Guardians)
                 {
-                    if (g.Active && g.PlayerMounted && !g.Base.ReverseMount)
+                    if (g.Active && g.PlayerMounted && !g.ReverseMount)
                         return true;
                 }
                 return false;
@@ -76,7 +76,7 @@ namespace giantsummon
                 TerraGuardian[] Guardians = GetAllGuardianFollowers;
                 foreach (TerraGuardian g in Guardians)
                 {
-                    if (g.Active && g.PlayerMounted && g.Base.ReverseMount)
+                    if (g.Active && g.PlayerMounted && g.ReverseMount)
                         return true;
                 }
                 return false;
@@ -812,7 +812,7 @@ namespace giantsummon
             {
                 foreach (TerraGuardian tg in GetAllGuardianFollowers)
                 {
-                    if (tg.Active && tg.PlayerMounted && !tg.Base.ReverseMount && !tg.HasFlag(GuardianFlags.CantReceiveHelpOnReviving))
+                    if (tg.Active && tg.PlayerMounted && !tg.ReverseMount && !tg.HasFlag(GuardianFlags.CantReceiveHelpOnReviving))
                         rect = tg.HitBox;
                 }
             }
@@ -1659,7 +1659,7 @@ namespace giantsummon
                 }
                 else
                 {
-                    if (guardian.PlayerMounted && !guardian.Base.ReverseMount && !player.tongued)
+                    if (guardian.PlayerMounted && !guardian.ReverseMount && !player.tongued)
                     {
                         if (player.mount.Active)
                             player.mount.Dismount(player);
@@ -1750,7 +1750,7 @@ namespace giantsummon
             }
             foreach (TerraGuardian Guardian in GetAllGuardianFollowers)
             {
-                if (Guardian.Active && ((Guardian.PlayerMounted && !Guardian.Base.ReverseMount) || Guardian.PlayerControl || Guardian.GrabbingPlayer || (Guardian.DoAction.InUse && Guardian.DoAction.FocusCameraOnGuardian)))
+                if (Guardian.Active && ((Guardian.PlayerMounted && !Guardian.ReverseMount) || Guardian.PlayerControl || Guardian.GrabbingPlayer || (Guardian.DoAction.InUse && Guardian.DoAction.FocusCameraOnGuardian)))
                 {
                     Main.screenPosition.X = (int)(Guardian.Position.X - (Main.screenWidth * 0.5f));
                     Main.screenPosition.Y = (int)(Guardian.Position.Y - (Guardian.SpriteHeight * 0.5f * Guardian.Scale) * Guardian.GravityDirection - (Main.screenHeight * 0.5f));
@@ -1961,7 +1961,7 @@ namespace giantsummon
             {
                 if (!guardian.Active)
                     continue;
-                if (Main.playerInventory && (guardian.PlayerControl || (guardian.PlayerMounted && !guardian.Base.ReverseMount)))
+                if (Main.playerInventory && (guardian.PlayerControl || (guardian.PlayerMounted && !guardian.ReverseMount)))
                 {
                     if (guardian.AdjascentTileChecker())
                         AdjascentTileChange = true;
@@ -1992,7 +1992,7 @@ namespace giantsummon
                     if (!guardian.OverrideQuickMountToMountGuardianInstead)
                         player.controlMount = false;
                 }
-                if (guardian.GuardianHasControlWhenMounted && guardian.PlayerMounted && guardian.Base.ReverseMount)
+                if (guardian.GuardianHasControlWhenMounted && guardian.PlayerMounted && guardian.ReverseMount)
                 {
                     player.controlUp = guardian.LastMoveUp;
                     player.controlDown = guardian.LastMoveDown;

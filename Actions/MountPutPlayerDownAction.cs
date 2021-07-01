@@ -20,7 +20,7 @@ namespace giantsummon.Actions
             {
                 guardian.ToggleMount(false, false);
             }
-            if (guardian.Base.ReverseMount || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
+            if (guardian.ReverseMount || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
             {
                 InUse = false;
             }
@@ -67,7 +67,7 @@ namespace giantsummon.Actions
 
         public override void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
         {
-            if (!guardian.Base.ReverseMount)
+            if (!guardian.ReverseMount)
             {
                 int AnimFrame = guardian.Base.ItemUseFrames[0];
                 if (Time >= 15) AnimFrame = guardian.Base.ItemUseFrames[3];

@@ -32,12 +32,14 @@ namespace giantsummon.Creatures
             Acceleration = 0.33f;
             SlowDown = 0.22f;
             MaxJumpHeight = 18;
-            JumpSpeed = 7.32f;
+            JumpSpeed = 7.19f;
             CanDuck = true;
             ReverseMount = false;
             DrinksBeverage = false;
             SetTerraGuardian();
             CallUnlockLevel = 4;
+            MoveInLevel = 2;
+            MountUnlockLevel = 6;
 
             AddInitialItem(Terraria.ID.ItemID.RedRyder, 1);
             AddInitialItem(Terraria.ID.ItemID.LesserHealingPotion, 5);
@@ -54,15 +56,15 @@ namespace giantsummon.Creatures
             SittingFrame = 16;
             ChairSittingFrame = 15;
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 16, 17, 21, 22 });
-            //ThroneSittingFrame = 24;
-            //BedSleepingFrame = 25;
-            //SleepingOffset.X = 16;
-            ReviveFrame = 26;
+            ThroneSittingFrame = 24;
+            BedSleepingFrame = 25;
+            SleepingOffset.X = 16;
+            ReviveFrame = 19;
             DownedFrame = 17;
-            PetrifiedFrame = 28;
+            //PetrifiedFrame = 28;
 
-            //BackwardStanding = 29;
-            //BackwardRevive = 30;
+            BackwardStanding = 26;
+            BackwardRevive = 27;
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(15, 0);
@@ -103,9 +105,9 @@ namespace giantsummon.Creatures
             SittingPoint = new Point(21 * 2, 39 * 2);
 
             //Head Vanity Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(24, 18);
-            HeadVanityPosition.AddFramePoint2x(18, 24, 22);
-            HeadVanityPosition.AddFramePoint2x(19, 24, 22);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(23, 18 + 2);
+            HeadVanityPosition.AddFramePoint2x(18, 23, 22 + 2);
+            HeadVanityPosition.AddFramePoint2x(19, 23, 22 + 2);
 
             //Wing Position
             //WingPosition.DefaultCoordinate2x = new Point(20, 23);

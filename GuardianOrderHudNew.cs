@@ -319,7 +319,7 @@ namespace giantsummon
                             if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && guardians[g].PlayerMounted && guardians[g].HasFlag(GuardianFlags.StopMindingAfk))
                             {
                                 byte Priority = 0;
-                                if (guardians[g].Base.ReverseMount)
+                                if (guardians[g].ReverseMount)
                                 {
                                     Priority = 1;
                                 }
@@ -505,12 +505,15 @@ namespace giantsummon
                                     }
                                     else
                                     {
-                                        if (!guardians[g].Base.ReverseMount && !MountedOnGuardian)
+                                        if (!guardians[g].ReverseMount)
                                         {
-                                            if (GuardianActions.GuardianPutPlayerOnShoulderCommand(guardians[g]))
-                                                break;
+                                            if (!MountedOnGuardian)
+                                            {
+                                                if (GuardianActions.GuardianPutPlayerOnShoulderCommand(guardians[g]))
+                                                    break;
+                                            }
                                         }
-                                        if (guardians[g].Base.ReverseMount && !SomeoneMounted)
+                                        else if (!SomeoneMounted)
                                         {
                                             if (GuardianActions.GuardianPutPlayerOnShoulderCommand(guardians[g]))
                                                 break;

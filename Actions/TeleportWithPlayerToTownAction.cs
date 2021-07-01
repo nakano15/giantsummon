@@ -221,7 +221,7 @@ namespace giantsummon.Actions
         {
             if (guardian.PlayerMounted || guardian.SittingOnPlayerMount)
                 return;
-            bool CanPickupPlayer = guardian.Base.MountUnlockLevel != 255 && !guardian.Base.ReverseMount;
+            bool CanPickupPlayer = guardian.Base.MountUnlockLevel != 255 && !guardian.ReverseMount;
             bool HoldingPlayer = false;
             HeldHand hand = HeldHand.Right;
             if ((hand == HeldHand.Right || hand == HeldHand.Both) && guardian.Base.DontUseRightHand)

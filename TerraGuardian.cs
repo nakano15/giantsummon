@@ -224,11 +224,15 @@ namespace giantsummon
         public bool HasMagicMirror { get { return HasItem(Terraria.ID.ItemID.MagicMirror) || HasItem(Terraria.ID.ItemID.IceMirror) || HasItem(Terraria.ID.ItemID.CellPhone); } }
         public bool IsBeingControlledByPlayer
         {
-            get { return (PlayerMounted && !Base.ReverseMount && !GuardianHasControlWhenMounted && !Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut) || PlayerControl; }
+            get { return (PlayerMounted && !ReverseMount && !GuardianHasControlWhenMounted && !Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut) || PlayerControl; }
         }
         public bool MountedOnPlayer
         {
-            get { return (PlayerMounted && Base.ReverseMount) || SittingOnPlayerMount; }
+            get { return (PlayerMounted && ReverseMount) || SittingOnPlayerMount; }
+        }
+        public bool ReverseMount
+        {
+            get { return (Base.ReverseMount || Data.SavedAge < 15); }
         }
         public bool SittingOnPlayerMount = false;
         public bool PlayerOutOfControl
@@ -2123,7 +2127,7 @@ namespace giantsummon
             }
             if (ItemAnimationTime == 0)
             {
-                if (MoveDown && Base.CanDuck && !SittingOnPlayerMount && (!Base.ReverseMount || !PlayerMounted) && Velocity.Y == 0)
+                if (MoveDown && Base.CanDuck && !SittingOnPlayerMount && (!ReverseMount || !PlayerMounted) && Velocity.Y == 0)
                 {
                     Ducking = true;
                 }
@@ -3717,7 +3721,7 @@ namespace giantsummon
                 SummonDamageMultiplier += SummonDamageBonus;
             }
             EtherRealmStatusShare();
-            if (PlayerMounted && !Base.ReverseMount)
+            if (PlayerMounted && !ReverseMount)
                 CoverRate += 20;
             Base.Attributes(this);
             UpdateBuffEffects();
@@ -3732,7 +3736,7 @@ namespace giantsummon
                     Data.SkillList[s].OnStatusUpdate(this);
                 }
             }
-            if (PlayerMounted && !Base.ReverseMount)
+            if (PlayerMounted && !ReverseMount)
                 MoveSpeed -= MoveSpeed * Base.MountBurdenPercentage;
             if (Tanker)
                 Aggro += TankerAggroBonus;
@@ -4917,7 +4921,7 @@ namespace giantsummon
                         //int MeleePosition = -1, RangedPosition = -1, MagicPosition = -1;
                         int HighestMeleeDamage = 0, HighestRangedDamage = 0, HighestMagicDamage = 0;
                         bool MagicItemNeedsRecharge = false, NoManaMagicItem = false;
-                        bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (Base.ReverseMount || !PlayerMounted);
+                        bool MayUseHeavyWeapon = UseHeavyMeleeAttackWhenMounted || (ReverseMount || !PlayerMounted);
                         for (int i = 0; i < 10; i++)
                         {
                             if (Inventory[i].type == 0)
@@ -5480,7 +5484,7 @@ namespace giantsummon
                     }
                 }
                 Base.GuardianBehaviorModScript(this);
-                if (SittingOnPlayerMount || (PlayerMounted && Base.ReverseMount && !GuardianHasControlWhenMounted))
+                if (SittingOnPlayerMount || (PlayerMounted && ReverseMount && !GuardianHasControlWhenMounted))
                 {
                     MoveLeft = MoveRight = Jump = MoveDown = false;
                 }
@@ -8151,7 +8155,7 @@ namespace giantsummon
         {
             if (OwnerPos == -1)
                 return;
-            if (PlayerMounted && !Base.ReverseMount && !GuardianHasControlWhenMounted)
+            if (PlayerMounted && !ReverseMount && !GuardianHasControlWhenMounted)
             {
                 Player owner = Main.player[OwnerPos];
                 if (!owner.stoned && !owner.frozen && !owner.webbed && !owner.GetModPlayer<PlayerMod>().KnockedOut)
@@ -9240,7 +9244,7 @@ namespace giantsummon
                 }
                 else if (PlayerMounted)
                 {
-                    if (Base.ReverseMount)
+                    if (ReverseMount)
                     {
                         this.Position.X = Main.player[OwnerPos].Center.X;
                         this.Position.Y = Main.player[OwnerPos].position.Y + (Main.player[OwnerPos].height - 1) * Main.player[OwnerPos].gravDir;
@@ -9296,7 +9300,7 @@ namespace giantsummon
                         {
                             Allow = false;
                         }
-                        else if (MainMod.IsGuardianItem(this.Inventory[i]) && ((Items.GuardianItemPrefab)this.Inventory[i].modItem).Heavy && ((PlayerMounted && !Base.ReverseMount && !UseHeavyMeleeAttackWhenMounted)))
+                        else if (MainMod.IsGuardianItem(this.Inventory[i]) && ((Items.GuardianItemPrefab)this.Inventory[i].modItem).Heavy && ((PlayerMounted && !ReverseMount && !UseHeavyMeleeAttackWhenMounted)))
                         {
                             Allow = false;
                         }
@@ -9335,7 +9339,7 @@ namespace giantsummon
             bool InMeleeRange = InMeleeRangeX && InMeleeRangeY;
             bool PanicMode = HP < MHP * 0.25f;
             float Distance = SquaredDistance.Length();
-            bool MayUseHeavyMeleeWeapon = !PlayerMounted || (!Base.ReverseMount && UseHeavyMeleeAttackWhenMounted);
+            bool MayUseHeavyMeleeWeapon = !PlayerMounted || (!ReverseMount && UseHeavyMeleeAttackWhenMounted);
             bool DoDuck = false;
             bool HasMeleeWeapon = this.HasMeleeWeapon,
                 HasRangedWeapon = this.HasRangedWeapon,
@@ -10331,7 +10335,7 @@ namespace giantsummon
             bool LeaderWet = false;
             if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
             {
-                TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.First(x => x.Active && x.PlayerMounted && !x.Base.ReverseMount);
+                TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.First(x => x.Active && x.PlayerMounted && !x.ReverseMount);
                 PositionDifference = guardian.CenterPosition;
                 LeaderCenterX = PositionDifference.X;
                 LeaderSpeedX = guardian.Velocity.X;
@@ -14010,7 +14014,7 @@ namespace giantsummon
             else if (Velocity.Y != 0) NewState = AnimationState.InAir;
             else if (KnockedOut) NewState = AnimationState.Defeated;
             else if (UsingFurniture) NewState = AnimationState.UsingFurniture;
-            else if (SittingOnPlayerMount || mount.Active || (PlayerMounted && Base.ReverseMount)) NewState = AnimationState.RidingMount;
+            else if (SittingOnPlayerMount || mount.Active || (PlayerMounted && ReverseMount)) NewState = AnimationState.RidingMount;
             else if (WallSlideStyle > 0) NewState = AnimationState.WallSliding;
             else if (Velocity.X != 0) NewState = AnimationState.Moving;
             UpdateMountAnimation();
@@ -14109,102 +14113,141 @@ namespace giantsummon
                     AnimationTime++;
                 }
             }
-            else if (PlayerControl && Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian != null)
+            else if (MountedOnPlayer)
             {
-                TerraGuardian otherguardian = Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian;
-                int Animation = Base.SittingFrame;
-                BodyAnimationFrame = Animation;
-                LeftArmAnimationFrame = Animation;
-                RightArmAnimationFrame = Animation;
-                AnimationTime++;
-            }
-            else if (mount.Active)
-            {
-                BodyAnimationFrame = Base.SittingFrame;
-                LeftArmAnimationFrame = Base.SittingFrame;
-                RightArmAnimationFrame = Base.SittingFrame;
-                AnimationTime++;
-            }
-            else if (WallSlideStyle > 0)
-            {
-                BodyAnimationFrame = Base.JumpFrame;
-                if (Base.DontUseRightHand)
+                if (PlayerMounted && ReverseMount)
                 {
-                    LeftArmAnimationFrame = Base.ItemUseFrames[2];
-                    UsingLeftArmAnimation = true;
+                    if (Base.ReverseMount)
+                    {
+                        if (Base.PlayerMountedArmAnimation > -1)
+                        {
+                            BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.PlayerMountedArmAnimation;
+                        }
+                        else
+                        {
+                            BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.SittingFrame;
+                        }
+                    }
+                    else
+                    {
+                        BodyAnimationFrame = Base.SittingFrame;
+                        LeftArmAnimationFrame = RightArmAnimationFrame = Base.ItemUseFrames[2];
+                    }
                 }
                 else
                 {
-                    RightArmAnimationFrame = Base.ItemUseFrames[2];
-                    UsingRightArmAnimation = true;
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.SittingFrame;
+                }
+                if (Base.IsTerrarian && ItemAnimationTime == 0)
+                {
+                    LeftArmAnimationFrame = 3;
+                    UsingLeftArmAnimation = true;
                 }
                 AnimationTime++;
             }
-            else if (Wet && HasCooldown(GuardianCooldownManager.CooldownType.SwimTime))
+            else
             {
-                int SwimValue = GetCooldownValue(GuardianCooldownManager.CooldownType.SwimTime);
-                float MaxAnimationTime = Base.MaxWalkSpeedTime;
-                AnimationTime++;
-                if (AnimationTime < 0f)
-                    AnimationTime += MaxAnimationTime;
-                if (AnimationTime >= MaxAnimationTime)
-                    AnimationTime -= MaxAnimationTime;
-                int PickedFrame = (int)(AnimationTime / Base.WalkAnimationFrameTime);
-                BodyAnimationFrame = PickedFrame;
-                int ArmFrame = Base.StandingFrame;
-                if (SwimValue >= 10 && SwimValue < 20)
-                    ArmFrame = Base.JumpFrame;
-                LeftArmAnimationFrame = ArmFrame;
-                RightArmAnimationFrame = ArmFrame;
-            }
-            else if (GuardianHasCarpet)
-            {
-                BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
-                AnimationTime++;
-            }
-            else if (Velocity.Y == 0)
-            {
-                if (Velocity.X != 0 && (!HasFlag(GuardianFlags.WindPushed) || (MoveLeft == true || MoveRight == true)))
+                if (PlayerControl && Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian != null)
                 {
+                    TerraGuardian otherguardian = Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian;
+                    int Animation = Base.SittingFrame;
+                    BodyAnimationFrame = Animation;
+                    LeftArmAnimationFrame = Animation;
+                    RightArmAnimationFrame = Animation;
+                    AnimationTime++;
+                }
+                else if (mount.Active)
+                {
+                    BodyAnimationFrame = Base.SittingFrame;
+                    LeftArmAnimationFrame = Base.SittingFrame;
+                    RightArmAnimationFrame = Base.SittingFrame;
+                    AnimationTime++;
+                }
+                else if (WallSlideStyle > 0)
+                {
+                    BodyAnimationFrame = Base.JumpFrame;
+                    if (Base.DontUseRightHand)
+                    {
+                        LeftArmAnimationFrame = Base.ItemUseFrames[2];
+                        UsingLeftArmAnimation = true;
+                    }
+                    else
+                    {
+                        RightArmAnimationFrame = Base.ItemUseFrames[2];
+                        UsingRightArmAnimation = true;
+                    }
+                    AnimationTime++;
+                }
+                else if (Wet && HasCooldown(GuardianCooldownManager.CooldownType.SwimTime))
+                {
+                    int SwimValue = GetCooldownValue(GuardianCooldownManager.CooldownType.SwimTime);
                     float MaxAnimationTime = Base.MaxWalkSpeedTime;
-                    MaxAnimationTime *= Scale;
-                    float SpeedX = Math.Abs(Velocity.X);
-                    if (WalkMode)
-                        SpeedX *= 3;
-                    if ((Velocity.X > 0 && Direction < 0) || (Velocity.X < 0 && Direction > 0))
-                        SpeedX *= -1;
-                    AnimationTime += SpeedX / MaxSpeed;
+                    AnimationTime++;
                     if (AnimationTime < 0f)
                         AnimationTime += MaxAnimationTime;
                     if (AnimationTime >= MaxAnimationTime)
                         AnimationTime -= MaxAnimationTime;
-                    int PickedFrame = (int)(AnimationTime / (Base.WalkAnimationFrameTime * Scale));
-                    if (PickedFrame >= 0 && PickedFrame < Base.WalkingFrames.Length)
-                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.WalkingFrames[PickedFrame];
+                    int PickedFrame = (int)(AnimationTime / Base.WalkAnimationFrameTime);
+                    BodyAnimationFrame = PickedFrame;
+                    int ArmFrame = Base.StandingFrame;
+                    if (SwimValue >= 10 && SwimValue < 20)
+                        ArmFrame = Base.JumpFrame;
+                    LeftArmAnimationFrame = ArmFrame;
+                    RightArmAnimationFrame = ArmFrame;
                 }
-                else
+                else if (GuardianHasCarpet)
                 {
-                    if (CurrentIdleAction == IdleActions.LookingAtTheBackground)
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
+                    AnimationTime++;
+                }
+                else if (Velocity.Y == 0)
+                {
+                    if (Ducking)
                     {
-                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.BackwardStanding;
+                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.DuckingFrame;
+                    }
+                    else if (Velocity.X != 0 && (!HasFlag(GuardianFlags.WindPushed) || (MoveLeft == true || MoveRight == true)))
+                    {
+                        float MaxAnimationTime = Base.MaxWalkSpeedTime;
+                        MaxAnimationTime *= Scale;
+                        float SpeedX = Math.Abs(Velocity.X);
+                        if (WalkMode)
+                            SpeedX *= 3;
+                        if ((Velocity.X > 0 && Direction < 0) || (Velocity.X < 0 && Direction > 0))
+                            SpeedX *= -1;
+                        AnimationTime += SpeedX / MaxSpeed;
+                        if (AnimationTime < 0f)
+                            AnimationTime += MaxAnimationTime;
+                        if (AnimationTime >= MaxAnimationTime)
+                            AnimationTime -= MaxAnimationTime;
+                        int PickedFrame = (int)(AnimationTime / (Base.WalkAnimationFrameTime * Scale));
+                        if (PickedFrame >= 0 && PickedFrame < Base.WalkingFrames.Length)
+                            BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.WalkingFrames[PickedFrame];
                     }
                     else
                     {
-                        BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
+                        if (CurrentIdleAction == IdleActions.LookingAtTheBackground)
+                        {
+                            BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.BackwardStanding;
+                        }
+                        else
+                        {
+                            BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.StandingFrame;
+                        }
+                        AnimationTime++;
                     }
+                }
+                else
+                {
+                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.JumpFrame;
                     AnimationTime++;
                 }
-            }
-            else
-            {
-                BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.JumpFrame;
-                AnimationTime++;
             }
             if (!FurnitureOverridingAnimation)
             {
                 if (PlayerMounted && !Ducking)
                 {
-                    if (Base.ReverseMount)
+                    if (ReverseMount)
                     {
                         LeftArmAnimationFrame = Base.SittingFrame;
                     }
@@ -14227,27 +14270,6 @@ namespace giantsummon
                         UsingLeftArmAnimation = true;
                     }
                 }
-                if (Ducking)
-                {
-                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.DuckingFrame;
-                }
-            }
-            if (MountedOnPlayer)
-            {
-                if (PlayerMounted && Base.ReverseMount && Base.PlayerMountedArmAnimation > -1)
-                {
-                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.PlayerMountedArmAnimation;
-                }
-                else
-                {
-                    BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.SittingFrame;
-                }
-                if (Base.IsTerrarian && ItemAnimationTime == 0)
-                {
-                    LeftArmAnimationFrame = 3;
-                    UsingLeftArmAnimation = true;
-                }
-                AnimationTime++;
             }
             UpdateItemUseAnimationEffect(HeldItemHand);
             if (IsDualWielding)
@@ -14790,20 +14812,20 @@ namespace giantsummon
                 if (!InMineCart && IsLookingLeft) MountPosition.X = SpriteWidth - MountPosition.X;
                 MountPosition.X = SpriteWidth * 0.5f - MountPosition.X;
                 MountPosition.Y = SpriteHeight - MountPosition.Y;
-                if (!Owner.mount.Active || (PlayerMounted && Base.ReverseMount && !SittingOnPlayerMount && !InMineCart))
+                if (!Owner.mount.Active || (PlayerMounted && ReverseMount && !SittingOnPlayerMount && !InMineCart))
                 {
                     Point PositionFrame = Base.LeftHandPoints.GetPositionFromFramePoint(Base.PlayerMountedArmAnimation);
-                    if (PositionFrame == Base.LeftHandPoints.DefaultCoordinate)
+                    if (PositionFrame == Base.LeftHandPoints.DefaultCoordinate || !Base.ReverseMount)
                     {
                         PositionFrame = Base.LeftHandPoints.GetPositionFromFramePoint(Base.ItemUseFrames[2]);
                         MountPosition.Y = Owner.position.Y + Owner.height + 6 + Owner.gfxOffY;// -12;
-                        MountPosition.X += Owner.Center.X - (12 + 2) * Direction;
+                        MountPosition.X += Owner.Center.X - 18 * Direction;
                         MountPosition.Y += -SpriteHeight + PositionFrame.Y;
                     }
                     else
                     {
                         MountPosition.X = Owner.Center.X - 10 * Direction;
-                        MountPosition.X += (PositionFrame.X - (int)(Base.SpriteWidth * 0.5f)) * Direction;
+                        MountPosition.X += (PositionFrame.X - (int)(Base.SpriteWidth * 0.5f) - 4) * Direction;
                         MountPosition.Y = Owner.position.Y + 56 - 30 - (PositionFrame.Y - Base.SpriteHeight) * Scale - 12 + Owner.gfxOffY; // -12;
                     }
                     if (Owner.mount.Active && !PlayerMounted)
@@ -15828,7 +15850,7 @@ namespace giantsummon
                 NewVelocity.Y = this.Velocity.Y;
                 CollisionY = true;
             }
-            if(!SittingOnPlayerMount && !(PlayerMounted && Base.ReverseMount))
+            if(!SittingOnPlayerMount && !(PlayerMounted && ReverseMount))
                 Position = Position + NewVelocity;
         }
 
@@ -16486,7 +16508,7 @@ namespace giantsummon
                 return;
             if (WofFood)
                 return;
-            DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && Base.ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount || (AssistSlot == 0 && LeftArmAnimationFrame == Base.ReviveFrame) || UsingFurniture;
+            DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount || (AssistSlot == 0 && LeftArmAnimationFrame == Base.ReviveFrame) || UsingFurniture;
             DrawRightBodyPartsInFrontOfPlayer = false;
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);
             hitTileData.DrawFreshAnimations(Main.spriteBatch);
