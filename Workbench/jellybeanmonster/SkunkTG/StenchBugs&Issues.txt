@@ -1,4 +1,4 @@
-Captain smelly current bugs and issues:
+Captain Sally Stench current bugs and issues:
 
 Follow AI: 
 -(Fix)Tg follows player too closely causing the chain grabble effect to happen way to often from such a short distance away.(Happens a lot in combat which makes tg somewhat handicapped when she keeps getting chained back from being 5 blocks away melee attacking a enemy)
@@ -7,8 +7,8 @@ Healing AI:
 -(Fix)Tg does not use potions nor do they throw potions to heal the player when low
 
 Death AI-
--(Fix)When smelly dies her sword spins around while she falls off screen
--(Fix)When smelly dies a clone of her stays on screen while the other one flies of screen, both have the spinning sword issue apon death
+-(Fix)When Stench dies her sword spins around while she falls off screen
+-(Fix)When Stench dies a clone of her stays on screen while the other one flies of screen, both have the spinning sword issue apon death
 
 Hostile AI:
 -(Fix)Enemey detection is very low causing tg to not attack eariler when threat is atleast 10 blocks near(very inconsistent depending on which combat mode you have on)
@@ -20,12 +20,12 @@ Hostile AI:
 
 Phantom device:
 -(Tweak)Make sprite in game slightly bigger for players to see easier, its kinda hard to see right now
--(Tweak)Phantom device tiers 2-4 should all be adding to smelly's max mana.(tier 2-20 max mana, tier 3-40 max mana, tier 4-60 max mana)
+-(Tweak)Phantom device tiers 2-4 should all be adding to Stench's max mana.(tier 2-20 max mana, tier 3-40 max mana, tier 4-60 max mana)
 -(Tweak)Change description of the items(Tiers 1-5):
-"Allows Smelly to use Phantom Blitz attack [placeholder/amount of times depending on which tier it is]"
-(Tweak)Broken Phantom Device should already be in smellys inventory or should be in her accessory slot upon meeting
-(Tweak)Broken Phantom device description change: "Item that allows smelly to use phantom blitz attack, it is broken and needs repair"
-(Fix)Smelly does not take into account if she has any of the phantom device tiers and instead will tell the player they lost her item even when she has it in inventory or in her accessory slot.
+"Allows Stench to use Phantom Blitz attack [placeholder/amount of times depending on which tier it is]"
+(Tweak)Broken Phantom Device should already be in Stench's inventory or should be in her accessory slot upon meeting
+(Tweak)Broken Phantom device description change: "Item that allows Stench to use phantom blitz attack, it is broken and needs repair"
+(Fix)Stench does not take into account if she has any of the phantom device tiers and instead will tell the player they lost her item even when she has it in inventory or in her accessory slot.
 
 
 Arm Blaster:
@@ -39,11 +39,11 @@ Weapon infusions:
 
 Ruby:
 -(Tweak)V swing heal percentage- 5% total damage dealt --->> 2% total damage dealt
--(New/Rework)H swing heal percentage rework- Total damage dealt % heal --->> Max Health % heal(Healing percentage restored is based on smelly's max hp)
+-(New/Rework)H swing heal percentage rework- Total damage dealt % heal --->> Max Health % heal(Healing percentage restored is based on Stench's max hp)
 -(New/Rework)- H swing max health heal %- 5% max health heal per enemy hit, 50% max health restored when hitting sweat spot
 
 Amethyst:
--(Tweak)Gemstone power vfx change- Energy wave sprite should be slightly bigger to match smellys height
+-(Tweak)Gemstone power vfx change- Energy wave sprite should be slightly bigger to match Stench's height
 -(Tweak)Gemstone projectile should have a longer life span on screen
 
 Topaz:
@@ -78,7 +78,7 @@ Special attack Phantom Blitz:
 -(Fix)Dash frames dont seem to go through all frames of the actual attack particularly the frames 5-9 of the dash attack.(Seems like the move only alternates bewteen frames 1-4.Its kinda hard to tell because the move is very fast but it could just be because of the issue above were you dont see the sword during the attack) 
 -(Fix)Does not show afterimage effect as if she had the ninja set consistentely at all.(It is very very rare happening in every like 50-100 dashes)
 -(Tweak/Fix)Every usable dash should consistently happen right after another meaning they take priority over all other attacks before she gets to use v or h swing, and arm blaster. So basically if she had 3 charges of PB then they should all be used in conjuction right after one another for maximum effiency, instead of her doing 1 sometimes then basic attack and using another dash after the basic attack.(The move is overall pretty consistently used one after another its just not done 100% of the time)
--(Tweak)Smelly should be Intagible/Invicible from beginning to end of the PB attack animation to ensure she is able to use more dashes consistently with higher usages
+-(Tweak)Stench should be Intagible/Invicible from beginning to end of the PB attack animation to ensure she is able to use more dashes consistently with higher usages
 -(Rework/Possibility)If its possible for PB to be used in all 8 direction It would help to fight enemies who are airborne
 
 
