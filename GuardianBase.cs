@@ -1137,7 +1137,7 @@ namespace giantsummon
                         gb = new GlennBase();
                         break;
                     case 22:
-                        gb = new CaptainSmellyBase();
+                        gb = new CaptainStenchBase();
                         break;
                     case 23:
                         gb = new CinnamonBase();
@@ -1295,6 +1295,11 @@ namespace giantsummon
                 }
                 return 0;
             }
+        }
+
+        public virtual void ModifyVelocity(TerraGuardian tg, ref Vector2 Velocity)
+        {
+
         }
 
         public virtual string GetSpecialMessage(string MessageID)

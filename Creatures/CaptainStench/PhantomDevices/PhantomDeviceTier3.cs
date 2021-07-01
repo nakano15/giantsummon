@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using Terraria.ModLoader;
 
-namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
+namespace giantsummon.Creatures.CaptainStench.PhantomDevices
 {
-    public class PhantomDeviceTier2 : Items.GuardianItemPrefab
+    public class PhantomDeviceTier3 : Items.GuardianItemPrefab
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Allows Smelly to use Phantom Blitz attack 2 times.");
+            Tooltip.SetDefault("Allows Smelly to use Phantom Blitz attack 3 times.");
         }
 
         public override void SetDefaults()
@@ -23,11 +23,11 @@ namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
 
         public override void ItemStatusScript(TerraGuardian g)
         {
-            g.MMP += 20;
-            if (g.Data is CaptainSmellyBase.CaptainSmellyData)
+            g.MMP += 40;
+            if (g.Data is CaptainStenchBase.CaptainStenchData)
             {
-                CaptainSmellyBase.CaptainSmellyData data = (CaptainSmellyBase.CaptainSmellyData)g.Data;
-                const int DID = 2;
+                CaptainStenchBase.CaptainStenchData data = (CaptainStenchBase.CaptainStenchData)g.Data;
+                const int DID = 3;
                 if (data.DeviceID < DID)
                     data.DeviceID = DID;
             }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria.ModLoader;
 
-namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
+namespace giantsummon.Creatures.CaptainStench.PhantomDevices
 {
     public class PhantomDeviceTier1 : Items.GuardianItemPrefab
     {
@@ -23,9 +23,9 @@ namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
 
         public override void ItemStatusScript(TerraGuardian g)
         {
-            if(g.Data is CaptainSmellyBase.CaptainSmellyData)
+            if(g.Data is CaptainStenchBase.CaptainStenchData)
             {
-                CaptainSmellyBase.CaptainSmellyData data = (CaptainSmellyBase.CaptainSmellyData)g.Data;
+                CaptainStenchBase.CaptainStenchData data = (CaptainStenchBase.CaptainStenchData)g.Data;
                 const int DID = 1;
                 if(data.DeviceID < DID)
                     data.DeviceID = DID;

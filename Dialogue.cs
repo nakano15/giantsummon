@@ -431,7 +431,9 @@ namespace giantsummon
                 });
             }
             while (!ProceedButtonPressed)
+            {
                 Thread.Sleep(100);
+            }
             return SelectedOption;
         }
 

@@ -2163,6 +2163,7 @@ namespace giantsummon
                 BeingPulledByPlayer = false;
             if (SittingOnPlayerMount && (Owner.dead || !Owner.mount.Active || GrabbingPlayer))
                 DoSitOnPlayerMount(false);
+            Base.ModifyVelocity(this, ref Velocity);
             if (Downed)
             {
                 this.Position += this.Velocity;

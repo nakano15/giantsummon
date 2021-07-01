@@ -39,7 +39,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 86, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1158,7 +1158,7 @@ namespace giantsummon
                     }
                     if (g.ID == 22)
                     {
-                        Creatures.CaptainSmellyBase.CaptainSmellyData data = (Creatures.CaptainSmellyBase.CaptainSmellyData)g.Data;
+                        Creatures.CaptainStenchBase.CaptainStenchData data = (Creatures.CaptainStenchBase.CaptainStenchData)g.Data;
                         New.Add(g.Name + "'s Device ID: " + data.DeviceID);
                         New.Add("\t Device Use Time: " + data.PhantomDeviceUseTimes);
                     }

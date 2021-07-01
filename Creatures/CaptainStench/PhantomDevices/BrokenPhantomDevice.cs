@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria.ModLoader;
 
-namespace giantsummon.Creatures.CaptainSmelly.PhantomDevices
+namespace giantsummon.Creatures.CaptainStench.PhantomDevices
 {
     public class BrokenPhantomDevice : ModItem
     {
