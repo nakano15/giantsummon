@@ -507,6 +507,7 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(HeadNoScouterTextureID, "head_no_scouter");
             sprites.AddExtraTexture(RubyGPTextureID, "RubyGP");
             sprites.AddExtraTexture(DiamondGPTextureID, "DiamondGP");
+
         }
 
         public override void ModifyVelocity(TerraGuardian tg, ref Vector2 Velocity)
@@ -1238,6 +1239,7 @@ namespace giantsummon.Creatures
                 int Damage = tg.SubAttackDamage;
                 int ID = Projectile.NewProjectile(ProjectilePosition, AimPosition * 14f, Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CannonBlast>(),
                     Damage, 0.03f, tg.GetSomeoneToSpawnProjectileFor);
+                //Main.PlaySound(Terraria.ModLoader.SoundLoader.customSoundType, tg.CenterPosition, Terraria.ModLoader.SoundLoader.GetSoundSlot(Terraria.ModLoader.SoundType.Custom, "Creatures/CaptainStench/Sounds/BlasterSound"));
                 Main.PlaySound(2, tg.CenterPosition, 20);
                 Main.projectile[ID].scale = tg.Scale;
                 Main.projectile[ID].netUpdate = true;
