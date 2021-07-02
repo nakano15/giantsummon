@@ -120,6 +120,8 @@
     <Compile Include="Creatures\CaptainStench\PhantomDevices\PhantomDeviceTier2.cs" />
     <Compile Include="Creatures\CaptainStench\PhantomDevices\PhantomDeviceTier1.cs" />
     <Compile Include="Creatures\CaptainStench\PhantomDevices\BrokenPhantomDevice.cs" />
+    <Compile Include="Creatures\CaptainStench\Sounds\BlasterSound.cs" />
+    <Compile Include="Creatures\CaptainStench\Sounds\PhantomBlitzSoundEffect.cs" />
     <Compile Include="Creatures\Cinnamon\CinnamonBase.cs" />
     <Compile Include="Creatures\Glenn\GlennBase.cs" />
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
@@ -373,6 +375,8 @@
     <Content Include="Creatures\CaptainStench\right_arm_front.png" />
     <Content Include="Creatures\CaptainStench\RubyGP.png" />
     <Content Include="Creatures\CaptainStench\scouter.png" />
+    <Content Include="Creatures\CaptainStench\Sounds\BlasterSound.wav" />
+    <Content Include="Creatures\CaptainStench\Sounds\PhantomBlitzSoundEffect.wav" />
     <Content Include="Creatures\Cinnamon\body.png" />
     <Content Include="Creatures\Cinnamon\body_front.png" />
     <Content Include="Creatures\Cinnamon\head.png" />

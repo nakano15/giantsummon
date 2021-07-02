@@ -2203,7 +2203,6 @@ namespace giantsummon
         public override void OnEnterWorld(Player player)
         {
             MainMod.PlayerGuardianSync.Clear();
-            ProjMod.GuardianProj.Clear();
             if (SelectedGuardian > -1)
             {
                 CallGuardian(SelectedGuardian, 0);

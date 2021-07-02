@@ -46,3 +46,5 @@ Companions will now avoid trying to jump off cliffs and at lava.
 Zacks age is now 16, instead of 15.
 Increased a bit the distance companions will be from the player.
 All companions will now try getting to the ones they are trying to revive faster, and also gain an extra brake when trying to stop at the one they want to rescue.
+Moved the code that clears the guardian projectile logging from the player entering world script, to when the game is about to clear world to enter/create It.
+	That may fix the issue where the game hangs for some people, when using summons.

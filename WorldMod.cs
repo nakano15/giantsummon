@@ -346,6 +346,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            ProjMod.GuardianProj.Clear();
             MainMod.ScreenColorAlpha = 0;
             HouseInfos.Clear();
             GuardiansMet.Clear();
