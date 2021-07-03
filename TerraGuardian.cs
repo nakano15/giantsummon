@@ -627,7 +627,7 @@ namespace giantsummon
         public float DefenseRate = 0;
         public bool LookingLeft = false;
         public int GravityDirection = 1;
-        public bool Wet = false, LavaWet = false, HoneyWet = false;
+        public bool Wet = false, LavaWet = false, HoneyWet = false, Drowning = false;
         public bool NoGravity = false;
         public bool Falling = false;
         public float Mass = 0.5f, MaxSpeed = 4.5f, Acceleration = 0.1f, SlowDown = 0.3f, MoveSpeed = 1f; //Mass = Gravity Strength
@@ -7126,6 +7126,7 @@ namespace giantsummon
                                             {
                                                 Position.X = Main.npc[NearestNpcPosition].position.X + Main.npc[NearestNpcPosition].width * 0.5f;
                                                 Position.Y = Main.npc[NearestNpcPosition].position.Y + Main.npc[NearestNpcPosition].height;
+                                                SetFallStart();
                                                 ChangeIdleAction(IdleActions.Wander, 10);
                                             }
                                             else
@@ -15700,11 +15701,13 @@ namespace giantsummon
         {
             bool UnderLiquid = Collision.DrownCollision(TopLeftPosition, Width, Height, GravityDirection);
             bool RestoreBreath = true;
+            Drowning = false;
             if (UnderLiquid)
             {
                 bool MayDrown = !HasFlag(GuardianFlags.BreathUnderwater) && !HasFlag(GuardianFlags.Merfolk);
                 if (MayDrown)
                 {
+                    Drowning = true;
                     RestoreBreath = false;
                     this.BreathCooldown++;
                     int MaxBreathCooldown = Base.BreathCooldown;

@@ -105,13 +105,14 @@ namespace giantsummon
         public byte TitanGuardian = 255;
         public bool HasFirstSymbol = false;
         public byte MountSitOrder = 0, FollowBackOrder = 0, FollowFrontOrder = 0;
-        public int MaxExtraGuardiansAllowed
+        public float MaxExtraGuardiansAllowed
         {
             get
             {
-                return GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel);
+                return MaxGuardianFollowersWeight;
             }
         }
+        public float GuardianFollowersWeight = 0f, MaxGuardianFollowersWeight = 0;
         public int GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(int FriendshipLevel)
         {
             int Count = (int)(FriendshipLevel * (BuddiesMode ? 0.5f : 1));
@@ -142,11 +143,13 @@ namespace giantsummon
 
         public void FriendshipLevelNotification()
         {
-            Main.NewText("You reached Friendship Rank " + FriendshipLevel + ".");
-            if (GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel) != GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel - 1))//(FriendshipLevel == 2 || FriendshipLevel == 6 || FriendshipLevel == 12 || FriendshipLevel == 18 || FriendshipLevel == 25)
+            Main.NewText("You reached Friendship Rank " + FriendshipLevel + "!");
+            int LastExtraCompanionBonus = GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel - 1),
+                NewExtraCompanionBonus = GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel);
+            if (NewExtraCompanionBonus != LastExtraCompanionBonus)
             {
-                int CompanionCount = MaxExtraGuardiansAllowed;
-                Main.NewText("You can now have " + (CompanionCount) + " extra companion" + (CompanionCount > 1 ? "s" : "") + " following you.");
+                int CompanionCount = NewExtraCompanionBonus - LastExtraCompanionBonus;
+                Main.NewText("Your max companion weight increased by " + (CompanionCount) + "!");
             }
         }
         public int GetSummonedGuardianCount
@@ -422,6 +425,7 @@ namespace giantsummon
         public override void ResetEffects()
         {
             //player.height = Player.defaultHeight;
+            MaxGuardianFollowersWeight = GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel);
             HasFirstSymbol = false;
             if (MainMod.SharedCrystalValues)
             {
@@ -1598,6 +1602,9 @@ namespace giantsummon
             bool FoundFirstTitanGuardian = false;
             MountSitOrder = FollowFrontOrder = FollowBackOrder = 0;
             byte GuardianSlot = 0;
+            float MaxCompanions = MaxExtraGuardiansAllowed;
+            GuardianFollowersWeight = 0;
+            bool First = true;
             foreach (TerraGuardian guardian in GetAllGuardianFollowers)
             {
                 if (!guardian.Active)
@@ -1610,13 +1617,15 @@ namespace giantsummon
                     FoundFirstTitanGuardian = true;
                     TitanGuardian = AssistSlot;
                 }
-                if (GuardianSlot > MaxExtraGuardiansAllowed && TitanGuardian < 255 && TitanGuardian != AssistSlot)
+                if (!First && ((MaxCompanions > 0 && GuardianFollowersWeight > 0 && guardian.Base.CompanionSlotWeight + GuardianFollowersWeight > MaxCompanions) || (TitanGuardian < 255 && TitanGuardian != AssistSlot)))
                 {
                     Main.NewText(guardian.Name + " were dismissed.");
                     DismissGuardian(AssistSlot);
                     AssistSlot++;
                     continue;
                 }
+                if(!First)
+                    GuardianFollowersWeight += guardian.Base.CompanionSlotWeight;
                 if (TeleportTrigger && !guardian.WofFacing)
                 {
                     guardian.TeleportToPlayer(true);
@@ -1708,9 +1717,9 @@ namespace giantsummon
                             player.mount.Dismount(player);
                     }
                 }
-                //player.maxMinions += guardian.NumMinions;
                 AssistSlot++;
                 GuardianSlot++;
+                First = false;
             }
             if (GuardianSlot > 0)
             {

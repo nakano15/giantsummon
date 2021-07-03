@@ -28,6 +28,7 @@ namespace giantsummon.Creatures
             Width = 22;
             Height = 66;
             CharacterPositionYDiscount = 22;
+            CompanionSlotWeight = 2.5f;
             //DuckingHeight = 62;
             SpriteWidth = 160;
             SpriteHeight = 140;

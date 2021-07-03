@@ -316,6 +316,28 @@ namespace giantsummon
                         CrownPosition.X += 16;
                         Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Base.GetPopularityContestsThirdPlace().ToString(), CrownPosition, Color.White);
                     }
+                    {
+                        Vector2 GroupWeightPosition = new Vector2(TabStartX + 60, InterfacePosition.Y + 8 + 8);
+                        float WeightValue = player.GuardianFollowersWeight * 1000,
+                            NextWeightValue = DisplayGuardian.Base.CompanionSlotWeight * 1000,
+                            MaxWeightValue = player.MaxGuardianFollowersWeight * 1000;
+                        if(player.GetGuardianSlot(GuardianList[Selected]) < 255)
+                        {
+                            NextWeightValue *= -1;
+                        }
+                        float GroupWeightValue = WeightValue / MaxWeightValue;
+                        Color color = Color.White;
+                        if(GroupWeightValue > 0)
+                        {
+                            if (GroupWeightValue < 0.333f)
+                                color = Color.Green;
+                            else if (GroupWeightValue < 0.667f)
+                                color = Color.Orange;
+                            else
+                                color = Color.Red;
+                        }
+                        Utils.DrawBorderString(Main.spriteBatch, "Group Size: " + (int)(WeightValue) + (NextWeightValue > 0 ? "+" + NextWeightValue : NextWeightValue.ToString()) + "=" + (WeightValue + NextWeightValue) + "/" + (int)(MaxWeightValue), GroupWeightPosition, color);
+                    }
                     float ElementStartY = ElementPosition.Y;
                     ElementPosition.X = (int)ElementPosition.X;
                     ElementPosition.Y = (int)ElementPosition.Y + 24;
@@ -495,7 +517,7 @@ namespace giantsummon
                 int ButtonRegionWidth = (int)(InterfacePosition.X + Width - ElementPosition.X - 8);
                 byte SummonSlot = player.GetEmptyGuardianSlot();
                 ElementPosition.X += ButtonRegionWidth * 0.25f;
-                if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian && (!PlayerMod.HasBuddiesModeOn(player.player) || !PlayerMod.GetPlayerBuddy(player.player).IsSameID(DisplayGuardian)) && (DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive(DisplayGuardian.Data)) || PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], DisplayGuardian.ID, DisplayGuardian.ModID)) && (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(GuardianList[Selected])) && ((SummonSlot < 255 && player.GetSummonedGuardianCount < player.MaxExtraGuardiansAllowed + 1) || player.GetGuardianSlot(GuardianList[Selected]) < 255))
+                if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian && (!PlayerMod.HasBuddiesModeOn(player.player) || !PlayerMod.GetPlayerBuddy(player.player).IsSameID(DisplayGuardian)) && (DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive(DisplayGuardian.Data)) || PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], DisplayGuardian.ID, DisplayGuardian.ModID)) && (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(GuardianList[Selected])) && ((SummonSlot < 255 && (player.GuardianFollowersWeight == 0 || player.GuardianFollowersWeight < player.MaxExtraGuardiansAllowed + DisplayGuardian.Base.CompanionSlotWeight)) || player.GetGuardianSlot(GuardianList[Selected]) < 255))
                 {
                     string ButtonText = "Call";
                     bool IsCallButton = player.GetGuardianSlot(GuardianList[Selected]) == 255;

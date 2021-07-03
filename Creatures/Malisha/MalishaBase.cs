@@ -30,6 +30,7 @@ namespace giantsummon.Creatures
             SpriteWidth = 96;
             SpriteHeight = 96;
             Scale = 97f / 84;
+            CompanionSlotWeight = 1.7f;
             Age = 21;
             SetBirthday(SEASON_SUMMER, 21);
             Male = false;

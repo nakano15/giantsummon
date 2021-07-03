@@ -26,6 +26,7 @@ namespace giantsummon.Creatures
             Size = GuardianSize.Large;
             Width = 30;
             Height = 84;
+            CompanionSlotWeight = 1.5f;
             SpriteWidth = 96;
             SpriteHeight = 96;
             Scale = 92f / 84;

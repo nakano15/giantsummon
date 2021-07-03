@@ -48,3 +48,7 @@ Increased a bit the distance companions will be from the player.
 All companions will now try getting to the ones they are trying to revive faster, and also gain an extra brake when trying to stop at the one they want to rescue.
 Moved the code that clears the guardian projectile logging from the player entering world script, to when the game is about to clear world to enter/create It.
 	That may fix the issue where the game hangs for some people, when using summons.
+Homeless companions will no longer have the risk of suffering fall damage, when teleporting to town npcs.
+Changed the following companions count to a companion slot weight system.
+	Each companion has their own weight value, which is displayed on the Guardian Selected Interface.
+	The Max Weight values stacks like the old Max Extra Companion counter used to work.

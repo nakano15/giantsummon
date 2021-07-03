@@ -24,6 +24,7 @@ namespace giantsummon.Creatures
             this.PigID = PigID;
             Size = GuardianSize.Medium;
             Age = 15;
+            CompanionSlotWeight = 0.6f;
             SetBirthday(SEASON_AUTUMN, 14);
 
             //Same animations and settings for all!
