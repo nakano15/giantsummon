@@ -292,6 +292,8 @@ namespace giantsummon.Creatures
             Mes.Add("*I feel like people actually look directly into my \'mana depository\' when they look at me.*");
             Mes.Add("*I'm a bit disappointed that this isn't a naturalist colony like I initially thought, but I'm glad I can do my experiments here.*");
 
+            Mes.Add("*Take your time to trust in me, and you will find infinity.*");
+
             if (Main.dayTime)
             {
                 if (Main.eclipse)

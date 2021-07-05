@@ -1246,6 +1246,7 @@ namespace giantsummon
         {
             public Color HairColor, SkinColor, EyeColor, ShirtColor, UnderShirtColor, PantsColor, ShoeColor;
             public int HairStyle, SkinVariant;
+            public int DefaultHelmet = 0, DefaultArmor = 0, DefaultLeggings = 0;
 
             public TerrarianCompanionInfos()
             {

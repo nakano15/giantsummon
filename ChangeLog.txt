@@ -52,3 +52,4 @@ Homeless companions will no longer have the risk of suffering fall damage, when 
 Changed the following companions count to a companion slot weight system.
 	Each companion has their own weight value, which is displayed on the Guardian Selected Interface.
 	The Max Weight values stacks like the old Max Extra Companion counter used to work.
+Companions will no longer move around like goofs when trying to use a furniture that is behind another companion town npc.

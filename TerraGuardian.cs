@@ -14,6 +14,7 @@ namespace giantsummon
     public class TerraGuardian
     {
         const float DivisionBy16 = 1f / 16;
+        public static bool UpdateAge = false;
 
         public DrawMoment drawMoment = DrawMoment.DontDraw;
         public List<PathFinder.Breadcrumbs> Paths = new List<PathFinder.Breadcrumbs>();
@@ -113,6 +114,7 @@ namespace giantsummon
         public string PersonalNicknameToPlayer { get { return Data.PersonalNicknameToPlayer; } set { Data.PersonalNicknameToPlayer = value; } }
         public GuardianMood Mood { get { return Data.Mood; } }
         public bool HasRequestActive { get { return Data.request.Active; } }
+        public int Age { get { return Data.Age; } }
         private float AgeScale = 0;
         //Trail Handler
         public int TrailLength = 0, TrailDelay = 0;
@@ -232,7 +234,7 @@ namespace giantsummon
         }
         public bool ReverseMount
         {
-            get { return (Base.ReverseMount || Data.SavedAge < 15); }
+            get { return (Base.ReverseMount || Age < 15); }
         }
         public bool SittingOnPlayerMount = false;
         public bool PlayerOutOfControl
@@ -1184,6 +1186,7 @@ namespace giantsummon
                     ModID = MainMod.mod.Name;
                 _Data = GuardianBase.GetGuardianBase(CreateByType, ModID).GetGuardianData(CreateByType, ModID);
                 TryFindingTownNpcInfo();
+                Data.UpdateAge();
             }
             WhoAmID = IDStack++;
         }
@@ -2715,6 +2718,10 @@ namespace giantsummon
 
         public void UpdateExtraStuff()
         {
+            if (UpdateAge)
+            {
+                Data.UpdateAge();
+            }
             if (SetToPlayerSize)
             {
                 FinalScale = (float)42 / (Base.Height - (Base.Size == GuardianBase.GuardianSize.Large ? 10 : 0));
@@ -5567,10 +5574,9 @@ namespace giantsummon
             {
                 return;
             }
-            float PredictedMoveSpeed = Math.Abs(Velocity.X);
             //if (MoveLeft || MoveRight)
             //    PredictedMoveSpeed += MoveSpeed;
-            byte DistXCheck = (byte)(2 + (PredictedMoveSpeed * 0.6f) * DivisionBy16);
+            byte DistXCheck = 3;
             int Direction = Velocity.X == 0 ? (MoveLeft ? -1 : 1) : Velocity.X > 0 ? 1 : -1;
             int CenterX = (int)(Position.X * DivisionBy16), 
                 CenterY = (int)(Position.Y * DivisionBy16) - 2;
@@ -6625,28 +6631,32 @@ namespace giantsummon
                 }
                 if (tile.type == Terraria.ID.TileID.Beds)
                     TileCenterX -= 8;
-                float DistanceFromTile = Math.Abs(Position.X + Velocity.X - TileCenterX);
-                if (DistanceFromTile > 4)
+                if (!UsingFurniture)
                 {
-                    MoveLeft = MoveRight = false;
-                    if (Position.X < TileCenterX)
+                    float DistanceFromTile = Math.Abs(Position.X + Velocity.X - TileCenterX);
+                    if (DistanceFromTile > 4)
                     {
-                        MoveRight = true;
+                        MoveLeft = MoveRight = false;
+                        if (Position.X < TileCenterX)
+                        {
+                            MoveRight = true;
+                        }
+                        else
+                        {
+                            MoveLeft = true;
+                        }
+                        if (DistanceFromTile < 16)
+                            WalkMode = true;
                     }
                     else
-                    {
-                        MoveLeft = true;
-                    }
-                    if (DistanceFromTile < 16)
-                        WalkMode = true;
-                }
-                else
-                {
-                    if (Velocity.X < 1)
                     {
                         if (AnyoneUsingFurniture(furniturex, furniturey))
                         {
                             LeaveFurniture(false);
+                            if (CurrentIdleAction == IdleActions.UseNearbyFurniture || CurrentIdleAction == IdleActions.UseNearbyFurnitureHome)
+                            {
+                                ChangeIdleAction(IdleActions.Wait, 300);
+                            }
                         }
                         else
                         {
@@ -7420,7 +7430,43 @@ namespace giantsummon
                     TileCheckY = (int)(Position.Y * DivisionBy16);
                 bool Pitfall = true;
                 bool HasOpening = false;
-                HasOpening = true;
+                {
+                    byte YCheck = 0;
+                    byte OpenSpaceCounter = 0;
+                    while (true)
+                    {
+                        Tile tile = Framing.GetTileSafely(TileCheckX, TileCheckY - YCheck);
+                        bool Obstruct = false;
+                        if (tile.active() && Main.tileSolid[tile.type])
+                        {
+                            if (tile.type == Terraria.ID.TileID.ClosedDoor || tile.type == Terraria.ID.TileID.TallGateClosed)
+                            {
+                                HasOpening = true;
+                                break;
+                            }
+                            else
+                            {
+                                Obstruct = true;
+                            }
+                        }
+                        if (Obstruct)
+                        {
+                            YCheck++;
+                            OpenSpaceCounter = 0;
+                        }
+                        else
+                        {
+                            YCheck++;
+                            OpenSpaceCounter++;
+                        }
+                        if(OpenSpaceCounter >= 3 || YCheck >= 8)
+                        {
+                            HasOpening = OpenSpaceCounter >= 3;
+                            break;
+                        }
+                    }
+                }
+                //HasOpening = true;
                 /*for (int y = 0; y < 5; y++)
                 {
                     if (MainMod.CanPassThroughThisTile(TileCheckX, TileCheckY - y))
@@ -7485,7 +7531,7 @@ namespace giantsummon
             }
             if (PlayerMounted && GuardianHasControlWhenMounted)
                 return false;
-            if (!IsAttackingSomething && !MoveLeft && !MoveRight)
+            if (!IsAttackingSomething && furniturex == -1 && !MoveLeft && !MoveRight)
             {
                 foreach (int key in MainMod.ActiveGuardians.Keys)
                 {
@@ -15996,6 +16042,22 @@ namespace giantsummon
             HeadSlot = Equipments[0].headSlot;
             ArmorSlot = Equipments[1].bodySlot;
             LegSlot = Equipments[2].legSlot;
+            if (Base.IsTerrarian)
+            {
+                GuardianBase.TerrarianCompanionInfos tci = Base.TerrarianInfo;
+                if (HeadSlot == -1 && tci.DefaultHelmet > 0)
+                {
+                    HeadSlot = tci.DefaultHelmet;
+                }
+                if (ArmorSlot == -1 && tci.DefaultArmor > 0)
+                {
+                    ArmorSlot = tci.DefaultArmor;
+                }
+                if (LegSlot == -1 && tci.DefaultLeggings > 0)
+                {
+                    LegSlot = tci.DefaultLeggings;
+                }
+            }
             bool werewolf = HasFlag(GuardianFlags.Werewolf), merfolk = HasFlag(GuardianFlags.Merfolk);
             for (int i = 0; i < 10; i++)
             {
@@ -16708,7 +16770,7 @@ namespace giantsummon
             }
             else
             {
-                DrawTerrarianData(NewPosition, seffect, Rotation, c, armorColor, IgnoreLighting);
+                DrawTerrarianData(NewPosition, seffect, Rotation, c, armorColor, IgnoreLighting, Shader);
             }
             if (mount.Active)
             {
@@ -17019,7 +17081,7 @@ namespace giantsummon
                 gdd.Draw(Main.spriteBatch);
         }
 
-        public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, float Rotation, Color color, Color armorColor, bool IgnoreLightingColor)
+        public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, float Rotation, Color color, Color armorColor, bool IgnoreLightingColor, int Shader)
         {
             Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56), 
                 bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56), 
@@ -17028,7 +17090,6 @@ namespace giantsummon
             if (hairrect.Y < 0)
                 hairrect.Y = 0;
             bool ShowHair = HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaFemale && HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaMale;
-            bool LeftArmInFront = SittingOnPlayerMount;
             int SkinVariant = Base.TerrarianInfo.GetSkinVariant(Male);
             Vector2 Origin = new Vector2(20, 56);
             byte EyeState = 0;
@@ -17111,6 +17172,7 @@ namespace giantsummon
             if (LegSlot > 0)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorLegs, Main.armorLegTexture[LegSlot], Position, legrect, armorColor, Rotation, Origin, Scale, seffect);
+                dd.Shader = Shader;
                 AddDrawData(dd, SittingOnPlayerMount);
             }
             else
@@ -17123,6 +17185,7 @@ namespace giantsummon
             if (ArmorSlot > 0)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorBody, (Male ? Main.armorBodyTexture[ArmorSlot] : Main.femaleBodyTexture[ArmorSlot]), Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
+                dd.Shader = Shader;
                 AddDrawData(dd, false);
             }
             else
@@ -17166,6 +17229,7 @@ namespace giantsummon
             if (HeadSlot > 0)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
+                dd.Shader = Shader;
                 AddDrawData(dd, false);
                 if (Base.Effect == GuardianBase.GuardianEffect.Wraith && HeadSlot == 38)
                 {
@@ -17178,6 +17242,7 @@ namespace giantsummon
             if (ArmorSlot > 0)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorArm, Main.armorArmTexture[ArmorSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
+                dd.Shader = Shader;
                 AddDrawData(dd, true);
             }
             else
@@ -17243,7 +17308,14 @@ namespace giantsummon
             {
                 Vector2 TextPosition = NewPosition;
                 TextPosition.Y -= SpriteHeight + 22;
-                Utils.DrawBorderString(Main.spriteBatch, ChatMessage, TextPosition, Color.White, 1f, 0.5f);
+                int Lines;
+                string[] Message = Utils.WordwrapString(ChatMessage, Main.fontMouseText, 240, 5, out Lines);
+                TextPosition.Y -= 22f * Lines;
+                for (int l = 0; l < Lines; l++)
+                {
+                    Utils.DrawBorderString(Main.spriteBatch, Message[l], TextPosition, Color.White, 1f, 0.5f);
+                    TextPosition.Y += 22;
+                }
             }
         }
 

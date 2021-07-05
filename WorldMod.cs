@@ -346,6 +346,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            TerraGuardian.UpdateAge = true;
             ProjMod.GuardianProj.Clear();
             MainMod.ScreenColorAlpha = 0;
             HouseInfos.Clear();

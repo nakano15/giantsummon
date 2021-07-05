@@ -848,6 +848,8 @@ namespace giantsummon
 
         public override void PostUpdateEverything()
         {
+            if (!Main.gameMenu)
+                TerraGuardian.UpdateAge = false;
             SoulSaved = false;
             GuardianNpcHousingCheckCooldown++;
             if (GuardianNpcHousingCheckCooldown > MaxGuardianNpcHousingCheckCooldown)

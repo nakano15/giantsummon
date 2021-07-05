@@ -39,6 +39,7 @@ namespace giantsummon
         public int ID { get { return MyID.ID; } set { MyID.ID = value; } }
         public string ModID { get { return MyID.ModID; } set { MyID.ModID = value; } } //To distinguish mod companions
         public byte PickedName = 0;
+        public int Age = 18, YearlyAge = 18;
         public string PersonalNicknameToPlayer = null;
         public GuardianID MyID = new GuardianID(0);
         public bool IsStarter = false;
@@ -717,14 +718,6 @@ namespace giantsummon
             {
                 if (WorldMod.HourChange)
                 {
-                    /*if (PlayerMod.HasGuardianSummoned(player, ID, ModID))
-                    {
-
-                    }
-                    else
-                    {
-
-                    }*/
                     StatusUpdate = true;
                     if (Injury > 0)
                     {
@@ -868,6 +861,7 @@ namespace giantsummon
                     if (NpcMod.HasGuardianNPC(ID, ModID) && !Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
                         Terraria.GameContent.Events.BirthdayParty.ToggleManualParty();
                 }
+                UpdateAge();
             }
             //
             if(LifeTime != null)
@@ -915,7 +909,6 @@ namespace giantsummon
 
         public string GetAgeString()
         {
-            int Age = GetAge(true), YearlyAge = GetAge(false);
             if(Age != YearlyAge)
             {
                 return Age + " (" + YearlyAge + " Years)";
@@ -1271,6 +1264,12 @@ namespace giantsummon
                 ResetSkillsProgress();
             if(ModVersion >= 83)
                 LoadCustom(tag, ModVersion, UniqueID);
+        }
+
+        public void UpdateAge()
+        {
+            Age = GetAge();
+            YearlyAge = GetAge(true);
         }
 
         public virtual void SaveCustom(Terraria.ModLoader.IO.TagCompound tag, int UniqueID)
