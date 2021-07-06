@@ -13,7 +13,7 @@ namespace giantsummon
 {
     public class TerraGuardian
     {
-        const float DivisionBy16 = 1f / 16;
+        public const float DivisionBy16 = 1f / 16;
         public static bool UpdateAge = false;
 
         public DrawMoment drawMoment = DrawMoment.DontDraw;
@@ -603,7 +603,6 @@ namespace giantsummon
             }
         }
         public Rectangle HitBox = Rectangle.Empty;
-        public Rectangle WeaponCollision = new Rectangle();
         public int SpriteWidth { get { return Base.SpriteWidth; } }
         public int SpriteHeight { get { return Base.SpriteHeight; } }
         public int HP { get { return Data.HP; } set { Data.HP = value; } }
@@ -8323,6 +8322,12 @@ namespace giantsummon
             if (HasFlag(GuardianFlags.Bleeding))
             {
                 HealthRegenTime = 0;
+                if (KnockedOut)
+                {
+                    if (HealthRegenPower > 0)
+                        HealthRegenPower = 0;
+                    HealthRegenPower--;
+                }
             }
             HealthRegenPower += ReviveBoost * 5;
             ReviveBoost = 0;
@@ -10848,6 +10853,8 @@ namespace giantsummon
         {
             if (!ForceHurt && ImmuneTime > 0 || Downed || (DoAction.InUse && DoAction.Immune) || KnockedOutCold || HasFlag(GuardianFlags.CantBeHurt))
                 return 0;
+            if (KnockedOut)
+                AddBuff(Terraria.ID.BuffID.Bleeding, 30 * 60);
             bool EvadedAttack = false;
             if (!ForceHurt)
             {
@@ -10858,7 +10865,7 @@ namespace giantsummon
                     EvadedAttack = true;
                     RemoveBuff(Terraria.ID.BuffID.ShadowDodge);
                 }
-                if (Main.rand.NextDouble() * 100 < DodgeRate)
+                if (!KnockedOut && Main.rand.NextDouble() * 100 < DodgeRate)
                 {
                     CombatText.NewText(HitBox, Color.Silver, "Dodged");
                     if (HasFlag(GuardianFlags.KnockbackImmunity))
@@ -11827,10 +11834,6 @@ namespace giantsummon
                 FreezeItemUseAnimation = false;
                 return;
             }
-            WeaponCollision.X = 0;
-            WeaponCollision.Y = 0;
-            WeaponCollision.Width = 0;
-            WeaponCollision.Height = 0;
             HeldItemHand = HeldHand.Left;
             PickHandToUse(ref HeldItemHand);
             ItemUseEffect(true, ref ItemAnimationTime, ref ItemUseTime, ref SelectedItem, ref HeldItemHand, ref ItemPositionX, ref ItemPositionY, ref ItemRotation, ref CriticalRate, ref Knockback, ref TriggerItem, ref ToolTrigger);
@@ -12002,6 +12005,7 @@ namespace giantsummon
                     ItemOrigin = GetItemOrigin(Inventory[SelectedItem]) * ItemScale;//giantsummon.GetGuardianItemData(Inventory[SelectedItem].type).ItemOrigin;
                     InclinedWeapon = Inclined45Degrees(Inventory[SelectedItem]);
                 }
+                Rectangle WeaponCollision = new Rectangle(0, 0, 0, 0);
                 if (ItemUseType == ItemUseTypes.ClawAttack) //Claw
                 {
                     HeldItemHand = HeldHand.Both;

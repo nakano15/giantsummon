@@ -126,15 +126,17 @@ namespace giantsummon
 
         public static void ApplyModifier(NPC npc)
         {
-            npc.lifeMax *= 10;
-            npc.damage += 10;
-            npc.defense += 5;
-            npc.knockBackResist *= 0.6f;
+            //npc.lifeMax *= 10;
+            //npc.damage += 10;
+            //npc.defense += 5;
+            //npc.knockBackResist *= 0.3f;
+            int DifficultyMod = 0;
             foreach (Modifiers mod in modifier)
             {
                 switch (mod)
                 {
                     case Modifiers.Boss:
+                        DifficultyMod++;
                         npc.lifeMax *= 5;
                         break;
                     case Modifiers.ExtraHealth:
@@ -157,12 +159,17 @@ namespace giantsummon
                         break;
                 }
             }
+            npc.GetGlobalNPC<NpcMod>().mobType = NpcMod.GetBossDifficulty(npc, DifficultyMod);
             npc.rarity = 10;
         }
 
         public static void UpdateBountyNPC(NPC npc)
         {
             const int ModifierVariable = 0;
+            if(Main.rand.Next(3) == 0)
+            {
+                Dust.NewDust(npc.position, npc.width, npc.height, 219);
+            }
             if (modifier.Contains(Modifiers.HealthRegen))
             {
                 BountyCounters[ModifierVariable]++;
@@ -305,10 +312,10 @@ namespace giantsummon
                     switch (mod)
                     {
                         case Modifiers.Boss:
-                            Extra += 0.5f;
+                            Extra *= 1.5f;
                             break;
                         case Modifiers.Noob:
-                            Extra -= 0.5f;
+                            Extra *= 0.5f;
                             break;
                         case Modifiers.ExtraHealth:
                             Extra += 0.15f;
@@ -473,6 +480,17 @@ namespace giantsummon
         {
             if (npc.target > -1 && npc.target < Main.maxPlayers && Main.player[npc.target].active && !Main.player[npc.target].dead && IsPlayerOnBountyBiome(Main.player[npc.target]))
             {
+                if (GetBountyState(Main.player[npc.target]) == 0)
+                {
+                    if (SpawnStress == 10)
+                    {
+                        Main.NewText("The bounty target seems to have noticed your killing spree.", 255, 100, 0);
+                    }
+                    if (SpawnStress == 0)
+                    {
+                        Main.NewText("You hear a deafening roar coming from somewhere...", 255, 50, 0);
+                    }
+                }
                 SpawnStress--;
             }
         }
@@ -528,6 +546,11 @@ namespace giantsummon
                             if (!((Main.tile[SpawnX, SpawnY].wall >= 7 && Main.tile[SpawnX, SpawnY].wall <= 9) || (Main.tile[SpawnX, SpawnY].wall >= 94 && Main.tile[SpawnX, SpawnY].wall <= 99)))
                             {
                                 MaySpawn = false;
+                            }
+                            break;
+                        case SpawnBiome.LihzahrdTemple:
+                            {
+                                MaySpawn = Main.tile[SpawnX, SpawnY].wall == Terraria.ID.WallID.LihzahrdBrickUnsafe;
                             }
                             break;
                         case SpawnBiome.Underworld:
@@ -599,6 +622,33 @@ namespace giantsummon
                     return player.ZoneJungle;
                 case SpawnBiome.Underworld:
                     return player.ZoneUnderworldHeight;
+                case SpawnBiome.Ocean:
+                    return player.ZoneBeach;
+                case SpawnBiome.Underground:
+                    return player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight;
+                case SpawnBiome.Sky:
+                    return player.ZoneSkyHeight;
+                case SpawnBiome.OldOneArmy:
+                    return Terraria.GameContent.Events.DD2Event.ShouldBlockBuilding(player.position);
+                case SpawnBiome.GoblinArmy:
+                    return Main.invasionType == InvasionID.GoblinArmy && player.ZoneOverworldHeight;
+                case SpawnBiome.Night:
+                    return !Main.dayTime && player.ZoneOverworldHeight;
+                case SpawnBiome.Snow:
+                    return player.ZoneSnow;
+                case SpawnBiome.Desert:
+                    return player.ZoneDesert;
+                case SpawnBiome.PirateArmy:
+                    return Main.invasionType == InvasionID.PirateInvasion && player.ZoneOverworldHeight;
+                case SpawnBiome.MartianMadness:
+                    return Main.invasionType == InvasionID.MartianMadness && player.ZoneOverworldHeight;
+                case SpawnBiome.SnowLegion:
+                    return Main.invasionType == InvasionID.SnowLegion && player.ZoneOverworldHeight;
+                case SpawnBiome.LihzahrdTemple:
+                    {
+                        Tile tile = Framing.GetTileSafely((int)(player.Center.X * TerraGuardian.DivisionBy16), (int)(player.Center.Y * TerraGuardian.DivisionBy16));
+                        return tile != null && tile.wall == Terraria.ID.WallID.LihzahrdBrickUnsafe;
+                    }
             }
             return false;
         }
@@ -798,7 +848,7 @@ namespace giantsummon
                             SetDefaultCooldown();
                             TargetMonsterID = 0;
                             UpdateBountyBoardText();
-                            Main.NewText("Bounty Hunting Ended", Microsoft.Xna.Framework.Color.MediumPurple);
+                            Main.NewText("Bounty Hunting Ended", Color.MediumPurple);
                         }
                     }
                 }
@@ -822,30 +872,78 @@ namespace giantsummon
             {
                 BountyCounters[i] = 0;
             }
-            if (!Main.hardMode || (Main.hardMode && Main.rand.Next(2) == 0))
             {
-                if (!WorldGen.crimson)
-                    spawnBiome = SpawnBiome.Corruption;
-                else
-                    spawnBiome = SpawnBiome.Crimson;
-            }
-            else
-            {
-                spawnBiome = SpawnBiome.Hallow;
-            }
-            if (Main.rand.Next(2) == 0)
-            {
-                if (Main.rand.Next(2) == 0 && NPC.downedBoss3)
+                List<KeyValuePair<float, SpawnBiome>> PossibleBiomes = new List<KeyValuePair<float, SpawnBiome>>();
+                if (NPC.downedBoss2)
                 {
-                    spawnBiome = SpawnBiome.Dungeon;
+                    if (!WorldGen.crimson)
+                    {
+                        PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(2, SpawnBiome.Corruption));
+                    }
+                    else
+                    {
+                        PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(2, SpawnBiome.Crimson));
+                    }
                 }
-                else if (Main.rand.Next(3) == 0)
+                if (Main.hardMode)
                 {
-                    spawnBiome = SpawnBiome.Underworld;
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(2, SpawnBiome.Hallow));
                 }
-                else
+                if (NPC.downedBoss3)
                 {
-                    spawnBiome = SpawnBiome.Jungle;
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(1.5f, SpawnBiome.Dungeon));
+                }
+                if (NPC.downedBoss3 || NPC.downedSlimeKing || NPC.downedQueenBee || NPC.downedGoblins)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(1.15f, SpawnBiome.Underworld));
+                }
+                if ((!Main.hardMode && (NPC.downedQueenBee || NPC.downedBoss2)) || (Main.hardMode && NPC.downedPlantBoss))
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(1.35f, SpawnBiome.Jungle));
+                }
+                if (NPC.downedSlimeKing)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.75f, SpawnBiome.Ocean));
+                }
+                PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(1f, SpawnBiome.Snow));
+                PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(1f, SpawnBiome.Night));
+                PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.8f, SpawnBiome.Underground));
+                if(NPC.downedBoss2 || NPC.downedBoss3 || NPC.downedGoblins|| Main.hardMode)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.85f, SpawnBiome.Sky));
+                }
+                if (NPC.downedGoblins)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.65f, SpawnBiome.GoblinArmy));
+                }
+                if (NPC.downedPirates)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.55f, SpawnBiome.PirateArmy));
+                }
+                if (NPC.downedMartians)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.7f, SpawnBiome.MartianMadness));
+                }
+                if (NPC.downedFrost)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.85f, SpawnBiome.SnowLegion));
+                }
+                if (NPC.downedPlantBoss)
+                {
+                    PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.95f, SpawnBiome.LihzahrdTemple));
+                }
+                //
+                float Total = PossibleBiomes.Sum(x => x.Key);
+                float Current = 0;
+                float PickedOne = Main.rand.NextFloat() * Total;
+                foreach(KeyValuePair<float, SpawnBiome> b in PossibleBiomes)
+                {
+                    if(Current >= PickedOne && Current + b.Key < PickedOne)
+                    {
+                        spawnBiome = b.Value;
+                        break;
+                    }
+                    Current += b.Key;
                 }
             }
             TargetName = "";
@@ -1094,7 +1192,318 @@ namespace giantsummon
                             }
                         }
                         TargetName = NameGen(new string[] { "de", "mon", "bo", "ne", "ser", "pent", "he" , "ad", "fi", "re", "imp", "red", "vil", "la", "va", "bat" });
-                        Suffix = GetRandomString(new string[] { "Pact Maker", "Hell Breaker", "Torturer", "Lava Eater" });
+                        Suffix = GetRandomString(new string[] { "Pact Maker", "Hell Breaker", "Torturer", "Lava Eater", "Human Buster" });
+                    }
+                    break;
+
+                case SpawnBiome.Ocean:
+                    {
+                        switch (Main.rand.Next(2))
+                        {
+                            case 0:
+                                TargetMonsterID = 65;
+                                break;
+                            case 1:
+                                TargetMonsterID = 67;
+                                break;
+                        }
+                        TargetName = NameGen(new string[] {"me", "ga", "lo", "don", "shark", "crab", "de", "vo", "ur", "de", "ath", "bre" });
+                        Suffix = GetRandomString(new string[] {"Man-Eater", "Menace", "Drowner" });
+                    }
+                    break;
+
+                case SpawnBiome.Underground:
+                    {
+                        switch (Main.rand.Next(6))
+                        {
+                            case 0:
+                                TargetMonsterID = 21;
+                                break;
+                            case 1:
+                                TargetMonsterID = 49;
+                                break;
+                            case 2:
+                                TargetMonsterID = Main.rand.Next(498, 507);
+                                break;
+                            case 3:
+                                TargetMonsterID = Main.rand.Next(404, 406);
+                                break;
+                            case 4:
+                                TargetMonsterID = Main.rand.Next(496, 498);
+                                break;
+                            case 5:
+                                TargetMonsterID = 196;
+                                break;
+                        }
+                        if (Main.hardMode && Main.rand.NextFloat() < 0.6f)
+                        {
+                            switch (Main.rand.Next(4))
+                            {
+                                case 0:
+                                    TargetMonsterID = 77;
+                                    break;
+                                case 1:
+                                    TargetMonsterID = 93;
+                                    break;
+                                case 2:
+                                    TargetMonsterID = 110;
+                                    break;
+                                case 3:
+                                    TargetMonsterID = 172;
+                                    break;
+                            }
+                        }
+                        TargetName = NameGen(new string[] { "ske", "le", "ton", "sa", "la", "man", "der", "craw", "dad", "gi", "ant", "shel", "ly", "ca", "ve", "bat" });
+                        Suffix = GetRandomString(new string[] { "Bane of the Living", "Impaler", "Human-Hunter", "Dark Stalker" });
+                    }
+                    break;
+
+                case SpawnBiome.Sky:
+                    {
+                        TargetMonsterID = 48;
+                        TargetName = NameGen(new string[] {"mar", "le", "ne", "har", "py", "da", "ria", "ki", "ra" });
+                        Suffix = GetRandomString(new string[] { "Siren", "Matriarch", "Human Snatcher", "Sky Guardian" });
+                    }
+                    break;
+
+                case SpawnBiome.OldOneArmy:
+                    {
+                        if (NPC.downedGolemBoss)
+                        {
+                            TargetMonsterID = 565;
+                        }
+                        else
+                        {
+                            TargetMonsterID = 564;
+                        }
+                        if(NPC.downedMechBossAny && Main.rand.NextDouble() < 0.6f)
+                        {
+                            if (NPC.downedGolemBoss)
+                            {
+                                TargetMonsterID = 577;
+                            }
+                            else
+                            {
+                                TargetMonsterID = 576;
+                            }
+                        }
+                        TargetName = NameGen(new string[] { "go","blin", "ko", "bold", "wy", "vern", "dark", "ma", "ge", "dra", "kin", "wi", "ther", "be", "ast", "ogre" });
+                        Suffix = GetRandomString(new string[] {"Lieutenant", "Captain", "Strategist", "General" });
+                    }
+                    break;
+
+                case SpawnBiome.GoblinArmy:
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0:
+                                TargetMonsterID = 28;
+                                break;
+                            case 1:
+                                TargetMonsterID = 111;
+                                break;
+                            case 2:
+                                TargetMonsterID = 29;
+                                break;
+                        }
+                        TargetName = NameGen(new string[] { "dex", "ter", "try", "xa", "bi", "dri", "dab", "bad", "chun", "gus" });
+                        Suffix = GetRandomString(new string[] { "Leader", "Raider", "Looter", "Slaver" });
+                    }
+                    break;
+
+                case SpawnBiome.Night:
+                    {
+                        if(Main.rand.Next(2) == 0)
+                        {
+                            TargetMonsterID = 3;
+                        }
+                        else
+                        {
+                            TargetMonsterID = 2;
+                        }
+                        if(Main.hardMode && Main.rand.NextDouble() < 0.6)
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    TargetMonsterID = 140;
+                                    break;
+                                case 1:
+                                    TargetMonsterID = 82;
+                                    break;
+                                case 2:
+                                    TargetMonsterID = 104;
+                                    break;
+                            }
+                        }
+                        TargetName = NameGen(new string[] { "zom", "bie", "de", "mon", "eye", "ra", "ven", "pos", "ses", "ed", "wra", "ith", "we", "re", "wolf" });
+                        Suffix = GetRandomString(new string[] { "Night Crawler", "Restless Soul", "Prowler" });
+                    }
+                    break;
+
+                case SpawnBiome.Snow:
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0:
+                                TargetMonsterID = 150;
+                                break;
+                            case 1:
+                                TargetMonsterID = 185;
+                                break;
+                            case 2:
+                                TargetMonsterID = 196;
+                                break;
+                        }
+                        if(Main.hardMode && Main.rand.NextDouble() < 0.6)
+                        {
+                            if (Main.rand.NextDouble() < 0.25)
+                            {
+                                switch (Main.rand.Next(3))
+                                {
+                                    case 0:
+                                        TargetMonsterID = 170;
+                                        break;
+                                    case 1:
+                                        TargetMonsterID = 171;
+                                        break;
+                                    case 2:
+                                        TargetMonsterID = 180;
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                switch (Main.rand.Next(3))
+                                {
+                                    case 0:
+                                        TargetMonsterID = 154;
+                                        break;
+                                    case 1:
+                                        TargetMonsterID = 169;
+                                        break;
+                                    case 2:
+                                        TargetMonsterID = 206;
+                                        break;
+                                }
+                            }
+                        }
+                        TargetName = NameGen(new string[] { "ice", "bat", "snow", "flinx", "un", "de", "ad", "vi", "king", "tor", "toi", "se", "ele", "men", "tal",
+                        "mer", "man"});
+                        Suffix = GetRandomString(new string[] { "Cold Heart", "Shiver Causer", "Chilled One", "One Who Paints Snow in Red" });
+                    }
+                    break;
+
+                case SpawnBiome.Desert:
+                    {
+                        switch (Main.rand.Next(4))
+                        {
+                            case 0:
+                                TargetMonsterID = 69;
+                                break;
+                            case 1:
+                                TargetMonsterID = 61;
+                                break;
+                            case 2:
+                                TargetMonsterID = 508;
+                                break;
+                            case 3:
+                                TargetMonsterID = 509;
+                                break;
+                        }
+                        if(Main.hardMode && Main.rand.NextDouble() < 0.6f)
+                        {
+                            switch (Main.rand.Next(4))
+                            {
+                                case 0:
+                                    TargetMonsterID = 78;
+                                    break;
+                                case 1:
+                                    TargetMonsterID = 532;
+                                    break;
+                                case 2:
+                                    TargetMonsterID = Main.rand.NextDouble() < 0.5 ? 528 : 529;
+                                    break;
+                                case 3:
+                                    TargetMonsterID = 533;
+                                    break;
+                            }
+                        }
+                        TargetName = NameGen(new string[] { "ant", "li", "on", "ba", "si", "lisk", "poa", "cher", "la", "mia", "gho", "ul" });
+                        Suffix = GetRandomString(new string[] { "Elusive", "Burier", "Forgotten", "Sandman" });
+                    }
+                    break;
+
+                case SpawnBiome.PirateArmy:
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0:
+                                TargetMonsterID = 212;
+                                break;
+                            case 1:
+                                TargetMonsterID = 215;
+                                break;
+                            case 2:
+                                TargetMonsterID = 216;
+                                break;
+                        }
+                        TargetName = NameGen(new string[] { "yar", "bla", "ho", "rum", "ha", "scur", "vy", "sea", "bleh", "yo", "bot", "tle" });
+                        Suffix = GetRandomString(new string[] { "Yaar!", "Aaargh!", "Yo ho ho", "Scurvy" } );
+                    }
+                    break;
+
+                case SpawnBiome.MartianMadness:
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0:
+                                TargetMonsterID = 391;
+                                break;
+                            case 1:
+                                TargetMonsterID = 520;
+                                break;
+                            case 2:
+                                TargetMonsterID = 383;
+                                break;
+                        }
+                        TargetName = NameGen(new string[] { "mar", "vin", "ti", "an", "scut", "lix", "gun", "ner", "scram", "bler", "gi", "ga", "zap", "per", "tes", "la" });
+                        Suffix = GetRandomString(new string[] { "Dissector", "Abductor", "World Conqueror", "Who Resents Humans" });
+                    }
+                    break;
+
+                case SpawnBiome.SnowLegion:
+                    {
+                        switch (Main.rand.Next(3))
+                        {
+                            case 0:
+                                TargetMonsterID = 144;
+                                break;
+                            case 1:
+                                TargetMonsterID = 143;
+                                break;
+                            case 2:
+                                TargetMonsterID = 145;
+                                break;
+                        }
+                        TargetName = NameGen(new string[] { "dan", "den", "din", "don", "dun", "frost", "stab", "by", "gang", "sta", "bal", "la", "thomp", "son" });
+                        Suffix = GetRandomString(new string[] { "Godfather", "Abductor", "World Conqueror", "Who Resents Humans" });
+                    }
+                    break;
+
+                case SpawnBiome.LihzahrdTemple:
+                    {
+                        switch (Main.rand.Next(2))
+                        {
+                            case 0:
+                                TargetMonsterID = 198;
+                                break;
+                            case 1:
+                                TargetMonsterID = 226;
+                                break;
+                        }
+                        TargetName = NameGen(new string[] { "lih", "zah", "rd", "fly", "ing", "sna", "ke", "go", "lem" });
+                        Suffix = GetRandomString(new string[] { "Ancient", "Sun Cultist", "Mechanic", "Who Praises the Sun" });
                     }
                     break;
             }
@@ -1210,6 +1619,7 @@ namespace giantsummon
                 SpawnStress = Main.rand.Next(20, 41);
             else
                 SpawnStress = Main.rand.Next(10, 21);
+            if (Main.hardMode) SpawnStress += 20;
         }
 
         public static void CreateRewards(float RewardMod)
@@ -1399,6 +1809,9 @@ namespace giantsummon
                     case SpawnBiome.Jungle:
                         i.SetDefaults(ItemID.JungleFishingCrate);
                         break;
+                    case SpawnBiome.Sky:
+                        i.SetDefaults(ItemID.FloatingIslandFishingCrate);
+                        break;
                 }
                 i.stack += Main.rand.Next((int)(3 * RewardMod));
                 Rewards.Add(i);
@@ -1416,129 +1829,132 @@ namespace giantsummon
         public static Item GetRandomWeaponID()
         {
             int WeaponID = 0;
-            switch (spawnBiome)
             {
-                case SpawnBiome.Corruption:
-                    switch (Main.rand.Next(5))
-                    {
-                        case 0:
-                            WeaponID = ItemID.BallOHurt;
-                            break;
-                        case 1:
-                            WeaponID = ItemID.DemonBow;
-                            break;
-                        case 2:
-                            WeaponID = ItemID.Musket;
-                            break;
-                        case 3:
-                            WeaponID = ItemID.Vilethorn;
-                            break;
-                        case 4:
-                            WeaponID = ItemID.LightsBane;
-                            break;
-                    }
-                    break;
-
-                case SpawnBiome.Crimson:
-                    switch (Main.rand.Next(6))
-                    {
-                        case 0:
-                            WeaponID = ItemID.TheRottedFork;
-                            break;
-                        case 1:
-                            WeaponID = ItemID.TheUndertaker;
-                            break;
-                        case 2:
-                            WeaponID = ItemID.TheMeatball;
-                            break;
-                        case 3:
-                            WeaponID = ItemID.TendonBow;
-                            break;
-                        case 4:
-                            WeaponID = ItemID.CrimsonRod;
-                            break;
-                        case 5:
-                            WeaponID = ItemID.BloodButcherer;
-                            break;
-                    }
-                    break;
-
-                case SpawnBiome.Dungeon:
-                    switch (Main.rand.Next(5))
-                    {
-                        case 0:
-                            WeaponID = ItemID.Muramasa;
-                            break;
-                        case 1:
-                            WeaponID = ItemID.Handgun;
-                            break;
-                        case 2:
-                            WeaponID = ItemID.AquaScepter;
-                            break;
-                        case 3:
-                            WeaponID = ItemID.MagicMissile;
-                            break;
-                        case 4:
-                            WeaponID = ItemID.BlueMoon;
-                            break;
-                    }
-                    break;
-
-                case SpawnBiome.Jungle:
-                    if (Main.rand.NextDouble() < 0.5f)
-                    {
-                        if (Main.rand.Next(2) == 0)
-                            WeaponID = ItemID.BladeofGrass;
-                        else
-                            WeaponID = ItemID.ThornChakram;
-                    }
-                    else
-                    {
-                        switch (Main.rand.Next(4))
+                List<int> RewardToGet = new List<int>();
+                switch (spawnBiome)
+                {
+                    case SpawnBiome.Corruption:
+                        RewardToGet.AddRange(new int[] { ItemID.BallOHurt, ItemID.DemonBow, ItemID.Musket, ItemID.Vilethorn, ItemID.LightsBane, ItemID.DemonBow });
+                        if (Main.hardMode)
                         {
-                            case 0:
-                                WeaponID = ItemID.BeeKeeper;
-                                break;
-                            case 1:
-                                WeaponID = ItemID.BeesKnees;
-                                break;
-                            case 2:
-                                WeaponID = ItemID.BeeGun;
-                                break;
-                            case 3:
-                                WeaponID = ItemID.HornetStaff;
-                                break;
+                            RewardToGet.AddRange(new int[] { ItemID.Toxikarp, ItemID.DartRifle, ItemID.CursedFlames, ItemID.ClingerStaff });
                         }
-                    }
-                    break;
+                        break;
 
-                case SpawnBiome.Underworld:
-                    switch (Main.rand.Next(6))
+                    case SpawnBiome.Crimson:
+                        RewardToGet.AddRange(new int[] { ItemID.TheRottedFork, ItemID.TheUndertaker, ItemID.TheMeatball, ItemID.TendonBow, ItemID.CrimsonRod, ItemID.BloodButcherer });
+                        if (Main.hardMode)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.Bladetongue, ItemID.DartPistol, ItemID.GoldenShower });
+                        }
+                        break;
+
+                    case SpawnBiome.Dungeon:
+                        RewardToGet.AddRange(new int[] { ItemID.Muramasa, ItemID.Handgun, ItemID.AquaScepter, ItemID.MagicMissile, ItemID.BlueMoon });
+                        if (NPC.downedPlantBoss)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.TacticalShotgun, ItemID.SniperRifle, ItemID.Keybrand, ItemID.RocketLauncher, ItemID.SpectreStaff, ItemID.InfernoFork, ItemID.ShadowbeamStaff, ItemID.MagnetSphere });
+                        }
+                        break;
+
+                    case SpawnBiome.Jungle:
+                        RewardToGet.AddRange(new int[] { ItemID.BladeofGrass, ItemID.ThornChakram, ItemID.BeeKeeper, ItemID.BeesKnees, ItemID.BeeGun, ItemID.HornetStaff });
+                        if (Main.hardMode)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.ChlorophyteClaymore, ItemID.ChlorophytePartisan, ItemID.ChlorophyteSaber, ItemID.ChlorophyteShotbow, ItemID.Uzi });
+                        }
+                        break;
+
+                    case SpawnBiome.Underworld:
+                        RewardToGet.AddRange(new int[] { ItemID.FieryGreatsword, ItemID.DarkLance, ItemID.Sunfury, ItemID.FlowerofFire, ItemID.Flamelash, ItemID.HellwingBow, ItemID.ImpStaff });
+                        if (NPC.downedMechBossAny)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.UnholyTrident, ItemID.ObsidianSwordfish });
+                        }
+                        break;
+
+                    case SpawnBiome.Hallow:
+                        RewardToGet.AddRange(new int[] { ItemID.PearlwoodSword });
+                        if (Main.hardMode)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.CrystalStorm, ItemID.CrystalSerpent });
+                        }
+                        break;
+
+                    case SpawnBiome.Ocean:
+                        RewardToGet.AddRange(new int[] { ItemID.Swordfish });
+                        break;
+
+                    case SpawnBiome.Underground:
+                        RewardToGet.AddRange(new int[] { ItemID.ChainKnife, ItemID.Spear, ItemID.WoodenBoomerang, ItemID.EnchantedBoomerang });
+                        if (Main.hardMode)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.BeamSword, ItemID.Marrow, ItemID.PoisonStaff, ItemID.SpiderStaff, ItemID.QueenSpiderStaff });
+                        }
+                        break;
+
+                    case SpawnBiome.Sky:
+                        RewardToGet.AddRange(new int[] { ItemID.Starfury, ItemID.DaedalusStormbow });
+                        if (Main.hardMode)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.NimbusRod });
+                        }
+                        break;
+
+                    case SpawnBiome.OldOneArmy:
+
+                        break;
+
+                    case SpawnBiome.Snow:
+                        RewardToGet.AddRange(new int[] { ItemID.IceBlade, ItemID.IceBoomerang, ItemID.SnowballCannon });
+                        if (Main.hardMode)
+                        {
+                            RewardToGet.AddRange(new int[] { ItemID.Frostbrand, ItemID.IceBow, ItemID.FlowerofFrost, ItemID.FrostStaff, ItemID.IceRod });
+                        }
+                        break;
+
+                    case SpawnBiome.Desert:
+                        RewardToGet.AddRange(new int[] { ItemID.AntlionMandible, ItemID.AmberStaff });
+                        break;
+                }
+                if (!Main.hardMode)
+                {
+                    float LootRate = Main.rand.NextFloat();
+                    RewardToGet.AddRange(new int[] { ItemID.CopperShortsword, ItemID.CopperBroadsword, ItemID.CopperBow,
+                        ItemID.TinShortsword, ItemID.TinBroadsword, ItemID.TinBow});
+                    //if (LootRate < 0.667)
                     {
-                        case 0:
-                            WeaponID = ItemID.FieryGreatsword;
-                            break;
-                        case 1:
-                            WeaponID = ItemID.DarkLance;
-                            break;
-                        case 2:
-                            WeaponID = ItemID.Sunfury;
-                            break;
-                        case 3:
-                            WeaponID = ItemID.FlowerofFire;
-                            break;
-                        case 4:
-                            WeaponID = ItemID.Flamelash;
-                            break;
-                        case 5:
-                            WeaponID = ItemID.HellwingBow;
-                            break;
+                        RewardToGet.AddRange(new int[] { ItemID.SilverShortsword, ItemID.SilverBroadsword, ItemID.SilverBow,
+                            ItemID.TungstenShortsword, ItemID.TungstenBroadsword, ItemID.TungstenBow});
                     }
-                    break;
-
-                case SpawnBiome.Hallow:
-                    WeaponID = ItemID.PearlwoodSword;
-                    break;
+                    //if (LootRate < 0.333)
+                    {
+                        RewardToGet.AddRange(new int[] { ItemID.GoldShortsword, ItemID.GoldBroadsword, ItemID.GoldBow,
+                            ItemID.PlatinumShortsword, ItemID.PlatinumBroadsword, ItemID.PlatinumBow});
+                    }
+                }
+                else
+                {
+                    float LootRate = Main.rand.NextFloat();
+                    RewardToGet.AddRange(new int[] { ItemID.CobaltSword, ItemID.CobaltNaginata, ItemID.CobaltRepeater,
+                        ItemID.PalladiumSword, ItemID.PalladiumPike, ItemID.PalladiumRepeater});
+                    //if (LootRate < 0.667)
+                    {
+                        RewardToGet.AddRange(new int[] {ItemID.MythrilSword, ItemID.MythrilHalberd, ItemID.MythrilRepeater,
+                            ItemID.OrichalcumSword, ItemID.OrichalcumHalberd, ItemID.OrichalcumRepeater });
+                    }
+                    //if (LootRate < 0.333)
+                    {
+                        RewardToGet.AddRange(new int[] { ItemID.AdamantiteSword, ItemID.AdamantiteGlaive, ItemID.AdamantiteRepeater,
+                            ItemID.TitaniumSword, ItemID.TitaniumTrident, ItemID.TitaniumRepeater});
+                    }
+                }
+                if(NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3)
+                {
+                    RewardToGet.AddRange(new int[] { ItemID.Excalibur, ItemID.Gungnir, ItemID.HallowedRepeater });
+                }
+                if (RewardToGet.Count > 0)
+                    WeaponID = RewardToGet[Main.rand.Next(RewardToGet.Count)];
             }
             if (WeaponID > 0)
             {
@@ -1681,37 +2097,37 @@ namespace giantsummon
         public static Item GetRandomAccessory()
         {
             List<int> ItemIDs = new List<int>();
-            ItemIDs.Add(Terraria.ID.ItemID.Aglet);
-            ItemIDs.Add(Terraria.ID.ItemID.HermesBoots);
-            ItemIDs.Add(Terraria.ID.ItemID.ClimbingClaws);
-            ItemIDs.Add(Terraria.ID.ItemID.ShoeSpikes);
-            ItemIDs.Add(Terraria.ID.ItemID.Flipper);
-            ItemIDs.Add(Terraria.ID.ItemID.LuckyHorseshoe);
-            ItemIDs.Add(Terraria.ID.ItemID.ShinyRedBalloon);
+            ItemIDs.Add(ItemID.Aglet);
+            ItemIDs.Add(ItemID.HermesBoots);
+            ItemIDs.Add(ItemID.ClimbingClaws);
+            ItemIDs.Add(ItemID.ShoeSpikes);
+            ItemIDs.Add(ItemID.Flipper);
+            ItemIDs.Add(ItemID.LuckyHorseshoe);
+            ItemIDs.Add(ItemID.ShinyRedBalloon);
             //
-            ItemIDs.Add(Terraria.ID.ItemID.BandofRegeneration);
+            ItemIDs.Add(ItemID.BandofRegeneration);
 
             switch (spawnBiome)
             {
                 case SpawnBiome.Corruption:
-                    ItemIDs.Add(Terraria.ID.ItemID.BandofRegeneration);
+                    ItemIDs.Add(ItemID.BandofRegeneration);
                     break;
                 case SpawnBiome.Crimson:
-                    ItemIDs.Add(Terraria.ID.ItemID.PanicNecklace);
+                    ItemIDs.Add(ItemID.PanicNecklace);
                     break;
                 case SpawnBiome.Dungeon:
-                    ItemIDs.Add(Terraria.ID.ItemID.CobaltShield);
+                    ItemIDs.Add(ItemID.CobaltShield);
                     break;
                 case SpawnBiome.Jungle:
-                    ItemIDs.Add(Terraria.ID.ItemID.AnkletoftheWind);
-                    ItemIDs.Add(Terraria.ID.ItemID.FeralClaws);
-                    ItemIDs.Add(Terraria.ID.ItemID.FlowerBoots);
+                    ItemIDs.Add(ItemID.AnkletoftheWind);
+                    ItemIDs.Add(ItemID.FeralClaws);
+                    ItemIDs.Add(ItemID.FlowerBoots);
                     break;
                 case SpawnBiome.Underworld:
-                    ItemIDs.Add(Terraria.ID.ItemID.LavaCharm);
-                    ItemIDs.Add(Terraria.ID.ItemID.ObsidianRose);
-                    ItemIDs.Add(Terraria.ID.ItemID.ObsidianSkull);
-                    ItemIDs.Add(Terraria.ID.ItemID.MagmaStone);
+                    ItemIDs.Add(ItemID.LavaCharm);
+                    ItemIDs.Add(ItemID.ObsidianRose);
+                    ItemIDs.Add(ItemID.ObsidianSkull);
+                    ItemIDs.Add(ItemID.MagmaStone);
                     break;
             }
             if (ItemIDs.Count > 0)
@@ -1958,7 +2374,9 @@ namespace giantsummon
 
         public enum SpawnBiome : byte
         {
-            Corruption, Crimson, Dungeon, Jungle, Underworld, Hallow
+            Corruption, Crimson, Dungeon, Jungle, Underworld, Hallow,
+            Ocean, Underground, Sky, OldOneArmy, GoblinArmy, Night, Snow, Desert,
+            PirateArmy, MartianMadness, SnowLegion, LihzahrdTemple
         }
 
         public enum Modifiers : byte

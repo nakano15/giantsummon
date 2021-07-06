@@ -1346,6 +1346,20 @@ namespace giantsummon
             if (damage > 0 && player.statLife > 0) TriggerHandler.FirePlayerHurtTrigger(player.Center, player, (int)damage, crit, pvp);
             if (player.statLife > 0)
                 FriendlyDuelDefeat = false;
+            if (KnockedOut)
+                player.AddBuff(Terraria.ID.BuffID.Bleeding, 30 * 60);
+        }
+
+        public override void UpdateBadLifeRegen()
+        {
+            if(KnockedOut && player.bleed)
+            {
+                if (player.lifeRegenTime > 0)
+                    player.lifeRegenTime = 0;
+                if (player.lifeRegen > 0)
+                    player.lifeRegen = 0;
+                player.lifeRegen--;
+            }
         }
 
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)

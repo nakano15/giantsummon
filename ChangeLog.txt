@@ -53,3 +53,11 @@ Changed the following companions count to a companion slot weight system.
 	Each companion has their own weight value, which is displayed on the Guardian Selected Interface.
 	The Max Weight values stacks like the old Max Extra Companion counter used to work.
 Companions will no longer move around like goofs when trying to use a furniture that is behind another companion town npc.
+Sardine's Bounty Quests got changes:
+	New places It can spawn: Ocean, Underground, Sky, Old One's Army event, Goblin Army, Night, Snow, Desert, Pirate Army, Martian Madness, Snow Legion and Lihzahrd Temple.
+	Added some more weapons that can be rewarded for completting a bounty.
+	Made the bounty target more resistant to knockbacks.
+	Red Fire effects will come from the bounty npc.
+	Hardmode bounty quests will require you to kill 20 more npcs, before spawn stress ends.
+Getting hit while Knocked Out will now inflict "Bleeding" debuff on the one affected by It.
+	Bleeding debuff depletes your character health when in knocked out state too.
