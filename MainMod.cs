@@ -15,7 +15,7 @@ namespace giantsummon
 	public class MainMod : Mod
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
-            GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture;
+            GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture, GSI_ForegroundInterfaceTexture, GSI_BackgroundInterfaceTexture;
         public static Texture2D EyeTexture;
         public static Texture2D TacticsBarTexture, TacticsIconsTexture;
         public static Texture2D TrappedCatTexture;
@@ -2726,6 +2726,8 @@ namespace giantsummon
                     Main.instance.Window.Title = GetTitleText;
                 }
                 EyeTexture = GetTexture("ExtraTextures/Eyes");
+                GSI_BackgroundInterfaceTexture = GetTexture("Interface/gsi_bg");
+                GSI_ForegroundInterfaceTexture = GetTexture("Interface/gsi_fg");
             }
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);

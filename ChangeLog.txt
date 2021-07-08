@@ -61,3 +61,5 @@ Sardine's Bounty Quests got changes:
 	Hardmode bounty quests will require you to kill 20 more npcs, before spawn stress ends.
 Getting hit while Knocked Out will now inflict "Bleeding" debuff on the one affected by It.
 	Bleeding debuff depletes your character health when in knocked out state too.
+Added Alexander's description.
+Fixed Nemesis saying dialogues reserved to when having Rococo or Sardine in the team, when you don't have them.

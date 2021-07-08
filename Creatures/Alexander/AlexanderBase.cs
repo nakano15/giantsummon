@@ -14,8 +14,8 @@ namespace giantsummon.Creatures
 
         public AlexanderBase()
         {
-            Name = "Alexander"; //I really want to name him Alexander. The problem is Alex.
-            Description = "";
+            Name = "Alexander";
+            Description = "Member of a mystery solving gang,\nuntil they disappeared, and now he looks for them.\nDoesn't miss a clue.";
             Size = GuardianSize.Large;
             Width = 28;
             Height = 86;

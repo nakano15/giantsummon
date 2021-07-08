@@ -887,24 +887,13 @@ namespace giantsummon
             bool First = true;
             if (Time.Days > 0)
             {
-                T += Time.Days + " days";
-                First = false;
+                return "In " + Time.Days + " day" + (Time.Days > 1 ? "s" : "");
             }
             if (Time.Hours > 0)
             {
-                if (!First)
-                    T += ", ";
-                T += Time.Hours + " hours";
-                First = false;
+                return "In " + Time.Hours + " hour" + (Time.Hours > 1 ? "s" : "");
             }
-            if (Time.Minutes > 0)
-            {
-                if (!First)
-                    T += ", ";
-                T += Time.Minutes + " minutes";
-                First = false;
-            }
-            return T + ".";
+            return "Starting soon.";
         }
 
         public string GetAgeString()
@@ -928,9 +917,9 @@ namespace giantsummon
             //return (float)((SavedAge > 0 ? SavedAge : Base.Age) * Base.GetGroup.AgingSpeed + (GetLifeTime.TotalDays * (double)Base.GetGroup.AgingSpeed) / DaysToYears);
         }
 
-        public string GetTime()
+        public string GetTime(bool Compressed = false)
         {
-            return Lang.LocalizedDuration(GetLifeTime, false, false);
+            return Lang.LocalizedDuration(GetLifeTime, Compressed, false);
         }
 
         public void Save(Terraria.ModLoader.IO.TagCompound tag, int UniqueID)

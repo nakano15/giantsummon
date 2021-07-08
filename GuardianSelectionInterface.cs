@@ -23,6 +23,10 @@ namespace giantsummon
 
         public static int Selected = -1, LastSelected = -1, HoveredButton = -1;
         public static int[] GuardianList = new int[0];
+        public static ContentElement[] ContentList = new ContentElement[0];
+        public static byte SortingOrder = 0;
+        public const byte SortByLetter = 0, SortByLivingInWorld = 1;
+        const int MaxLines = 18;
 
         public static void OpenInterface()
         {
@@ -34,7 +38,7 @@ namespace giantsummon
             Selected = -1;
             LastSelected = -1;
             HasRequestRequiringIt = false;
-            GuardianList = GetGuardianList(player);//player.MyGuardians.Keys.ToArray();
+            GetGuardianList(player);
             Width = (int)(Main.screenWidth * 0.5f);
             Height = (int)(Main.screenHeight * 0.5f);
             if (Width < 640) Width = 640;
@@ -42,7 +46,7 @@ namespace giantsummon
             InterfacePosition.X = (Main.screenWidth - Width) * 0.5f;
             InterfacePosition.Y = (Main.screenHeight - Height + 36) * 0.5f;
             ScrollY = 0;
-            for (int k = 0; k < GuardianList.Length; k++)
+            /*for (int k = 0; k < GuardianList.Length; k++)
             {
                 if (player.SelectedGuardian == GuardianList[k])
                     Selected = k;
@@ -51,27 +55,63 @@ namespace giantsummon
             {
                 DisplayGuardian.Data = player.MyGuardians[GuardianList[Selected]];
                 HasRequestRequiringIt = RequestData.PlayerHasRequestRequiringCompanion(player.player, DisplayGuardian.Data);
-            }
+            }*/
         }
 
-        public static int[] GetGuardianList(PlayerMod player)
+        public static void GetGuardianList(PlayerMod player)
         {
-            List<int> GuardiansLivingHere = new List<int>(), GuardiansNotLivingHere = new List<int>();
-            int[] keys = player.MyGuardians.Keys.ToArray();
-            foreach (int key in keys)
             {
-                GuardianData gd = player.MyGuardians[key];
-                if (WorldMod.CanGuardianNPCSpawnInTheWorld(gd.ID, gd.ModID))
+                int[] keys = new int[0];
+                switch (SortingOrder)
                 {
-                    GuardiansLivingHere.Add(key);
+                    default:
+                        keys = player.MyGuardians.OrderBy(x => x.Value.Name).Select(x => x.Key).ToArray();
+                        break;
+                    case SortByLivingInWorld:
+                        keys = player.MyGuardians.OrderBy(x => !WorldMod.CanGuardianNPCSpawnInTheWorld(x.Value.ID)).Select(x => x.Key).ToArray();
+                        break;
                 }
-                else
+                List<ContentElement> contents = new List<ContentElement>();
+                char LastLetter = ' ';
+                foreach(int k in keys)
                 {
-                    GuardiansNotLivingHere.Add(key);
+                    GuardianData gd = player.MyGuardians[k];
+                    if (SortingOrder == SortByLetter)
+                    {
+                        char Letter = gd.Name[0];
+                        if (Letter >= '0' && Letter < '9')
+                        {
+                            Letter = '0';
+                        }
+                        if (Letter != LastLetter)
+                        {
+                            LastLetter = Letter;
+                            contents.Add(new ContentElement(Letter));
+                        }
+                    }
+                    contents.Add(new ContentElement(k, WorldMod.CanGuardianNPCSpawnInTheWorld(gd.ID, gd.ModID)));
                 }
+                ContentList = contents.ToArray();
             }
-            GuardiansLivingHere.AddRange(GuardiansNotLivingHere);
-            return GuardiansLivingHere.ToArray();
+            //
+            {
+                List<int> GuardiansLivingHere = new List<int>(), GuardiansNotLivingHere = new List<int>();
+                int[] keys = player.MyGuardians.Keys.ToArray();
+                foreach (int key in keys)
+                {
+                    GuardianData gd = player.MyGuardians[key];
+                    if (WorldMod.CanGuardianNPCSpawnInTheWorld(gd.ID, gd.ModID))
+                    {
+                        GuardiansLivingHere.Add(key);
+                    }
+                    else
+                    {
+                        GuardiansNotLivingHere.Add(key);
+                    }
+                }
+                GuardiansLivingHere.AddRange(GuardiansNotLivingHere);
+                GuardianList = GuardiansLivingHere.ToArray();
+            }
         }
 
         public static void DrawLevelInfoInterface(PlayerMod player)
@@ -97,6 +137,8 @@ namespace giantsummon
 
         public static void DrawInterface()
         {
+            DrawNewInterface();
+            return;
             try
             {
                 if (Main.playerInventory)
@@ -721,9 +763,367 @@ namespace giantsummon
             }
         }
 
+        private static void ChangeSelectedGuardian(int Position, PlayerMod player)
+        {
+            if (Position < 0 || Position >= ContentList.Length)
+                return;
+            ContentElement element = ContentList[Position];
+            if (!element.Letter && player.MyGuardians.ContainsKey(element.Index))
+            {
+                Selected = Position;
+                DisplayGuardian.Data = player.MyGuardians[element.Index];
+                Age = DisplayGuardian.Data.GetAgeString();
+                Time = DisplayGuardian.Data.GetTime();
+                ModName = DisplayGuardian.Data.ModID;
+                Mod mod = ModLoader.GetMod(ModName);
+                if (mod != null)
+                    ModName = mod.DisplayName;
+                DisplayGuardian.Scale = DisplayGuardian.GetAgeSize() * DisplayGuardian.Base.GetScale;
+                if (DisplayGuardian.Data.IsBirthday)
+                {
+                    BirthdayTime = "Turns " + DisplayGuardian.Data.GetBirthdayAge + " years old today.";
+                }
+                else
+                {
+                    BirthdayTime = "Birthday: " + DisplayGuardian.Data.TimeUntilBirthdayString();
+                }
+            }
+        }
+
+        public static void DrawNewInterface()
+        {
+            if (Main.playerInventory)
+                IsActive = false;
+            if (!IsActive)
+                return;
+            PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            Vector2 HudPosition = new Vector2(Main.screenWidth * 0.5f - 240, Main.screenHeight * 0.5f - 240);
+            Main.spriteBatch.Draw(MainMod.GSI_BackgroundInterfaceTexture, HudPosition, Color.White);
+            if (Main.mouseX >= HudPosition.X + 22 && Main.mouseX < HudPosition.X + 470 &&
+               Main.mouseY >= HudPosition.Y + 54 && Main.mouseY < HudPosition.Y + 447)
+            {
+                player.player.mouseInterface = true;
+            }
+            if (Main.mouseX >= HudPosition.X + 180 && Main.mouseX < HudPosition.X + 23 &&
+               Main.mouseY >= HudPosition.Y + 436 && Main.mouseY < HudPosition.Y + 62)
+            {
+                player.player.mouseInterface = true;
+            }
+            DrawNameList(HudPosition, player);
+            DrawWeightBar(HudPosition, player, Selected > -1 ? (DisplayGuardian.Base.CompanionSlotWeight * (!PlayerMod.HasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID) ? 1 : -1)) : 0);
+            if(Selected > -1)
+            {
+                const float ElementScale = 0.7f;
+                const int ElementCenterX = 175 + 131;
+                {
+                    int BarWidth = (int)((float)player.FriendshipExp / player.FriendshipMaxExp * 262);
+                    Vector2 RankPosition = Vector2.Zero;
+                    RankPosition.X = HudPosition.X + 175;
+                    RankPosition.Y = HudPosition.Y + 87;
+                    Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, RankPosition, new Rectangle(185, 87, BarWidth, 5), Color.White);
+                    RankPosition.X = HudPosition.X + ElementCenterX;
+                    RankPosition.Y = HudPosition.Y + 84 + 6;
+                    Utils.DrawBorderString(Main.spriteBatch, "Friendship Rank: " + player.FriendshipLevel, RankPosition, Color.White, ElementScale, 0.5f, 1f);
+
+                }
+                {
+                    Vector2 TgPos = Vector2.Zero;
+                    TgPos.X = Main.screenPosition.X + HudPosition.X + ElementCenterX;
+                    TgPos.Y = Main.screenPosition.Y + HudPosition.Y + 235;
+                    DisplayGuardian.Position = TgPos;
+                    DisplayGuardian.Draw(true);
+                }
+                {
+                    Vector2 NamePos = Vector2.Zero;
+                    NamePos.X = HudPosition.X + ElementCenterX;
+                    NamePos.Y = HudPosition.Y + 253 + 6;
+                    Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Name, NamePos, Color.White, ElementScale, 0.5f, 1);
+                }
+                {
+                    //int lines;
+                    string[] DescriptionTextParsed = DisplayGuardian.Base.Description.Split('\n'); //Utils.WordwrapString(DisplayGuardian.Base.Description, Main.fontMouseText, (int)(261 * (1f / (ElementScale != 0 ? ElementScale : 1))), 5, out lines);
+                    for (int l = 0; l < DescriptionTextParsed.Length; l++)
+                    {
+                        Vector2 DescriptionPos = Vector2.Zero;
+                        DescriptionPos.X = HudPosition.X + ElementCenterX;
+                        DescriptionPos.Y = HudPosition.Y + 255 + 12 * l;
+                        Utils.DrawBorderString(Main.spriteBatch, DescriptionTextParsed[l], DescriptionPos, Color.White, ElementScale, 0.5f, 0);
+                    }
+                }
+                {
+                    Vector2 ExtraInfosPos = Vector2.Zero;
+                    ExtraInfosPos.X = HudPosition.X + ElementCenterX;
+                    ExtraInfosPos.Y = HudPosition.Y + 323 + 6;
+                    Utils.DrawBorderString(Main.spriteBatch, "Extra Infos", ExtraInfosPos, Color.White, ElementScale, 0.5f, 1f);
+                    //
+                    List<string> InfosText = new List<string>();
+                    {
+                        int AgeVal = DisplayGuardian.Age, YearlyAgeVal = DisplayGuardian.Data.YearlyAge;
+                        InfosText.Add("Age: " + DisplayGuardian.Age + (YearlyAgeVal != AgeVal ? "(" + YearlyAgeVal + " Years Old)" : ""));
+                    }
+                    InfosText.Add("Size: " + DisplayGuardian.Base.Size.ToString());
+                    InfosText.Add(DisplayGuardian.GetGroup.Name);
+                    InfosText.Add("Mod:" + DisplayGuardian.ModID);
+                    for (int y = 0; y < 4; y++)
+                    {
+                        for (int x = 0; x < 2; x++)
+                        {
+                            int index = y * 2 + x;
+                            if (index >= InfosText.Count)
+                                break;
+                            ExtraInfosPos.X = HudPosition.X + 175 + 130 * x;
+                            ExtraInfosPos.Y = HudPosition.Y + 326 - 2 + 10 * y;
+                            Utils.DrawBorderString(Main.spriteBatch, InfosText[index], ExtraInfosPos, Color.White, ElementScale);
+                        }
+                    }
+                }
+            }
+            //Dismiss Button (left)
+            if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian &&
+                (!PlayerMod.HasBuddiesModeOn(player.player) || !PlayerMod.GetPlayerBuddy(player.player).IsSameID(DisplayGuardian)) &&
+                (DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive(DisplayGuardian.Data)) ||
+                PlayerMod.PlayerHasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID)) &&
+                (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(ContentList[Selected].Index)) &&
+                ((player.GetEmptyGuardianSlot() < 255 && (player.GuardianFollowersWeight == 0 || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
+                player.GetGuardianSlot(ContentList[Selected].Index) < 255))
+            {
+                Vector2 ButtonCenter = Vector2.Zero;
+                ButtonCenter.X = HudPosition.X + 175 + 39;
+                ButtonCenter.Y = HudPosition.Y + 404 + 14;
+                bool MouseOver = false;
+                string Text = "Call";
+                bool IsCallButton = player.GetGuardianSlot(ContentList[Selected].Index) == 255;
+                byte SummonSlot = player.GetEmptyGuardianSlot();
+                if (!IsCallButton)
+                {
+                    Text = "Dismiss";
+                }
+                else if(SummonSlot > 0 && SummonSlot < 255)
+                {
+                    Text += " Assist";
+                }
+                if(Math.Abs(Main.mouseX - ButtonCenter.X) < 39 && 
+                    Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
+                {
+                    MouseOver = true;
+                    if(Main.mouseLeft && Main.mouseLeftRelease)
+                    {
+                        if (IsCallButton)
+                        {
+                            player.CallGuardian(ContentList[Selected].Index, SummonSlot);
+                            foreach(TerraGuardian tg in player.GetAllGuardianFollowers)
+                            {
+                                if(tg.Active && tg.ID == DisplayGuardian.ID && tg.ModID == DisplayGuardian.ModID)
+                                {
+                                    string mes = tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess);
+                                    if(mes != "")
+                                    {
+                                        tg.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(mes, tg));
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            TerraGuardian tg = PlayerMod.GetPlayerSummonedGuardian(player.player, DisplayGuardian.ID, DisplayGuardian.ModID);
+                            string Mes = tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer);
+                            if (Mes != "")
+                                Main.NewText(tg.Name + ": " + GuardianMouseOverAndDialogueInterface.MessageParser(Mes, tg));
+                            player.DismissGuardian(player.GetGuardianSlot(ContentList[Selected].Index));
+                        }
+                    }
+                }
+                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), 1f, 0.5f, 0.5f);
+            }
+            //Home Button (Center)
+            if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel))
+            {
+                Vector2 ButtonCenter = Vector2.Zero;
+                ButtonCenter.X = HudPosition.X + 265 + 41;
+                ButtonCenter.Y = HudPosition.Y + 404 + 14;
+                bool MouseOver = false;
+                string Text = "";
+                bool IsMoveout = false;
+                if(WorldMod.CanGuardianNPCSpawnInTheWorld(DisplayGuardian.ID, DisplayGuardian.ModID))
+                {
+                    IsMoveout = true;
+                    Text = "Send Home";
+                }
+                else if(WorldMod.HasEmptyGuardianNPCSlot())
+                {
+                    Text = "Allow Move In";
+                }
+                if (Text != "")
+                {
+                    if (Math.Abs(Main.mouseX - ButtonCenter.X) < 41 &&
+                        Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
+                    {
+                        MouseOver = true;
+                        if (Main.mouseLeft && Main.mouseLeftRelease)
+                        {
+                            if (IsMoveout)
+                                WorldMod.RemoveGuardianNPCToSpawn(DisplayGuardian.ID, DisplayGuardian.ModID);
+                            else
+                                WorldMod.AllowGuardianNPCToSpawn(DisplayGuardian.ID, DisplayGuardian.ModID);
+                        }
+                    }
+                    Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), 1f, 0.5f, 0.5f);
+                }
+            }
+            //Inventory Button (Right)
+            {
+                Vector2 ButtonCenter = Vector2.Zero;
+                ButtonCenter.X = HudPosition.X + 360 + 39;
+                ButtonCenter.Y = HudPosition.Y + 404 + 14;
+                bool MouseOver = false;
+                string Text = "Inventory";
+                if (Math.Abs(Main.mouseX - ButtonCenter.X) < 39 &&
+                    Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
+                {
+                    MouseOver = true;
+                    if (Main.mouseLeft && Main.mouseLeftRelease)
+                    {
+
+                    }
+                }
+                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), 1f, 0.5f, 0.5f);
+            }
+        }
+
+        public static void DrawWeightBar(Vector2 InterfacePosition, PlayerMod player, float SelectedGuardianWeight)
+        {
+            Vector2 BarPosition = Vector2.Zero;
+            BarPosition.X = InterfacePosition.X + 184;
+            BarPosition.Y = InterfacePosition.Y + 34;
+            const int BarWidth = 248, BarHeight = 28;
+                int CurrentWeight = (int)(player.GuardianFollowersWeight * 1000), GuardianWeightValue = (int)(SelectedGuardianWeight * 1000), MaxWeight = (int)(player.MaxGuardianFollowersWeight * 1000);
+            {
+                int FirstBarSize = (int)((float)(CurrentWeight + (GuardianWeightValue > 0 ? 0 : GuardianWeightValue)) / MaxWeight * BarWidth),
+                    SecondBarSize = (int)((float)Math.Abs(GuardianWeightValue) / MaxWeight * BarWidth);
+                if(SelectedGuardianWeight > 0 && FirstBarSize + SecondBarSize > BarWidth)
+                {
+                    FirstBarSize = 0;
+                    SecondBarSize = BarWidth;
+                }
+                Rectangle rect = new Rectangle((int)BarPosition.X, (int)BarPosition.Y, FirstBarSize, BarHeight);
+                Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, rect, new Rectangle(266, 34, 88, 28), Color.White);
+                if (SelectedGuardianWeight != 0)
+                {
+                    rect.X += FirstBarSize;
+                    rect.Width = SecondBarSize;
+                    Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, rect, new Rectangle(SelectedGuardianWeight < 0 ? 186 : 358, 34, 70, 28), Color.White);
+                }
+            }
+            BarPosition.X += BarWidth * 0.5f;
+            BarPosition.Y = InterfacePosition.Y + 56 + 6;
+            Utils.DrawBorderString(Main.spriteBatch, "Weight: " + CurrentWeight + "/" + MaxWeight, BarPosition, Color.White, 1f, 0.5f, 1f);
+        }
+
+        public static void DrawNameList(Vector2 InterfaceStartPosition, PlayerMod player)
+        {
+            Vector2 ElementPosition = Vector2.Zero;
+            // Scroll Bar
+            {
+                ElementPosition.X = InterfaceStartPosition.X + 152;
+                ElementPosition.Y = InterfaceStartPosition.Y + 66;
+                const int ScrollBarMaxHeight = 366;
+                float ScrollBarSize = 1f;
+                int OverflowValue = ContentList.Length - MaxLines;
+                if(OverflowValue > 0)
+                {
+                    ScrollBarSize = (float)MaxLines / ContentList.Length;
+                    ElementPosition.Y += (ScrollBarMaxHeight * ((1f / OverflowValue) * (1f - ScrollBarSize)));
+                }
+                ScrollBarSize *= ScrollBarMaxHeight;
+                for(int i = 0; i < 3; i++)
+                {
+                    Vector2 ThisPosition = ElementPosition;
+                    int dy = 66, dh = 0;
+                    int scaley = 0;
+                    switch (i)
+                    {
+                        case 0: //bg
+                            scaley = (int)ScrollBarSize;
+                            dy = 96;
+                            dh = 110;
+                            break;
+                        case 1: //upper
+                            dh = 28;
+                            break;
+                        case 2: //lower
+                            dh = 28;
+                            if (ScrollBarSize < 56)
+                                ThisPosition.Y += 28;
+                            else
+                            {
+                                ThisPosition.Y += ScrollBarMaxHeight - 28;
+                            }
+                            break;
+                    }
+                    Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, new Rectangle((int)ThisPosition.X, (int)ThisPosition.Y, 12, scaley), new Rectangle(152, dy, 12, dh), Color.White);
+                }
+            }
+            // Companion List
+            ElementPosition.X = InterfaceStartPosition.X + 30;
+            ElementPosition.Y = InterfaceStartPosition.Y + 96 + 6;
+            const float ElementScale = 0.7f;
+            Utils.DrawBorderString(Main.spriteBatch, "Companions", ElementPosition, Color.White, ElementScale, 0f, 1f);
+            ElementPosition.Y += 14;
+            for(int element = 0; element < MaxLines; element++)
+            {
+                int index = element + ScrollY;
+                if(index >= ContentList.Length)
+                {
+                    break;
+                }
+                ContentElement ce = ContentList[index];
+                if (ce.Letter)
+                {
+                    Utils.DrawBorderString(Main.spriteBatch, " " + ((char)ce.Index == '0' ? "0~9" : ((char)ce.Index).ToString()), ElementPosition, Color.Brown, ElementScale, 0f, 1f);
+                }
+                else
+                {
+                    GuardianData gd = player.MyGuardians[ce.Index];
+                    Color color = Selected == index ? Color.Yellow : (ce.LivingHere ? Color.White : Color.Gray);
+                    if(Main.mouseX >= ElementPosition.X && Main.mouseX < ElementPosition.X + 34 && 
+                        Main.mouseY >= ElementPosition.Y - 14 && Main.mouseY < ElementPosition.Y - 4)
+                    {
+                        color = Color.Cyan;
+                        if(Main.mouseLeft && Main.mouseLeftRelease)
+                        {
+                            ChangeSelectedGuardian(index, player);
+                        }
+                    }
+                    Utils.DrawBorderString(Main.spriteBatch, gd.Name, ElementPosition, color, ElementScale, 0f, 1f);
+                }
+                ElementPosition.Y += 14;
+            }
+        }
+
         public static void DrawRectangle(float x, float y, int width, int height, Color c)
         {
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)x, (int)y, width, height), c);
+        }
+
+        public struct ContentElement
+        {
+            public int Index;
+            public bool Letter, LivingHere;
+
+            public ContentElement(int MyTgID, bool LivingHere)
+            {
+                Index = MyTgID;
+                Letter = false;
+                this.LivingHere = LivingHere;
+            }
+
+            public ContentElement(char Letter)
+            {
+                Index = Letter;
+                this.Letter = true;
+                LivingHere = false;
+            }
         }
     }
 }

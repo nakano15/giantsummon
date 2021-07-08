@@ -489,6 +489,8 @@
     <Content Include="Interface\EditButton.png" />
     <Content Include="Interface\Emotions.png" />
     <Content Include="Interface\FriendshipHeart.png" />
+    <Content Include="Interface\gsi_bg.png" />
+    <Content Include="Interface\gsi_fg.png" />
     <Content Include="Interface\GuardianInfoIcons.png" />
     <Content Include="Interface\GuardianMouse.png" />
     <Content Include="Interface\GuardianStatusIcon.png" />
@@ -580,6 +582,12 @@
   <ItemGroup>
     <Folder Include="Commands\" />
     <Folder Include="Ideas\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Font\libraryfont.dynamicfont" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

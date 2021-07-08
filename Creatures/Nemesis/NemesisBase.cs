@@ -188,14 +188,14 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             Mes.Add("Why does people here look at me like as if I would kill them in their sleep?");
             Mes.Add("I see all this colorful environment, but can't feel anything.");
-            if (!PlayerMod.HasGuardianSummoned(player, 4))
+            if (PlayerMod.HasGuardianSummoned(player, 4))
             {
                 Mes.Add("Take me with you on your quest, sometime.");
-                if (Main.raining)
-                    Mes.Add("The rain passes through my body, but the armor still can take the drops.");
             }
+            if (Main.raining)
+                Mes.Add("The rain passes through my body, but the armor still can take the drops.");
             Mes.Add("The dungeon in this world? It is a place where cultists sacrificed people to awaken some ancient god. A Terrarian has defeated that ancient god, but parts of it remains in this world.");
-            if (!PlayerMod.HasGuardianSummoned(player, 0))
+            if (PlayerMod.HasGuardianSummoned(player, 0))
             {
                 Mes.Add("I don't know what it is to feel fun, [gn:0]. So stop doing jokes.");
                 Mes.Add("I were wanting to talk to you, [gn:0]. Why do you take people trash with you?");
