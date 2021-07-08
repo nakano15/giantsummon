@@ -25,8 +25,8 @@ namespace giantsummon
         public static int[] GuardianList = new int[0];
         public static ContentElement[] ContentList = new ContentElement[0];
         public static byte SortingOrder = 0;
-        public const byte SortByLetter = 0, SortByLivingInWorld = 1;
-        const int MaxLines = 18;
+        public const byte SortByLetter = 0, SortByLivingInWorld = 1, SortBySize = 2, SortByWeight = 3, SortByHeight = 4, SortByWidth = 5;
+        public const int MaxLines = 24;
 
         public static void OpenInterface()
         {
@@ -39,6 +39,7 @@ namespace giantsummon
             LastSelected = -1;
             HasRequestRequiringIt = false;
             GetGuardianList(player);
+            PickMainGuardian(player);
             Width = (int)(Main.screenWidth * 0.5f);
             Height = (int)(Main.screenHeight * 0.5f);
             if (Width < 640) Width = 640;
@@ -58,6 +59,25 @@ namespace giantsummon
             }*/
         }
 
+        public static void PickMainGuardian(PlayerMod player)
+        {
+            if (!player.Guardian.Active)
+            {
+                Selected = -1;
+            }
+            else
+            {
+                for(int i = 0; i < ContentList.Length; i++)
+                {
+                    if(ContentList[i].SortingType == ContentElement.SortTypes.GuardianID && ContentList[i].Index == player.SelectedGuardian)
+                    {
+                        ChangeSelectedGuardian(i, player);
+                        return;
+                    }
+                }
+            }
+        }
+
         public static void GetGuardianList(PlayerMod player)
         {
             {
@@ -70,24 +90,92 @@ namespace giantsummon
                     case SortByLivingInWorld:
                         keys = player.MyGuardians.OrderBy(x => !WorldMod.CanGuardianNPCSpawnInTheWorld(x.Value.ID)).Select(x => x.Key).ToArray();
                         break;
+                    case SortBySize:
+                        keys = player.MyGuardians.OrderBy(x => x.Value.Base.Size).Select(x => x.Key).ToArray();
+                        break;
+                    case SortByWeight:
+                        keys = player.MyGuardians.OrderBy(x => x.Value.Base.CompanionSlotWeight).Select(x => x.Key).ToArray();
+                        break;
+                    case SortByWidth:
+                        keys = player.MyGuardians.OrderBy(x => x.Value.Base.Width * x.Value.Base.Scale).Select(x => x.Key).ToArray();
+                        break;
+                    case SortByHeight:
+                        keys = player.MyGuardians.OrderBy(x => x.Value.Base.Height * x.Value.Base.Scale).Select(x => x.Key).ToArray();
+                        break;
                 }
                 List<ContentElement> contents = new List<ContentElement>();
-                char LastLetter = ' ';
+                int LastValue = -1;
                 foreach(int k in keys)
                 {
                     GuardianData gd = player.MyGuardians[k];
-                    if (SortingOrder == SortByLetter)
+                    switch (SortingOrder)
                     {
-                        char Letter = gd.Name[0];
-                        if (Letter >= '0' && Letter < '9')
-                        {
-                            Letter = '0';
-                        }
-                        if (Letter != LastLetter)
-                        {
-                            LastLetter = Letter;
-                            contents.Add(new ContentElement(Letter));
-                        }
+                        case SortByLetter:
+                            char Letter = gd.Name[0];
+                            if (Letter >= '0' && Letter < '9')
+                            {
+                                Letter = '0';
+                            }
+                            if (Letter != LastValue)
+                            {
+                                LastValue = Letter;
+                                contents.Add(new ContentElement(Letter));
+                            }
+                            break;
+                        case SortBySize:
+                            {
+                                int SizeValue = (int)gd.Base.Size;
+                                if(SizeValue != LastValue)
+                                {
+                                    LastValue = SizeValue;
+                                    contents.Add(new ContentElement(gd.Base.Size));
+                                }
+                            }
+                            break;
+                        case SortByWeight:
+                            {
+                                int WeightValue = (int)(gd.Base.CompanionSlotWeight * 1000);
+                                int Value = 0;
+                                if (WeightValue >= 2400)
+                                    Value = 5;
+                                else if (WeightValue >= 1800)
+                                    Value = 4;
+                                else if (WeightValue >= 1200)
+                                    Value = 3;
+                                else if (WeightValue >= 800)
+                                    Value = 2;
+                                else if (WeightValue >= 500)
+                                    Value = 1;
+                                if (LastValue != Value)
+                                {
+                                    LastValue = Value;
+                                    contents.Add(new ContentElement(Value, 0));
+                                }
+                            }
+                            break;
+                        case SortByHeight:
+                            {
+                                int WeightValue = (int)(Math.Max(gd.Base.Width, gd.Base.Height) * gd.Base.Scale);
+                                int Value = 0;
+                                if (WeightValue >= 286)
+                                    Value = 6;
+                                else if (WeightValue >= 134)
+                                    Value = 5;
+                                else if (WeightValue >= 82)
+                                    Value = 4;
+                                else if (WeightValue >= 60)
+                                    Value = 3;
+                                else if (WeightValue >= 28)
+                                    Value = 2;
+                                else if (WeightValue >= 12)
+                                    Value = 1;
+                                if (LastValue != Value)
+                                {
+                                    LastValue = Value;
+                                    contents.Add(new ContentElement(Value, 1));
+                                }
+                            }
+                            break;
                     }
                     contents.Add(new ContentElement(k, WorldMod.CanGuardianNPCSpawnInTheWorld(gd.ID, gd.ModID)));
                 }
@@ -768,7 +856,7 @@ namespace giantsummon
             if (Position < 0 || Position >= ContentList.Length)
                 return;
             ContentElement element = ContentList[Position];
-            if (!element.Letter && player.MyGuardians.ContainsKey(element.Index))
+            if (element.SortingType == ContentElement.SortTypes.GuardianID && player.MyGuardians.ContainsKey(element.Index))
             {
                 Selected = Position;
                 DisplayGuardian.Data = player.MyGuardians[element.Index];
@@ -809,11 +897,52 @@ namespace giantsummon
             {
                 player.player.mouseInterface = true;
             }
+            const float ElementScale = 0.7f;
+            string MouseText = "";
             DrawNameList(HudPosition, player);
             DrawWeightBar(HudPosition, player, Selected > -1 ? (DisplayGuardian.Base.CompanionSlotWeight * (!PlayerMod.HasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID) ? 1 : -1)) : 0);
-            if(Selected > -1)
+            //Book Tag
             {
-                const float ElementScale = 0.7f;
+                Vector2 TagPosition = Vector2.Zero;
+                TagPosition.X = HudPosition.X + 38;
+                TagPosition.Y = HudPosition.Y + 10;
+                if(Main.mouseX >= TagPosition.X && Main.mouseX < TagPosition.X + 55 && 
+                    Main.mouseY >= TagPosition.Y && Main.mouseY < TagPosition.Y + 53)
+                {
+                    player.player.mouseInterface = true;
+                    MouseText = "Sorting by: ";
+                    switch (SortingOrder)
+                    {
+                        case SortByLetter:
+                            MouseText += "Alphabetical Order";
+                            break;
+                        case SortByLivingInWorld:
+                            MouseText += "Living in the World";
+                            break;
+                        case SortBySize:
+                            MouseText += "Size";
+                            break;
+                        case SortByWeight:
+                            MouseText += "Weight";
+                            break;
+                        case SortByHeight:
+                            MouseText += "Weight";
+                            break;
+                    }
+                    if(Main.mouseLeft && Main.mouseLeftRelease)
+                    {
+                        SortingOrder++;
+                        if (SortingOrder >= 5)
+                            SortingOrder = 0;
+                        ScrollY = 0;
+                        GetGuardianList(player);
+                        PickMainGuardian(player);
+                    }
+                }
+                Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, TagPosition, new Rectangle(38, 10, 55, 53), Color.White);
+            }
+            if (Selected > -1)
+            {
                 const int ElementCenterX = 175 + 131;
                 {
                     int BarWidth = (int)((float)player.FriendshipExp / player.FriendshipMaxExp * 262);
@@ -841,8 +970,11 @@ namespace giantsummon
                 }
                 {
                     //int lines;
-                    string[] DescriptionTextParsed = DisplayGuardian.Base.Description.Split('\n'); //Utils.WordwrapString(DisplayGuardian.Base.Description, Main.fontMouseText, (int)(261 * (1f / (ElementScale != 0 ? ElementScale : 1))), 5, out lines);
-                    for (int l = 0; l < DescriptionTextParsed.Length; l++)
+                    string Description = DisplayGuardian.Base.Description.Replace('\n', ' ');
+                    int lines;
+                    string[] DescriptionTextParsed = Utils.WordwrapString(Description, Main.fontMouseText, (int)(262 * (1f / (ElementScale != 0 ? ElementScale : 1))), 5, out lines);
+                    
+                    for (int l = 0; l <= lines; l++)
                     {
                         Vector2 DescriptionPos = Vector2.Zero;
                         DescriptionPos.X = HudPosition.X + ElementCenterX;
@@ -872,7 +1004,7 @@ namespace giantsummon
                             if (index >= InfosText.Count)
                                 break;
                             ExtraInfosPos.X = HudPosition.X + 175 + 130 * x;
-                            ExtraInfosPos.Y = HudPosition.Y + 326 - 2 + 10 * y;
+                            ExtraInfosPos.Y = HudPosition.Y + 326 - 2 + 12 * y;
                             Utils.DrawBorderString(Main.spriteBatch, InfosText[index], ExtraInfosPos, Color.White, ElementScale);
                         }
                     }
@@ -906,6 +1038,14 @@ namespace giantsummon
                     Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
                 {
                     MouseOver = true;
+                    if (IsCallButton)
+                    {
+                        MouseText = "Calls the companion to aid you on your quest.";
+                    }
+                    else
+                    {
+                        MouseText = "Dismisses a companion from your group.";
+                    }
                     if(Main.mouseLeft && Main.mouseLeftRelease)
                     {
                         if (IsCallButton)
@@ -934,7 +1074,7 @@ namespace giantsummon
                         }
                     }
                 }
-                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), 1f, 0.5f, 0.5f);
+                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
             }
             //Home Button (Center)
             if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel))
@@ -959,6 +1099,10 @@ namespace giantsummon
                     if (Math.Abs(Main.mouseX - ButtonCenter.X) < 41 &&
                         Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
                     {
+                        if (!IsMoveout)
+                            MouseText = "Lets the companion live in your world.";
+                        else
+                            MouseText = "Makes the companion stop living in your world.";
                         MouseOver = true;
                         if (Main.mouseLeft && Main.mouseLeftRelease)
                         {
@@ -968,10 +1112,11 @@ namespace giantsummon
                                 WorldMod.AllowGuardianNPCToSpawn(DisplayGuardian.ID, DisplayGuardian.ModID);
                         }
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), 1f, 0.5f, 0.5f);
+                    Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
                 }
             }
             //Inventory Button (Right)
+            if(Selected > -1)
             {
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 360 + 39;
@@ -982,12 +1127,62 @@ namespace giantsummon
                     Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
                 {
                     MouseOver = true;
+                    MouseText = "Allows management of companion inventory and skins.";
                     if (Main.mouseLeft && Main.mouseLeftRelease)
                     {
-
+                        if (GuardianManagement.OpenInterfaceForGuardian(ContentList[Selected].Index))
+                            IsActive = false;
                     }
                 }
-                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), 1f, 0.5f, 0.5f);
+                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
+            }
+            //Wiki Button
+            if(Selected > -1)
+            {
+                Vector2 ButtonCenter = Vector2.Zero;
+                ButtonCenter.X = HudPosition.X + 175 + 20;
+                ButtonCenter.Y = HudPosition.Y + 235 - 5;
+                bool MouseOver = false;
+                string Text = "Wiki";
+                if (Math.Abs(Main.mouseX - ButtonCenter.X) < 39 &&
+                    Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
+                {
+                    MouseText = "Opens the wiki page related to this companion.";
+                    MouseOver = true;
+                    if (Main.mouseLeft && Main.mouseLeftRelease)
+                    {
+                        string Url = "https://nakano15-mods.fandom.com/wiki/";
+                        if (DisplayGuardian.Base.WikiPageLink != null)
+                            Url += DisplayGuardian.Base.WikiPageLink;
+                        else
+                            Url += DisplayGuardian.Base.Name;
+                        System.Diagnostics.Process.Start(Url);
+                        Main.NewText("Opening wiki page of " + DisplayGuardian.Name + ".");
+                    }
+                }
+                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
+            }
+            //Close Button
+            {
+                Vector2 ButtonCenter = Vector2.Zero;
+                ButtonCenter.X = HudPosition.X + 460;
+                ButtonCenter.Y = HudPosition.Y + 63;
+                bool MouseOver = false;
+                string Text = "X";
+                if (Math.Abs(Main.mouseX - ButtonCenter.X) < 6 &&
+                    Math.Abs(Main.mouseY - ButtonCenter.Y) < 6)
+                {
+                    MouseOver = true;
+                    if (Main.mouseLeft && Main.mouseLeftRelease)
+                    {
+                        IsActive = false;
+                    }
+                }
+                Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.Red), ElementScale, 0.5f, 0.5f);
+            }
+            if(MouseText != "")
+            {
+                Utils.DrawBorderString(Main.spriteBatch, MouseText, new Vector2(Main.mouseX + 16, Main.mouseY + 16), Color.White);
             }
         }
 
@@ -1033,7 +1228,7 @@ namespace giantsummon
                 if(OverflowValue > 0)
                 {
                     ScrollBarSize = (float)MaxLines / ContentList.Length;
-                    ElementPosition.Y += (ScrollBarMaxHeight * ((1f / OverflowValue) * (1f - ScrollBarSize)));
+                    ElementPosition.Y += (ScrollBarMaxHeight * ((1f / OverflowValue) * (1f - ScrollBarSize) * ScrollY));
                 }
                 ScrollBarSize *= ScrollBarMaxHeight;
                 for(int i = 0; i < 3; i++)
@@ -1041,34 +1236,63 @@ namespace giantsummon
                     Vector2 ThisPosition = ElementPosition;
                     int dy = 66, dh = 0;
                     int scaley = 0;
+                    bool MouseOver = false;
                     switch (i)
                     {
                         case 0: //bg
-                            scaley = (int)ScrollBarSize;
+                            scaley = (int)ScrollBarSize - 16;
                             dy = 96;
                             dh = 110;
+                            ThisPosition.Y += 4;
                             break;
                         case 1: //upper
                             dh = 28;
+                            scaley = dh;
+                            if(Main.mouseX >= ThisPosition.X && Main.mouseX < ThisPosition.X + 12 && 
+                                Main.mouseY >= ThisPosition.Y && Main.mouseY < ThisPosition.Y + dh)
+                            {
+                                MouseOver = true;
+                                if (Main.mouseLeft && Main.mouseLeftRelease)
+                                {
+                                    ScrollY--;
+                                    if (ScrollY < 0)
+                                        ScrollY = 0;
+                                }
+                            }
                             break;
                         case 2: //lower
+                            dy = 208;
                             dh = 28;
-                            if (ScrollBarSize < 56)
+                            scaley = dh;
+                            if (ScrollBarSize < 28)
                                 ThisPosition.Y += 28;
                             else
                             {
-                                ThisPosition.Y += ScrollBarMaxHeight - 28;
+                                ThisPosition.Y += ScrollBarSize - 28;
+                            }
+                            if (Main.mouseX >= ThisPosition.X && Main.mouseX < ThisPosition.X + 12 &&
+                                Main.mouseY >= ThisPosition.Y && Main.mouseY < ThisPosition.Y + dh)
+                            {
+                                MouseOver = true;
+                                if (Main.mouseLeft && Main.mouseLeftRelease)
+                                {
+                                    ScrollY++;
+                                    if (ScrollY > ContentList.Length - MaxLines)
+                                        ScrollY = ContentList.Length - MaxLines;
+                                    if (ScrollY < 0)
+                                        ScrollY = 0;
+                                }
                             }
                             break;
                     }
-                    Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, new Rectangle((int)ThisPosition.X, (int)ThisPosition.Y, 12, scaley), new Rectangle(152, dy, 12, dh), Color.White);
+                    Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, new Rectangle((int)ThisPosition.X, (int)ThisPosition.Y, 12, scaley), new Rectangle(152, dy, 12, dh), (MouseOver ? Color.Yellow : Color.White));
                 }
             }
             // Companion List
             ElementPosition.X = InterfaceStartPosition.X + 30;
             ElementPosition.Y = InterfaceStartPosition.Y + 96 + 6;
             const float ElementScale = 0.7f;
-            Utils.DrawBorderString(Main.spriteBatch, "Companions", ElementPosition, Color.White, ElementScale, 0f, 1f);
+            Utils.DrawBorderString(Main.spriteBatch, "Companions (Ascending)", ElementPosition, Color.White, 1, 0f, 1f);
             ElementPosition.Y += 14;
             for(int element = 0; element < MaxLines; element++)
             {
@@ -1078,24 +1302,34 @@ namespace giantsummon
                     break;
                 }
                 ContentElement ce = ContentList[index];
-                if (ce.Letter)
+                switch (ce.SortingType)
                 {
-                    Utils.DrawBorderString(Main.spriteBatch, " " + ((char)ce.Index == '0' ? "0~9" : ((char)ce.Index).ToString()), ElementPosition, Color.Brown, ElementScale, 0f, 1f);
-                }
-                else
-                {
-                    GuardianData gd = player.MyGuardians[ce.Index];
-                    Color color = Selected == index ? Color.Yellow : (ce.LivingHere ? Color.White : Color.Gray);
-                    if(Main.mouseX >= ElementPosition.X && Main.mouseX < ElementPosition.X + 34 && 
-                        Main.mouseY >= ElementPosition.Y - 14 && Main.mouseY < ElementPosition.Y - 4)
-                    {
-                        color = Color.Cyan;
-                        if(Main.mouseLeft && Main.mouseLeftRelease)
+                    case ContentElement.SortTypes.Letter:
+                        Utils.DrawBorderString(Main.spriteBatch, " #" + ((char)ce.Index == '0' ? "0~9" : ((char)ce.Index).ToString()), ElementPosition, Color.LightSalmon, ElementScale, 0f, 1f);
+                        break;
+                    case ContentElement.SortTypes.Size:
+                        Utils.DrawBorderString(Main.spriteBatch, " #" + Enum.GetName(typeof(GuardianBase.GuardianSize), ce.Index), ElementPosition, Color.LightSalmon, ElementScale, 0f, 1f);
+                        break;
+                    case ContentElement.SortTypes.Weight:
+                        Utils.DrawBorderString(Main.spriteBatch, " #" + WeightValueToString(ce.Index), ElementPosition, Color.LightSalmon, ElementScale, 0f, 1f);
+                        break;
+                    case ContentElement.SortTypes.Dimension:
+                        Utils.DrawBorderString(Main.spriteBatch, " #" + HeightValueToString(ce.Index), ElementPosition, Color.LightSalmon, ElementScale, 0f, 1f);
+                        break;
+                    case ContentElement.SortTypes.GuardianID:
+                        GuardianData gd = player.MyGuardians[ce.Index];
+                        Color color = Selected == index ? Color.Yellow : (ce.LivingHere ? Color.White : Color.Gray);
+                        if (Main.mouseX >= ElementPosition.X && Main.mouseX < ElementPosition.X + 118 &&
+                            Main.mouseY >= ElementPosition.Y - 18 && Main.mouseY < ElementPosition.Y - 6)
                         {
-                            ChangeSelectedGuardian(index, player);
+                            color = Color.Cyan;
+                            if (Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                ChangeSelectedGuardian(index, player);
+                            }
                         }
-                    }
-                    Utils.DrawBorderString(Main.spriteBatch, gd.Name, ElementPosition, color, ElementScale, 0f, 1f);
+                        Utils.DrawBorderString(Main.spriteBatch, gd.Name, ElementPosition, color, ElementScale, 0f, 1f);
+                        break;
                 }
                 ElementPosition.Y += 14;
             }
@@ -1106,23 +1340,81 @@ namespace giantsummon
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)x, (int)y, width, height), c);
         }
 
+        public static string WeightValueToString(int Value)
+        {
+            switch (Value)
+            {
+                case 0: return "Trivial";
+                case 1: return "Minimal";
+                case 2: return "Normal";
+                case 3: return "Big";
+                case 4: return "Huge";
+                case 5: return "Giant";
+                default: return "Colossal";
+            }
+        }
+
+        public static string HeightValueToString(int Value)
+        {
+            switch (Value)
+            {
+                case 0: return "Extremelly Small";
+                case 1: return "Very Small";
+                case 2: return "Small";
+                case 3: return "Normal";
+                case 4: return "Large";
+                case 5: return "Very Large";
+                case 6: return "Extra Large";
+                default: return "Can only see the feet.";
+            }
+        }
+
         public struct ContentElement
         {
             public int Index;
-            public bool Letter, LivingHere;
+            public bool LivingHere;
+            public SortTypes SortingType;
 
             public ContentElement(int MyTgID, bool LivingHere)
             {
                 Index = MyTgID;
-                Letter = false;
                 this.LivingHere = LivingHere;
+                SortingType = SortTypes.GuardianID;
             }
 
             public ContentElement(char Letter)
             {
                 Index = Letter;
-                this.Letter = true;
+                SortingType = SortTypes.Letter;
                 LivingHere = false;
+            }
+
+            public ContentElement(GuardianBase.GuardianSize size)
+            {
+                Index = (int)size;
+                SortingType = SortTypes.Size;
+                LivingHere = false;
+            }
+
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="Value"></param>
+            /// <param name="ValueType">0 = Weight, 1 = Width/Height size</param>
+            public ContentElement(int Value, byte ValueType)
+            {
+                Index = Value;
+                SortingType = (ValueType == 0 ? SortTypes.Weight : SortTypes.Dimension);
+                LivingHere = false;
+            }
+
+            public enum SortTypes : byte
+            {
+                GuardianID,
+                Letter,
+                Size,
+                Weight,
+                Dimension
             }
         }
     }

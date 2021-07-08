@@ -63,3 +63,5 @@ Getting hit while Knocked Out will now inflict "Bleeding" debuff on the one affe
 	Bleeding debuff depletes your character health when in knocked out state too.
 Added Alexander's description.
 Fixed Nemesis saying dialogues reserved to when having Rococo or Sardine in the team, when you don't have them.
+Companions will no longer try holding something when facing the background.
+Fixed an issue where companions who don't take aggro were taking aggro.

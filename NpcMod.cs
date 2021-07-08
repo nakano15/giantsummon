@@ -673,9 +673,11 @@ namespace giantsummon
                         float LowestAggroCount = (Main.player[p].Center - npc.Center).Length() - Main.player[p].aggro;
                         foreach (TerraGuardian g in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                         {
-                            if (g.Active && !g.Downed && !g.KnockedOutCold)
+                            if (g.Active && !g.Downed && !g.KnockedOutCold && !g.HasFlag(GuardianFlags.DontTakeAggro) && (!g.HasFlag(GuardianFlags.CantBeKnockedOutCold) || !g.KnockedOut))
                             {
                                 float AggroRange = (g.CenterPosition - npc.Center).Length() - g.Aggro;
+                                if (g.KnockedOut)
+                                    AggroRange += 300;
                                 if (AggroRange < LowestAggroCount)
                                 {
                                     LowestAggroCount = AggroRange;
