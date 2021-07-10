@@ -636,6 +636,20 @@ namespace giantsummon.Creatures
             {
 
             }
+            switch (guardian.OutfitID)
+            {
+                case RedHoodOutfitID:
+                    Mes.Add("*[name] says that now she's ready for adventure.*");
+                    Mes.Add("*[name] is saying that she finds this outfit comfy and style.*");
+                    Mes.Add("*[name] is saying that the cloak is the most important part of her outfit.*");
+                    Mes.Add("*[name] asks what you think of her outfit.*");
+                    break;
+                case CloaklessOutfitID:
+                    Mes.Add("*[name] says that now she's ready for adventure.*");
+                    Mes.Add("*[name] seems to be missing the cloak.*");
+                    Mes.Add("*[name] asks what you think of her outfit.*");
+                    break;
+            }
             Mes.Add("*[name] tells you of a Terrarian she met, named beaverrac. She said that found weird that he didn't talked with her, beside there were a lot of weird things happening around too.");
             if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
             {

@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace giantsummon.Creatures
 {
     public class ZacksBase : GuardianBase
     {
-        public const string OldHeadID = "oldhead", OldBodyID = "oldbody", OldLeftArmID = "oldleftarm";
-        public const byte OldBodyTextureID = 1;
+        public const string OldHeadID = "oldhead", OldBodyID = "oldbody", OldLeftArmID = "oldleftarm", MeatBagTextureID = "meatbag", MeatBagTextureFrontID = "meatbag_f";
+        public const byte OldBodySkinID = 1;
+        public const byte MeatBagOutfitID = 1;
 
         /// <summary>
         /// -Blue's Boyfriend.
@@ -135,7 +137,10 @@ namespace giantsummon.Creatures
             WingPosition.DefaultCoordinate2x = new Point(22, 21);
 
             //Skins
-            AddSkin(OldBodyTextureID, "Old Body", delegate(GuardianData gd, Player pl) { return true; });
+            AddSkin(OldBodySkinID, "Old Body", delegate(GuardianData gd, Player pl) { return true; });
+
+            //Outfits
+            AddOutfit(MeatBagOutfitID, "Meat Bag", delegate (GuardianData gd, Player pl) { return true; });
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -143,11 +148,13 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(OldHeadID, "head_old");
             sprites.AddExtraTexture(OldBodyID, "body_old");
             sprites.AddExtraTexture(OldLeftArmID, "left_arm_old");
+            sprites.AddExtraTexture(MeatBagTextureID, "meatbagoutfit");
+            sprites.AddExtraTexture(MeatBagTextureFrontID, "meatbagoutfit_f");
         }
 
         public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdd)
         {
-            if (guardian.SkinID == OldBodyTextureID)
+            if (guardian.SkinID == OldBodySkinID)
             {
                 foreach (GuardianDrawData gdd2 in gdd)
                 {
@@ -158,7 +165,7 @@ namespace giantsummon.Creatures
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
         {
-            if (guardian.SkinID == OldBodyTextureID)
+            if (guardian.SkinID == OldBodySkinID)
             {
                 foreach (GuardianDrawData gdd2 in TerraGuardian.DrawFront)
                 {
@@ -168,6 +175,47 @@ namespace giantsummon.Creatures
                 {
                     ReplaceTexturesForOldTexture(gdd2);
                 }
+            }
+            switch (guardian.OutfitID)
+            {
+                case MeatBagOutfitID:
+                    {
+                        bool OldSkin = guardian.SkinID == OldBodySkinID;
+                        Texture2D outfittexture = sprites.GetExtraTexture(MeatBagTextureID);
+                        Texture2D outfitfronttexture = sprites.GetExtraTexture(MeatBagTextureFrontID);
+                        Rectangle rect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame); //new Rectangle(0,0, SpriteWidth, SpriteHeight);
+                        GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, outfittexture, DrawPosition, rect, color, Rotation,
+                            Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        if (OldSkin)
+                            rect.Y += SpriteHeight * 2 * 2;
+                        else
+                            rect.Y += SpriteHeight * 2 * 1;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, outfittexture, DrawPosition, rect, color, Rotation,
+                            Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        rect = guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame);
+                        if (OldSkin)
+                            rect.Y += SpriteHeight * 2 * 3;
+                        else
+                            rect.Y += SpriteHeight * 2 * 4;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, outfittexture, DrawPosition, rect, color, Rotation,
+                            Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
+                        rect = guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame);
+                        rect.Y += SpriteHeight * 2 * 5;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, outfittexture, DrawPosition, rect, color, Rotation,
+                            Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGRightArm, gdd);
+                        if (BodyFrontFrameSwap.ContainsKey(guardian.BodyAnimationFrame))
+                        {
+                            rect = guardian.GetAnimationFrameRectangle(BodyFrontFrameSwap[guardian.BodyAnimationFrame]);
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, outfitfronttexture, DrawPosition, rect, color, Rotation,
+                                Origin, Scale, seffect);
+                            InjectTextureAfter(GuardianDrawData.TextureType.TGBodyFront, gdd);
+                        }
+                    }
+                    break;
             }
         }
 
@@ -329,6 +377,24 @@ namespace giantsummon.Creatures
                     Mes.Add("*[name] is trying very hard to hold his hunger.*");
                     Mes.Add("*[name] said that this night remembers him of when he died. He don't want to share the horrors he passed through with you. That seems to make him very angry.*");
                 }
+            }
+            switch (guardian.SkinID)
+            {
+                case OldBodySkinID:
+                    {
+                        Mes.Add("*Do I look less scary like this?*");
+                        Mes.Add("*Well.. At least there aren't any more flies entering my mouth...*");
+                        Mes.Add("*Some people said that I look less psychopathic like this.*");
+                    }
+                    break;
+            }
+            switch (guardian.OutfitID)
+            {
+                case MeatBagOutfitID:
+                    Mes.Add("*\"Meat Bag\"... I hope you didn't helped [gn:"+Blue+"] pick this shirt.*");
+                    Mes.Add("*It's good to have my wounds patched. It's really uncomfortable when people stares at your wounds, and shows their disgust face.*");
+                    Mes.Add("*Well, I'm probably less scary now, but I still can't get rid of the smell.*");
+                    break;
             }
             if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
             {

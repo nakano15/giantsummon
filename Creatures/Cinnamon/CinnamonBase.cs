@@ -9,7 +9,7 @@ namespace giantsummon.Creatures
 {
     public class CinnamonBase : GuardianBase
     {
-        public CinnamonBase()
+        public CinnamonBase() //Her recruitment could involve Soup.
         {
             Name = "Cinnamon";
             Description = "";
@@ -112,6 +112,18 @@ namespace giantsummon.Creatures
 
             //Wing Position
             //WingPosition.DefaultCoordinate2x = new Point(20, 23);
+        }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            if (player.HasItem(Terraria.ID.ItemID.BowlofSoup))
+            {
+                Mes.Add("*(Snif, Snif) Humm.... (Snif, Snif) You have something that smells delicious. Could you share It with me?*");
+            }
+            Mes.Add("*Oh, hello. Do you like tasty food too?*");
+            Mes.Add("*Hi, I love tasty foods. What do you love?*");
+            return Mes[Main.rand.Next(Mes.Count)];
         }
     }
 }

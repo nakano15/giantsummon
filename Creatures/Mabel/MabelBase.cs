@@ -209,6 +209,7 @@ namespace giantsummon.Creatures
             Mes.Add("*I was trying to fly earlier, to see If I can get into the contest. Maybe they only accept Reindeers on it, so If I could fly, I could at least participate?*");
             Mes.Add("*Everytime I try to join the Miss North Pole contest, they come with a different excuse.*");
             Mes.Add("*The Miss North Pole is a contest that happens some days before new year. Before happens what your people calls \"X-mas\".*");
+            Mes.Add("*My mom used to say that I had the luck of being attracted to merry places. Maybe that explains how I got here.*");
             if (Main.bloodMoon)
             {
                 Mes.Add("*How do I look? How do I look-How do I look-How do I look? \"She's blinking her eyes very fast, about 30 frames per second.\"*");

@@ -394,6 +394,24 @@ namespace giantsummon.Creatures
                 Mes.Add("My son got quite sad when I told him that I didn't found his dad yet...");
                 Mes.Add("[nickname], if you could help finding my husband, It will be great. He's a black cat with some spirit for adventure.");
             }
+            switch (guardian.SkinID)
+            {
+                case BaglessSkinID:
+                    Mes.Add("It's good to not have that weight on my back, It was already starting to ache.");
+                    if(player.Male)
+                        Mes.Add("You've been looking at me way too much since I removed the bag, why is that?");
+                    Mes.Add("What? You're impressed that I'm actually strong? House work isn't easy thing. Or was it the bag?");
+                    Mes.Add("I hope there's no thieves in your world, I really don't want to return home and find out my things are gone.");
+                    break;
+            }
+            switch (guardian.OutfitID)
+            {
+                case DamselOutfitID:
+                    Mes.Add("I also have taste for clothing, you know.");
+                    Mes.Add("I'm glad that the Clothier managed to make this clothing, it just fits in me.");
+                    Mes.Add("I feel like wanting to spend and afternoon at a beach now.");
+                    break;
+            }
             if (NpcMod.HasGuardianNPC(0))
             {
                 Mes.Add("I really love having [gn:0] in the town, I can ask him to do things without questioning.");

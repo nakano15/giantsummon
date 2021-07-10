@@ -119,8 +119,18 @@ namespace giantsummon.Npcs
             if (MessageTime > 0) MessageTime--;
             float Acceleration = Base.Acceleration, MaxSpeed = Base.MaxSpeed, Deceleration = Base.SlowDown,
                 JumpSpeed = Base.JumpSpeed;
-            if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI)
-                Idle = false;
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].talkNPC == npc.whoAmI)
+                {
+                    Idle = false;
+                    if (Main.player[i].Center.X < npc.Center.X)
+                        npc.direction = -1;
+                    else
+                        npc.direction = 1;
+                    break;
+                }
+            }
             if (Idle)
             {
                 if (npc.direction == 0)

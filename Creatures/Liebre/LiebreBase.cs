@@ -16,8 +16,8 @@ namespace giantsummon.Creatures
 
         public BunnyReaperGuardianBase()
         {
-            Name = "BunnyReaperGuardian";
-            Description = "";
+            Name = "Liebre";
+            Description = "Tasked with collecting souls from the\nTerra Realm and deliver to their destination.\nFeared by many, but he only want to have friends.";
             Size = GuardianSize.Large;
             Width = 24;
             Height = 66;
@@ -107,7 +107,7 @@ namespace giantsummon.Creatures
             g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
             //g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
             //g.AddFlag(GuardianFlags.HideKOBar);
-            //g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
+            g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
             const float TrailLength = 4;
             if(g.TrailLength == 0)
                 g.TrailLength = (int)TrailLength;

@@ -22,11 +22,7 @@ namespace giantsummon
                     return _Name;
                 else
                 {
-                    if (Base.PossibleNames.Length > 0 && PickedName < Base.PossibleNames.Length)
-                    {
-                        return Base.PossibleNames[PickedName];
-                    }
-                    return Base.Name;
+                    return RealName;
                 }
             }
             set
@@ -35,6 +31,17 @@ namespace giantsummon
             }
         }
         public string _Name = null;
+        public string RealName
+        {
+            get
+            {
+                if (Base.PossibleNames.Length > 0 && PickedName < Base.PossibleNames.Length)
+                {
+                    return Base.PossibleNames[PickedName];
+                }
+                return Base.Name;
+            }
+        }
         public bool Male = true;
         public int ID { get { return MyID.ID; } set { MyID.ID = value; } }
         public string ModID { get { return MyID.ModID; } set { MyID.ModID = value; } } //To distinguish mod companions

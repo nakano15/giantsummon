@@ -65,3 +65,7 @@ Added Alexander's description.
 Fixed Nemesis saying dialogues reserved to when having Rococo or Sardine in the team, when you don't have them.
 Companions will no longer try holding something when facing the background.
 Fixed an issue where companions who don't take aggro were taking aggro.
+New Guardian Selection Interface implemented.
+	Fully sprited by jellybeanmonster.
+The game will no longer show a long line of text over the companion head, when they say something with maaaaaaaaany words.
+Companions will now comment on their equipped skins and outfits.

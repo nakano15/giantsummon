@@ -936,8 +936,6 @@ namespace giantsummon
                 {
                     layers.Add(gi);
                 }
-                layers.Insert(MouseOverLayer, dcs);
-                layers.Insert(MouseOverLayer, dgmo);
                 layers.Insert(CursorLayer, gsi);
                 if (BuddyModeSetupInterface.WindowActive)
                 {
@@ -947,7 +945,10 @@ namespace giantsummon
                 {
                     if (Main.playerInventory)
                         Main.playerInventory = false;
+                    if (!Main.player[Main.myPlayer].dead)
+                        layers.Clear();
                     layers.Insert(PlayerDeathLayer, downedInterface);
+                    return;
                 }
                 layers.Insert(PlayerChatLayer, dnagd);
                 layers.Insert(HotbatLayer, goi);
@@ -958,6 +959,8 @@ namespace giantsummon
                 layers.Insert(EntityHealthBarLayer, dgrb);
                 layers.Insert(TownNpcHeadBannersLayer, dghmi);
                 layers.Insert(TownNpcHeadBannersLayer, umos);
+                layers.Insert(TownNpcHeadBannersLayer, dcs);
+                layers.Insert(TownNpcHeadBannersLayer, dgmo);
                 layers.Insert(0, dngh);
                 bool RemoveHealthBarAndInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
                 for (int l = 0; l < layers.Count; l++)
@@ -1067,8 +1070,8 @@ namespace giantsummon
                 ClosingBar2EffectPercentage = 1f;
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, BarDimY), ClosingBarsColor);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, BarDimY, Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY), Main.screenWidth, BarDimY), ClosingBarsColor);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - 1 - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - 1 - BarDimY), Main.screenWidth, BarDimY), ClosingBarsColor);
             //
             if (!Main.player[Main.myPlayer].dead && (!playerMod.KnockedOutCold || Main.player[Main.myPlayer].statLife > 1))
             {

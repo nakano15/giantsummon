@@ -106,7 +106,8 @@ namespace giantsummon
             }
         }
         private GuardianData _Data;
-        public string Name { get { if (Data.Name != null) return Data.Name; else return Base.Name; } set { Data.Name = value; } }
+        public string Name { get { if (Data.Name != null) return Data.Name; else return RealName; } set { Data.Name = value; } }
+        public string RealName { get { return Data.RealName; } }
         public string GroupID { get { return Base.GetGroupID; } }
         public int ID { get { return Data.MyID.ID; } set { Data.MyID.ID = value; } }
         public string ModID { get { return Data.MyID.ModID; } set { Data.MyID.ModID = value; } }
@@ -258,38 +259,9 @@ namespace giantsummon
                 return NewName;
             }
         }
-        public bool TakesAggro(Vector2 AttackerPosition)
-        {
-            if (HasFlag(GuardianFlags.DontTakeAggro))
-                return false;
-            bool IsBeingAggroed = false;
-            if (OwnerPos == -1)
-                IsBeingAggroed = true;
-            else if (!Downed)
-            {
-                Vector2 PC = Main.player[OwnerPos].Center, MC = CenterPosition;
-                bool NearPlayer = Math.Abs(PC.X - MC.X) < NPC.sWidth && Math.Abs(PC.Y - MC.Y) < NPC.sHeight;
-                if (NearPlayer && Main.player[OwnerPos].dead)
-                {
-                    IsBeingAggroed = true;
-                }
-                else if (NearPlayer && Aggro > Main.player[OwnerPos].aggro)
-                {
-                    IsBeingAggroed = true;
-                }
-                /*else if (NearPlayer && HasFlag(GuardianFlags.Tanking) && Tanker)
-                {
-                    IsBeingAggroed = true;
-                }*/
-                else if ((CenterPosition - AttackerPosition).Length() < (Main.player[OwnerPos].Center - AttackerPosition).Length())
-                {
-                    IsBeingAggroed = true;
-                }
-            }
-            return IsBeingAggroed;
-        }
         public List<string> MessageSchedule = new List<string>();
         public string ChatMessage = "";
+        public bool CanBeInterrupted = false;
         public bool DisplayMessageOnChat = false;
         public int MessageTime = 0;
         public List<GuardianFlags> FlagList = new List<GuardianFlags>();
@@ -1216,27 +1188,48 @@ namespace giantsummon
             }
         }
 
-        public int SaySomething(string[] Message, bool ChatDisplay = false)
+        public int SaySomething(string[] Message, bool ChatDisplay = false, bool CanInterrupt = false)
         {
             return SaySomething(Message.ToList(), ChatDisplay);
         }
 
-        public int SaySomething(List<string> Message, bool ChatDisplay = false)
+        public int SaySomething(List<string> Message, bool ChatDisplay = false, bool CanInterrupt = false)
         {
-            this.ChatMessage = Message[0];
+            if (!CanBeInterrupted && MessageTime > 0)
+                return MessageTime;
+            CanBeInterrupted = true;
+            ChatMessage = Message[0];
             Message.RemoveAt(0);
             MessageSchedule = Message;
             DisplayMessageOnChat = ChatDisplay;
+            MessageTime = MainMod.CalculateMessageTime(ChatMessage);
             if (ChatDisplay)
             {
                 Main.NewText(Name + ": " + Message);
             }
-            MessageTime = MainMod.CalculateMessageTime(ChatMessage);
             return MessageTime;
+        }
+
+        public int SaySomethingCanSchedule(string Message, bool ChatDisplay = false)
+        {
+            CanBeInterrupted = false;
+            DisplayMessageOnChat = ChatDisplay;
+            if (MessageTime > 0)
+            {
+                MessageSchedule.Add(Message);
+                return MessageTime + MainMod.CalculateMessageTime(Message);
+            }
+            else
+            {
+                return SaySomething(Message, ChatDisplay);
+            }
         }
 
         public int SaySomething(string Message, bool ChatDisplay = false)
         {
+            if (!CanBeInterrupted && MessageTime > 0)
+                return MessageTime;
+            CanBeInterrupted = true;
             this.ChatMessage = Message;
             DisplayMessageOnChat = ChatDisplay;
             if (ChatDisplay)
@@ -5586,6 +5579,7 @@ namespace giantsummon
             byte GapDistance = 0;
             if (PrioritaryBehaviorType != PrioritaryBehavior.Jump)
             {
+                bool CanSwim = HasFlag(GuardianFlags.SwimmingAbility) || HasFlag(GuardianFlags.Merfolk);
                 for (byte x = 0; x <= DistXCheck; x++)
                 {
                     byte Dangerous = 0;
@@ -5608,6 +5602,10 @@ namespace giantsummon
                                 {
                                     SolidTile = true;
                                     break;
+                                }
+                                else if (tile.liquid > 20 && !tile.lava() && CanSwim)
+                                {
+                                    SolidTile = true;
                                 }
                             }
                         }
@@ -5665,8 +5663,9 @@ namespace giantsummon
                     MoveLeft = false;
                     if(OwnerPos > -1)
                     {
-                        if(Math.Abs(Main.player[OwnerPos].Center.X - Position.X) >= 12 * 16 | 
-                            Math.Abs(Main.player[OwnerPos].Center.Y - CenterY) >= 12 * 16)
+                        if(Main.player[OwnerPos].velocity.Y == 0 && 
+                            (Math.Abs(Main.player[OwnerPos].Center.X - Position.X) >= 4 * 16 ||
+                            Math.Abs(Main.player[OwnerPos].Center.Y - CenterY) >= 4 * 16))
                         {
                             IncreaseStuckTimer();
                         }
@@ -17313,9 +17312,9 @@ namespace giantsummon
                 Vector2 TextPosition = NewPosition;
                 TextPosition.Y -= SpriteHeight + 22;
                 int Lines;
-                string[] Message = Utils.WordwrapString(ChatMessage, Main.fontMouseText, 240, 5, out Lines);
+                string[] Message = Utils.WordwrapString(ChatMessage, Main.fontMouseText, 400, 5, out Lines);
                 TextPosition.Y -= 22f * Lines;
-                for (int l = 0; l < Lines; l++)
+                for (int l = 0; l <= Lines; l++)
                 {
                     Utils.DrawBorderString(Main.spriteBatch, Message[l], TextPosition, Color.White, 1f, 0.5f);
                     TextPosition.Y += 22;

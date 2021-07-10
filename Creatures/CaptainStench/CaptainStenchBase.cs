@@ -24,7 +24,7 @@ namespace giantsummon.Creatures
             Name = "CaptainStench";
             PossibleNames = new string[] { "Cpt. Stench" }; //Captain Sally Stench
             Description = "";
-            Size = GuardianSize.Large;
+            Size = GuardianSize.Medium;
             Width = 22;
             Height = 66;
             CharacterPositionYDiscount = 22;

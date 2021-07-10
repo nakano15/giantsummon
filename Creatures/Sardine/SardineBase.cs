@@ -10,7 +10,8 @@ namespace giantsummon.Creatures
 {
     public class SardineBase : GuardianBase
     {
-        public const string CaitSithOutfitID = "cs_outfit";
+        public const string CaitSithTextureID = "cs_outfit";
+        public const int CaitSithOutfitID = 1;
 
         /// <summary>
         /// -Cheerful and Friendly.
@@ -139,7 +140,7 @@ namespace giantsummon.Creatures
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
-            sprites.AddExtraTexture(CaitSithOutfitID, "caitsith_outfit");
+            sprites.AddExtraTexture(CaitSithTextureID, "caitsith_outfit");
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
@@ -148,7 +149,7 @@ namespace giantsummon.Creatures
                 {
                     case 1:
                         {
-                            Texture2D texture = sprites.GetExtraTexture(CaitSithOutfitID);
+                            Texture2D texture = sprites.GetExtraTexture(CaitSithTextureID);
                             int BodyFramePosition = -1, RightArmPosition = -1, HeadEquipPosition = -1, BodyFrontPosition = -1;
                             bool HasVanityItem = TerraGuardian.HeadSlot > 0;
                             for (int t = 0; t < TerraGuardian.DrawBehind.Count; t++)
@@ -352,6 +353,14 @@ namespace giantsummon.Creatures
                 Mes.Add("Where did those weird creatures came from?");
             }
             bool HasBreeMet = PlayerMod.PlayerHasGuardian(player, Bree), HasGlennMet = PlayerMod.PlayerHasGuardian(player, Glenn);
+            switch (guardian.OutfitID)
+            {
+                case CaitSithOutfitID:
+                    Mes.Add("I really like this outfit, but the cloak on my tail is bothering me a bit.");
+                    Mes.Add("For some reason, this outfit also came with some kind of sword.");
+                    Mes.Add("[nickname], do you know what Tokyo is?");
+                    break;
+            }
             if (HasBreeMet && HasGlennMet)
             {
                 Mes.Add("I'm so glad that my son and my wife are safe.");

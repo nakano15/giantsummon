@@ -11,7 +11,8 @@ namespace giantsummon.Creatures
 {
     public class BrutusBase : GuardianBase
     {
-        public const string RoyalGuardSkinID = "royal_guard", RoyalGuardSkinFID = "royal_guard_f";
+        public const string RoyalGuardTextureID = "royal_guard", RoyalGuardTextureFID = "royal_guard_f";
+        public const int RoyalGuardOutfitID = 1;
 
         /// <summary>
         /// -Was a Royal Guard in the Ether Realm.
@@ -441,6 +442,14 @@ namespace giantsummon.Creatures
             if (Terraria.GameContent.Events.DD2Event.DownedInvasionAnyDifficulty)
                 Mes.Add("*The Old One's Army is the perfect event for training my bodyguard skills. If I be able to protect the crystal, I can protect anyone.*");
             Mes.Add("*You want to visit the Ether Realm? I'm not sure if you will be able to, things are very tough there for Terrarians.*");
+            switch (guardian.OutfitID)
+            {
+                case RoyalGuardOutfitID:
+                    Mes.Add("*Halt! What do you think? It fits me, right?*");
+                    Mes.Add("*This outfit means so much for me: I used it on my last job for years, and using it again brings me memories.*");
+                    Mes.Add("*There is no way I can convince you to tell me who gave you this, right?*");
+                    break;
+            }
             if (NpcMod.HasGuardianNPC(0))
                 Mes.Add("*[gn:0] has what it takes to be a good warrior, he just needs to take things a bit more serious.*");
             if (NpcMod.HasGuardianNPC(1))
@@ -731,8 +740,8 @@ namespace giantsummon.Creatures
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
-            sprites.AddExtraTexture(RoyalGuardSkinID, "royal_guard_outfit");
-            sprites.AddExtraTexture(RoyalGuardSkinFID, "royal_guard_outfit_f");
+            sprites.AddExtraTexture(RoyalGuardTextureID, "royal_guard_outfit");
+            sprites.AddExtraTexture(RoyalGuardTextureFID, "royal_guard_outfit_f");
         }
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
@@ -751,7 +760,7 @@ namespace giantsummon.Creatures
                     {
                         int FramePosition;
                         bool IsFrameFront;
-                        Texture2D texture = sprites.GetExtraTexture(RoyalGuardSkinID);
+                        Texture2D texture = sprites.GetExtraTexture(RoyalGuardTextureID);
                         Rectangle LeftArmFrame = guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame),
                             RightArmFrame = guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame),
                             BodyFrame = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
@@ -875,7 +884,7 @@ namespace giantsummon.Creatures
                             int FrameID = guardian.Base.GetBodyFrontSprite(guardian.BodyAnimationFrame);
                             if (FrameID > -1)
                             {
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(RoyalGuardSkinFID), DrawPosition, guardian.GetAnimationFrameRectangle(FrameID), color, Rotation, Origin, SpriteScale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(RoyalGuardTextureFID), DrawPosition, guardian.GetAnimationFrameRectangle(FrameID), color, Rotation, Origin, SpriteScale, seffect);
                                 guardian.AddDrawDataAfter(gdd, FramePosition, IsFrameFront);
                             }
                         }

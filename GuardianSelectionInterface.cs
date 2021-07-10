@@ -27,6 +27,7 @@ namespace giantsummon
         public static byte SortingOrder = 0;
         public const byte SortByLetter = 0, SortByLivingInWorld = 1, SortBySize = 2, SortByWeight = 3, SortByHeight = 4, SortByWidth = 5;
         public const int MaxLines = 24;
+        public const int MaxDrawWidth = 262, MaxDrawHeight = 133;
 
         public static void OpenInterface()
         {
@@ -34,7 +35,6 @@ namespace giantsummon
             PlayerMod player = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
             IsActive = true;
             DisplayGuardian = new TerraGuardian();
-            DisplayGuardian.LookingLeft = true;
             Selected = -1;
             LastSelected = -1;
             HasRequestRequiringIt = false;
@@ -396,7 +396,7 @@ namespace giantsummon
                         Name = DisplayGuardian.Name;
                         if (DisplayGuardian.Data._Name != null)
                         {
-                            Name += " (" + DisplayGuardian.Base.Name + ")";
+                            Name += " (" + DisplayGuardian.RealName + ")";
                         }
                         Age = DisplayGuardian.Data.GetAgeString();
                         Time = DisplayGuardian.Data.GetTime();
@@ -578,7 +578,7 @@ namespace giantsummon
                             Main.spriteBatch.Draw(MainMod.GuardianInfoIcons, IconPos, new Rectangle(Val * 16, 0, 16, 16), Color.White);
                             if (Negation)
                                 Main.spriteBatch.Draw(MainMod.GuardianInfoIcons, IconPos, new Rectangle(0, 0, 16, 16), Color.White);
-                            IconsPosition.X += 24;
+                            IconsPosition.X += 21;
                         }
                     }
                     Vector2 NameDim = Utils.DrawBorderString(Main.spriteBatch, Name, ElementPosition, Color.White, ScaleY, 0.5f);
@@ -867,6 +867,15 @@ namespace giantsummon
                 if (mod != null)
                     ModName = mod.DisplayName;
                 DisplayGuardian.Scale = DisplayGuardian.GetAgeSize() * DisplayGuardian.Base.GetScale;
+                if (DisplayGuardian.Height * DisplayGuardian.Scale > MaxDrawHeight)
+                {
+                    DisplayGuardian.Scale *= (float)MaxDrawHeight / (DisplayGuardian.Height * DisplayGuardian.Scale);
+                }
+                else if (DisplayGuardian.Width * DisplayGuardian.Scale > MaxDrawWidth)
+                {
+                    DisplayGuardian.Scale *= (float)MaxDrawWidth / (DisplayGuardian.Width * DisplayGuardian.Scale);
+                }
+                DisplayGuardian.LookingLeft = false;
                 if (DisplayGuardian.Data.IsBirthday)
                 {
                     BirthdayTime = "Turns " + DisplayGuardian.Data.GetBirthdayAge + " years old today.";
@@ -926,7 +935,7 @@ namespace giantsummon
                             MouseText += "Weight";
                             break;
                         case SortByHeight:
-                            MouseText += "Weight";
+                            MouseText += "Height";
                             break;
                     }
                     if(Main.mouseLeft && Main.mouseLeftRelease)
@@ -966,8 +975,218 @@ namespace giantsummon
                     Vector2 NamePos = Vector2.Zero;
                     NamePos.X = HudPosition.X + ElementCenterX;
                     NamePos.Y = HudPosition.Y + 253 + 6;
-                    Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Name, NamePos, Color.White, ElementScale, 0.5f, 1);
+                    string NameText = DisplayGuardian.Name;
+                    if (DisplayGuardian.Data._Name != null)
+                        NameText += "(" + DisplayGuardian.RealName + ")";
+                    NamePos.X += Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Name, NamePos, Color.White, 0.8f, 0.5f, 1).X * 0.5f + 4;
+                    if (DisplayGuardian.Data.CanChangeName)
+                    {
+                        NamePos.Y -= 7 + 16;
+                        Main.spriteBatch.Draw(MainMod.EditButtonTexture, NamePos, Color.White);
+                        if(Main.mouseX >= NamePos.X && Main.mouseX < NamePos.X + 16 && 
+                            Main.mouseY >= NamePos.Y && Main.mouseY < NamePos.Y + 16)
+                        {
+                            MouseText = "Click to rename companion.\nCheck chat if you do so.";
+                            if(Main.mouseLeft && Main.mouseLeftRelease)
+                            {
+                                int GPos = ContentList[Selected].Index;
+                                Main.chatText = "/renameguardian " + player.MyGuardians[GPos].ID + " " + player.MyGuardians[GPos].ModID + " ";
+                                Main.drawingPlayerChat = true;
+                                IsActive = false;
+                                Main.NewText("Insert new name. Press Esc to cancel.");
+                            }
+                        }
+                    }
                 }
+                //Upper Left Display Infos
+                {
+                    Vector2 ElementPos = Vector2.Zero;
+                    ElementPos.X = HudPosition.X + 175 + 4;//NameWidth - 20 * 2;
+                    ElementPos.Y = HudPosition.Y + 102 + 4;//-= 24 + 6;
+                    DisplayGuardian.DrawFriendshipHeart(ElementPos, 255, -1, 1);
+                    //Crowns Drawing
+                    Vector2 TextPos = Vector2.Zero;
+                    ElementPos.Y += 26 + 4;
+                    //Gold Crown
+                    Main.spriteBatch.Draw(MainMod.CrownTexture, ElementPos, new Rectangle(0, 0, 16, 12), Color.White);
+                    TextPos.X = ElementPos.X + 20;
+                    TextPos.Y = ElementPos.Y - 6;
+                    Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Base.GetPopularityContestsWon().ToString(), TextPos, Color.White, ElementScale);
+                    if (Main.mouseX >= ElementPos.X && Main.mouseX < ElementPos.X + 40 && Main.mouseY >= ElementPos.Y && Main.mouseY < ElementPos.Y + 16)
+                    {
+                        MouseText = "Popularity Contests won: " + DisplayGuardian.Base.GetPopularityContestsWon();
+                    }
+                    ElementPos.Y += 20;
+                    //Silver Crown
+                    Main.spriteBatch.Draw(MainMod.CrownTexture, ElementPos, new Rectangle(16, 0, 16, 12), Color.White);
+                    //TextPos.X = ElementPos.X + 20;
+                    TextPos.Y = ElementPos.Y - 6;
+                    Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Base.GetPopularityContestsSecondPlace().ToString(), TextPos, Color.White, ElementScale);
+                    if (Main.mouseX >= ElementPos.X && Main.mouseX < ElementPos.X + 40 && Main.mouseY >= ElementPos.Y && Main.mouseY < ElementPos.Y + 16)
+                    {
+                        MouseText = "Popularity Contests won in 2nd place: " + DisplayGuardian.Base.GetPopularityContestsSecondPlace();
+                    }
+                    ElementPos.Y += 20;
+                    //Bronze Crown
+                    Main.spriteBatch.Draw(MainMod.CrownTexture, ElementPos, new Rectangle(32, 0, 16, 12), Color.White);
+                    //TextPos.X = ElementPos.X + 20;
+                    TextPos.Y = ElementPos.Y - 6;
+                    Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Base.GetPopularityContestsThirdPlace().ToString(), TextPos, Color.White, ElementScale);
+                    if (Main.mouseX >= ElementPos.X && Main.mouseX < ElementPos.X + 40 && Main.mouseY >= ElementPos.Y && Main.mouseY < ElementPos.Y + 16)
+                    {
+                        MouseText = "Popularity Contests won in 3nd place: " + DisplayGuardian.Base.GetPopularityContestsThirdPlace();
+                    }
+                    ElementPos.Y += 20;
+                }
+                //Info Icons
+                {
+                    List<sbyte> InfoIcons = new List<sbyte>();
+                    if (DisplayGuardian.Male)
+                        InfoIcons.Add(4);
+                    else
+                        InfoIcons.Add(5);
+                    if (DisplayGuardian.Base.DontUseRightHand)
+                        InfoIcons.Add(-1);
+                    else
+                        InfoIcons.Add(1);
+                    if (DisplayGuardian.Base.DontUseHeavyWeapons)
+                        InfoIcons.Add(-2);
+                    else
+                        InfoIcons.Add(2);
+                    if (DisplayGuardian.Base.IsTerraGuardian)
+                        InfoIcons.Add(6);
+                    else
+                        InfoIcons.Add(-6);
+                    if (DisplayGuardian.Base.OneHanded2HWeaponWield)
+                        InfoIcons.Add(7);
+                    else
+                        InfoIcons.Add(-7);
+                    if (DisplayGuardian.Base.CanDuck)
+                        InfoIcons.Add(8);
+                    else
+                        InfoIcons.Add(-8);
+                    if (DisplayGuardian.Base.ReverseMount)
+                        InfoIcons.Add(9);
+                    else
+                        InfoIcons.Add(-9);
+                    if (DisplayGuardian.Base.DrinksBeverage)
+                        InfoIcons.Add(10);
+                    else
+                        InfoIcons.Add(-10);
+                    if (!DisplayGuardian.Base.IsNocturnal)
+                        InfoIcons.Add(11);
+                    else
+                        InfoIcons.Add(12);
+                    Vector2 IconPosition = Vector2.Zero;
+                    IconPosition.X = HudPosition.X + 175 + 131 - 20 * InfoIcons.Count * 0.5f;
+                    IconPosition.Y = HudPosition.Y + 102;
+                    foreach(sbyte i in InfoIcons)
+                    {
+                        bool Negation = i < 0;
+                        byte Value = (i >= 0 ? (byte)i : (byte)(-i));
+                        IconPosition.X += 2;
+                        if(Main.mouseX >= IconPosition.X && Main.mouseX < IconPosition.X + 16 && 
+                            Main.mouseY >= IconPosition.Y && Main.mouseY < IconPosition.Y + 16)
+                        {
+                            switch (Value)
+                            {
+                                case 1:
+                                    if (Negation)
+                                        MouseText = "Doesn't use Right Hand";
+                                    else
+                                        MouseText = "Use Right Hand";
+                                    break;
+                                case 2:
+                                    if (Negation)
+                                    {
+                                        MouseText = "Doesn't Use Two Handed Weapons";
+                                    }
+                                    else
+                                    {
+                                        MouseText = "Use Two Handed Weapons";
+                                    }
+                                    break;
+                                case 3:
+                                    if (Negation)
+                                    {
+                                        MouseText = "Doesn't Use Player Armor as Vanity";
+                                    }
+                                    else
+                                    {
+                                        MouseText = "Use Player Armor as Vanity";
+                                    }
+                                    break;
+                                case 4:
+                                    MouseText = "Male";
+                                    break;
+                                case 5:
+                                    MouseText = "Female";
+                                    break;
+                                case 6:
+                                    if (Negation)
+                                    {
+                                        MouseText = "Terra Creature";
+                                    }
+                                    else
+                                    {
+                                        MouseText = "Ether Realm Creature";
+                                    }
+                                    break;
+                                case 7:
+                                    if (Negation)
+                                    {
+                                        MouseText = "Uses Both Hands to wield Heavy Weapons.";
+                                    }
+                                    else
+                                    {
+                                        MouseText = "Wield Heavy Weapons with one hand";
+                                    }
+                                    break;
+                                case 8:
+                                    if (Negation)
+                                    {
+                                        MouseText = "Can't Crouch";
+                                    }
+                                    else
+                                    {
+                                        MouseText = "Can Crouch";
+                                    }
+                                    break;
+                                case 9:
+                                    if (Negation)
+                                    {
+                                        MouseText = "Player Mounts on the Guadian";
+                                    }
+                                    else
+                                    {
+                                        MouseText = "Guardian Mounts on Player back";
+                                    }
+                                    break;
+                                case 10:
+                                    if (Negation)
+                                    {
+                                        MouseText = "Doesn't Drink Alcoholic Drinks";
+                                    }
+                                    else
+                                    {
+                                        MouseText = "Drinks Alcoholic Drinks";
+                                    }
+                                    break;
+                                case 11:
+                                    MouseText = "Diurnal";
+                                    break;
+                                case 12:
+                                    MouseText = "Nocturnal";
+                                    break;
+                            }
+                        }
+                        Main.spriteBatch.Draw(MainMod.GuardianInfoIcons, IconPosition, new Rectangle(Value * 16, 0, 16, 16), Color.White);
+                        if(Negation)
+                            Main.spriteBatch.Draw(MainMod.GuardianInfoIcons, IconPosition, new Rectangle(0, 0, 16, 16), Color.White);
+                        IconPosition.X += 18;
+                    }
+                }
+                //Description
                 {
                     //int lines;
                     string Description = DisplayGuardian.Base.Description.Replace('\n', ' ');
@@ -1222,18 +1441,21 @@ namespace giantsummon
             {
                 ElementPosition.X = InterfaceStartPosition.X + 152;
                 ElementPosition.Y = InterfaceStartPosition.Y + 66;
-                const int ScrollBarMaxHeight = 366;
+                const int ScrollBarMaxHeight = 366 - 24;
                 float ScrollBarSize = 1f;
                 int OverflowValue = ContentList.Length - MaxLines;
+                float BarY = 0;
                 if(OverflowValue > 0)
                 {
                     ScrollBarSize = (float)MaxLines / ContentList.Length;
-                    ElementPosition.Y += (ScrollBarMaxHeight * ((1f / OverflowValue) * (1f - ScrollBarSize) * ScrollY));
+                    BarY = (ScrollBarMaxHeight * ((1f / OverflowValue) * (1f - ScrollBarSize) * ScrollY));
                 }
                 ScrollBarSize *= ScrollBarMaxHeight;
                 for(int i = 0; i < 3; i++)
                 {
-                    Vector2 ThisPosition = ElementPosition;
+                    Vector2 ThisPosition = Vector2.Zero;
+                    ThisPosition.X = ElementPosition.X;
+                    ThisPosition.Y = ElementPosition.Y;
                     int dy = 66, dh = 0;
                     int scaley = 0;
                     bool MouseOver = false;
@@ -1243,7 +1465,7 @@ namespace giantsummon
                             scaley = (int)ScrollBarSize - 16;
                             dy = 96;
                             dh = 110;
-                            ThisPosition.Y += 4;
+                            ThisPosition.Y += 24 + BarY;
                             break;
                         case 1: //upper
                             dh = 28;
@@ -1264,12 +1486,13 @@ namespace giantsummon
                             dy = 208;
                             dh = 28;
                             scaley = dh;
-                            if (ScrollBarSize < 28)
+                            /*if (ScrollBarSize < 28)
                                 ThisPosition.Y += 28;
                             else
                             {
                                 ThisPosition.Y += ScrollBarSize - 28;
-                            }
+                            }*/
+                            ThisPosition.Y = ElementPosition.Y + 366 - 28;
                             if (Main.mouseX >= ThisPosition.X && Main.mouseX < ThisPosition.X + 12 &&
                                 Main.mouseY >= ThisPosition.Y && Main.mouseY < ThisPosition.Y + dh)
                             {
@@ -1292,7 +1515,7 @@ namespace giantsummon
             ElementPosition.X = InterfaceStartPosition.X + 30;
             ElementPosition.Y = InterfaceStartPosition.Y + 96 + 6;
             const float ElementScale = 0.7f;
-            Utils.DrawBorderString(Main.spriteBatch, "Companions (Ascending)", ElementPosition, Color.White, 1, 0f, 1f);
+            Utils.DrawBorderString(Main.spriteBatch, "Companions", ElementPosition, Color.White, 1, 0f, 1f);
             ElementPosition.Y += 14;
             for(int element = 0; element < MaxLines; element++)
             {
@@ -1347,9 +1570,9 @@ namespace giantsummon
                 case 0: return "Trivial";
                 case 1: return "Minimal";
                 case 2: return "Normal";
-                case 3: return "Big";
-                case 4: return "Huge";
-                case 5: return "Giant";
+                case 3: return "Relevant";
+                case 4: return "Spacious";
+                case 5: return "Very Spacious";
                 default: return "Colossal";
             }
         }
