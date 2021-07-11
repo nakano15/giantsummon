@@ -1,5 +1,8 @@
 Captain Stench dialogue additions and changes:
 
+(New)Companion summary for terra guardian menu ingame:
+A Space pilot once renown for pillaging through out the galaxy, now is left stranded on a unknown planet after survivng a collision with a meteorite which killed her whole crew.
+
 Quest Dialogue changes(Makes it much more noticible for player that it is a quest):
 (Tweak)-"I want to talk to you" --->> "Phantom Device Quest"
 (Tweak/Fix)- Stench does not notice if phantom device is in her inventory nor does she distinguish between multiple phantom devices you have in players inventory.
