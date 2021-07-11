@@ -1,5 +1,17 @@
 Quentin the Wizard's apprentice
 
+Name: Quentin
+Hair Style: 15
+Is Male? True
+Skin Variant: 0
+Hair Color: {R:215 G:90 B:55 A:255}
+Eyes Color: {R:105 G:90 B:75 A:255}
+Skin Color: {R:203 G:255 B:90 A:255}
+Shirt Color: {R:203 G:255 B:90 A:255}
+Undershirt Color: {R:203 G:255 B:90 A:255}
+Pants Color: {R:203 G:255 B:90 A:255}
+Shoes Color: {R:203 G:255 B:90 A:255}
+
 Age- 15
 Guardians Slots Taken- 1
 
