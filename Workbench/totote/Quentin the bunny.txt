@@ -1,0 +1,230 @@
+Quentin the Wizard's apprentice
+
+Age- 15
+Guardians Slots Taken- 1
+
+Initial Stats:
+Hp- 85
+Mp- 50
+
+Life Crystal Bonus- 15
+Life Fruit Bonus- 10
+Mana Crystal Bonus- 25
+Mana Fruit Bonus- 10
+
+Recruitment Method: random chance of spawn killing Dark  Casters on the dungeon After Goblin Army is defeated
+
+
+Recruit message:"Thanks for rescue me from that dark sorcerer, he wanted to force me to become his familiar, by the way i am Quentin, the Mage's apprentice bunny.";
+
+	ControlUnlockMessage
+        
+	return "If you really need it, I can lead the group.";
+         
+	GreetMessages
+              
+	case 0:
+	return "let's discover together the mysteries of magic.";
+	case 1:
+	return "I may still be an apprentice but I assure you I can be of help.";
+	case 2:
+	return "I am a mage's apprentice trying to gather more knowledge.";
+       
+      
+
+	NoRequestMessage
+        
+	"I don't need anything yet I'm just enjoying this adventure.";
+	"I don't need your help right now, don't worry.";
+        
+
+	HasRequestMessage
+        
+
+	"I want you to get this item for me. Its for research purposes .";
+	"I have a mission for you, and I don't mind helping you with it..";
+
+	CompletedRequestMessage
+
+	"I always knew that you could achieve it without problem.";
+	"Wonderful, I never doubt that you could make it.";
+
+
+	NormalMessage
+
+	"since I joined you I feel that I have become more powerful, if we continue like this soon we will be unstoppable.";
+	"my master was a great sorcerer, I miss him a lot since I got here.";
+	"what? What do you mean I look like a clown?.";
+	"I am a bunny, not a rabbit or a hare, learn to distinguish them.";
+	"this hat and this robe were gifts from my Master for my birthday.";
+	("I am amazed at the amount of mysteries that still remain to be unveiled in this new world.");
+
+
+
+	if BloodMoon
+          
+	("Did the moon just turn red? I hope nothing bad happens tonight.");
+	("What are those scary things? as if zombies weren't bad enough.");
+	("even the water looks scary tonight.");
+            
+	if Eclipse
+            
+	("The only thing that terrifies me more than a dark night is when it's just as dark during the day.");
+	("You saw the size of that thing, I hope it doesn't come any closer to us.");
+	("some of these monsters look like the ones in horror movies my master used to watch.");
+
+	If Pirate Invasion
+	
+	("I always knew that the Pale Pirate would come seeking revenge for stealing his treasure.");
+	("don't let the Pale Pirate capture me please.");
+
+	If Nearby railroads or in a minecart
+
+	("this reminds me when me and my master got on the Tricky Train to try to stop it before it fell off a ravine.");
+
+	If Guide npc is near
+
+	("That man always dresses in such a boring way, wasn't there more striking clothes in his closet?.");
+
+	If Merchant npc is near
+
+	("I love that old man, he is very nice to me and he sells that blue juice that makes me feel like I regain my powers with every sip.");
+
+	If Wizard npc is near
+
+	("Finally i find another wizard here, I hope that he is willing to teach me more about magic.");
+
+	About Leopold
+	
+	("when i asked leopold if he wanted to help me my magic show, he didn't speak to me for a week, I don't know why he got so upset.");
+	(" Is nice to see another bunny after so much time");
+
+	On a party
+            	
+	"I really love parties, nothing better than filling my stomach with cake.");
+           
+	If on Hallowed biome
+
+	"Hmm those colorful trees look like cotton candy, can I try one?.");
+	"I tried to pet one of those unicorns and it almost attacked me with its horn.");
+
+	If on Corruption/Crimson biome
+	
+	"this place looks even more scary than forest on night.");
+	"I feel very observed and not in a good way.");
+
+	If on Forest
+	
+	"I always try to talk to the rabbits around here but they seem to be very shy.");
+
+	If on Tundra
+	
+	"with this cold my mustache freezes.");
+	"Brrr... my robe is not thick enough to shelter me from this cold.");
+	
+	If on Jungle
+	
+	"why are we here? It is full of carnivorous plants and bats everywhere.");
+
+	HomelessMessage
+
+
+	"You know where i could find a tower or at least a house not made of wood to live?, I fear i would end I would end up burning it if not.");
+           
+	"Every wizard needs a lair where he can practice his magic.");
+                
+	if Raining
+
+	"If I can't find a place to shelter from this rain, my robe will shrink.");
+         
+        About the Dungeon
+	("this place only brings back bad memories.");
+
+	If another companion join the party
+	("Yay!! new friends.");
+        
+
+	If Birthday
+
+	"you say you have a gift for me? I love them, what surprises will it hide.";
+	"my master always told me that with age comes wisdom.";
+
+
+	ReviveMessage
+
+	Mes.Add("You will be back.");
+	Mes.Add("I'll take care of you, don't worry.");
+	Mes.Add("You look terrible, let me help you.");
+
+	RescueMessage:
+	"I'm going to try to heal you, don't move too much.";
+	GuardianWokeUpByPlayerMessage:
+
+	 case 0:
+	"good morning friend, a new day means a new adventure.";
+	case 1:
+	"ooh, i was dreaming about candies and chocolate.";
+
+
+	GuardianWokeUpByPlayerRequestActiveMessage:
+	case 0:
+	"Did you complete my task?";
+	case 1:
+	"What about my quest?";
+
+	AfterAskingCompanionToJoinYourGroupSuccess:
+	"Of, course, let me grab my things.";
+	AfterAskingCompanionToJoinYourGroupFullParty:
+	"No, i hate crowds.";
+	
+	AfterAskingCompanionToJoinYourGroupFail
+	"i am busy now.";
+	AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+	"Are you sure about that? i thought we were having fun.";
+	AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+	"No problem then.";
+	AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+	"I know the way.";
+	AfterAskingCompanionToLeaveYourGroupNoAnswer:
+	"good.";
+	RequestAccepted:
+	"Awesome.";
+	RequestCantAcceptTooManyRequests:
+	"No. you look too busy to take care of this.";
+	RequestRejected:
+	"I hope you can help me another time then.";
+	RequestPostpone:
+	"don't worry I'm not in a hurry.";
+	RequestFailed:
+	"I never expected this result, well there will always be more chances to achieve it.";
+	RestAskForHowLong:
+	"My Master always said that it is essential not to laze if you want to succeed, let's get up?";
+	RestNotPossible:
+	"i don´t think is a good time to sleep.";
+	RestWhenGoingSleep:
+                    return "zzz";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "[shop]'s shop has something i want, please get it for me.";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "Yes, this one.";
+                case MessageIDs.GenericYes:
+                    return "Yep.";
+                case MessageIDs.GenericNo:
+                    return "Nope.";
+                case MessageIDs.GenericThankYou:
+                    return "Thanks.";
+                case MessageIDs.ChatAboutSomething:
+                    return "Speak.";
+                case MessageIDs.NevermindTheChatting:
+                    return "Okay.";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "Are you sure you can't do it?";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "Okay. then i am gonna find another to do It.";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "Then It was just a mistake of what to say.";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return "Thanks i feel a lot better now.";
+                case MessageIDs.RevivedByRecovery:
+                    return "I thought i wasn't gonna make it.";
