@@ -2101,6 +2101,7 @@ namespace giantsummon
                 tag.Add("PigForm_" + i, PigGuardianCloudForm[i]);
             }
             tag.Add("ReceivedFoodFromMinerva", ReceivedFoodFromMinerva);
+            tag.Add("ZacksMeatBagQuestStatus", ZacksMeatBagOutfitQuestStep);
             return tag;
         }
 
@@ -2206,6 +2207,11 @@ namespace giantsummon
             {
                 ReceivedFoodFromMinerva = tag.GetBool("ReceivedFoodFromMinerva");
             }
+            if(ModVersion >= 87)
+            {
+                ZacksMeatBagOutfitQuestStep = tag.GetByte("ZacksMeatBagQuestStatus");
+            }
+
             if (BuddiesMode)
             {
                 bool HasBuddySummoned = SelectedGuardian != -1 && MyGuardians[SelectedGuardian].MyID.IsSameID(BuddiesModeBuddyID);
@@ -2972,6 +2978,10 @@ namespace giantsummon
             });
             layers.Add(l);*/
         }
+
+        // Quest Variables
+        public byte ZacksMeatBagOutfitQuestStep = 0;
+        //
 
         public enum EyeState
         {

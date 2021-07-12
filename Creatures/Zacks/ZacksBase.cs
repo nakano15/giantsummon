@@ -140,7 +140,22 @@ namespace giantsummon.Creatures
             AddSkin(OldBodySkinID, "Old Body", delegate(GuardianData gd, Player pl) { return true; });
 
             //Outfits
-            AddOutfit(MeatBagOutfitID, "Meat Bag", delegate (GuardianData gd, Player pl) { return true; });
+            AddOutfit(MeatBagOutfitID, "Meat Bag", delegate (GuardianData gd, Player pl) { return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep >= 8; });
+
+            GetTopics();
+        }
+
+        public void GetTopics()
+        {
+            //Related to Zacks Meat Bag outfit quest.
+            AddTopic("About Blue's request related to you.", Quests.ZacksMeatBagOutfit.UponAskingAboutRequest, delegate (TerraGuardian tg, PlayerMod pm)
+            {
+                return pm.ZacksMeatBagOutfitQuestStep >= 2 && pm.ZacksMeatBagOutfitQuestStep < 6;
+            });
+            AddTopic("We have something to give you.", Quests.ZacksMeatBagOutfit.UponDeliveringToZacksDialogue, delegate (TerraGuardian tg, PlayerMod pm)
+            {
+                return pm.ZacksMeatBagOutfitQuestStep == 7;
+            });
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)

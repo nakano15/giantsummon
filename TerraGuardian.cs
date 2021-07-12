@@ -5586,7 +5586,7 @@ namespace giantsummon
                     bool SolidTile = false;
                     for (int CheckX = 0; CheckX < 2; CheckX++)
                     {
-                        for (int y = 0; y < FallCheckDistY; y++)
+                        for (int y = -1; y < FallCheckDistY; y++)
                         {
                             int TileX = (x + CheckX) * Direction + CenterX,
                                 TileY = CenterY + y;

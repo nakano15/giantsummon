@@ -235,6 +235,36 @@ namespace giantsummon
             return GuardianMouseOverAndDialogueInterface.Speaker;
         }
 
+        public static void ChangeSpeaker(int ParticipantID)
+        {
+            if (ParticipantID < 0 || ParticipantID >= DialogueParticipants.Length)
+                return;
+            LastSpeaker = DialogueParticipants[ParticipantID];
+        }
+
+        public static bool HasParticipant(int ID, string ModID = "")
+        {
+            if (ModID == "") ModID = MainMod.mod.Name;
+            for(int i = 0; i < DialogueParticipants.Length; i++)
+            {
+                if (DialogueParticipants[i].ID == ID && DialogueParticipants[i].ModID == ModID)
+                    return true;
+            }
+            return false;
+        }
+
+        public static TerraGuardian GetParticipant(int ParticipantID)
+        {
+            if (ParticipantID < 0 || ParticipantID >= DialogueParticipants.Length)
+                return DialogueParticipants[0];
+            return DialogueParticipants[ParticipantID];
+        }
+
+        public static void ChangeSpeaker(TerraGuardian tg)
+        {
+            LastSpeaker = tg;
+        }
+
         public static void AddParticipant(TerraGuardian tg)
         {
             List<TerraGuardian> NewParticipants = new List<TerraGuardian>();

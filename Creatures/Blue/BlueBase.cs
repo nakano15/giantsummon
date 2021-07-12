@@ -582,6 +582,19 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             bool ZacksRecruited = PlayerMod.PlayerHasGuardian(player, 3) || NpcMod.HasMetGuardian(3);
+            if (!guardian.IsUsingBed && ZacksRecruited) //better finish making the dialogues first
+            {
+                PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                if(pm.ZacksMeatBagOutfitQuestStep == 0)
+                {
+                    pm.ZacksMeatBagOutfitQuestStep = 1;
+                    return "*[name] asks you if you could help her with a thing. She told you that if you want to know further, speak with her. If you want, bring [gn:"+Zacks+"] with you.*";
+                }
+                else if(pm.ZacksMeatBagOutfitQuestStep == 1 && Main.rand.Next(3) == 0)
+                {
+                    return "*[name] tells you that she still needs help with something, so tells you to talk to her when possible.*";
+                }
+            }
             List<string> Mes = new List<string>();
             if (!Main.bloodMoon)
             {
@@ -1143,6 +1156,15 @@ namespace giantsummon.Creatures
         public void GetTopics()
         {
             //AddTopic("How are you doing?", HangoutDialogue); //This topic is actually for testing purposes, only.
+            //Zacks Meat Bag Outfit.
+            AddTopic("What do you need help with?", Quests.ZacksMeatBagOutfit.BlueWhenListeningToHerRequest, delegate (TerraGuardian tg, PlayerMod pl)
+            {
+                return pl.ZacksMeatBagOutfitQuestStep == 1;
+            });
+            AddTopic("What should we be doing now?", Quests.ZacksMeatBagOutfit.UponAskingAboutRequest, delegate (TerraGuardian tg, PlayerMod pl)
+            {
+                return pl.ZacksMeatBagOutfitQuestStep >= 2 && pl.ZacksMeatBagOutfitQuestStep < 8;
+            });
         }
 
         public void DialogueAskHowSheMetZacks()
