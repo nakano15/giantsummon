@@ -23,7 +23,7 @@ namespace giantsummon
         public static int GuardiansMetCount { get { return GuardiansMet.Count; } }
         public static byte SpawnDelay = 0, LeaveCooldown = 0;
         public static List<GuardianID> ScheduledVisits = new List<GuardianID>();
-        public static List<GuardianHouseInfos> HouseInfos = new List<GuardianHouseInfos>();
+        public static List<GuardianBuildingInfo> HouseInfos = new List<GuardianBuildingInfo>();
 
         public static void AllowGuardianNPCToSpawn(int ID, string ModID = "")
         {
@@ -1332,7 +1332,7 @@ namespace giantsummon
                 case Terraria.ID.TileID.Thrones:
                 case Terraria.ID.TileID.Benches:
                     {
-                        foreach(GuardianHouseInfos ghi in HouseInfos)
+                        foreach(GuardianBuildingInfo ghi in HouseInfos)
                         {
                             if(PositionX >= ghi.HouseStartX && PositionX <= ghi.HouseEndX && PositionY >= ghi.HouseStartY && PositionY <= ghi.HouseEndY)
                             {
@@ -1344,7 +1344,7 @@ namespace giantsummon
             }
         }
 
-        public class GuardianHouseInfos
+        public class GuardianBuildingInfo
         {
             public int HomePointX = 0, HomePointY = 0;
             public int HouseStartX = -1, HouseEndX = -1, HouseStartY = -1, HouseEndY = -1;
@@ -1565,7 +1565,7 @@ namespace giantsummon
             public GuardianID CharID = new GuardianID();
             public bool Homeless = true;
             public int HomeX = -1, HomeY = -1;
-            public GuardianHouseInfos HouseInfo;
+            public GuardianBuildingInfo HouseInfo;
 
             public GuardianTownNpcState()
             {
@@ -1597,7 +1597,7 @@ namespace giantsummon
                 if (HomeX == -1 || HomeY == -1 || Homeless)
                 {
                     Homeless = true;
-                    foreach(GuardianHouseInfos ghi in WorldMod.HouseInfos)
+                    foreach(GuardianBuildingInfo ghi in WorldMod.HouseInfos)
                     {
                         for (int i = 0; i < ghi.GuardiansLivingHere.Count; i++)
                         {
@@ -1608,7 +1608,7 @@ namespace giantsummon
                     }
                     return;
                 }
-                foreach (GuardianHouseInfos ghi in WorldMod.HouseInfos)
+                foreach (GuardianBuildingInfo ghi in WorldMod.HouseInfos)
                 {
                     if(ghi.BelongsToThisHousing(HomeX, HomeY))
                     {
@@ -1637,7 +1637,7 @@ namespace giantsummon
                         return;
                     }
                 }
-                GuardianHouseInfos newhouseinfo = new GuardianHouseInfos();
+                GuardianBuildingInfo newhouseinfo = new GuardianBuildingInfo();
                 newhouseinfo.HomePointX = HomeX;
                 newhouseinfo.HomePointY = HomeY;
                 newhouseinfo.ValidateHouse();

@@ -599,7 +599,7 @@ namespace giantsummon.Creatures
                         }
                     }
                 }
-                Dialogue.ShowEndDialogueMessage("*I... Also gave some to your... Companions... If you don't mind...*", false);
+                Dialogue.ShowEndDialogueMessage("*I... Also gave some food to your companions... If you don't mind...*", false);
             }
         }
     }

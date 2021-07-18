@@ -6286,8 +6286,8 @@ namespace giantsummon
                 AtHome = false;
             if (AtHome)
             {
-                WorldMod.GuardianHouseInfos ghi = townstate.HouseInfo;
-                foreach (WorldMod.GuardianHouseInfos.FurnitureInfo furniture in ghi.furnitures)
+                WorldMod.GuardianBuildingInfo ghi = townstate.HouseInfo;
+                foreach (WorldMod.GuardianBuildingInfo.FurnitureInfo furniture in ghi.furnitures)
                 {
                     if (TileType.Contains(furniture.FurnitureID))
                     {

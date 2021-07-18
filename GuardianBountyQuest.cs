@@ -667,7 +667,7 @@ namespace giantsummon
                 HPY = townstate.HomeY;
             if(townstate.HouseInfo != null)
             {
-                foreach (WorldMod.GuardianHouseInfos.FurnitureInfo fi in townstate.HouseInfo.furnitures)
+                foreach (WorldMod.GuardianBuildingInfo.FurnitureInfo fi in townstate.HouseInfo.furnitures)
                 {
                     if (fi.FurnitureID == Terraria.ID.TileID.Signs || fi.FurnitureID == Terraria.ID.TileID.AnnouncementBox)
                     {

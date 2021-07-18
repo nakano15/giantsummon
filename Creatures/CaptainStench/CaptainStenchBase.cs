@@ -23,7 +23,8 @@ namespace giantsummon.Creatures
         {
             Name = "CaptainStench";
             PossibleNames = new string[] { "Cpt. Stench" }; //Captain Sally Stench
-            Description = "";
+            Description = "A Space pilot once renown for pillaging through out the galaxy, now is left stranded \n" +
+                "on a unknown planet after survivng a collision with a meteorite which killed her whole crew.";
             Size = GuardianSize.Medium;
             Width = 22;
             Height = 66;
@@ -545,28 +546,28 @@ namespace giantsummon.Creatures
                     switch (data.SwordID)
                     {
                         case StandardFalchion:
-                            Mes = "nothing.";
+                            Mes = "nothing";
                             break;
                         case AmethystFalchion:
-                            Mes = "Amethyst power.";
+                            Mes = "Amethyst power";
                             break;
                         case TopazFalchion:
-                            Mes = "Topaz power.";
+                            Mes = "Topaz power";
                             break;
                         case SapphireFalchion:
-                            Mes = "Sapphire power.";
+                            Mes = "Sapphire power";
                             break;
                         case EmeraldFalchion:
-                            Mes = "Emerald power.";
+                            Mes = "Emerald power";
                             break;
                         case RubyFalchion:
-                            Mes = "Ruby power.";
+                            Mes = "Ruby power";
                             break;
                         case DiamondFalchion:
-                            Mes = "Diamond power.";
+                            Mes = "Diamond power";
                             break;
                     }
-                    GuardianMouseOverAndDialogueInterface.SetDialogue("My Falchion is infused with " +Mes + "\nWhat should I infuse my weapon with?\nGem will be used upon changing Infusion.");
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("My Falchion is infused with " +Mes + ".\nWhat should I infuse my weapon with?\nGem will be used upon changing Infusion.");
                 }
                 for (byte i = 0; i < NumberOfSwords; i++)
                 {
@@ -578,7 +579,8 @@ namespace giantsummon.Creatures
                     {
                         case 0:
                             Mes = "Remove Infusion";
-                            Description = "Removes any infusion from the weapon.";
+                            Description = "Removes any infusion from the weapon.\n" +
+                                "There is no way of getting the infused gem back.";
                             break;
                         case 1:
                             Mes = "Infuse with Amethyst";
@@ -613,7 +615,7 @@ namespace giantsummon.Creatures
                         case 6:
                             Mes = "Infuse with Diamond";
                             Description = "Diamond: Passive- Sword attacks deal 5% max health bonus damage, additionally all sword strikes have a 50% chance to cause dazzed debuff\n" +
-                                "Gem Power-Shines bright flash that does 10 % max health true damage with 100 % chance to cause confused debuff.";
+                                "Gem Power-Shines bright flash that does 10% max health true damage with 100% chance to cause confused debuff.";
                             ItemID = Terraria.ID.ItemID.Diamond;
                             break;
                     }
@@ -797,8 +799,7 @@ namespace giantsummon.Creatures
                                     }
                                     else if (SwordID == DiamondFalchion)
                                     {
-                                        if (Main.rand.NextDouble() < 0.2)
-                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
+                                        Main.npc[n].AddBuff(Terraria.ID.BuffID.Confused, 3 * 60);
                                     }
                                 }
                                 Main.PlaySound(Main.npc[n].HitSound, Main.npc[n].Center);
@@ -1078,8 +1079,7 @@ namespace giantsummon.Creatures
                                     }
                                     else if (SwordID == DiamondFalchion)
                                     {
-                                        if (Main.rand.NextDouble() < 0.5)
-                                            Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
+                                        Main.npc[n].AddBuff(Terraria.ID.BuffID.Confused, 3 * 60);
                                     }
                                 }
                                 Main.PlaySound(Main.npc[n].HitSound, Main.npc[n].Center);
@@ -1283,22 +1283,23 @@ namespace giantsummon.Creatures
                 DistanceYTargetTop = Owner.Position.Y - TargetPosition.Y,
                 DistanceYTargetBottom = Owner.Position.Y - TargetPosition.Y + TargetHeight;
             DefaultBehavior = false;
+            float WidthValue = (TargetWidth + Owner.Width) * 0.5f;
             switch (tactic)
             {
                 case CombatTactic.Charge:
-                    if (Distance > 52 + TargetWidth * 0.5f)
+                    if (Distance >= 52 + WidthValue)
                     {
                         Approach = true;
                         Retreat = false;
                     }
-                    else if(Distance < 38 + TargetWidth * 0.5f)
+                    else if(Distance < 38 + WidthValue)
                     {
                         Approach = false;
                         Retreat = true;
                     }
                     break;
                 case CombatTactic.Assist:
-                    if (Distance < 52 + TargetWidth * 0.5f)
+                    if (Distance < 52 + WidthValue)
                     {
                         Retreat = true;
                         Approach = false;
@@ -1325,11 +1326,11 @@ namespace giantsummon.Creatures
             CaptainStenchData data = (CaptainStenchData)Owner.Data;
             //if (DistanceYLower <= Owner.Height && (Owner.Velocity.Y == 0 || Owner.JumpHeight > 0))
             //    Jump = true;
-            if (data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6 + TargetWidth * 0.5f && DistanceYTargetBottom < Owner.Height && DistanceYTargetTop <= TargetHeight)
+            if (data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6 + WidthValue && DistanceYTargetBottom < Owner.Height && DistanceYTargetTop <= TargetHeight)
             {
                 ID = 3;
             }
-            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 + TargetWidth * 0.5f && DistanceYTargetBottom >= -98 && DistanceYTargetTop >= -18)
+            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 + WidthValue && DistanceYTargetBottom >= -98 && DistanceYTargetTop >= -18)
             {
                 ID = 1;
             }
@@ -1676,13 +1677,13 @@ namespace giantsummon.Creatures
             if(data.PhantomDeviceMiniquestProgress == -1)
                 Mes.Add("My phantom device has been broken, if you have any spare platinum/gold bars you could help fix it.");
             bool AnyMetal = false, AnyGemstone = false;
-            if (Main.screenTileCounts[Terraria.ID.TileID.Topaz] > 0 ||
-                Main.screenTileCounts[Terraria.ID.TileID.Amethyst] > 0 ||
-                Main.screenTileCounts[Terraria.ID.TileID.Sapphire] > 0 ||
-                Main.screenTileCounts[Terraria.ID.TileID.Emerald] > 0 ||
-                Main.screenTileCounts[Terraria.ID.TileID.Ruby] > 0 ||
-                Main.screenTileCounts[Terraria.ID.TileID.Diamond] > 0 ||
-                Main.screenTileCounts[Terraria.ID.TileID.AmberGemspark] > 0)
+            if (guardian.GetTileCount(Terraria.ID.TileID.Topaz) > 0 ||
+                guardian.GetTileCount(Terraria.ID.TileID.Amethyst) > 0 ||
+                guardian.GetTileCount(Terraria.ID.TileID.Sapphire) > 0 ||
+                guardian.GetTileCount(Terraria.ID.TileID.Emerald) > 0 ||
+                guardian.GetTileCount(Terraria.ID.TileID.Ruby) > 0 ||
+                guardian.GetTileCount(Terraria.ID.TileID.Diamond) > 0 ||
+                guardian.GetTileCount(Terraria.ID.TileID.AmberGemspark) > 0)
             {
                 AnyGemstone = true;
             }
@@ -1690,7 +1691,7 @@ namespace giantsummon.Creatures
             {
                 for (int i = 0; i < Main.screenTileCounts.Length; i++)
                 {
-                    if (Terraria.ID.TileID.Sets.Ore[i] && Main.screenTileCounts[i] > 0)
+                    if (Terraria.ID.TileID.Sets.Ore[i] && guardian.GetTileCount(i) > 0)
                     {
                         AnyMetal = true;
                         break;
