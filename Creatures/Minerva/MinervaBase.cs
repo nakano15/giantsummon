@@ -510,6 +510,7 @@ namespace giantsummon.Creatures
                 "Nevermind"
                 };
             Player player = Main.player[Main.myPlayer];
+            int CountPlayerFood = player.inventory.Where(x => x.buffType == Terraria.ID.BuffID.WellFed).Sum(x => x.stack);
             if (player.position.Y >= Main.worldSurface * 16)
                 PossibleFoods[0] = "";
             if (player.Center.X / 16 >= 250 && player.Center.X / 16 <= Main.maxTilesX / 250)
@@ -573,18 +574,28 @@ namespace giantsummon.Creatures
             if (GotFood)
             {
                 player.GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva = true;
-                player.GetItem(Main.myPlayer, Main.item[Item.NewItem(player.getRect(), ItemToGet, 3, true)]);
+                if (CountPlayerFood > 10)
+                {
+                    Dialogue.ShowDialogueWithContinue("*You still got a lot of food with you. Eat them before asking me for more.*");
+                }
+                else
+                {
+                    player.GetItem(Main.myPlayer, Main.item[Item.NewItem(player.getRect(), ItemToGet, 3, true)]);
+                }
                 foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (tg.Active)
                     {
-                        if (tg.ID == Minerva && tg.ModID == MainMod.mod.Name && ItemToGet == Terraria.ID.ItemID.GrubSoup)
+                        if (tg.Inventory.Where(x => x.buffType == Terraria.ID.BuffID.WellFed).Sum(x => x.stack) <= 10)
                         {
-                            tg.GetItem(Terraria.ID.ItemID.BowlofSoup, 3);
-                        }
-                        else
-                        {
-                            tg.GetItem(ItemToGet, 3);
+                            if (tg.ID == Minerva && tg.ModID == MainMod.mod.Name && ItemToGet == Terraria.ID.ItemID.GrubSoup)
+                            {
+                                tg.GetItem(Terraria.ID.ItemID.BowlofSoup, 3);
+                            }
+                            else
+                            {
+                                tg.GetItem(ItemToGet, 3);
+                            }
                         }
                     }
                 }

@@ -645,6 +645,7 @@ namespace giantsummon
         public bool Downed = false;
         public bool KnockedOut { get { return Data.KnockedOut; } set { Data.KnockedOut = value; } }
         public bool KnockedOutCold { get { return Data.KnockedOutCold; } set { Data.KnockedOutCold = value; } }
+        public byte KnockoutBleedingTime = 0;
         public bool WofFood { get { return Data.WofFood; } set { Data.WofFood = value; } }
         public bool FriendlyDuelDefeat = false;
         public byte ReviveBoost = 0;
@@ -1799,6 +1800,21 @@ namespace giantsummon
         {
             if (Downed)
                 return;
+            if(ReviveBoost == 0 && HasBuff(Terraria.ID.BuffID.Bleeding))
+            {
+                KnockoutBleedingTime++;
+                if(KnockoutBleedingTime >= MainMod.BleedingHealthDamageTime)
+                {
+                    int Damage = (int)(Math.Max(1, MHP * MainMod.BleedingHealthDamage));
+                    this.HP -= Damage;
+                    CombatText.NewText(HitBox, CombatText.LifeRegenNegative, Damage, false, true);
+                    KnockoutBleedingTime = 0;
+                }
+            }
+            else
+            {
+                KnockoutBleedingTime = 0;
+            }
             if (HP >= MHP)
             {
                 ExitDownedState();
@@ -3045,6 +3061,25 @@ namespace giantsummon
             ManageTrail();
             ManagePulse();
             //FloorVisual(Velocity.Y != 0);
+        }
+
+        private void SporeSacScript()
+        {
+            int Damage = 70;
+            float kb = 1.5f;
+            if(Main.rand.Next(15) == 0)
+            {
+                int SporesSpawned = 0;
+                for(int i = 0; i < Main.maxProjectiles; i++)
+                {
+                    if(Main.projectile[i].active && (Main.projectile[i].type == 567 || Main.projectile[i].type == 568) && ProjMod.IsGuardianProjectile(i) && ProjMod.GuardianProj[i].WhoAmID == this.WhoAmID)
+                    {
+                        SporesSpawned++;
+                        if (SporesSpawned >= 10)
+                            return;
+                    }
+                }
+            }
         }
 
         public void ManageTrail()
@@ -4767,6 +4802,7 @@ namespace giantsummon
                     }
                 }
             }
+
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
             bool TargetIsBoss = false;
@@ -4902,7 +4938,22 @@ namespace giantsummon
                 }
                 if (WaitingForManaRecharge && MP >= MMP)
                     WaitingForManaRecharge = false;
-                bool NearDeath = HP < MHP * 0.2f && !PlayerMounted;
+                bool NearDeath = HasFlag(GuardianFlags.VergeOfDeathAlert);
+                if(!NearDeath)
+                {
+                    if (HP < MHP * 0.2f && !PlayerMounted && !SittingOnPlayerMount)
+                    {
+                        AddFlag(GuardianFlags.VergeOfDeathAlert);
+                        NearDeath = true;
+                    }
+                }
+                else
+                {
+                    if(HP >= MHP * 0.7f || PlayerMounted || SittingOnPlayerMount)
+                    {
+                        RemoveFlag(GuardianFlags.VergeOfDeathAlert);
+                    }
+                }
                 if (HasFlag(GuardianFlags.Confusion))
                 {
                     if (OwnerPos > -1)
@@ -5149,7 +5200,7 @@ namespace giantsummon
                                     {
                                         ApproachDistance = MaxAttackRange;
                                     }*/
-                                    if (DistanceX <= ApproachDistance + 8 && InRangeY)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                    if (DistanceX <= ApproachDistance + 8 && InRangeY && !NearDeath)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                     {
                                         GoMelee = true;
                                     }
@@ -5176,7 +5227,7 @@ namespace giantsummon
                                 break;
                             case CombatTactic.Assist:
                                 {
-                                    if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                    if ((SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee)) && !NearDeath)
                                     {
                                         GoMelee = true;
                                     }
@@ -5204,7 +5255,7 @@ namespace giantsummon
                                 break;
                             case CombatTactic.Snipe:
                                 {
-                                    if (SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
+                                    if ((SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee)) && !NearDeath)
                                     {
                                         GoMelee = true;
                                     }
@@ -5249,10 +5300,10 @@ namespace giantsummon
                                 }
                             }
                         }
-                        if ((InRangeX && InRangeY) || NearDeath)
+                        if (InRangeX && InRangeY)
                         {
                             Attack = true;
-                            if (NeedsDucking && !NearDeath)
+                            if (NeedsDucking)
                                 Duck = true;
                         }
                         float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
@@ -8321,12 +8372,6 @@ namespace giantsummon
             if (HasFlag(GuardianFlags.Bleeding))
             {
                 HealthRegenTime = 0;
-                if (KnockedOut)
-                {
-                    if (HealthRegenPower > 0)
-                        HealthRegenPower = 0;
-                    HealthRegenPower--;
-                }
             }
             HealthRegenPower += ReviveBoost * 5;
             ReviveBoost = 0;
@@ -8869,6 +8914,7 @@ namespace giantsummon
 
         public void EnterDownedState()
         {
+            KnockoutBleedingTime = 0;
             KnockedOut = true;
             if (HasFlag(GuardianFlags.HealthGoesToZeroWhenKod))
             {

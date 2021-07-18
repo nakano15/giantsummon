@@ -45,6 +45,7 @@ namespace giantsummon
             }
         }
         public bool KnockedOut = false, KnockedOutCold = false, FriendlyDuelDefeat = false;
+        public byte KnockoutBleedingTime = 0;
         public short RescueTime = 0;
         public const int MaxRescueTime = 10;
         public bool RescueWakingUp = false;
@@ -981,6 +982,21 @@ namespace giantsummon
                     player.headRotation = 1.570796326794897f * player.direction;
                 }*/
             }
+            if (ReviveBoost == 0 && player.HasBuff(Terraria.ID.BuffID.Bleeding))
+            {
+                KnockoutBleedingTime++;
+                if(KnockoutBleedingTime >= MainMod.BleedingHealthDamageTime)
+                {
+                    int HealthToDeduct = (int)(Math.Max(1, player.statLifeMax2 * MainMod.BleedingHealthDamage));
+                    player.statLife -= HealthToDeduct;
+                    CombatText.NewText(player.getRect(), CombatText.LifeRegenNegative, HealthToDeduct, false, true);
+                    KnockoutBleedingTime = 0;
+                }
+            }
+            else
+            {
+                KnockoutBleedingTime = 0;
+            }
             if (player.statLife >= player.statLifeMax2)
             {
                 LeaveDownedState();
@@ -1350,18 +1366,6 @@ namespace giantsummon
                 player.AddBuff(Terraria.ID.BuffID.Bleeding, 30 * 60);
         }
 
-        public override void UpdateBadLifeRegen()
-        {
-            if(KnockedOut && player.bleed)
-            {
-                if (player.lifeRegenTime > 0)
-                    player.lifeRegenTime = 0;
-                if (player.lifeRegen > 0)
-                    player.lifeRegen = 0;
-                player.lifeRegen--;
-            }
-        }
-
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)
         {
             foreach (TerraGuardian guardian in GetAllGuardianFollowers)
@@ -1458,6 +1462,7 @@ namespace giantsummon
 
         public void EnterDownedState(bool Friendly = false)
         {
+            KnockoutBleedingTime = 0;
             KnockedOut = true;
             if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
             {

@@ -33,7 +33,7 @@ namespace giantsummon.Quests
             {
                 Dialogue.ShowDialogueWithContinue("*I'm fine, those wounds doesn't hurt or anything.*", Dialogue.GetParticipant(ZacksSlot));
                 Dialogue.ShowDialogueWithContinue("*It may not be hurting, but isn't the greatest thing to look at, even more at that hole in your chest.*", Dialogue.GetParticipant(BlueSlot));
-                Dialogue.ShowDialogueWithContinue("*Oh, yeah... This is really nasty thing to look at.*", Dialogue.GetParticipant(ZacksSlot));
+                Dialogue.ShowDialogueWithContinue("*Oh, yeah... This is really a nasty thing to look at.*", Dialogue.GetParticipant(ZacksSlot));
                 Dialogue.ShowDialogueWithContinue("*We need to patch up the wounds on your arms and feet, and wash the blood in your paws... Is that even your blood?*", Dialogue.GetParticipant(BlueSlot));
                 Dialogue.ShowDialogueWithContinue("*I... Don't think... It is?*", Dialogue.GetParticipant(ZacksSlot));
                 Dialogue.ShowDialogueWithContinue("*We definitelly have to wash that off.*", Dialogue.GetParticipant(BlueSlot));
@@ -74,7 +74,7 @@ namespace giantsummon.Quests
                     if (HasBlueInTheParty)
                     {
                         Dialogue.AddParticipant(PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue));
-                        Dialogue.ShowDialogueWithContinue("*Yes. Your wounds aren't good things to look at, and that hole in your chest needs to be covered.*", Dialogue.GetParticipant(BlueID));
+                        Dialogue.ShowDialogueWithContinue("*Yes. Your wounds aren't a good thing to look at, and that hole in your chest needs to be covered. There is also that blood in your hands to remove, too.*", Dialogue.GetParticipant(BlueID));
                         Dialogue.ShowDialogueWithContinue("*You have a point. Okay, I guess I should wait to see what you two will bring me, then.*", Dialogue.GetParticipant(ZacksID));
                         Dialogue.ShowDialogueWithContinue("*Don't worry, you wont be disappointed. (She gives a discrete smile)*", Dialogue.GetParticipant(BlueID));
                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep++;
@@ -105,11 +105,11 @@ namespace giantsummon.Quests
                                         Dialogue.ShowDialogueWithContinue("*That's one good Terrarian, so reliable.*", Dialogue.GetParticipant(ZacksID));
                                         break;
                                     case 1:
-                                        switch (Dialogue.ShowDialogueWithOptions("*Come on, you plan on making me pay for that? It's for a good cause, you know*", new string[] { "Yes", "No" }, Dialogue.GetParticipant(ZacksID)))
+                                        switch (Dialogue.ShowDialogueWithOptions("*Come on, you plan on making me pay for that? It's for a good cause, you know*", new string[] { "Yes", "No..." }, Dialogue.GetParticipant(ZacksID)))
                                         {
                                             case 0:
                                                 Dialogue.ShowDialogueWithContinue("*...*", Dialogue.GetParticipant(BlueID));
-                                                Dialogue.ShowDialogueWithContinue("*Now that's a complication.*", Dialogue.GetParticipant(ZacksID));
+                                                Dialogue.ShowDialogueWithContinue("*Now that's a complication. Hahaha.*", Dialogue.GetParticipant(ZacksID));
                                                 break;
                                             case 1:
                                                 Dialogue.ShowDialogueWithContinue("*Thank you, [nickname].*", Dialogue.GetParticipant(BlueID));
@@ -132,8 +132,17 @@ namespace giantsummon.Quests
                             {
                                 Dialogue.ShowDialogueWithContinue("*We got the bandages, but we need to visit the clothier.*", Dialogue.GetParticipant(BlueID));
                                 Dialogue.ShowDialogueWithContinue("*The clothier? Why?*", Dialogue.GetParticipant(ZacksID));
-                                Dialogue.ShowDialogueWithContinue("*You need something to cover that hole in your chest*", Dialogue.GetParticipant(BlueID));
-                                Dialogue.ShowDialogueWithContinue("*This hole? Hm. I can only think of a shirt to solve this. I hope you pick a cool designed one.*", Dialogue.GetParticipant(ZacksID));
+                                Dialogue.ShowDialogueWithContinue("*You still need something to cover that hole in your chest, and I don't think the bandages will be helpful in this case.*", Dialogue.GetParticipant(BlueID));
+                                if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Zacks))
+                                {
+                                    Dialogue.ShowDialogueWithContinue("*This hole? Hm. I can only think of a shirt to solve this. Will you let me pick the shirt?*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("*No?*", Dialogue.GetParticipant(BlueID));
+                                    Dialogue.ShowDialogueWithContinue("*Then... I guess I should trust your decision, then.*", Dialogue.GetParticipant(ZacksID));
+                                }
+                                else
+                                {
+                                    Dialogue.ShowDialogueWithContinue("*This hole? Hm. I can only think of a shirt to solve this. I hope you two pick a cool design one.*", Dialogue.GetParticipant(ZacksID));
+                                }
                                 Dialogue.ShowEndDialogueMessage("*Don't worry, you wont be disappointed. (wink)*", true, Dialogue.GetParticipant(BlueID));
                             }
                             break;
@@ -156,31 +165,51 @@ namespace giantsummon.Quests
                     case 3:
                         {
                             Dialogue.ShowDialogueWithContinue("*You forgot already what we talked about? We need to visit the Nurse and get some bandages.*");
-                            if (HasZacksInTheParty && !Knows)
+                            if (HasZacksInTheParty)
                             {
-                                Dialogue.ShowDialogueWithContinue("*Bandages? What do you need bandages for?*", Dialogue.GetParticipant(ZacksID));
-                                Dialogue.ShowDialogueWithContinue("*It's for you.*", Dialogue.GetParticipant(BlueID));
-                                Dialogue.ShowDialogueWithContinue("*For me? What? You plan on mummifying me or something?*", Dialogue.GetParticipant(ZacksID));
-                                Dialogue.ShowDialogueWithContinue("*No no. It's to take care of your wounds.*", Dialogue.GetParticipant(BlueID));
-                                Dialogue.ShowDialogueWithContinue("*Ah, that's why. So... I shouldn't worry about being locked inside a sarcophagus, then?*", Dialogue.GetParticipant(ZacksID));
-                                Dialogue.ShowDialogueWithContinue("*...*", Dialogue.GetParticipant(BlueID));
-                                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep++;
+                                if (!Knows)
+                                {
+                                    Dialogue.ShowDialogueWithContinue("*Bandages? What do you need bandages for?*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("*It's for you.*", Dialogue.GetParticipant(BlueID));
+                                    Dialogue.ShowDialogueWithContinue("*For me? What? You plan on mummifying me or something?*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("*No no. It's to take care of your wounds.*", Dialogue.GetParticipant(BlueID));
+                                    Dialogue.ShowDialogueWithContinue("*Ah, that's why. So... I shouldn't worry about being locked inside a sarcophagus, then?*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("*...*", Dialogue.GetParticipant(BlueID));
+                                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep++;
+                                }
+                                else
+                                {
+                                    Dialogue.ShowDialogueWithContinue("*You don't seems to have good memory, [nickname].\nMind if I analyze your head?*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("*That's not funny.*", Dialogue.GetParticipant(BlueID));
+                                    Dialogue.ShowDialogueWithContinue("*At least I can scare others using my current state.*", Dialogue.GetParticipant(ZacksID));
+                                }
                             }
-                            Dialogue.ShowEndDialogueMessage("*Before we go, do you need to talk about something else?*", false);
+                            Dialogue.ShowEndDialogueMessage("*Before we go, do you need to talk about something else, [nickname]?*", false, Dialogue.GetParticipant(BlueID));
                         }
                         break;
                     case 4:
                     case 5:
                         {
                             Dialogue.ShowDialogueWithContinue("*We already got the bandages, now we need to visit the Clothier.*");
-                            if (HasZacksInTheParty && !Knows)
+                            if (HasZacksInTheParty)
                             {
-                                Dialogue.ShowDialogueWithContinue("*Bandages? Clothier? Those doesn't add up*", Dialogue.GetParticipant(ZacksID));
-                                Dialogue.ShowDialogueWithContinue("*We're doing something for you, and you'll know what it is once I'm done.*", Dialogue.GetParticipant(BlueID));
-                                Dialogue.ShowDialogueWithContinue("*No spoiler, then...?*", Dialogue.GetParticipant(ZacksID));
-                                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep++;
+                                if (!Knows)
+                                {
+                                    Dialogue.ShowDialogueWithContinue("*Bandages? Clothier? Those doesn't add up*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("*We're doing something for you, and you'll know what it is once I'm done.*", Dialogue.GetParticipant(BlueID));
+                                    Dialogue.ShowDialogueWithContinue("*No spoiler, then...?*", Dialogue.GetParticipant(ZacksID));
+                                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep++;
+                                }
+                                else
+                                {
+                                    Dialogue.ShowDialogueWithContinue("*Come on, let's get going. I'm curious to see what you guys will pick for me.*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("(Gives an evil smile to Zacks.)", Dialogue.GetParticipant(BlueID));
+                                    Dialogue.ShowDialogueWithContinue("*Wait, what are you planning? I don't like that smile at all.*", Dialogue.GetParticipant(ZacksID));
+                                    Dialogue.ShowDialogueWithContinue("Soon, Zackary... Soon.", Dialogue.GetParticipant(BlueID));
+                                    Dialogue.ShowDialogueWithContinue("*She just said my first name. That can't be good.*", Dialogue.GetParticipant(ZacksID));
+                                }
                             }
-                            Dialogue.ShowEndDialogueMessage("*Before we go, do you need to talk about something else?*", false);
+                            Dialogue.ShowEndDialogueMessage("*Before we go, do you need to talk about something else, [nickname]?*", false, Dialogue.GetParticipant(BlueID));
                         }
                         break;
                     case 6:
@@ -203,7 +232,7 @@ namespace giantsummon.Quests
         {
             if(!PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Blue))
             {
-                Dialogue.ShowEndDialogueMessage("*You say that Blue and You have something for me? Where is Blue? She's part of it too, right?*", true);
+                Dialogue.ShowEndDialogueMessage("*You say that Blue and You have something for me? But where is Blue? She's part of that too, right?*", true);
                 return;
             }
             int BlueSlot = -1, ZacksSlot = -1;
@@ -238,7 +267,7 @@ namespace giantsummon.Quests
                 Dialogue.ShowDialogueWithContinue("*We brought you bandages and a shirt.*", Dialogue.GetParticipant(BlueSlot));
                 Dialogue.ShowDialogueWithContinue("*Bandages and a shirt? Why?*", Dialogue.GetParticipant(ZacksSlot));
                 Dialogue.ShowDialogueWithContinue("*It's so we can cover those wounds of yours.*", Dialogue.GetParticipant(BlueSlot));
-                Dialogue.ShowDialogueWithContinue("*Oh, that is actually nice of you two.*", Dialogue.GetParticipant(ZacksSlot));
+                Dialogue.ShowDialogueWithContinue("*Oh, that is actually... nice of you two.*", Dialogue.GetParticipant(ZacksSlot));
             }
             else
             {

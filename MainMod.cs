@@ -125,6 +125,8 @@ namespace giantsummon
         public static bool TriedLoadingCustomGuardians = false;
         public static bool NpcInCameraRange = false;
         public static List<TerraGuardian> CompanionsToShowArrowFor = new List<TerraGuardian>();
+        public const float BleedingHealthDamage = 0.015f;
+        public const int BleedingHealthDamageTime = 30;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -947,7 +949,10 @@ namespace giantsummon
                         Main.playerInventory = false;
                     if (!Main.player[Main.myPlayer].dead)
                         layers.Clear();
-                    layers.Insert(PlayerDeathLayer, downedInterface);
+                    layers.Add(hsi);
+                    layers.Add(downedInterface);
+                    //layers.Insert(PlayerDeathLayer, downedInterface);
+                    //layers.Insert(HealthBarLayer - 1, hsi);
                     return;
                 }
                 layers.Insert(PlayerChatLayer, dnagd);
@@ -1059,7 +1064,8 @@ namespace giantsummon
             if (BarSize < 0)
                 BarSize = 0f;
             //
-            int BarDimY = (int)(Main.screenHeight * (1f - BarSize) * 0.25f);
+            float MaxBarsize = Main.screenHeight * 0.25f;
+            int BarDimY = (int)((1f - BarSize) * MaxBarsize);
             if (playerMod.RescueWakingUp)
                 BarSize = 0;
             Color ClosingBarsColor = playerMod.KnockedOutCold || playerMod.RescueWakingUp ? new Color(0, 0, 0, (int)(255 * (1f - BarSize))) : new Color((byte)(128 * (1f - BarSize)), 0, 0, (int)(255 * (1f - BarSize)));
@@ -1070,8 +1076,8 @@ namespace giantsummon
                 ClosingBar2EffectPercentage = 1f;
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, BarDimY), ClosingBarsColor);
             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, BarDimY, Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - 1 - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - 1 - BarDimY), Main.screenWidth, BarDimY), ClosingBarsColor);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY), Main.screenWidth, BarDimY), ClosingBarsColor);
             //
             if (!Main.player[Main.myPlayer].dead && (!playerMod.KnockedOutCold || Main.player[Main.myPlayer].statLife > 1))
             {
@@ -1100,6 +1106,14 @@ namespace giantsummon
                     {
                         Text = (DoNotUseRescue ? "Giving up in " : "Rescue in ") + Math.Round(PlayerMod.MaxRescueTime - (float)playerMod.RescueTime / 60, 1) + " seconds";
                         Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28 + 26), Color.OrangeRed, 0.85f, 0.5f, 0.5f);
+                    }
+                }
+                else
+                {
+                    if (playerMod.RescueWakingUp)
+                    {
+                        Text = "Waking up...";
+                        Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28), Color.OrangeRed, 1f, 0.5f, 0.5f);
                     }
                 }
             }

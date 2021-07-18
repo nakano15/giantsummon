@@ -924,7 +924,7 @@ namespace giantsummon
                 {
                     PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.7f, SpawnBiome.MartianMadness));
                 }
-                if (NPC.downedFrost)
+                if (NPC.downedFrost && Main.xMas)
                 {
                     PossibleBiomes.Add(new KeyValuePair<float, SpawnBiome>(0.85f, SpawnBiome.SnowLegion));
                 }
@@ -936,14 +936,21 @@ namespace giantsummon
                 float Total = PossibleBiomes.Sum(x => x.Key);
                 float Current = 0;
                 float PickedOne = Main.rand.NextFloat() * Total;
+                bool GotABountyPlace = false;
                 foreach(KeyValuePair<float, SpawnBiome> b in PossibleBiomes)
                 {
-                    if(Current >= PickedOne && Current + b.Key < PickedOne)
+                    if(PickedOne >= Current && PickedOne < Current + b.Key)
                     {
+                        GotABountyPlace = true;
                         spawnBiome = b.Value;
                         break;
                     }
                     Current += b.Key;
+                }
+                if (!GotABountyPlace)
+                {
+                    SetDefaultCooldown();
+                    return;
                 }
             }
             TargetName = "";

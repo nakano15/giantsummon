@@ -188,6 +188,7 @@ namespace giantsummon
         DryadBane,
         NotPulledWhenKOd,
         DisableMountSharing,
-        CantDie
+        CantDie,
+        VergeOfDeathAlert
     }
 }

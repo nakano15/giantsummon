@@ -54,13 +54,17 @@ Changed the following companions count to a companion slot weight system.
 	The Max Weight values stacks like the old Max Extra Companion counter used to work.
 Companions will no longer move around like goofs when trying to use a furniture that is behind another companion town npc.
 Sardine's Bounty Quests got changes:
-	New places It can spawn: Ocean, Underground, Sky, Old One's Army event, Goblin Army, Night, Snow, Desert, Pirate Army, Martian Madness, Snow Legion and Lihzahrd Temple.
+	New places and occasions It can spawn:
+		Ocean, Underground, Sky, Old One's Army event, Goblin Army, Night, Snow, Desert, Pirate Army, Martian Madness, Snow Legion and Lihzahrd Temple.
+		There will only have the chance of the bounty to appear in a event or a new place depending on your progress, current world state, or event on-going (Christmas, Halloween).
 	Added some more weapons that can be rewarded for completting a bounty.
 	Made the bounty target more resistant to knockbacks.
 	Red Fire effects will come from the bounty npc.
 	Hardmode bounty quests will require you to kill 20 more npcs, before spawn stress ends.
-Getting hit while Knocked Out will now inflict "Bleeding" debuff on the one affected by It.
-	Bleeding debuff depletes your character health when in knocked out state too.
+Changed how Knocked Out state works:
+	Getting hit by an attack causes the character in Knocked Out state to get the Bleeding debuff.
+	The Bleeding debuff will damage 1.5% of health every half second while It's active.
+	The effect above wont happen when being revived by others.
 Added Alexander's description.
 Fixed Nemesis saying dialogues reserved to when having Rococo or Sardine in the team, when you don't have them.
 Companions will no longer try holding something when facing the background.
@@ -72,3 +76,9 @@ Companions will now comment on their equipped skins and outfits.
 Minerva shall no longer appear on the wilderness when you have her as a team member.
 Zacks Meat Bag outfit implemented.
 	Blue may help you with this.
+Companions got changes on their Near Death checking.
+	They will get a Verge of Death flag when their health drops bellow 25%, and they're not being mounted by your character.
+	During the Verge of Death state, they will still try avoiding getting too close to their target.
+	They leave that state once their health is above 70%.
+Minerva will no longer give food to those who have more than 10 food items in the inventory.
+	No more money making scheme.
