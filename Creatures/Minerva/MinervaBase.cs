@@ -482,6 +482,52 @@ namespace giantsummon.Creatures
                     return "*I'm thankful for your help.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*...*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Ugh... Pain...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Ahh!! There's fire everywhere!! Around me!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*I can't see clearly!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*I want to throw up...*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*Why I can't attack?*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I'm... Out of breath...*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*My legs hurts...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Argh... Nasty cut...*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*No no no! That thing wont eat me! No way!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*You vile creature...*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*Not even my f-fat helps much ag-gainst c-cold.*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*I don't think this web will last for long.*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*I'll make hamburguer out of you!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*My defenses seems more unpenetrable now.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "(Farts)*I'm sorry... Just plug your nose a bit.*";
+                    return "*It still lacks a few spices...*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*This will help me when chopping.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*I think this can make me lose some weight, if I make use of It.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Does this potion makes me bigger?*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*I got a bit tougher, somehow.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*Okay, blades coated.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*I preffer drinking while eating..*";
             }
             return "";
         }

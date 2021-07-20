@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using giantsummon.Trigger;
 
 namespace giantsummon.Creatures
 {
@@ -251,11 +252,11 @@ namespace giantsummon.Creatures
             AddRequesterSummonedRequirement();
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
-            if (trigger == TriggerTypes.PlayerDowned)
+            if (trigger == TriggerTypes.Downed && Sender.TargetType == TriggerTarget.TargetTypes.Player)
             {
-                if (Value == guardian.OwnerPos)
+                if (Sender.TargetID == guardian.OwnerPos)
                 {
                     bool GuardianJustWokeUp = false;
                     if (guardian.KnockedOut)
@@ -267,8 +268,8 @@ namespace giantsummon.Creatures
                     }
                     if (!guardian.DoAction.InUse || !guardian.DoAction.IsGuardianSpecificAction || guardian.DoAction.ID != ProtectModeID)
                     {
-                        guardian.StartNewGuardianAction(new Creatures.Brutus.ProtectModeAction(Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut), ProtectModeID);
-                        string PlayerNickname = PlayerMod.GetPlayerNicknameGivenByGuardian(Main.player[Value], guardian.MyID);
+                        guardian.StartNewGuardianAction(new Creatures.Brutus.ProtectModeAction(Main.player[Sender.TargetID].GetModPlayer<PlayerMod>().KnockedOut), ProtectModeID);
+                        string PlayerNickname = PlayerMod.GetPlayerNicknameGivenByGuardian(Main.player[Sender.TargetID], guardian.MyID);
                         if (!GuardianJustWokeUp)
                         {
                             switch (Main.rand.Next(3))
@@ -302,20 +303,20 @@ namespace giantsummon.Creatures
                     }
                 }
             }
-            if (trigger == TriggerTypes.PlayerHurt)
+            if (trigger == TriggerTypes.Hurt && Sender.TargetType == TriggerTarget.TargetTypes.Player)
             {
-                if (Value == guardian.OwnerPos)
+                if (Sender.TargetID == guardian.OwnerPos)
                 {
-                    Player player = Main.player[Value];
+                    Player player = Main.player[Sender.TargetID];
                     string PlayerNickname = PlayerMod.GetPlayerNicknameGivenByGuardian(player, guardian.MyID);
-                    if (player.statLife < player.statLifeMax2 * 0.3f && player.statLife + Value2 >= player.statLifeMax2 * 0.3f)
+                    if (player.statLife < player.statLifeMax2 * 0.15f && player.statLife + Value2 >= player.statLifeMax2 * 0.15f)
                     {
                         if (guardian.KnockedOut && !guardian.KnockedOutCold)
                         {
                             switch (Main.rand.Next(3))
                             {
                                 case 0:
-                                    guardian.SaySomething("*"+PlayerNickname+"! Go now! Save yourself!*");
+                                    guardian.SaySomething("*" + PlayerNickname + "! Go now! Save yourself!*");
                                     break;
                                 case 1:
                                     guardian.SaySomething("*I'll distract them, " + PlayerNickname + "! Go! My contract is worth nothing if you die.*");
@@ -361,7 +362,7 @@ namespace giantsummon.Creatures
                     }
                 }
             }
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         public void SkinsAndOutfits()
@@ -1018,6 +1019,50 @@ namespace giantsummon.Creatures
                     if (Main.rand.NextDouble() < 0.5f)
                         return "*Alright, now's my turn.*";
                     return "*That is It?! I'm still standing!*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*I don't feell good...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*It burns!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*I can't see!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Everyone multiplied..*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*What's wrong with my arms?*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*My legs!*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I feel weak...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*I feel... Vulnerable...*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*What is that abomination? Everyone fall back!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*I can take anything else you throw on me, but this...*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*Cold...*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*You'll see when I cut myself out of this!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*I will show you my fury!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Go on, hit me.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Delicious. There is more?*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*I feel... Stronger! Even my muscles seems bigger.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*Now I can charge into battle.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Try taking me down now.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*This will hurt my foes a lot.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*I dislike doing this..*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*Ahh.. A nice, and good mug of ale.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

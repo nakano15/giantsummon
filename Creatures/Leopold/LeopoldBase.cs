@@ -602,6 +602,50 @@ namespace giantsummon.Creatures
                     return "*Thanks to you, my geniality still lives.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*Ow, okay... I think I'm fine now.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Ack! What a moment to forget Poisona spell.*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Aaahhh!! I'm burning!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*Hey! Who turned off the light?*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Why I see 3 of you?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*Arm, I command you to use that weapon!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*My leg! Hurt!*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I'm still standing...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Kr... You...*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*W-w-w-wall of Flesh!!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Hey! I'm not a toilet!*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*T-too c-cooold...*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*This vile web is no match to my fire spell!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*My turn to bite you!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*This made my defense more effective.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Way better than conjured food.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*I feel being more powerful.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*You're too slow!*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*I feel even more alive now.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*My spells will hurt now.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*I could have enchanted instead, but at least saved mana.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*I don't think I'll be reading right now, so why not.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using giantsummon.Trigger;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -374,34 +375,40 @@ namespace giantsummon.Creatures
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
             switch (trigger)
             {
-                case TriggerTypes.GuardianDowned:
+                case TriggerTypes.Downed:
                     {
-                        TerraGuardian tg = MainMod.ActiveGuardians[Value];
-                        AlexanderData data = (AlexanderData)guardian.Data;
-                        if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && !data.WasGuardianIdentified(tg))
+                        if (Sender.TargetType == TriggerTarget.TargetTypes.TerraGuardian)
                         {
-                            if (guardian.StartNewGuardianAction(new Creatures.Alexander.SleuthAction(tg), 0))
-                                return true;
+                            TerraGuardian tg = MainMod.ActiveGuardians[Sender.TargetID];
+                            AlexanderData data = (AlexanderData)guardian.Data;
+                            if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && !data.WasGuardianIdentified(tg))
+                            {
+                                if (guardian.StartNewGuardianAction(new Creatures.Alexander.SleuthAction(tg), 0))
+                                    return true;
+                            }
                         }
                     }
                     break;
-                case TriggerTypes.GuardianSpotted:
+                case TriggerTypes.Spotted:
                     {
-                        TerraGuardian tg = MainMod.ActiveGuardians[Value];
-                        AlexanderData data = (AlexanderData)guardian.Data;
-                        if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && tg.IsUsingBed && !data.WasGuardianIdentified(tg))
+                        if (Sender.TargetType == TriggerTarget.TargetTypes.TerraGuardian)
                         {
-                            if (guardian.StartNewGuardianAction(new Creatures.Alexander.SleuthAction(tg), 0))
-                                return true;
+                            TerraGuardian tg = MainMod.ActiveGuardians[Sender.TargetID];
+                            AlexanderData data = (AlexanderData)guardian.Data;
+                            if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && tg.IsUsingBed && !data.WasGuardianIdentified(tg))
+                            {
+                                if (guardian.StartNewGuardianAction(new Creatures.Alexander.SleuthAction(tg), 0))
+                                    return true;
+                            }
                         }
                     }
                     break;
             }
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         public override string HomelessMessage(Player player, TerraGuardian guardian)
@@ -530,6 +537,50 @@ namespace giantsummon.Creatures
                     if (Main.rand.NextDouble() < 0.5f)
                         return "*You could have helped me. I'm fine now, by the way.*";
                     return "*That was because of my sleuthing, right?*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*My blood... So painful...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Put it out! Put it out!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*I can barelly see!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*I can't... Do anything!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*My feet wont move faster.*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I don't feel 100%...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Argh! My chest!*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*What is that grothesque thing?!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Hey! That's not funny!*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*Brrr... Can you place a bonfire?*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*I'm stuck here!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*You want to test my teeth?!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Try hitting me!*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*I was needing this.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*This will be efficient against our foes.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*Take my dust!*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "(Deep breath) *Ahhh....*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*Now I will cause some damage.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*This will be of help.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*Burp.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

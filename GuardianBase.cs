@@ -844,7 +844,7 @@ namespace giantsummon
         /// <param name="Value4"></param>
         /// <param name="Value5"></param>
         /// <returns>Return false if you don't want the companion to try executing a default behavior for this trigger.</returns>
-        public virtual bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public virtual bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, Trigger.TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
         {
             return true;
         }
@@ -1423,6 +1423,27 @@ namespace giantsummon
                 AlexanderSleuthingProgressFinished = "Mes.Alexander.SleuthProgressFinished";
             public const string ReviveByOthersHelp = "Mes.Revive.HelpedByOthers",
                 RevivedByRecovery = "Mes.Revive.Alone";
+            public const string AcquiredPoisonedDebuff = "Mes.Debuff.Poisoned",
+                AcquiredBurningDebuff = "Mes.Debuff.Burning",
+                AcquiredDarknessDebuff = "Mes.Debuff.Darkness",
+                AcquiredConfusedDebuff = "Mes.Debuff.Confused",
+                AcquiredCursedDebuff = "Mes.Debuff.Cursed",
+                AcquiredSlowDebuff = "Mes.Debuff.Slow",
+                AcquiredWeakDebuff = "Mes.Debuff.Weak",
+                AcquiredBrokenArmorDebuff = "Mes.Debuff.BrokenArmor",
+                AcquiredHorrifiedDebuff = "Mes.Debuff.Horrified",
+                AcquiredIchorDebuff = "Mes.Debuff.Ichor",
+                AcquiredChilledDebuff = "Mes.Debuff.Chilled",
+                AcquiredWebbedDebuff = "Mes.Debuff.Webbed",
+                AcquiredFeralBiteDebuff = "Mes.Debuff.FeralBite";
+            public const string AcquiredDefenseBuff = "Mes.Buff.Endurance",
+                AcquiredWellFedBuff = "Mes.Buff.WellFed",
+                AcquiredDamageBuff = "Mes.Buff.Wrath",
+                AcquiredSpeedBuff = "Mes.Buff.Swiftness",
+                AcquiredHealthIncreaseBuff = "Mes.Buff.Lifeforce",
+                AcquiredCriticalBuff = "Mes.Buff.Rage",
+                AcquiredMeleeWeaponBuff = "Mes.Buff.PoisonFlask";
+            public const string AcquiredTipsyDebuff = "Mes.Buff.Drunk";
         }
         
         public enum GuardianEffect

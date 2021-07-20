@@ -746,6 +746,50 @@ namespace giantsummon.Creatures
                     return "*[name] seems happy for the help.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*[name] says that he's fine.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*[name] seems in pain.*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*[name] is panicking because of the fire.*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*[name] can't see properly.*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*[name] is confused.*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*[name] tells that can't attack.*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*[name] seems slower.*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*[name] says that is feeling down.*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*[name] had It's defense penetrated.*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*[name] is very scared of the creature ahead.*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*[name] is bothered by the ichor around him.*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*[name] is shivering.*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*[name] is stuck in a web.*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*[name] seems rabid.*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*[name] says that is tougher now.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*[name] ate the food like as if didn't ate one for long.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*[name] feels stronger.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*[name] seems faster now.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*[name] feels healthier.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*[name]'s precision were enhanced.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*[name] used poison on his weapon.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "";
             }
             return base.GetSpecialMessage(MessageID);
         }

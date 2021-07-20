@@ -816,6 +816,50 @@ namespace giantsummon.Creatures
                     return "*You couldn't go on without me, couldn't you?*";
                 case MessageIDs.RevivedByRecovery:
                     return "*Okay, who will be the first one I'll turn into a frog?*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*I will make you feel worser than this.*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Ah!! You!!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*Ouch, my eyes! Wait until I see you!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Did they called reinforcements?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*I hate so much this curse...*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I injured my ankle.*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*You wont see my drop...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Oh, you pervert!*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*Ah! Aaahhh!! What is that?!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Hey! That's.... Wow!*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*So... Want to warm yourself with me...?*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*Hey! Stop daydreaming and help me!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*Show me the color of your blood!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Come on, hit me now. I like it.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Hmm... I'm so glad I don't care about conjured food.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*This is gonna hurt.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*I can definitelly outrun you, now.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Look how healthier I got.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*Feel free to hate me when my attack lands you.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*Hm... So usefull...*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*Another cup, please.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

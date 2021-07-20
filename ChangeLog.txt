@@ -82,3 +82,4 @@ Companions got changes on their Near Death checking.
 	They leave that state once their health is above 70%.
 Minerva will no longer give food to those who have more than 10 food items in the inventory.
 	No more money making scheme.
+Companions will now comment on buffs and debuffs they just caught.

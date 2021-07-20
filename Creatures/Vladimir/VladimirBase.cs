@@ -908,6 +908,50 @@ namespace giantsummon.Creatures
                     return "*I'm so glad to have so many good people around.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*I'm feeling better now.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*My body hurts...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Ah! Fire!! Water!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*I see poorly!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Are you guys over there?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*I can't defend myself.*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I'm feeling sluggier.*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I'm feeling heavy..*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Ugh... That will leave a scar..*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*Aaahhhh! Someone, save me from that thing!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Yuk, what a despicable monster!*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*M-mind if I w-warm myself with you?*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*I can't move, I'm stuck here!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*Grrr!! Come back here!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*I can now protect my friends with this. Even my skin looks tougher.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Delicious, but I'm still hungry...*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*I'm feeling stronger now.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*I can move faster, now.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*I'm feeling more alive now.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*This will help me keep my friends safe.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*As long as It isn't to hurt my friends...*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*I needed a bit of that.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

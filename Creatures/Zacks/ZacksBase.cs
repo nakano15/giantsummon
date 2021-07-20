@@ -5,6 +5,7 @@ using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using giantsummon.Trigger;
 
 namespace giantsummon.Creatures
 {
@@ -706,26 +707,33 @@ namespace giantsummon.Creatures
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
-            /*switch (trigger)
+            switch (trigger)
             {
-                case TriggerTypes.PlayerDowned:
-                    Player player = Main.player[Value];
-                    if (!guardian.DoAction.InUse && !guardian.IsPlayerHostile(player))
+                case TriggerTypes.Downed:
                     {
-                        guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(player), PullSomeoneID);
+                        switch(Sender.TargetType)
+                        {
+                            case TriggerTarget.TargetTypes.Player:
+                                Player player = Main.player[Sender.TargetID];
+                                if (!guardian.DoAction.InUse && !guardian.IsPlayerHostile(player))
+                                {
+                                    guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(player), PullSomeoneID);
+                                }
+                                break;
+                            case TriggerTarget.TargetTypes.TerraGuardian:
+                                TerraGuardian tg = MainMod.ActiveGuardians[Sender.TargetID];
+                                if (!guardian.DoAction.InUse && !guardian.IsGuardianHostile(tg))
+                                {
+                                    guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(tg), PullSomeoneID);
+                                }
+                                break;
+                        }
                     }
                     return true;
-                case TriggerTypes.GuardianDowned:
-                    TerraGuardian tg = MainMod.ActiveGuardians[Value];
-                    if (!guardian.DoAction.InUse && !guardian.IsGuardianHostile(tg))
-                    {
-                        guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(tg), PullSomeoneID);
-                    }
-                    return true;
-            }*/
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            }
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         public const int FullMoonBehaviorID = 0, PullSomeoneID = 1;
@@ -825,6 +833,50 @@ namespace giantsummon.Creatures
                     return "*I can move again. I don't know what you did, but Thank you.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*My body moves again, good.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Fire!! It's burning my organs too!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*My eyes are failing me!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*I'm so dizzy...*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*My arms wont answer me, I feel blocked!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*Please, don't leave me behind!*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*My body feels like crumbling...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*My chest was cut open, and my organs are vulnerable!*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*What is that thing?! We should not let It eat us!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Hehe... Golden Shower...*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*Sorry, my body is reacting to the cold.*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*I can't get out of this!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*Ugh...*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*I'm tougher now.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*My hunger satiation wont last long...*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*I feel able to rip someone apart now.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*I wont be hindering you, now.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*My body may last longer now.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*Sharper.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*Blue was right, this is useful.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*I keep forgetting that It escapes from the hole on my chest....*";
             }
             return base.GetSpecialMessage(MessageID);
         }

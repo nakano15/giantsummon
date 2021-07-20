@@ -127,8 +127,14 @@ namespace giantsummon
         public static List<TerraGuardian> CompanionsToShowArrowFor = new List<TerraGuardian>();
         public const float BleedingHealthDamage = 0.015f;
         public const int BleedingHealthDamageTime = 30;
+        public static int GeneralIdleCommentCooldown = 0;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
+
+        public static void SetIdleCommentCooldown()
+        {
+            GeneralIdleCommentCooldown = (int)(Main.rand.Next(15 * 60, 30 * 60));
+        }
 
         public static void EnterSubworld(Compatibility.SubworldLibraryCompatibility.SubworldInfo subWorld)
         {
@@ -899,6 +905,8 @@ namespace giantsummon
                 LastChatTime = Main.player[Main.myPlayer].chatOverhead.timeLeft;
             }
             WorldMod.AnalyzeDrawMoment();
+            if (GeneralIdleCommentCooldown > 0)
+                GeneralIdleCommentCooldown--;
         }
 
         private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh;

@@ -574,6 +574,50 @@ namespace giantsummon.Creatures
                     return "*Thank you, I'm so glad to have you around.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*Ouch... It still hurts... But I can still walk..*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Pain... Everywhere...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Aahh!! My skin!! Burns!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*My eyes hurts!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Are you there?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*I can't attack! I can't do anything!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I don't feel like running faster..*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I can't seem to be able to fully help now...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*My chest! Argh!*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*Eeek!! What is that! Let's get out of here!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Hey! That's very shameful!*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*I'm so cold.... Acho~!*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*I'm stuck here! Help!!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*You took my blood, now I'll take yours!!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Hey, I feel resistant now.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Thank you for the food.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*Hey, I like this. But I hope It doesn't change my physique.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*I feel like running a marathon now.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*I think monsters will threaten me less now.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*Now I will hurt those creatures.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*So... I should drink this, right?*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return ""; //Doesn't drinks
             }
             return base.GetSpecialMessage(MessageID);
         }

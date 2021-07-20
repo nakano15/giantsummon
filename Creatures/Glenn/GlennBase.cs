@@ -450,6 +450,50 @@ namespace giantsummon.Creatures
                     return "*My problem?! What do you mean by that? Why you're following that Terrarian?*";
                 case MessageIDs.LeopoldMessage3:
                     return "They called me for an adventure, and I'm following them.";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "Ngh... Hurts... A lot!";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "Ah! Fire! Put it out! Quick!";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "Ah! My eyes!";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "Oooooohh... My head...";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "I can't attack!";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "I'm having mobility issues here.";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "I feel like throwing up...";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "Ouch... This wound doesn't look good...";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "Aahhh!! Don't let that get me!!";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "This is warm and smelly. Is this...";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "S-someone got a f-fur c-coat?";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "Help! Heeelp! Dad!!";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "Mrooooooowwwnnn..... Pshiiiiiiih....";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "This is really helpful.";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "Ahh... It's like mom's food, but better.";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "I really feel like taking down something now.";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "I'm as fast as a blue hedgehog now.";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "I think I'm like dad now.";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "This is great, It's like I can everyone's heart place.";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "My mom wouldn't be happy to see me playing with poison...";
+                case MessageIDs.AcquiredTipsyDebuff: //He doesn't drink.
+                    return "";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using giantsummon.Trigger;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -239,20 +240,20 @@ namespace giantsummon.Creatures
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
             switch (trigger)
             {
-                case TriggerTypes.GuardianDowned:
+                case TriggerTypes.Downed:
                     {
-                        if(Value == guardian.WhoAmID)
+                        if (Sender.TargetType == TriggerTarget.TargetTypes.TerraGuardian && Sender.TargetID == guardian.WhoAmID)
                         {
                             SpawnSoul(guardian);
                         }
                     }
                     break;
             }
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         public void SpawnSoul(TerraGuardian guardian)

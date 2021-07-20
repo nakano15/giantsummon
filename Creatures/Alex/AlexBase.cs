@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
+using giantsummon.Trigger;
 
 namespace giantsummon.Creatures
 {
@@ -183,22 +184,28 @@ namespace giantsummon.Creatures
             }
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
             /*if (!guardian.DoAction.InUse)
             {
-                if (trigger == TriggerTypes.PlayerHurt)
+                if (trigger == TriggerTypes.Hurt)
                 {
-                    GuardianActions action = guardian.StartNewGuardianAction(HealingLickAction);
-                    action.Players.Add(Main.player[Value]);
-                }
-                if (trigger == TriggerTypes.GuardianHurt)
-                {
-                    GuardianActions action = guardian.StartNewGuardianAction(HealingLickAction);
-                    action.Guardians.Add(MainMod.ActiveGuardians[Value]);
+                    switch (Sender.TargetType)
+                    {
+                        case TriggerTarget.TargetTypes.Player:
+                            {
+                                guardian.StartNewGuardianAction(new Alex.HealingLickAction(Main.player[Sender.TargetID]), HealingLickAction);
+                            }
+                            break;
+                        case TriggerTarget.TargetTypes.TerraGuardian:
+                            {
+                                guardian.StartNewGuardianAction(new Alex.HealingLickAction(MainMod.ActiveGuardians[Sender.TargetID]), HealingLickAction);
+                            }
+                            break;
+                    }
                 }
             }*/
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)

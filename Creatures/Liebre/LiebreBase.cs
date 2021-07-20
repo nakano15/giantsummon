@@ -6,6 +6,7 @@ using Terraria;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader.IO;
+using giantsummon.Trigger;
 
 namespace giantsummon.Creatures
 {
@@ -138,30 +139,31 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(HeadPlasmaID, "head_p");
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
             switch (trigger)
             {
-                case TriggerTypes.GuardianDies:
+                case TriggerTypes.Death:
                     {
-                        TerraGuardian tg = MainMod.ActiveGuardians[Value];
-                        SpawnSoul(tg.CenterPosition, guardian, TerraGuardian.TargetTypes.Guardian, Value, !guardian.IsGuardianHostile(tg));
-                    }
-                    break;
-                case TriggerTypes.NpcDies:
-                    {
-                        NPC npc = Main.npc[Value];
-                        SpawnSoul(npc.Center, guardian, TerraGuardian.TargetTypes.Npc, Value);
-                    }
-                    break;
-                case TriggerTypes.PlayerDies:
-                    {
-                        Player player = Main.player[Value];
-                        SpawnSoul(player.Center, guardian, TerraGuardian.TargetTypes.Player, Value, !guardian.IsPlayerHostile(player));
+                        switch (Sender.TargetType)
+                        {
+                            case TriggerTarget.TargetTypes.TerraGuardian:
+                                TerraGuardian tg = MainMod.ActiveGuardians[Sender.TargetID];
+                                SpawnSoul(tg.CenterPosition, guardian, TerraGuardian.TargetTypes.Guardian, Sender.TargetID, !guardian.IsGuardianHostile(tg));
+                                break;
+                            case TriggerTarget.TargetTypes.NPC:
+                                NPC npc = Main.npc[Sender.TargetID];
+                                SpawnSoul(npc.Center, guardian, TerraGuardian.TargetTypes.Npc, Sender.TargetID);
+                                break;
+                            case TriggerTarget.TargetTypes.Player:
+                                Player player = Main.player[Sender.TargetID];
+                                SpawnSoul(player.Center, guardian, TerraGuardian.TargetTypes.Player, Sender.TargetID, !guardian.IsPlayerHostile(player));
+                                break;
+                        }
                     }
                     break;
             }
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         public override void GuardianUpdateScript(TerraGuardian guardian)
@@ -1058,6 +1060,50 @@ namespace giantsummon.Creatures
                     return "*Oh my... The Terrarian even enslaved a Reaper! Things are more serious than I thought!*";
                 case MessageIDs.LeopoldMessage3:
                     return "*I already said that we're not slaves. We're aiding the Terrarian on their quest.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Ugh... Prepare to suffer!*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Argh, this is damaging my plasma.*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*Something is wrong with my eyes!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Is this the right way?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*This will not save you from me.*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I'll catch you up.*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I still can push myself in this fight.*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Ugh... You pierced my plasma coat...*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*There is no escape from this. We need to defeat that twisted creature.*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*This color doesn't fit my plasma.*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*I feel the cold even in my bones...*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*I can't do much like this...*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*I will take your soul!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Okay, I can take on the offensive now.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*I don't feel the taste of this food.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*Even my scythe looks sharper.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*Faster!*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Health up!*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*This will make the job easier.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*I feel a bit dirty for doing this...*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*...I miss drinking ale... I don't feel the taste of It...*";
             }
             return base.GetSpecialMessage(MessageID);
         }

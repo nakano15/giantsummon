@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
+using giantsummon.Trigger;
 
 namespace giantsummon.Creatures
 {
@@ -154,11 +155,11 @@ namespace giantsummon.Creatures
             AddRequestRequirement(RequestBase.GetFishingRodRequirement);
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
-            if (trigger == TriggerTypes.NpcSpotted)
+            if (trigger == TriggerTypes.Spotted && Sender.TargetType == TriggerTarget.TargetTypes.NPC)
             {
-                NPC npc = Main.npc[Value];
+                NPC npc = Main.npc[Sender.TargetID];
                 if (npc.type == Terraria.ID.NPCID.KingSlime && NpcMod.TrappedCatKingSlime == npc.whoAmI)
                 {
                     switch (Main.rand.Next(3))
@@ -175,9 +176,9 @@ namespace giantsummon.Creatures
                     }
                 }
             }
-            if (trigger == TriggerTypes.NpcDies)
+            if (trigger == TriggerTypes.Death && Sender.TargetType == TriggerTarget.TargetTypes.NPC)
             {
-                NPC npc = Main.npc[Value];
+                NPC npc = Main.npc[Sender.TargetID];
                 if (npc.type == Terraria.ID.NPCID.KingSlime && NpcMod.TrappedCatKingSlime == npc.whoAmI)
                 {
                     switch (Main.rand.Next(3))
@@ -195,7 +196,7 @@ namespace giantsummon.Creatures
                     guardian.IncreaseFriendshipProgress(1);
                 }
             }
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -770,6 +771,50 @@ namespace giantsummon.Creatures
                     return "I really hope you didn't tried anything other than to help me.";
                 case MessageIDs.RevivedByRecovery:
                     return "Who leaves a damsel bleeding on the ground? You?";
+                    //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "Argh! This is horrible! Gr...";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "Water! Water!!";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "Ouch! My eyes!";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "The world is spinning...";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "My arm wont obbey me.";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "My legs aren't moving faster.";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "I can barelly stand...";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "Ooof... (Heavy breathing) Nice... Hit...";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "Aack!! What is that thing! It could swallow us whole!";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "This is so gross!";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "I can barelly move due to shivering...";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "No! Don't eat me!";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "Now you're making me furious!";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "You still think I can't take damage.";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "It's not better than my food, but filled me up.";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "I'm feeling stronger now.";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "Even my feet feels lighter.";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "I even feel younger too.";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "I can't wait to hit something.";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "Maybe this will make things easier.";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "It's not the same drinking with Sardine...";
             }
             return base.GetSpecialMessage(MessageID);
         }

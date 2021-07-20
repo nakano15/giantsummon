@@ -538,6 +538,50 @@ namespace giantsummon.Creatures
                     return "*Okay, thanks. Happy now?*";
                 case MessageIDs.RevivedByRecovery:
                     return "*I'm fine now, not thanks for you.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Ugh... I should have stayed behind...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Argh! Burn! Damn it!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*I can barelly see!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Why is that tree zig-zagging?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*I can't pull the trigger. Help!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*Ouch, I wounded my leg.*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*You think that will put me down...?*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Ahh! That... Is It?*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*... I will need more ammo...*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*I'll fill you with holes now!*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*S-s-someone c-can l-lend me a-a blanket?*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*Try getting closer to me.*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*Grrr... Bark! Bark!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*My fur feels thicker too. I don't know if I like that.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Well cooked food is always nice.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*Whatever crosses my path, is dead, now.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*This would have been handy in the Ether Realm.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Aaaaahh....*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*I can now see vital points clearer.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*Always good to ensure victory.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*Good...*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -5,6 +5,7 @@ using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using giantsummon.Trigger;
 
 namespace giantsummon.Creatures
 {
@@ -894,11 +895,11 @@ namespace giantsummon.Creatures
             return "*[name] is dancing away.*";
         }
 
-        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
-            if (trigger == TriggerTypes.NpcSpotted)
+            if (trigger == TriggerTypes.Spotted && Sender.TargetType == TriggerTarget.TargetTypes.NPC)
             {
-                NPC npc = Main.npc[Value];
+                NPC npc = Main.npc[Sender.TargetID];
                 if (npc.type == Terraria.ModLoader.ModContent.NPCType<Npcs.ZombieGuardian>())
                 {
                     if ((guardian.OwnerPos > -1 && PlayerMod.PlayerHasGuardian(Main.player[guardian.OwnerPos], GuardianBase.Zacks)) || NpcMod.HasMetGuardian(GuardianBase.Zacks))
@@ -922,9 +923,9 @@ namespace giantsummon.Creatures
                     }
                 }
             }
-            if (trigger == TriggerTypes.NpcDies)
+            if (trigger == TriggerTypes.Death && Sender.TargetType == TriggerTarget.TargetTypes.NPC)
             {
-                NPC npc = Main.npc[Value];
+                NPC npc = Main.npc[Sender.TargetID];
                 if (npc.type == Terraria.ModLoader.ModContent.NPCType<Npcs.ZombieGuardian>())
                 {
                     switch (Main.rand.Next(3))
@@ -941,7 +942,7 @@ namespace giantsummon.Creatures
                     }
                 }
             }
-            return base.WhenTriggerActivates(guardian, trigger, Value, Value2, Value3, Value4, Value5);
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
         }
 
         private static bool HasBunnyInInventory(TerraGuardian tg)
@@ -1149,6 +1150,50 @@ namespace giantsummon.Creatures
                     return "*She thanked everyone for the help.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*She said that she's fine now, if someone were wondering.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Argh! Everything inside me burns!*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*AAAAAAAAHHH!! My fur burns!!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*My eyes!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Why there are two of you?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*My arms, I can't move them!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*My feet are tired.*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I don't feel good...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Ouch... That hurt...*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*Aaaaaahhh!! What is that thing?!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Ewww! It smells like...*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*C-c-cooold....*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*There's web in my fur!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*Grrrrr!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*I can take on tough things now.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*So glad to carry good food around.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*Want to test my arm?*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*Weeee!!*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Healthier!*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*My vision got sharper like my claws.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*Always comes in handy.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*Ahhh...*";
             }
             return base.GetSpecialMessage(MessageID);
         }

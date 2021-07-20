@@ -71,6 +71,7 @@
     <Compile Include="AlexRecruitScripts.cs" />
     <Compile Include="BuddyModeSetupInterface.cs" />
     <Compile Include="BuffData.cs" />
+    <Compile Include="BuffMod.cs" />
     <Compile Include="Buffs\Defended.cs" />
     <Compile Include="Buffs\DrainingHealth.cs" />
     <Compile Include="Buffs\GhostFoxHaunts\BeeHaunt.cs" />
@@ -297,6 +298,7 @@
     <Compile Include="TileMod.cs" />
     <Compile Include="TrailPositionLogger.cs" />
     <Compile Include="TriggerHandler.cs" />
+    <Compile Include="Trigger\TriggerTarget.cs" />
     <Compile Include="UtilityMethods.cs" />
     <Compile Include="WorldMod.cs" />
   </ItemGroup>

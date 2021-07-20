@@ -1339,10 +1339,105 @@ namespace giantsummon
             AddCooldown(type, Value);
         }
 
+        public void BuffCommentary(int ID)
+        {
+            if (MainMod.GeneralIdleCommentCooldown > 0 || HasCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown) || Downed || KnockedOut)
+                return;
+            string Mes = "";
+            switch (ID)
+            {
+                case Terraria.ID.BuffID.Poisoned:
+                case Terraria.ID.BuffID.Venom:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredPoisonedDebuff);
+                    break;
+                case Terraria.ID.BuffID.OnFire:
+                case Terraria.ID.BuffID.CursedInferno:
+                case Terraria.ID.BuffID.Frostburn:
+                case Terraria.ID.BuffID.ShadowFlame:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredBurningDebuff);
+                    break;
+                case Terraria.ID.BuffID.Darkness:
+                case Terraria.ID.BuffID.Blackout:
+                case Terraria.ID.BuffID.Obstructed:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredDarknessDebuff);
+                    break;
+                case Terraria.ID.BuffID.Confused:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredConfusedDebuff);
+                    break;
+                case Terraria.ID.BuffID.Cursed:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredCursedDebuff);
+                    break;
+                case Terraria.ID.BuffID.Slow:
+                case Terraria.ID.BuffID.OgreSpit:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredSlowDebuff);
+                    break;
+                case Terraria.ID.BuffID.Weak:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredWeakDebuff);
+                    break;
+                case Terraria.ID.BuffID.BrokenArmor:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredBrokenArmorDebuff);
+                    break;
+                case Terraria.ID.BuffID.Horrified:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredHorrifiedDebuff);
+                    break;
+                case Terraria.ID.BuffID.Ichor:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredIchorDebuff);
+                    break;
+                case Terraria.ID.BuffID.Chilled:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredChilledDebuff);
+                    break;
+                case Terraria.ID.BuffID.Webbed:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredWebbedDebuff);
+                    break;
+                case Terraria.ID.BuffID.Rabies:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredFeralBiteDebuff);
+                    break;
+                //
+                case Terraria.ID.BuffID.Endurance:
+                case Terraria.ID.BuffID.Ironskin:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredDefenseBuff);
+                    break;
+                case Terraria.ID.BuffID.WellFed:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredWellFedBuff);
+                    break;
+                case Terraria.ID.BuffID.Wrath:
+                case Terraria.ID.BuffID.Archery:
+
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredDamageBuff);
+                    break;
+                case Terraria.ID.BuffID.Swiftness:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredSpeedBuff);
+                    break;
+                case Terraria.ID.BuffID.Lifeforce:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredHealthIncreaseBuff);
+                    break;
+                case Terraria.ID.BuffID.Rage:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredCriticalBuff);
+                    break;
+                case Terraria.ID.BuffID.WeaponImbueConfetti:
+                case Terraria.ID.BuffID.WeaponImbueCursedFlames:
+                case Terraria.ID.BuffID.WeaponImbueFire:
+                case Terraria.ID.BuffID.WeaponImbueGold:
+                case Terraria.ID.BuffID.WeaponImbueIchor:
+                case Terraria.ID.BuffID.WeaponImbueNanites:
+                case Terraria.ID.BuffID.WeaponImbuePoison:
+                case Terraria.ID.BuffID.WeaponImbueVenom:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredMeleeWeaponBuff);
+                    break;
+                case Terraria.ID.BuffID.Tipsy:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredTipsyDebuff);
+                    break;
+            }
+            if (Mes != "") {
+                SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
+                MainMod.SetIdleCommentCooldown();
+                AddCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown, Main.rand.Next(45 * 60, 80 * 60));
+            }
+        }
+
         public void AddBuff(int ID, int Time)
         {
             if (BuffImmunity.Contains(ID)) return;
-            bool BuffExists = false;
             foreach (BuffData b in Buffs)
             {
                 if (b.ID == ID)
@@ -1357,15 +1452,13 @@ namespace giantsummon
                     {
                         b.Time = Time;
                     }
-                    BuffExists = true;
-                    break;
+                    return;
                 }
             }
-            if (!BuffExists)
-            {
-                Buffs.Add(new BuffData(ID, Time));
-                UpdateStatus = true;
-            }
+            Buffs.Add(new BuffData(ID, Time));
+            TriggerHandler.FireGuardianBuffAcquiredTrigger(CenterPosition, this, ID);
+            BuffCommentary(ID);
+            UpdateStatus = true;
         }
 
         public bool HasBuff(int ID)
@@ -1393,7 +1486,11 @@ namespace giantsummon
             for (int b = 0; b < Buffs.Count; b++)
             {
                 if (Buffs[b].ID == ID)
+                {
                     Buffs.RemoveAt(b);
+                    TriggerHandler.FireGuardianBuffRemovedTrigger(CenterPosition, this, ID);
+                    return;
+                }
             }
         }
 
@@ -1945,7 +2042,7 @@ namespace giantsummon
                 {
                     if (!this.PlayersSpotted.Contains(i))
                     {
-                        this.DoTrigger(TriggerTypes.PlayerSpotted, i);
+                        this.DoTrigger(TriggerTypes.Spotted, new giantsummon.Trigger.TriggerTarget(Main.player[i]));
                     }
                     PlayersSpotted.Add(i);
                 }
@@ -1957,7 +2054,7 @@ namespace giantsummon
                     {
                         if (!this.NpcsSpotted.Contains(i))
                         {
-                            this.DoTrigger(TriggerTypes.NpcSpotted, i);
+                            this.DoTrigger(TriggerTypes.Spotted, new giantsummon.Trigger.TriggerTarget(Main.npc[i]));
                         }
                         NpcsSpotted.Add(i);
                     }
@@ -1973,7 +2070,7 @@ namespace giantsummon
                     {
                         if (!this.GuardiansSpotted.Contains(key))
                         {
-                            this.DoTrigger(TriggerTypes.GuardianSpotted, key);
+                            this.DoTrigger(TriggerTypes.Spotted, new giantsummon.Trigger.TriggerTarget(guardian));
                         }
                         GuardiansSpotted.Add(key);
                     }
@@ -7015,7 +7112,7 @@ namespace giantsummon
             }
         }
         public bool IsPlayerAFK { get { return (!MainMod.GuardiansIdleEasierOnTowns && AfkCounter >= 180 * 60) || (MainMod.GuardiansIdleEasierOnTowns && TownNpcs >= 3 && AfkCounter >= 60 * 30); } }
-        public bool IsPlayerIdle { get { return (!MainMod.GuardiansIdleEasierOnTowns && IdleCounter >= 180 * 60) || (MainMod.GuardiansIdleEasierOnTowns && TownNpcs >= 3 && IdleCounter >= 60 * 30); } }
+        public bool IsPlayerIdle { get { return (!MainMod.GuardiansIdleEasierOnTowns && IdleCounter >= 180 * 60) || (MainMod.GuardiansIdleEasierOnTowns && TownNpcs >= 2 && IdleCounter >= 60 * 30); } }
 
         public void ShowEmote(int Type, int Time = 180)
         {
@@ -8573,7 +8670,7 @@ namespace giantsummon
                 MP = MMP;
         }
 
-        public static void DoTriggerGroup(IEnumerable<TerraGuardian> terraguardians, TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0f)
+        public static void DoTriggerGroup(IEnumerable<TerraGuardian> terraguardians, TriggerTypes trigger, Trigger.TriggerTarget Target, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0f)
         {
             //Add here actions that can only be triggered by one of those.
             switch (trigger)
@@ -8582,262 +8679,272 @@ namespace giantsummon
             }
         }
 
-        public void DoTrigger(TriggerTypes trigger, int Value, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
+        public void DoTrigger(TriggerTypes trigger, Trigger.TriggerTarget Target, int Value = 0, int Value2 = 0, float Value3 = 0f, float Value4 = 0f, float Value5 = 0f)
         {
-            if (!Base.WhenTriggerActivates(this, trigger, Value, Value2, Value3, Value4, Value5))
+            if (!Base.WhenTriggerActivates(this, trigger, Target, Value, Value2, Value3, Value4, Value5))
                 return;
             switch (trigger)
             {
-                case TriggerTypes.PlayerHurt:
+                case TriggerTypes.Hurt:
                     {
-                        Player player = Main.player[Value];
-                        if (!IsPlayerHostile(player))
+                        switch (Target.TargetType)
                         {
-                            int Damage = Value2;
-                            bool Pvp = Value4 == 1;
-                            byte HostileType = 255;
-                            int HostileID = 0;
-                            float HostileDistance = 512f;
-                            bool Urgency = player.statLife < player.statLifeMax2 * 0.5f;
-                            if (Pvp)
-                            {
-                                for(int p = 0; p < 255; p++)
+                            case giantsummon.Trigger.TriggerTarget.TargetTypes.Player:
                                 {
-                                    if(p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
+                                    Player player = Main.player[Target.TargetID];
+                                    if (!IsPlayerHostile(player))
                                     {
-                                        float Distance = (Main.player[p].Center - player.Center).Length();
-                                        if(Distance < HostileDistance)
+                                        int Damage = Value2;
+                                        bool Pvp = Value4 == 1;
+                                        byte HostileType = 255;
+                                        int HostileID = 0;
+                                        float HostileDistance = 512f;
+                                        bool Urgency = player.statLife < player.statLifeMax2 * 0.5f;
+                                        if (Pvp)
                                         {
-                                            HostileDistance = Distance;
-                                            HostileType = 0;
-                                            HostileID = p;
+                                            for (int p = 0; p < 255; p++)
+                                            {
+                                                if (p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
+                                                {
+                                                    float Distance = (Main.player[p].Center - player.Center).Length();
+                                                    if (Distance < HostileDistance)
+                                                    {
+                                                        HostileDistance = Distance;
+                                                        HostileType = 0;
+                                                        HostileID = p;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        for (int n = 0; n < 200; n++)
+                                        {
+                                            if (Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
+                                            {
+                                                float Distance = (Main.npc[n].Center - player.Center).Length();
+                                                if (Distance < HostileDistance)
+                                                {
+                                                    HostileDistance = Distance;
+                                                    HostileType = 1;
+                                                    HostileID = n;
+                                                }
+                                            }
+                                        }
+                                        foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                                        {
+                                            if (IsGuardianHostile(tg))
+                                            {
+                                                float Distance = (tg.CenterPosition - player.Center).Length();
+                                                if (Distance < HostileDistance)
+                                                {
+                                                    HostileDistance = Distance;
+                                                    HostileType = 2;
+                                                    HostileID = tg.WhoAmID;
+                                                }
+                                            }
+                                        }
+                                        if (HostileType < 255)
+                                        {
+                                            switch (HostileType)
+                                            {
+                                                case 0:
+                                                    if (Urgency || !AttackingTarget)
+                                                    {
+                                                        TargetID = HostileID;
+                                                        TargetType = TargetTypes.Player;
+                                                    }
+                                                    break;
+                                                case 1:
+                                                    if (Urgency || !AttackingTarget)
+                                                    {
+                                                        TargetID = HostileID;
+                                                        TargetType = TargetTypes.Npc;
+                                                    }
+                                                    break;
+                                                case 2:
+                                                    if (Urgency || !AttackingTarget)
+                                                    {
+                                                        TargetID = HostileID;
+                                                        TargetType = TargetTypes.Guardian;
+                                                    }
+                                                    break;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            for(int n = 0; n < 200; n++)
-                            {
-                                if(Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
+                                break;
+
+                            case giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian:
                                 {
-                                    float Distance = (Main.npc[n].Center - player.Center).Length();
-                                    if(Distance < HostileDistance)
+                                    if (MainMod.ActiveGuardians.ContainsKey(Target.TargetID))
                                     {
-                                        HostileDistance = Distance;
-                                        HostileType = 1;
-                                        HostileID = n;
+                                        TerraGuardian tg = MainMod.ActiveGuardians[Target.TargetID];
+                                        if (!IsGuardianHostile(tg))
+                                        {
+                                            int Damage = Value2;
+                                            bool Pvp = Value4 == 1;
+                                            byte HostileType = 255;
+                                            int HostileID = 0;
+                                            float HostileDistance = 512f;
+                                            bool Urgency = tg.HP < tg.MHP * 0.5f;
+                                            if (Pvp)
+                                            {
+                                                for (int p = 0; p < 255; p++)
+                                                {
+                                                    if (p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
+                                                    {
+                                                        float Distance = (Main.player[p].Center - tg.CenterPosition).Length();
+                                                        if (Distance < HostileDistance)
+                                                        {
+                                                            HostileDistance = Distance;
+                                                            HostileType = 0;
+                                                            HostileID = p;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            for (int n = 0; n < 200; n++)
+                                            {
+                                                if (Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
+                                                {
+                                                    float Distance = (Main.npc[n].Center - tg.CenterPosition).Length();
+                                                    if (Distance < HostileDistance)
+                                                    {
+                                                        HostileDistance = Distance;
+                                                        HostileType = 1;
+                                                        HostileID = n;
+                                                    }
+                                                }
+                                            }
+                                            foreach (TerraGuardian tg2 in MainMod.ActiveGuardians.Values)
+                                            {
+                                                if (tg.WhoAmID != tg2.WhoAmID && IsGuardianHostile(tg2))
+                                                {
+                                                    float Distance = (tg2.CenterPosition - tg2.CenterPosition).Length();
+                                                    if (Distance < HostileDistance)
+                                                    {
+                                                        HostileDistance = Distance;
+                                                        HostileType = 2;
+                                                        HostileID = tg2.WhoAmID;
+                                                    }
+                                                }
+                                            }
+                                            if (HostileType < 255)
+                                            {
+                                                switch (HostileType)
+                                                {
+                                                    case 0:
+                                                        if (Urgency || !AttackingTarget)
+                                                        {
+                                                            TargetID = HostileID;
+                                                            TargetType = TargetTypes.Player;
+                                                        }
+                                                        break;
+                                                    case 1:
+                                                        if (Urgency || !AttackingTarget)
+                                                        {
+                                                            TargetID = HostileID;
+                                                            TargetType = TargetTypes.Npc;
+                                                        }
+                                                        break;
+                                                    case 2:
+                                                        if (Urgency || !AttackingTarget)
+                                                        {
+                                                            TargetID = HostileID;
+                                                            TargetType = TargetTypes.Guardian;
+                                                        }
+                                                        break;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            foreach(TerraGuardian tg in MainMod.ActiveGuardians.Values)
-                            {
-                                if (IsGuardianHostile(tg))
+                                break;
+
+                            case giantsummon.Trigger.TriggerTarget.TargetTypes.NPC:
                                 {
-                                    float Distance = (tg.CenterPosition - player.Center).Length();
-                                    if (Distance < HostileDistance)
+                                    NPC npc = Main.npc[Target.TargetID];
+                                    if (!IsNpcHostile(npc) && npc.townNPC)
                                     {
-                                        HostileDistance = Distance;
-                                        HostileType = 2;
-                                        HostileID = tg.WhoAmID;
+                                        int Damage = Value2;
+                                        bool Pvp = Value4 == 1;
+                                        byte HostileType = 255;
+                                        int HostileID = 0;
+                                        float HostileDistance = 512f;
+                                        bool Urgency = npc.life < npc.lifeMax * 0.5f;
+                                        if (Pvp)
+                                        {
+                                            for (int p = 0; p < 255; p++)
+                                            {
+                                                if (p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
+                                                {
+                                                    float Distance = (Main.player[p].Center - npc.Center).Length();
+                                                    if (Distance < HostileDistance)
+                                                    {
+                                                        HostileDistance = Distance;
+                                                        HostileType = 0;
+                                                        HostileID = p;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        for (int n = 0; n < 200; n++)
+                                        {
+                                            if (Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
+                                            {
+                                                float Distance = (Main.npc[n].Center - npc.Center).Length();
+                                                if (Distance < HostileDistance)
+                                                {
+                                                    HostileDistance = Distance;
+                                                    HostileType = 1;
+                                                    HostileID = n;
+                                                }
+                                            }
+                                        }
+                                        foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                                        {
+                                            if (IsGuardianHostile(tg))
+                                            {
+                                                float Distance = (tg.CenterPosition - npc.Center).Length();
+                                                if (Distance < HostileDistance)
+                                                {
+                                                    HostileDistance = Distance;
+                                                    HostileType = 2;
+                                                    HostileID = tg.WhoAmID;
+                                                }
+                                            }
+                                        }
+                                        if (HostileType < 255)
+                                        {
+                                            switch (HostileType)
+                                            {
+                                                case 0:
+                                                    if (Urgency || !AttackingTarget)
+                                                    {
+                                                        TargetID = HostileID;
+                                                        TargetType = TargetTypes.Player;
+                                                    }
+                                                    break;
+                                                case 1:
+                                                    if (Urgency || !AttackingTarget)
+                                                    {
+                                                        TargetID = HostileID;
+                                                        TargetType = TargetTypes.Npc;
+                                                    }
+                                                    break;
+                                                case 2:
+                                                    if (Urgency || !AttackingTarget)
+                                                    {
+                                                        TargetID = HostileID;
+                                                        TargetType = TargetTypes.Guardian;
+                                                    }
+                                                    break;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            if (HostileType < 255)
-                            {
-                                switch (HostileType)
-                                {
-                                    case 0:
-                                        if(Urgency || !AttackingTarget)
-                                        {
-                                            TargetID = HostileID;
-                                            TargetType = TargetTypes.Player;
-                                        }
-                                        break;
-                                    case 1:
-                                        if (Urgency || !AttackingTarget)
-                                        {
-                                            TargetID = HostileID;
-                                            TargetType = TargetTypes.Npc;
-                                        }
-                                        break;
-                                    case 2:
-                                        if (Urgency || !AttackingTarget)
-                                        {
-                                            TargetID = HostileID;
-                                            TargetType = TargetTypes.Guardian;
-                                        }
-                                        break;
-                                }
-                            }
+                                break;
                         }
-                    }
-                    break;
-                case TriggerTypes.GuardianHurt:
-                    {
-                        if (MainMod.ActiveGuardians.ContainsKey(Value))
-                        {
-                            TerraGuardian tg = MainMod.ActiveGuardians[Value];
-                            if (!IsGuardianHostile(tg))
-                            {
-                                int Damage = Value2;
-                                bool Pvp = Value4 == 1;
-                                byte HostileType = 255;
-                                int HostileID = 0;
-                                float HostileDistance = 512f;
-                                bool Urgency = tg.HP < tg.MHP * 0.5f;
-                                if (Pvp)
-                                {
-                                    for (int p = 0; p < 255; p++)
-                                    {
-                                        if (p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
-                                        {
-                                            float Distance = (Main.player[p].Center - tg.CenterPosition).Length();
-                                            if (Distance < HostileDistance)
-                                            {
-                                                HostileDistance = Distance;
-                                                HostileType = 0;
-                                                HostileID = p;
-                                            }
-                                        }
-                                    }
-                                }
-                                for (int n = 0; n < 200; n++)
-                                {
-                                    if (Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
-                                    {
-                                        float Distance = (Main.npc[n].Center - tg.CenterPosition).Length();
-                                        if (Distance < HostileDistance)
-                                        {
-                                            HostileDistance = Distance;
-                                            HostileType = 1;
-                                            HostileID = n;
-                                        }
-                                    }
-                                }
-                                foreach (TerraGuardian tg2 in MainMod.ActiveGuardians.Values)
-                                {
-                                    if (tg.WhoAmID != tg2.WhoAmID && IsGuardianHostile(tg2))
-                                    {
-                                        float Distance = (tg2.CenterPosition - tg2.CenterPosition).Length();
-                                        if (Distance < HostileDistance)
-                                        {
-                                            HostileDistance = Distance;
-                                            HostileType = 2;
-                                            HostileID = tg2.WhoAmID;
-                                        }
-                                    }
-                                }
-                                if (HostileType < 255)
-                                {
-                                    switch (HostileType)
-                                    {
-                                        case 0:
-                                            if (Urgency || !AttackingTarget)
-                                            {
-                                                TargetID = HostileID;
-                                                TargetType = TargetTypes.Player;
-                                            }
-                                            break;
-                                        case 1:
-                                            if (Urgency || !AttackingTarget)
-                                            {
-                                                TargetID = HostileID;
-                                                TargetType = TargetTypes.Npc;
-                                            }
-                                            break;
-                                        case 2:
-                                            if (Urgency || !AttackingTarget)
-                                            {
-                                                TargetID = HostileID;
-                                                TargetType = TargetTypes.Guardian;
-                                            }
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    break;
-                case TriggerTypes.NpcHurt:
-                    {
-                        NPC npc = Main.npc[Value];
-                        if (!IsNpcHostile(npc) && npc.townNPC)
-                        {
-                            int Damage = Value2;
-                            bool Pvp = Value4 == 1;
-                            byte HostileType = 255;
-                            int HostileID = 0;
-                            float HostileDistance = 512f;
-                            bool Urgency = npc.life < npc.lifeMax * 0.5f;
-                            if (Pvp)
-                            {
-                                for (int p = 0; p < 255; p++)
-                                {
-                                    if (p != Value && Main.player[p].active && !Main.player[p].dead && IsPlayerHostile(Main.player[p]))
-                                    {
-                                        float Distance = (Main.player[p].Center - npc.Center).Length();
-                                        if (Distance < HostileDistance)
-                                        {
-                                            HostileDistance = Distance;
-                                            HostileType = 0;
-                                            HostileID = p;
-                                        }
-                                    }
-                                }
-                            }
-                            for (int n = 0; n < 200; n++)
-                            {
-                                if (Main.npc[n].active && !Main.npc[n].townNPC && IsNpcHostile(Main.npc[n]))
-                                {
-                                    float Distance = (Main.npc[n].Center - npc.Center).Length();
-                                    if (Distance < HostileDistance)
-                                    {
-                                        HostileDistance = Distance;
-                                        HostileType = 1;
-                                        HostileID = n;
-                                    }
-                                }
-                            }
-                            foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
-                            {
-                                if (IsGuardianHostile(tg))
-                                {
-                                    float Distance = (tg.CenterPosition - npc.Center).Length();
-                                    if (Distance < HostileDistance)
-                                    {
-                                        HostileDistance = Distance;
-                                        HostileType = 2;
-                                        HostileID = tg.WhoAmID;
-                                    }
-                                }
-                            }
-                            if (HostileType < 255)
-                            {
-                                switch (HostileType)
-                                {
-                                    case 0:
-                                        if (Urgency || !AttackingTarget)
-                                        {
-                                            TargetID = HostileID;
-                                            TargetType = TargetTypes.Player;
-                                        }
-                                        break;
-                                    case 1:
-                                        if (Urgency || !AttackingTarget)
-                                        {
-                                            TargetID = HostileID;
-                                            TargetType = TargetTypes.Npc;
-                                        }
-                                        break;
-                                    case 2:
-                                        if (Urgency || !AttackingTarget)
-                                        {
-                                            TargetID = HostileID;
-                                            TargetType = TargetTypes.Guardian;
-                                        }
-                                        break;
-                                }
-                            }
-                        }
+                        
                     }
                     break;
             }
@@ -10669,53 +10776,6 @@ namespace giantsummon
                         Jump = true;
                         WingFlightTime++;
                     }
-                    /*else
-                    {
-                        if(false && Collision.CanHitLine(TopLeftPosition, CollisionWidth, CollisionHeight, new Vector2(LeaderCenterX - 2, LeaderBottom - CollisionHeight * 0.5f), 4, 4))
-                        {
-                            bool HasPlatformAbove = false, HasSolidTile = false;
-                            for (int y = 0; y < MaxJumpHeight * JumpSpeed; y++)
-                            {
-                                int TileY = (int)CenterPosition.Y * DivisionBy16 - 1 - y;
-                                if (TileY < Main.topWorld * DivisionBy16)
-                                    break;
-                                HasPlatformAbove = false;
-                                for (int x = 0; x < 2; x++)
-                                {
-                                    int TileX = (int)CenterPosition.X * DivisionBy16 - 1 + x;
-                                    Tile tile = Framing.GetTileSafely(TileX, TileY);
-                                    if (tile.active() && Main.tileSolid[tile.type])
-                                    {
-                                        if (!Terraria.ID.TileID.Sets.Platforms[tile.type])
-                                        {
-                                            HasSolidTile = true;
-                                            HasPlatformAbove = false;
-                                            break;
-                                        }
-                                        else
-                                        {
-                                            HasPlatformAbove = true;
-                                        }
-                                    }
-                                }
-                                if(HasSolidTile || HasPlatformAbove)
-                                {
-                                    break;
-                                }
-                            }
-                            if (!HasSolidTile && HasPlatformAbove)
-                            {
-                                Jump = true;
-                            }
-                        }
-                        else if(Math.Abs(CenterPosition.X - LeaderCenterX) > 4)
-                        {
-                            if (CenterPosition.X < LeaderCenterX)
-                                MoveRight = true;
-                            else
-                                MoveLeft = true;
-                        }
-                    }*/
                 }
                 else if (Breath < BreathMax && !TryFlying && !TrySwimming && Wet && !LeaderWet)
                 {
