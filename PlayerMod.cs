@@ -665,6 +665,16 @@ namespace giantsummon
             return false;
         }
 
+        public static bool HasGuardianBeenGifted(Player player, GuardianData tg)
+        {
+            return HasGuardianBeenGifted(player, tg.ID, tg.ModID);
+        }
+
+        public static bool HasGuardianBeenGifted(Player player, TerraGuardian tg)
+        {
+            return HasGuardianBeenGifted(player, tg.ID, tg.ModID);
+        }
+
         public static bool HasGuardianBeenGifted(Player player, int ID, string ModID = "")
         {
             if (player.GetModPlayer<PlayerMod>().HasGuardian(ID, ModID))

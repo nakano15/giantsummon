@@ -909,7 +909,7 @@ namespace giantsummon
             const float ElementScale = 0.7f;
             string MouseText = "";
             DrawNameList(HudPosition, player);
-            DrawWeightBar(HudPosition, player, Selected > -1 ? (DisplayGuardian.Base.CompanionSlotWeight * (!PlayerMod.HasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID) ? 1 : -1)) : 0);
+            DrawWeightBar(HudPosition, player, Selected > -1 ? ContentList[Selected].Index == player.SelectedGuardian ? 0 : (DisplayGuardian.Base.CompanionSlotWeight * (!PlayerMod.HasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID) ? 1 : -1)) : 0);
             //Book Tag
             {
                 Vector2 TagPosition = Vector2.Zero;
@@ -1411,7 +1411,9 @@ namespace giantsummon
             BarPosition.X = InterfacePosition.X + 184;
             BarPosition.Y = InterfacePosition.Y + 34;
             const int BarWidth = 248, BarHeight = 28;
-                int CurrentWeight = (int)(player.GuardianFollowersWeight * 1000), GuardianWeightValue = (int)(SelectedGuardianWeight * 1000), MaxWeight = (int)(player.MaxGuardianFollowersWeight * 1000);
+            int CurrentWeight = (int)(player.GuardianFollowersWeight * 1000), 
+                GuardianWeightValue = (int)(SelectedGuardianWeight * 1000), 
+                MaxWeight = (int)(player.MaxGuardianFollowersWeight * 1000);
             {
                 int FirstBarSize = (int)((float)(CurrentWeight + (GuardianWeightValue > 0 ? 0 : GuardianWeightValue)) / MaxWeight * BarWidth),
                     SecondBarSize = (int)((float)Math.Abs(GuardianWeightValue) / MaxWeight * BarWidth);
@@ -1419,6 +1421,13 @@ namespace giantsummon
                 {
                     FirstBarSize = 0;
                     SecondBarSize = BarWidth;
+                }
+                else
+                {
+                    if (FirstBarSize > BarWidth)
+                        FirstBarSize = BarWidth;
+                    if (SecondBarSize > BarWidth)
+                        SecondBarSize = BarWidth;
                 }
                 Rectangle rect = new Rectangle((int)BarPosition.X, (int)BarPosition.Y, FirstBarSize, BarHeight);
                 Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, rect, new Rectangle(266, 34, 88, 28), Color.White);

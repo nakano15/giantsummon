@@ -213,6 +213,7 @@ namespace giantsummon
         public IdleActions CurrentIdleAction = IdleActions.Wait;
         public int IdleActionTime = 0;
         public Dictionary<int, int> TileCount = new Dictionary<int, int>(), TempTileCount = new Dictionary<int, int>();
+        public Dictionary<int, int> SpottedTileMemoryTime = new Dictionary<int, int>();
         private Terraria.GameContent.UI.WorldUIAnchor anchor = new Terraria.GameContent.UI.WorldUIAnchor();
         private Terraria.GameContent.UI.EmoteBubble emote; 
         public const int FramesSquaredTileCount = 16; //8
@@ -1402,7 +1403,6 @@ namespace giantsummon
                     break;
                 case Terraria.ID.BuffID.Wrath:
                 case Terraria.ID.BuffID.Archery:
-
                     Mes = GetMessage(GuardianBase.MessageIDs.AcquiredDamageBuff);
                     break;
                 case Terraria.ID.BuffID.Swiftness:
@@ -1671,6 +1671,21 @@ namespace giantsummon
             Data.AddSkillProgress(Value, Type);
         }
 
+        public bool HasTileMemory(int TileID)
+        {
+            return SpottedTileMemoryTime.ContainsKey(TileID);
+        }
+
+        public void RefreshTileMemory(int TileID)
+        {
+            if (SpottedTileMemoryTime.ContainsKey(TileID))
+            {
+                SpottedTileMemoryTime[TileID] = 60 * 30;
+                return;
+            }
+            SpottedTileMemoryTime.Add(TileID, 60 * 30);
+        }
+
         public void AddTileCount(int TileID)
         {
             if (TempTileCount.ContainsKey(TileID))
@@ -1704,6 +1719,7 @@ namespace giantsummon
             int TilePositionX = (int)(Position.X * DivisionBy16) + TileCheckStartPositionX, TilePositionY = (int)(CenterY * DivisionBy16) + TileCheckStartPositionY;
             TilePositionX += TileRangeX * (TileCheckValue % AFourthTileCount);
             TilePositionY += TileRangeY * (TileCheckValue / AFourthTileCount);
+            List<int> TileMemories = new List<int>();
             for (int y = TilePositionY; y < TilePositionY + TileRangeY; y++)
             {
                 for (int x = TilePositionX; x < TilePositionX + TileRangeX; x++)
@@ -1713,6 +1729,37 @@ namespace giantsummon
                         if (Main.tile[x, y] != null && Main.tile[x, y].active())
                         {
                             AddTileCount(Main.tile[x, y].type);
+                            if(OwnerPos != -1 && TownNpcs == 0 && Lighting.Brightness(x, y) > 0.5f && !TileMemories.Contains(Main.tile[x, y].type))
+                            {
+                                TileMemories.Add(Main.tile[x, y].type);
+                                if (!HasTileMemory(Main.tile[x, y].type))
+                                {
+                                    //Comment tile
+                                    Vector2 VisionPosition = Vector2.Zero;
+                                    VisionPosition.X = Position.X;
+                                    VisionPosition.Y = Position.Y - Height * 0.75f;
+                                    bool Found = false;
+                                    for (int x2 = -1; x2 < 2; x2++)
+                                    {
+                                        for(int y2 = -1; y2 < 2; y2++)
+                                        {
+                                            if(!Main.tileSolid[Main.tile[x, y].type] || (x2 != 0 && y2 != 0))
+                                            {
+                                                if(Collision.CanHitLine(VisionPosition, 1,1, new Vector2((x + x2) * 16, (y + y2) * 16), 16, 16))
+                                                {
+                                                    Found = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        if (Found)
+                                            break;
+                                    }
+                                    if(Found)
+                                        OnTileSpotted(Main.tile[x, y].type);
+                                }
+                                RefreshTileMemory(Main.tile[x, y].type);
+                            }
                         }
                     }
                 }
@@ -1724,6 +1771,77 @@ namespace giantsummon
                 TileCount = TempTileCount;
                 TempTileCount = new Dictionary<int,int>();
                 BiomeZoneChecker();
+            }
+            int[] Keys = SpottedTileMemoryTime.Keys.ToArray();
+            foreach(int key in Keys)
+            {
+                SpottedTileMemoryTime[key]--;
+                if (SpottedTileMemoryTime[key] <= 0)
+                    SpottedTileMemoryTime.Remove(key);
+            }
+        }
+
+        public void OnTileSpotted(int TileID)
+        {
+            bool Comment = MainMod.GeneralIdleCommentCooldown <= 0 && !HasCooldown(GuardianCooldownManager.CooldownType.TileCommentCooldown);
+            string Mes = "";
+            switch (TileID)
+            {
+                case Terraria.ID.TileID.Gold:
+                case Terraria.ID.TileID.Platinum:
+                    if (!Main.hardMode)
+                    {
+                        Mes = GuardianBase.MessageIDs.FoundRareOreTile;
+                    }
+                    break;
+                case Terraria.ID.TileID.Mythril:
+                case Terraria.ID.TileID.Orichalcum:
+                    Mes = GuardianBase.MessageIDs.FoundRareOreTile;
+                    break;
+                case Terraria.ID.TileID.Adamantite:
+                case Terraria.ID.TileID.Titanium:
+                case Terraria.ID.TileID.LunarOre:
+                    Mes = GuardianBase.MessageIDs.FoundVeryRareOreTile;
+                    break;
+                case Terraria.ID.TileID.Heart:
+                case Terraria.ID.TileID.LifeFruit:
+                    Mes = GuardianBase.MessageIDs.FoundLifeCrystalTile;
+                    break;
+                case Terraria.ID.TileID.PlanteraBulb:
+                    Mes = GuardianBase.MessageIDs.FoundPlanteraTile;
+                    break;
+                case Terraria.ID.TileID.Detonator:
+                    Mes = GuardianBase.MessageIDs.FoundDetonatorTile;
+                    break;
+                case Terraria.ID.TileID.ElderCrystalStand:
+                    Mes = GuardianBase.MessageIDs.FoundEterniaCrystalStandTile;
+                    break;
+                case Terraria.ID.TileID.PressurePlates:
+                    Mes = GuardianBase.MessageIDs.FoundPressurePlateTile;
+                    break;
+                case 21:
+                case 467:
+                    Mes = GuardianBase.MessageIDs.FoundTreasureTile;
+                    break;
+                case Terraria.ID.TileID.ExposedGems:
+                    Mes = GuardianBase.MessageIDs.FoundGemTile;
+                    break;
+                case Terraria.ID.TileID.LandMine:
+                    Mes = GuardianBase.MessageIDs.FoundMineTile;
+                    break;
+                case Terraria.ID.TileID.MinecartTrack:
+                    Mes = GuardianBase.MessageIDs.FoundMinecartRailTile;
+                    break;
+            }
+            if (Comment && Mes != "")
+            {
+                Mes = GetMessage(Mes);
+                if (Mes != "")
+                {
+                    SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
+                    MainMod.SetIdleCommentCooldown();
+                    AddCooldown(GuardianCooldownManager.CooldownType.TileCommentCooldown, Main.rand.Next(45 * 60, 80 * 60));
+                }
             }
         }
 

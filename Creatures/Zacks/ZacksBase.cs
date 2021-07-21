@@ -537,11 +537,17 @@ namespace giantsummon.Creatures
                 Mes.Add("*I like following [gn:" + Glenn + "] around when he's completelly alone. His attempts to escape from me makes me want to chase him more.*");
                 Mes.Add("*I don't have anything against [gn:"+Glenn+"], but I can use my current state to scare him just for fun.*");
             }
+            if (NpcMod.HasGuardianNPC(Cinnamon))
+            {
+                Mes.Add("*It may sound weird, but I care for [gn:" + Cinnamon + "]'s well being and safety.*");
+                Mes.Add("*I hound around [gn:" + Cinnamon + "]'s house during the night, since being scared and locked inside, means not being outside and in danger.*");
+                Mes.Add("*Maybe if I take care of [gn:" + Cinnamon + "], I'll practice to be a good parent when I have a child... If I have a child...*");
+            }
             if (guardian.IsPlayerRoomMate(player))
             {
                 Mes.Add("*Yes, I can share my room with you, I can't sleep at night, anyway.*");
                 Mes.Add("*If you're worried about being devoured during the night, don't worry, I wont. I know how to search for food outside.*");
-                Mes.Add("*There is not much I can do during the night. Either I watch the window, or you sleep. I think I saw you putting your thumb on your mouth, one night. Though.*");
+                Mes.Add("*There is not much I can do during the night. Either I watch the window, or you sleep. I think I saw you putting your thumb on your mouth one night.*");
             }
             if (NpcMod.IsGuardianPlayerRoomMate(player, Blue))
             {

@@ -478,6 +478,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*I sometimes help [gn:"+Glenn+"] with his studies, even more whenever he needs a pacific place to study.*");
                 Mes.Add("*At first, [gn:"+Glenn+"] was really scared of me. After we just talked for a moment, his fear vanished.*");
             }
+            if (NpcMod.HasGuardianNPC(Cinnamon))
+            {
+                Mes.Add("*[gn:" + Cinnamon + "] is a good girl. Sometimes I help her testing the food she cooks.*");
+                Mes.Add("*There are a number of times where [gn:" + Cinnamon + "] falls asleep due to exaustion from cooking. I know she's trying her best to cook good food, but overdoing It isn't good to anyone. I'm glad that I'm there when that happens.*");
+            }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
             {
@@ -530,8 +535,8 @@ namespace giantsummon.Creatures
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.TaxCollector))
             {
-                Mes.Add("*I discovered earlier that hugging [nn:" + Terraria.ID.NPCID.Mechanic + "] is a good way of avoiding tax collection.*");
-                Mes.Add("*I actually dislike hugging [nn:" + Terraria.ID.NPCID.Mechanic + "], he smells like an abandoned house. I nearly sneezed last time.*");
+                Mes.Add("*I discovered earlier that hugging [nn:" + Terraria.ID.NPCID.TaxCollector + "] is a good way of avoiding tax collection.*");
+                Mes.Add("*I actually dislike hugging [nn:" + Terraria.ID.NPCID.TaxCollector + "], he smells like an abandoned house. I nearly sneezed last time.*");
             }
 
             if (guardian.IsUsingToilet)
@@ -544,7 +549,7 @@ namespace giantsummon.Creatures
             {
                 if (guardian.IsAttackingSomething)
                 {
-                    if (!Main.bloodMoon)
+                    if (Main.bloodMoon)
                     {
                         Mes.Add("*I WILL SILENCE YOU NOW!!!*");
                         Mes.Add("*DIE VILE CREATURE!!!!*");
@@ -656,7 +661,7 @@ namespace giantsummon.Creatures
                     }
                     if (guardian.IsPlayerRoomMate(player))
                     {
-                        Mes.Add("*I'm very happy of sharing my room with you, I never feel lonelly again.*");
+                        Mes.Add("*I'm very happy of sharing my room with you, I never feel lonelly at night again.*");
                         Mes.Add("*Having someone to hug during the night always makes the night better.*");
                     }
                     if (guardian.IsUsingToilet)
@@ -668,7 +673,8 @@ namespace giantsummon.Creatures
                         Mes.Add("*Ugh... My stomach... I think this is a bad time for a hug... Oww...*");
                         Mes.Add("*I don't mind hugging at this moment, It's not like as if you are watching me doing my business.*");
                         Mes.Add("*Sorry If I'm hugging too strong, but I really need to use some strength right now.*");
-                        Mes.Add("*Oh! Did that noise scared you?*");
+                        Mes.Add("*Did that noise scared you? Sorry.*");
+                        Mes.Add("*Sorry for moving too much, I'm trying to aim at the toilet hole.*");
                     }
                 }
             }

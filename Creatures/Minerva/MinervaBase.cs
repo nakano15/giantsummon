@@ -290,6 +290,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*[nickname], is [gn:16] on my shoulder? No? Good. She's very scary, and I hate when she does that.*");
                     Mes.Add("*[gn:16] asked if I could make some food for her, but she couldn't manage to eat It... The food fell through her body.*");
                 }
+                if (NpcMod.HasGuardianNPC(Cinnamon))
+                {
+                    Mes.Add("*Having [gn:" + Cinnamon + "] around is perfect to try improving my cooking. Maybe I could ask her to be my assistant in the future.*");
+                    Mes.Add("*While my strength is knowing how to cook things, [gn:" + Cinnamon + "] is good at setting the correct seasonings and their amount on the food.*");
+                }
             }
             else
             {

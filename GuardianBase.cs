@@ -142,6 +142,7 @@ namespace giantsummon
             Fluffles = 16,
             Minerva = 17,
             Daphne = 18,
+            Liebre = 19,
             Bapha = 20,
             Glenn = 21,
             CaptainSmelly = 22,
@@ -1444,6 +1445,17 @@ namespace giantsummon
                 AcquiredCriticalBuff = "Mes.Buff.Rage",
                 AcquiredMeleeWeaponBuff = "Mes.Buff.PoisonFlask";
             public const string AcquiredTipsyDebuff = "Mes.Buff.Drunk";
+            public const string FoundLifeCrystalTile = "Mes.Tile.LC",
+                FoundPressurePlateTile = "Mes.Tile.PressurePlate",
+                FoundMineTile = "Mes.Tile.Mine",
+                FoundDetonatorTile = "Mes.Tile.Detonator",
+                FoundPlanteraTile = "Mes.Tile.Plantera",
+                FoundEterniaCrystalStandTile = "Mes.Tile.ECStand",
+                FoundTreasureTile = "Mes.Tile.Treasure",
+                FoundGemTile = "Mes.Tile.Gem",
+                FoundRareOreTile = "Mes.Tile.RareOre",
+                FoundVeryRareOreTile = "Mes.Tile.VeryRareOre",
+                FoundMinecartRailTile = "Mes.Tile.Minecart";
         }
         
         public enum GuardianEffect

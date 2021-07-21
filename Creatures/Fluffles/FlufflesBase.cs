@@ -236,6 +236,10 @@ namespace giantsummon.Creatures
                     Mes.Add("(She smiles and waves at [gn:" + Glenn + "]. He also waved back at her while smiling.)");
                     Mes.Add("(It seems like both her and [gn:" + Glenn + "] are great friends.)");
                 }
+                if (PlayerMod.HasGuardianSummoned(player, Cinnamon))
+                {
+                    Mes.Add("(She stares at [gn:" + Cinnamon + "], then showed a soft smile.)");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

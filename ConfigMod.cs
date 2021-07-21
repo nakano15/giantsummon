@@ -46,8 +46,9 @@ namespace giantsummon
         [Label("Show Companions Backward Animations?")]
         [Tooltip("Useful in case you don't feel okay with them.")]
         [DefaultValue(true)]
-        public bool ShowBackwardAnimations { get { return MainMod.ShowBackwardAnimations = true; } set { MainMod.ShowBackwardAnimations = value; } }
+        public bool ShowBackwardAnimations { get { return MainMod.ShowBackwardAnimations; } set { MainMod.ShowBackwardAnimations = value; } }
     }
+
     [Label("Server Settings")]
     public class ServerConfigMod : ModConfig
     {

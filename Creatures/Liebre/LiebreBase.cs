@@ -886,7 +886,16 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("*It seems like [gn:" + Glenn + "] still didn't find his father. You should try not to think of what could have happened to him if you want to find him.*");
                 }
+                else
+                {
+                    Mes.Add("*It seems like [gn:" + Glenn + "] still didn't find any of his parents. You should try not to think of what could have happened if you want to find them.*");
+                }
                 Mes.Add("*That kid, [gn:"+Glenn+"], is very curious and talkative. Anyways, It's not everyday one have a reaper as neighbor.*");
+            }
+            if (NpcMod.HasGuardianNPC(Cinnamon))
+            {
+                Mes.Add("*I was watching [gn:" + Cinnamon + "] earlier, and spooked her to death... Not literally, but she ran away so fast when she noticed. She should really not get scared whenever she sees me watching her.*");
+                Mes.Add("*[gn:" + Cinnamon + "]... *");
             }
             if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {

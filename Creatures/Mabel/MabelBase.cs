@@ -345,7 +345,11 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Fluffles))
             {
-                Mes.Add("*What's with [gn:"+Fluffles+"]? Sometimes when she looks at me, she looks me from the head to the feet.*");
+                Mes.Add("*What's with [gn:" + Fluffles + "]? Sometimes when she looks at me, she looks me from the head to the feet.*");
+            }
+            if (NpcMod.HasGuardianNPC(Cinnamon))
+            {
+                Mes.Add("*When visitting [gn:" + Cinnamon + "], I always have to resist the temptation of nibbling everything she cooked.*");
             }
             if (guardian.KnockedOut)
             {

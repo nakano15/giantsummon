@@ -35,6 +35,7 @@ namespace giantsummon.Creatures
             CanDuck = false;
             ReverseMount = true;
             DontUseHeavyWeapons = true;
+            DrinksBeverage = false;
             SetTerraGuardian();
 
             MountUnlockLevel = 255;
@@ -350,6 +351,50 @@ namespace giantsummon.Creatures
                     return "*This rage is of happiness, believe It or not!*";
                 case MessageIDs.RevivedByRecovery:
                     return "*I hate you all! Why didn't you helped me?!*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Agh!! Poison!*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Fire! Fire! AAAHHH!!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*Wait until I see you again!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*I don't care how many of you are, I'll take you down!*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*Cheater! You can't bind my arms forever!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I can't move faster!! That makes me more angry!*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*That wont allow you to escape from a beating!*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Ah!! Prepare to suffer!*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*Great! Something worth unleashing my rage on.*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*You piece of...*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*That doesn't make me less angry!*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*Get me off here now!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*RAAAAAAAAAAAAAAHHHHH!!!!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Come on! Hit me!*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*THANKS!!*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*Now you made me more furious!*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*Rush!*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Try taking me down now!*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*Harder hitting!*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*This should be fun.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "";
             }
             return base.GetSpecialMessage(MessageID);
         }

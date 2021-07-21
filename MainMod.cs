@@ -2794,6 +2794,7 @@ namespace giantsummon
                13 = Lunar
                14 = Moon Lord*/
             scaling.Call(ModContent.ItemType<Items.Weapons.WoodenGreathammer>(), 1, 1f);
+            scaling.Call(ModContent.ItemType<Items.Weapons.TwoHandedSword>(), 2, 1f);
             scaling.Call(ModContent.ItemType<Items.Weapons.WoodenCrossbow>(), 1, 1f);
             scaling.Call(ModContent.ItemType<Items.Weapons.UprootedTree>(), 11, 1f);
             scaling.Call(ModContent.ItemType<Items.Weapons.TheStinger>(), 5, 1f);

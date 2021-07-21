@@ -552,6 +552,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] is telling you that [gn:" + Glenn + "] is his newest friend.*");
                 Mes.Add("*[name] says that loves playing with [gn:" + Glenn + "].*");
             }
+            if (NpcMod.HasGuardianNPC(Cinnamon))
+            {
+                Mes.Add("*[name] says that after meeting [gn:" + Cinnamon + "], he has been eating several tasty foods.*");
+                Mes.Add("*[name] asks what is wrong with the seasonings he brings to [gn:" + Cinnamon + "].*");
+            }
                 if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is telling me to plug my nose.*");

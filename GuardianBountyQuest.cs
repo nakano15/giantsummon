@@ -1627,6 +1627,8 @@ namespace giantsummon
             else
                 SpawnStress = Main.rand.Next(10, 21);
             if (Main.hardMode) SpawnStress += 20;
+            if (spawnBiome == SpawnBiome.Night)
+                SpawnStress /= 2;
         }
 
         public static void CreateRewards(float RewardMod)
@@ -1636,7 +1638,7 @@ namespace giantsummon
             if (Main.rand.NextDouble() < 0.01 * RewardMod)
             {
                 i = new Item();
-                switch (Main.rand.Next(3))
+                switch (Main.rand.Next(4))
                 {
                     case 0:
                         i.SetDefaults(ModContent.ItemType<Items.Accessories.PackLeaderNecklace>());
@@ -1821,7 +1823,8 @@ namespace giantsummon
                         break;
                 }
                 i.stack += Main.rand.Next((int)(3 * RewardMod));
-                Rewards.Add(i);
+                if(i.type != 0)
+                    Rewards.Add(i);
             }
             if (Main.rand.Next(5) == 0)
             {

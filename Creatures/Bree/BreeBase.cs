@@ -524,7 +524,13 @@ namespace giantsummon.Creatures
                     Mes.Add("[gn:" + Alex + "] is not only keeping me company sometimes, but also plays with my son, [gn:" + Glenn + "].");
                 }
             }
-            if (guardian.IsPlayerRoomMate(player))
+            if (NpcMod.HasGuardianNPC(Cinnamon))
+            {
+                Mes.Add("[gn:" + Cinnamon + "] actually knows how to put seasoning to food well, but she sometimes exagerate a bit.");
+                if(HasSardineMet)
+                    Mes.Add("Well, teaching [gn:" + Cinnamon + "] makes me forget the stupidities my husband does.");
+            }
+                if (guardian.IsPlayerRoomMate(player))
             {
                 if(player.Male)
                     Mes.Add("Okay, I can share my bedroom. Just don't try anything funny during the night.");

@@ -392,6 +392,50 @@ namespace giantsummon.Creatures
                     return "Thanks! Like... Really. Thanks!";
                 case MessageIDs.RevivedByRecovery:
                     return "I'm fine! I'm fine... Ow...";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "I'm not feeling well...";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "Aaahh!! AAAHH!! AAAAAAAAAHHHHH!!";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "My eyes! Can't see!";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "Spinning! It's spinning!";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "My weapon has no effect!";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "My feet barelly respond ot me.";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "I still can fight..";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "My armor!";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "What is that?! Let's protect our friends!";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "Gross!! Too gross!!";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "I'm f-freezing...";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "Cut it off! Cut it off!";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "I'm not feeling very good...";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "Things will hurt me less now.";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "Hmm... Delicious!";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "Let's deliver some pain!";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "Light feet!";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "Yeah!! Healthier!";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "Let's make things explode!";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "Time to ease the battle.";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "Okay, no more drinks.";
             }
             return base.GetSpecialMessage(MessageID);
         }

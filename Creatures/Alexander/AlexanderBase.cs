@@ -545,7 +545,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.AcquiredDarknessDebuff:
                     return "*I can barelly see!*";
                 case MessageIDs.AcquiredConfusedDebuff:
-                    return "";
+                    return "*My head is spinning...*";
                 case MessageIDs.AcquiredCursedDebuff:
                     return "*I can't... Do anything!*";
                 case MessageIDs.AcquiredSlowDebuff:

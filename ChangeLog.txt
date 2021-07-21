@@ -83,3 +83,7 @@ Companions got changes on their Near Death checking.
 Minerva will no longer give food to those who have more than 10 food items in the inventory.
 	No more money making scheme.
 Companions will now comment on buffs and debuffs they just caught.
+Wrath no longer drinks beverage.
+Fixed the Two Handed Sword not being affected by W1k Weapon Scaling mod.
+Fixed an issue where you couldn't disable the TerraGuardians backward animations.
+Fixed a bug with bounty quests, where It could spawn an empty item.

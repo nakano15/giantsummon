@@ -510,6 +510,50 @@ namespace giantsummon.Creatures
                     return "I've got the best pack ever!";
                 case MessageIDs.RevivedByRecovery:
                     return "*Whine whine whine* You guys could have helped me...";
+                    //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Whine whine...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "Aahhh!! Hot! It's hot!!";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "I can't see you anymore!";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "Enemies multiplies?";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "I can't bite them!";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "I don't feel like walking...";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "I can barelly stand...";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "That's a lot of meat! Can I eat that?";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "Hey! Don't pee on me! I'm not your territory!";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "C-chill...";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "I'll try biting this off.";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "Grrrrrrrrr... Bark! Bark!!";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "I can now protect you better.";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "Best food ever!";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "My teeth looks sharper now.";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "I can now walk to the moon and back!";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "Healthier!";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "This will make combat be better!";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "So, I shouldn't lick the blade?";
+                case MessageIDs.AcquiredTipsyDebuff: 
+                    return "";
             }
             return base.GetSpecialMessage(MessageID);
         }
