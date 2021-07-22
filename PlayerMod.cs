@@ -1109,7 +1109,8 @@ namespace giantsummon
                                     if (rescuer.furniturex > -1)
                                         rescuer.LeaveFurniture(false);
                                     if (RescueMessage != "")
-                                        rescuer.SaySomething(RescueMessage, true);
+                                        Main.NewText(GuardianMouseOverAndDialogueInterface.MessageParser(RescueMessage, rescuer));
+                                        //rescuer.SaySomething(RescueMessage, true);
                                     player.position = rescuer.Position;
                                     player.position.X -= player.width * 0.5f;
                                     player.position.Y -= player.height + 8;

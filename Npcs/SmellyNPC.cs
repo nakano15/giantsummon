@@ -16,7 +16,7 @@ namespace giantsummon.Npcs
         private bool HasMaterials = false, MetBefore = false;
 
         public SmellyNPC() : 
-            base(GuardianBase.CaptainSmelly)
+            base(GuardianBase.CaptainStench)
         {
 
         }
@@ -85,8 +85,8 @@ namespace giantsummon.Npcs
                 case 1:
                     if (MetBefore)
                     {
-                        NpcMod.AddGuardianMet(GuardianBase.CaptainSmelly);
-                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.CaptainSmelly);
+                        NpcMod.AddGuardianMet(GuardianBase.CaptainStench);
+                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.CaptainStench);
                     }
                     else
                     {
@@ -146,9 +146,9 @@ namespace giantsummon.Npcs
                                 }
                             }
                         }
-                        PlayerMod.AddPlayerGuardian(player, GuardianBase.CaptainSmelly);
-                        NpcMod.AddGuardianMet(GuardianBase.CaptainSmelly);
-                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.CaptainSmelly);
+                        PlayerMod.AddPlayerGuardian(player, GuardianBase.CaptainStench);
+                        NpcMod.AddGuardianMet(GuardianBase.CaptainStench);
+                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.CaptainStench);
                     }
                     else
                     {

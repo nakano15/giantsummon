@@ -27,7 +27,7 @@ namespace giantsummon.Projectiles
             projectile.timeLeft = 600;
             projectile.alpha = 255;
             projectile.light = 0f;
-            projectile.ignoreWater = false;
+            projectile.ignoreWater = true;
             projectile.tileCollide = true;
             projectile.penetrate = projectile.maxPenetrate = 20;
             projectile.width = 76;

@@ -209,6 +209,7 @@
     <Compile Include="Npcs\LeopoldNPC.cs" />
     <Compile Include="Npcs\MabelNPC.cs" />
     <Compile Include="Npcs\MalishaNPC.cs" />
+    <Compile Include="Npcs\CinnamonSpawnerNPC.cs" />
     <Compile Include="Npcs\MinervaSpawnerNPC.cs" />
     <Compile Include="Npcs\RococoNPC.cs" />
     <Compile Include="Npcs\SmellyNPC.cs" />

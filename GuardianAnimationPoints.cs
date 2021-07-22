@@ -56,6 +56,11 @@ namespace giantsummon
             return SpecificCoordinates[Frame].GetPoint();
         }
 
+        public bool HasSpecificCoordinate(int Frame)
+        {
+            return SpecificCoordinates.ContainsKey(Frame);
+        }
+
         public void AddFramePoint2x(int Frame, int x, int y, float Rotation = 0f, bool ShowWeapon = false)
         {
             AddFramePoint(Frame, new Point(x * 2, y * 2), Rotation, ShowWeapon);

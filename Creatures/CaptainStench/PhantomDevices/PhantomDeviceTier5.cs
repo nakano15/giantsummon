@@ -10,7 +10,7 @@ namespace giantsummon.Creatures.CaptainStench.PhantomDevices
     {
         public override void SetStaticDefaults()
         {
-            Tooltip.SetDefault("Allows Smelly to use Phantom Blitz attack 5 times.");
+            Tooltip.SetDefault("Allows the use of Phantom Blitz 5 times.");
         }
 
         public override void SetDefaults()
@@ -30,6 +30,9 @@ namespace giantsummon.Creatures.CaptainStench.PhantomDevices
                 if (data.DeviceID < DID)
                     data.DeviceID = DID;
             }
+            g.DashSpeed += 6.75f;
+            g.RocketType = 2;
+            g.MoveSpeed += 0.08f;
         }
     }
 }

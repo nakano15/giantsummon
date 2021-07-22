@@ -728,6 +728,11 @@ namespace giantsummon
                 GuardianTownNPC.Add(guardian);
             }
             guardian.SetAimPositionToCenter();
+            if(npc.modNPC is Npcs.GuardianActorNPC)
+            {
+                Npcs.GuardianActorNPC n = (Npcs.GuardianActorNPC)npc.modNPC;
+                guardian.SaySomething(n.MessageText);
+            }
             npc.active = false;
             if (Main.player[Main.myPlayer].talkNPC == npc.whoAmI)
             {

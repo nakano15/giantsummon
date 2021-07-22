@@ -87,3 +87,7 @@ Wrath no longer drinks beverage.
 Fixed the Two Handed Sword not being affected by W1k Weapon Scaling mod.
 Fixed an issue where you couldn't disable the TerraGuardians backward animations.
 Fixed a bug with bounty quests, where It could spawn an empty item.
+Rescue messages will no longer show in the chat the name of who rescued you.
+Companions will no longer drink regardless of wether they drink alcoholic stuff or not.
+	They also will need to be 18 years old or higher to drink.
+Cinnamon Arrives.

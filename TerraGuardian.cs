@@ -15,6 +15,7 @@ namespace giantsummon
     {
         public const float DivisionBy16 = 1f / 16;
         public static bool UpdateAge = false;
+        public const int MinimumAgetToDrink = 18;
 
         public DrawMoment drawMoment = DrawMoment.DontDraw;
         public List<PathFinder.Breadcrumbs> Paths = new List<PathFinder.Breadcrumbs>();
@@ -1345,6 +1346,7 @@ namespace giantsummon
             if (MainMod.GeneralIdleCommentCooldown > 0 || HasCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown) || Downed || KnockedOut)
                 return;
             string Mes = "";
+            bool IsFoodBuff = false;
             switch (ID)
             {
                 case Terraria.ID.BuffID.Poisoned:
@@ -1400,6 +1402,7 @@ namespace giantsummon
                     break;
                 case Terraria.ID.BuffID.WellFed:
                     Mes = GetMessage(GuardianBase.MessageIDs.AcquiredWellFedBuff);
+                    IsFoodBuff = true;
                     break;
                 case Terraria.ID.BuffID.Wrath:
                 case Terraria.ID.BuffID.Archery:
@@ -1426,12 +1429,16 @@ namespace giantsummon
                     break;
                 case Terraria.ID.BuffID.Tipsy:
                     Mes = GetMessage(GuardianBase.MessageIDs.AcquiredTipsyDebuff);
+                    IsFoodBuff = true;
                     break;
             }
-            if (Mes != "") {
+            if (Mes != "" && (IsFoodBuff || Main.rand.Next(3) == 0)) {
                 SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
-                MainMod.SetIdleCommentCooldown();
-                AddCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown, Main.rand.Next(45 * 60, 80 * 60));
+                if (!IsFoodBuff)
+                {
+                    MainMod.SetIdleCommentCooldown();
+                    AddCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown, Main.rand.Next(45 * 60, 80 * 60));
+                }
             }
         }
 
@@ -1833,7 +1840,7 @@ namespace giantsummon
                     Mes = GuardianBase.MessageIDs.FoundMinecartRailTile;
                     break;
             }
-            if (Comment && Mes != "")
+            if (Comment && Mes != "" && Main.rand.Next(3) == 0)
             {
                 Mes = GetMessage(Mes);
                 if (Mes != "")
@@ -7145,7 +7152,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (ItemUseTime == 0 && IsAttackingSomething && !HasBuff(Terraria.ID.BuffID.Tipsy))
+            if (ItemUseTime == 0 && IsAttackingSomething && Base.DrinksBeverage && !HasBuff(Terraria.ID.BuffID.Tipsy) && Age >= MinimumAgetToDrink)
             {
                 for (int i = 0; i < 50; i++)
                 {
@@ -9307,8 +9314,14 @@ namespace giantsummon
                     Buffs.Remove(buff);
                 }
             }
+            SubAttackCooldown.Clear();
             TriggerHandler.FireGuardianDeathTrigger(CenterPosition, this, false);
             //Buffs.Clear();
+        }
+
+        public void LookAt(Vector2 TargetPosition, bool Force = false) {
+            if(Force || Velocity.X == 0)
+                LookingLeft = TargetPosition.X - Position.X < 0;
         }
 
         public bool HasDuplicateEquipped(int id)

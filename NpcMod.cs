@@ -1011,7 +1011,11 @@ namespace giantsummon
             }
             if (!HasMetGuardian(GuardianBase.Alexander) && Npcs.AlexanderNPC.AlexanderConditionMet)
             {
-                Messages.Add("There seems to be a TerraGuardian jumping and smelling anyone It finds travelling the dungeon, and saying that is not who he's are looking for. I think you may want to check that out.");
+                Messages.Add("There seems to be a TerraGuardian jumping and sleuthing anyone It finds travelling the dungeon, and saying that is not who he's are looking for. I think you may want to check that out.");
+            }
+            if (!HasMetGuardian(GuardianBase.Cinnamon))
+            {
+                Messages.Add("I heard from a Travelling Merchant that there's a Squirrel TerraGuardian that sometimes follows him. If that's about right, It may show up sometimes when one appears.");
             }
         }
 
@@ -1216,12 +1220,27 @@ namespace giantsummon
                     }
                     break;
                 case Terraria.ID.NPCID.TravellingMerchant:
-                    if (HasGuardianNPC(7) && Main.rand.Next(2) == 0)
+                    if (HasGuardianNPC(7))
                         PossibleMessages.Add(GetGuardianNPCName(1) + " really loves when I bring products from the land that produces the Sake. She says that reminds her of home.");
-                    if (HasGuardianNPC(8) && Main.rand.Next(2) == 0)
+                    if (HasGuardianNPC(8))
                         PossibleMessages.Add("I've got a huge increase in tissues sale latelly, It seems like there's an incidence of nose bleeding around this place...? I hope isn't contagious.");
-                    if (HasGuardianNPC(9) && Main.rand.Next(2) == 0)
+                    if (HasGuardianNPC(9))
                         PossibleMessages.Add("That " + GetGuardianNPCName(9) + " is such a jester, he thinks my products are trash.");
+                    if (!HasGuardianNPC(GuardianBase.Cinnamon))
+                    {
+                        PossibleMessages.Add("There is a TerraGuardian that follows me into my travels, she keeps me company when moving from a world to another. She may pop up any time soon.");
+                    }
+                    else
+                    {
+                        if (WorldMod.CanGuardianNPCSpawnInTheWorld(GuardianBase.Cinnamon))
+                        {
+                            PossibleMessages.Add("I quite miss that TerraGuardian company on my travels, now they look a bit more boring. What is her name, by the way?");
+                        }
+                        else
+                        {
+                            PossibleMessages.Add("You know that TerraGuardian that arrived with me? She follows me during my travels. At least travelling isn't so lonely with her around.");
+                        }
+                    }
                     break;
                 case Terraria.ID.NPCID.Dryad:
                     switch (Main.rand.Next(7))
@@ -1382,6 +1401,22 @@ namespace giantsummon
                     if (NpcMod.HasGuardianNPC(GuardianBase.Minerva))
                     {
                         PossibleMessages.Add("I charge less rent from " + NpcMod.GetGuardianNPCName(GuardianBase.Minerva) + ". She's the only person who treats me right, and also cooks something whenever I visit.");
+                    }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Liebre))
+                    {
+                        PossibleMessages.Add("What? Are you nuts? Trying to collect rent from " + NpcMod.GetGuardianNPCName(GuardianBase.Liebre) + " is like asking to be sent to afterlife!");
+                    }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Glenn))
+                    {
+                        PossibleMessages.Add("Kid or not, " + NpcMod.GetGuardianNPCName(GuardianBase.Glenn) + " has also to pay for the rent.");
+                    }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.CaptainStench))
+                    {
+                        PossibleMessages.Add(NpcMod.GetGuardianNPCName(GuardianBase.CaptainStench) + " nearly splitted me in half when I tried collecting her rent.");
+                    }
+                    if (NpcMod.HasGuardianNPC(GuardianBase.Cinnamon))
+                    {
+                        PossibleMessages.Add("Can you tell "+NpcMod.GetGuardianNPCName(GuardianBase.Cinnamon) + " to stop tossing pies on my face when I try collecting her rent?");
                     }
                     break;
                 case Terraria.ID.NPCID.PartyGirl:

@@ -87,6 +87,18 @@ namespace giantsummon.Npcs
             return base.PreAI();
         }
 
+        public void StareAt(Player player)
+        {
+            Idle = false;
+            npc.direction = player.Center.X - npc.Center.X < 0 ? -1 : 1;
+        }
+
+        public void StareAt(TerraGuardian tg)
+        {
+            Idle = false;
+            npc.direction = tg.Position.X - npc.Center.X < 0 ? -1 : 1;
+        }
+
         public bool IsInPerceptionRange(Player player, float CustomRangeX = -1, float CustomRangeY = -1)
         {
             if(CustomRangeX < 0)
@@ -340,8 +352,16 @@ namespace giantsummon.Npcs
             {
                 Vector2 TextCenter = npc.position - Main.screenPosition;
                 TextCenter.X += npc.width * 0.5f;
-                TextCenter.Y -= 18f;
-                Utils.DrawBorderString(spriteBatch, MessageText, TextCenter, Color.White, 1f, 0.5f);
+                TextCenter.Y -= 22f;
+                int Lines;
+                string[] Message = Utils.WordwrapString(MessageText, Main.fontMouseText, 400, 5, out Lines);
+                TextCenter.Y -= 22f * Lines;
+                for (int l = 0; l <= Lines; l++)
+                {
+                    Utils.DrawBorderString(Main.spriteBatch, Message[l], TextCenter, Color.White, 1f, 0.5f);
+                    TextCenter.Y += 22;
+                }
+                //Utils.DrawBorderString(spriteBatch, MessageText, TextCenter, Color.White, 1f, 0.5f);
             }
         }
 

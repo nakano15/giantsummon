@@ -12,7 +12,8 @@ namespace giantsummon.Creatures
         public GlennBase()
         {
             Name = "Glenn";
-            Description = "";
+            Description = "Interessed in literature and games.\n" +
+                "Can stay up all night due to that.";
             Size = GuardianSize.Small;
             Width = 14;
             Height = 38;
@@ -43,6 +44,9 @@ namespace giantsummon.Creatures
             DodgeRate = 60;
             HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit51);
             DeadSound = new SoundData(Terraria.ID.SoundID.NPCDeath54);
+
+            CallUnlockLevel = 3;
+            MoveInLevel = 0;
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
@@ -303,11 +307,17 @@ namespace giantsummon.Creatures
                     Mes.Add("Everyone keeps telling me to stay away from [gn:" + Malisha + "]'s place, but she doesn't seems like that bad of a person.");
                     Mes.Add("I saw [gn:" + Malisha + "] the other day by her house, she was offering me candies. I didn't accepted them, because I just lunched.");
                 }
+
+                if (guardian.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("*I don't mind sharing the room with you, but I want a bed for myself.*");
+                    Mes.Add("*It's cool to have you as a room mate, we could play games until morning comes.*");
+                }
             }
             if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
-                Mes.Add("*Gah! Ghost!*");
+                Mes.Add("*Aaaah! Ghost!*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

@@ -60,12 +60,11 @@ namespace giantsummon.Projectiles
         public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
         {
             damage += (int)(target.defense * (Main.expertMode? 0.75f : 0.5f));
-            //damage += (int)(target.life * 0.01);
         }
 
         public override void ModifyHitPvp(Player target, ref int damage, ref bool crit)
         {
-            damage += (int)(target.statLife * 0.01);
+            damage += (int)(target.statDefense * (Main.expertMode ? 0.75f : 0.5f));
         }
     }
 }

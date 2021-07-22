@@ -536,6 +536,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*I see that you've met a new toy for me to play with... Spooking [gn:" + Glenn + "] will keep me entertained.*");
                 Mes.Add("*I like following [gn:" + Glenn + "] around when he's completelly alone. His attempts to escape from me makes me want to chase him more.*");
                 Mes.Add("*I don't have anything against [gn:"+Glenn+"], but I can use my current state to scare him just for fun.*");
+                Mes.Add("*At night, I visit [gn:" + Glenn + "]'s house to make sure he's inside, since being scared and locked inside, means not being outside and in danger.*");
             }
             if (NpcMod.HasGuardianNPC(Cinnamon))
             {

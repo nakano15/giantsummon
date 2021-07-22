@@ -39,7 +39,7 @@ namespace giantsummon.Creatures
             DrinksBeverage = false;
             SetTerraGuardian();
             CallUnlockLevel = 4;
-            MoveInLevel = 2;
+            MoveInLevel = 3;
             MountUnlockLevel = 6;
 
             AddInitialItem(Terraria.ID.ItemID.RedRyder, 1);
@@ -113,6 +113,64 @@ namespace giantsummon.Creatures
 
             //Wing Position
             //WingPosition.DefaultCoordinate2x = new Point(20, 23);
+
+            GetRequestList();
+        }
+
+        public void GetRequestList()
+        {
+            //0
+            AddNewRequest("A Good Soup", 225, 
+                "*I need something warm and delicious to eat. I can think of a Soup as that thing. Would you try getting some for me?*",
+                "*I'll be waiting for the soup, then.*",
+                "*Awww... But I'm hungry...*",
+                "*Thank you! Be sure that I'll enjoy eating this.*", 
+                "*I don't know much about soups, but I think they involve Mushrooms or Goldfishs?*", 
+                "");
+            AddItemCollectionObjective(Terraria.ID.ItemID.BowlofSoup, 1, 0.2f);
+            //1
+            AddNewRequest("You Can Fish That", 220, 
+                "*I want to taste some food that involves fish. I need to check also how you cook it to make it edible and delicious. Can you do that?*",
+                "*Yay! I'll be waiting.*",
+                "*You don't know how to cook fish...?*",
+                "*I can't stop drooling, that looks DELICIOUS! Thank you!*",
+                "*You will need to fish up some fish from water before you can cook them. You will need a fishing rod and bait to do that, obviously.*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.CookedFish, 1, 0.2f);
+            //2
+            AddNewRequest("Shrips For Good!", 235,
+                "*I want to taste shrips! People says that shrips is tasty, and I want to know if It's true. Do you know how to cook them? Could you make some cooked shrips for me?*",
+                "*Okay, I'll be waiting here. I think you can find them on the ocean, but I may be wrong.*",
+                "*But I want to taste shrips....*",
+                "*That's the shrips?! (Snif, snif) Hm... It looks tasty... What? The name is shrimp? How can I say right that name?*",
+                "*I think Shrips are found in the ocean. You will need to try fishing them there, if you want to find them, if they're there.*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.CookedShrimp, 1, 0.2f);
+            //3
+            AddNewRequest("Who Takes the First Bite?", 260,
+                "*I also need to taste exotic kinds of food, so I wonder if you could make me a Grub Soup. Would you make one for me?*",
+                "*Thanks. I have to say that I'm not excited to try that food, but let's see how it looks...*",
+                "*I think you may be right, neither I am interessed in trying that...*",
+                "*That's... The grub soup...? I ... Really don't want to take a bite of that... Why don't you try It and tell me the taste? Uh... [nickname], are you feeling alright? Your face seems pale.*",
+                "*The insects for a Grub Soup can be found in the Jungle. You will need a Bug Net to catch them.*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.GrubSoup, 1, 0.2f);
+            //4
+            AddNewRequest("Probably Non Existing Place Culinary", 275,
+                "*I heard from a Travelling Merchant, that there is a food called \'Sashimi\' in one of the places he has been into. He said that It's good food, so I want to try It too. Do you know how to make It?*",
+                "*Wow [nickname], you really know many foods. I'll be waiting for you to bring me a \'Sashimi\'.*",
+                "*You never heard of It, either? Maybe I should ask the Travelling Merchant to see if could find the recipe if he visit that place.*",
+                "*The way It's cut... The smell... Hmm... You need to give me the recipe of this sometime.*",
+                "*The only thing I know from \'Sashimi\', is that It's made using fish, but you know that already, don't you?*");
+            AddItemCollectionObjective(Terraria.ID.ItemID.Sashimi, 1, 0.2f);
+        }
+
+        public override bool AlterRequestGiven(GuardianData Guardian, out int ForcedMissionID, out bool IsTalkRequest)
+        {
+            if(Guardian.FriendshipLevel < MoveInLevel)
+            {
+                ForcedMissionID = Main.rand.Next(5);
+                IsTalkRequest = (Main.rand.NextDouble() < 0.3f);
+                return true;
+            }
+            return base.AlterRequestGiven(Guardian, out ForcedMissionID, out IsTalkRequest);
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)
@@ -137,6 +195,13 @@ namespace giantsummon.Creatures
             Mes.Add("*(singing) Lalala...*");
             Mes.Add("*Hello [nickname], want something?*");
             Mes.Add("*Are you cooking something? I want to see your cooking secrets, teehee.*");
+            Mes.Add("*Happiness is contagious, am I right?*");
+
+            if (FlufflesBase.IsHauntedByFluffles(player))
+            {
+                Mes.Add("*Aahh!! There's a ghost on your back!!*");
+            }
+
             if (!guardian.HasBuff(Terraria.ID.BuffID.WellFed))
             {
                 Mes.Add("(Growl) *Oh, my stomach is complaining... Is "+(Main.dayTime ? "lunch" : "dinner")+" ready?*");
@@ -250,6 +315,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*What now?!*");
                 Mes.Add("*Don't you have someone else to bother?*");
                 Mes.Add("*Enough!*");
+                Mes.Add("*No! I wont cook for you!*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -259,6 +325,45 @@ namespace giantsummon.Creatures
             List<string> Mes = new List<string>();
             Mes.Add("*I was a little kid when I got passion for tasty food.*");
             Mes.Add("*My name is the same of a seasoning, since I know. It's funny that my mom picked specifically that name to me.*");
+            Mes.Add("*Once we had food shortage at home, because I cooked many different food with what we had at home... We had to eat apples for week.*");
+            Mes.Add("*I wonder if my mom is worried about me...*");
+            Mes.Add("*I heard from the Travelling Merchant that he travels through worlds, so I'm following him to meet new places, and find new kinds of foods.*");
+            Mes.Add("*Every food tastes better with the right seasoning, but sometimes placing them is not necessary.*");
+            bool HasSomeoneToTutorInCooking = false;
+            if (NpcMod.HasGuardianNPC(Minerva))
+            {
+                Mes.Add("*I have been learning how to cook food at the right point from [gn:" + Minerva + "]. Even my food tastes better now.*");
+                HasSomeoneToTutorInCooking = true;
+            }
+            if (NpcMod.HasGuardianNPC(Bree))
+            {
+                Mes.Add("*[gn:" + Bree + "] have been teaching me how to not exagerate when placing seasoning, so my food no longer feels over or under seasoned.*");
+                HasSomeoneToTutorInCooking = true;
+            }
+            if (!HasSomeoneToTutorInCooking)
+            {
+                Mes.Add("*I'm looking for someone to more about cooking from. I wonder if this world has someone like that.*");
+            }
+            bool HasSomeoneToTasteFood = false;
+            if (NpcMod.HasGuardianNPC(Brutus))
+            {
+                Mes.Add("*[gn:" + Brutus + "] sometimes eat of the food I made. He always compliments It.*");
+                HasSomeoneToTasteFood = true;
+            }
+            if (NpcMod.HasGuardianNPC(Rococo))
+            {
+                Mes.Add("*[gn:" + Rococo + "] is always happy when he tastes my food, but I always have to reject his seasoning suggestions.*");
+                HasSomeoneToTasteFood = true;
+            }
+            if (NpcMod.HasGuardianNPC(Vladimir))
+            {
+                Mes.Add("*I really like testing food with [gn:" + Vladimir + "], we chat about so many things when we do so.*");
+                HasSomeoneToTasteFood = true;
+            }
+            if (!HasSomeoneToTasteFood)
+            {
+                Mes.Add("*I really don't have a second opinion about the food I cook... I can't know if what I cook is good if only I test It.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -304,6 +409,143 @@ namespace giantsummon.Creatures
                 Mes.Add("*Saaaaaaaay... Do you have some kind of package for me, [nickname]?*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.RescueMessage:
+                    return "*I'm tending to your wounds, don't worry.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Oooohh... Okay... I'm awaken... Do you need something...?*";
+                    return "*Yawnn... I'm so sleepy... What do you need, [nickname]?*";
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Yes.. I'm waking up... Is It about my request?*";
+                    return "*Zzzz... Oh! Ah... Uh... Oh...! Did you complete my request?*";
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    if (NpcMod.HasGuardianNPC(Brutus) && Main.rand.NextDouble() < 0.33)
+                        return "*I think [gn:"+Brutus+"] wont feel angry at me if I accompany you on your quest.*";
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*Travel the world with you? Yes, let's go!*";
+                    return "*Yes! That sounds so fun... Can I gather some ingredients on the way?*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*There's way too many people following you, I'd feel cramped in there.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*I... Don't really trust you... Right now...*";
+                    return "*Sorry, but... No...*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*But this place is dangerous! How can I make It home from here? Do you really want to make me leave the group here?*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*Alright, I'll be heading home, then.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    if (NpcMod.HasGuardianNPC(Brutus))
+                        return "*... I really wish [gn:"+Brutus+"] was here now...*";
+                    return "*...Fine... I'll see if I can reach home alive..*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*More travelling! Yay!*";
+                case MessageIDs.RequestAccepted:
+                    return "*Thank you! Tell me when you get It done.*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*Don't you have too many things to do?*";
+                case MessageIDs.RequestRejected:
+                    return "*Aww....*";
+                case MessageIDs.RequestPostpone:
+                    return "*Later? Fine, it can wait then.*";
+                case MessageIDs.RequestFailed:
+                    return "*It seems like you couldn't do it, then... (You see tears rolling down from her eyes)*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*My feet are hurting, so I could really use some rest. How long we'll rest?*";
+                case MessageIDs.RestNotPossible:
+                    return "*This isn't a good moment to do that.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*I think I can use my tail as a kind of blanket.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*That looks interesting! Let's check [shop]'s shop.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*I want one of this, and one of that, and...*";
+                case MessageIDs.GenericYes:
+                    return "*Yeah!*";
+                case MessageIDs.GenericNo:
+                    return "*Nay~....*";
+                case MessageIDs.GenericThankYou:
+                    return "*Thank you!*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*Do you want to chat? It's good so I can take a little break. What do you want to know?*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*Alright, anything else?*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*You can't do my request?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Aww... Well... At least you tried.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Okay, so what was that for?*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*What can you tell me about you, rodent?*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... You've been in contact with many foods.*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*I'm starting to get hungry now...*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*I guess I should visit your house sometimes when you're cooking...*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Ouch! You didn't needed to slap my face!*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return "*I was so scary of dying! Thanks for helping.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*Uh, what happened? Why was I in the floor?*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*My body burns inside!!*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Aaahh!!! I don't want to be cooked alive!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*I can't keep my eyes wide open!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*Why is everybody floating around?*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*I can't use my weapons!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*My feet aren't moving as fast as I wanted!*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I'm not slacking! I'm feeling weak!*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Ahh!! My belly!*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*Aahhh!! That monster is really big!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Hey! If you want to alleviate yourself, do that somewhere else!*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*N-not even my t-tail is helping a-against the c-chill..*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*Let me go! Let me go!! Aaaahh!!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*I'll cut you into pieces!!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Hey! I got tougher!*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Lovelly food!*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*I'm stronger!*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*Let's do a race!*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*I got healthier!*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*This will be super effective!*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*This will ruin the meat...*";
+                case MessageIDs.AcquiredTipsyDebuff: //She doesn't drinks beverage
+                    return "";
+            }
+            return base.GetSpecialMessage(MessageID);
         }
     }
 }

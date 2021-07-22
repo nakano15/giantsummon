@@ -145,7 +145,7 @@ namespace giantsummon
             Liebre = 19,
             Bapha = 20,
             Glenn = 21,
-            CaptainSmelly = 22,
+            CaptainStench = 22,
             Cinnamon = 23;
 
         public struct DialogueTopic
@@ -1039,9 +1039,23 @@ namespace giantsummon
         {
             if (DontUseRightHand)
                 return LeftHandPoints.GetPositionFromFramePoint(Frame);
-            Microsoft.Xna.Framework.Point p = new Microsoft.Xna.Framework.Point(), l = LeftHandPoints.GetPositionFromFramePoint(Frame), r = RightHandPoints.GetPositionFromFramePoint(Frame);
-            p.X = l.X + (int)((r.X - l.X) * 0.5f);
-            p.Y = l.Y + (int)((r.Y - l.Y) * 0.5f);
+            Point p = new Point(), 
+                l = LeftHandPoints.GetPositionFromFramePoint(Frame), 
+                r = RightHandPoints.GetPositionFromFramePoint(Frame);
+            if (LeftHandPoints.HasSpecificCoordinate(Frame) && RightHandPoints.HasSpecificCoordinate(Frame))
+            {
+                p.X = l.X + (int)((r.X - l.X) * 0.5f);
+                p.Y = l.Y + (int)((r.Y - l.Y) * 0.5f);
+            }else if (LeftHandPoints.HasSpecificCoordinate(Frame))
+            {
+                p.X = l.X;
+                p.Y = l.Y;
+            }
+            else
+            {
+                p.X = r.X;
+                p.Y = r.Y;
+            }
             return p;
         }
 
