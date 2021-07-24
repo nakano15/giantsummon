@@ -36,7 +36,7 @@ namespace giantsummon.Npcs
                     {
                         return "ahoy there mate, are you back to recruit me on your ventures yeah?";
                     }
-                    return "Hello there stranger, I'm captain smelly and my ship was hit by this big rock here while I was scouting this planet.My cadets were tragically killed during the crash and im the only survivor.";
+                    return "Hello there stranger, I'm captain stench and my ship was hit by this big rock here while I was scouting this planet.My cadets were tragically killed during the crash and im the only survivor.";
                 case 2:
                     return "Before landing here I was scouting this planet and there seems to be lots of rare and useful materials underneath the soil, yeah ? ";
                 case 3:

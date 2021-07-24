@@ -28,6 +28,7 @@ namespace giantsummon
         public const byte SortByLetter = 0, SortByLivingInWorld = 1, SortBySize = 2, SortByWeight = 3, SortByHeight = 4, SortByWidth = 5;
         public const int MaxLines = 24;
         public const int MaxDrawWidth = 262, MaxDrawHeight = 133;
+        public static float ContributionIconAnimationTime = 0;
 
         public static void OpenInterface()
         {
@@ -1186,6 +1187,22 @@ namespace giantsummon
                         IconPosition.X += 18;
                     }
                 }
+                //Contributor Icon Part
+                if (DisplayGuardian.Base.IsContributedCompanion)
+                {
+                    Vector2 ContributionIconPosition = Vector2.Zero;
+                    ContributionIconPosition.X = HudPosition.X + 434 - 17;
+                    ContributionIconPosition.Y = HudPosition.Y + 232 - 17;
+                    ContributionIconAnimationTime += (1f / 60 * 100 * 0.5f);
+                    if (ContributionIconAnimationTime >= 9)
+                        ContributionIconAnimationTime -= 9;
+                    Main.spriteBatch.Draw(MainMod.ContributorIconTexture, ContributionIconPosition, new Rectangle(17 * (int)(ContributionIconAnimationTime), 0, 17, 17), Color.White);
+                    if(Main.mouseX >= ContributionIconPosition.X && Main.mouseX < ContributionIconPosition.X + 17 && 
+                        Main.mouseY >= ContributionIconPosition.Y && Main.mouseY < ContributionIconPosition.Y + 17)
+                    {
+                        MouseText = "Contributed Companion";
+                    }
+                }                
                 //Description
                 {
                     //int lines;

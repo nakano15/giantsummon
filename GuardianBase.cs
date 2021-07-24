@@ -35,6 +35,7 @@ namespace giantsummon
         public int MaxJumpHeight = 15;
         public float Scale = 1f;
         public bool ForceScale = false;
+        public bool IsContributedCompanion = false;
         public float GetScale { get { if (MainMod.UseCompanionsDefinedScaleChange || ForceScale) return Scale; else return 1f; } }
         public float Accuracy = 0.9f, Agility = 0.5f, Trigger = 0.5f;
         public float JumpSpeed = 7.08f;

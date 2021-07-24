@@ -56,6 +56,7 @@ namespace giantsummon.Creatures
             SpecialAttackBasedCombat = true;
             UsesRightHandByDefault = true;
             ForceWeaponUseOnMainHand = true;
+            IsContributedCompanion = true;
             SetTerraGuardian();
 
             this.MountUnlockLevel = 255;
@@ -1331,6 +1332,7 @@ namespace giantsummon.Creatures
                 DistanceYTargetBottom = Owner.Position.Y - TargetPosition.Y + TargetHeight;
             DefaultBehavior = false;
             float WidthValue = (TargetWidth + Owner.Width) * 0.5f;
+            bool HasManaForBlaster = Owner.MP >= 2;
             switch (tactic)
             {
                 case CombatTactic.Charge:

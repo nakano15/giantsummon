@@ -27,7 +27,7 @@ namespace giantsummon.Maps
             return passes;
         }
 
-        private GenPass TungstenGround
+        public GenPass TungstenGround
         {
             get
             {

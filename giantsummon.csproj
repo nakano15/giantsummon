@@ -492,6 +492,7 @@
     <Content Include="Creatures\Rococo\body.png" />
     <Content Include="Creatures\Rococo\left_arm.png" />
     <Content Include="Creatures\Rococo\right_arm.png" />
+    <Content Include="Interface\Contributor_Icon.png" />
     <Content Include="Interface\Crown.png" />
     <Content Include="Interface\EditButton.png" />
     <Content Include="Interface\Emotions.png" />

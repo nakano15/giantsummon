@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria.ModLoader;
 using Terraria;
+using Terraria.UI;
 using Terraria.World.Generation;
 using Terraria.GameContent.Generation;
 
@@ -39,26 +40,37 @@ namespace giantsummon.Compatibility
 
             public bool Register()
             {
-                if (!SubworldLibraryCompatibility.IsModActive)
+                if (!IsModActive)
                 {
                     Main.NewText("Subworld Library isn't installed.");
                     return false;
                 }
-                object Value = MainMod.SubworldLibrary.Call("Register", mod, Name, Width, Height, Tasks(), OnLoad, OnUnload, 
-                    modWorld, SaveSubworld,  DisablePlayerSaving, SaveModData, NoWorldUpdate, LoadingUI, loadingUIState, 
-                    votingUI, VotingDuration, OnVoteFor);
-                if (Value == null)
+                object Value = MainMod.SubworldLibrary.Call(
+                    "Register", 
+                    mod, 
+                    Name, 
+                    Width, 
+                    Height, 
+                    Tasks(),
+                    OnLoad, 
+                    OnUnload, 
+                    modWorld, 
+                    SaveSubworld,  
+                    DisablePlayerSaving, 
+                    SaveModData, 
+                    NoWorldUpdate, 
+                    LoadingUI, 
+                    loadingUIState, 
+                    votingUI, 
+                    VotingDuration, 
+                    OnVoteFor);
+                if (Value != null && Value is string ID)
                 {
-                    Success = false;
-                    Main.NewText("World creation failed.");
-                }
-                else
-                {
-                    ID = (string)Value;
-                    Success = true;
                     Main.NewText("World created sucessfully.");
+                    return true;
                 }
-                return Success;
+                Main.NewText("World creation failed.");
+                return false;
             }
 
             public void Enter()
@@ -97,21 +109,23 @@ namespace giantsummon.Compatibility
 
             public virtual List<Terraria.World.Generation.GenPass> Tasks()
             {
-                List<Terraria.World.Generation.GenPass> DefaultPass = new List<Terraria.World.Generation.GenPass>();
-                DefaultPass.Add(new PassLegacy("ground gen", delegate (GenerationProgress progress)
+                List<GenPass> DefaultPass = new List<GenPass>
                 {
-                    progress.Message = "Creating Ground";
-                    int StartHeight = (int)(Height * 0.6f);
-                    for (int x = 0; x < Width; x++)
+                    new PassLegacy("ground gen", delegate (GenerationProgress progress)
                     {
-                        progress.Value = (float)x / Width;
-                        for (int y = 0; y < Height; y++)
+                        progress.Message = "Creating Ground";
+                        int StartHeight = (int)(Height * 0.6f);
+                        for (int x = 0; x < Width; x++)
                         {
-                            Main.tile[x, y].active(true);
-                            Main.tile[x, y].type = Terraria.ID.TileID.Dirt;
+                            progress.Value = (float)x / Width;
+                            for (int y = 0; y < Height; y++)
+                            {
+                                Main.tile[x, y].active(true);
+                                Main.tile[x, y].type = Terraria.ID.TileID.Dirt;
+                            }
                         }
-                    }
-                }, 0.1f));
+                    }, 0.1f)
+                };
                 return DefaultPass;
             }
 

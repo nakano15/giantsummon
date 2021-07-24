@@ -336,7 +336,7 @@ namespace giantsummon.Npcs
                                     DialogueStep = 2;
                                     break;
                                 }
-                                NpcMod.AddGuardianMet(GuardianID);
+                                NpcMod.AddGuardianMet(GuardianID, "", true);
                                 PlayerMod.AddPlayerGuardian(Main.player[npc.target], GuardianID);
                                 WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID);
                             }
@@ -409,7 +409,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (Main.dayTime && spawnInfo.player.townNPCs == 0 && GlennCanSpawn && !NpcMod.HasMetGuardian(GuardianBase.Glenn) && !NpcMod.HasGuardianNPC(GuardianBase.Glenn) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Glenn) && 
+            if (!spawnInfo.water && Main.dayTime && spawnInfo.player.townNPCs == 0 && GlennCanSpawn && !NpcMod.HasMetGuardian(GuardianBase.Glenn) && !NpcMod.HasGuardianNPC(GuardianBase.Glenn) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Glenn) && 
                 !NPC.AnyNPCs(ModContent.NPCType<GlennNPC>()))
             {
                 return 1f / 300; //250

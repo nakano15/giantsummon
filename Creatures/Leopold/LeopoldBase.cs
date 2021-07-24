@@ -496,21 +496,14 @@ namespace giantsummon.Creatures
 
         public void SubworldTestScript(TerraGuardian tg)
         {
-            if (MainMod.SubworldLibrary == null)
+            Maps.TestMap map = new Maps.TestMap();
+            if (map.Register())
             {
-                GuardianMouseOverAndDialogueInterface.SetDialogue("*I can't take you to that world.*");
+                map.Enter();
             }
             else
             {
-                Maps.TestMap map = new Maps.TestMap();
-                if (map.Register())
-                {
-                    map.Enter();
-                }
-                else
-                {
-                    GuardianMouseOverAndDialogueInterface.SetDialogue("*Something went wrong.*");
-                }
+                GuardianMouseOverAndDialogueInterface.SetDialogue("*Something went wrong.*");
             }
         }
 

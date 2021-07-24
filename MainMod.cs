@@ -22,6 +22,7 @@ namespace giantsummon
         public static Texture2D NinjaTextureBackup;
         public static Texture2D TwoHandedSwordSprite;
         public static Texture2D LosangleOfUnnown;
+        public static Texture2D ContributorIconTexture;
         public static Mod mod;
         public static ModPacket GetPatcket { get { return mod.GetPacket(); } }
         public static GuardianItemSlotButtons SelectedGuardianInventorySlot = GuardianItemSlotButtons.Nothing;
@@ -39,7 +40,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 87, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -2753,6 +2754,7 @@ namespace giantsummon
                 EyeTexture = GetTexture("ExtraTextures/Eyes");
                 GSI_BackgroundInterfaceTexture = GetTexture("Interface/gsi_bg");
                 GSI_ForegroundInterfaceTexture = GetTexture("Interface/gsi_fg");
+                ContributorIconTexture = GetTexture("Interface/Contributor_Icon");
             }
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);

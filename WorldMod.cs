@@ -634,7 +634,7 @@ namespace giantsummon
                             tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
                         }
                     }
-                    else if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned))
+                    else if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || Main.player[tg.OwnerPos].stoned || Main.player[tg.OwnerPos].invis))
                     {
                         tg.drawMoment = DrawMoment.DrawAfterDrawingTiles;
                     }
@@ -840,6 +840,8 @@ namespace giantsummon
         {
             if (ModID == "")
                 ModID = MainMod.mod.Name;
+            if (GuardianBase.GetGuardianBase(ID, ModID).MoveInLevel == 0)
+                return true;
             for(int i = 0; i < 255; i++)
             {
                 if (Main.player[i].active && PlayerMod.PlayerHasGuardian(Main.player[i], ID, ModID))

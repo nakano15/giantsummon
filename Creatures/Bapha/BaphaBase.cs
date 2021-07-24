@@ -47,6 +47,7 @@ namespace giantsummon.Creatures
             SpecialAttackBasedCombat = true;
             UsesRightHandByDefault = true;
             ForceWeaponUseOnMainHand = true;
+            IsContributedCompanion = true;
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
