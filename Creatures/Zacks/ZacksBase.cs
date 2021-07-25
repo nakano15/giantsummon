@@ -884,6 +884,29 @@ namespace giantsummon.Creatures
                     return "*Blue was right, this is useful.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*I keep forgetting that It escapes from the hole on my chest....*";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "*Life Crystal over there.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*There's a trap there.*";
+                case MessageIDs.FoundMineTile:
+                    return "*Don't step on the mine.*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*A Detonator, better not activate It.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*I smell danger.*";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "*I could use biting something different.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*Loot time!*";
+                case MessageIDs.FoundGemTile:
+                    return "*Gems staring at us.*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*I have found some ores here.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*Rare ores there.*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*We could use those tracks to reach somewhere else.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

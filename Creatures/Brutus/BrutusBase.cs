@@ -1068,6 +1068,29 @@ namespace giantsummon.Creatures
                     return "*I dislike doing this..*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*Ahh.. A nice, and good mug of ale.*";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "*I even feel a little healthier after seeing that.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*Wait! I see a pressure plate.*";
+                case MessageIDs.FoundMineTile:
+                    return "*Watch out! A mine!*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*I recommend you not to press that detonator.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*I sense coming from that thing...*";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "*I can always do some extra exercise.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*Pillage!*";
+                case MessageIDs.FoundGemTile:
+                    return "*Look, there's some gems there.*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*I see some ores here, they may be useful for our armory.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*There's rare ores over there.*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*Rails! Maybe that will ease our travels.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

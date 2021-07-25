@@ -1763,7 +1763,7 @@ namespace giantsummon
                                             break;
                                     }
                                     if(Found)
-                                        OnTileSpotted(Main.tile[x, y].type);
+                                        OnTileSpotted(Main.tile[x, y].type, x, y);
                                 }
                                 RefreshTileMemory(Main.tile[x, y].type);
                             }
@@ -1788,7 +1788,7 @@ namespace giantsummon
             }
         }
 
-        public void OnTileSpotted(int TileID)
+        public void OnTileSpotted(int TileID, int TileX, int TileY)
         {
             bool Comment = MainMod.GeneralIdleCommentCooldown <= 0 && !HasCooldown(GuardianCooldownManager.CooldownType.TileCommentCooldown);
             string Mes = "";
@@ -1828,7 +1828,31 @@ namespace giantsummon
                     break;
                 case 21:
                 case 467:
-                    Mes = GuardianBase.MessageIDs.FoundTreasureTile;
+                    if (Main.tile[TileX, TileY] != null)
+                    {
+                        int ChestPos = Chest.FindChest(TileX, TileY);
+                        if (ChestPos >= 0 && ChestPos < Main.maxChests)
+                        {
+                            Chest c = Main.chest[ChestPos];
+                            bool HasInterestingItem = false;
+                            for(int i = 0; i < c.item.Length; i++)
+                            {
+                                if(c.item[i].type > 0)
+                                {
+                                    if(c.item[i].rare > Terraria.ID.ItemRarityID.White && 
+                                        (c.item[i].damage > 0 || 
+                                        c.item[i].defense > 0 ||
+                                        c.item[i].accessory))
+                                    {
+                                        HasInterestingItem = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(HasInterestingItem)
+                                Mes = GuardianBase.MessageIDs.FoundTreasureTile;
+                        }
+                    }
                     break;
                 case Terraria.ID.TileID.ExposedGems:
                     Mes = GuardianBase.MessageIDs.FoundGemTile;
@@ -5441,7 +5465,7 @@ namespace giantsummon
                                         if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
                                             Attack = true;
                                     }
-                                    if (!NearDeath && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
+                                    if (!NearDeath && Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < (TargetWidth + Width) * 0.5f + 40 && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
                                     {
                                         Jump = true;
                                     }
@@ -16644,8 +16668,11 @@ namespace giantsummon
             return rect;
         }
 
+        public static bool DrawingIgnoringLighting = false;
+
         public void Draw(bool IgnoreLighting = false)
         {
+            DrawingIgnoringLighting = IgnoreLighting;
             DrawDataCreation(IgnoreLighting);
             List<GuardianDrawData> DrawBehindDone = DrawBehind,
                 DrawFrontDone = DrawFront;

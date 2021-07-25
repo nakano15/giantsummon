@@ -1180,7 +1180,7 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    if (g.KnockedOut)
+                    /*if (g.KnockedOut)
                     {
                         New.Add(g.Name+"'s Revive Boost: " + g.ReviveBoost);
                     }
@@ -1189,7 +1189,7 @@ namespace giantsummon
                         Creatures.CaptainStenchBase.CaptainStenchData data = (Creatures.CaptainStenchBase.CaptainStenchData)g.Data;
                         New.Add(g.Name + "'s Device ID: " + data.DeviceID);
                         New.Add("\t Device Use Time: " + data.PhantomDeviceUseTimes);
-                    }
+                    }*/
                     if (g.ID == GuardianBase.Fluffles)
                     {
                         Creatures.FlufflesBase.FlufflesData data = (Creatures.FlufflesBase.FlufflesData)g.Data;
@@ -1198,7 +1198,11 @@ namespace giantsummon
                         New.Add("Soul Opacity: " + data.SoulOpacity);
                         New.Add("Soul Attached? " + data.SoulAttached);
                     }
-                    New.Add(g.Name + "'s mount is active?  " + g.mount.Active);
+                    /*New.Add(g.Name + "'s animation frames:");
+                    New.Add("  Body Arm:" + g.BodyAnimationFrame);
+                    New.Add("  Left Arm:" + g.LeftArmAnimationFrame);
+                    New.Add("  Right Arm:" + g.RightArmAnimationFrame);*/
+                    //New.Add(g.Name + "'s mount is active?  " + g.mount.Active);
                     /*if(g.ID == 19)
                     {
                         Creatures.BunnyReaperGuardianBase.ReaperGuardianData data = (Creatures.BunnyReaperGuardianBase.ReaperGuardianData)g.Data;

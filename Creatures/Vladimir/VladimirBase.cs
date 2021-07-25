@@ -288,7 +288,9 @@ namespace giantsummon.Creatures
             {
                 if (guardian.SittingOnPlayerMount)
                 {
-                    Main.player[guardian.OwnerPos].AddBuff(ModContent.BuffType<Buffs.Obstruction>(), 5);
+                    //Main.player[guardian.OwnerPos].AddBuff(ModContent.BuffType<Buffs.Obstruction>(), 5);
+                    Main.player[guardian.OwnerPos].AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                    guardian.AddBuff(ModContent.BuffType<Buffs.Protecting>(), 5);
                 }
                 else if (guardian.PlayerMounted)
                 {
@@ -958,6 +960,29 @@ namespace giantsummon.Creatures
                     return "*As long as It isn't to hurt my friends...*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*I needed a bit of that.*";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "*A heart shaped crystal.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*[nickname], a pressure plate over there.*";
+                case MessageIDs.FoundMineTile:
+                    return "*There's a mine over there, watch out.*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*Be careful not to fall on that.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*I recommend we make a camp first.*";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "*Couldn't those Etherians come on peace, instead?*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*I think you will like that.*";
+                case MessageIDs.FoundGemTile:
+                    return "*I see some gems there.*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*There's some ores there.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*Rare ores over there.*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*Want to ride a minecart?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -1471,6 +1471,7 @@ namespace giantsummon
                 FoundRareOreTile = "Mes.Tile.RareOre",
                 FoundVeryRareOreTile = "Mes.Tile.VeryRareOre",
                 FoundMinecartRailTile = "Mes.Tile.Minecart";
+
         }
         
         public enum GuardianEffect

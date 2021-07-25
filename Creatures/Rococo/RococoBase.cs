@@ -795,6 +795,29 @@ namespace giantsummon.Creatures
                     return "*[name] used poison on his weapon.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "*[name] tells you of the Life Crystal.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*[name] warns you of the Pressure Plate.*";
+                case MessageIDs.FoundMineTile:
+                    return "*[name] warns you of the mine.*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*[name] asks if can press the Detonator.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*[name] seems scared of the Bulb.*";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "*[name] seems a bit nervous.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*[name] tells you of the Chest.*";
+                case MessageIDs.FoundGemTile:
+                    return "*[name] tells you of gems he found.*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*[name] points at some rare ores.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*[name] shows you some very rare ores.*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*[name] seems anxious to ride a minecart.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

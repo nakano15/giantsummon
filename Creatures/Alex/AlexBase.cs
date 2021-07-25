@@ -554,6 +554,29 @@ namespace giantsummon.Creatures
                     return "So, I shouldn't lick the blade?";
                 case MessageIDs.AcquiredTipsyDebuff: 
                     return "";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "Shiny Heart!";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "I smell a trap.";
+                case MessageIDs.FoundMineTile:
+                    return "Watch out! Mine!";
+                case MessageIDs.FoundDetonatorTile:
+                    return "What happens if we push that?";
+                case MessageIDs.FoundPlanteraTile:
+                    return "Funny flower.";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "Are we going to defend the crystal again?";
+                case MessageIDs.FoundTreasureTile:
+                    return "Shiny!";
+                case MessageIDs.FoundGemTile:
+                    return "Cool gems!";
+                case MessageIDs.FoundRareOreTile:
+                    return "I see rare ores.";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "I spotted very rare ores!";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "Let's ride It?";
             }
             return base.GetSpecialMessage(MessageID);
         }

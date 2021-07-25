@@ -1113,6 +1113,29 @@ namespace giantsummon.Creatures
                     return "*I feel a bit dirty for doing this...*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*...I miss drinking ale... I don't feel the taste of It...*";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "*I even feel vigorous after seeing that. Life Crystal!*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*[nickname], no. Look, trap.*";
+                case MessageIDs.FoundMineTile:
+                    return "*A mine, watch out.*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*By my experience, a number of souls I gathered are from playing with Detonators.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*I have a bad feeling about this...*";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "*Don't worry, I know where to deliver etherians souls.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*Well, that's a colirium to the eyes.*";
+                case MessageIDs.FoundGemTile:
+                    return "*Gems.*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*I see some rare ores, if you're looking for them.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*Look, over there. Shiny ores.*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*As long as you don't scream during the ride, It's okay.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

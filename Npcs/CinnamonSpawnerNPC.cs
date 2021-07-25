@@ -33,7 +33,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (Main.dayTime && Main.time < 3600 * 6.5f && NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant) && !NpcMod.HasMetGuardian(GuardianBase.Cinnamon) && !NpcMod.HasGuardianNPC(GuardianBase.Cinnamon) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Cinnamon))
+            if (Main.dayTime && Main.time < 3600 * 8.5f && NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant) && !NpcMod.HasMetGuardian(GuardianBase.Cinnamon) && !NpcMod.HasGuardianNPC(GuardianBase.Cinnamon) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Cinnamon))
             {
                 return 1f / 200; //250
             }

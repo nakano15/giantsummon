@@ -15,7 +15,9 @@ namespace giantsummon.Creatures
             CloudFormThroneSit = 23,
             CloudFormKO = 24,
             CloudFormRevive = 25,
-            CloudFormBedSleep = 26;
+            CloudFormBedSleep = 26,
+            CloudFormBackwardStanding = 29,
+            CloudFormBackwardRevive = 30;
         public byte PigID = 0;
         public const byte AngerPigGuardianID = 0, SadnessPigGuardianID = 1, HappinessPigGuardianID = 2, FearPigGuardianID = 3, BlandPigGuardianID = 4;
 
@@ -113,13 +115,13 @@ namespace giantsummon.Creatures
                 {
                     return;
                 }
-                if (guardian.BodyAnimationFrame == BackwardRevive)
+                if (Frame == BackwardRevive)
                 {
-                    Frame = 30;
+                    Frame = CloudFormBackwardRevive;
                 }
-                else if (guardian.BodyAnimationFrame == BackwardStanding)
+                else if (Frame == BackwardStanding)
                 {
-                    Frame = 29;
+                    Frame = CloudFormBackwardStanding;
                 }
                 else if (guardian.SittingOnPlayerMount)
                 {
@@ -185,7 +187,8 @@ namespace giantsummon.Creatures
             {
                 foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
                 {
-                    if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
+                    if (!TerraGuardian.DrawingIgnoringLighting && 
+                        gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
                         gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
                         gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
                     {
@@ -194,7 +197,8 @@ namespace giantsummon.Creatures
                 }
                 foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
                 {
-                    if (gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
+                    if (!TerraGuardian.DrawingIgnoringLighting &&
+                        gdd.textureType != GuardianDrawData.TextureType.MainHandItem && gdd.textureType != GuardianDrawData.TextureType.OffHandItem &&
                         gdd.textureType != GuardianDrawData.TextureType.Effect && gdd.textureType != GuardianDrawData.TextureType.Wings &&
                         gdd.textureType != GuardianDrawData.TextureType.TGHeadAccessory)
                     {

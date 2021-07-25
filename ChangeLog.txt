@@ -94,3 +94,9 @@ Cinnamon, Glenn and Captain Stench Arrives.
 Your companions will no longer disappear when you're invisible.
 Fixed a bug where when the mod just does the recruitment of the companion, It checks if anyone has It on move in level before adding It to the can live in the world list.
 	The problem is when that's done before the companion is added to your list.
+Vladimir no longer inflicts "Obstruction" debuff on the character when sharing mount or minecart with the player.
+	Instead, It will inflict "Hug" buff on the player. Vladimir will get the "Protecting" buff.
+Melee companions will no longer "hop" after flying foes when they're trying to reach them.
+	They will now only jump when close horizontally to the target.
+Companions will no longer show fade effects on the Guardian Selection Interface window.
+Fixed a bug where Wrath's arms didn't changed animation with the body, when facing the background.

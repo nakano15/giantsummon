@@ -504,6 +504,29 @@ namespace giantsummon.Creatures
                     return "My mom wouldn't be happy to see me playing with poison...";
                 case MessageIDs.AcquiredTipsyDebuff: //He doesn't drink.
                     return "";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "[nickname], check this out.";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "Hey, pressure plate.";
+                case MessageIDs.FoundMineTile:
+                    return "A mine!";
+                case MessageIDs.FoundDetonatorTile:
+                    return "Can I press that?";
+                case MessageIDs.FoundPlanteraTile:
+                    return "I have never seen something like that before. What is It?";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "We're going to be facing more etherians?";
+                case MessageIDs.FoundTreasureTile:
+                    return "Let's check what is inside It.";
+                case MessageIDs.FoundGemTile:
+                    return "Hey! Gems!";
+                case MessageIDs.FoundRareOreTile:
+                    return "Look at those ores.";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "Those ores looks pretty rare.";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "Let's ride the rollercoaster!";
             }
             return base.GetSpecialMessage(MessageID);
         }

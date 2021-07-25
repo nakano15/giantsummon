@@ -854,7 +854,7 @@ namespace giantsummon
 
         private static void ChangeSelectedGuardian(int Position, PlayerMod player)
         {
-            if (Position < 0 || Position >= ContentList.Length)
+            if (Position < 0 || Position >= ContentList.Length || Position == Selected)
                 return;
             ContentElement element = ContentList[Position];
             if (element.SortingType == ContentElement.SortTypes.GuardianID && player.MyGuardians.ContainsKey(element.Index))
@@ -876,6 +876,7 @@ namespace giantsummon
                 {
                     DisplayGuardian.Scale *= (float)MaxDrawWidth / (DisplayGuardian.Width * DisplayGuardian.Scale);
                 }
+                DisplayGuardian.Data.UpdateAge();
                 DisplayGuardian.LookingLeft = false;
                 if (DisplayGuardian.Data.IsBirthday)
                 {
@@ -970,6 +971,7 @@ namespace giantsummon
                     TgPos.X = Main.screenPosition.X + HudPosition.X + ElementCenterX;
                     TgPos.Y = Main.screenPosition.Y + HudPosition.Y + 235;
                     DisplayGuardian.Position = TgPos;
+                    DisplayGuardian.UpdateAnimation();
                     DisplayGuardian.Draw(true);
                 }
                 {

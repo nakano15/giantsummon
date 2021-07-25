@@ -821,6 +821,29 @@ namespace giantsummon.Creatures
                     return "Maybe this will make things easier.";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "It's not the same drinking with Sardine...";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "What a lovely crystal!";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "Watch your step.";
+                case MessageIDs.FoundMineTile:
+                    return "Hey! That's dangerous!";
+                case MessageIDs.FoundDetonatorTile:
+                    return "If you want to press that, just tell me so I can get away.";
+                case MessageIDs.FoundPlanteraTile:
+                    return "What kind of plant is that?";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "Yes, I can beat some etherians.";
+                case MessageIDs.FoundTreasureTile:
+                    return "I will like you more if you find me some jewelry from that chest.";
+                case MessageIDs.FoundGemTile:
+                    return "Beautiful gems.";
+                case MessageIDs.FoundRareOreTile:
+                    return "You may want to check those ores.";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "Hey, look! Those ores may interest you.";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "I hope It doesn't zig-zags.";
             }
             return base.GetSpecialMessage(MessageID);
         }

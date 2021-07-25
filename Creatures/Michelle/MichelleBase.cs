@@ -436,6 +436,29 @@ namespace giantsummon.Creatures
                     return "Time to ease the battle.";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "Okay, no more drinks.";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "We're so lucky! A Life Crystal!";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "Watch It, there's a trap there.";
+                case MessageIDs.FoundMineTile:
+                    return "Better not step on that.";
+                case MessageIDs.FoundDetonatorTile:
+                    return "Try not to fall on that.";
+                case MessageIDs.FoundPlanteraTile:
+                    return "Let's break that weird thing.";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "Let's beat some Etherians?";
+                case MessageIDs.FoundTreasureTile:
+                    return "Loot!";
+                case MessageIDs.FoundGemTile:
+                    return "There's some gems there.";
+                case MessageIDs.FoundRareOreTile:
+                    return "Check out those ores.";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "Rare ores over there.";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "A Minecart Track!";
             }
             return base.GetSpecialMessage(MessageID);
         }

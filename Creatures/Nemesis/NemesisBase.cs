@@ -308,6 +308,29 @@ namespace giantsummon.Creatures
                     return "Brought back.";
                 case MessageIDs.RevivedByRecovery:
                     return "I returned.";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "Life Crystal.";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "A trap.";
+                case MessageIDs.FoundMineTile:
+                    return "Mine.";
+                case MessageIDs.FoundDetonatorTile:
+                    return "A detonator over there.";
+                case MessageIDs.FoundPlanteraTile:
+                    return "Our doom will approach if we break that.";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "";
+                case MessageIDs.FoundTreasureTile:
+                    return "A chest.";
+                case MessageIDs.FoundGemTile:
+                    return "Gems over there.";
+                case MessageIDs.FoundRareOreTile:
+                    return "Ores.";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "Rare ores.";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "";
             }
             return base.GetSpecialMessage(MessageID);
         }

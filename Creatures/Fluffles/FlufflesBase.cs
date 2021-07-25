@@ -432,6 +432,29 @@ namespace giantsummon.Creatures
                     return "*Is that... AAAAAHHH!! A ghost!!! Help!*";
                 case MessageIDs.LeopoldMessage3:
                     return "(After he screamed, she looked at you with a sad face, and your character tried comforting her, while you looked at him with an angry face.)";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "(She calls your attention to the Life Crystal.)";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "(She pulls your shoulder, then points at the Pressure Plate.)";
+                case MessageIDs.FoundMineTile:
+                    return "(She shows you the Mine in the floor.)";
+                case MessageIDs.FoundDetonatorTile:
+                    return "(She gestures you to not try pressing the Detonator.)";
+                case MessageIDs.FoundPlanteraTile:
+                    return "(As she notices the Bulb, she cowers behind you.)";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "(She nods to you, after seeing the Eternia Crystal Stand.)";
+                case MessageIDs.FoundTreasureTile:
+                    return "(She jumps happily while pointing at the Chest.)";
+                case MessageIDs.FoundGemTile:
+                    return "(She calls your attention to the Gems around.)";
+                case MessageIDs.FoundRareOreTile:
+                    return "(She tells you of ores around.)";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "(She shows you some rare ores she found.)";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "(She points at the Minecart Rails like a kid wanting to go on a rollercoaster.)";
             }
             return base.GetSpecialMessage(MessageID);
         }
@@ -466,7 +489,7 @@ namespace giantsummon.Creatures
             return color;
         }
 
-        public static float GetColorMod { get { return (float)Math.Sin(Main.GlobalTime * 3) * 0.3f + 0.3f; } }
+        public static float GetColorMod { get { if (TerraGuardian.DrawingIgnoringLighting) return 1f; return (float)Math.Sin(Main.GlobalTime * 3) * 0.3f + 0.3f; } }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
         {

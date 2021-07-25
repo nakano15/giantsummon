@@ -544,6 +544,29 @@ namespace giantsummon.Creatures
                     return "*This will ruin the meat...*";
                 case MessageIDs.AcquiredTipsyDebuff: //She doesn't drinks beverage
                     return "";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "*I see a crystal shining over there.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*Watch it! Be careful not to step on the pressure plate.*";
+                case MessageIDs.FoundMineTile:
+                    return "*Some bad intentioned person left that mine there.*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*Can I press It? Please?*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*Is that plant even edible?*";
+                case MessageIDs.FoundEterniaCrystalStandTile:
+                    return "*I don't know if we should, but I'll stay with you during the invasion.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*Come on! Open it!*";
+                case MessageIDs.FoundGemTile:
+                    return "*Oooohhh! Gems!*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*There's some ores over there.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*Woah! Look at those ores!*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*Let's ride a Minecart?*";
             }
             return base.GetSpecialMessage(MessageID);
         }
