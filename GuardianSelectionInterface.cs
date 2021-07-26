@@ -1365,7 +1365,7 @@ namespace giantsummon
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 265 + 41;
                 ButtonCenter.Y = HudPosition.Y + 404 + 14;
-                Utils.DrawBorderString(Main.spriteBatch, "Can't Ask to Move In", ButtonCenter, Color.Red, ElementScale, 0.5f, 0.5f);
+                Utils.DrawBorderString(Main.spriteBatch, "Can't Move In", ButtonCenter, Color.Red, ElementScale, 0.5f, 0.5f);
             }
             //Inventory Button (Right)
             if (Selected > -1)
