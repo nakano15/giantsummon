@@ -1970,36 +1970,37 @@ namespace giantsummon
             {
                 Item i = new Item();
                 i.SetDefaults(WeaponID);
+                byte prefix = 0;
                 if (i.melee)
                 {
                     switch (Main.rand.Next(10))
                     {
                         case 1:
-                            i.prefix = Terraria.ID.PrefixID.Dangerous;
+                            prefix = Terraria.ID.PrefixID.Dangerous;
                             break;
                         case 2:
-                            i.prefix = Terraria.ID.PrefixID.Savage;
+                            prefix = Terraria.ID.PrefixID.Savage;
                             break;
                         case 3:
-                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            prefix = Terraria.ID.PrefixID.Deadly; //Common
                             break;
                         case 4:
-                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            prefix = Terraria.ID.PrefixID.Ruthless; //Universal
                             break;
                         case 5:
-                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            prefix = Terraria.ID.PrefixID.Godly; //Universal
                             break;
                         case 6:
-                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            prefix = Terraria.ID.PrefixID.Demonic; //Universal
                             break;
                         case 7:
-                            i.prefix = Terraria.ID.PrefixID.Savage;
+                            prefix = Terraria.ID.PrefixID.Savage;
                             break;
                         case 8:
-                            i.prefix = Terraria.ID.PrefixID.Legendary;
+                            prefix = Terraria.ID.PrefixID.Legendary;
                             break;
                         case 9:
-                            i.prefix = Terraria.ID.PrefixID.Superior;
+                            prefix = Terraria.ID.PrefixID.Superior;
                             break;
                     }
                 }
@@ -2008,31 +2009,31 @@ namespace giantsummon
                     switch (Main.rand.Next(10))
                     {
                         case 1:
-                            i.prefix = Terraria.ID.PrefixID.Deadly2;
+                            prefix = Terraria.ID.PrefixID.Deadly2;
                             break;
                         case 2:
-                            i.prefix = Terraria.ID.PrefixID.Rapid;
+                            prefix = Terraria.ID.PrefixID.Rapid;
                             break;
                         case 3:
-                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            prefix = Terraria.ID.PrefixID.Deadly; //Common
                             break;
                         case 4:
-                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            prefix = Terraria.ID.PrefixID.Ruthless; //Universal
                             break;
                         case 5:
-                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            prefix = Terraria.ID.PrefixID.Godly; //Universal
                             break;
                         case 6:
-                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            prefix = Terraria.ID.PrefixID.Demonic; //Universal
                             break;
                         case 7:
-                            i.prefix = Terraria.ID.PrefixID.Powerful;
+                            prefix = Terraria.ID.PrefixID.Powerful;
                             break;
                         case 8:
-                            i.prefix = Terraria.ID.PrefixID.Unreal;
+                            prefix = Terraria.ID.PrefixID.Unreal;
                             break;
                         case 9:
-                            i.prefix = Terraria.ID.PrefixID.Superior;
+                            prefix = Terraria.ID.PrefixID.Superior;
                             break;
                     }
                 }
@@ -2041,31 +2042,31 @@ namespace giantsummon
                     switch (Main.rand.Next(10))
                     {
                         case 1:
-                            i.prefix = Terraria.ID.PrefixID.Masterful;
+                            prefix = Terraria.ID.PrefixID.Masterful;
                             break;
                         case 2:
-                            i.prefix = Terraria.ID.PrefixID.Celestial;
+                            prefix = Terraria.ID.PrefixID.Celestial;
                             break;
                         case 3:
-                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            prefix = Terraria.ID.PrefixID.Deadly; //Common
                             break;
                         case 4:
-                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            prefix = Terraria.ID.PrefixID.Ruthless; //Universal
                             break;
                         case 5:
-                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            prefix = Terraria.ID.PrefixID.Godly; //Universal
                             break;
                         case 6:
-                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            prefix = Terraria.ID.PrefixID.Demonic; //Universal
                             break;
                         case 7:
-                            i.prefix = Terraria.ID.PrefixID.Mystic;
+                            prefix = Terraria.ID.PrefixID.Mystic;
                             break;
                         case 8:
-                            i.prefix = Terraria.ID.PrefixID.Mythical;
+                            prefix = Terraria.ID.PrefixID.Mythical;
                             break;
                         case 9:
-                            i.prefix = Terraria.ID.PrefixID.Superior;
+                            prefix = Terraria.ID.PrefixID.Superior;
                             break;
                     }
                 }
@@ -2074,31 +2075,32 @@ namespace giantsummon
                     switch (Main.rand.Next(9))
                     {
                         case 1:
-                            i.prefix = Terraria.ID.PrefixID.Deadly; //Common
+                            prefix = Terraria.ID.PrefixID.Deadly; //Common
                             break;
                         case 2:
-                            i.prefix = Terraria.ID.PrefixID.Ruthless; //Universal
+                            prefix = Terraria.ID.PrefixID.Ruthless; //Universal
                             break;
                         case 3:
-                            i.prefix = Terraria.ID.PrefixID.Godly; //Universal
+                            prefix = Terraria.ID.PrefixID.Godly; //Universal
                             break;
                         case 4:
-                            i.prefix = Terraria.ID.PrefixID.Demonic; //Universal
+                            prefix = Terraria.ID.PrefixID.Demonic; //Universal
                             break;
                         case 5:
-                            i.prefix = Terraria.ID.PrefixID.Murderous;
+                            prefix = Terraria.ID.PrefixID.Murderous;
                             break;
                         case 6:
-                            i.prefix = Terraria.ID.PrefixID.Hurtful;
+                            prefix = Terraria.ID.PrefixID.Hurtful;
                             break;
                         case 7:
-                            i.prefix = Terraria.ID.PrefixID.Unpleasant;
+                            prefix = Terraria.ID.PrefixID.Unpleasant;
                             break;
                         case 8:
-                            i.prefix = Terraria.ID.PrefixID.Superior;
+                            prefix = Terraria.ID.PrefixID.Superior;
                             break;
                     }
                 }
+                i.Prefix(prefix);
                 return i;
             }
             return null;
@@ -2144,46 +2146,48 @@ namespace giantsummon
             {
                 Item i = new Item();
                 i.SetDefaults(ItemIDs[Main.rand.Next(ItemIDs.Count)]);
+                byte prefix = 0;
                 if (Main.rand.NextDouble() < 0.8f)
                 {
                     switch (Main.rand.Next(12))
                     {
                         case 0:
-                            i.prefix = Terraria.ID.PrefixID.Armored;
+                            prefix = Terraria.ID.PrefixID.Armored;
                             break;
                         case 1:
-                            i.prefix = Terraria.ID.PrefixID.Warding;
+                            prefix = Terraria.ID.PrefixID.Warding;
                             break;
                         case 2:
-                            i.prefix = Terraria.ID.PrefixID.Precise;
+                            prefix = Terraria.ID.PrefixID.Precise;
                             break;
                         case 3:
-                            i.prefix = Terraria.ID.PrefixID.Lucky;
+                            prefix = Terraria.ID.PrefixID.Lucky;
                             break;
                         case 4:
-                            i.prefix = Terraria.ID.PrefixID.Angry;
+                            prefix = Terraria.ID.PrefixID.Angry;
                             break;
                         case 5:
-                            i.prefix = Terraria.ID.PrefixID.Menacing;
+                            prefix = Terraria.ID.PrefixID.Menacing;
                             break;
                         case 6:
-                            i.prefix = Terraria.ID.PrefixID.Hasty;
+                            prefix = Terraria.ID.PrefixID.Hasty;
                             break;
                         case 7:
-                            i.prefix = Terraria.ID.PrefixID.Quick;
+                            prefix = Terraria.ID.PrefixID.Quick;
                             break;
                         case 8:
-                            i.prefix = Terraria.ID.PrefixID.Intrepid;
+                            prefix = Terraria.ID.PrefixID.Intrepid;
                             break;
                         case 9:
-                            i.prefix = Terraria.ID.PrefixID.Violent;
+                            prefix = Terraria.ID.PrefixID.Violent;
                             break;
                         case 10:
-                            i.prefix = Terraria.ID.PrefixID.Arcane;
+                            prefix = Terraria.ID.PrefixID.Arcane;
                             break;
 
                     }
                 }
+                i.Prefix(prefix);
                 return i;
             }
             return null;

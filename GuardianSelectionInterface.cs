@@ -1314,6 +1314,13 @@ namespace giantsummon
                 }
                 Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
             }
+            else
+            {
+                Vector2 ButtonCenter = Vector2.Zero;
+                ButtonCenter.X = HudPosition.X + 175 + 39;
+                ButtonCenter.Y = HudPosition.Y + 404 + 14;
+                Utils.DrawBorderString(Main.spriteBatch, "Can't Call", ButtonCenter, Color.Red, ElementScale, 0.5f, 0.5f);
+            }
             //Home Button (Center)
             if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel))
             {
@@ -1353,8 +1360,15 @@ namespace giantsummon
                     Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
                 }
             }
+            else
+            {
+                Vector2 ButtonCenter = Vector2.Zero;
+                ButtonCenter.X = HudPosition.X + 265 + 41;
+                ButtonCenter.Y = HudPosition.Y + 404 + 14;
+                Utils.DrawBorderString(Main.spriteBatch, "Can't Ask to Move In", ButtonCenter, Color.Red, ElementScale, 0.5f, 0.5f);
+            }
             //Inventory Button (Right)
-            if(Selected > -1)
+            if (Selected > -1)
             {
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 360 + 39;

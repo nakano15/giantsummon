@@ -150,7 +150,7 @@ namespace giantsummon
             if (NewExtraCompanionBonus != LastExtraCompanionBonus)
             {
                 int CompanionCount = NewExtraCompanionBonus - LastExtraCompanionBonus;
-                Main.NewText("Your max companion weight increased by " + (CompanionCount) + "!");
+                Main.NewText("Your max companion weight increased by " + (CompanionCount * 1000) + "!");
             }
         }
         public int GetSummonedGuardianCount

@@ -101,3 +101,5 @@ Melee companions will no longer "hop" after flying foes when they're trying to r
 	They will now only jump when close horizontally to the target.
 Companions will no longer show fade effects on the Guardian Selection Interface window.
 Fixed a bug where Wrath's arms didn't changed animation with the body, when facing the background.
+Fixed a bug with Bounty Quest weapon and accessory rewards being only name.
+	That bug only persists until you re-enter the world.
