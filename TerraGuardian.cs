@@ -8400,15 +8400,15 @@ namespace giantsummon
                 }
                 if (CreatureAllowsAFK)
                 {
-                    bool PlayerInCriticalHealth = AfkCounter >= 60 * 60 && owner.statLife <= owner.statLifeMax2 * 0.5f;
+                    bool PlayerInCriticalHealth = AfkCounter >= 60 * 60 && owner.statLife < owner.statLifeMax2 * 0.5f;
                     if (PlayerInCriticalHealth && !GrabbingPlayer && !owner.GetModPlayer<PlayerMod>().BeingGrabbedByGuardian)
                     {
-                        if (CurrentEmotion != Emotions.Alarmed)
-                            DisplayEmotion(Emotions.Alarmed);
                         if (AttemptToGrabPlayer())
                         {
                             DisplayEmotion(Emotions.Sweat);
                         }
+                        else if (CurrentEmotion != Emotions.Alarmed)
+                            DisplayEmotion(Emotions.Alarmed);
                         return true;
                     }
                     if (GrabbingPlayer)
@@ -9246,7 +9246,7 @@ namespace giantsummon
                 string Mes = GetMessage(ReviveBoost > 0 ? GuardianBase.MessageIDs.ReviveByOthersHelp : GuardianBase.MessageIDs.RevivedByRecovery);
                 if(Mes != "")
                 {
-                    SaySomething(Mes);
+                    SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
                 }
             }
             //    Main.NewText(Name + " woke up!", Color.Green);

@@ -91,6 +91,7 @@ Rescue messages will no longer show in the chat the name of who rescued you.
 Companions will no longer drink regardless of wether they drink alcoholic stuff or not.
 	They also will need to be 18 years old or higher to drink.
 Cinnamon, Glenn and Captain Stench Arrives.
+	Cinnamon is a starter companion.
 Your companions will no longer disappear when you're invisible.
 Fixed a bug where when the mod just does the recruitment of the companion, It checks if anyone has It on move in level before adding It to the can live in the world list.
 	The problem is when that's done before the companion is added to your list.

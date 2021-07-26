@@ -721,7 +721,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.RestNotPossible:
                     return "*[name] says that It's not possible at this moment.*";
                 case MessageIDs.RestWhenGoingSleep:
-                    return "*[name] tells you to have a good night.*";
+                    return "*[name] wishes you a good night.*";
                 case MessageIDs.AskPlayerToGetCloserToShopNpc:
                     return "*[name] is telling you that wants to check [shop]'s shop.*";
                 case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:

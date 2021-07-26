@@ -136,7 +136,7 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(62, 44, 31);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(22, 50, 34);
+            RightHandPoints.AddFramePoint2x(22, 50, 33);
             RightHandPoints.AddFramePoint2x(23, 50, 40);
             RightHandPoints.AddFramePoint2x(24, 48, 45);
 
@@ -1450,7 +1450,7 @@ namespace giantsummon.Creatures
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
-            bool UsingWeapon = data.HoldingWeaponTime > 0;
+            bool UsingWeapon = data.HoldingWeaponTime > 0, OpenCloak = guardian.ItemUseTime > 0;
             if(guardian.Velocity.Y > 0)
             {
                 Frame++;
@@ -1459,7 +1459,7 @@ namespace giantsummon.Creatures
             {
                 Frame += 25;
             }
-            if (UsingWeapon)
+            if (UsingWeapon || (OpenCloak && BodyPartID == 0))
             {
                 if (Frame == 0)
                     Frame++;

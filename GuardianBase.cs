@@ -1471,7 +1471,7 @@ namespace giantsummon
                 FoundRareOreTile = "Mes.Tile.RareOre",
                 FoundVeryRareOreTile = "Mes.Tile.VeryRareOre",
                 FoundMinecartRailTile = "Mes.Tile.Minecart";
-
+            public const string TeleportHomeMessage = "Mes.Teleport.Home";
         }
         
         public enum GuardianEffect

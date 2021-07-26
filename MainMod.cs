@@ -304,6 +304,7 @@ namespace giantsummon
             InitialGuardians.Clear();
             InitialGuardians.Add(new GuardianID(GuardianBase.Rococo));
             InitialGuardians.Add(new GuardianID(GuardianBase.Blue));
+            InitialGuardians.Add(new GuardianID(GuardianBase.Cinnamon));
             foreach (Mod mod in ModLoader.Mods)
             {
                 if (IsntExceptionMod(mod.Name))
