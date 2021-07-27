@@ -1702,8 +1702,7 @@ namespace giantsummon
                     {
                         if (player.mount.Active)
                             player.mount.Dismount(player);
-                        player.velocity = Microsoft.Xna.Framework.Vector2.Zero;
-                        player.velocity.Y = 0;
+                        player.velocity = Vector2.Zero;
                         if (KnockedOut && !guardian.IsAttackingSomething && guardian.Velocity.X == 0)
                         {
                             player.position = guardian.PositionWithOffset;
@@ -2708,6 +2707,17 @@ namespace giantsummon
             foreach (TerraGuardian g in GetAllGuardianFollowers)
             {
                 if (!g.Active || !g.InCameraRange() || (g.UsingFurniture && !g.PlayerMounted))
+                    continue;
+                bool HasDrawMoment = false;
+                foreach(GuardianDrawMoment gdm in MainMod.DrawMoment)
+                {
+                    if(gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.GuardianWhoAmID == g.WhoAmID)
+                    {
+                        HasDrawMoment = true;
+                        break;
+                    }
+                }
+                if (HasDrawMoment)
                     continue;
                 List<Terraria.DataStructures.DrawData> TrailData = g.GetTrailsDataAsDrawData();
                 g.DrawDataCreation();

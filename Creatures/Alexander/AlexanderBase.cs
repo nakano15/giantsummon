@@ -222,7 +222,7 @@ namespace giantsummon.Creatures
                         g.MeleeDamageMultiplier += 0.02f;
                         break;
                     case Fluffles:
-                        g.DodgeRate += 0.03f;
+                        g.DodgeRate += 3f;
                         break;
                     case Minerva:
                         g.Defense += 2;
@@ -232,6 +232,17 @@ namespace giantsummon.Creatures
                         break;
                     case Glenn:
                         g.Accuracy += 0.03f;
+                        break;
+                    case CaptainStench:
+                        g.Aggro -= 30;
+                        break;
+                    case Liebre:
+                        g.DodgeRate += 2f;
+                        g.MHP += 3;
+                        break;
+                    case Cinnamon:
+                        g.HealthRegenPower++;
+                        g.MaxJumpHeight++;
                         break;
                 }
             }

@@ -773,7 +773,9 @@ namespace giantsummon.Creatures
                     tg.ImmuneTime = 30;
                     tg.ImmuneNoBlink = true;
                     //tg.Velocity.X = tg.Direction * 10;
-                    tg.Position.X += tg.Direction * 20;
+                    Vector2 Velocity = Collision.TileCollision(tg.TopLeftPosition, new Vector2(tg.Direction * 20, 0), tg.CollisionWidth, tg.CollisionHeight);
+                    tg.Position += Velocity;
+                    tg.Velocity = Vector2.Zero;
                     if (Collision.SolidCollision(tg.TopLeftPosition, tg.CollisionWidth, tg.CollisionHeight))
                     {
                         if (tg.LookingLeft)

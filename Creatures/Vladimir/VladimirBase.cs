@@ -9,6 +9,8 @@ namespace giantsummon.Creatures
 {
     public class VladimirBase : GuardianBase
     {
+        public const int HugActionID = 0, CarrySomeoneActionID = 1;
+
         /// <summary>
         /// -Very friendly when not in a bloodmoon.
         /// -Turns extremelly aggressive during bloodmoons.
@@ -168,14 +170,94 @@ namespace giantsummon.Creatures
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian Guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            GuardianMouseOverAndDialogueInterface.DialogueOption Option = new GuardianMouseOverAndDialogueInterface.DialogueOption((Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction ? "Enough" : "Be Hugged"), HugOptionAction);
+            GuardianMouseOverAndDialogueInterface.DialogueOption Option = new GuardianMouseOverAndDialogueInterface.DialogueOption((Guardian.DoAction.InUse && Guardian.DoAction.ID == HugActionID && Guardian.DoAction.IsGuardianSpecificAction ? "Enough" : "Be Hugged"), HugOptionAction);
             Options.Add(Option);
+            //Needs fixing on the GuardianDrawMoment system. There's an anomaly happening when trying to check if as a companion to draw the arm in front of.
+            /*if(Guardian.DoAction.InUse && Guardian.DoAction.IsGuardianSpecificAction && Guardian.DoAction.ID == CarrySomeoneActionID)
+            {
+                Creatures.Vladimir.CarrySomeoneAction Action = (Creatures.Vladimir.CarrySomeoneAction)Guardian.DoAction;
+                //Action to speak to someone.
+                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("I want to speak with " + Action.GetCarriedOneName() + ".",
+                    delegate(TerraGuardian tg)
+                    {
+                        Guardian.SaySomething("*I will wait until you two end speaking.*");
+                        if (Action.CarriedPersonType == TerraGuardian.TargetTypes.Npc)
+                        {
+                            Main.player[Main.myPlayer].talkNPC = Action.CarriedPersonID;
+                        }
+                        else if (Action.CarriedPersonType == TerraGuardian.TargetTypes.Guardian)
+                        {
+                            GuardianMouseOverAndDialogueInterface.StartDialogue(MainMod.ActiveGuardians[Action.CarriedPersonID]);
+                        }
+                    });
+                if(Guardian.OwnerPos > -1)
+                {
+                    Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Place " + Action.GetCarriedOneName() + " on the Floor.", PlaceCarriedPersonOnTheFloor);
+                    Options.Add(Option);
+                }
+            }
+            else if (HasCarryableCompanions(Main.player[Main.myPlayer]))
+            {
+                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Carry Someone", CarrySomeoneButtonAction);
+                Options.Add(Option);
+            }*/
             return Options;
+        }
+
+        public TerraGuardian[] GetCarryableCompanions(Player player)
+        {
+            List<TerraGuardian> CarryableCompanions = new List<TerraGuardian>();
+            foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+            {
+                if(tg.Active && tg.Base.Size < GuardianSize.Large)
+                {
+                    CarryableCompanions.Add(tg);
+                }
+            }
+            return CarryableCompanions.ToArray();
+        }
+
+        public bool HasCarryableCompanions(Player player)
+        {
+            return GetCarryableCompanions(player).Length > 0;
+        }
+
+        public void CarrySomeoneButtonAction(TerraGuardian Vladimir)
+        {
+            TerraGuardian[] Guardians = GetCarryableCompanions(Main.player[Main.myPlayer]);
+            GuardianMouseOverAndDialogueInterface.DialogueOption Option;
+            GuardianMouseOverAndDialogueInterface.Options.Clear();
+            GuardianMouseOverAndDialogueInterface.SetDialogue("*I like this idea. Who should I carry with me?*");
+            for (int i = 0; i < Guardians.Length; i++)
+            {
+                TerraGuardian guardian = Guardians[i];
+                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption(guardian.Name, delegate (TerraGuardian tg)
+                {
+                    Vladimir.StartNewGuardianAction(new Creatures.Vladimir.CarrySomeoneAction(Vladimir, guardian), CarrySomeoneActionID);
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("*Alright, I will pick them up after we finish talking.*");
+                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
+                });
+                GuardianMouseOverAndDialogueInterface.Options.Add(Option);
+            }
+            Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Nevermind.", delegate (TerraGuardian tg)
+            {
+                GuardianMouseOverAndDialogueInterface.SetDialogue("*Changed your mind, [nickname]? It's fine.*");
+                GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
+            });
+            GuardianMouseOverAndDialogueInterface.Options.Add(Option);
+        }
+
+        public void PlaceCarriedPersonOnTheFloor(TerraGuardian Vladimir)
+        {
+            Vladimir.DoAction.OnActionEnd(Vladimir);
+            Vladimir.DoAction.InUse = false;
+            GuardianMouseOverAndDialogueInterface.SetDialogue("*Okay, done...*");
+            GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
         }
 
         public void HugOptionAction(TerraGuardian Guardian)
         {
-            if (Guardian.DoAction.InUse && Guardian.DoAction.ID == 0 && Guardian.DoAction.IsGuardianSpecificAction)
+            if (Guardian.DoAction.InUse && Guardian.DoAction.ID == HugActionID && Guardian.DoAction.IsGuardianSpecificAction)
             {
                 Guardian.DoAction.InUse = false;
 
@@ -191,7 +273,7 @@ namespace giantsummon.Creatures
                 }
                 else
                 {
-                    if (Guardian.StartNewGuardianAction(new Creatures.Vladimir.HugAction(Main.player[Main.myPlayer]), 0))
+                    if (Guardian.StartNewGuardianAction(new Creatures.Vladimir.HugAction(Main.player[Main.myPlayer]), HugActionID))
                     {
                         GuardianMouseOverAndDialogueInterface.SetDialogue("*Press Jump button If you want me to stop.*");
                     }
@@ -343,7 +425,11 @@ namespace giantsummon.Creatures
 
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
-            bool IsPlayerBeingHugged = guardian.DoAction.InUse && guardian.DoAction.ID == 0 && guardian.DoAction.IsGuardianSpecificAction && ((Creatures.Vladimir.HugAction)guardian.DoAction).Target == player;
+            bool IsPlayerBeingHugged = guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction;
+            if (IsPlayerBeingHugged)
+            {
+                IsPlayerBeingHugged = ((Creatures.Vladimir.HugAction)guardian.DoAction).Target == player;
+            }
             List<string> Mes = new List<string>();
             Mes.Add("*I really don't mind giving hugs to anybody.*");
             Mes.Add("*Why I like giving hugs? I used to give them to my younger brother, It always helped in various situations where he was sad.*");

@@ -1980,10 +1980,16 @@ namespace giantsummon
 
         public bool StartNewGuardianAction(GuardianActions action, int ID)
         {
+            if (action.Cancellable && action.InUse)
+            {
+                action.OnActionEnd(this);
+                action.InUse = false;
+            }
             if (!DoAction.InUse)
             {
                 action.IsGuardianSpecificAction = true;
                 action.InUse = true;
+                action.ID = ID;
                 DoAction = action;
                 return true;
             }
@@ -16676,15 +16682,19 @@ namespace giantsummon
             DrawDataCreation(IgnoreLighting);
             List<GuardianDrawData> DrawBehindDone = DrawBehind,
                 DrawFrontDone = DrawFront;
-            DrawBehind = new List<GuardianDrawData>();
-            DrawFront = new List<GuardianDrawData>();
+
             foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
             {
-                if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.DrawTargetID == WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
+                Main.NewText("Target Type: " + gdm.DrawTargetType.ToString() + "  Target ID: " + gdm.DrawTargetID + "  Other Target ID: " + gdm.GuardianWhoAmID);
+                Main.NewText(" : " + (gdm.DrawTargetType == TargetTypes.Guardian) + "   : " + (gdm.DrawTargetID == WhoAmID) + "  Other Target ID: " + MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID));
+                if (gdm.DrawTargetType == TargetTypes.Guardian && gdm.DrawTargetID == WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
                 {
+                    Main.NewText("Bam!");
+                    DrawBehind = new List<GuardianDrawData>();
+                    DrawFront = new List<GuardianDrawData>();
                     MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
                     DrawBehindDone.InsertRange(0, DrawBehind);
-                    DrawFrontDone.AddRange(DrawBehind);
+                    DrawFrontDone.AddRange(DrawFront);
                 }
             }
             foreach (GuardianDrawData dd in DrawBehindDone)

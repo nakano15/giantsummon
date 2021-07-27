@@ -131,6 +131,7 @@
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\Minerva\MinervaBase.cs" />
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
+    <Compile Include="Creatures\Vladimir\CarrySomeoneAction.cs" />
     <Compile Include="Creatures\Vladimir\HugAction.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />

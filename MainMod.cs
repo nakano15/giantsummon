@@ -1191,6 +1191,7 @@ namespace giantsummon
                         New.Add(g.Name + "'s Device ID: " + data.DeviceID);
                         New.Add("\t Device Use Time: " + data.PhantomDeviceUseTimes);
                     }*/
+                    New.Add(g.Name + " ID: " + g.WhoAmID);
                     if (g.ID == GuardianBase.Fluffles)
                     {
                         Creatures.FlufflesBase.FlufflesData data = (Creatures.FlufflesBase.FlufflesData)g.Data;

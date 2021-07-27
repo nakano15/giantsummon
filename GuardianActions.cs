@@ -160,6 +160,8 @@ namespace giantsummon
                 StepChanged = false;
             else
                 Time++;
+            if (!InUse)
+                OnActionEnd(guardian);
         }
         
         public virtual void Update(TerraGuardian guardian)
@@ -180,6 +182,11 @@ namespace giantsummon
         }
 
         public virtual void Draw(TerraGuardian guardian)
+        {
+
+        }
+
+        public virtual void OnActionEnd(TerraGuardian guardian)
         {
 
         }
