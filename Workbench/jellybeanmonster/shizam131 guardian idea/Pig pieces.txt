@@ -3,7 +3,7 @@ Lost Pig pieces:
 Anger piece-
 Possible Recruitment process:
 -The first piece you will find
--Will be spoted after you beat the eye of cathulu
+-Will be spoted after you beat the eye of cthulhu
 -Will confront the player and challenge them to a fight 
 -will be recruitable after defeating it
 Abilites/skills-
@@ -14,7 +14,7 @@ Possible Recuitment process:
 Can be found somewhere underground in a corner crying
 Abilities/skills:
 -Will refuse to help the player in battles
-- crys tears that can make enemies confused?/ or make it give some type of debuff
+- crys tears lowers enemies defense value/ or make it give some type of debuff
 
 Happy piece-
 Possible Recuitment process:
