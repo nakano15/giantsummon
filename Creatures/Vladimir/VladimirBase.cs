@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
 
 namespace giantsummon.Creatures
 {
     public class VladimirBase : GuardianBase
     {
-        public const int HugActionID = 0, CarrySomeoneActionID = 1;
+        public const int HugActionID = 0;
+        public static List<GuardianID> CarryBlacklist = new List<GuardianID>();
 
         /// <summary>
         /// -Very friendly when not in a bloodmoon.
@@ -151,6 +153,11 @@ namespace giantsummon.Creatures
             WingPosition.AddFramePoint(25, -1000, -1000);
         }
 
+        public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
+        {
+            return new VladimirData(ID, ModID);
+        }
+
         public override string MountUnlockMessage
         {
             get
@@ -169,38 +176,52 @@ namespace giantsummon.Creatures
         
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian Guardian)
         {
+            VladimirData data = (VladimirData)Guardian.Data;
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
             GuardianMouseOverAndDialogueInterface.DialogueOption Option = new GuardianMouseOverAndDialogueInterface.DialogueOption((Guardian.DoAction.InUse && Guardian.DoAction.ID == HugActionID && Guardian.DoAction.IsGuardianSpecificAction ? "Enough" : "Be Hugged"), HugOptionAction);
             Options.Add(Option);
-            //Needs fixing on the GuardianDrawMoment system. There's an anomaly happening when trying to check if as a companion to draw the arm in front of.
-            /*if(Guardian.DoAction.InUse && Guardian.DoAction.IsGuardianSpecificAction && Guardian.DoAction.ID == CarrySomeoneActionID)
+            //Change the method, this one blocks actions.
+            if(data.CarrySomeone)
             {
-                Creatures.Vladimir.CarrySomeoneAction Action = (Creatures.Vladimir.CarrySomeoneAction)Guardian.DoAction;
                 //Action to speak to someone.
-                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("I want to speak with " + Action.GetCarriedOneName() + ".",
-                    delegate(TerraGuardian tg)
-                    {
-                        Guardian.SaySomething("*I will wait until you two end speaking.*");
-                        if (Action.CarriedPersonType == TerraGuardian.TargetTypes.Npc)
-                        {
-                            Main.player[Main.myPlayer].talkNPC = Action.CarriedPersonID;
-                        }
-                        else if (Action.CarriedPersonType == TerraGuardian.TargetTypes.Guardian)
-                        {
-                            GuardianMouseOverAndDialogueInterface.StartDialogue(MainMod.ActiveGuardians[Action.CarriedPersonID]);
-                        }
-                    });
-                if(Guardian.OwnerPos > -1)
+                if (data.CarriedPersonType != TerraGuardian.TargetTypes.Player)
                 {
-                    Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Place " + Action.GetCarriedOneName() + " on the Floor.", PlaceCarriedPersonOnTheFloor);
+                    Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("I want to speak with " + GetCarriedOneName(Guardian) + ".",
+                        delegate (TerraGuardian tg)
+                        {
+                            Guardian.SaySomething("*I will wait until you two end speaking.*");
+                            if (data.CarriedPersonType == TerraGuardian.TargetTypes.Npc)
+                            {
+                                Main.player[Main.myPlayer].talkNPC = data.CarriedPersonID;
+                            }
+                            else if (data.CarriedPersonType == TerraGuardian.TargetTypes.Guardian)
+                            {
+                                GuardianMouseOverAndDialogueInterface.StartDialogue(MainMod.ActiveGuardians[data.CarriedPersonID]);
+                            }
+                        });
+                    Options.Add(Option);
+                }
+                bool CarriedIsMainPlayer = data.CarriedPersonType == TerraGuardian.TargetTypes.Player && data.CarriedPersonID == Main.myPlayer;
+                if (Guardian.OwnerPos > -1 || CarriedIsMainPlayer)
+                {
+                    string Text = "";
+                    if(CarriedIsMainPlayer)
+                    {
+                        Text = "me";
+                    }
+                    else
+                    {
+                        Text = GetCarriedOneName(Guardian);
+                    }
+                    Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Place " + Text + " on the Floor.", PlaceCarriedPersonOnTheFloorButtonAction);
                     Options.Add(Option);
                 }
             }
-            else if (HasCarryableCompanions(Main.player[Main.myPlayer]))
+            else if (Guardian.OwnerPos > -1 && HasCarryableCompanions(Main.player[Main.myPlayer]))
             {
                 Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Carry Someone", CarrySomeoneButtonAction);
                 Options.Add(Option);
-            }*/
+            }
             return Options;
         }
 
@@ -209,7 +230,7 @@ namespace giantsummon.Creatures
             List<TerraGuardian> CarryableCompanions = new List<TerraGuardian>();
             foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
             {
-                if(tg.Active && tg.Base.Size < GuardianSize.Large)
+                if(tg.Active && (tg.ID != Vladimir || tg.ModID != MainMod.mod.Name) && tg.Base.Size < GuardianSize.Large)
                 {
                     CarryableCompanions.Add(tg);
                 }
@@ -233,7 +254,7 @@ namespace giantsummon.Creatures
                 TerraGuardian guardian = Guardians[i];
                 Option = new GuardianMouseOverAndDialogueInterface.DialogueOption(guardian.Name, delegate (TerraGuardian tg)
                 {
-                    Vladimir.StartNewGuardianAction(new Creatures.Vladimir.CarrySomeoneAction(Vladimir, guardian), CarrySomeoneActionID);
+                    CarrySomeoneAction(Vladimir, guardian);
                     GuardianMouseOverAndDialogueInterface.SetDialogue("*Alright, I will pick them up after we finish talking.*");
                     GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
                 });
@@ -247,10 +268,9 @@ namespace giantsummon.Creatures
             GuardianMouseOverAndDialogueInterface.Options.Add(Option);
         }
 
-        public void PlaceCarriedPersonOnTheFloor(TerraGuardian Vladimir)
+        public void PlaceCarriedPersonOnTheFloorButtonAction(TerraGuardian Vladimir)
         {
-            Vladimir.DoAction.OnActionEnd(Vladimir);
-            Vladimir.DoAction.InUse = false;
+            PlaceCarriedPersonOnTheFloor(Vladimir);
             GuardianMouseOverAndDialogueInterface.SetDialogue("*Okay, done...*");
             GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
         }
@@ -334,7 +354,8 @@ namespace giantsummon.Creatures
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)
         {
-            if (guardian.PlayerMounted)
+            VladimirData data = (VladimirData)guardian.Data;
+            if (guardian.PlayerMounted || (data.CarrySomeone && data.PickedUpPerson))
             {
                 int Frame = 1;
                 if (guardian.BodyAnimationFrame == ThroneSittingFrame)
@@ -379,6 +400,375 @@ namespace giantsummon.Creatures
                     Main.player[guardian.OwnerPos].AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
                     guardian.AddBuff(ModContent.BuffType<Buffs.Protecting>(), 5);
                 }
+            }
+        }
+
+        public override void GuardianBehaviorModScript(TerraGuardian guardian)
+        {
+            UpdateCarryAllyScript(guardian);
+        }
+
+        public void CarrySomeoneAction(TerraGuardian Vladimir, Player player, int Time = 0)
+        {
+            VladimirData data = (VladimirData)Vladimir.Data;
+            if (data.CarrySomeone)
+            {
+                PlaceCarriedPersonOnTheFloor(Vladimir);
+            }
+            data.CarrySomeone = true;
+            data.PickedUpPerson = false;
+            data.WasFollowingPlayerBefore = Vladimir.OwnerPos > -1;
+            data.CarriedPersonID = player.whoAmI;
+            data.CarriedPersonType = TerraGuardian.TargetTypes.Player;
+            data.Duration = Time;
+        }
+
+        public void CarrySomeoneAction(TerraGuardian Vladimir, TerraGuardian tg, int Time = 0)
+        {
+            VladimirData data = (VladimirData)Vladimir.Data;
+            if (data.CarrySomeone)
+            {
+                PlaceCarriedPersonOnTheFloor(Vladimir);
+            }
+            data.CarrySomeone = true;
+            data.PickedUpPerson = false;
+            data.WasFollowingPlayerBefore = Vladimir.OwnerPos > -1;
+            data.CarriedPersonID = tg.WhoAmID;
+            data.CarriedPersonType = TerraGuardian.TargetTypes.Guardian;
+            data.Duration = Time;
+        }
+
+        public void CarrySomeoneAction(TerraGuardian Vladimir, NPC npc, int Time = 0)
+        {
+            VladimirData data = (VladimirData)Vladimir.Data;
+            if (data.CarrySomeone)
+            {
+                PlaceCarriedPersonOnTheFloor(Vladimir);
+            };
+            data.CarrySomeone = true;
+            data.PickedUpPerson = false;
+            data.WasFollowingPlayerBefore = Vladimir.OwnerPos > -1;
+            data.CarriedPersonID = npc.whoAmI;
+            data.CarriedPersonType = TerraGuardian.TargetTypes.Npc;
+            data.Duration = Time;
+        }
+
+        public static void AddCarryBlacklist(int ID, string ModID = "")
+        {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
+            CarryBlacklist.Add(new GuardianID(ID, ModID));
+        }
+
+        public void UpdateCarryAllyScript(TerraGuardian guardian)
+        {
+            VladimirData data = (VladimirData)guardian.Data;
+            if (!data.CarrySomeone)
+            {
+                if (guardian.OwnerPos > -1)
+                    return;
+                if(guardian.TargetID == -1 && guardian.DoAction.InUse == false && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait && Main.rand.Next(350) == 0)
+                {
+                    List<int> PotentialNpcs = new List<int>();
+                    for (int n = 0; n < 200; n++)
+                    {
+                        if (Main.npc[n].active && Main.npc[n].townNPC && (Main.npc[n].Center - guardian.CenterPosition).Length() < 60)
+                        {
+                            PotentialNpcs.Add(n);
+                        }
+                    }
+                    List<int> PotentialPlayers = new List<int>();
+                    for (int n = 0; n < 255; n++)
+                    {
+                        if (Main.player[n].active && !guardian.IsPlayerHostile(Main.player[n]) && Main.player[n].velocity.Length() == 0 && 
+                            Main.player[n].itemAnimation == 0 && (Main.player[n].Center - guardian.CenterPosition).Length() < 60)
+                        {
+                            PotentialPlayers.Add(n);
+                        }
+                    }
+                    List<int> PotentialTgs = new List<int>();
+                    foreach(int k in MainMod.ActiveGuardians.Keys)
+                    {
+                        if(k != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[k]) && MainMod.ActiveGuardians[k].OwnerPos == -1 && 
+                            CarryBlacklist.Any(x => x.IsSameID(MainMod.ActiveGuardians[k]))&& (guardian.CenterPosition - MainMod.ActiveGuardians[k].CenterPosition).Length() < 60 + MainMod.ActiveGuardians[k].Width * 0.5f)
+                        {
+                            PotentialTgs.Add(k);
+                        }
+                    }
+                    bool CheckNpc = false;
+                    if(PotentialPlayers.Count > 0 && Main.rand.NextFloat() < 0.66f)
+                    {
+                        CarrySomeoneAction(guardian, Main.player[PotentialPlayers[Main.rand.Next(PotentialPlayers.Count)]]);
+                    }
+                    else if (!(PotentialTgs.Count == 0 && PotentialNpcs.Count == 0))
+                    {
+                        if (PotentialNpcs.Count > 0 && PotentialTgs.Count > 0)
+                        {
+                            CheckNpc = Main.rand.NextDouble() < 0.5f;
+                        }
+                        if (CheckNpc)
+                        {
+                            CarrySomeoneAction(guardian, Main.npc[PotentialNpcs[Main.rand.Next(PotentialNpcs.Count)]]);
+                        }
+                        else
+                        {
+                            CarrySomeoneAction(guardian, MainMod.ActiveGuardians[PotentialTgs[Main.rand.Next(PotentialTgs.Count)]]);
+                        }
+                    }
+                }
+                return;
+            }
+            if (!data.PickedUpPerson)
+            {
+                if (guardian.CurrentIdleAction == TerraGuardian.IdleActions.Listening)
+                    return;
+                guardian.WalkMode = true;
+                data.Time++;
+                Rectangle TargetRect;
+                switch (data.CarriedPersonType)
+                {
+                    default:
+                        data.CarrySomeone = false;
+                        return;
+                    case TerraGuardian.TargetTypes.Guardian:
+                        if (!MainMod.ActiveGuardians.ContainsKey(data.CarriedPersonID))
+                        {
+                            data.CarrySomeone = false;
+                            return;
+                        }
+                        TargetRect = MainMod.ActiveGuardians[data.CarriedPersonID].HitBox;
+                        break;
+                    case TerraGuardian.TargetTypes.Player:
+                        if (!Main.player[data.CarriedPersonID].active)
+                        {
+                            data.CarrySomeone = false;
+                            return;
+                        }
+                        TargetRect = Main.player[data.CarriedPersonID].getRect();
+                        break;
+                    case TerraGuardian.TargetTypes.Npc:
+                        if (!Main.npc[data.CarriedPersonID].active)
+                        {
+                            data.CarrySomeone = false;
+                            return;
+                        }
+                        TargetRect = Main.npc[data.CarriedPersonID].getRect();
+                        break;
+                }
+                float TargetCenterX = TargetRect.X + TargetRect.Width * 0.5f;
+                guardian.MoveLeft = guardian.MoveRight = false;
+                guardian.AttackingTarget = false;
+                if (guardian.Position.X < TargetCenterX)
+                {
+                    guardian.MoveRight = true;
+                }
+                else
+                {
+                    guardian.MoveLeft = true;
+                }
+                if (TargetRect.Intersects(guardian.HitBox) || data.Time >= 5 * 60)
+                {
+                    data.PickedUpPerson = true;
+                    data.Time = 0;
+                }
+                if (!data.PickedUpPerson)
+                    return;
+            }
+            if (!data.WasFollowingPlayerBefore)
+            {
+                if (guardian.TargetID == -1)
+                {
+                    data.Time++;
+                }
+                if (data.Time >= data.Duration)
+                {
+                    data.CarrySomeone = false;
+                }
+            }
+            if (guardian.ItemAnimationTime > 0)
+                guardian.OffHandAction = false;
+            if (guardian.KnockedOut)
+                data.CarrySomeone = false;
+            if (guardian.PlayerMounted)
+            {
+                Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().MountedOffset.X -= 6f * guardian.Direction;
+            }
+            if (data.WasFollowingPlayerBefore && guardian.OwnerPos == -1)
+            {
+                guardian.SaySomething("*The Terrarian will still need your help, better you go with them.*");
+                data.CarrySomeone = false;
+            }
+            else if (!data.WasFollowingPlayerBefore && guardian.OwnerPos != -1)
+            {
+                guardian.SaySomething("*It might be dangerous, better you stay here.*");
+                data.CarrySomeone = false;
+            }
+            switch (data.CarriedPersonType)
+            {
+                case TerraGuardian.TargetTypes.Guardian:
+                    if (!MainMod.ActiveGuardians.ContainsKey(data.CarriedPersonID))
+                    {
+                        data.CarrySomeone = false;
+                    }
+                    else if (data.CarriedPersonID == guardian.WhoAmID)
+                    {
+                        data.CarrySomeone = false;
+                        guardian.DisplayEmotion(TerraGuardian.Emotions.Question);
+                    }
+                    else
+                    {
+                        TerraGuardian HeldGuardian = MainMod.ActiveGuardians[data.CarriedPersonID];
+                        if (HeldGuardian.CurrentIdleAction == TerraGuardian.IdleActions.Listening)
+                        {
+                            guardian.ChangeIdleAction(TerraGuardian.IdleActions.Listening, 5);
+                            guardian.LookAt(Main.player[HeldGuardian.TalkPlayerID].Center);
+                        }
+                        if (HeldGuardian.UsingFurniture)
+                            HeldGuardian.LeaveFurniture(false);
+                        HeldGuardian.AddFlag(GuardianFlags.DisableMovement);
+                        HeldGuardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                        HeldGuardian.Position = guardian.GetGuardianShoulderPosition;
+                        HeldGuardian.Position.Y += (HeldGuardian.SpriteHeight - HeldGuardian.Base.SittingPoint.Y) * HeldGuardian.Scale + 4 * guardian.Scale;
+                        HeldGuardian.Velocity = Vector2.Zero;
+                        HeldGuardian.Velocity.Y -= HeldGuardian.Mass;
+                        HeldGuardian.gfxOffY = 0;
+                        HeldGuardian.BeingPulledByPlayer = false;
+                        HeldGuardian.SetFallStart();
+                        if (guardian.PlayerMounted || (guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction))
+                            HeldGuardian.Position.X += 4 * guardian.Direction * guardian.Scale;
+                        if (HeldGuardian.KnockedOut)
+                            HeldGuardian.ReviveBoost += 3;
+                        if (HeldGuardian.ItemAnimationTime == 0)
+                            HeldGuardian.Direction = guardian.Direction;
+                        guardian.AddDrawMomentToTerraGuardian(HeldGuardian);
+                        if(HeldGuardian.Base.Size >= GuardianSize.Large && guardian.OwnerPos == -1)
+                        {
+                            if (!guardian.AttackMyTarget)
+                            {
+                                guardian.ChangeIdleAction(TerraGuardian.IdleActions.Wait, 50);
+                                if(guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
+                                {
+                                    guardian.MoveDown = true;
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                case TerraGuardian.TargetTypes.Npc:
+                    if (!Main.npc[data.CarriedPersonID].active)
+                    {
+                        data.CarrySomeone = false;
+                    }
+                    else
+                    {
+                        NPC npc = Main.npc[data.CarriedPersonID];
+                        for (int p = 0; p < 255; p++)
+                        {
+                            if (Main.player[p].talkNPC == npc.whoAmI)
+                            {
+                                guardian.ChangeIdleAction(TerraGuardian.IdleActions.Listening, 5);
+                                guardian.LookAt(Main.player[p].Center);
+                                break;
+                            }
+                        }
+                        npc.position = guardian.GetGuardianShoulderPosition;
+                        npc.position.X -= npc.width * 0.5f;
+                        npc.position.Y -= npc.height * 0.5f + 8;
+                        if (npc.velocity.X == 0)
+                            npc.direction = guardian.Direction;
+                        if (guardian.PlayerMounted || (guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction))
+                            npc.position.X += 4 * guardian.Direction * guardian.Scale;
+                        npc.velocity = Vector2.Zero;
+                        guardian.AddDrawMomentToNpc(npc);
+                    }
+                    break;
+
+                case TerraGuardian.TargetTypes.Player:
+                    if (!Main.player[data.CarriedPersonID].active)
+                    {
+                        data.CarrySomeone = false;
+                    }
+                    else
+                    {
+                        Player player = Main.player[data.CarriedPersonID];
+                        player.position = guardian.GetGuardianShoulderPosition;
+                        player.position.X -= player.width * 0.5f;
+                        player.position.Y -= player.height * 0.5f + 8;
+                        if (guardian.PlayerMounted || (guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction))
+                            player.position.X += 4 * guardian.Direction * guardian.Scale;
+                        player.fallStart = (int)(player.position.Y * TerraGuardian.DivisionBy16);
+                        player.velocity = Vector2.Zero;
+                        player.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                        PlayerMod pm = player.GetModPlayer<PlayerMod>();
+                        if (pm.KnockedOut)
+                            pm.ReviveBoost += 3;
+                        if (player.itemAnimation == 0)
+                            player.direction = guardian.Direction;
+                        guardian.AddDrawMomentToPlayer(player);
+                        if (player.controlJump)
+                        {
+                            data.CarrySomeone = false;
+                        }
+                    }
+                    break;
+            }
+            if (!data.CarrySomeone)
+            {
+                PlaceCarriedPersonOnTheFloor(guardian);
+            }
+        }
+
+        public string GetCarriedOneName(TerraGuardian guardian)
+        {
+            VladimirData data = (VladimirData)guardian.Data;
+            if (!data.CarrySomeone)
+                return "Nobody";
+            switch (data.CarriedPersonType)
+            {
+                case TerraGuardian.TargetTypes.Guardian:
+                    return MainMod.ActiveGuardians[data.CarriedPersonID].Name;
+                case TerraGuardian.TargetTypes.Player:
+                    return Main.player[data.CarriedPersonID].name;
+                case TerraGuardian.TargetTypes.Npc:
+                    return Main.npc[data.CarriedPersonID].GivenOrTypeName;
+            }
+            return "";
+        }
+
+        public void PlaceCarriedPersonOnTheFloor(TerraGuardian guardian)
+        {
+            VladimirData data = (VladimirData)guardian.Data;
+            if (!data.CarrySomeone)
+                return;
+            data.CarrySomeone = false;
+            switch (data.CarriedPersonType)
+            {
+                case TerraGuardian.TargetTypes.Guardian:
+                    {
+                        TerraGuardian HeldGuardian = MainMod.ActiveGuardians[data.CarriedPersonID];
+                        HeldGuardian.Position = guardian.Position;
+                        HeldGuardian.UpdateStatus = true;
+                    }
+                    break;
+
+                case TerraGuardian.TargetTypes.Npc:
+                    {
+                        NPC npc = Main.npc[data.CarriedPersonID];
+                        npc.position = guardian.Position;
+                        npc.position.X -= npc.width * 0.5f;
+                        npc.position.Y -= npc.height;
+                    }
+                    break;
+
+                case TerraGuardian.TargetTypes.Player:
+                    {
+                        Player player = Main.player[data.CarriedPersonID];
+                        player.position = guardian.Position;
+                        player.position.X -= player.width * 0.5f;
+                        player.position.Y -= player.height;
+                    }
+                    break;
             }
         }
 
@@ -1071,6 +1461,20 @@ namespace giantsummon.Creatures
                     return "*Want to ride a minecart?*";
             }
             return base.GetSpecialMessage(MessageID);
+        }
+
+        public class VladimirData : GuardianData
+        {
+            public bool PickedUpPerson = false, CarrySomeone = false;
+            public int CarriedPersonID = 0;
+            public TerraGuardian.TargetTypes CarriedPersonType = TerraGuardian.TargetTypes.Guardian;
+            public int Duration = 0, Time = 0;
+            public bool WasFollowingPlayerBefore = false;
+
+            public VladimirData(int Id, string ModID) : base(Id, ModID)
+            {
+
+            }
         }
     }
 }

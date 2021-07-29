@@ -61,6 +61,7 @@ namespace giantsummon.Creatures
             DeadSound = new SoundData(Terraria.ID.SoundID.ZombieMoan);
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 10, 11, 12, 14, 15 });
             CallUnlockLevel = 2;
+            VladimirBase.AddCarryBlacklist(Zacks);
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;

@@ -51,6 +51,7 @@ namespace giantsummon.Creatures
             //HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             //DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
             CallUnlockLevel = 0;
+            VladimirBase.AddCarryBlacklist(Alex);
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;

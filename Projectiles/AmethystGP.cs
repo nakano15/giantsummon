@@ -38,11 +38,17 @@ namespace giantsummon.Projectiles
         public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
         {
             target.AddBuff(Terraria.ID.BuffID.ShadowFlame, 5 * 60);
+            projectile.damage -= (int)(projectile.damage * 0.1f);
+            if (projectile.damage < 1)
+                projectile.damage = 1;
         }
 
         public override void OnHitPlayer(Player target, int damage, bool crit)
         {
             target.AddBuff(Terraria.ID.BuffID.ShadowFlame, 5 * 60);
+            projectile.damage -= (int)(projectile.damage * 0.1f);
+            if (projectile.damage < 1)
+                projectile.damage = 1;
         }
 
         public override void AI()

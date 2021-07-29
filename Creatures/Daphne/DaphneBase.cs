@@ -44,6 +44,7 @@ namespace giantsummon.Creatures
             //HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             //DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
             CallUnlockLevel = 0;
+            VladimirBase.AddCarryBlacklist(Daphne);
 
             //Animation Frames
             StandingFrame = 0;

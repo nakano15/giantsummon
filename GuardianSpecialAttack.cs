@@ -20,6 +20,10 @@ namespace giantsummon
         {
 
         };
+        public Action<TerraGuardian> WhenSubAttackEnds = delegate (TerraGuardian tg)
+        {
+
+        };
         public delegate void AnimationReplaceDel(TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame);
         public AnimationReplaceDel AnimationReplacer = delegate (TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame)
         {

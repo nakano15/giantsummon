@@ -16,7 +16,10 @@ namespace giantsummon
         public InvalidGuardianPoints invalidGuardianPoints = new InvalidGuardianPoints(true);
         public delegate void GuardianModDel(TerraGuardian guardian);
         public delegate void GuardianBehaviorModDel(TerraGuardian guardian, ref bool AllowAIMovement);
-        public const string TerraGuardianGroupID = "guardian", TerrarianGroupID = "terrarian", TerraGuardianCaitSithGroupID = "caitsithguardian", GiantDogGuardianGroupID = "giantdogguardian";
+        public const string TerraGuardianGroupID = "guardian", 
+            TerrarianGroupID = "terrarian", 
+            TerraGuardianCaitSithGroupID = "caitsithguardian", 
+            GiantDogGuardianGroupID = "giantdogguardian";
 
         public virtual GuardianData GetGuardianData(int ID = -1, string ModID = "") { return new GuardianData(ID, ModID);}
 
@@ -1484,7 +1487,8 @@ namespace giantsummon
         {
             Small,
             Medium,
-            Large
+            Large,
+            ExtraLarge
         }
     }
 }

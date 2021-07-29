@@ -189,6 +189,7 @@ namespace giantsummon
         NotPulledWhenKOd,
         DisableMountSharing,
         CantDie,
-        VergeOfDeathAlert
+        VergeOfDeathAlert,
+        DisableMovement
     }
 }

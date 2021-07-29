@@ -12,7 +12,7 @@ namespace giantsummon.Items.Consumable
 			//Tooltip.SetDefault("Restores 1200 Life.");
 		}
 
-        public override bool GuardianCanUse(TerraGuardian guardian)
+        public override bool GuardianCanUseItem(TerraGuardian guardian)
         {
             return guardian.Base.IsTerraGuardian;
         }

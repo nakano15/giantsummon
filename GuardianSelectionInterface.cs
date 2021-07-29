@@ -28,7 +28,7 @@ namespace giantsummon
         public const byte SortByLetter = 0, SortByLivingInWorld = 1, SortBySize = 2, SortByWeight = 3, SortByHeight = 4, SortByWidth = 5;
         public const int MaxLines = 24;
         public const int MaxDrawWidth = 262, MaxDrawHeight = 133;
-        public static float ContributionIconAnimationTime = 0;
+        public static int ContributionIconAnimationTime = 0;
 
         public static void OpenInterface()
         {
@@ -178,7 +178,7 @@ namespace giantsummon
                             }
                             break;
                     }
-                    contents.Add(new ContentElement(k, WorldMod.CanGuardianNPCSpawnInTheWorld(gd.ID, gd.ModID)));
+                    contents.Add(new ContentElement(k, WorldMod.CanGuardianNPCSpawnInTheWorld(gd.ID, gd.ModID), PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], gd.ID, gd.ModID)));
                 }
                 ContentList = contents.ToArray();
             }
@@ -1195,10 +1195,10 @@ namespace giantsummon
                     Vector2 ContributionIconPosition = Vector2.Zero;
                     ContributionIconPosition.X = HudPosition.X + 434 - 17;
                     ContributionIconPosition.Y = HudPosition.Y + 232 - 17;
-                    ContributionIconAnimationTime += (1f / 60 * 100 * 0.5f);
-                    if (ContributionIconAnimationTime >= 9)
-                        ContributionIconAnimationTime -= 9;
-                    Main.spriteBatch.Draw(MainMod.ContributorIconTexture, ContributionIconPosition, new Rectangle(17 * (int)(ContributionIconAnimationTime), 0, 17, 17), Color.White);
+                    ContributionIconAnimationTime++;// += (1f / 60 * 100 * 0.5f);
+                    if (ContributionIconAnimationTime >= 9 * 6)
+                        ContributionIconAnimationTime -= 9 * 6;
+                    Main.spriteBatch.Draw(MainMod.ContributorIconTexture, ContributionIconPosition, new Rectangle(17 * (int)(ContributionIconAnimationTime * (1f / 6)), 0, 17, 17), Color.White);
                     if(Main.mouseX >= ContributionIconPosition.X && Main.mouseX < ContributionIconPosition.X + 17 && 
                         Main.mouseY >= ContributionIconPosition.Y && Main.mouseY < ContributionIconPosition.Y + 17)
                     {
@@ -1289,7 +1289,7 @@ namespace giantsummon
                         if (IsCallButton)
                         {
                             player.CallGuardian(ContentList[Selected].Index, SummonSlot);
-                            foreach(TerraGuardian tg in player.GetAllGuardianFollowers)
+                            foreach (TerraGuardian tg in player.GetAllGuardianFollowers)
                             {
                                 if(tg.Active && tg.ID == DisplayGuardian.ID && tg.ModID == DisplayGuardian.ModID)
                                 {
@@ -1310,6 +1310,7 @@ namespace giantsummon
                                 Main.NewText(tg.Name + ": " + GuardianMouseOverAndDialogueInterface.MessageParser(Mes, tg));
                             player.DismissGuardian(player.GetGuardianSlot(ContentList[Selected].Index));
                         }
+                        ContentList[Selected].Summoned = IsCallButton;
                     }
                 }
                 Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
@@ -1352,9 +1353,14 @@ namespace giantsummon
                         if (Main.mouseLeft && Main.mouseLeftRelease)
                         {
                             if (IsMoveout)
+                            {
                                 WorldMod.RemoveGuardianNPCToSpawn(DisplayGuardian.ID, DisplayGuardian.ModID);
+                            }
                             else
+                            {
                                 WorldMod.AllowGuardianNPCToSpawn(DisplayGuardian.ID, DisplayGuardian.ModID);
+                            }
+                            ContentList[Selected].LivingHere = !IsMoveout;
                         }
                     }
                     Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
@@ -1583,11 +1589,20 @@ namespace giantsummon
                         break;
                     case ContentElement.SortTypes.GuardianID:
                         GuardianData gd = player.MyGuardians[ce.Index];
-                        Color color = Selected == index ? Color.Yellow : (ce.LivingHere ? Color.White : Color.Gray);
+                        Color color = Color.White;
+                        if (Selected == index)
+                            color = Color.Yellow;
+                        else if (ce.Summoned)
+                            color = Color.Cyan;
+                        else if (ce.LivingHere)
+                            color = Color.White;
+                        else
+                            color = Color.Gray;
+                        // Selected == index ? Color.Yellow : (ce.LivingHere ? Color.White : Color.Gray);
                         if (Main.mouseX >= ElementPosition.X && Main.mouseX < ElementPosition.X + 118 &&
                             Main.mouseY >= ElementPosition.Y - 18 && Main.mouseY < ElementPosition.Y - 6)
                         {
-                            color = Color.Cyan;
+                            color = Color.LightCyan;
                             if (Main.mouseLeft && Main.mouseLeftRelease)
                             {
                                 ChangeSelectedGuardian(index, player);
@@ -1637,14 +1652,15 @@ namespace giantsummon
         public struct ContentElement
         {
             public int Index;
-            public bool LivingHere;
+            public bool LivingHere, Summoned;
             public SortTypes SortingType;
 
-            public ContentElement(int MyTgID, bool LivingHere)
+            public ContentElement(int MyTgID, bool LivingHere, bool Summoned)
             {
                 Index = MyTgID;
                 this.LivingHere = LivingHere;
                 SortingType = SortTypes.GuardianID;
+                this.Summoned = Summoned;
             }
 
             public ContentElement(char Letter)
@@ -1652,6 +1668,7 @@ namespace giantsummon
                 Index = Letter;
                 SortingType = SortTypes.Letter;
                 LivingHere = false;
+                Summoned = false;
             }
 
             public ContentElement(GuardianBase.GuardianSize size)
@@ -1659,6 +1676,7 @@ namespace giantsummon
                 Index = (int)size;
                 SortingType = SortTypes.Size;
                 LivingHere = false;
+                Summoned = false;
             }
 
             /// <summary>
@@ -1671,6 +1689,7 @@ namespace giantsummon
                 Index = Value;
                 SortingType = (ValueType == 0 ? SortTypes.Weight : SortTypes.Dimension);
                 LivingHere = false;
+                Summoned = false;
             }
 
             public enum SortTypes : byte

@@ -103,3 +103,8 @@ Companions will no longer show fade effects on the Guardian Selection Interface 
 Fixed a bug where Wrath's arms didn't changed animation with the body, when facing the background.
 Fixed a bug with Bounty Quest weapon and accessory rewards being only name.
 	That bug only persists until you re-enter the world.
+Companions AI will no longer try using heavy items, when they can't.
+When companions get hurt, they will have a more cautious AI for 3 seconds.
+Companions now knows that showing their behinds doesn't help revive others.
+Vladimir can now carry allies.
+Companions following you and in idle AI will no longer try going home at night.

@@ -58,6 +58,7 @@ namespace giantsummon.Creatures
             OneHanded2HWeaponWield = true;
             CallUnlockLevel = 0;
             StopMindingAFK = 0;
+            VladimirBase.AddCarryBlacklist(Brutus);
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;

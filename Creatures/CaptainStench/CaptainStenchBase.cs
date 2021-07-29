@@ -29,7 +29,7 @@ namespace giantsummon.Creatures
             Width = 22;
             Height = 66;
             CharacterPositionYDiscount = 22;
-            CompanionSlotWeight = 1.1f;
+            CompanionSlotWeight = 0.9f;
             //DuckingHeight = 62;
             SpriteWidth = 160;
             SpriteHeight = 140;
@@ -141,6 +141,24 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(24, 48, 45);
 
             RightHandPoints.AddFramePoint2x(26, 53, 52);
+
+            //Hat Position
+            HeadVanityPosition.DefaultCoordinate2x = new Point(40, 32);
+            HeadVanityPosition.AddFramePoint2x(18, 40, 32 - 5);
+            HeadVanityPosition.AddFramePoint2x(19, 40, 32 - 5);
+            HeadVanityPosition.AddFramePoint2x(20, 44, 32 - 5);
+            HeadVanityPosition.AddFramePoint2x(21, 40, 32);
+
+            HeadVanityPosition.AddFramePoint2x(26, 43, 36);
+
+            for(int i = 27; i < 43; i++)
+                HeadVanityPosition.AddFramePoint2x(i, 39, 33);
+
+            HeadVanityPosition.AddFramePoint2x(60, 40, 32 - 5);
+            HeadVanityPosition.AddFramePoint2x(61, 40, 32 - 5);
+            HeadVanityPosition.AddFramePoint2x(62, 40, 32 - 5);
+
+            HeadVanityPosition.AddFramePoint2x(75, 46, 38);
 
             SubAttacksSetup();
         }
@@ -267,7 +285,7 @@ namespace giantsummon.Creatures
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<CaptainStench.PhantomDevices.PhantomDeviceTier2>());
                                                 Dialogue.ShowEndDialogueMessage("Not bad! The Phantom Device got improved.\n" +
                                                     "I can improve It some more, if you're up to It.\n" +
-                                                    "I can make use of Phantom Rush if I equip that in one of my accessory slots.", false);
+                                                    "I can make use of Phantom Blitz if I equip that in one of my accessory slots.", false);
                                                 data.PhantomDeviceMiniquestProgress = 2;
                                             });
                                         }
@@ -578,7 +596,7 @@ namespace giantsummon.Creatures
                             Mes = "Diamond power";
                             break;
                     }
-                    GuardianMouseOverAndDialogueInterface.SetDialogue("My Falchion is infused with " + Mes + ".\nWhat should I infuse my weapon with?\nGem will be used upon changing Infusion.");
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("My Saber is infused with " + Mes + ".\nWhat should I infuse my weapon with?\nGem will be used upon changing Infusion.");
                 }
                 for (byte i = 0; i < NumberOfSwords; i++)
                 {
@@ -614,7 +632,7 @@ namespace giantsummon.Creatures
                         case 4:
                             Mes = "Infuse with Emerald";
                             Description = "Emerald: Passive- Gains 50% critical chance on sword attacks additonally critical strikes receive a 3x damage boost(3x damage boost applies to gem power also)\n" +
-                                "Gem Power-Conjures up a slow moving tornado that hits many times in a 3 second duration, each hit is a garunteed critical strike that scales with 25 % of total weapon damage";
+                                "Gem Power-Conjures up a slow moving tornado that hits many times in a 3 second duration, each hit is a garunteed critical strike that scales with 75% of total weapon damage";
                             ItemID = Terraria.ID.ItemID.Emerald;
                             break;
                         case 5:
@@ -634,7 +652,7 @@ namespace giantsummon.Creatures
                     {
                         GuardianMouseOverAndDialogueInterface.AddOption(Mes, delegate (TerraGuardian tg2)
                         {
-                            GuardianMouseOverAndDialogueInterface.SetDialogue(Description + "\n\nShould I infuse my falchion with this gem?");
+                            GuardianMouseOverAndDialogueInterface.SetDialogue(Description + "\n\nShould I infuse my saber with this gem?");
                             GuardianMouseOverAndDialogueInterface.Options.Clear();
                             GuardianMouseOverAndDialogueInterface.AddOption("Yes", delegate (TerraGuardian tg3)
                             {
@@ -664,7 +682,7 @@ namespace giantsummon.Creatures
                 }
                 GuardianMouseOverAndDialogueInterface.AddOption("What does Weapon infusion do?", delegate (TerraGuardian tg2)
                 {
-                    GuardianMouseOverAndDialogueInterface.SetDialogue("I can infuse my Falchion with gemstone powers to cause different effects when I use it.\n" +
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("I can infuse my Saber with gemstone powers to cause different effects when I use it.\n" +
                         "I need to have a gemstone before I can do the infusion.");
                     GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg2);
                 });
@@ -762,14 +780,19 @@ namespace giantsummon.Creatures
             }
             special.WhenSubAttackBegins = delegate (TerraGuardian tg)
             {
-                tg.TrailDelay = 3;
-                tg.TrailLength = 5;
+            };
+
+            special.WhenSubAttackEnds = delegate (TerraGuardian tg)
+            {
+                tg.UpdateStatus = true;
             };
             special.WhenFrameUpdatesScript = delegate (TerraGuardian tg, int Frame, int Time)
             {
                 tg.Velocity = Vector2.Zero;
                 if (Frame >= 4)
                 {
+                    tg.TrailDelay = 2;
+                    tg.TrailLength = 10;
                     tg.ImmuneTime = 30;
                     tg.ImmuneNoBlink = true;
                     //tg.Velocity.X = tg.Direction * 10;
@@ -913,13 +936,14 @@ namespace giantsummon.Creatures
                                 Knockback += 12f;
                                 break;
                             case SapphireFalchion:
-                                Knockback *= 0.11f;
+                                //Knockback *= 0.11f;
                                 break;
                             case EmeraldFalchion:
                                 CriticalRate += 50;
                                 break;
                         }
                     }
+                    bool HitSomething = false;
                     for (int n = 0; n < 200; n++)
                     {
                         if (Main.npc[n].active && !Main.npc[n].friendly && !tg.NpcHasBeenHit(n) && Main.npc[n].getRect().Intersects(AttackHitbox))
@@ -939,6 +963,7 @@ namespace giantsummon.Creatures
                                     float DamageMult = Main.player[tg.OwnerPos].GetModPlayer<PlayerMod>().DamageMod;
                                     NewDamage = (int)(NewDamage * DamageMult);
                                 }
+                                HitSomething = true;
                                 double result = Main.npc[n].StrikeNPC(NewDamage, Knockback, HitDirection, Critical);
                                 if (result > 0)
                                 {
@@ -977,6 +1002,17 @@ namespace giantsummon.Creatures
                             {
 
                             }
+                        }
+                    }
+
+                    if (HitSomething)
+                    {
+                        if(SwordID == SapphireFalchion)
+                        {
+                            tg.ChangeSubAttackCooldown(GPSubAttack, -0.25f);
+                            tg.MP += (int)(2 * tg.ManaHealMult);
+                            if (tg.MP > tg.MMP)
+                                tg.MP = tg.MMP;
                         }
                     }
                 }
@@ -1026,10 +1062,10 @@ namespace giantsummon.Creatures
                             case AmethystFalchion:
                                 {
                                     Vector2 SpawnPos = tg.PositionWithOffset;
-                                    float Scale = (float)tg.Height / 74 * tg.Scale * 1.2f;
+                                    float Scale = (float)tg.Height / 74 * tg.Scale * 1.5f;
                                     SpawnPos.Y -= 39 * Scale; //78
                                     int p = Projectile.NewProjectile(SpawnPos, new Vector2(16f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.AmethystGP>(),
-                                        Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
+                                        (int)(Damage * 1.333f), Knockback, tg.GetSomeoneToSpawnProjectileFor);
                                     Main.PlaySound(2, tg.CenterPosition, 101);
                                     Main.projectile[p].scale = Scale;
                                     Main.projectile[p].netUpdate = true;
@@ -1053,7 +1089,7 @@ namespace giantsummon.Creatures
                                 break;
                             case SapphireFalchion:
                                 {
-                                    Knockback *= 0.11f;
+                                    //Knockback *= 0.11f;
                                     int p = Projectile.NewProjectile(tg.CenterPosition, new Vector2(8f * tg.Direction, 0), Terraria.ModLoader.ModContent.ProjectileType<Projectiles.SapphireGP>(),
                                         Damage, Knockback, tg.GetSomeoneToSpawnProjectileFor);
                                     Main.projectile[p].scale = tg.Scale;
@@ -1225,7 +1261,7 @@ namespace giantsummon.Creatures
                 if (tg.SelectedItem > -1)
                 {
                     float Dps = (float)tg.Inventory[tg.SelectedItem].useAnimation / (float)tg.Inventory[tg.SelectedItem].useTime;
-                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * Dps * 0.45f);
+                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * Dps * 0.5f);
                 }
                 return (int)(Damage * tg.RangedDamageMultiplier);
             };
@@ -1335,53 +1371,70 @@ namespace giantsummon.Creatures
             DefaultBehavior = false;
             float WidthValue = (TargetWidth + Owner.Width) * 0.5f;
             bool HasManaForBlaster = Owner.MP >= 2;
-            switch (tactic)
+            bool HasJugglingPanic = Owner.Velocity.Y != 0 && Owner.HasCooldown(GuardianCooldownManager.CooldownType.HurtPanic);
+            if (HasJugglingPanic)
             {
-                case CombatTactic.Charge:
-                    if (Distance >= 52 + WidthValue)
-                    {
-                        Approach = true;
-                        Retreat = false;
-                    }
-                    else if(Distance < 38 + WidthValue)
-                    {
-                        Approach = false;
-                        Retreat = true;
-                    }
-                    break;
-                case CombatTactic.Assist:
-                    if (Distance < 52 + WidthValue)
-                    {
-                        Retreat = true;
-                        Approach = false;
-                    }
-                    else
-                    {
-                        Approach = true;
-                        Retreat = false;
-                    }
-                    break;
-                case CombatTactic.Snipe:
-                    if(Distance < 280)
-                    {
-                        Retreat = true;
-                        Approach = false;
-                    }
-                    else if (Distance > 320)
-                    {
-                        Retreat = false;
-                        Approach = true;
-                    }
-                    break;
+                if (Distance < 60 + WidthValue)
+                {
+                    Retreat = true;
+                    Approach = false;
+                }
+                else if (Distance > 65 + WidthValue)
+                {
+                    Approach = true;
+                    Retreat = false;
+                }
+            }
+            else
+            {
+                switch (tactic)
+                {
+                    case CombatTactic.Charge:
+                        if (Distance >= 52 + WidthValue)
+                        {
+                            Approach = true;
+                            Retreat = false;
+                        }
+                        else if (Distance < 38 + WidthValue)
+                        {
+                            Approach = false;
+                            Retreat = true;
+                        }
+                        break;
+                    case CombatTactic.Assist:
+                        if (Distance < 52 + WidthValue)
+                        {
+                            Retreat = true;
+                            Approach = false;
+                        }
+                        else
+                        {
+                            Approach = true;
+                            Retreat = false;
+                        }
+                        break;
+                    case CombatTactic.Snipe:
+                        if (Distance < 280)
+                        {
+                            Retreat = true;
+                            Approach = false;
+                        }
+                        else if (Distance > 320)
+                        {
+                            Retreat = false;
+                            Approach = true;
+                        }
+                        break;
+                }
             }
             CaptainStenchData data = (CaptainStenchData)Owner.Data;
             //if (DistanceYLower <= Owner.Height && (Owner.Velocity.Y == 0 || Owner.JumpHeight > 0))
             //    Jump = true;
-            if (data.DeviceID > 0 && !Owner.SubAttackInCooldown(3) && Distance < 40 * 6 + WidthValue && Owner.Position.Y > TargetPosition.Y && Owner.Position.Y - Owner.Height < TargetPosition.Y + TargetHeight)
+            if (data.DeviceID > 0 && !Owner.WaitingForManaRecharge && Owner.CanUseSubAttack(3) && Distance < 40 * 6 + WidthValue && Owner.Position.Y > TargetPosition.Y && Owner.Position.Y - Owner.Height < TargetPosition.Y + TargetHeight)
             {
                 ID = 3;
             }
-            else if (!Owner.SubAttackInCooldown(1) && Distance < 62 + WidthValue && DistanceYTargetBottom >= -98 && DistanceYTargetTop >= -18)
+            else if (Owner.CanUseSubAttack(1) && Distance < 62 + WidthValue && DistanceYTargetBottom >= -98 && DistanceYTargetTop >= -18)
             {
                 ID = 1;
             }
@@ -1389,10 +1442,12 @@ namespace giantsummon.Creatures
             {
                 ID = 0;
             }
-            else
+            else if (!Owner.WaitingForManaRecharge)
             {
                 ID = 2;
             }
+            if (Owner.MP < 2 * Owner.ManaCostMult)
+                Owner.WaitingForManaRecharge = true;
             //if(Owner.Velocity.Y == 0)Main.NewText("DistanceX: "+Distance+" DistanceY: " + DistanceYTargetTop + "~" + DistanceYTargetBottom);
             return ID;
         }
@@ -1714,11 +1769,11 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("Before coming to this planet i was a space pirate captain, going around taking things from other worlds.");
+            Mes.Add("Before coming to this planet i was a space pirate, going around taking things from other worlds.");
             Mes.Add("Unfortunately I am the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures I will find.");
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
             if(data.SwordID == 0)
-                Mes.Add("My plasma falchion seems to have a empty socket for a gemstone to fit in wonder what it would do?");
+                Mes.Add("My plasma saber seems to have a empty socket for a gemstone to fit in wonder what it would do?");
             Mes.Add("I wonder if amber can be used as a infusion?......Probably not since it contains fossilized creatures, I will need to test it in the future ");
             Mes.Add("Shredding threw enemies gets me excited knowing they will drop loot");
             Mes.Add("I guess im retired from space travel as my only family is dead now. This world will be my last plunder land, I'll be sure to make it enjoyable.");
@@ -1822,6 +1877,10 @@ namespace giantsummon.Creatures
                 case MessageIDs.FoundDetonatorTile:
                 case MessageIDs.FoundMineTile:
                     return "Picking up danger signals in this area look out for traps.";
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "I feel lightheaded....";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "A couple burns ain't stoping me from loot!";
             }
             return base.GetSpecialMessage(MessageID);
         }

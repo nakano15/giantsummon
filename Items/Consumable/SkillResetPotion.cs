@@ -17,7 +17,7 @@ namespace giantsummon.Items.Consumable
             guardian.Data.ResetSkillsProgress();
         }
 
-        public override bool GuardianCanUse(TerraGuardian guardian)
+        public override bool GuardianCanUseItem(TerraGuardian guardian)
         {
             return true;
         }

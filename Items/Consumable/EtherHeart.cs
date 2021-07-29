@@ -12,7 +12,7 @@ namespace giantsummon.Items.Consumable
 			Tooltip.SetDefault("Permanently increases the Guardian Max Health by 20.");  //The (English) text shown below your weapon's name
 		}
 
-        public override bool GuardianCanUse(TerraGuardian guardian)
+        public override bool GuardianCanUseItem(TerraGuardian guardian)
         {
             return guardian.Base.IsTerraGuardian;
         }

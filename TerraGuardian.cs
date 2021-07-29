@@ -366,7 +366,7 @@ namespace giantsummon
         private byte _SubAttack = 0;
         public int SubAttackID { get { return _SubAttack - 1; } }
         public int SubAttackTime = 0, SubAttackFrame = 0, SubAttackDamage = 0;
-        private Dictionary<byte, int> SubAttackCooldown = new Dictionary<byte, int>();
+        private Dictionary<byte, float> SubAttackCooldown = new Dictionary<byte, float>();
         public float SubAttackSpeed = 1f;
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
@@ -5190,6 +5190,7 @@ namespace giantsummon
                 }
                 if (WaitingForManaRecharge && MP >= MMP)
                     WaitingForManaRecharge = false;
+                bool HasHurtPanic = HasCooldown(GuardianCooldownManager.CooldownType.HurtPanic);
                 bool NearDeath = HasFlag(GuardianFlags.VergeOfDeathAlert);
                 if(!NearDeath)
                 {
@@ -5452,6 +5453,11 @@ namespace giantsummon
                                     {
                                         ApproachDistance = MaxAttackRange;
                                     }*/
+                                    if (HasHurtPanic)
+                                    {
+                                        ApproachDistance += 18;
+                                        RetreatDistance += 12;
+                                    }
                                     if (DistanceX <= ApproachDistance + 8 && InRangeY && !NearDeath)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
                                     {
                                         GoMelee = true;
@@ -5489,12 +5495,15 @@ namespace giantsummon
                                         float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
                                         float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
                                             RetreatDistance = TargetWidth + Width + AssistDistance + DistanceDiscount - 24;
-                                        if (MaxAttackRange > -1)
+                                        if (HasHurtPanic)
                                         {
-                                            ApproachDistance = MaxAttackRange + TargetWidth;
-                                            RetreatDistance = MaxAttackRange - 24;
-                                            if (RetreatDistance < Width * 0.5f + 8)
-                                                RetreatDistance = Width * 0.5f + 8;
+                                            ApproachDistance += 42;
+                                            RetreatDistance += 30;
+                                        }
+                                        if (HasHurtPanic)
+                                        {
+                                            ApproachDistance += Math.Abs(TargetVelocity.X * 2);
+                                            RetreatDistance += Math.Abs(TargetVelocity.X * 2);
                                         }
                                         if (DistanceX >= ApproachDistance)
                                             Approach = true;
@@ -5521,6 +5530,11 @@ namespace giantsummon
                                         RetreatDistance = MaxAttackRange - 50;
                                         if (RetreatDistance < Width * 0.5f + 8)
                                             RetreatDistance = Width * 0.5f + 8;
+                                    }
+                                    if (HasHurtPanic)
+                                    {
+                                        ApproachDistance += Math.Abs(TargetVelocity.X * 2);
+                                        RetreatDistance += Math.Abs(TargetVelocity.X * 2);
                                     }
                                     if (DistanceX >= ApproachDistance)
                                         Approach = true;
@@ -5561,7 +5575,11 @@ namespace giantsummon
                         float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
                             DistanceAbs = Math.Abs((Position.X + Velocity.X * 0.5f) - (TargetPosition.X + TargetWidth * 0.5f));
                         Approach = Retreat = false;
-                        if (DistanceAbs < (Width + TargetWidth) * 0.5f + 8 || (NearDeath && DistanceAbs < (Width + TargetWidth) * 0.5f + 64))
+                        if (HurtPanic)
+                        {
+                            AttackRange += Math.Abs(TargetVelocity.X * 2);
+                        }
+                        if ((NearDeath && DistanceAbs < (Width + TargetWidth) * 0.5f + 64) || DistanceAbs < (Width + TargetWidth) * 0.5f + 8)
                             Retreat = true;
                         else if (DistanceAbs > AttackRange)
                             Approach = true;
@@ -5787,7 +5805,7 @@ namespace giantsummon
                     }
                 }
                 Base.GuardianBehaviorModScript(this);
-                if (SittingOnPlayerMount || (PlayerMounted && ReverseMount && !GuardianHasControlWhenMounted))
+                if (SittingOnPlayerMount || (PlayerMounted && ReverseMount && !GuardianHasControlWhenMounted) || HasFlag(GuardianFlags.DisableMovement))
                 {
                     MoveLeft = MoveRight = Jump = MoveDown = false;
                 }
@@ -7356,6 +7374,8 @@ namespace giantsummon
             if (IsTownNpc)
             {
                 bool MoveIndoors = Main.raining || Main.eclipse || Main.snowMoon || Main.pumpkinMoon;
+                if (OwnerPos == -1)
+                    MoveIndoors = false;
                 if (!MoveIndoors)
                 {
                     if (!Base.IsNocturnal)
@@ -11152,6 +11172,7 @@ namespace giantsummon
             int FinalDamage = 0;
             if (!EvadedAttack)
             {
+                AddCooldown(GuardianCooldownManager.CooldownType.HurtPanic, 3 * 60);
                 float CurrentDefenseRate = DefenseRate;
                 if (HP < MHP * 0.5f && HasFlag(GuardianFlags.FrozenTurtleShell))
                     CurrentDefenseRate += 0.25f;
@@ -11787,6 +11808,8 @@ namespace giantsummon
 
         public bool UseMana(int value)
         {
+            if (value == 0)
+                return true;
             bool Used = false;
             bool FirstTry = true;
         retry:
@@ -11953,7 +11976,8 @@ namespace giantsummon
                     {
                         AllowItemUsage = false;
                     }
-                    else if (Inventory[SelectedItem].modItem != null && Inventory[SelectedItem].modItem is Items.GuardianItemPrefab && !((Items.GuardianItemPrefab)Inventory[SelectedItem].modItem).GuardianCanUse(this))
+                    else if (Inventory[SelectedItem].modItem != null && Inventory[SelectedItem].modItem is Items.GuardianItemPrefab && 
+                        !((Items.GuardianItemPrefab)Inventory[SelectedItem].modItem).GuardianCanUse(this))
                         AllowItemUsage = false;
                     else if (Inventory[SelectedItem].mana > 0)
                     {
@@ -14206,6 +14230,14 @@ namespace giantsummon
             gsa.WhenSubAttackBegins(this);
         }
 
+        public bool CanUseSubAttack(byte ID)
+        {
+            GuardianBase b = Base;
+            if (ID < 0 || ID >= b.SpecialAttackList.Count)
+                return false;
+            return MP >= (int)(b.SpecialAttackList[ID].ManaCost * ManaCostMult) && !SubAttackInCooldown(ID);
+        }
+
         public bool SubAttackInCooldown(byte ID)
         {
             return SubAttackCooldown.ContainsKey((byte)(ID + 1));
@@ -14213,9 +14245,17 @@ namespace giantsummon
 
         public void ResetSubAttackCooldown(byte ID)
         {
-            if(SubAttackInCooldown(ID))
+            if (SubAttackInCooldown(ID))
             {
                 SubAttackCooldown.Remove((byte)(ID + 1));
+            }
+        }
+
+        public void ChangeSubAttackCooldown(byte ID, float Value)
+        {
+            if (SubAttackInCooldown(ID))
+            {
+                SubAttackCooldown[(byte)(ID + 1)] += Value;
             }
         }
 
@@ -14278,6 +14318,7 @@ namespace giantsummon
             SubAttackFrame = CurrentFrame;
             if (SubAttackTime >= StackCounter)
             {
+                subattack.WhenSubAttackEnds(this);
                 if(subattack.Cooldown > 0)
                 {
                     SubAttackCooldown.Add(_SubAttack, subattack.Cooldown);
@@ -16685,11 +16726,8 @@ namespace giantsummon
 
             foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
             {
-                Main.NewText("Target Type: " + gdm.DrawTargetType.ToString() + "  Target ID: " + gdm.DrawTargetID + "  Other Target ID: " + gdm.GuardianWhoAmID);
-                Main.NewText(" : " + (gdm.DrawTargetType == TargetTypes.Guardian) + "   : " + (gdm.DrawTargetID == WhoAmID) + "  Other Target ID: " + MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID));
                 if (gdm.DrawTargetType == TargetTypes.Guardian && gdm.DrawTargetID == WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
                 {
-                    Main.NewText("Bam!");
                     DrawBehind = new List<GuardianDrawData>();
                     DrawFront = new List<GuardianDrawData>();
                     MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();

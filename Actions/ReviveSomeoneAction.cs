@@ -285,7 +285,8 @@ namespace giantsummon.Actions
                 bool IsStopped = guardian.Velocity.X == 0 || guardian.HasFlag(GuardianFlags.WindPushed);
                 if (guardian.Velocity.X == 0 || guardian.HasFlag(GuardianFlags.WindPushed))
                 {
-                    if (guardian.BodyAnimationFrame == guardian.Base.StandingFrame)
+                    if (guardian.BodyAnimationFrame == guardian.Base.StandingFrame ||
+                        guardian.BodyAnimationFrame == guardian.Base.BackwardStanding)
                     {
                         int Animation = guardian.Base.StandingFrame;
                         int ArmAnimation = -1;

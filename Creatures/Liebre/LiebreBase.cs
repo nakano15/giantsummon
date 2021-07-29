@@ -48,6 +48,7 @@ namespace giantsummon.Creatures
             SleepsAtBed = false;
             DontUseHeavyWeapons = false;
             SetTerraGuardian();
+            VladimirBase.AddCarryBlacklist(Liebre);
 
             //Animation Frames
             StandingFrame = 0;

@@ -36,6 +36,7 @@ namespace giantsummon.Creatures.Vladimir
                     pm.Guardian.AddBuff(ModContent.BuffType<Buffs.WellBeing>(), 3600 * 30 * Stack);
                 }
             }
+            VladimirBase.VladimirData data = (VladimirBase.VladimirData)guardian.Data;
             bool End = Target.controlJump;
             //if (PlayerMod.PlayerHasGuardianSummoned(player, guardian.ID, guardian.ModID))
             //    End = true;
@@ -65,6 +66,8 @@ namespace giantsummon.Creatures.Vladimir
                     pm.Guardian.Position = guardian.GetGuardianShoulderPosition;
                     pm.Guardian.Position.Y += guardian.Height * 0.5f;
                     pm.Guardian.Velocity.Y = -pm.Guardian.Mass;
+                    if (data.CarrySomeone)
+                        pm.Guardian.Position.X -= 6 * guardian.Direction;
                     pm.Guardian.FallStart = (int)pm.Guardian.Position.Y / 16;
                     if (pm.Guardian.ItemAnimationTime == 0 && !pm.Guardian.MoveLeft && !pm.Guardian.MoveRight)
                         pm.Guardian.FaceDirection((guardian.Direction * (FaceBear ? -1 : 1)) == -1);
@@ -85,6 +88,8 @@ namespace giantsummon.Creatures.Vladimir
                     Target.Center = guardian.GetGuardianShoulderPosition;
                     Target.velocity.Y = -Player.defaultGravity;
                     Target.fallStart = (int)Target.Center.Y / 16;
+                    if (data.CarrySomeone)
+                        Target.position.X -= 6 * guardian.Direction;
                     if (Target.itemAnimation == 0 && !Target.controlLeft && !Target.controlRight)
                         Target.ChangeDir(guardian.Direction * (FaceBear ? -1 : 1));
                     Target.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);

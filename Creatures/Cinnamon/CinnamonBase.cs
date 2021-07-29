@@ -13,7 +13,7 @@ namespace giantsummon.Creatures
         {
             Name = "Cinnamon";
             Description = "";
-            Size = GuardianSize.Large;
+            Size = GuardianSize.Medium;
             Width = 24;
             Height = 68;
             DuckingHeight = 60;

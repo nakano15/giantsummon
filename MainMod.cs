@@ -40,7 +40,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 87, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1200,6 +1200,7 @@ namespace giantsummon
                         New.Add("Soul Opacity: " + data.SoulOpacity);
                         New.Add("Soul Attached? " + data.SoulAttached);
                     }
+                    New.Add("Mana Regen Time: " + g.ManaRegenTime);
                     /*New.Add(g.Name + "'s animation frames:");
                     New.Add("  Body Arm:" + g.BodyAnimationFrame);
                     New.Add("  Left Arm:" + g.LeftArmAnimationFrame);
@@ -2765,7 +2766,7 @@ namespace giantsummon
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
             AddNewGroup(GuardianBase.TerraGuardianCaitSithGroupID, "Cait Sith Guardian", 1f / 0.272f, true, true);
-            AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "G. Dog Guardian", 4.6667f, true, true);
+            AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "Giant Dog Guardian", 4.6667f, true, true);
             GetInitialCompanionsList();
             CommonRequestsDB.PopulateCommonRequestsDB();
             //

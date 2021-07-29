@@ -50,7 +50,8 @@ namespace giantsummon
             SpottingCooldown,
             TownNpcInfoCheckingCooldown,
             BuffCommentCooldown,
-            TileCommentCooldown
+            TileCommentCooldown,
+            HurtPanic
         }
     }
 }

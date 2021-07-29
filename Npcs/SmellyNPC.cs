@@ -165,7 +165,15 @@ namespace giantsummon.Npcs
         {
             if (FirstFrame)
             {
-                Main.NewText(Main.player[Main.myPlayer].name + " noticed someone " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of their position.");
+                if (Main.rand.NextFloat() < 0.99f)
+                {
+                    Main.NewText(Main.player[Main.myPlayer].name + " noticed a cloaked figure " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of their position.");
+                }
+                else
+                {
+                    Main.NewText("A cloaked figure to the "+ GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " has came to skunk you.");
+                }
+
                 FirstFrame = false;
             }
             bool SomeoneTalkingToMe = false;

@@ -31,7 +31,7 @@ namespace giantsummon.Items.Consumable
             item.rare = 2;
         }
 
-        public override bool GuardianCanUse(TerraGuardian guardian)
+        public override bool GuardianCanUseItem(TerraGuardian guardian)
         {
             return !guardian.HasBuff(ModContent.BuffType<Buffs.FirstAidCooldown>()) && guardian.Data.Injury > 0;
         }

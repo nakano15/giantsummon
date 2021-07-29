@@ -86,6 +86,8 @@ namespace giantsummon.Projectiles
         {
             if (Detonated)
                 return;
+            projectile.scale *= 4;
+            projectile.damage *= 2;
             this.Detonated = true;
             projectile.velocity = Vector2.Zero;
             Frame = 9;
@@ -93,7 +95,8 @@ namespace giantsummon.Projectiles
             if (ProjMod.IsGuardianProjectile(projectile.whoAmI))
             {
                 TerraGuardian tg = ProjMod.GuardianProj[projectile.whoAmI];
-                Rectangle ExplosionRange = new Rectangle((int)projectile.position.X - 48, (int)projectile.position.Y - 48, 96, 96);
+                Rectangle ExplosionRange = new Rectangle((int)projectile.position.X - (int)(48 * projectile.scale), (int)projectile.position.Y - (int)(48 * projectile.scale)
+                    , (int)(96 * projectile.scale), (int)(96 * projectile.scale));
                 for (int t = 0; t < 255; t++)
                 {
                     if(Main.player[t].active && tg.IsPlayerHostile(Main.player[t]) && Main.player[t].getRect().Intersects(ExplosionRange))

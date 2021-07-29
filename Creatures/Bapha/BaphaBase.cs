@@ -51,6 +51,7 @@ namespace giantsummon.Creatures
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
+            VladimirBase.AddCarryBlacklist(Bapha);
 
             StandingFrame = 0;
             WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };

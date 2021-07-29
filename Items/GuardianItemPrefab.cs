@@ -74,7 +74,14 @@ namespace giantsummon.Items
 
         }
 
-        public virtual bool GuardianCanUse(TerraGuardian guardian)
+        public bool GuardianCanUse(TerraGuardian guardian)
+        {
+            if (Heavy && guardian.Base.DontUseHeavyWeapons)
+                return false;
+            return GuardianCanUseItem(guardian);
+        }
+
+        public virtual bool GuardianCanUseItem(TerraGuardian guardian)
         {
             return true;
         }
@@ -156,6 +163,10 @@ namespace giantsummon.Items
             else
             {
                 tooltips.Insert(1, new TooltipLine(this.mod, "GuardianItemWarning", "The status will only be shown if you have a Guardian summoned."));
+            }
+            if (Heavy)
+            {
+                tooltips.Insert(1, new TooltipLine(this.mod, "GuardianHeavyItemInfo", "Heavy Item"));
             }
             TooltipLine tl = new TooltipLine(this.mod, "GuardianExclusiveWarning", "Terra Guardian Item");
             tooltips.Insert(1, tl);

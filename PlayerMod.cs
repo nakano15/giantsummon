@@ -141,6 +141,7 @@ namespace giantsummon
             return Allowance;
         }
         public int MyDrawOrderID = 0;
+        public Vector2 MountedOffset = Vector2.Zero;
 
         public void FriendshipLevelNotification()
         {
@@ -1715,7 +1716,7 @@ namespace giantsummon
                         else
                         {
                             player.fullRotation = 0;
-                            player.position = guardian.GetGuardianShoulderPosition;
+                            player.position = guardian.GetGuardianShoulderPosition + MountedOffset;
                             player.position.X -= player.width * 0.5f;
                             player.position.Y -= (player.height * 0.5f) + 8; //Bugs out when gravity is reverse
                             player.gfxOffY = 0;
@@ -1767,6 +1768,7 @@ namespace giantsummon
                 DamageMod = 1f - DamageMod;
                 BuddiesModeEffective = 1f / GuardianSlot;
             }
+            MountedOffset = Vector2.Zero;
             if (!FoundFirstTitanGuardian)
                 TitanGuardian = 255;
             CheckIfLeaderHasBeenRemoved();
@@ -2711,16 +2713,40 @@ namespace giantsummon
                 bool HasDrawMoment = false;
                 foreach(GuardianDrawMoment gdm in MainMod.DrawMoment)
                 {
-                    if(gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.GuardianWhoAmID == g.WhoAmID)
+                    if(gdm.GuardianWhoAmID == g.WhoAmID)
                     {
                         HasDrawMoment = true;
                         break;
                     }
                 }
-                if (HasDrawMoment)
+                if (HasDrawMoment && !g.PlayerMounted)
                     continue;
                 List<Terraria.DataStructures.DrawData> TrailData = g.GetTrailsDataAsDrawData();
                 g.DrawDataCreation();
+                if (!HasDrawMoment)
+                {
+                    {
+                        List<GuardianDrawData> drawbehind = TerraGuardian.DrawBehind, drawfront = TerraGuardian.DrawFront;
+                        foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
+                        {
+                            if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.DrawTargetID == g.WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
+                            {
+                                TerraGuardian.DrawBehind = new List<GuardianDrawData>();
+                                TerraGuardian.DrawFront = new List<GuardianDrawData>();
+                                MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
+                                drawbehind.InsertRange(0, TerraGuardian.DrawBehind);
+                                drawfront.AddRange(TerraGuardian.DrawFront);
+                            }
+                        }
+                        TerraGuardian.DrawBehind = drawbehind;
+                        TerraGuardian.DrawFront = drawfront;
+                    }
+                }
+                else
+                {
+                    TerraGuardian.DrawBehind.Clear();
+                }
+                //Add draw moment checking.
                 int BackStack = 0, FurnitureStack = 0;
                 if (g.PlayerControl || (MainMod.ShowBackwardAnimations && KnockedOut && Counter > 0 && g.Base.BackwardRevive > -1))
                 {
