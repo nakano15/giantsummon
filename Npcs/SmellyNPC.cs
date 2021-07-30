@@ -21,6 +21,12 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            npc.townNPC = false;
+        }
+
         public bool PlayerHasMaterials()
         {
             return Main.player[Main.myPlayer].CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount ||

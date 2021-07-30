@@ -1894,7 +1894,7 @@ namespace giantsummon
             {
                 ZoneDungeon = Main.wallDungeon[(int)Main.tile[CenterTilePoint.X, CenterTilePoint.Y].wall];
             }
-            Tile tile = Framing.GetTileSafely(CenterTilePoint);
+            Tile tile = MainMod.GetTile(CenterTilePoint);
             if (tile != null)
             {
                 BehindWall = tile.wall > 0;
@@ -2251,6 +2251,28 @@ namespace giantsummon
             if (!CombatTypeInfo.ContainsKey(AttackTypeName))
                 CombatTypeInfo.Add(AttackTypeName, new GuardianAttackTypeInfo());
             return CombatTypeInfo[AttackTypeName];
+        }
+
+        public static bool IsBlacklisted(TerraGuardian guardian)
+        {
+            return IsBlacklisted(guardian.MyID);
+        }
+
+        public static bool IsBlacklisted(GuardianData data)
+        {
+            return IsBlacklisted(data.MyID);
+        }
+
+        public static bool IsBlacklisted(GuardianID gid)
+        {
+            return MainMod.CompanionBlacklist.Any(x => x.IsSameID(gid));
+        }
+
+        public static bool IsBlacklisted(int id, string modid = "")
+        {
+            if (modid == "")
+                modid = MainMod.mod.Name;
+            return MainMod.CompanionBlacklist.Any(x => x.IsSameID(id, modid));
         }
 
         private static bool LoadedWorldRegion = true;
@@ -2865,7 +2887,7 @@ namespace giantsummon
             {
                 for (int y = cy - YDistancing; y <= cy + YDistancing; y++)
                 {
-                    Tile tile = Framing.GetTileSafely(x, y);
+                    Tile tile = MainMod.GetTile(x, y);
                     if (tile.liquid > 200)
                     {
                         switch (tile.liquid)
@@ -3458,7 +3480,7 @@ namespace giantsummon
                             float Length = new Vector2(cx - x, cy - y).Length();
                             if (Length < range && x > 0 && x < Main.maxTilesX - 1 && y > 0 && y < Main.maxTilesY - 1)
                             {
-                                Tile tile = Framing.GetTileSafely(x, y);
+                                Tile tile = MainMod.GetTile(x, y);
                                 if (tile != null && tile.active())
                                 {
                                     bool SpelunkerOre = false;
@@ -4607,7 +4629,7 @@ namespace giantsummon
             List<Node> CurNodes = new List<Node>(), NextNodes = new List<Node>();
             while (true)
             {
-                Tile floortile = Framing.GetTileSafely(StartX, StartY + 1);
+                Tile floortile = MainMod.GetTile(StartX, StartY + 1);
                 if (!floortile.active() || !Main.tileSolid[floortile.type])
                 {
                     StartY++;
@@ -4642,7 +4664,7 @@ namespace giantsummon
                         case Node.StepDirection.Left:
                             if (tx > Main.leftWorld)
                             {
-                                Tile floortile = Framing.GetTileSafely(tx, ty + 1);
+                                Tile floortile = MainMod.GetTile(tx, ty + 1);
                                 if (floortile.active() && floortile.type == Terraria.ID.TileID.Platforms) //Check for stairs
                                 {
                                     Node newnode = new Node((ushort)(tx - 1), ty, (byte)(Step + 1), Node.StepDirection.Left);
@@ -4652,7 +4674,7 @@ namespace giantsummon
                                         if (i == -1 && tx <= Main.leftWorld)
                                             continue;
                                         ushort ntx = (ushort)(i + tx), nty = (ushort)(ty);
-                                        Tile othertile = Framing.GetTileSafely(ntx, nty);
+                                        Tile othertile = MainMod.GetTile(ntx, nty);
                                         if (othertile.active() && floortile.type == Terraria.ID.TileID.Platforms)
                                         {
                                             newnode = new Node(tx, (ushort)(ty - 1), (byte)(Step + 1), (i == -1 ? Node.StepDirection.Left : Node.StepDirection.Right));
@@ -4666,7 +4688,7 @@ namespace giantsummon
                                     for (int y = 0; y < 8; y++)
                                     {
                                         int nty = ty - (y + 1);
-                                        Tile tile = Framing.GetTileSafely(tx, nty);
+                                        Tile tile = MainMod.GetTile(tx, nty);
                                         if (tile.active() && tile.type == Terraria.ID.TileID.Platforms)
                                         {
                                             Node newnode = new Node(tx, (ushort)(nty - 1), (byte)(Step + 1), Node.StepDirection.Up);
@@ -4709,7 +4731,7 @@ namespace giantsummon
                         case Node.StepDirection.Right:
                             if (tx < Main.rightWorld)
                             {
-                                Tile floortile = Framing.GetTileSafely(tx, ty + 1);
+                                Tile floortile = MainMod.GetTile(tx, ty + 1);
                                 if (floortile.active() && floortile.type == Terraria.ID.TileID.Platforms) //Check for stairs
                                 {
                                     Node newnode = new Node((ushort)(tx + 1), ty, (byte)(Step + 1), Node.StepDirection.Right);
@@ -4719,7 +4741,7 @@ namespace giantsummon
                                         if (i == -1 && tx >= Main.rightWorld)
                                             continue;
                                         ushort ntx = (ushort)(i + tx), nty = (ushort)(ty);
-                                        Tile othertile = Framing.GetTileSafely(ntx, nty);
+                                        Tile othertile = MainMod.GetTile(ntx, nty);
                                         if (othertile.active() && floortile.type == Terraria.ID.TileID.Platforms)
                                         {
                                             newnode = new Node(tx, (ushort)(ty - 1), (byte)(Step + 1), (i == -1 ? Node.StepDirection.Left : Node.StepDirection.Right));
@@ -4733,7 +4755,7 @@ namespace giantsummon
                                     for (int y = 0; y < 8; y++)
                                     {
                                         int nty = ty - (y + 1);
-                                        Tile tile = Framing.GetTileSafely(tx, nty);
+                                        Tile tile = MainMod.GetTile(tx, nty);
                                         if (tile.active() && tile.type == Terraria.ID.TileID.Platforms)
                                         {
                                             Node newnode = new Node(tx, (ushort)(nty - 1), (byte)(Step + 1), Node.StepDirection.Up);
@@ -4778,7 +4800,7 @@ namespace giantsummon
                             {
                                 for (int x = -1; x < 2; x += 2)
                                 {
-                                    Tile floorTile = Framing.GetTileSafely(tx + x, ty + 1);
+                                    Tile floorTile = MainMod.GetTile(tx + x, ty + 1);
                                     if (floorTile.active() && MainMod.IsSolidTile(tx + x, ty + 1) && floorTile.type != Terraria.ID.TileID.Platforms)
                                     {
                                         Node newnode = new Node((ushort)(tx + x), ty, (byte)(Step + 1), (x == -1 ? Node.StepDirection.Left : Node.StepDirection.Right));
@@ -4790,14 +4812,14 @@ namespace giantsummon
                         case Node.StepDirection.Down:
                             if (ty < Main.bottomWorld)
                             {
-                                Tile floorTile = Framing.GetTileSafely(tx, ty + 1);
+                                Tile floorTile = MainMod.GetTile(tx, ty + 1);
                                 if (floorTile.type != Terraria.ID.TileID.Platforms)
                                     break;
                                 for (int y = 2; y < 9; y++)
                                 {
                                     if (ty + y >= Main.bottomWorld)
                                         break;
-                                    floorTile = Framing.GetTileSafely(tx, ty + y);
+                                    floorTile = MainMod.GetTile(tx, ty + y);
                                     if (floorTile.active() && Main.tileSolid[floorTile.type])
                                     {
                                         Node newnode = new Node(tx, ty, (byte)(Step + 1), Node.StepDirection.Left);
@@ -4828,7 +4850,7 @@ namespace giantsummon
                 bool HasSolidGround = false, HasSolidTile = false;
                 for (int x = -1; x <= 0; x++)
                 {
-                    Tile tile = Framing.GetTileSafely(X + x, Y);
+                    Tile tile = MainMod.GetTile(X + x, Y);
                     if (tile == null)
                         return false;
                     if (x == 0 && PathFinder.CheckForSolidBlocks(X + x, Y))
@@ -5924,7 +5946,7 @@ namespace giantsummon
                         {
                             int TileX = (x + CheckX) * Direction + CenterX,
                                 TileY = CenterY + y;
-                            Tile tile = Framing.GetTileSafely(TileX, TileY);
+                            Tile tile = MainMod.GetTile(TileX, TileY);
                             if (tile != null)
                             {
                                 if (tile.lava() || MainMod.IsDangerousTile(TileX, TileY, FireBlockProtection))
@@ -6289,7 +6311,7 @@ namespace giantsummon
                 {
                     for(int y = 0; y < 3; y++)
                     {
-                        Tile tile = Framing.GetTileSafely(MyX + x * CheckDirection, MyY + y);
+                        Tile tile = MainMod.GetTile(MyX + x * CheckDirection, MyY + y);
                         if (tile.active() && Main.tileSolid[tile.type])
                         {
                             //SaySomething("*No jumping needed.*");
@@ -6306,10 +6328,10 @@ namespace giantsummon
                 {
                     for (int y = uy; y < ly; y++)
                     {
-                        Tile tile = Framing.GetTileSafely(MyX + X * CheckDirection, y);
+                        Tile tile = MainMod.GetTile(MyX + X * CheckDirection, y);
                         if (tile.active() && Main.tileSolid[tile.type] && !Terraria.ID.TileID.Sets.Platforms[tile.type])
                         {
-                            Tile uppertile = Framing.GetTileSafely(MyX + X * CheckDirection, y - 1);
+                            Tile uppertile = MainMod.GetTile(MyX + X * CheckDirection, y - 1);
                             if (!uppertile.active() || !Main.tileSolid[uppertile.type])
                             {
                                 //Jump here!
@@ -6420,7 +6442,7 @@ namespace giantsummon
                     int TileX = FeetX + x, TileY = FeetY - y;
                     if (TileY >= 0)
                     {
-                        Tile tile = Framing.GetTileSafely(TileX, TileY);
+                        Tile tile = MainMod.GetTile(TileX, TileY);
                         if (tile.active())
                         {
                             if (tile.type == Terraria.ID.TileID.Platforms)
@@ -6452,7 +6474,7 @@ namespace giantsummon
                         int TileX = FeetX + x, TileY = FeetY + y;
                         if (TileY >= 0)
                         {
-                            Tile tile = Framing.GetTileSafely(TileX, TileY);
+                            Tile tile = MainMod.GetTile(TileX, TileY);
                             if (tile.active() && Main.tileSolid[tile.type])
                             {
                                 if (tile.type == Terraria.ID.TileID.Platforms)
@@ -6490,7 +6512,7 @@ namespace giantsummon
                 int TileY = FeetY + y;
                 if (TileY >= 0 && y > 1)
                 {
-                    Tile tile = Framing.GetTileSafely(FeetX, TileY);
+                    Tile tile = MainMod.GetTile(FeetX, TileY);
                     if (tile.active() && (Main.tileSolidTop[tile.type] || Main.tileSolid[tile.type]))
                     {
                         return true;
@@ -6513,7 +6535,7 @@ namespace giantsummon
                 for (int x = -WidthRange; x <= WidthRange; x++)
                 {
                     int TileX = FeetX + x, TileY = FeetY + y;
-                    Tile tile = Framing.GetTileSafely(TileX, TileY);
+                    Tile tile = MainMod.GetTile(TileX, TileY);
                     if (tile != null && tile.active())
                     {
                         if (tile.type == Terraria.ID.TileID.Platforms)
@@ -6613,8 +6635,8 @@ namespace giantsummon
                     bool TileUnder, BlockedPosition;
                     while (Attempts < 3)
                     {
-                        Tile FloorTile = Framing.GetTileSafely(TileX, TileY + 1),
-                            PositionTile = Framing.GetTileSafely(TileX, TileY);
+                        Tile FloorTile = MainMod.GetTile(TileX, TileY + 1),
+                            PositionTile = MainMod.GetTile(TileX, TileY);
                         TileUnder = BlockedPosition = false;
                         if (FloorTile.active() && ((Main.tileSolid[FloorTile.type] && !Main.tileSolidTop[FloorTile.type]) || Terraria.ID.TileID.Sets.Platforms[FloorTile.type]))
                             TileUnder = true;
@@ -6632,7 +6654,7 @@ namespace giantsummon
                         {
                             for (int y = 0; y < 3; y++)
                             {
-                                Tile tile = Framing.GetTileSafely(TileX, TileY - y);
+                                Tile tile = MainMod.GetTile(TileX, TileY - y);
                                 if (tile.active() && ((Main.tileSolid[tile.type] && !Main.tileSolidTop[tile.type]) || (StopOnPlatformWalls && Terraria.ID.TileID.Sets.Platforms[tile.type])))
                                 {
                                     BlockedPosition = true;
@@ -6660,7 +6682,7 @@ namespace giantsummon
                         for (int y = 0; y < 8; y++)
                         {
                             int TileY2 = TileY - y;
-                            Tile tile = Framing.GetTileSafely(TileX, TileY2);
+                            Tile tile = MainMod.GetTile(TileX, TileY2);
                             //Dust.NewDust(new Vector2(TileX, TileY2) * 16, 16, 16, 235, 0, 0, 0, Color.White, 1f);
                             if (tile.active() && Main.tileSolid[tile.type] && !Main.tileSolidTop[tile.type])
                             {
@@ -6746,7 +6768,7 @@ namespace giantsummon
         /// <returns>Returns true if It is going to try using it.</returns>
         public bool UseFurniture(int x, int y)
         {
-            Tile tile = Framing.GetTileSafely(x, y);
+            Tile tile = MainMod.GetTile(x, y);
             UsingFurniture = false;
             if (tile != null && tile.active())
             {
@@ -6822,10 +6844,11 @@ namespace giantsummon
 
         public void LeaveFurniture(bool StillGoingToUseFurniture = false)
         {
-            if (!UsingFurniture)
-                return;
-            float FurnitureBottomY = (furniturey + 1) * 16;
-            Position.Y = FurnitureBottomY;
+            if (UsingFurniture)
+            {
+                float FurnitureBottomY = (furniturey + 1) * 16;
+                Position.Y = FurnitureBottomY;
+            }
             if (!StillGoingToUseFurniture)
             {
                 furniturex = furniturey = -1;
@@ -6839,7 +6862,7 @@ namespace giantsummon
             {
                 if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
-                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    Tile tile = MainMod.GetTile(furniturex, furniturey);
                     if (tile.active() && tile.type == 15 && (tile.frameY / 36 == 1 || tile.frameY / 36 == 20))
                     {
                         return true;
@@ -6855,7 +6878,7 @@ namespace giantsummon
             {
                 if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
-                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    Tile tile = MainMod.GetTile(furniturex, furniturey);
                     if (tile.active() && tile.type == Terraria.ID.TileID.Thrones)
                     {
                         return true;
@@ -6871,7 +6894,7 @@ namespace giantsummon
             {
                 if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
-                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    Tile tile = MainMod.GetTile(furniturex, furniturey);
                     if (tile.active() && tile.type == Terraria.ID.TileID.Benches)
                     {
                         return true;
@@ -6895,7 +6918,7 @@ namespace giantsummon
             {
                 if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
-                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    Tile tile = MainMod.GetTile(furniturex, furniturey);
                     if (tile.active() && tile.type == Terraria.ID.TileID.Beds)
                     {
                         return true;
@@ -6911,7 +6934,7 @@ namespace giantsummon
             {
                 if (furniturex > -1 && furniturey > -1 && UsingFurniture)
                 {
-                    Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                    Tile tile = MainMod.GetTile(furniturex, furniturey);
                     if (tile.active() && tile.type == Terraria.ID.TileID.Chairs)
                     {
                         return true;
@@ -6952,9 +6975,9 @@ namespace giantsummon
                     }
                     return;
                 }
-                float TileCenterX = furniturex * 16 + 8,
-                    TileCenterY = furniturey * 16 + 16;
-                Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                float TileCenterX = furniturex * 16 + 8;
+                    //TileCenterY = furniturey * 16 + 16;
+                Tile tile = MainMod.GetTile(furniturex, furniturey);
                 if (tile == null || !tile.active())
                 {
                     furniturex = furniturey = -1;
@@ -7445,7 +7468,7 @@ namespace giantsummon
                             if (IdleActionTime <= 0)
                             {
                                 int cx = (int)(HouseX * DivisionBy16), cy = (int)((HouseY - CollisionHeight * 0.5f) * DivisionBy16);
-                                Tile tile = Framing.GetTileSafely(cx, cy);
+                                Tile tile = MainMod.GetTile(cx, cy);
                                 if (tile != null)
                                 {
                                     if (!Main.wallHouse[tile.wall])
@@ -7600,7 +7623,7 @@ namespace giantsummon
                                     int StartX = (int)(Position.X * DivisionBy16), StartY = (int)((Position.Y - Height) * DivisionBy16);
                                     for(int x = -1; x < 0; x++)
                                     {
-                                        Tile tile = Framing.GetTileSafely(StartX + x, StartY);
+                                        Tile tile = MainMod.GetTile(StartX + x, StartY);
                                         if(tile != null && !tile.active() && (tile.wall == 0 || Terraria.ID.WallID.Sets.Transparent[tile.wall]))
                                         {
                                             HasWindowOrOpenPlace = true;
@@ -7718,7 +7741,7 @@ namespace giantsummon
                             bool Door = false;
                             for (int y = 0; y < 4; y++)
                             {
-                                Tile tile = Framing.GetTileSafely(CheckAheadX, CheckAheadStartY);
+                                Tile tile = MainMod.GetTile(CheckAheadX, CheckAheadStartY);
                                 if (tile.active() && (tile.type == Terraria.ID.TileID.ClosedDoor || (tile.type == Terraria.ID.TileID.OpenDoor && (tile.frameX >= 18 && tile.frameX <= 36)) ||
                                     tile.type == Terraria.ID.TileID.TallGateClosed || tile.type == Terraria.ID.TileID.TallGateOpen))
                                 {
@@ -7769,7 +7792,7 @@ namespace giantsummon
                     byte OpenSpaceCounter = 0;
                     while (true)
                     {
-                        Tile tile = Framing.GetTileSafely(TileCheckX, TileCheckY - YCheck);
+                        Tile tile = MainMod.GetTile(TileCheckX, TileCheckY - YCheck);
                         bool Obstruct = false;
                         if (tile.active() && Main.tileSolid[tile.type])
                         {
@@ -7831,7 +7854,7 @@ namespace giantsummon
                     {
                         for (int x = 0; x < 2; x++)
                         {
-                            Tile undertile = Framing.GetTileSafely(TileCheckX + x * Direction, TileCheckY + y);
+                            Tile undertile = MainMod.GetTile(TileCheckX + x * Direction, TileCheckY + y);
                             if (undertile.active() && (Main.tileSolid[undertile.type] || Main.tileSolidTop[undertile.type]))
                             {
                                 Pitfall = false;
@@ -7965,7 +7988,7 @@ namespace giantsummon
                 }
                 if (ForceCloseDoor || DistanceFromDoor > Width * DivisionBy16 + 2)
                 {
-                    Tile doorTile = Framing.GetTileSafely(doorx, doory);
+                    Tile doorTile = MainMod.GetTile(doorx, doory);
                     if (doorTile != null)
                     {
                         if (doorTile.type == 11)
@@ -8014,7 +8037,7 @@ namespace giantsummon
             for (int dx = 0; dx < 2; dx++)
             {
                 int TileX = (int)(TileCheckDir * DivisionBy16) + Dir * dx, TileY = (int)(Position.Y * DivisionBy16) - 2;
-                Tile nextTile = Framing.GetTileSafely(TileX, TileY);
+                Tile nextTile = MainMod.GetTile(TileX, TileY);
                 if (nextTile != null && nextTile.active() && (nextTile.type == 10 || nextTile.type == 388))
                 {
                     if (WorldGen.OpenDoor(TileX, TileY, Dir))
@@ -10799,14 +10822,14 @@ namespace giantsummon
                         PlayerPositionX = (int)(LeaderCenterX * DivisionBy16), PlayerPositionY = (int)(LeaderBottom * DivisionBy16);
                     for (int attempt = 0; attempt < 20; attempt++)
                     {
-                        Tile tile = Framing.GetTileSafely(MyPositionX, MyPositionY);
+                        Tile tile = MainMod.GetTile(MyPositionX, MyPositionY);
                         if (tile.active() && Main.tileSolid[tile.type])
                         {
                             MyPositionY--;
                         }
                         else
                         {
-                            Tile undertile = Framing.GetTileSafely(MyPositionX, MyPositionY + 1);
+                            Tile undertile = MainMod.GetTile(MyPositionX, MyPositionY + 1);
                             if (!undertile.active() || !Main.tileSolid[undertile.type])
                             {
                                 MyPositionY++;
@@ -10858,7 +10881,7 @@ namespace giantsummon
                                 {
                                     for (int x = XStart; x < XEnd; x++)
                                     {
-                                        Tile tile = Framing.GetTileSafely(x, YStart + y);
+                                        Tile tile = MainMod.GetTile(x, YStart + y);
                                         if (tile.active() && Main.tileSolid[tile.type])
                                         {
                                             if (!Terraria.ID.TileID.Sets.Platforms[tile.type])
@@ -12195,7 +12218,7 @@ namespace giantsummon
                     if (!CheckingAgain)
                     {
                         CheckingAgain = true;
-                        Tile t = Framing.GetTileSafely((int)((Position.X + OffHandPositionX) * DivisionBy16), (int)((Position.Y + OffHandPositionY) * DivisionBy16));
+                        Tile t = MainMod.GetTile((int)((Position.X + OffHandPositionX) * DivisionBy16), (int)((Position.Y + OffHandPositionY) * DivisionBy16));
                         if (!Ducking && t.active() && Main.tileSolid[t.type])
                         {
                             if (OwnerPos > -1 && !PlayerMounted && Main.player[OwnerPos].Center.Y < Position.Y - Height * 0.5f)
@@ -12792,7 +12815,7 @@ namespace giantsummon
                             int ToolUseDistance = (int)((5 + Inventory[SelectedItem].tileBoost) * Scale);
                             if (Math.Abs(CenterX - TileTargetX) < ToolUseDistance && Math.Abs(CenterY - TileTargetY) < ToolUseDistance) //Can trigger tool effect
                             {
-                                Tile tile = Framing.GetTileSafely(TileTargetX, TileTargetY);
+                                Tile tile = MainMod.GetTile(TileTargetX, TileTargetY);
                                 if (Action && tile != null)
                                 {
                                     bool HitWall = true;
@@ -13821,7 +13844,7 @@ namespace giantsummon
                     {
                         for (int x = 0; x < 2; x++)
                         {
-                            Tile t = Framing.GetTileSafely(TileCheckX + x * Direction, TileCheckY + y);
+                            Tile t = MainMod.GetTile(TileCheckX + x * Direction, TileCheckY + y);
                             if (t != null && t.active() && (Main.tileSolid[t.type] || Main.tileSolidTop[t.type]))
                             {
                                 Pitfall = false;
@@ -13838,14 +13861,14 @@ namespace giantsummon
                                 if (TryJump)
                                     break;
                                 int TileX = TileCheckX + x * Direction, TileY = TileCheckY + y;
-                                Tile t = Framing.GetTileSafely(TileX, TileY);
+                                Tile t = MainMod.GetTile(TileX, TileY);
                                 if (t != null && t.active() && (Main.tileSolid[t.type] || Main.tileSolidTop[t.type]))
                                 {
                                     int UpperTileCount = 0;
                                     int MaxHeight = (int)(CollisionHeight * DivisionBy16)+ 1;
                                     for (int u = -1; u < -MaxHeight; u--)
                                     {
-                                        Tile upperTile = Framing.GetTileSafely(TileX, TileY + y);
+                                        Tile upperTile = MainMod.GetTile(TileX, TileY + y);
                                         if (upperTile.active() && !Main.tileSolid[upperTile.type])
                                         {
                                             UpperTileCount++;
@@ -13884,7 +13907,7 @@ namespace giantsummon
             for (int x = -1; x <= (CollisionWidth * DivisionBy16) + 2; x++)
             {
                 int ThisFloorX = FloorX + x * Direction;
-                Tile t = Framing.GetTileSafely(ThisFloorX, FloorY);
+                Tile t = MainMod.GetTile(ThisFloorX, FloorY);
                 bool AboveTile = Math.Abs(x) < (Width * DivisionBy16) + 1;
                 if (t != null && t.active() && Main.tileSolid[t.type])
                 {
@@ -13915,7 +13938,7 @@ namespace giantsummon
                     {
                         bool HurtTileCollision = false;
                         int tx = (Dir == 0 ? lpx : rpx), ty = (Dir == 0 ? lpy : rpy);
-                        Tile t = Framing.GetTileSafely(tx, ty);
+                        Tile t = MainMod.GetTile(tx, ty);
                         byte Attempt = 5;
                         while (Attempt > 0)
                         {
@@ -14435,7 +14458,7 @@ namespace giantsummon
             bool GuardianHasCarpet = HasCarpet();
             if (UsingFurniture && furniturex > -1 && furniturey > -1 && !IsAttackingSomething)
             {
-                Tile tile = Framing.GetTileSafely(furniturex, furniturey);
+                Tile tile = MainMod.GetTile(furniturex, furniturey);
                 if (tile != null)
                 {
                     switch (tile.type)
@@ -15484,7 +15507,7 @@ namespace giantsummon
             if (Velocity.Y >= 3f)
             {
                 Point point = (Position + new Vector2(0, 0.01f)).ToTileCoordinates();
-                Tile tile = Framing.GetTileSafely(point.X, point.Y);
+                Tile tile = MainMod.GetTile(point.X, point.Y);
                 if (tile.active() && tile.type == Terraria.ID.TileID.Detonator && tile.frameY == 0 && tile.frameX < 36)
                 {
                     Wiring.HitSwitch(point.X, point.Y);
@@ -16907,7 +16930,7 @@ namespace giantsummon
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);
             hitTileData.DrawFreshAnimations(Main.spriteBatch);
             bool DrawInvalidGuardian = Base.InvalidGuardian;
-            if (!Base.InvalidGuardian && Base.IsCustomSpriteCharacter)
+            if (!Base.InvalidGuardian)
             {
                 if (Base.sprites.HasErrorLoadingOccurred)
                     DrawInvalidGuardian = true;
@@ -17098,7 +17121,7 @@ namespace giantsummon
             }
             else
             {
-                DrawTerrarianData(NewPosition, seffect, Rotation, c, armorColor, IgnoreLighting, Shader);
+                DrawTerrarianData(NewPosition, seffect, Rotation, c, armorColor, Origin, IgnoreLighting, Shader);
             }
             if (mount.Active)
             {
@@ -17409,7 +17432,7 @@ namespace giantsummon
                 gdd.Draw(Main.spriteBatch);
         }
 
-        public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, float Rotation, Color color, Color armorColor, bool IgnoreLightingColor, int Shader)
+        public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, float Rotation, Color color, Color armorColor, Vector2 Origin, bool IgnoreLightingColor, int Shader)
         {
             Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56), 
                 bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56), 
@@ -17419,7 +17442,8 @@ namespace giantsummon
                 hairrect.Y = 0;
             bool ShowHair = HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaFemale && HeadSlot != Terraria.ID.ArmorIDs.Head.LamiaMale;
             int SkinVariant = Base.TerrarianInfo.GetSkinVariant(Male);
-            Vector2 Origin = new Vector2(20, 56);
+            Origin.X = 20;
+            Origin.Y = 56;
             byte EyeState = 0;
             if (KnockedOut && !Downed)
             {

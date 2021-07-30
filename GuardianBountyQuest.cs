@@ -646,7 +646,7 @@ namespace giantsummon
                     return Main.invasionType == InvasionID.SnowLegion && player.ZoneOverworldHeight;
                 case SpawnBiome.LihzahrdTemple:
                     {
-                        Tile tile = Framing.GetTileSafely((int)(player.Center.X * TerraGuardian.DivisionBy16), (int)(player.Center.Y * TerraGuardian.DivisionBy16));
+                        Tile tile = MainMod.GetTile((int)(player.Center.X * TerraGuardian.DivisionBy16), (int)(player.Center.Y * TerraGuardian.DivisionBy16));
                         return tile != null && tile.wall == Terraria.ID.WallID.LihzahrdBrickUnsafe;
                     }
             }
@@ -784,6 +784,7 @@ namespace giantsummon
                 if (!Main.npc[TargetMonsterSpawnPosition].active || Main.npc[TargetMonsterSpawnPosition].type != TargetMonsterID)
                 {
                     TargetMonsterSpawnPosition = -1;
+                    Main.NewText(TargetName + " has retreated.");
                 }
             }
             if (ActionCooldown % 300 == 0)
@@ -812,13 +813,13 @@ namespace giantsummon
                             {
                                 bool TrySpawning = IsPlayerOnBountyBiome(player);
                                 if (TrySpawning)
-                                    TrySpawning = Main.rand.NextDouble() < 0.01;
+                                    TrySpawning = Main.rand.NextDouble() < 0.1;
                                 if (TrySpawning)
                                 {
                                     SpawnBountyMobOnPlayer(player);
                                     if (TargetMonsterSpawnPosition > -1)
                                     {
-                                        ResetSpawnStress(false);
+                                        //ResetSpawnStress(false);
                                         break;
                                     }
                                 }
@@ -1356,10 +1357,10 @@ namespace giantsummon
                                 TargetMonsterID = 150;
                                 break;
                             case 1:
-                                TargetMonsterID = 185;
+                                TargetMonsterID = 147;
                                 break;
                             case 2:
-                                TargetMonsterID = 196;
+                                TargetMonsterID = 197;
                                 break;
                         }
                         if(Main.hardMode && Main.rand.NextDouble() < 0.6)
@@ -1635,7 +1636,7 @@ namespace giantsummon
         {
             List<Item> Rewards = new List<Item>();
             Item i;
-            if (Main.rand.NextDouble() < 0.01 * RewardMod)
+            if (Main.rand.NextDouble() < 0.03 * RewardMod)
             {
                 i = new Item();
                 switch (Main.rand.Next(4))

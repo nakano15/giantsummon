@@ -190,7 +190,7 @@ namespace giantsummon
             byte State = 0;
             for (int y = 0; y < 2; y++)
             {
-                Tile tile = Framing.GetTileSafely(px, py + y);
+                Tile tile = MainMod.GetTile(px, py + y);
                 if (y == 0 && (!tile.active() || !Main.tileSolid[tile.type]))
                 {
                     State++;
@@ -208,7 +208,7 @@ namespace giantsummon
             byte State = 0;
             for (int x = -1; x < 1; x++)
             {
-                Tile tile = Framing.GetTileSafely(px + x, py);
+                Tile tile = MainMod.GetTile(px + x, py);
                 if (tile != null && tile.active() && tile.type == Terraria.ID.TileID.Platforms && (tile.rightSlope() || tile.leftSlope()))
                 {
                     return true;
@@ -223,7 +223,7 @@ namespace giantsummon
             {
                 for (int y = -(Height - 1); y <= 0; y++)
                 {
-                    Tile t = Framing.GetTileSafely(tx + x, ty + y);
+                    Tile t = MainMod.GetTile(tx + x, ty + y);
                     if (t == null) return false;
                     if (t.active() && Main.tileSolid[t.type])
                         return true;
@@ -237,7 +237,7 @@ namespace giantsummon
             byte PlatformTiles = 0;
             for (int x = -1; x <= 0; x++)
             {
-                Tile t = Framing.GetTileSafely(tx + x, ty);
+                Tile t = MainMod.GetTile(tx + x, ty);
                 if (t == null) return false;
                 if (t.active() && Main.tileSolidTop[t.type])
                     PlatformTiles++;
@@ -250,7 +250,7 @@ namespace giantsummon
             byte PlatformTiles = 0;
             for (int x = -1; x <= 0; x++)
             {
-                Tile t = Framing.GetTileSafely(tx + x, ty);
+                Tile t = MainMod.GetTile(tx + x, ty);
                 if (t == null) return false;
                 if (t.active() && Main.tileSolidTop[t.type])
                     PlatformTiles++;

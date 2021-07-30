@@ -129,8 +129,27 @@ namespace giantsummon
         public const float BleedingHealthDamage = 0.015f;
         public const int BleedingHealthDamageTime = 30;
         public static int GeneralIdleCommentCooldown = 0;
+        public static List<GuardianID> CompanionBlacklist = new List<GuardianID>();
+        private static Tile DefaultTile = new Tile();
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
+
+        public static Tile GetTile(Point p)
+        {
+            return GetTile(p.X, p.Y);
+        }
+
+        public static Tile GetTile(int x, int y)
+        {
+            if(x >= 0 && x < Main.maxTilesX && 
+                y >= 0 && y < Main.maxTilesY)
+            {
+                if (Main.tile[x, y] == null)
+                    Main.tile[x, y] = new Tile();
+                return Main.tile[x, y];
+            }
+            return DefaultTile;
+        }
 
         public static void SetIdleCommentCooldown()
         {
@@ -603,18 +622,6 @@ namespace giantsummon
                 Time += 24;
             Hours = (int)Time;
             Minutes = (int)((Time - (int)Time) * 60);
-        }
-        
-        public static Tile GetTile(int x, int y)
-        {
-            if (x >= 0 && x < Main.maxTilesX && y >= 0 && y < Main.maxTilesY)
-            {
-                return Main.tile[x, y];
-            }
-            else
-            {
-                return Main.tile[0,0];
-            }
         }
 
         public static bool IsSolidTile(int x, int y)

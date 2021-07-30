@@ -67,13 +67,24 @@ namespace giantsummon.Creatures
         {
             Rectangle rect = new Rectangle(0,0,40,56);
             Vector2 Position = new Vector2(DrawPosition.X, DrawPosition.Y);
-            if ((guardian.BodyAnimationFrame >= 7 && guardian.BodyAnimationFrame < 11) ||
-                (guardian.BodyAnimationFrame >= 14 && guardian.BodyAnimationFrame < 18))
-                Position.Y -= 2 * guardian.GravityDirection;
+            Vector2 NewOrigin = new Vector2(Origin.X, Origin.Y);
+            NewOrigin.Y -= -2 * guardian.GravityDirection;
+            NewOrigin.X += -2 * guardian.Direction;
+            if (guardian.ItemAnimationTime == 0 && 
+                ((guardian.LeftArmAnimationFrame >= 7 && guardian.LeftArmAnimationFrame < 11) ||
+                (guardian.LeftArmAnimationFrame >= 14 && guardian.LeftArmAnimationFrame < 18)))
+                NewOrigin.Y -= -2 * guardian.GravityDirection;
+            rect.Y = rect.Height * 2;
             Texture2D texture = sprites.GetExtraTexture(HeadTextureID);
-            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect, 
-                color, Rotation, Origin, Scale, seffect);
+            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
+                color, Rotation, NewOrigin, Scale, seffect);
             InjectTextureAfter(GuardianDrawData.TextureType.PlHead, gdd);
+            rect.Y = 0;
+            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
+                color, Rotation, NewOrigin, Scale, seffect);
+            InjectTextureAfter(GuardianDrawData.TextureType.PlHead, gdd);
+            RemoveTextureDrawData(GuardianDrawData.TextureType.PlEye);
+            RemoveTextureDrawData(GuardianDrawData.TextureType.PlEyeWhite);
         }
 
         #region Dialogues

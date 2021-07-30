@@ -104,7 +104,7 @@ namespace giantsummon.Npcs
 
         public static void TrySpawningBrutus()
         {
-            if (NpcMod.HasMetGuardian(6, "") || WorldMod.IsGuardianNpcInWorld(GuardianBase.Brutus))
+            if (Main.netMode == 1 || NpcMod.HasMetGuardian(6, "") || WorldMod.IsGuardianNpcInWorld(GuardianBase.Brutus))
                 return;
             const int SpawnTime = 3 * 3600;
             if (Main.fastForwardTime || Main.eclipse || !Main.dayTime || (Main.time < SpawnTime || WorldMod.LastTime >= 7.5))
@@ -150,7 +150,11 @@ namespace giantsummon.Npcs
                 SpawnPosY = (int)(Main.npc[PickedNPC].position.Y + Main.npc[PickedNPC].height);
             int npcPos = NPC.NewNPC(SpawnPosX, SpawnPosY, ModContent.NPCType<BrutusNPC>());
             ((BrutusNPC)Main.npc[npcPos].modNPC).WarnedAboutBrutus = true;
-            Main.NewText(Main.npc[npcPos].GivenOrTypeName + " has came from the Ether Realm looking for someone to hire him as bodyguard.");
+            string Text = Main.npc[npcPos].GivenOrTypeName + " has came from the Ether Realm looking for someone to hire him as bodyguard.";
+            if(Main.netMode == 0)
+                Main.NewText(Text);
+            else
+                NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Text), 255, 255, 255, 255);
         }
 
         private bool WarnedAboutBrutus = false;

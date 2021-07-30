@@ -1181,7 +1181,7 @@ namespace giantsummon
             }
             if (!InvalidGuardian)
             {
-                gb.sprites = new GuardianSprites("Creatures/" + gb.Name, mod);
+                gb.sprites = new GuardianSprites(gb, mod);
                 gb.ManageExtraDrawScript(gb.sprites);
             }
             else
@@ -1351,6 +1351,43 @@ namespace giantsummon
         {
             DefaultBehavior = true;
             return 0;
+        }
+
+        public GuardianDrawData GetTextureDrawData(GuardianDrawData.TextureType textureType)
+        {
+            for (int i = 0; i < TerraGuardian.DrawBehind.Count; i++)
+            {
+                if (TerraGuardian.DrawBehind[i].textureType == textureType)
+                {
+                    return TerraGuardian.DrawBehind[i];
+                }
+            }
+            for (int i = 0; i < TerraGuardian.DrawFront.Count; i++)
+            {
+                if (TerraGuardian.DrawFront[i].textureType == textureType)
+                {
+                    return TerraGuardian.DrawFront[i];
+                }
+            }
+            return null;
+        }
+
+        public void RemoveTextureDrawData(GuardianDrawData.TextureType textureType)
+        {
+            for (int i = 0; i < TerraGuardian.DrawBehind.Count; i++)
+            {
+                if (TerraGuardian.DrawBehind[i].textureType == textureType)
+                {
+                    TerraGuardian.DrawBehind.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < TerraGuardian.DrawFront.Count; i++)
+            {
+                if (TerraGuardian.DrawFront[i].textureType == textureType)
+                {
+                    TerraGuardian.DrawFront.RemoveAt(i);
+                }
+            }
         }
 
         public void InjectTextureBefore(GuardianDrawData.TextureType textureType, GuardianDrawData DrawDatas)

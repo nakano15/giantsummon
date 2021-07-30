@@ -46,7 +46,7 @@ namespace giantsummon.Projectiles
                 projectile.position += projectile.velocity;
                 bool Collides = false;
                 for (int x = 0; x < 2; x++) {
-                    Tile tile = Framing.GetTileSafely((int)((projectile.position.X + (x == 0 ? 0 : projectile.width)) * (1f / 16)), (int)(projectile.Center.Y * (1f / 16)));
+                    Tile tile = MainMod.GetTile((int)((projectile.position.X + (x == 0 ? 0 : projectile.width)) * (1f / 16)), (int)(projectile.Center.Y * (1f / 16)));
                     if(tile == null || (tile.active() && Main.tileSolid[tile.type]))
                     {
                         Collides = true;

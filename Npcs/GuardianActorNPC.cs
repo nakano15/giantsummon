@@ -136,10 +136,7 @@ namespace giantsummon.Npcs
                 if (Main.player[i].talkNPC == npc.whoAmI)
                 {
                     Idle = false;
-                    if (Main.player[i].Center.X < npc.Center.X)
-                        npc.direction = -1;
-                    else
-                        npc.direction = 1;
+                    StareAt(Main.player[i]);
                     break;
                 }
             }
@@ -170,7 +167,7 @@ namespace giantsummon.Npcs
                         for (int y = 0; y < 4; y++)
                         {
                             int Tx = (int)npc.Center.X / 16 + (2 + x) * npc.direction, Ty = (int)npc.Bottom.Y / 16 + y;
-                            Tile tile = Framing.GetTileSafely(Tx, Ty);
+                            Tile tile = MainMod.GetTile(Tx, Ty);
                             if (tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]))
                             {
                                 HasTileInFront = true;

@@ -259,7 +259,7 @@ namespace giantsummon
         public static bool IsInASafePlace(Player player, bool ShowWarnMessages = false)
         {
             int PlayerX = (int)player.Center.X / 16, PlayerY = (int)player.Center.Y / 16;
-            Tile CenterTile = Framing.GetTileSafely(PlayerX, PlayerY);
+            Tile CenterTile = MainMod.GetTile(PlayerX, PlayerY);
             if (CenterTile == null || !Main.wallHouse[CenterTile.wall])
             {
                 if(ShowWarnMessages) Main.NewText("You are not in a house.");
@@ -1168,7 +1168,7 @@ namespace giantsummon
                                                 bool Blocked = false;
                                                 for (int x = 0; x < 2; x++)
                                                 {
-                                                    Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2);
+                                                    Tile t = MainMod.GetTile(point.X + x, point.Y + 2);
                                                     if (t.active() && Main.tileSolid[t.type])
                                                     {
                                                         if (MoveDist == 2)
@@ -1194,7 +1194,7 @@ namespace giantsummon
                                                     bool Blocked = false;
                                                     for (int x = 0; x < 2; x++)
                                                     {
-                                                        Tile t = Framing.GetTileSafely(point.X + x, point.Y + 2 + 1);
+                                                        Tile t = MainMod.GetTile(point.X + x, point.Y + 2 + 1);
                                                         if (t.active() && Main.tileSolid[t.type])
                                                         {
                                                             if (MoveDist == 2)
@@ -1221,7 +1221,7 @@ namespace giantsummon
                                                 {
                                                     if (HasTileBlocking)
                                                         break;
-                                                    Tile t = Framing.GetTileSafely(point.X + x, point.Y + y);
+                                                    Tile t = MainMod.GetTile(point.X + x, point.Y + y);
                                                     if (t.active() && Main.tileSolid[t.type])
                                                     {
                                                         HasTileBlocking = true;
@@ -3028,7 +3028,7 @@ namespace giantsummon
                     for(int x = MinX; x < MaxX; x++)
                     {
                         Vector2 TextPosition = new Vector2(x * 16 + 8, y * 16 + 8) - Main.screenPosition;
-                        Tile tile = Framing.GetTileSafely(x, y);
+                        Tile tile = MainMod.GetTile(x, y);
                         if (tile != null)
                         {
                             Utils.DrawBorderString(Main.spriteBatch, "" + tile.slope(), TextPosition, Color.Red, 1f, 0.5f, 0.5f);

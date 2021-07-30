@@ -36,7 +36,7 @@ namespace giantsummon.Creatures.Blue
                     {
                         if (Time <= 0)
                         {
-                            Tile tile = Framing.GetTileSafely((int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16)));
+                            Tile tile = MainMod.GetTile((int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16)));
                             if (tile.wall > 0)
                             {
                                 Time = 400;

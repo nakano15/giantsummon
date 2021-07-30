@@ -15,17 +15,19 @@ namespace giantsummon
         private bool TexturesLoaded = false, ErrorLoading = false;
         public bool IsTextureLoaded { get { return TexturesLoaded; } }
         public bool HasErrorLoadingOccurred { get { return ErrorLoading; } }
-        private string SpriteDir = "";
+        private string SpriteDir { get { return "Creatures/" + ReferedBase.Name; } }
         private Mod mod = null;
         private byte DisposeCooldown = 0;
         private Dictionary<string, ExtraTextureHolder> ExtraTextures = new Dictionary<string, ExtraTextureHolder>();
+        public GuardianBase ReferedBase;
 
-        public GuardianSprites(string SpritesDir, Mod mod = null)
+        public GuardianSprites(GuardianBase companionBase, Mod mod = null)
         {
+            ReferedBase = companionBase;
             if (mod == null)
                 mod = MainMod.mod;
             this.mod = mod;
-            this.SpriteDir = SpritesDir;
+            //this.SpriteDir = "Creatures/" + ReferedBase.Name;
         }
 
         /// <summary>
@@ -62,14 +64,17 @@ namespace giantsummon
             DisposeCooldown = 0;
             try
             {
-                HeadSprite = mod.GetTexture(SpriteDir + "/head");
-                BodySprite = mod.GetTexture(SpriteDir + "/body");
-                LeftArmSprite = mod.GetTexture(SpriteDir + "/left_arm");
-                RightArmSprite = mod.GetTexture(SpriteDir + "/right_arm");
-                if (mod.TextureExists(SpriteDir + "/body_front"))
-                    BodyFrontSprite = mod.GetTexture(SpriteDir + "/body_front");
-                if (mod.TextureExists(SpriteDir + "/right_arm_front"))
-                    RightArmFrontSprite = mod.GetTexture(SpriteDir + "/right_arm_front");
+                if (ReferedBase.IsCustomSpriteCharacter)
+                {
+                    HeadSprite = mod.GetTexture(SpriteDir + "/head");
+                    BodySprite = mod.GetTexture(SpriteDir + "/body");
+                    LeftArmSprite = mod.GetTexture(SpriteDir + "/left_arm");
+                    RightArmSprite = mod.GetTexture(SpriteDir + "/right_arm");
+                    if (mod.TextureExists(SpriteDir + "/body_front"))
+                        BodyFrontSprite = mod.GetTexture(SpriteDir + "/body_front");
+                    if (mod.TextureExists(SpriteDir + "/right_arm_front"))
+                        RightArmFrontSprite = mod.GetTexture(SpriteDir + "/right_arm_front");
+                }
                 foreach (ExtraTextureHolder eth in ExtraTextures.Values)
                 {
                     eth.LoadTexture(SpriteDir, mod);
@@ -103,12 +108,17 @@ namespace giantsummon
         public void Dispose()
         {
             if (!TexturesLoaded)
+            {
                 ErrorLoading = false;
                 return;
-            HeadSprite.Dispose();
-            BodySprite.Dispose();
-            LeftArmSprite.Dispose();
-            RightArmSprite.Dispose();
+            }
+            if (ReferedBase.IsCustomSpriteCharacter)
+            {
+                HeadSprite.Dispose();
+                BodySprite.Dispose();
+                LeftArmSprite.Dispose();
+                RightArmSprite.Dispose();
+            }
             foreach (ExtraTextureHolder eth in ExtraTextures.Values)
             {
                 eth.Texture.Dispose();

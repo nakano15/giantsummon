@@ -509,7 +509,7 @@ namespace giantsummon.Npcs
             {
                 for (int y = -8; y < 8; y++)
                 {
-                    Tile t = Framing.GetTileSafely(tileX + x, tileY + y);
+                    Tile t = MainMod.GetTile(tileX + x, tileY + y);
                     if (t.active() && t.type == 215)
                     {
                         BonfireX = tileX + x;
@@ -527,7 +527,7 @@ namespace giantsummon.Npcs
                 int attempts = 5;
                 while (!Done)
                 {
-                    Tile t = Framing.GetTileSafely(BonfireX, BonfireY);
+                    Tile t = MainMod.GetTile(BonfireX, BonfireY);
                     if (t.frameX < 1)
                         BonfireX++;
                     if (t.frameX > 1)

@@ -1331,7 +1331,7 @@ namespace giantsummon
 
         public static void UpdateTileStateOnGuardianHouses(int PositionX, int PositionY, bool Addition)
         {
-            Tile tile = Framing.GetTileSafely(PositionX, PositionY);
+            Tile tile = MainMod.GetTile(PositionX, PositionY);
             switch (tile.type)
             {
                 case Terraria.ID.TileID.Chairs:
@@ -1365,7 +1365,7 @@ namespace giantsummon
                 if (Addition)
                 {
                 retry:
-                    Tile tile = Framing.GetTileSafely(PositionX, PositionY);
+                    Tile tile = MainMod.GetTile(PositionX, PositionY);
                     bool Add = false, FacingLeft = false;
                     switch (tile.type)
                     {
@@ -1518,7 +1518,7 @@ namespace giantsummon
                     for (int i = 0; i < WorldGen.numRoomTiles; i++)
                     {
                         int X = WorldGen.roomX[i], Y = WorldGen.roomY[i];
-                        Tile tile = Framing.GetTileSafely(X, Y);
+                        Tile tile = MainMod.GetTile(X, Y);
                         UpdateTileState(tile.type, X, Y, true);
                         HousingPoints.Add(new BytePoint((byte)(X - WorldGen.roomX1), (byte)(Y - WorldGen.roomY1)));
                     }
