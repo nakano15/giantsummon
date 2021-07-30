@@ -1591,6 +1591,31 @@ namespace giantsummon
             }
         }
 
+        public bool CompanionReaction(string MessageID, float Chance = 1f)
+        {
+            if (Chance != 1 && Main.rand.NextFloat() >= Chance)
+                return false;
+            List<KeyValuePair<TerraGuardian, string>> CompanionsReaction = new List<KeyValuePair<TerraGuardian, string>>();
+            foreach(TerraGuardian tg in GetAllGuardianFollowers)
+            {
+                if (tg.Active)
+                {
+                    string Mes = tg.GetMessage(MessageID);
+                    if(Mes != "")
+                    {
+                        CompanionsReaction.Add(new KeyValuePair<TerraGuardian, string>(tg, Mes));
+                    }
+                }
+            }
+            if(CompanionsReaction.Count > 0)
+            {
+                int Picked = Main.rand.Next(CompanionsReaction.Count);
+                CompanionsReaction[Picked].Key.SaySomething(CompanionsReaction[Picked].Value);
+                return true;
+            }
+            return false;
+        }
+
         public void UpdateGuardian()
         {
             DamageMod = 1f;
@@ -2363,6 +2388,7 @@ namespace giantsummon
                 {
                     guardian = new TerraGuardian(MyGuardians[Id].ID, MyGuardians[Id].ModID);
                 }
+                CompanionReaction(GuardianBase.MessageIDs.SomeoneJoinsTeamMessage);
                 guardian.OwnerPos = player.whoAmI;
                 guardian.Active = true;
                 guardian.AssistSlot = AssistSlot;
@@ -2539,6 +2565,7 @@ namespace giantsummon
                         TutorialCompanionIntroduction = true;
                     }
                 }
+                CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
             }
             return AlreadySpawned;
         }

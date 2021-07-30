@@ -1,1 +1,1 @@
-﻿
+﻿Possibly fixed an issue where the game would have consecutive crashing.

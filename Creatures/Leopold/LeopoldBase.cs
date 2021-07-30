@@ -226,6 +226,8 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*So much knowledge found inside the dungeon. From dark secrets to sci-fi literature.*");
             }
+            if (guardian.FriendshipGrade < 2)
+                Mes.Add("*Don't call me bunny, I don't know you yet.*");
             if (NpcMod.HasGuardianNPC(GuardianBase.Bree))
             {
                 Mes.Add("*What did I had on my mind during the popularity contest, when I agreed with Bree when she was clearly wrong?*");

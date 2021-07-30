@@ -150,7 +150,8 @@ namespace giantsummon
             Bapha = 20,
             Glenn = 21,
             CaptainStench = 22,
-            Cinnamon = 23;
+            Cinnamon = 23,
+            Quentin = 24;
 
         public struct DialogueTopic
         {
@@ -1162,6 +1163,9 @@ namespace giantsummon
                     case 23:
                         gb = new CinnamonBase();
                         break;
+                    case 24:
+                        gb = new QuentinBase();
+                        break;
                 }
             }
             if (gb == null)
@@ -1474,7 +1478,9 @@ namespace giantsummon
                 FoundRareOreTile = "Mes.Tile.RareOre",
                 FoundVeryRareOreTile = "Mes.Tile.VeryRareOre",
                 FoundMinecartRailTile = "Mes.Tile.Minecart";
-            public const string TeleportHomeMessage = "Mes.Teleport.Home";
+            public const string TeleportHomeMessage = "Mes.Generic.TeleportHome",
+                SomeoneJoinsTeamMessage = "Mes.Generic.SomeoneJoinsGroup",
+                PlayerMeetsSomeoneNewMessage = "Mes.Generic.PlayerMetSomeoneNew";
         }
         
         public enum GuardianEffect

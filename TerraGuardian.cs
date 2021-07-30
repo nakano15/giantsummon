@@ -1341,6 +1341,16 @@ namespace giantsummon
             AddCooldown(type, Value);
         }
 
+        public bool HasNpcBeenSpotted(int NpcID)
+        {
+            foreach(byte b in NpcsSpotted)
+            {
+                if (Main.npc[b].active && Main.npc[b].type == NpcID)
+                    return true;
+            }
+            return false;
+        }
+
         public void BuffCommentary(int ID)
         {
             if (MainMod.GeneralIdleCommentCooldown > 0 || HasCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown) || Downed || KnockedOut)
@@ -2252,13 +2262,13 @@ namespace giantsummon
                 return;
             if (Position.X < 0 || Position.Y < 0)
                 Spawn();
-            for (int dm = 0; dm < MainMod.DrawMoment.Count; dm++)
+            /*for (int dm = 0; dm < MainMod.DrawMoment.Count; dm++)
             {
                 if (MainMod.DrawMoment[dm].GuardianWhoAmID == WhoAmID)
                 {
                     MainMod.DrawMoment.RemoveAt(dm);
                 }
-            }
+            }*/
             CollisionHeightDiscount = 0;
             FinalScale = ScaleMult;
             if (TurnLock > 0)
@@ -2289,7 +2299,10 @@ namespace giantsummon
                 if(Counter == 1)
                     RideMount(Terraria.ID.MountID.Bunny);
             }*/
-            LoadedWorldRegion = Main.tile[(int)(Position.X * 0.0625f), (int)(Position.Y * 0.0625f)] != null;
+            LoadedWorldRegion = false;
+            if(Position.X >= Main.leftWorld * 16 && Position.X < Main.rightWorld * 16 && 
+                Position.Y >= Main.topWorld * 16 && Position.Y < Main.bottomWorld * 16)
+                LoadedWorldRegion = Main.tile[(int)(Position.X * DivisionBy16), (int)(Position.Y * DivisionBy16)] != null;
             OffsetX = OffsetY = 0;
             MainMod.AddActiveGuardian(this);
             WalkMode = false;

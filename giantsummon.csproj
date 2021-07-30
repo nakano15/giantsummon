@@ -131,6 +131,7 @@
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\Minerva\MinervaBase.cs" />
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
+    <Compile Include="Creatures\Quentin\QuentinBase.cs" />
     <Compile Include="Creatures\Vladimir\HugAction.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />
@@ -417,6 +418,7 @@
     <Content Include="Creatures\Minerva\left_arm.png" />
     <Content Include="Creatures\Minerva\right_arm.png" />
     <Content Include="Creatures\Minerva\right_arm_front.png" />
+    <Content Include="Creatures\Quentin\QuentinHead.png" />
     <Content Include="Creatures\Rococo\shadedbody.png" />
     <Content Include="Creatures\Rococo\shadedbodyfront.png" />
     <Content Include="Creatures\Rococo\shadedhead.png" />
