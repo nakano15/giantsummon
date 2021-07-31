@@ -858,6 +858,17 @@ namespace giantsummon.Creatures
                     return "Hey [nickname]! Check out those ores.";
                 case MessageIDs.FoundMinecartRailTile:
                     return "I hope I don't get nauseous...";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "Yes, let's check our loot there.";
+                case MessageIDs.SomeoneJoinsTeamMessage:
+                    return "Hi! Nice to see you joining.";
+                case MessageIDs.PlayerMeetsSomeoneNewMessage:
+                    return "A new person! Nice to meet you.";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "Time to make things easier.";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "That is so weird.";
             }
             return base.GetSpecialMessage(MessageID);
         }

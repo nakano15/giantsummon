@@ -7217,6 +7217,15 @@ namespace giantsummon
             {
                 SelectedItem = SummonerWeaponPosition;
                 Action = true;
+                if(NumMinions == 0 && MainMod.GeneralIdleCommentCooldown <= 0)
+                {
+                    string Mes = GetMessage(GuardianBase.MessageIDs.CompanionInvokesAMinion);
+                    if(Mes != "")
+                    {
+                        SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
+                        MainMod.SetIdleCommentCooldown();
+                    }
+                }
             }
         }
 

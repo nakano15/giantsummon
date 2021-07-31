@@ -1515,9 +1515,11 @@ namespace giantsummon
                 FoundRareOreTile = "Mes.Tile.RareOre",
                 FoundVeryRareOreTile = "Mes.Tile.VeryRareOre",
                 FoundMinecartRailTile = "Mes.Tile.Minecart";
-            public const string TeleportHomeMessage = "Mes.Generic.TeleportHome",
-                SomeoneJoinsTeamMessage = "Mes.Generic.SomeoneJoinsGroup",
-                PlayerMeetsSomeoneNewMessage = "Mes.Generic.PlayerMetSomeoneNew";
+            public const string TeleportHomeMessage = "Mes.Teleport.Home",
+                SomeoneJoinsTeamMessage = "Mes.Team.SomeoneJoins",
+                PlayerMeetsSomeoneNewMessage = "Mes.Player.MetSomeoneNew",
+                CompanionInvokesAMinion = "Mes.Item.InvokeMinion";
+            public const string VladimirRecruitPlayerGetsHugged = "Mes.Recruit.VladmirHug";
         }
         
         public enum GuardianEffect

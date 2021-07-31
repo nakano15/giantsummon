@@ -17,6 +17,7 @@ namespace giantsummon.Npcs
         public bool EndDialogDone = false;
         public DialogueChain dialogues = new DialogueChain();
         private bool JustSpawned = true;
+        private bool PlayerHasMetSardine = false, PlayerHasMetGlenn = false;
 
         public BreeNPC()
             : base(7, "")
@@ -98,6 +99,11 @@ namespace giantsummon.Npcs
                 {
                     ChangeScene(SceneIds.BreeSeesFriendlyFace);
                 }
+                /*else if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Glenn))
+                {
+                    ChangeScene(SceneIds.GlennSpotted);
+                    SayMessage("Gl... Glenn?! What are you doing here? You should have been at home.");
+                }*/
                 else if (PlayerMod.PlayerHasGuardianSummoned(player, 2))
                 {
                     ChangeScene(0);
@@ -417,6 +423,34 @@ namespace giantsummon.Npcs
                                 ChangeScene(SceneIds.BreeTurnsToTownNpc);
                             }
                             break;
+
+                        case SceneIds.GlennSpotted:
+                            {
+                                guardian.SaySomething("You and Dad were taking too long to come home, so I came looking for you two.");
+                                ChangeScene(SceneIds.GlennAnswer);
+                            }
+                            break;
+
+                        case SceneIds.AsksGlennIfHesOkay:
+                            {
+                                SayMessage("But It's dangerous out there! Are you hurt?");
+                                ChangeScene(SceneIds.AsksGlennIfHesOkay);
+                            }
+                            break;
+
+                        case SceneIds.GlennSaysThatIsFine:
+                            {
+                                guardian.SaySomething("I'm okay, don't worry. This Terrarian let me stay here, and It's safe here.");
+                                ChangeScene(SceneIds.BreeJoinsToTakeCareOfGlenn);
+                            }
+                            break;
+
+                        case SceneIds.BreeJoinsToTakeCareOfGlenn:
+                            {
+                                SayMessage("I can't let you stay here alone, I shouldn't have let you stay alone at home either. I'll stay here to take care of you, and look for your father.");
+                                ChangeScene(SceneIds.BreeTurnsToTownNpc);
+                            }
+                            break;
                     }
                 }
                 if (StepTime <= -600)
@@ -479,9 +513,15 @@ namespace giantsummon.Npcs
             }
             if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], 2, GuardianModID))
             {
-                if(SceneStep == SceneIds.NoScene)
+                if (SceneStep == SceneIds.NoScene)
                     ChangeScene(0);
                 return "Wait, is that... Sardine! I finally found you!";
+            }
+            else if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Glenn, GuardianModID))
+            {
+                if (SceneStep == SceneIds.NoScene)
+                    ChangeScene(0);
+                return "Gl... Glenn?!";
             }
             else if (!dialogues.Finished)
             {
@@ -660,7 +700,13 @@ namespace giantsummon.Npcs
 
             BreeSeesFriendlyFace,
             BreeSaysHowSheAppearedThere,
-            BreeJoinsYou
+            BreeJoinsYou,
+
+            GlennSpotted,
+            GlennAnswer,
+            AsksGlennIfHesOkay,
+            GlennSaysThatIsFine,
+            BreeJoinsToTakeCareOfGlenn
         }
     }
 }

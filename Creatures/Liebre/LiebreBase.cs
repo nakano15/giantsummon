@@ -1137,6 +1137,17 @@ namespace giantsummon.Creatures
                     return "*Look, over there. Shiny ores.*";
                 case MessageIDs.FoundMinecartRailTile:
                     return "*As long as you don't scream during the ride, It's okay.*";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "*Enough exploration for now?*";
+                case MessageIDs.SomeoneJoinsTeamMessage:
+                    return "*Another soul joins us.*";
+                case MessageIDs.PlayerMeetsSomeoneNewMessage:
+                    return "*Welcome, and please, don't freak out.*";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "*I could use some aid on reaping.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*I don't think even the souls in my body believe in what I see.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

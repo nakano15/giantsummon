@@ -844,6 +844,17 @@ namespace giantsummon.Creatures
                     return "Hey, look! Those ores may interest you.";
                 case MessageIDs.FoundMinecartRailTile:
                     return "I hope It doesn't zig-zags.";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "Finally, home.";
+                case MessageIDs.SomeoneJoinsTeamMessage:
+                    return "Great, one more person.";
+                case MessageIDs.PlayerMeetsSomeoneNewMessage:
+                    return "I hope you're not stranded here, too.";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "I wish I had those minions back home.";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "Should... I leave you two alone?";
             }
             return base.GetSpecialMessage(MessageID);
         }

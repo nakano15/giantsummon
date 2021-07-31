@@ -455,6 +455,17 @@ namespace giantsummon.Creatures
                     return "(She shows you some rare ores she found.)";
                 case MessageIDs.FoundMinecartRailTile:
                     return "(She points at the Minecart Rails like a kid wanting to go on a rollercoaster.)";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "(She gives a sigh of relief.)";
+                case MessageIDs.SomeoneJoinsTeamMessage:
+                    return "(She waves at the person, while smiling.)";
+                case MessageIDs.PlayerMeetsSomeoneNewMessage:
+                    return "(She looks happy for meeting someone new.)";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "(She got a evil look in her eyes.)";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "(She seems to not be able to believe what is happening.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

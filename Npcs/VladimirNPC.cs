@@ -10,7 +10,7 @@ namespace giantsummon.Npcs
 {
     public class VladimirNPC : GuardianActorNPC
     {
-        public bool SpottedPlayer = false, RequestTaken = false, RequestComplete = false, HugPassed = false;
+        public bool SpottedPlayer = false, RequestTaken = false, RequestComplete = false, HugPassed = false, HasHugCommentHappened = false;
         public byte FishsTaken = 0, FishsToTake = 0;
         public int HuggingPlayer = -1;
         const int FishID = Terraria.ID.ItemID.Honeyfin;
@@ -53,7 +53,7 @@ namespace giantsummon.Npcs
                 npc.ai[2] = 1;
                 npc.ai[3] = -3;
                 npc.TargetClosest(false);
-                Main.NewText("A huge bear appeared " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[npc.target].Center) + " near to " + Main.player[npc.target].name + ".");
+                Main.NewText("A huge Terra Guardian appeared " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[npc.target].Center) + " near to " + Main.player[npc.target].name + ".");
             }
             if (npc.direction == 0)
                 npc.direction = 1;
@@ -196,7 +196,7 @@ namespace giantsummon.Npcs
                                 switch (Main.rand.Next(5))
                                 {
                                     case 0:
-                                        Message = ("*Becareful! That can hurt someone!*");
+                                        Message = ("*Be careful! That can hurt someone!*");
                                         break;
                                     case 1:
                                         Message = ("*Hey! Are you trying to hurt me?*");
@@ -256,7 +256,7 @@ namespace giantsummon.Npcs
                                     Message = ("*Hey! Why the aggression?*");
                                     break;
                                 case 4:
-                                    Message = ("*Urrrf... (Breathing for a moment) Gasp! You took out all my air with that kick! Why?! Tell me why you did that?!*");
+                                    Message = ("*Urrrf... (Breathing for a moment) Gasp! You took out all my air with that kick! Why?! Tell me why you did that?*");
                                     break;
                             }
                         }
@@ -312,7 +312,7 @@ namespace giantsummon.Npcs
                             switch (Main.rand.Next(4))
                             {
                                 case 0:
-                                    Message = "*You want some more? I don't mind.*";
+                                    Message = "*You want some more hug? I don't mind.*";
                                     break;
                                 case 1:
                                     Message = "*(Humming)*";
@@ -372,8 +372,8 @@ namespace giantsummon.Npcs
                         HugPosition.X = Base.SpriteWidth - HugPosition.X;
                     HugPosition.X -= Base.SpriteWidth * 0.5f;
                     HugPosition.Y -= Base.SpriteHeight;
-                    HugPosition.X += npc.position.X + npc.width * 0.5f;
-                    HugPosition.Y += npc.position.Y + npc.height;
+                    HugPosition.X = HugPosition.X * npc.scale + npc.position.X + npc.width * 0.5f;
+                    HugPosition.Y = HugPosition.Y * npc.scale + npc.position.Y + npc.height;
                     if (npc.ai[0] < -200)
                     {
                         switch (Main.rand.Next(5))
@@ -396,6 +396,11 @@ namespace giantsummon.Npcs
                         }
                         HugPosition = npc.Center;
                         HuggingPlayer = -1;
+                    }
+                    if(MessageTime <= 0 && !HasHugCommentHappened)
+                    {
+                        HasHugCommentHappened = true;
+                        pm.CompanionReaction(GuardianBase.MessageIDs.VladimirRecruitPlayerGetsHugged);
                     }
                     if (ControllingGuardian)
                     {

@@ -626,10 +626,10 @@ namespace giantsummon
                 if (g.ID == ID && g.ModID == ModID)
                     return g;
             }
-            if (player.GetModPlayer<PlayerMod>().Guardian.MyID.IsSameID(ID, ModID))
+            /*if (player.GetModPlayer<PlayerMod>().Guardian.MyID.IsSameID(ID, ModID))
             {
                 return player.GetModPlayer<PlayerMod>().Guardian;
-            }
+            }*/
             return null;
         }
 
@@ -1610,7 +1610,7 @@ namespace giantsummon
             if(CompanionsReaction.Count > 0)
             {
                 int Picked = Main.rand.Next(CompanionsReaction.Count);
-                CompanionsReaction[Picked].Key.SaySomething(CompanionsReaction[Picked].Value);
+                CompanionsReaction[Picked].Key.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(CompanionsReaction[Picked].Value, CompanionsReaction[Picked].Key));
                 return true;
             }
             return false;
@@ -1904,6 +1904,22 @@ namespace giantsummon
                 guardian.GravityDirection = (int)player.gravDir;
             }
             return true;
+        }
+
+        public override void PostItemCheck()
+        {
+            if (player.itemAnimation > 0)
+            {
+                int ItemType = player.inventory[player.selectedItem].type;
+                if ((ItemType == Terraria.ID.ItemID.MagicMirror ||
+                    ItemType == Terraria.ID.ItemID.IceMirror ||
+                    ItemType == Terraria.ID.ItemID.CellPhone) && 
+                    player.itemAnimation == (int)(player.itemAnimationMax * 0.8f))
+                {
+                    CompanionReaction(GuardianBase.MessageIDs.TeleportHomeMessage);
+                }
+            }
+
         }
 
         public override void SetControls()

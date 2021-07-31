@@ -556,6 +556,17 @@ namespace giantsummon.Creatures
                     return "*I see some rare ores.*";
                 case MessageIDs.FoundMinecartRailTile:
                     return "*I hope we both fit in the minecart.*";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "*Would you like something to eat, when we arrive?*";
+                case MessageIDs.SomeoneJoinsTeamMessage:
+                    return "*Welcome...*";
+                case MessageIDs.PlayerMeetsSomeoneNewMessage:
+                    return "*Hello, I'm [name].*";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "*Could they also help me in cooking?*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*I guess I can wait a while longer...*";
             }
             return "";
         }

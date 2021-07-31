@@ -331,6 +331,17 @@ namespace giantsummon.Creatures
                     return "Rare ores.";
                 case MessageIDs.FoundMinecartRailTile:
                     return "";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "";
+                case MessageIDs.SomeoneJoinsTeamMessage:
+                    return "";
+                case MessageIDs.PlayerMeetsSomeoneNewMessage:
+                    return "";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "Minion, do my bidding.";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "Don't we have something more important to do?";
             }
             return base.GetSpecialMessage(MessageID);
         }

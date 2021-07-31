@@ -8,3 +8,5 @@ Fixed an issue with the system of disposing textures when mod reloads.
 Terrarian companions can now have extra texture data loaded.
 Fixed constant crashes that happened on multiplayer.
 	That doesn't means that multiplayer is 100% playable. I don't recommend joining It for a serious playthrough, since gathering new companions wont be possible.
+Added companion reactions to:
+	Teleporting Home, When Someone Joins Team, When Player Meets Someone New, Companion Invokes a Minion and When Player is Hugged by Vladimir Recruit Npc.
