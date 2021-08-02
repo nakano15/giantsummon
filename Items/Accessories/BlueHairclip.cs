@@ -21,6 +21,7 @@ namespace giantsummon.Items.Accessories
             item.height = 24;           //Weapon's texture's height
             item.value = Item.buyPrice(0, 1, 50);           //The value of the weapon
             item.rare = 7;              //The rarity of the weapon, from -1 to 13
+            PlayerCanUse = true;
         }
 
         public override void UpdateEquip(Player player)

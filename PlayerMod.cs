@@ -774,7 +774,8 @@ namespace giantsummon
             UpdateGuardian();
             for (int e = 0; e < 3; e++)
             {
-                if (player.armor[e].type > 0 && player.armor[e].modItem is Items.GuardianItemPrefab)
+                if (player.armor[e].type > 0 && player.armor[e].modItem is Items.GuardianItemPrefab && 
+                    !((Items.GuardianItemPrefab)player.armor[e].modItem).PlayerCanUse)
                 {
                     Item i = player.armor[e];
                     Item.NewItem(player.getRect(), i.type);
@@ -782,7 +783,8 @@ namespace giantsummon
                     player.armor[e].SetDefaults();
                     Main.NewText("This item doesn't fit on me.");
                 }
-                if (player.armor[e + 10].type > 0 && player.armor[e + 10].modItem is Items.GuardianItemPrefab)
+                if (player.armor[e + 10].type > 0 && player.armor[e + 10].modItem is Items.GuardianItemPrefab &&
+                    !((Items.GuardianItemPrefab)player.armor[e + 10].modItem).PlayerCanUse)
                 {
                     Item i = player.armor[e + 10];
                     Item.NewItem(player.getRect(), i.type);
@@ -1706,6 +1708,10 @@ namespace giantsummon
                     if (guardian.Base.DontUseRightHand)
                     {
                         player.position = guardian.GetGuardianLeftHandPosition;
+                    }
+                    else if (guardian.Base.DontUseLeftHand)
+                    {
+                        player.position = guardian.GetGuardianRightHandPosition;
                     }
                     else
                     {

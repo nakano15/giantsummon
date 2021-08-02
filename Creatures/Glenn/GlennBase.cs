@@ -106,6 +106,12 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(19, 22, 23);
         }
 
+        public override string CallUnlockMessage => "I think my parents will not mind if I come with you. You are responsible, right?";
+
+        public override string MountUnlockMessage => "My feet hurts from all this walking. Can we do the rest of the exploration with me holding on your back?";
+
+        public override string ControlUnlockMessage => "You're a cool person. I can give you control as long as you don't get me killed.";
+
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
@@ -379,6 +385,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "I'm so happy that you picked me as your buddy, I think you're the first friend I ever had.";
                 case MessageIDs.RescueMessage:
                     return "Don't worry! You're at my house right now, It's safe in here.";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:

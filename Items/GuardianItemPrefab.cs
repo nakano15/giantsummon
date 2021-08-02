@@ -13,7 +13,7 @@ namespace giantsummon.Items
         public Point ShotSpawnPosition = Point.Zero;
         public float ProjectileFallRate = 0f;
         public HeldHand hand = HeldHand.Both;
-        public bool Heavy = false, Shield = false, OffHandItem = false;
+        public bool Heavy = false, Shield = false, OffHandItem = false, PlayerCanUse = false;
         public int BlockRate = 0;
 
         public override bool CloneNewInstances
@@ -168,8 +168,11 @@ namespace giantsummon.Items
             {
                 tooltips.Insert(1, new TooltipLine(this.mod, "GuardianHeavyItemInfo", "Heavy Item"));
             }
-            TooltipLine tl = new TooltipLine(this.mod, "GuardianExclusiveWarning", "Terra Guardian Item");
-            tooltips.Insert(1, tl);
+            if (PlayerCanUse)
+            {
+                tooltips.Insert(1, new TooltipLine(this.mod, "GuardianHeavyItemInfo", "You can use."));
+            }
+            tooltips.Insert(1, new TooltipLine(this.mod, "GuardianExclusiveWarning", "Terra Guardian Item"));
             base.ModifyTooltips(tooltips);
         }
         

@@ -10,3 +10,12 @@ Fixed constant crashes that happened on multiplayer.
 	That doesn't means that multiplayer is 100% playable. I don't recommend joining It for a serious playthrough, since gathering new companions wont be possible.
 Added companion reactions to:
 	Teleporting Home, When Someone Joins Team, When Player Meets Someone New, Companion Invokes a Minion and When Player is Hugged by Vladimir Recruit Npc.
+Companions will stop using items when knocked out.
+Terrarian companions will have their hair loaded and drawn on their head sprites.
+You can now use Blue's Hairclip accessory.
+Glenn will no longer cause crashes on your game when you move away after he notices you.
+Fixed distancing bug on Glenn recruit npc.
+Fixed Captain Stench's torch positioning. She now knows that will not use the left arm.
+Added missing messages from Glenn and Cinnamon.
+Cinnamon now has a chance of arriving with the name "Canela", instead.
+Added a good number of missing messages companions picked as buddy says.

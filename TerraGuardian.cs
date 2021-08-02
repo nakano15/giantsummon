@@ -11994,6 +11994,10 @@ namespace giantsummon
         {
             if (HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified))
                 return;
+            if(ItemAnimationTime > 0 && KnockedOut)
+            {
+                ItemAnimationTime = ItemUseTime = 0;
+            }
             bool TriggerItem = false, ToolTrigger = false;
             float Knockback = 8f;
             int CriticalRate = 0;
@@ -13788,6 +13792,8 @@ namespace giantsummon
         {
             if (hand == HeldHand.Left && (Base.IsTerrarian || Base.DontUseRightHand))
                 hand = HeldHand.Left;
+            else if (hand == HeldHand.Right && (Base.IsTerrarian || Base.DontUseLeftHand))
+                hand = HeldHand.Right;
             else if (hand == HeldHand.Left) hand = HeldHand.Right;
             else if (hand == HeldHand.Right) hand = HeldHand.Left;
         }
@@ -17369,14 +17375,15 @@ namespace giantsummon
                  null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None).Draw(Main.spriteBatch);
                 return;
             }
+            if (!Base.sprites.IsTextureLoaded)
+                Base.sprites.LoadTextures();
+            TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             if (Base.IsTerrarian)
             {
                 Position.Y -= 16f;
                 DrawTerrarianHeadData(Position, Scale);
                 return;
             }
-            if (!Base.sprites.IsTextureLoaded)
-                Base.sprites.LoadTextures();
             Position.X -= Base.sprites.HeadSprite.Width * XOffset;
             Position.Y -= Base.sprites.HeadSprite.Height * YOffset;
             List<GuardianDrawData> gddlist = new List<GuardianDrawData>();

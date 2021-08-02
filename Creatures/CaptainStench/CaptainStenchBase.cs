@@ -53,6 +53,7 @@ namespace giantsummon.Creatures
             ReverseMount = false;
             DrinksBeverage = true;
             DontUseHeavyWeapons = true;
+            DontUseLeftHand = true;
             SpecialAttackBasedCombat = true;
             UsesRightHandByDefault = true;
             ForceWeaponUseOnMainHand = true;
@@ -136,11 +137,21 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(62, 44, 31);
 
             //Right Arm
+            RightHandPoints.AddFramePoint2x(1, 48, 45);
+
+            for(int i = 10; i < 18; i++)
+                RightHandPoints.AddFramePoint2x(i, 48, 45);
+
+            RightHandPoints.AddFramePoint2x(20, 55, 28);
+            RightHandPoints.AddFramePoint2x(21, 49, 41);
+
             RightHandPoints.AddFramePoint2x(22, 50, 33);
             RightHandPoints.AddFramePoint2x(23, 50, 40);
             RightHandPoints.AddFramePoint2x(24, 48, 45);
 
             RightHandPoints.AddFramePoint2x(26, 53, 52);
+
+            RightHandPoints.AddFramePoint2x(45, 48, 42);
 
             //Hat Position
             HeadVanityPosition.DefaultCoordinate2x = new Point(40, 32);
@@ -1478,6 +1489,7 @@ namespace giantsummon.Creatures
                 data.HoldingWeaponTime = 5 * 60;
             else if(data.HoldingWeaponTime > 0)
             {
+                guardian.OffHandAction = false;
                 data.HoldingWeaponTime--;
             }
             if(data.DeviceID > 0)
@@ -1507,7 +1519,7 @@ namespace giantsummon.Creatures
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
-            bool UsingWeapon = data.HoldingWeaponTime > 0, OpenCloak = guardian.ItemUseTime > 0;
+            bool UsingWeapon = data.HoldingWeaponTime > 0 || guardian.OffHandAction, OpenCloak = guardian.ItemUseTime > 0 || guardian.OffHandAction;
             if(guardian.Velocity.Y > 0)
             {
                 Frame++;
@@ -1867,6 +1879,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "As long as you share loot with me we'll be the best of friends.";
                 case MessageIDs.ReviveByOthersHelp:
                     return "Once more im in debt to you I hope my performance in combat wont be this lackluster next time...";
                 case MessageIDs.RevivedByRecovery:

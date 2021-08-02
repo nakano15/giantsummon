@@ -196,6 +196,8 @@ namespace giantsummon
             Vector2 HandPosition = guardian.Position;
             if ((hand == HeldHand.Right || hand == HeldHand.Both) && guardian.Base.DontUseRightHand)
                 hand = HeldHand.Left;
+            if ((hand == HeldHand.Left || hand == HeldHand.Both) && guardian.Base.DontUseLeftHand)
+                hand = HeldHand.Right;
             switch (hand)
             {
                 case HeldHand.Left:

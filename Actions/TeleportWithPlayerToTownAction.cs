@@ -226,6 +226,8 @@ namespace giantsummon.Actions
             HeldHand hand = HeldHand.Right;
             if ((hand == HeldHand.Right || hand == HeldHand.Both) && guardian.Base.DontUseRightHand)
                 hand = HeldHand.Left;
+            if ((hand == HeldHand.Left || hand == HeldHand.Both) && guardian.Base.DontUseLeftHand)
+                hand = HeldHand.Right;
             switch (Step)
             {
                 case 1:

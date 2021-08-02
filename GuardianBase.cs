@@ -47,7 +47,7 @@ namespace giantsummon
         public int MaxBreath = 200, BreathCooldown = 7;
         public int BlockRate = 0, DodgeRate = 0;
         public float MountBurdenPercentage = 0.05f;
-        public bool UsesRightHandByDefault = false, DontUseRightHand = false, ForceWeaponUseOnMainHand = false;
+        public bool UsesRightHandByDefault = false, DontUseLeftHand = false, DontUseRightHand = false, ForceWeaponUseOnMainHand = false;
         public bool DontUseHeavyWeapons = false;
         public bool CanChangeGender = false;
         public bool OneHanded2HWeaponWield = false;
@@ -1040,10 +1040,12 @@ namespace giantsummon
             Y = p.Y;
         }
 
-        public Microsoft.Xna.Framework.Point GetBetweenHandsPosition(int Frame)
+        public Point GetBetweenHandsPosition(int Frame)
         {
             if (DontUseRightHand)
                 return LeftHandPoints.GetPositionFromFramePoint(Frame);
+            if (DontUseLeftHand)
+                return RightHandPoints.GetPositionFromFramePoint(Frame);
             Point p = new Point(), 
                 l = LeftHandPoints.GetPositionFromFramePoint(Frame), 
                 r = RightHandPoints.GetPositionFromFramePoint(Frame);

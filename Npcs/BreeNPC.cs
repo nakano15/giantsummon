@@ -18,6 +18,7 @@ namespace giantsummon.Npcs
         public DialogueChain dialogues = new DialogueChain();
         private bool JustSpawned = true;
         private bool PlayerHasMetSardine = false, PlayerHasMetGlenn = false;
+        private bool HadSardineSpotted = false, HadGlennSpotted = false;
 
         public BreeNPC()
             : base(7, "")
@@ -99,15 +100,25 @@ namespace giantsummon.Npcs
                 {
                     ChangeScene(SceneIds.BreeSeesFriendlyFace);
                 }
-                /*else if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Glenn))
+                else if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Glenn) && PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Sardine))
+                {
+                    ChangeScene(SceneIds.BreeSpotsSardineAndGlenn);
+                    SayMessage("Are they... Glenn! Sardine!");
+                    HadSardineSpotted = HadGlennSpotted = true;
+                }
+                else if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Glenn))
                 {
                     ChangeScene(SceneIds.GlennSpotted);
-                    SayMessage("Gl... Glenn?! What are you doing here? You should have been at home.");
-                }*/
+                    SayMessage("Gl... Glenn?!");
+                    HadSardineSpotted = false;
+                    HadGlennSpotted = true;
+                }
                 else if (PlayerMod.PlayerHasGuardianSummoned(player, 2))
                 {
                     ChangeScene(0);
                     SayMessage("Sardine! I finally found you!");
+                    HadSardineSpotted = true;
+                    HadGlennSpotted = false;
                 }
             }
             npc.npcSlots = 1;
@@ -128,68 +139,228 @@ namespace giantsummon.Npcs
                     PositionOnPlayer.X += XMod - Base.SpriteWidth * 0.5f;
                     npc.position = PositionOnPlayer;
                 }
-                TerraGuardian guardian = PlayerMod.GetPlayerMainGuardian(player);
-                if (PlayerMod.HasGuardianSummoned(player, 2))
+                TerraGuardian guardian = PlayerMod.GetPlayerMainGuardian(player),
+                    Sardine = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine),
+                    Glenn = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Glenn);
+                if (HadGlennSpotted && HadSardineSpotted)
                 {
-                    guardian = PlayerMod.GetPlayerSummonedGuardian(player, 2);
-                    bool IsSardineToTheLeft = guardian.Position.X - npc.Center.X < 0;
-                    if (Math.Abs(guardian.Position.X - npc.Center.X) >= 96)
+                    if(Sardine != null && Glenn != null)
                     {
-                        if (!IsSardineToTheLeft)
+                        bool GlennIsClosest = (Glenn.CenterPosition - player.Center).Length() < (Sardine.CenterPosition - player.Center).Length();
+                        if (GlennIsClosest)
                         {
-                            MoveRight = true;
+                            guardian = Glenn;
+                            bool IsGlennToTheLeft = guardian.Position.X - npc.Center.X < 0;
+                            if (Math.Abs(guardian.Position.X - npc.Center.X) >= 96)
+                            {
+                                if (!IsGlennToTheLeft)
+                                {
+                                    MoveRight = true;
+                                }
+                                else
+                                {
+                                    MoveLeft = true;
+                                }
+                            }
+                            if (!guardian.IsAttackingSomething && guardian.Velocity.X == 0)
+                            {
+                                guardian.FaceDirection(!IsGlennToTheLeft);
+                            }
+                            if (npc.velocity.X == 0)
+                            {
+                                npc.direction = !IsGlennToTheLeft ? 1 : -1;
+                            }
                         }
                         else
                         {
-                            MoveLeft = true;
+                            guardian = Sardine;
+                            bool IsSardineToTheLeft = guardian.Position.X - npc.Center.X < 0;
+                            if (Math.Abs(guardian.Position.X - npc.Center.X) >= 96)
+                            {
+                                if (!IsSardineToTheLeft)
+                                {
+                                    MoveRight = true;
+                                }
+                                else
+                                {
+                                    MoveLeft = true;
+                                }
+                            }
+                            if (!guardian.IsAttackingSomething && guardian.Velocity.X == 0)
+                            {
+                                guardian.FaceDirection(!IsSardineToTheLeft);
+                            }
+                            if (npc.velocity.X == 0)
+                            {
+                                npc.direction = !IsSardineToTheLeft ? 1 : -1;
+                            }
+                        }
+                        if (SceneStep >= SceneIds.BreePersuadesThePlayerToCallHimBack && SceneStep <= SceneIds.BreePersuadesThePlayerALittleCloser)
+                        {
+                            if (InterruptedOnce)
+                            {
+                                ChangeScene(SceneIds.SardineIsCalledBackByPlayerAfterInterruption);
+                            }
+                            else
+                            {
+                                ChangeScene(SceneIds.PlayerCalledSardineBackAfterBreeAsked);
+                            }
                         }
                     }
-                    if (!guardian.IsAttackingSomething)
+                    else
                     {
-                        guardian.FaceDirection(!IsSardineToTheLeft);
-                    }
-                    if (npc.velocity.X == 0)
-                    {
-                        npc.direction = !IsSardineToTheLeft ? 1 : -1;
-                    }
-                    if (SceneStep >= SceneIds.BreePersuadesThePlayerToCallHimBack && SceneStep <= SceneIds.BreePersuadesThePlayerALittleCloser)
-                    {
-                        if (InterruptedOnce)
+                        bool IsPlayerToTheLeft = player.Center.X - npc.Center.X < 0;
+                        if (Math.Abs(player.Center.X - npc.Center.X) >= 96)
                         {
-                            ChangeScene(SceneIds.SardineIsCalledBackByPlayerAfterInterruption);
+                            if (!IsPlayerToTheLeft)
+                            {
+                                MoveRight = true;
+                            }
+                            else
+                            {
+                                MoveLeft = true;
+                            }
                         }
-                        else
+                        if (npc.velocity.X == 0)
                         {
-                            ChangeScene(SceneIds.PlayerCalledSardineBackAfterBreeAsked);
+                            npc.direction = !IsPlayerToTheLeft ? 1 : -1;
+                        }
+                        if (SceneStep >= SceneIds.BothAnswers && SceneStep < SceneIds.BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen)
+                        {
+                            InterruptedOnce = true;
+                            if(Sardine == null)
+                                ChangeScene(SceneIds.PlayerUnsummonedSardine);
+                            else
+                                ChangeScene(SceneIds.PlayerUnsummonedGlenn);
                         }
                     }
                 }
-                else
+                else if (HadGlennSpotted)
                 {
-                    bool IsPlayerToTheLeft = player.Center.X - npc.Center.X < 0;
-                    if (Math.Abs(player.Center.X - npc.Center.X) >= 96)
+                    if (Glenn != null)
                     {
-                        if (!IsPlayerToTheLeft)
+                        guardian = Glenn;
+                        bool IsGlennToTheLeft = guardian.Position.X - npc.Center.X < 0;
+                        if (Math.Abs(guardian.Position.X - npc.Center.X) >= 96)
                         {
-                            MoveRight = true;
+                            if (!IsGlennToTheLeft)
+                            {
+                                MoveRight = true;
+                            }
+                            else
+                            {
+                                MoveLeft = true;
+                            }
                         }
-                        else
+                        if (!guardian.IsAttackingSomething && guardian.Velocity.X == 0)
                         {
-                            MoveLeft = true;
+                            guardian.FaceDirection(!IsGlennToTheLeft);
+                        }
+                        if (npc.velocity.X == 0)
+                        {
+                            npc.direction = !IsGlennToTheLeft ? 1 : -1;
+                        }
+                        if (SceneStep >= SceneIds.BreePersuadesThePlayerToCallHimBack && SceneStep <= SceneIds.BreePersuadesThePlayerALittleCloser)
+                        {
+                            if (InterruptedOnce)
+                            {
+                                ChangeScene(SceneIds.SardineIsCalledBackByPlayerAfterInterruption);
+                            }
+                            else
+                            {
+                                ChangeScene(SceneIds.PlayerCalledSardineBackAfterBreeAsked);
+                            }
                         }
                     }
-                    if (npc.velocity.X == 0)
+                    else
                     {
-                        npc.direction = !IsPlayerToTheLeft ? 1 : -1;
+                        bool IsPlayerToTheLeft = player.Center.X - npc.Center.X < 0;
+                        if (Math.Abs(player.Center.X - npc.Center.X) >= 96)
+                        {
+                            if (!IsPlayerToTheLeft)
+                            {
+                                MoveRight = true;
+                            }
+                            else
+                            {
+                                MoveLeft = true;
+                            }
+                        }
+                        if (npc.velocity.X == 0)
+                        {
+                            npc.direction = !IsPlayerToTheLeft ? 1 : -1;
+                        }
+                        if (SceneStep >= SceneIds.GlennAnswer && SceneStep < SceneIds.BreeJoinsToTakeCareOfGlenn)
+                        {
+                            InterruptedOnce = true;
+                            ChangeScene(SceneIds.PlayerUnsummonedGlenn);
+                        }
                     }
-                    if (SceneStep >= SceneIds.SardineStaysAndTalksToBree && SceneStep < SceneIds.BreeTurnsToTownNpc)
+                }
+                else if (HadSardineSpotted)
+                {
+                    if (Sardine != null)
                     {
-                        InterruptedOnce = true;
-                        ChangeScene(SceneIds.PlayerUnsummonedSardine);
+                        guardian = Sardine;
+                        bool IsSardineToTheLeft = guardian.Position.X - npc.Center.X < 0;
+                        if (Math.Abs(guardian.Position.X - npc.Center.X) >= 96)
+                        {
+                            if (!IsSardineToTheLeft)
+                            {
+                                MoveRight = true;
+                            }
+                            else
+                            {
+                                MoveLeft = true;
+                            }
+                        }
+                        if (!guardian.IsAttackingSomething)
+                        {
+                            guardian.FaceDirection(!IsSardineToTheLeft);
+                        }
+                        if (npc.velocity.X == 0)
+                        {
+                            npc.direction = !IsSardineToTheLeft ? 1 : -1;
+                        }
+                        if (SceneStep >= SceneIds.BreePersuadesThePlayerToCallHimBack && SceneStep <= SceneIds.BreePersuadesThePlayerALittleCloser)
+                        {
+                            if (InterruptedOnce)
+                            {
+                                ChangeScene(SceneIds.SardineIsCalledBackByPlayerAfterInterruption);
+                            }
+                            else
+                            {
+                                ChangeScene(SceneIds.PlayerCalledSardineBackAfterBreeAsked);
+                            }
+                        }
                     }
-                    if (SceneStep == SceneIds.SardineSpotted)
+                    else
                     {
-                        ChangeScene(SceneIds.SardineFlees);
+                        bool IsPlayerToTheLeft = player.Center.X - npc.Center.X < 0;
+                        if (Math.Abs(player.Center.X - npc.Center.X) >= 96)
+                        {
+                            if (!IsPlayerToTheLeft)
+                            {
+                                MoveRight = true;
+                            }
+                            else
+                            {
+                                MoveLeft = true;
+                            }
+                        }
+                        if (npc.velocity.X == 0)
+                        {
+                            npc.direction = !IsPlayerToTheLeft ? 1 : -1;
+                        }
+                        if (SceneStep >= SceneIds.SardineStaysAndTalksToBree && SceneStep < SceneIds.BreeTurnsToTownNpc)
+                        {
+                            InterruptedOnce = true;
+                            ChangeScene(SceneIds.PlayerUnsummonedSardine);
+                        }
+                        if (SceneStep == SceneIds.SardineSpotted)
+                        {
+                            ChangeScene(SceneIds.SardineFlees);
+                        }
                     }
                 }
                 if (SceneChange)
@@ -270,9 +441,27 @@ namespace giantsummon.Npcs
                             break;
                         case SceneIds.BreeForcedPlayerToCallSardineBack:
                             {
-                                player.GetModPlayer<PlayerMod>().CallGuardian(2, "");
+                                if (HadSardineSpotted)
+                                {
+                                    player.GetModPlayer<PlayerMod>().CallGuardian(2, "");
+                                }
+                                if (HadGlennSpotted)
+                                {
+                                    player.GetModPlayer<PlayerMod>().CallGuardian(GuardianBase.Glenn, "");
+                                }
                                 SayMessage("Good.");
-                                ChangeScene(SceneIds.SardineStaysAndTalksToBree);
+                                if (HadSardineSpotted && HadGlennSpotted)
+                                {
+                                    ChangeScene(SceneIds.BreeAsksWhereWasSardine);
+                                }
+                                else if (HadGlennSpotted)
+                                {
+                                    ChangeScene(SceneIds.GlennSpotted);
+                                }
+                                else
+                                {
+                                    ChangeScene(SceneIds.SardineStaysAndTalksToBree);
+                                }
                             }
                             break;
                         case SceneIds.SardineStaysAndTalksToBree:
@@ -390,7 +579,7 @@ namespace giantsummon.Npcs
 
                         case SceneIds.PlayerUnsummonedSardine:
                             {
-                                SayMessage("What was that for?!");
+                                SayMessage("Hey! We were talking!");
                                 InterruptedOnce = true;
                                 ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
                             }
@@ -426,15 +615,22 @@ namespace giantsummon.Npcs
 
                         case SceneIds.GlennSpotted:
                             {
-                                guardian.SaySomething("You and Dad were taking too long to come home, so I came looking for you two.");
+                                SayMessage("Glenn! What are you doing here? You should be at home.");
                                 ChangeScene(SceneIds.GlennAnswer);
+                            }
+                            break;
+
+                        case SceneIds.GlennAnswer:
+                            {
+                                guardian.SaySomething("You and Dad were taking too long to come home, so I came looking for you two.");
+                                ChangeScene(SceneIds.AsksGlennIfHesOkay);
                             }
                             break;
 
                         case SceneIds.AsksGlennIfHesOkay:
                             {
                                 SayMessage("But It's dangerous out there! Are you hurt?");
-                                ChangeScene(SceneIds.AsksGlennIfHesOkay);
+                                ChangeScene(SceneIds.GlennSaysThatIsFine);
                             }
                             break;
 
@@ -448,7 +644,86 @@ namespace giantsummon.Npcs
                         case SceneIds.BreeJoinsToTakeCareOfGlenn:
                             {
                                 SayMessage("I can't let you stay here alone, I shouldn't have let you stay alone at home either. I'll stay here to take care of you, and look for your father.");
-                                ChangeScene(SceneIds.BreeTurnsToTownNpc);
+                                ChangeScene(SceneIds.BreeIntroducesHerself);
+                            }
+                            break;
+
+                        case SceneIds.BreeSpotsSardineAndGlenn:
+                            {
+                                SayMessage("Are you two alright?");
+                                ChangeScene(SceneIds.BothAnswers);
+                            }
+                            break;
+
+                        case SceneIds.BothAnswers:
+                            {
+                                Sardine.SaySomething("Yes, we're fine.");
+                                Glenn.SaySomething("I'm okay.");
+                                ChangeScene(SceneIds.BreeAsksWhereWasSardine);
+                            }
+                            break;
+
+                        case SceneIds.BreeAsksWhereWasSardine:
+                            {
+                                SayMessage("I'm so glad you two are fine. Sardine, where did you go? Why didn't you returned home?");
+                                ChangeScene(SceneIds.SardineAnswers);
+                            }
+                            break;
+
+                        case SceneIds.SardineAnswers:
+                            {
+                                Sardine.SaySomething("I was trying to find treasures for you two... And then I was saved by that Terrarian from a bounty hunt that gone wrong.");
+                                ChangeScene(SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere);
+                            }
+                            break;
+
+                        case SceneIds.BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere:
+                            {
+                                SayMessage("I think I should think you then, Terrarian. Now Glenn, I told you to wait for us at home!");
+                                ChangeScene(SceneIds.GlennAnswers);
+                            }
+                            break;
+
+                        case SceneIds.GlennAnswers:
+                            {
+                                Glenn.SaySomething("I stayed at home, but I was worried that you two didn't returned yet, so I explored worlds trying to find you two.");
+                                ChangeScene(SceneIds.BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld);
+                            }
+                            break;
+
+                        case SceneIds.BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld:
+                            {
+                                SayMessage("That's really reckless and dangerous, but I'm glad you two are unharmed. Let's spend a little time here and then return home.");
+                                ChangeScene(SceneIds.SardineSaysThatForgotWhereTheWorldIsAt);
+                            }
+                            break;
+
+                        case SceneIds.SardineSaysThatForgotWhereTheWorldIsAt:
+                            {
+                                Sardine.SaySomething("I hope you know our way home, because I forgot.");
+                                ChangeScene(SceneIds.GlennAlsoSaysThatForgot);
+                            }
+                            break;
+
+                        case SceneIds.GlennAlsoSaysThatForgot:
+                            {
+                                Glenn.SaySomething("I also forgot my way back home, sorry mom.");
+                                ChangeScene(SceneIds.BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen);
+                            }
+                            break;
+
+                        case SceneIds.BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen:
+                            {
+                                SayMessage("I can't remember either.... Well, I hope you don't mind if we stay here for longer, Terrarian.");
+                                ChangeScene(SceneIds.BreeIntroducesHerself);
+                            }
+                            break;
+
+                        case SceneIds.PlayerUnsummonedGlenn:
+                            {
+                                SayMessage("Where did you sent my son? Call him back now!");
+                                InterruptedOnce = true;
+                                ChangeScene(SceneIds.BreePersuadesThePlayerToCallHimBack);
                             }
                             break;
                     }
@@ -502,7 +777,10 @@ namespace giantsummon.Npcs
             }
             SceneStep = scene;
             //Main.NewText("Scene: " + scene.ToString());
-            StepTime = 180;
+            if (MessageTime > 0)
+                StepTime = MessageTime + 30;
+            else
+                StepTime = 300;
         }
 
         public override string GetChat()
@@ -511,7 +789,13 @@ namespace giantsummon.Npcs
             {
                 return "Oh, It's you again... Well... I'm here, If you need me.";
             }
-            if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], 2, GuardianModID))
+            if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], 2, GuardianModID) || PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Glenn, GuardianModID))
+            {
+                if (SceneStep == SceneIds.NoScene)
+                    ChangeScene(SceneIds.BreeSpotsSardineAndGlenn);
+                return "Are they... Glenn! Sardine!";
+            }
+            else if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], 2, GuardianModID))
             {
                 if (SceneStep == SceneIds.NoScene)
                     ChangeScene(0);
@@ -520,7 +804,7 @@ namespace giantsummon.Npcs
             else if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Glenn, GuardianModID))
             {
                 if (SceneStep == SceneIds.NoScene)
-                    ChangeScene(0);
+                    ChangeScene(SceneIds.GlennSpotted);
                 return "Gl... Glenn?!";
             }
             else if (!dialogues.Finished)
@@ -706,7 +990,20 @@ namespace giantsummon.Npcs
             GlennAnswer,
             AsksGlennIfHesOkay,
             GlennSaysThatIsFine,
-            BreeJoinsToTakeCareOfGlenn
+            BreeJoinsToTakeCareOfGlenn,
+
+            PlayerUnsummonedGlenn,
+
+            BreeSpotsSardineAndGlenn,
+            BothAnswers,
+            BreeAsksWhereWasSardine,
+            SardineAnswers,
+            BreeThenFeelsRelievedAndAsksGlennWhatIsHeDoingHere,
+            GlennAnswers,
+            BreeSuggestsToSpendSomeTimeTogetherBeforeReturningToTheWorld,
+            SardineSaysThatForgotWhereTheWorldIsAt,
+            GlennAlsoSaysThatForgot,
+            BreeThenSaysThatTheyShouldStayInTheWorldForAWhileThen
         }
     }
 }

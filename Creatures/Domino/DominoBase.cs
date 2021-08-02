@@ -442,6 +442,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "*Alright, I can be your buddy. I wont offer you discounts, though.*";
                 case MessageIDs.RescueMessage:
                     return "*The kind of things I do to protect my business...*";
                 case MessageIDs.StoreOpenMessage:

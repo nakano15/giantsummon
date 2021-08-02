@@ -932,6 +932,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "*Take this as my vow to you, that I will protect you until the end of our lives, my buddy.*";
                 case MessageIDs.RescueMessage:
                     return "*I think this may be able to help you recover your senses.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:

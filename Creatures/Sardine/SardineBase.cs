@@ -700,6 +700,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "So, you picked me as your buddy? I like that idea of having you as my buddy too.";
                 case MessageIDs.RescueMessage:
                     return "I'm glad you called, It was fun trying to carry you here.";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:

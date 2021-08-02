@@ -677,6 +677,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "Most of my heart is reserved for my husband, but I'll reserve a fraction for you.";
                 case MessageIDs.RescueMessage:
                     return "I really hope you don't die, because I had trouble carrying you here.";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:

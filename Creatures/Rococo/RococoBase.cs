@@ -669,6 +669,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "*[name] is surprised that was picked as buddy. He seems so happy that is even crying.*";
                 case MessageIDs.RescueMessage:
                     return "*You heard someone saying that you'll be fine.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:

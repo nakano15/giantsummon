@@ -12,6 +12,7 @@ namespace giantsummon.Creatures
         public CinnamonBase() //Her recruitment could involve Soup.
         {
             Name = "Cinnamon";
+            PossibleNames = new string[] { "Cinnamon", "Canela" };
             Description = "";
             Size = GuardianSize.Medium;
             Width = 24;
@@ -116,6 +117,14 @@ namespace giantsummon.Creatures
 
             GetRequestList();
         }
+
+        public override string CallUnlockMessage => "*I think you're a cool guy. You can call me anytime for your adventures.*";
+
+        public override string MountUnlockMessage => "*If you want, I can carry you on my shoulder.*";
+
+        public override string MoveInUnlockMessage => "*This place seems actually nice. May I live here with you?*";
+
+        public override string ControlUnlockMessage => "*As long as you help me get more tasty food, I can let you control me.*";
 
         public void GetRequestList()
         {
@@ -415,6 +424,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "*You choose me as your buddy? I'm so happy!*";
                 case MessageIDs.RescueMessage:
                     return "*I'm tending to your wounds, don't worry.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:

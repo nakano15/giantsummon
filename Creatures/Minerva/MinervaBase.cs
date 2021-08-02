@@ -404,6 +404,8 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.BuddySelected:
+                    return "*You picked me, of everyone? I'm... I'm so happy right now. Thank you.*";
                 case MessageIDs.RescueMessage:
                     if (Main.rand.Next(2) == 0)
                         return "*Drink this, It will make you feel better...*";
