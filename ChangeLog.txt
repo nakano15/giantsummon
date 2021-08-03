@@ -19,3 +19,4 @@ Fixed Captain Stench's torch positioning. She now knows that will not use the le
 Added missing messages from Glenn and Cinnamon.
 Cinnamon now has a chance of arriving with the name "Canela", instead.
 Added a good number of missing messages companions picked as buddy says.
+Brutus got a fix on his head positioning.

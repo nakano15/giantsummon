@@ -2410,7 +2410,8 @@ namespace giantsummon
                 {
                     guardian = new TerraGuardian(MyGuardians[Id].ID, MyGuardians[Id].ModID);
                 }
-                CompanionReaction(GuardianBase.MessageIDs.SomeoneJoinsTeamMessage);
+                if(player.immuneTime <= 0) //Work around to avoid message when player enters world.
+                    CompanionReaction(GuardianBase.MessageIDs.SomeoneJoinsTeamMessage);
                 guardian.OwnerPos = player.whoAmI;
                 guardian.Active = true;
                 guardian.AssistSlot = AssistSlot;
