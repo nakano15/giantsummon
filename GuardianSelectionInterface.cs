@@ -1450,8 +1450,8 @@ namespace giantsummon
             BarPosition.X = InterfacePosition.X + 184;
             BarPosition.Y = InterfacePosition.Y + 34;
             const int BarWidth = 248, BarHeight = 28;
-            int CurrentWeight = (int)(player.GuardianFollowersWeight * 1000), 
-                GuardianWeightValue = (int)(SelectedGuardianWeight * 1000), 
+            int CurrentWeight = (int)(Math.Round(player.GuardianFollowersWeight) * 1000), 
+                GuardianWeightValue = (int)(Math.Round(SelectedGuardianWeight) * 1000), 
                 MaxWeight = (int)(player.MaxGuardianFollowersWeight * 1000);
             {
                 int FirstBarSize = (int)((float)(CurrentWeight + (GuardianWeightValue > 0 ? 0 : GuardianWeightValue)) / MaxWeight * BarWidth),

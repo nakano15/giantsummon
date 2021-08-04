@@ -20,3 +20,7 @@ Added missing messages from Glenn and Cinnamon.
 Cinnamon now has a chance of arriving with the name "Canela", instead.
 Added a good number of missing messages companions picked as buddy says.
 Brutus got a fix on his head positioning.
+Your companions will no longer have mana regen benefits while their mana is full.
+Fixed an error that happened on Vladimir due to not knowing correctly that should try carrying a town npc.
+Large companions like Vladimir will no longer think they're outside of home, because they're using a chair.
+	It wasn't because were uncomfortable.

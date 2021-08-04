@@ -268,6 +268,17 @@ namespace giantsummon
         public int MessageTime = 0;
         public List<GuardianFlags> FlagList = new List<GuardianFlags>();
         public Vector2 Position = Vector2.Zero, Velocity = Vector2.Zero;
+        public Vector2 FeetPosition
+        {
+            get
+            {
+                if (UsingFurniture)
+                {
+                    return new Vector2(furniturex, furniturey) * 16;
+                }
+                return Position;
+            }
+        }
         public float CenterY { get { return Position.Y - Height * 0.5f * GravityDirection; } }
         public Vector2 PositionWithOffset
         {
@@ -5856,10 +5867,12 @@ namespace giantsummon
                     if (!SittingOnPlayerMount && !PlayerMounted)
                     {
                         TryJumpingTallTiles();
-                        CheckIfIsSafeAhead();
+                        bool SafeAhead = CheckIfIsSafeAhead();
                         //CheckIfNeedsJumping();
-                        CheckIfIsSteppingOnDamageTiles();
-                        TryLandingOnSafeSpot();
+                        if(Velocity.Y == 0)
+                            CheckIfIsSteppingOnDamageTiles();
+                        if(SafeAhead)
+                            TryLandingOnSafeSpot();
                     }
                     //if (OwnerPos > -1 && AssistSlot == 0 && Main.player[OwnerPos].dead)
                     ///    GuardianActions.UseResurrectOnPlayer(this, Main.player[OwnerPos]);
@@ -5916,11 +5929,11 @@ namespace giantsummon
             }*/
         }
 
-        public void CheckIfIsSafeAhead()
+        public bool CheckIfIsSafeAhead()
         {
             if(Velocity.X == 0 && !MoveLeft && !MoveRight)
             {
-                return;
+                return true;
             }
             //if (MoveLeft || MoveRight)
             //    PredictedMoveSpeed += MoveSpeed;
@@ -6005,7 +6018,7 @@ namespace giantsummon
             //if (HasPitfall)
             //{
                 if (PrioritaryBehaviorType == PrioritaryBehavior.Jump)
-                    return;
+                    return true;
             //}
             if (HasDangerousTileBellow || (HasPitfall && OwnerY - 64 < Position.Y))
             {
@@ -6042,7 +6055,9 @@ namespace giantsummon
                 }
                 //if (Math.Abs(PredictedMoveSpeed * DivisionBy16 - Distance) < 1 && OwnerY - 32 < Position.Y)
                 //    Jump = true;
+                return false;
             }
+            return true;
         }
 
         public void CheckIfIsSteppingOnDamageTiles()
@@ -7373,7 +7388,7 @@ namespace giantsummon
                 WorldMod.GuardianTownNpcState TownNpcState = GetTownNpcInfo;
                 if (TownNpcState == null)
                     return false;
-                return TownNpcState.IsAtHome(Position);
+                return TownNpcState.IsAtHome(FeetPosition);
             }
         }
 
@@ -7437,7 +7452,7 @@ namespace giantsummon
                 {
                     if (MoveIndoors)
                     {
-                        bool AtHome = TownNpcInfo.IsAtHome(Position);
+                        bool AtHome = TownNpcInfo.IsAtHome(FeetPosition);
                         if (!TownNpcInfo.Homeless)
                         {
                             HouseX = TownNpcInfo.HomeX;
@@ -7957,7 +7972,7 @@ namespace giantsummon
                     TryFindingNearbyBed(true);
                     if (furniturex == -1 && furniturey == -1)
                     {
-                        if (!GetTownNpcInfo.IsAtHome(Position))
+                        if (!GetTownNpcInfo.IsAtHome(FeetPosition))
                         {
                             ChangeIdleAction(IdleActions.GoHome, 5);
                         }
@@ -8839,6 +8854,8 @@ namespace giantsummon
 
         public void UpdateManaRegen()
         {
+            if (MP >= MMP)
+                return;
             if (HasCooldown(GuardianCooldownManager.CooldownType.ManaRegenDelay))
             {
                 if (HasFlag(GuardianFlags.ManaRegenDelayReduction))

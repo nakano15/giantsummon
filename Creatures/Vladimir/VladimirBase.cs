@@ -460,6 +460,61 @@ namespace giantsummon.Creatures
             CarryBlacklist.Add(new GuardianID(ID, ModID));
         }
 
+        public void TryCarryingSomeone(TerraGuardian guardian, VladimirData data)
+        {
+            if (!(guardian.TargetID == -1 && guardian.DoAction.InUse == false && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait && 
+                Main.rand.Next(350) == 0))
+                return;
+            List<int> PotentialNpcs = new List<int>();
+            for (int n = 0; n < 200; n++)
+            {
+                if (Main.npc[n].active && Main.npc[n].townNPC && (Main.npc[n].Center - guardian.CenterPosition).Length() < 80)
+                {
+                    PotentialNpcs.Add(n);
+                }
+            }
+            List<int> PotentialPlayers = new List<int>();
+            for (int p = 0; p < 255; p++)
+            {
+                if (Main.player[p].active && !guardian.IsPlayerHostile(Main.player[p]) && Main.player[p].velocity.Length() == 0 &&
+                    Main.player[p].itemAnimation == 0 && (Main.player[p].Center - guardian.CenterPosition).Length() < 80)
+                {
+                    PotentialPlayers.Add(p);
+                }
+            }
+            List<int> PotentialTgs = new List<int>();
+            foreach (int k in MainMod.ActiveGuardians.Keys)
+            {
+                if (k != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[k]) && MainMod.ActiveGuardians[k].OwnerPos == -1 &&
+                    CarryBlacklist.Any(x => x.IsSameID(MainMod.ActiveGuardians[k])) && 
+                    (guardian.CenterPosition - MainMod.ActiveGuardians[k].CenterPosition).Length() < 80 + MainMod.ActiveGuardians[k].Width * 0.5f)
+                {
+                    PotentialTgs.Add(k);
+                }
+            }
+            bool CheckNpc = PotentialNpcs.Count > 0;
+            int Time = Main.rand.Next(600, 1400) * 3;
+            if (PotentialPlayers.Count > 0 && Main.rand.NextFloat() < 0.66f)
+            {
+                CarrySomeoneAction(guardian, Main.player[PotentialPlayers[Main.rand.Next(PotentialPlayers.Count)]], Time);
+            }
+            else if (PotentialTgs.Count > 0 || PotentialNpcs.Count > 0)
+            {
+                if (PotentialNpcs.Count > 0 && PotentialTgs.Count > 0)
+                {
+                    CheckNpc = Main.rand.NextDouble() < 0.5f;
+                }
+                if (CheckNpc)
+                {
+                    CarrySomeoneAction(guardian, Main.npc[PotentialNpcs[Main.rand.Next(PotentialNpcs.Count)]], Time);
+                }
+                else
+                {
+                    CarrySomeoneAction(guardian, MainMod.ActiveGuardians[PotentialTgs[Main.rand.Next(PotentialTgs.Count)]], Time);
+                }
+            }
+        }
+
         public void UpdateCarryAllyScript(TerraGuardian guardian)
         {
             VladimirData data = (VladimirData)guardian.Data;
@@ -467,55 +522,7 @@ namespace giantsummon.Creatures
             {
                 if (guardian.OwnerPos > -1)
                     return;
-                if(guardian.TargetID == -1 && guardian.DoAction.InUse == false && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait && Main.rand.Next(350) == 0)
-                {
-                    List<int> PotentialNpcs = new List<int>();
-                    for (int n = 0; n < 200; n++)
-                    {
-                        if (Main.npc[n].active && Main.npc[n].townNPC && (Main.npc[n].Center - guardian.CenterPosition).Length() < 60)
-                        {
-                            PotentialNpcs.Add(n);
-                        }
-                    }
-                    List<int> PotentialPlayers = new List<int>();
-                    for (int n = 0; n < 255; n++)
-                    {
-                        if (Main.player[n].active && !guardian.IsPlayerHostile(Main.player[n]) && Main.player[n].velocity.Length() == 0 && 
-                            Main.player[n].itemAnimation == 0 && (Main.player[n].Center - guardian.CenterPosition).Length() < 60)
-                        {
-                            PotentialPlayers.Add(n);
-                        }
-                    }
-                    List<int> PotentialTgs = new List<int>();
-                    foreach(int k in MainMod.ActiveGuardians.Keys)
-                    {
-                        if(k != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[k]) && MainMod.ActiveGuardians[k].OwnerPos == -1 && 
-                            CarryBlacklist.Any(x => x.IsSameID(MainMod.ActiveGuardians[k]))&& (guardian.CenterPosition - MainMod.ActiveGuardians[k].CenterPosition).Length() < 60 + MainMod.ActiveGuardians[k].Width * 0.5f)
-                        {
-                            PotentialTgs.Add(k);
-                        }
-                    }
-                    bool CheckNpc = false;
-                    if(PotentialPlayers.Count > 0 && Main.rand.NextFloat() < 0.66f)
-                    {
-                        CarrySomeoneAction(guardian, Main.player[PotentialPlayers[Main.rand.Next(PotentialPlayers.Count)]]);
-                    }
-                    else if (!(PotentialTgs.Count == 0 && PotentialNpcs.Count == 0))
-                    {
-                        if (PotentialNpcs.Count > 0 && PotentialTgs.Count > 0)
-                        {
-                            CheckNpc = Main.rand.NextDouble() < 0.5f;
-                        }
-                        if (CheckNpc)
-                        {
-                            CarrySomeoneAction(guardian, Main.npc[PotentialNpcs[Main.rand.Next(PotentialNpcs.Count)]]);
-                        }
-                        else
-                        {
-                            CarrySomeoneAction(guardian, MainMod.ActiveGuardians[PotentialTgs[Main.rand.Next(PotentialTgs.Count)]]);
-                        }
-                    }
-                }
+                TryCarryingSomeone(guardian, data);
                 return;
             }
             if (!data.PickedUpPerson)
@@ -676,7 +683,7 @@ namespace giantsummon.Creatures
                         npc.position.X -= npc.width * 0.5f;
                         npc.position.Y -= npc.height * 0.5f + 8;
                         if (npc.velocity.X == 0)
-                            npc.direction = guardian.Direction;
+                            npc.direction = -guardian.Direction;
                         if (guardian.PlayerMounted || (guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction))
                             npc.position.X += 4 * guardian.Direction * guardian.Scale;
                         npc.velocity = Vector2.Zero;
@@ -699,6 +706,7 @@ namespace giantsummon.Creatures
                             player.position.X += 4 * guardian.Direction * guardian.Scale;
                         player.fallStart = (int)(player.position.Y * TerraGuardian.DivisionBy16);
                         player.velocity = Vector2.Zero;
+                        player.velocity.Y = -Player.defaultGravity;
                         player.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
                         PlayerMod pm = player.GetModPlayer<PlayerMod>();
                         if (pm.KnockedOut)
