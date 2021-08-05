@@ -89,10 +89,10 @@ namespace giantsummon.Creatures
             SittingPoint = new Point(21 * 2, 36 * 2);
 
             //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 13, 2);
-            LeftHandPoints.AddFramePoint2x(11, 33, 10);
-            LeftHandPoints.AddFramePoint2x(12, 35, 18);
-            LeftHandPoints.AddFramePoint2x(13, 31, 27);
+            LeftHandPoints.AddFramePoint2x(10, 12, 3);
+            LeftHandPoints.AddFramePoint2x(11, 31, 12);
+            LeftHandPoints.AddFramePoint2x(12, 34, 19);
+            LeftHandPoints.AddFramePoint2x(13, 30, 28);
 
             LeftHandPoints.AddFramePoint2x(14, 5, 7);
             LeftHandPoints.AddFramePoint2x(15, 31, 6);
@@ -105,10 +105,10 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(25, 36, 38);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 15, 2);
-            RightHandPoints.AddFramePoint2x(11, 35, 10);
-            RightHandPoints.AddFramePoint2x(12, 37, 18);
-            RightHandPoints.AddFramePoint2x(13, 33, 27);
+            RightHandPoints.AddFramePoint2x(10, 16, 3);
+            RightHandPoints.AddFramePoint2x(11, 34, 12);
+            RightHandPoints.AddFramePoint2x(12, 37, 19);
+            RightHandPoints.AddFramePoint2x(13, 33, 28);
 
             RightHandPoints.AddFramePoint2x(14, 7, 7);
             RightHandPoints.AddFramePoint2x(15, 33, 6);
@@ -143,10 +143,10 @@ namespace giantsummon.Creatures
             MountShoulderPoints.AddFramePoint2x(26, 14, 32);
 
             //Hat Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(22 + 1, 10 + 2);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(22 + 1 + 2, 10 + 2);
             HeadVanityPosition.AddFramePoint2x(16, 36 + 1, 21 + 2);
             HeadVanityPosition.AddFramePoint2x(19, 33 + 1, 24 + 2);
-            HeadVanityPosition.AddFramePoint2x(22, 33 + 1, 25 + 2);
+            HeadVanityPosition.AddFramePoint2x(22, 35, 24);
             HeadVanityPosition.AddFramePoint2x(23, 33 + 1, 25 + 2);
             HeadVanityPosition.AddFramePoint2x(24, 33 + 1, 25 + 2);
             HeadVanityPosition.AddFramePoint2x(25, 33 + 1, 25 + 2);

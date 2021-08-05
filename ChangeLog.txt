@@ -24,3 +24,7 @@ Your companions will no longer have mana regen benefits while their mana is full
 Fixed an error that happened on Vladimir due to not knowing correctly that should try carrying a town npc.
 Large companions like Vladimir will no longer think they're outside of home, because they're using a chair.
 	It wasn't because were uncomfortable.
+Malisha got a few changes on her sprites:
+	Her legs are no longer extra thick.
+	Her head position were moved by 2 pixels in many frames, and totally repositioned in others.
+	Her bust is no longer that much large.
