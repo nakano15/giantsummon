@@ -45,6 +45,95 @@ namespace giantsummon
 
         public static void TrySpawningTombstone(Terraria.World.Generation.GenerationProgress status)
         {
+            {
+                int PositionX = 0, PositionY = 0;
+                ushort Retry = 0;
+                bool Success = false;
+                while (!Success)
+                {
+                    PositionX = Main.rand.Next((int)Main.leftWorld / 16+2, (int)Main.rightWorld / 16 - 4);
+                    PositionY = Main.rand.Next((int)(Main.worldSurface * 0.35f), (int)(Main.worldSurface * 0.95f));
+                    bool BlockedTilePosition = false;
+                    for(int x = -1; x < 2; x++)
+                    {
+                        Tile tile = Main.tile[PositionX + x, PositionY];
+                        if((tile.active() && Main.tileSolid[tile.type]) || tile.liquid > 0)
+                        {
+                            BlockedTilePosition = true;
+                            break;
+                        }
+                    }
+                    if (!BlockedTilePosition)
+                    {
+                        bool GroundBellow = false;
+                        while (true)
+                        {
+                            byte FloorCount = 0;
+                            PositionY++;
+                            if (PositionY >= Main.worldSurface)
+                            {
+                                break;
+                            }
+                            for (int x = -1; x < 2; x++)
+                            {
+                                Tile tile = Main.tile[PositionX + x, PositionY];
+                                if (tile.active() && Main.tileSolid[tile.type] && tile.liquid == 0)
+                                {
+                                    FloorCount++;
+                                }
+                            }
+                            if (FloorCount == 1)
+                            {
+                                break;
+                            }
+                            else if (FloorCount == 2)
+                            {
+                                GroundBellow = true;
+                                break;
+                            }
+                        }
+                        if (GroundBellow)
+                        {
+                            PositionY -= 1;
+                            //PositionX--;
+                            TileObject to;
+                            TileObject.CanPlace(PositionX, PositionY, TileID.Tombstones, Main.rand.Next(255) == 0 ? 9 : 4, 1, out to);
+                            //WorldGen.PlaceTile(PositionX, PositionY, TileID.Tombstones, true, false, -1, Main.rand.Next(255) == 0 ? 9 : 4);
+                            //status.Message = "Tombstone tried spawning at X:" + PositionX + "  Y:" + PositionY;
+                            if (TileObject.CanPlace(PositionX, PositionY, TileID.Tombstones, Main.rand.Next(255) == 0 ? 9 : 4, 1, out to))//(Main.tile[PositionX, PositionY].active() && Main.tile[PositionX, PositionY].type == TileID.Tombstones)
+                            {
+                                TileObject.Place(to);
+                                status.Message = "Someone's tombstone placed...";
+                                //status.Message = "Tombstone placed at X:" + PositionX + "  Y:" + PositionY;
+                                System.Threading.Thread.Sleep(5000);
+                                TombstoneTileX = PositionX;
+                                TombstoneTileY = PositionY;
+                                int signpos = Sign.ReadSign(PositionX, PositionY);
+                                if(signpos > -1)
+                                {
+                                    if(Main.sign[signpos] == null)
+                                    {
+                                        Main.sign[signpos] = new Sign();
+                                    }
+                                    Sign.TextSign(signpos, TombstoneText);
+                                }
+                                NPC.NewNPC(TombstoneTileX * 16, TombstoneTileY * 16, ModContent.NPCType<Npcs.AlexNPC>());
+                                SpawnedTombstone = true;
+                                Success = true;
+                            }
+                        }
+                    }
+                    Retry++;
+                    if(!Success && Retry >= 1000)
+                    {
+                        status.Message = "Tombstone Spawn failed...";
+                        System.Threading.Thread.Sleep(5000);
+                        break;
+                    }
+                }
+                return;
+            }
+
             try
             {
                 int StartPosX = 0, StartPosY = 0;

@@ -230,6 +230,12 @@ namespace giantsummon.Creatures
             Mes.Add("Don't worry, I'll protect you from any danger.");
             Mes.Add("I'm sure you would like to meet " + AlexRecruitScripts.AlexOldPartner + ". Well, she was a bit closed off to other people, but she was my best pal. That's what matter, I guess?");
             Mes.Add("I wonder if " + AlexRecruitScripts.AlexOldPartner + "'s tombstone is alright. Should I check it up later?");
+
+            Mes.Add("A number of Terrarians kept asking me how I managed to place "+AlexRecruitScripts.AlexOldPartner+"'s tombstone in so many weird places, so now I learned how to properly place them.");
+            Mes.Add("Whaaaaaaaaaaat? You can't place tombstones on trees? Or plants? Or in the water?");
+            if(NPC.AnyNPCs(22))
+                Mes.Add("[gn:22] teached me how to properly place things on correct places, and now I can't place them on the wrong place.");
+
             if (Main.bloodMoon)
             {
                 Mes.Add("Stay near me and you'll be safe.");

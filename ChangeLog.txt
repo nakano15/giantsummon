@@ -1,30 +1,3 @@
-﻿Possibly fixed an issue where the game would have consecutive crashing.
-Bounty targets now spawns easier.
-Boosted the chance of rare accessories appearing on bounty quests.
-Companions will no longer insist in trying to use furniture someone else is using.
-Captain Stench's recruitment npc will no longer persist in the world after you leave It.
-Fixed a resource disposing bug.
-Fixed an issue with the system of disposing textures when mod reloads.
-Terrarian companions can now have extra texture data loaded.
-Fixed constant crashes that happened on multiplayer.
-	That doesn't means that multiplayer is 100% playable. I don't recommend joining It for a serious playthrough, since gathering new companions wont be possible.
-Added companion reactions to:
-	Teleporting Home, When Someone Joins Team, When Player Meets Someone New, Companion Invokes a Minion and When Player is Hugged by Vladimir Recruit Npc.
-Companions will stop using items when knocked out.
-Terrarian companions will have their hair loaded and drawn on their head sprites.
-You can now use Blue's Hairclip accessory.
-Glenn will no longer cause crashes on your game when you move away after he notices you.
-Fixed distancing bug on Glenn recruit npc.
-Fixed Captain Stench's torch positioning. She now knows that will not use the left arm.
-Added missing messages from Glenn and Cinnamon.
-Cinnamon now has a chance of arriving with the name "Canela", instead.
-Added a good number of missing messages companions picked as buddy says.
-Brutus got a fix on his head positioning.
-Your companions will no longer have mana regen benefits while their mana is full.
-Fixed an error that happened on Vladimir due to not knowing correctly that should try carrying a town npc.
-Large companions like Vladimir will no longer think they're outside of home, because they're using a chair.
-	It wasn't because were uncomfortable.
-Malisha got a few changes on her sprites:
-	Her legs are no longer extra thick.
-	Her head position were moved by 2 pixels in many frames, and totally repositioned in others.
-	Her bust is no longer that much large.
+﻿Changed Irene's tombstone spawning method.
+	Alex will now place her tombstone in less weird places.
+	Alex will mention that, though.
