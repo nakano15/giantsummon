@@ -1414,7 +1414,39 @@ namespace giantsummon
 
         public void InjectTexturesAt(GuardianDrawData.TextureType textureType, GuardianDrawData[] PreDraw, GuardianDrawData[] PostDraw)
         {
-            for (int i = 0; i < TerraGuardian.DrawBehind.Count; i++)
+            for(int SpriteList = 0; SpriteList < 2; SpriteList++)
+            {
+                List<GuardianDrawData> CurrentDrawData;
+                switch (SpriteList)
+                {
+                    default:
+                        CurrentDrawData = TerraGuardian.DrawBehind;
+                        break;
+                    case 1:
+                        CurrentDrawData = TerraGuardian.DrawFront;
+                        break;
+                }
+                int EarliestLayerShowUp = -1, LatestLayerShowUp = -1;
+                for (int i = 0; i < CurrentDrawData.Count; i++)
+                {
+                    if (CurrentDrawData[i].textureType == textureType)
+                    {
+                        if (EarliestLayerShowUp == -1)
+                            EarliestLayerShowUp = i;
+                        LatestLayerShowUp = i;
+                        //break;
+                    }
+                }
+                if (PostDraw != null && LatestLayerShowUp > -1)
+                {
+                    if (LatestLayerShowUp + 1 >= CurrentDrawData.Count)
+                        CurrentDrawData.AddRange(PostDraw);
+                    else
+                        CurrentDrawData.InsertRange(LatestLayerShowUp + 1, PostDraw);
+                }
+                if (PreDraw != null && EarliestLayerShowUp > -1) CurrentDrawData.InsertRange(EarliestLayerShowUp, PreDraw);
+            }
+            /*for (int i = 0; i < TerraGuardian.DrawBehind.Count; i++)
             {
                 if (TerraGuardian.DrawBehind[i].textureType == textureType)
                 {
@@ -1431,7 +1463,7 @@ namespace giantsummon
                     if (PreDraw != null) TerraGuardian.DrawFront.InsertRange(i, PreDraw);
                     break;
                 }
-            }
+            }*/
         }
 
         public class MessageIDs

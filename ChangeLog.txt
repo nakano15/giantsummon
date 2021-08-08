@@ -1,3 +1,8 @@
 ﻿Changed Irene's tombstone spawning method.
 	Alex will now place her tombstone in less weird places.
 	Alex will mention that, though.
+Revamped the following companions tail sprites:
+	Rococo and Blue.
+Fixed inhability to speak with Captain Stench.
+Changed Rococo's right arm sprite when reviving someone.
+Incapacitated companions will no longer react to things.

@@ -334,6 +334,7 @@
     <Content Include="Creatures\Bapha\hell_gate.png" />
     <Content Include="Creatures\Bapha\left_arm.png" />
     <Content Include="Creatures\Bapha\right_arm.png" />
+    <Content Include="Creatures\Blue\bunny.png" />
     <Content Include="Creatures\Blue\red_hood_outfit.png" />
     <Content Include="Creatures\Blue\red_hood_outfit_body_f.png" />
     <Content Include="Creatures\Bree\bags.png" />

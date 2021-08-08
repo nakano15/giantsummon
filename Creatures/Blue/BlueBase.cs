@@ -14,7 +14,7 @@ namespace giantsummon.Creatures
         public const int FullMoonBehaviorID = 0;
 
         public const byte RedHoodOutfitID = 1, CloaklessOutfitID = 2;
-        public const string RedHoodSkinOutfitID = "red_hood_outfit", RedHoodSkinOutfitBodyFrontID = "red_hood_outfit_body_f";
+        public const string RedHoodSkinOutfitID = "red_hood_outfit", RedHoodSkinOutfitBodyFrontID = "red_hood_outfit_body_f", BunnyTextureID = "bunny";
 
         /// <summary>
         /// -Cares about her hair.
@@ -98,6 +98,7 @@ namespace giantsummon.Creatures
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(24, 0);
             //BodyFrontFrameSwap.Add(26, 0);
+            BodyFrontFrameSwap.Add(31, 2);
 
             //Left Hand Position
             LeftHandPoints.AddFramePoint2x(10, 6, 14);
@@ -175,11 +176,29 @@ namespace giantsummon.Creatures
         {
             sprites.AddExtraTexture(RedHoodSkinOutfitID, "red_hood_outfit");
             sprites.AddExtraTexture(RedHoodSkinOutfitBodyFrontID, "red_hood_outfit_body_f");
+            sprites.AddExtraTexture(BunnyTextureID, "bunny");
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
         {
-            if(guardian.OutfitID > 0)
+            bool DrawBunny = HasBunnyInInventory(guardian);
+            byte BunnyFrame = 0, BunnyFrontFrame = 0;
+            bool DrawBunnyFront = true;
+            Texture2D BunnyTexture = sprites.GetExtraTexture(BunnyTextureID);
+            if (DrawBunny)
+            {
+                if (guardian.BodyAnimationFrame == 30)
+                {
+                    BunnyFrame = 1;
+                    DrawBunnyFront = false;
+                }
+                if (guardian.BodyAnimationFrame == 31)
+                {
+                    BunnyFrame = 2;
+                    BunnyFrontFrame = 1;
+                }
+            }
+            if (guardian.OutfitID > 0)
             {
                 Rectangle BodyRect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
                     LeftArmRect = guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame),
@@ -217,7 +236,7 @@ namespace giantsummon.Creatures
                                     Rectangle rect = BodyRect;
                                     //Head
                                     rect.Y += 8 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 }
                             }
@@ -230,28 +249,28 @@ namespace giantsummon.Creatures
                                     //Head
                                     rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
                                     rect.Y += 4 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                     //Cloak Right Arm
                                     rect = RightArmRect;
                                     rect.Y += 5 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 }
                                 //Shirt
                                 rect = BodyRect;
                                 rect.Y += 3 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 //Pants
                                 rect = BodyRect;
                                 rect.Y += 2 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 //Shoes
                                 rect = BodyRect;
                                 rect.Y += 1 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                             }
                             break;
@@ -263,18 +282,18 @@ namespace giantsummon.Creatures
                                     //Head
                                     rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
                                     rect.Y += 8 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                     //Cloak Front
                                     rect = LeftArmRect;
                                     rect.Y += 7 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 }
                                 //Shirt Sleeve
                                 rect = LeftArmRect;
                                 rect.Y += 6 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                             }
                             break;
@@ -284,7 +303,7 @@ namespace giantsummon.Creatures
                                 {
                                     Rectangle rect = RightArmRect;
                                     //Cloak Right Arm Back
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f - 1, DrawFront);
                                 }
                             }
@@ -293,7 +312,7 @@ namespace giantsummon.Creatures
                             {
                                 //Shirt
                                 Rectangle rect = guardian.GetAnimationFrameRectangle(guardian.Base.GetBodyFrontSprite(guardian.BodyAnimationFrame));
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, bodyfronttexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, bodyfronttexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                             }
                             break;
@@ -311,7 +330,7 @@ namespace giantsummon.Creatures
                                     Rectangle rect = BodyRect;
                                     //Head
                                     rect.Y += 8 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 }
                             }
@@ -324,28 +343,28 @@ namespace giantsummon.Creatures
                                     //Head
                                     rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
                                     rect.Y += 4 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                     //Cloak Right Arm
                                     rect = RightArmRect;
                                     rect.Y += 5 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 }
                                 //Shirt
                                 rect = BodyRect;
                                 rect.Y += 3 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 //Pants
                                 rect = BodyRect;
                                 rect.Y += 2 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 //Shoes
                                 rect = BodyRect;
                                 rect.Y += 1 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                             }
                             break;
@@ -357,18 +376,18 @@ namespace giantsummon.Creatures
                                     //Head
                                     rect = guardian.GetAnimationFrameRectangle(CloakAnimationFrame);
                                     rect.Y += 8 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                     //Cloak Front
                                     rect = LeftArmRect;
                                     rect.Y += 7 * TextureGap;
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f, DrawFront);
                                 }
                                 //Shirt Sleeve
                                 rect = LeftArmRect;
                                 rect.Y += 6 * TextureGap;
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                             }
                             break;
@@ -378,7 +397,7 @@ namespace giantsummon.Creatures
                                 {
                                     Rectangle rect = RightArmRect;
                                     //Cloak Right Arm Back
-                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, texture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                     guardian.AddDrawDataAfter(gdd, f - 1, DrawFront);
                                 }
                             }
@@ -387,12 +406,35 @@ namespace giantsummon.Creatures
                             {
                                 //Shirt
                                 Rectangle rect = guardian.GetAnimationFrameRectangle(guardian.Base.GetBodyFrontSprite(guardian.BodyAnimationFrame));
-                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, bodyfronttexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, bodyfronttexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
                                 guardian.AddDrawDataAfter(gdd, f, DrawFront);
                             }
                             break;
                     }
                 }
+            }
+            if (DrawBunny)
+            {
+                Rectangle rect = guardian.GetAnimationFrameRectangle(BunnyFrame),
+                    frontrect = guardian.GetAnimationFrameRectangle(BunnyFrontFrame);
+                Vector2 BunnyPos = DrawPosition;
+                BunnyPos.Y -= (guardian.Height * (guardian.Scale - 1f)) * 0.5f;
+                BunnyPos.X += (guardian.Width * (guardian.Scale - 1f)) * guardian.Direction;
+                GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BunnyTexture, BunnyPos, rect, color, Rotation, Origin, 1f, seffect);
+                if(guardian.BodyAnimationFrame == 36)
+                {
+                    InjectTextureBefore(GuardianDrawData.TextureType.TGBody, gdd);
+                }
+                else
+                {
+                    InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                    if (DrawBunnyFront)
+                    {
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BunnyTexture, BunnyPos, frontrect, color, Rotation, Origin, 1f, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGRightArmFront, gdd);
+                    }
+                }
+                //guardian.AddDrawDataAfter(gdd, f, DrawFront);
             }
         }
 

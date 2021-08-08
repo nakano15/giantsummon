@@ -1600,7 +1600,7 @@ namespace giantsummon
             List<KeyValuePair<TerraGuardian, string>> CompanionsReaction = new List<KeyValuePair<TerraGuardian, string>>();
             foreach(TerraGuardian tg in GetAllGuardianFollowers)
             {
-                if (tg.Active)
+                if (tg.Active && !tg.KnockedOut && !tg.Downed)
                 {
                     string Mes = tg.GetMessage(MessageID);
                     if(Mes != "")

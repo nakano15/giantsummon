@@ -33,6 +33,11 @@ namespace giantsummon.Npcs
                 Main.player[Main.myPlayer].CountItem(Terraria.ID.ItemID.PlatinumBar) >= BarCount;
         }
 
+        public override bool CanChat()
+        {
+            return true;
+        }
+
         public override string GetChat()
         {
             switch (DialogueStep)
