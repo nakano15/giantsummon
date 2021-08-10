@@ -2333,8 +2333,8 @@ namespace giantsummon
                     RideMount(Terraria.ID.MountID.Bunny);
             }*/
             LoadedWorldRegion = false;
-            if(Position.X >= Main.leftWorld * 16 && Position.X < Main.rightWorld * 16 && 
-                Position.Y >= Main.topWorld * 16 && Position.Y < Main.bottomWorld * 16)
+            if(Position.X >= Main.leftWorld && Position.X < Main.rightWorld && 
+                Position.Y >= Main.topWorld && Position.Y < Main.bottomWorld)
                 LoadedWorldRegion = Main.tile[(int)(Position.X * DivisionBy16), (int)(Position.Y * DivisionBy16)] != null;
             OffsetX = OffsetY = 0;
             MainMod.AddActiveGuardian(this);
@@ -2470,7 +2470,7 @@ namespace giantsummon
             }
             if (BeingPulledByPlayer && SittingOnPlayerMount)
                 BeingPulledByPlayer = false;
-            if (SittingOnPlayerMount && (Owner.dead || !Owner.mount.Active || GrabbingPlayer))
+            if (SittingOnPlayerMount && Owner != null && (Owner.dead || !Owner.mount.Active || GrabbingPlayer))
                 DoSitOnPlayerMount(false);
             Base.ModifyVelocity(this, ref Velocity);
             if (Downed)
@@ -5488,13 +5488,14 @@ namespace giantsummon
                     }
                     else
                     {
+                        float HalfWidth = Width * 0.5f;
                         switch (Tactic)
                         {
                             case CombatTactic.Charge:
                                 {
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
                                     float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
-                                        RetreatDistance = Width * 0.5f + 8;
+                                        RetreatDistance = HalfWidth + 8;
                                     /*if (MaxAttackRange > -1)
                                     {
                                         ApproachDistance = MaxAttackRange;
@@ -5516,11 +5517,14 @@ namespace giantsummon
                                             RetreatDistance += 20;
                                         }
                                         //Main.NewText("Approach Distance: " + ApproachDistance + "  Current Distance: " + Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X));
-                                        if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) < RetreatDistance)
-                                            Retreat = true;
-                                        else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
-                                            Approach = true;
-                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                        if (DistanceX < 300 + HalfWidth)
+                                        {
+                                            if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) < RetreatDistance)
+                                                Retreat = true;
+                                            else if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) >= ApproachDistance)
+                                                Approach = true;
+                                        }
+                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee && DistanceX < 180 + HalfWidth)
                                             Attack = true;
                                     }
                                     if (!NearDeath && Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < (TargetWidth + Width) * 0.5f + 40 && Position.Y - (Height + 16) > TargetPosition.Y + TargetHeight)
@@ -5539,8 +5543,8 @@ namespace giantsummon
                                     {
                                         const float AssistDistance = 120f;
                                         float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                        float ApproachDistance = TargetWidth + Width + AssistDistance + DistanceDiscount,
-                                            RetreatDistance = TargetWidth + Width + AssistDistance + DistanceDiscount - 24;
+                                        float ApproachDistance = (TargetWidth + Width) * 0.5f + AssistDistance + 75 + DistanceDiscount,
+                                            RetreatDistance = (TargetWidth + Width) * 0.5f + AssistDistance + DistanceDiscount;
                                         if (HasHurtPanic)
                                         {
                                             ApproachDistance += 42;
@@ -5551,11 +5555,14 @@ namespace giantsummon
                                             ApproachDistance += Math.Abs(TargetVelocity.X * 2);
                                             RetreatDistance += Math.Abs(TargetVelocity.X * 2);
                                         }
-                                        if (DistanceX >= ApproachDistance)
-                                            Approach = true;
-                                        else if (DistanceX <= RetreatDistance)
-                                            Retreat = true;
-                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                        if (DistanceX < 325 + HalfWidth)
+                                        {
+                                            if (DistanceX >= ApproachDistance)
+                                                Approach = true;
+                                            else if (DistanceX <= RetreatDistance)
+                                                Retreat = true;
+                                        }
+                                        if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee && DistanceX < 250 + HalfWidth + DistanceDiscount)
                                             Attack = true;
                                     }
                                 }
@@ -5567,26 +5574,29 @@ namespace giantsummon
                                         GoMelee = true;
                                     }
                                     float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                    const float SnipeDistance = 260f;
-                                    float ApproachDistance = TargetWidth + Width + SnipeDistance + DistanceDiscount,
-                                        RetreatDistance = TargetWidth + Width + SnipeDistance - 50;
+                                    const float SnipeDistance = 220f;
+                                    float ApproachDistance = (TargetWidth + Width) * 0.5f + SnipeDistance + 150 + DistanceDiscount,
+                                        RetreatDistance = (TargetWidth + Width) * 0.5f + SnipeDistance;
                                     if (MaxAttackRange > -1)
                                     {
                                         ApproachDistance = MaxAttackRange + TargetWidth;
                                         RetreatDistance = MaxAttackRange - 50;
-                                        if (RetreatDistance < Width * 0.5f + 8)
-                                            RetreatDistance = Width * 0.5f + 8;
+                                        if (RetreatDistance < HalfWidth + 8)
+                                            RetreatDistance = HalfWidth + 8;
                                     }
                                     if (HasHurtPanic)
                                     {
                                         ApproachDistance += Math.Abs(TargetVelocity.X * 2);
                                         RetreatDistance += Math.Abs(TargetVelocity.X * 2);
                                     }
-                                    if (DistanceX >= ApproachDistance)
-                                        Approach = true;
-                                    else if (DistanceX <= RetreatDistance)
-                                        Retreat = true;
-                                    if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee)
+                                    if (DistanceX < 475 + HalfWidth)
+                                    {
+                                        if (DistanceX >= ApproachDistance)
+                                            Approach = true;
+                                        else if (DistanceX <= RetreatDistance)
+                                            Retreat = true;
+                                    }
+                                    if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee && DistanceX < 400 + HalfWidth + DistanceDiscount)
                                         Attack = true;
                                 }
                                 break;
@@ -5638,6 +5648,8 @@ namespace giantsummon
             {
                 Approach = Retreat = false;
             }
+            if (Approach || Retreat)
+                MoveLeft = MoveRight = false;
             if (Approach)
             {
                 if (TargetPosition.X + TargetWidth * 0.5f > Position.X)
@@ -5821,6 +5833,7 @@ namespace giantsummon
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
                 CheckIfSomeoneNeedsRevive();
+                FollowPlayerAI();
                 if (!Dialogue.InDialogue && !CheckForPlayerAFK() || Dialogue.UpdateDialogueParticipationGuardian(this))
                 {
                     if(MainMod.TestNewCombatAI)
@@ -5846,7 +5859,6 @@ namespace giantsummon
                         if (!NewIdleBehavior())
                         {
                             GuardingPositionAI();
-                            FollowPlayerAI();
                         }
                     }
                 }
@@ -10836,7 +10848,7 @@ namespace giantsummon
             {
                 IncreaseStuckTimer();
             }
-            if (!IsAttackingSomething)
+            //if (true || !IsAttackingSomething)
             {
                 if (UsingFurniture && Math.Abs(PositionDifference.X) >= 160f)
                 {

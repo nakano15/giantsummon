@@ -66,20 +66,20 @@ namespace giantsummon.Creatures
             BodyFrontFrameSwap.Add(23, 3);
 
             //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 10, 3);
-            LeftHandPoints.AddFramePoint2x(11, 22, 9);
-            LeftHandPoints.AddFramePoint2x(12, 23, 17);
-            LeftHandPoints.AddFramePoint2x(13, 22, 20);
+            LeftHandPoints.AddFramePoint2x(10, 10, 4);
+            LeftHandPoints.AddFramePoint2x(11, 22, 11);
+            LeftHandPoints.AddFramePoint2x(12, 24, 19);
+            LeftHandPoints.AddFramePoint2x(13, 20, 24);
 
-            LeftHandPoints.AddFramePoint2x(17, 24, 26);
+            LeftHandPoints.AddFramePoint2x(17, 24, 28);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 15, 3);
-            RightHandPoints.AddFramePoint2x(11, 25, 9);
-            RightHandPoints.AddFramePoint2x(12, 26, 17);
-            RightHandPoints.AddFramePoint2x(13, 23, 20);
+            RightHandPoints.AddFramePoint2x(10, 16, 4);
+            RightHandPoints.AddFramePoint2x(11, 26, 11);
+            RightHandPoints.AddFramePoint2x(12, 28, 19);
+            RightHandPoints.AddFramePoint2x(13, 24, 24);
 
-            RightHandPoints.AddFramePoint2x(17, 26, 26);
+            RightHandPoints.AddFramePoint2x(17, 26, 28);
 
             //Headgear
             HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 11);

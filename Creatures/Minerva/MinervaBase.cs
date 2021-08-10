@@ -28,7 +28,7 @@ namespace giantsummon.Creatures
             DuckingHeight = 52;
             SpriteWidth = 96;
             SpriteHeight = 112;
-            CompanionSlotWeight = 1.8f;
+            CompanionSlotWeight = 1.4f;
             Scale = 108f / 90f;
             Age = 19;
             SetBirthday(SEASON_WINTER, 9);

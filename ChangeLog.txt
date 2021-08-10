@@ -6,3 +6,32 @@ Revamped the following companions tail sprites:
 Fixed inhability to speak with Captain Stench.
 Changed Rococo's right arm sprite when reviving someone.
 Incapacitated companions will no longer react to things.
+Fixed an issue related to the script where the game checks if the companion is inside the world.
+Changed a few companion slot weights:
+	Vladimir went from 2200 to 1600.
+	Domino went from 1800 to 1400.
+	Cinnamon went from 1500 to 900. (Where I had my mind on?)
+	Brutus went from 1800 to 1300.
+	Alexander went from 1500 to 1200.
+	Leopold went from 1350 to 1150.
+	Mabel went from 1500 to 1150.
+	Malisha went from 1700 to 1300.
+	Minerva went from 1800 to 1400.
+	Rococo went from 1300 to 1100.
+	Zacks went from 1650 to 1250.
+Changed a few behaviors of companions AI behavior script.
+	On Charge combat AI:
+		Companions will only try attacking foes that are 180 pixels near them.
+		Companions will only chase targets 300 pixels near them.
+	On Assist combat AI:
+		Companions will try staying 120~195 pixels away from their target.
+		Companions will only try attacking foes that are 250 pixels near them.
+		Companions will only chase targets 325 pixels near them.
+		Companions should now correctly measure distance from their target.
+	On Snipe combat AI:
+		Companions will try staying 220~370 pixels away from their target.
+		Companions will only try attacking foes that are 400 pixels near them.
+		Companions will only chase targets 475 pixels near them.
+		Companions should now correctly measure distance from their target.
+Wrath's sprite changed.
+

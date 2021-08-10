@@ -16,9 +16,9 @@ namespace giantsummon.Creatures
             Description = "One of the emotion pieces fragments\nof a TerraGuardian. Very volatile.";
             Width = 10 * 2;
             Height = 27 * 2;
-            SpriteWidth = 64;
+            SpriteWidth = 70;
             SpriteHeight = 68;
-            FramesInRows = 30;
+            FramesInRows = 28;
             //DuckingHeight = 54;
             //Each pig should definitelly have the same size, birthday age and time, so I moved those infos.
             Male = true;
@@ -44,6 +44,29 @@ namespace giantsummon.Creatures
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.LesserHealingPotion, 10));
 
             //Animation Frames
+
+            //Left Arm
+            LeftHandPoints.AddFramePoint2x(10, 11, 4);
+            LeftHandPoints.AddFramePoint2x(11, 23, 11);
+            LeftHandPoints.AddFramePoint2x(12, 24, 19);
+            LeftHandPoints.AddFramePoint2x(13, 22, 24);
+
+            LeftHandPoints.AddFramePoint2x(17, 25, 28);
+
+            //Right Arm
+            RightHandPoints.AddFramePoint2x(10, 15, 4);
+            RightHandPoints.AddFramePoint2x(11, 25, 11);
+            RightHandPoints.AddFramePoint2x(12, 27, 19);
+            RightHandPoints.AddFramePoint2x(13, 23, 24);
+
+            RightHandPoints.AddFramePoint2x(17, 27, 28);
+
+            //Headgear
+            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16 + 2, 11);
+            HeadVanityPosition.AddFramePoint2x(14, 16 + 2, 9);
+            HeadVanityPosition.AddFramePoint2x(17, 23 + 2, 18);
+            HeadVanityPosition.AddFramePoint2x(22, 16 + 2, 9);
+            HeadVanityPosition.AddFramePoint2x(25, 23 + 2, 18);
 
             GetRequests();
         }

@@ -33,7 +33,7 @@ namespace giantsummon.Creatures
             SpriteWidth = 128;
             SpriteHeight = 160;
             Scale = 138f / 116f;
-            CompanionSlotWeight = 2.2f;
+            CompanionSlotWeight = 1.6f;
             FramesInRows = 15;
             Age = 26;
             SetBirthday(SEASON_SPRING, 23);
