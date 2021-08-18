@@ -1457,7 +1457,7 @@ namespace giantsummon.Creatures
                     return "*Be careful not to fall on that.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*I recommend we make a camp first.*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*Couldn't those Etherians come on peace, instead?*";
                 case MessageIDs.FoundTreasureTile:
                     return "*I think you will like that.*";

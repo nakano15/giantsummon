@@ -654,7 +654,7 @@ namespace giantsummon.Creatures
                     return "*My wise advice is not to do It.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*I'm pretty sure we will enrage something if we destroy that.*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*I could use researching the Etherians.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*Let's look what is inside.*";

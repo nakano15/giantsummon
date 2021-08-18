@@ -51,7 +51,8 @@ namespace giantsummon
             TownNpcInfoCheckingCooldown,
             BuffCommentCooldown,
             TileCommentCooldown,
-            HurtPanic
+            HurtPanic,
+            MemoryOfTarget
         }
     }
 }

@@ -1543,7 +1543,6 @@ namespace giantsummon
                 FoundMineTile = "Mes.Tile.Mine",
                 FoundDetonatorTile = "Mes.Tile.Detonator",
                 FoundPlanteraTile = "Mes.Tile.Plantera",
-                FoundEterniaCrystalStandTile = "Mes.Tile.ECStand",
                 FoundTreasureTile = "Mes.Tile.Treasure",
                 FoundGemTile = "Mes.Tile.Gem",
                 FoundRareOreTile = "Mes.Tile.RareOre",
@@ -1552,7 +1551,8 @@ namespace giantsummon
             public const string TeleportHomeMessage = "Mes.Teleport.Home",
                 SomeoneJoinsTeamMessage = "Mes.Team.SomeoneJoins",
                 PlayerMeetsSomeoneNewMessage = "Mes.Player.MetSomeoneNew",
-                CompanionInvokesAMinion = "Mes.Item.InvokeMinion";
+                CompanionInvokesAMinion = "Mes.Item.InvokeMinion",
+                WhenOldOneArmyStarts = "Mes.Event.DD2Start";
             public const string VladimirRecruitPlayerGetsHugged = "Mes.Recruit.VladmirHug";
         }
         

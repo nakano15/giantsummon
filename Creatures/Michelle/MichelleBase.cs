@@ -449,7 +449,7 @@ namespace giantsummon.Creatures
                     return "Try not to fall on that.";
                 case MessageIDs.FoundPlanteraTile:
                     return "Let's break that weird thing.";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "Let's beat some Etherians?";
                 case MessageIDs.FoundTreasureTile:
                     return "Loot!";

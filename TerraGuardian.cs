@@ -15,7 +15,8 @@ namespace giantsummon
     {
         public const float DivisionBy16 = 1f / 16;
         public static bool UpdateAge = false;
-        public const int MinimumAgetToDrink = 18;
+        public const int MinimumAgeToDrink = 18;
+        public const int TimeUntilCompanionForgetsTarget = 7 * 60;
 
         public DrawMoment drawMoment = DrawMoment.DontDraw;
         public List<PathFinder.Breadcrumbs> Paths = new List<PathFinder.Breadcrumbs>();
@@ -1842,7 +1843,7 @@ namespace giantsummon
                     Mes = GuardianBase.MessageIDs.FoundDetonatorTile;
                     break;
                 case Terraria.ID.TileID.ElderCrystalStand:
-                    Mes = GuardianBase.MessageIDs.FoundEterniaCrystalStandTile;
+                    Mes = GuardianBase.MessageIDs.WhenOldOneArmyStarts;
                     break;
                 case Terraria.ID.TileID.PressurePlates:
                     Mes = GuardianBase.MessageIDs.FoundPressurePlateTile;
@@ -5100,7 +5101,6 @@ namespace giantsummon
                     }
                 }
             }
-
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
             bool TargetIsBoss = false;
@@ -5145,6 +5145,21 @@ namespace giantsummon
                     TargetWidth = MainMod.ActiveGuardians[TargetID].Width;
                     TargetHeight = MainMod.ActiveGuardians[TargetID].Height;
                     break;
+            }
+            if (!HasCooldown(GuardianCooldownManager.CooldownType.MemoryOfTarget))
+            {
+                TargetID = -1;
+                AttackingTarget = false;
+                return;
+            }
+            else
+            {
+                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) < 600 &&
+                    Math.Abs(TargetPosition.Y + TargetWidth * 0.5f - CenterY) < 400 && 
+                    CanHit(TargetPosition, TargetWidth, TargetHeight))
+                {
+                    SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
+                }
             }
             bool Approach = false, Retreat = false, Jump = false, Duck = false, Attack = false;
             bool TargetInAim = false;
@@ -5828,7 +5843,6 @@ namespace giantsummon
             if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified) || KnockedOut) return;
             if (!Is2PControlled)
             {
-                //LookForThreats();
                 LookForThreatsV2();
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
@@ -5958,6 +5972,7 @@ namespace giantsummon
             bool FireBlockProtection = HasFlag(GuardianFlags.FireblocksImmunity);
             byte Distance = 0;
             byte GapDistance = 0;
+            float DangerPosition = 0;
             if (PrioritaryBehaviorType != PrioritaryBehavior.Jump)
             {
                 bool CanSwim = HasFlag(GuardianFlags.SwimmingAbility) || HasFlag(GuardianFlags.Merfolk);
@@ -5995,6 +6010,10 @@ namespace giantsummon
                     {
                         HasDangerousTileBellow = true;
                         Distance = x;
+                        if (Direction < 0)
+                            DangerPosition = (x + CenterX + 1) * 16;
+                        else
+                            DangerPosition = (x + CenterX) * 16;
                         break;
                     }
                     if (!SolidTile)
@@ -6034,6 +6053,31 @@ namespace giantsummon
             //}
             if (HasDangerousTileBellow || (HasPitfall && OwnerY - 64 < Position.Y))
             {
+                float DangerDistance = DangerPosition - Position.X;
+                if (Math.Abs(DangerDistance) < 20)
+                {
+                    if (DangerPosition < Position.X)
+                    {
+                        MoveLeft = false;
+                        MoveRight = true;
+                    }
+                    else
+                    {
+                        MoveLeft = true;
+                        MoveRight = false;
+                    }
+                }
+                else
+                {
+                    MoveLeft = false;
+                    MoveRight = false;
+                    if (Velocity.X == 0 && Velocity.Y == 0)
+                    {
+                        LookingLeft = DangerPosition < Position.X;
+                    }
+                    IncreaseStuckTimer();
+                }
+                return false;
                 if (Distance <= 1)
                 {
                     if(Velocity.X == 0)
@@ -7272,7 +7316,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (ItemUseTime == 0 && IsAttackingSomething && Base.DrinksBeverage && !HasBuff(Terraria.ID.BuffID.Tipsy) && Age >= MinimumAgetToDrink)
+            if (ItemUseTime == 0 && IsAttackingSomething && Base.DrinksBeverage && !HasBuff(Terraria.ID.BuffID.Tipsy) && Age >= MinimumAgeToDrink)
             {
                 for (int i = 0; i < 50; i++)
                 {
@@ -9567,6 +9611,21 @@ namespace giantsummon
                 TargetID = -1;
                 return;
             }
+            if (!HasCooldown(GuardianCooldownManager.CooldownType.MemoryOfTarget))
+            {
+                TargetID = -1;
+                AttackingTarget = false;
+                return;
+            }
+            else
+            {
+                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) < 600 &&
+                    Math.Abs(TargetPosition.Y + TargetWidth * 0.5f - CenterY) < 400 &&
+                    Collision.CanHitLine(TopLeftPosition, Width, Height, TargetPosition, TargetWidth, TargetHeight))
+                {
+                    SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
+                }
+            }
             Vector2 TargetCenter = TargetPosition;
             TargetCenter.X += TargetWidth * 0.5f;
             TargetCenter.Y += TargetHeight * 0.5f;
@@ -10603,6 +10662,7 @@ namespace giantsummon
                                 NearestTargetDistance = Distance;
                                 TargetID = i;
                                 TargetType = TargetTypes.Npc;
+                                SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
                             }
                         }
                     }
@@ -10633,6 +10693,7 @@ namespace giantsummon
                                 NearestTargetDistance = Distance;
                                 TargetID = i;
                                 TargetType = TargetTypes.Player;
+                                SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
                             }
                         }
                     }
@@ -10670,6 +10731,7 @@ namespace giantsummon
                                     NearestTargetDistance = Distance;
                                     TargetID = key;
                                     TargetType = TargetTypes.Guardian;
+                                    SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
                                 }
                             }
                         }
@@ -11419,7 +11481,7 @@ namespace giantsummon
             Vector2 TargetCenter = TargetPosition;
             TargetCenter.X += TargetWidth * 0.5f;
             TargetCenter.Y += TargetHeight * 0.5f;
-            Vector2 Position = (CollisionRelated ? CollisionPosition : TopLeftPosition);
+            Vector2 MyCenterPosition = this.Position;
             int Width = this.Width;
             int Height = 42;
             if (CollisionRelated)
@@ -11432,19 +11494,19 @@ namespace giantsummon
                 if (Ducking)
                 {
                     Height = (int)(Base.DuckingHeight * Scale);
-                    Position.Y += (Base.Height - Base.DuckingHeight) * Scale;
                 }
                 else
                 {
                     Height = (int)(Base.Height * Scale);
                 }
             }
+            MyCenterPosition.Y -= Height * 0.5f;
             if (mount.Active)
                 Height += mount.HeightBoost;
-            return Collision.CanHit(Position, Width, Height, TargetPosition, TargetWidth, TargetHeight) ||
-                Collision.CanHitLine(Position + new Vector2((float)(Direction * Width / 2), GravityDirection * (-(float)Height) / 3f), 0, 0, TargetCenter + new Vector2(0f, (float)(-(float)TargetHeight / 3)), 0, 0) ||
-                Collision.CanHitLine(Position + new Vector2((float)(Direction * Width / 2), GravityDirection * (-(float)Height) / 3f), 0, 0, TargetCenter, 0, 0) ||
-                Collision.CanHitLine(Position + new Vector2((float)(Direction * Width / 2), 0f), 0, 0, TargetCenter + new Vector2(0f, (float)(TargetHeight / 3)), 0, 0);
+            return Collision.CanHit(MyCenterPosition, Width, Height, TargetPosition, TargetWidth, TargetHeight) ||
+                Collision.CanHitLine(MyCenterPosition + new Vector2(0, GravityDirection * (-(float)Height) * 0.3f), 0, 0, TargetCenter, TargetWidth, TargetHeight) ||
+                Collision.CanHitLine(MyCenterPosition + new Vector2(0, 0), 0, 0, TargetCenter, TargetWidth, TargetHeight) ||
+                Collision.CanHitLine(MyCenterPosition + new Vector2(0, GravityDirection * ((float)Height) * 0.3f), 0, 0, TargetCenter, TargetWidth, TargetHeight);
         }
 
         public bool CanUseItem(Item i)

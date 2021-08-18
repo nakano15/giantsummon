@@ -1127,7 +1127,7 @@ namespace giantsummon.Creatures
                     return "*By my experience, a number of souls I gathered are from playing with Detonators.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*I have a bad feeling about this...*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*Don't worry, I know where to deliver etherians souls.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*Well, that's a colirium to the eyes.*";

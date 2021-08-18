@@ -371,6 +371,14 @@ namespace giantsummon.Creatures
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("I don't feel very safe living outdoors. I like warm and cozy places.");
+            Mes.Add("Would you mind if I live with my parents? I don't know which house they're living on, by the way.");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
         public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
         {
             List<string> Mes = new List<string>();
@@ -523,7 +531,7 @@ namespace giantsummon.Creatures
                     return "Can I press that?";
                 case MessageIDs.FoundPlanteraTile:
                     return "I have never seen something like that before. What is It?";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "We're going to be facing more etherians?";
                 case MessageIDs.FoundTreasureTile:
                     return "Let's check what is inside It.";

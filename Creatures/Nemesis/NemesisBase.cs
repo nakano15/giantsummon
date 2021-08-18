@@ -321,7 +321,7 @@ namespace giantsummon.Creatures
                     return "A detonator over there.";
                 case MessageIDs.FoundPlanteraTile:
                     return "Our doom will approach if we break that.";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "";
                 case MessageIDs.FoundTreasureTile:
                     return "A chest.";

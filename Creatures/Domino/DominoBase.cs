@@ -595,7 +595,7 @@ namespace giantsummon.Creatures
                     return "*You're going to press It? I need to know, so I can take a safe distance.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*Something tells me not to pop that.*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*I could use unloading my guns at things. Go on ahead.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*You're planning on sharing, right?*";

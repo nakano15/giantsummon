@@ -54,7 +54,7 @@ namespace giantsummon.Npcs
                     return "Do you by any chance have some rare metals like gold or platinum?";
                 case 4:
                     HasMaterials = PlayerHasMaterials();
-                    return "If you do it would really help me out as my equipment is damaged from the crash and i am unable to defend myself. If you give me 15 gold and platinum bars I will be in debt to you and a VERY useful companion if needed.";
+                    return "If you do it would really help me out as my equipment is damaged from the crash and i am unable to defend myself. If you give me 15 gold or platinum bars I will be in debt to you and a VERY useful companion if needed.";
             }
             return "";
         }

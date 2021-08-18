@@ -1249,7 +1249,7 @@ namespace giantsummon.Creatures
                     return "*I don't recommend pulling that.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*What a cute flower, can you pick It up for me?*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*I'm ready for this, if you want to do it.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*I hope there's an accessory inside.*";

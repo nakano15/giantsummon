@@ -848,7 +848,7 @@ namespace giantsummon.Creatures
                     return "Better not touch that Detonator.";
                 case MessageIDs.FoundPlanteraTile:
                     return "I don't like the look of this...";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "Let's kick some Etherians ass?";
                 case MessageIDs.FoundTreasureTile:
                     return "Amazing! Loot!";

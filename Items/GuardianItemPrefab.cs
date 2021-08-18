@@ -178,12 +178,16 @@ namespace giantsummon.Items
         
         public override bool CanUseItem(Player player)
         {
+            if (PlayerCanUse)
+                return true;
             Main.NewText("This kind of item can only be used by Guardians.");
             return false;
         }
 
         public override bool CanEquipAccessory(Player player, int slot)
         {
+            if (PlayerCanUse)
+                return true;
             Main.NewText("This kind of item can only be equipped by Guardians.");
             return false;
         }

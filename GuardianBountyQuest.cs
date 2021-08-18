@@ -781,23 +781,15 @@ namespace giantsummon
             }
             if (TargetMonsterSpawnPosition > -1)
             {
-                if (!Main.npc[TargetMonsterSpawnPosition].active || Main.npc[TargetMonsterSpawnPosition].type != TargetMonsterID)
+                if ((!Main.npc[TargetMonsterSpawnPosition].active && Main.npc[TargetMonsterSpawnPosition].life > 0) || Main.npc[TargetMonsterSpawnPosition].type != TargetMonsterID)
                 {
                     TargetMonsterSpawnPosition = -1;
                     Main.NewText(TargetName + " has retreated.");
                 }
             }
-            if (ActionCooldown % 300 == 0)
+            if (SignID == -1 && Main.rand.Next(200) == 0)
             {
-                if (SignID > -1 && !SignExists())
-                {
-                    Main.sign[SignID] = null;
-                    SignID = -1;
-                }
-                if (SignID == -1)
-                {
-                    TryFindingASign();
-                }
+                TryFindingASign();
             }
             if (ActionCooldown % 60 == 0)
             {
@@ -863,7 +855,8 @@ namespace giantsummon
 
         public static bool SignExists()
         {
-            return SignID > -1 && (Main.sign[SignID] != null && Main.tile[Main.sign[SignID].x, Main.sign[SignID].y].active() && 
+            return SignID > -1 && (Main.sign[SignID] != null && 
+                Main.tile[Main.sign[SignID].x, Main.sign[SignID].y].active() && 
                 Main.tileSign[Main.tile[Main.sign[SignID].x, Main.sign[SignID].y].type]);
         }
 

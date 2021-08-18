@@ -36,3 +36,16 @@ Changed a few behaviors of companions AI behavior script.
 Wrath's sprite changed.
 Removed Cinnamon's alternative name.
 Cinnamon has gained a description.
+Added Glenn's missing homeless dialogue.
+Changed the way Bounty Quest signs are seeked.
+	Destroying a sign in the world will now check if it's the bounty system sign.
+Companions will now be less stupid about cliffs.
+	They will avoid hanging, or side stepping in the direction, or opposite direction of cliffs.
+	When they're stopped at the edge of a cliff, their stuck timer increases, so they are pulled towards you afterwards.
+Your companions can now forget targets that stays too far away from their view distance, or they can't see.
+Eased the script that checks if companion can hit target.
+Fixed a mistaken dialogue on Captain Stench's recruit npc.
+	She's supposed to ask for either 15 Gold or Platinum bars, instead of both.
+Companions will no longer comment whenever they see the Eternia Crystal Stand.
+	Instead, they will now comment when the Old One's Army event starts.
+You can now equip certain guardian accessories, like Blue's Hairclip.

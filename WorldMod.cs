@@ -24,6 +24,7 @@ namespace giantsummon
         public static byte SpawnDelay = 0, LeaveCooldown = 0;
         public static List<GuardianID> ScheduledVisits = new List<GuardianID>();
         public static List<GuardianBuildingInfo> HouseInfos = new List<GuardianBuildingInfo>();
+        private static bool OldOneArmyWasLastActive = false;
 
         public static void AllowGuardianNPCToSpawn(int ID, string ModID = "")
         {
@@ -131,6 +132,11 @@ namespace giantsummon
         public override void PreUpdate()
         {
             ProjMod.CheckForInactiveProjectiles();
+            if (!Main.gameMenu && Terraria.GameContent.Events.DD2Event.Ongoing && !OldOneArmyWasLastActive)
+            {
+                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.WhenOldOneArmyStarts);
+            }
+            OldOneArmyWasLastActive = Terraria.GameContent.Events.DD2Event.Ongoing;
             LastWasDay = DelayedWasDay;
             DelayedWasDay = Main.dayTime;
             DayChange = false;

@@ -834,7 +834,7 @@ namespace giantsummon.Creatures
                     return "If you want to press that, just tell me so I can get away.";
                 case MessageIDs.FoundPlanteraTile:
                     return "What kind of plant is that?";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "Yes, I can beat some etherians.";
                 case MessageIDs.FoundTreasureTile:
                     return "I will like you more if you find me some jewelry from that chest.";

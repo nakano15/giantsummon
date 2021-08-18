@@ -431,7 +431,7 @@ namespace giantsummon.Creatures
                     return "*Don't even think about it.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*I could discount my rage on that.*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*That seems perfect to discount my rage.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*I hope that doesn't waste our time.*";

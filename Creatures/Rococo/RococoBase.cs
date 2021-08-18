@@ -808,7 +808,7 @@ namespace giantsummon.Creatures
                     return "*[name] asks if can press the Detonator.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*[name] seems scared of the Bulb.*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*[name] seems a bit nervous.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*[name] tells you of the Chest.*";

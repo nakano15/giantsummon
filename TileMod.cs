@@ -14,6 +14,10 @@ namespace giantsummon
             if (!fail)
             {
                 WorldMod.UpdateTileStateOnGuardianHouses(i, j, false);
+                if(Main.tileSign[type] && GuardianBountyQuest.SignID > -1 && Sign.ReadSign(i, j, false) == GuardianBountyQuest.SignID)
+                {
+                    GuardianBountyQuest.SignID = -1;
+                }
             }
         }
 

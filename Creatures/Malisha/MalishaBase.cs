@@ -873,7 +873,7 @@ namespace giantsummon.Creatures
                     return "*Go ahead, press It. I'll just stay here.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*I sense trouble.*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*I could use some Etherian Creatures body parts, so why not.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*They know how to treat a girl, right?*";

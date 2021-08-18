@@ -635,7 +635,7 @@ namespace giantsummon.Creatures
                     return "*Who left that detonator over there?*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*Oooohhh!! What a interesting flower! Can we place it on a vase and put It at my home?*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*I can't understand why creatures appears when you place a crystal there.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*Hey! Let's look inside.*";

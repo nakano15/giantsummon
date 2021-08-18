@@ -566,7 +566,7 @@ namespace giantsummon.Creatures
                     return "*Can I press It? Please?*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*Is that plant even edible?*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*I don't know if we should, but I'll stay with you during the invasion.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*Come on! Open it!*";

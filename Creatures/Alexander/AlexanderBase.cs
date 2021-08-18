@@ -605,7 +605,7 @@ namespace giantsummon.Creatures
                     return "*Be careful, we don't know where is It connected to.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*I have a bad feeling about that.*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*Do you ever wonder why we have to defend those crystals?*";
                 case MessageIDs.FoundTreasureTile:
                     return "*Loot.*";

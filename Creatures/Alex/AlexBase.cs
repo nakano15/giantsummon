@@ -574,7 +574,7 @@ namespace giantsummon.Creatures
                     return "What happens if we push that?";
                 case MessageIDs.FoundPlanteraTile:
                     return "Funny flower.";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "Are we going to defend the crystal again?";
                 case MessageIDs.FoundTreasureTile:
                     return "Shiny!";

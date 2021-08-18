@@ -1082,7 +1082,7 @@ namespace giantsummon.Creatures
                     return "*I recommend you not to press that detonator.*";
                 case MessageIDs.FoundPlanteraTile:
                     return "*I sense coming from that thing...*";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "*I can always do some extra exercise.*";
                 case MessageIDs.FoundTreasureTile:
                     return "*Pillage!*";

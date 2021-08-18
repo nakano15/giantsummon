@@ -443,7 +443,7 @@ namespace giantsummon.Creatures
                     return "(She gestures you to not try pressing the Detonator.)";
                 case MessageIDs.FoundPlanteraTile:
                     return "(As she notices the Bulb, she cowers behind you.)";
-                case MessageIDs.FoundEterniaCrystalStandTile:
+                case MessageIDs.WhenOldOneArmyStarts:
                     return "(She nods to you, after seeing the Eternia Crystal Stand.)";
                 case MessageIDs.FoundTreasureTile:
                     return "(She jumps happily while pointing at the Chest.)";
