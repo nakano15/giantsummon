@@ -1842,9 +1842,6 @@ namespace giantsummon
                 case Terraria.ID.TileID.Detonator:
                     Mes = GuardianBase.MessageIDs.FoundDetonatorTile;
                     break;
-                case Terraria.ID.TileID.ElderCrystalStand:
-                    Mes = GuardianBase.MessageIDs.WhenOldOneArmyStarts;
-                    break;
                 case Terraria.ID.TileID.PressurePlates:
                     Mes = GuardianBase.MessageIDs.FoundPressurePlateTile;
                     break;
