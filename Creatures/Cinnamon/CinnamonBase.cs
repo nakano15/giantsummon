@@ -13,7 +13,7 @@ namespace giantsummon.Creatures
         {
             Name = "Cinnamon";
             PossibleNames = new string[] { "Cinnamon", "Canela" };
-            Description = "";
+            Description = "A food enthusiast who is travelling worlds,\nseeking the best seasonings for food.";
             Size = GuardianSize.Medium;
             Width = 24;
             Height = 68;

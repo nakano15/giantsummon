@@ -34,4 +34,5 @@ Changed a few behaviors of companions AI behavior script.
 		Companions will only chase targets 475 pixels near them.
 		Companions should now correctly measure distance from their target.
 Wrath's sprite changed.
-
+Removed Cinnamon's alternative name.
+Cinnamon has gained a description.

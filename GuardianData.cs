@@ -1041,6 +1041,11 @@ namespace giantsummon
             if (ModVersion >= 72)
             {
                 PickedName = tag.GetByte("NameID_" + UniqueID);
+                GuardianBase gb = Base;
+                if(gb.PossibleNames.Length > 0 && PickedName > gb.PossibleNames.Length)
+                {
+                    PickedName = (byte)Main.rand.Next(gb.PossibleNames.Length);
+                }
             }
             if (ModVersion >= 52)
             {
