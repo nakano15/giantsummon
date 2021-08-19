@@ -38,7 +38,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 87, LastModVersion = 85;
+        public const int ModVersion = 88, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
         public static bool ShowDebugInfo = false;
         //Downed system configs

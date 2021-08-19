@@ -782,6 +782,14 @@ namespace giantsummon
             return WorldMod.GuardiansMet.Any(x => x.ID == ID && x.ModID == ModID);
         }
 
+        public override void OnHitPlayer(NPC npc, Player target, int damage, bool crit)
+        {
+            if(GuardianBountyQuest.TargetMonsterID == npc.whoAmI)
+            {
+                GuardianBountyQuest.OnBountyMonsterHitPlayer(target);
+            }
+        }
+
         public override void OnHitNPC(NPC npc, NPC target, int damage, float knockback, bool crit)
         {
             if (npc.townNPC)
@@ -841,6 +849,17 @@ namespace giantsummon
                 float DamageMod = player.GetModPlayer<PlayerMod>().DamageMod;
                 damage = (int)(damage * DamageMod);
             }
+            if(GuardianBountyQuest.TargetMonsterID == npc.whoAmI)
+            {
+                byte DamageType = 0;
+                if (item.ranged)
+                    DamageType = 1;
+                if (item.magic)
+                    DamageType = 2;
+                if (item.summon)
+                    DamageType = 3;
+                GuardianBountyQuest.ModifyBountyMonsterHitByPlayerAttack(player, DamageType, ref damage, ref knockback, ref crit);
+            }
         }
 
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -849,6 +868,31 @@ namespace giantsummon
             {
                 float DamageMod = Main.player[projectile.owner].GetModPlayer<PlayerMod>().DamageMod;
                 damage = (int)(damage * DamageMod);
+            }
+            if (GuardianBountyQuest.TargetMonsterID == npc.whoAmI && !projectile.hostile)
+            {
+                if (ProjMod.GuardianProj.ContainsKey(projectile.whoAmI))
+                {
+                    byte DamageType = 0;
+                    if (projectile.ranged)
+                        DamageType = 1;
+                    if (projectile.magic)
+                        DamageType = 2;
+                    if (projectile.minion)
+                        DamageType = 3;
+                    GuardianBountyQuest.ModifyBountyMonsterHitByGuardianAttack(ProjMod.GuardianProj[projectile.whoAmI], DamageType, ref damage, ref knockback, ref crit);
+                }
+                else
+                {
+                    byte DamageType = 0;
+                    if (projectile.ranged)
+                        DamageType = 1;
+                    if (projectile.magic)
+                        DamageType = 2;
+                    if (projectile.minion)
+                        DamageType = 3;
+                    GuardianBountyQuest.ModifyBountyMonsterHitByPlayerAttack(Main.player[projectile.owner], DamageType, ref damage, ref knockback, ref crit);
+                }
             }
         }
 

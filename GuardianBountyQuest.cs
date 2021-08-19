@@ -21,6 +21,7 @@ namespace giantsummon
         public static string TargetFullName { get { return TargetName + " the " + Suffix; } }
         public static SpawnBiome spawnBiome = SpawnBiome.Corruption;
         public static List<Modifiers> modifier = new List<Modifiers>();
+        public static DangerousModifier dangerousModifier = DangerousModifier.None;
         public static int ActionCooldown = 5;
         public const int NewRequestMinTime = 10 * 3600, NewRequestMaxTime = 20 * 3600,
             RequestEndMinTime = 20 * 3600, RequestEndMaxTime = 35 * 3600;
@@ -30,7 +31,8 @@ namespace giantsummon
         public const string NoRequestText = "No bounty right now.";
         private static Dictionary<string, byte> BountyProgress = new Dictionary<string, byte>();
         public const byte BountyKilled = 1, BountyRewardRedeemed = 2;
-        public static int[] BountyCounters = new int[5];
+        public static int[] BountyCounters = new int[7];
+        public const int HealthRegenCounter = 0, SpecialSkillCounter = 1, LeaderSpawnFlagCounter = 2, FireRainCounter = 3, SappingCounter = 4, OsmoseCounter = 5, ImobilizeCounter = 6;
 
         public static void Save(Terraria.ModLoader.IO.TagCompound writer)
         {
@@ -49,6 +51,7 @@ namespace giantsummon
                 {
                     writer.Add("BQModifier_" + m, (byte)modifier[m]);
                 }
+                writer.Add("BQDangerousModifier", (byte)dangerousModifier);
                 writer.Add("BQCoinReward", CoinReward);
                 writer.Add("BQRewardList", RewardList.Length);
                 int c = 0;
@@ -74,6 +77,12 @@ namespace giantsummon
             SardineTalkedToAboutBountyQuests = reader.GetBool("BQSardineTalkedTo");
             IsAnnouncementBox = reader.GetBool("BQIsAnnouncementBox");
             TargetMonsterID = reader.GetInt("BQTargetMonsterID");
+            if (Version < 88)
+            {
+                TargetMonsterID = 0;
+                SetDefaultCooldown();
+                return;
+            }
             if (TargetMonsterID > 0)
             {
                 SpawnStress = reader.GetInt("BQSpawnStress");
@@ -92,6 +101,7 @@ namespace giantsummon
                         modifier.Add((Modifiers)reader.GetByte("BQModifier_" + m));
                     }
                 }
+                dangerousModifier = (DangerousModifier)reader.GetByte("BQDangerousModifier");
                 CoinReward = reader.GetInt("BQCoinReward");
                 int ItemCount = reader.GetInt("BQRewardList");
                 RewardList = new Item[ItemCount];
@@ -126,10 +136,17 @@ namespace giantsummon
 
         public static void ApplyModifier(NPC npc)
         {
-            //npc.lifeMax *= 10;
-            //npc.damage += 10;
-            //npc.defense += 5;
-            //npc.knockBackResist *= 0.3f;
+            if (SpawningBountyMob)
+            {
+                for(int i = 0; i < BountyCounters.Length; i++)
+                {
+                    BountyCounters[i] = 0;
+                }
+            }
+            npc.lifeMax *= 10;
+            npc.damage += 20;
+            npc.defense += 10;
+            npc.knockBackResist *= 0.3f;
             int DifficultyMod = 0;
             foreach (Modifiers mod in modifier)
             {
@@ -137,18 +154,17 @@ namespace giantsummon
                 {
                     case Modifiers.Boss:
                         DifficultyMod++;
-                        npc.lifeMax *= 5;
                         break;
                     case Modifiers.ExtraHealth:
-                        npc.lifeMax += (int)(npc.lifeMax * 0.2f);
+                        npc.lifeMax += (int)(npc.lifeMax * 0.4f);
                         break;
                     case Modifiers.ExtraDamage:
                         npc.damage += (int)(npc.damage * 0.3f);
                         break;
                     case Modifiers.ExtraDefense:
-                        npc.defense += (int)(npc.defense * 0.2f);
+                        npc.defense += (int)(npc.defense * 0.3f);
                         break;
-                    case Modifiers.KBImmunity:
+                    case Modifiers.Armored:
                         npc.knockBackResist = 0;
                         break;
                     case Modifiers.Noob:
@@ -162,142 +178,458 @@ namespace giantsummon
             npc.GetGlobalNPC<NpcMod>().mobType = NpcMod.GetBossDifficulty(npc, DifficultyMod);
             npc.rarity = 10;
         }
+        
+        public static void OnBountyMonsterHitPlayer(Player Target)
+        {
+            if (modifier.Contains(Modifiers.Petrifying) && !Target.HasBuff(Terraria.ID.BuffID.Stoned) && Main.rand.NextFloat() < 0.5)
+            {
+                Target.AddBuff(Terraria.ID.BuffID.Stoned, 5 * 30);
+            }
+            if (modifier.Contains(Modifiers.Fatal))
+            {
+                Target.AddBuff(Terraria.ID.BuffID.BrokenArmor, 5 * 30);
+            }
+        }
+
+        public static void OnBountyMonsterHitTerraGuardian(TerraGuardian Target)
+        {
+            if (modifier.Contains(Modifiers.Petrifying) && !Target.HasBuff(Terraria.ID.BuffID.Stoned) && Main.rand.NextFloat() < 0.5)
+            {
+                Target.AddBuff(Terraria.ID.BuffID.Stoned, 5 * 30);
+            }
+            if (modifier.Contains(Modifiers.Fatal))
+            {
+                Target.AddBuff(Terraria.ID.BuffID.BrokenArmor, 5 * 30);
+            }
+        }
+
+        public static void ModifyBountyMonsterHitByPlayerAttack(Player player, byte DamageType, ref int damage, ref float knockback, ref bool crit)
+        {
+            switch (DamageType)
+            {
+                case 0:
+                    if (modifier.Contains(Modifiers.MeleeDefense))
+                    {
+                        damage = (int)(damage * 0.5f);
+                    }
+                    break;
+                case 1:
+                    if (modifier.Contains(Modifiers.RangedDefense))
+                    {
+                        damage = (int)(damage * 0.5f);
+                    }
+                    break;
+                case 2:
+                    if (modifier.Contains(Modifiers.MagicDefense))
+                    {
+                        damage = (int)(damage * 0.5f);
+                    }
+                    break;
+            }
+            if (Main.rand.NextFloat() < 0.66f)
+            {
+                if (modifier.Contains(Modifiers.Retaliate))
+                {
+                    int Damage = (int)(Math.Max(1, damage * 0.1f));
+                    player.statLife -= Damage;
+                    if (player.statLife < 0)
+                        player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" couldn't stand the backfire."), Damage, -player.direction);
+                    CombatText.NewText(player.getRect(), CombatText.LifeRegenNegative, Damage, false, true);
+                }
+                if (DamageType == 2 && modifier.Contains(Modifiers.ManaBurn))
+                {
+                    int Damage = (int)(Math.Max(1, damage * 0.1f));
+                    player.statMana -= Damage;
+                    if (player.statMana < 0)
+                        player.statMana = 0;
+                    CombatText.NewText(player.getRect(), CombatText.HealMana * 0.5f, Damage, false, true);
+                }
+            }
+        }
+
+        public static void ModifyBountyMonsterHitByGuardianAttack(TerraGuardian guardian, byte DamageType, ref int damage, ref float knockback, ref bool crit)
+        {
+            switch (DamageType)
+            {
+                case 0:
+                    if (modifier.Contains(Modifiers.MeleeDefense))
+                    {
+                        damage = (int)(damage * 0.5f);
+                    }
+                    break;
+                case 1:
+                    if (modifier.Contains(Modifiers.RangedDefense))
+                    {
+                        damage = (int)(damage * 0.5f);
+                    }
+                    break;
+                case 2:
+                    if (modifier.Contains(Modifiers.MagicDefense))
+                    {
+                        damage = (int)(damage * 0.5f);
+                    }
+                    break;
+            }
+            if (Main.rand.NextFloat() < 0.66f)
+            {
+                if (modifier.Contains(Modifiers.Retaliate))
+                {
+                    int Damage = (int)(Math.Max(1, damage * 0.1f));
+                    guardian.HP -= Damage;
+                    if (guardian.HP < 0)
+                        guardian.Knockout(" couldn't stand the backfire.");
+                    CombatText.NewText(guardian.HitBox, CombatText.LifeRegenNegative, Damage, false, true);
+                }
+                if (DamageType == 2 && modifier.Contains(Modifiers.ManaBurn))
+                {
+                    int Damage = (int)(Math.Max(1, damage * 0.1f));
+                    guardian.MP -= Damage;
+                    if (guardian.MP < 0)
+                        guardian.MP = 0;
+                    CombatText.NewText(guardian.HitBox, CombatText.HealMana * 0.5f, Damage, false, true);
+                }
+            }
+        }
 
         public static void UpdateBountyNPC(NPC npc)
         {
-            const int ModifierVariable = 0;
-            if(Main.rand.Next(3) == 0)
+            if (Main.rand.Next(3) == 0)
             {
                 Dust.NewDust(npc.position, npc.width, npc.height, 219);
             }
             if (modifier.Contains(Modifiers.HealthRegen))
             {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[0] >= 30)
+                if (BountyCounters[HealthRegenCounter] >= 30)
                 {
-                    BountyCounters[0] -= 30;
+                    BountyCounters[HealthRegenCounter] -= 30;
                     npc.life += npc.defense;
                     if (npc.life > npc.lifeMax)
                         npc.life = npc.lifeMax;
                 }
             }
-            if (modifier.Contains(Modifiers.Reaper))
+            if (modifier.Contains(Modifiers.Leader))
             {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[ModifierVariable] >= 180)
+                if (BountyCounters[LeaderSpawnFlagCounter] == 0)
                 {
-                    bool Trigger = BountyCounters[ModifierVariable] % 20 == 0;
-                    if (BountyCounters[ModifierVariable] >= 300)
-                        BountyCounters[ModifierVariable] -= 300;
-                    if (Trigger && npc.target > -1)
+                    for (int p = 0; p < 255; p++)
                     {
-                        Vector2 Dir = Main.player[npc.target].Center - npc.Center;
-                        Dir.Normalize();
-                        Projectile.NewProjectile(npc.Center, Dir * 8f, 44, (int)(npc.defDamage * 1.2f), 3f);
+                        if (Main.player[p].active && Main.player[p].Distance(npc.Center) < 300)
+                        {
+                            BountyCounters[LeaderSpawnFlagCounter] = 1;
+                            int MobsToSpawn = Main.rand.Next(2, 5);
+                            for (int i = 0; i < MobsToSpawn; i++)
+                            {
+                                int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Bottom.Y, npc.type);
+                                Vector2 Velocity = new Vector2(Main.rand.Next(-100, 101), Main.rand.Next(-100, 101));
+                                Velocity.Normalize();
+                                Main.npc[npcpos].velocity = Velocity * 3;
+                            }
+                            break;
+                        }
                     }
                 }
             }
-            if (modifier.Contains(Modifiers.Cyclops))
+            if (modifier.Contains(Modifiers.FireRain))
             {
-                BountyCounters[ModifierVariable]++;
-                float DelayTime = 300 - 180 * (1f - (float)npc.life / npc.lifeMax);
-                if (BountyCounters[ModifierVariable] >= DelayTime)
+                if (BountyCounters[FireRainCounter] >= Main.rand.Next(20, 30))
                 {
-                    BountyCounters[ModifierVariable] -= (int)DelayTime;
-                    if (npc.target > -1)
+                    BountyCounters[FireRainCounter] = 0;
+                    Vector2 RainSpawnPosition = npc.Center;
+                    if (npc.position.Y < Main.worldSurface * 16)
                     {
-                        Vector2 Dir = Main.player[npc.target].Center - npc.Center;
-                        Dir.Normalize();
-                        Vector2 SpawnPosition = npc.position;
-                        SpawnPosition.X += npc.width * 0.5f;
-                        SpawnPosition.Y += npc.height * 0.25f;
-                        Projectile.NewProjectile(SpawnPosition, Dir * 10f, 259, (int)(npc.defDamage * 0.8f), 3f);
+                        RainSpawnPosition.Y -= 1000;
+                        RainSpawnPosition.X += Main.rand.Next(-1000, 1001);
+                    }
+                    int Damage = (int)(npc.damage * 0.65f);
+                    Vector2 Velocity = new Vector2(Main.rand.Next(-100, 101), Main.rand.Next(-100, 101));
+                    Velocity.Normalize();
+                    Projectile.NewProjectile(RainSpawnPosition, Velocity * 15, Main.rand.Next(326, 329), Damage, 0.1f);
+                }
+            }
+            if (modifier.Contains(Modifiers.Imobilizer))
+            {
+                if (BountyCounters[ImobilizeCounter] >= 10 * 60)
+                {
+                    BountyCounters[ImobilizeCounter] = 0;
+                    Vector2 RainSpawnPosition = npc.Center;
+                    int Damage = (int)(npc.damage * 0.85f);
+                    Vector2 Velocity = Main.player[npc.target].Center - npc.Center;
+                    Velocity.Normalize();
+                    Projectile.NewProjectile(RainSpawnPosition, Velocity * 9, Terraria.ID.ProjectileID.WebSpit, Damage, 0.1f);
+                }
+            }
+            if (modifier.Contains(Modifiers.Sapping))
+            {
+                bool DamageHealth = BountyCounters[SappingCounter] >= 30;
+                if (DamageHealth)
+                    BountyCounters[SappingCounter] = 0;
+                for (int p = 0; p < 255; p++)
+                {
+                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].Distance(npc.Center) < 240)
+                    {
+                        Main.player[p].lifeRegen = 0;
+                        if (DamageHealth)
+                        {
+                            int HealthDamage = (int)(Main.player[p].statLifeMax2 / Main.player[p].statLifeMax);
+                            if (HealthDamage < 1)
+                                HealthDamage = 1;
+                            Main.player[p].statLife -= HealthDamage;
+                            if (Main.player[p].statLife <= 0)
+                                Main.player[p].KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" didn't had anymore spare blood."), 1, 0);
+                            CombatText.NewText(Main.player[p].getRect(), CombatText.LifeRegenNegative, HealthDamage, false, true);
+                        }
+                    }
+                }
+                foreach(TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                {
+                    if(!tg.Downed && tg.Distance(npc.Center) < 240)
+                    {
+                        tg.HealthRegenTime = 0;
+                        if (DamageHealth)
+                        {
+                            int Damage = (int)(tg.HealthHealMult);
+                            if (Damage < 1)
+                                Damage = 1;
+                            tg.HP -= Damage;
+                            if (tg.HP <= 0)
+                                tg.Knockout(" didn't had anymore spare blood.");
+                            CombatText.NewText(tg.HitBox, CombatText.LifeRegenNegative, Damage, false, true);
+                        }
                     }
                 }
             }
-            if (modifier.Contains(Modifiers.GoldenShower))
+            if (modifier.Contains(Modifiers.Osmose))
             {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[ModifierVariable] >= 300)
+                bool DamageMana = BountyCounters[SappingCounter] >= 30;
+                if (DamageMana)
+                    BountyCounters[SappingCounter] = 0;
+                for (int p = 0; p < 255; p++)
                 {
-                    bool Trigger = BountyCounters[ModifierVariable] % 5 == 0;
-                    if (BountyCounters[ModifierVariable] >= 360)
-                        BountyCounters[ModifierVariable] -= 360;
-                    if (Trigger && npc.target > -1)
+                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].Distance(npc.Center) < 240)
                     {
-                        Vector2 Dir = Main.player[npc.target].Center - npc.Center;
-                        Dir.Normalize();
-                        Vector2 ShotPosition = npc.position;
-                        ShotPosition.X += npc.width * 0.5f;
-                        ShotPosition.Y += npc.height * 0.6f;
-                        Projectile.NewProjectile(ShotPosition, Dir * 8f, 288, (int)(npc.defDamage * 0.75f), 3f);
+                        Main.player[p].manaRegen = 0;
+                        if (Main.player[p].statMana <= 0)
+                            Main.player[p].lifeRegen = 0;
+                        if (DamageMana)
+                        {
+                            if (Main.player[p].statMana > 0)
+                            {
+                                int ManaDamage = (int)(Main.player[p].statManaMax2 / Main.player[p].statManaMax);
+                                if (ManaDamage < 1)
+                                    ManaDamage = 1;
+                                Main.player[p].statMana -= ManaDamage;
+                            }
+                            else
+                            {
+                                int HealthDamage = (int)(Main.player[p].statLifeMax2 / Main.player[p].statLifeMax);
+                                if (HealthDamage < 1)
+                                    HealthDamage = 1;
+                                Main.player[p].statLife -= HealthDamage;
+                                if (Main.player[p].statLife <= 0)
+                                    Main.player[p].KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" was dried out."), 1, 0);
+                                CombatText.NewText(Main.player[p].getRect(), CombatText.LifeRegenNegative, HealthDamage, false, true);
+                            }
+                        }
+                    }
+                }
+                foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                {
+                    if (!tg.Downed && tg.Distance(npc.Center) < 240)
+                    {
+                        tg.ManaRegenTime = 0;
+                        if (tg.MP <= 0)
+                            tg.HealthRegenTime = 0;
+                        if (DamageMana)
+                        {
+                            if (tg.MP > 0)
+                            {
+                                int Damage = (int)tg.ManaHealMult;
+                                if (Damage < 1)
+                                    Damage = 1;
+                                tg.MP -= Damage;
+                                if (tg.MP < 0)
+                                    tg.MP = 0;
+                            }
+                            else
+                            {
+                                int Damage = (int)(tg.HealthHealMult);
+                                if (Damage < 1)
+                                    Damage = 1;
+                                tg.HP -= Damage;
+                                if (tg.HP <= 0)
+                                    tg.Knockout(" was dried out.");
+                                CombatText.NewText(tg.HitBox, CombatText.LifeRegenNegative, Damage, false, true);
+                            }
+                        }
                     }
                 }
             }
-            if (modifier.Contains(Modifiers.Haunted))
+            switch (dangerousModifier)
             {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[ModifierVariable] >= 300)
-                {
-                    BountyCounters[ModifierVariable] -= (int)300;
-                    if (npc.target > -1)
+                case DangerousModifier.Invoker:
                     {
-                        Vector2 Dir = Main.player[npc.target].Center - npc.Center;
-                        Dir.Normalize();
-                        Projectile.NewProjectile(npc.Center, Dir * 10f, 293, (int)(npc.defDamage * 1.25f), 3f);
+                        if (BountyCounters[SpecialSkillCounter] == 0)
+                        {
+                            bool HasBossSpawned = false;
+                            for (int n = 0; n < 200; n++)
+                            {
+                                if (Main.npc[n].active && NPCID.Sets.TechnicallyABoss[Main.npc[n].type])
+                                {
+                                    HasBossSpawned = true;
+                                    break;
+                                }
+                            }
+                            if (!HasBossSpawned)
+                            {
+                                for (int p = 0; p < 255; p++)
+                                {
+                                    if (Main.player[p].active && Main.player[p].Distance(npc.Center) < 300)
+                                    {
+                                        //Spawn a boss
+                                        int BossToSpawn = NPCID.KingSlime;
+                                        if (!Main.dayTime)
+                                        {
+                                            BossToSpawn = NPCID.EyeofCthulhu;
+                                        }
+                                        if (Main.player[p].ZoneJungle)
+                                        {
+                                            BossToSpawn = NPCID.QueenBee;
+                                        }
+                                        if (Main.player[p].ZoneCorrupt)
+                                        {
+                                            BossToSpawn = NPCID.EaterofWorldsHead;
+                                        }
+                                        else if (Main.player[p].ZoneCrimson)
+                                        {
+                                            BossToSpawn = NPCID.BrainofCthulhu;
+                                        }
+                                        NPC.SpawnOnPlayer(p, BossToSpawn);
+                                        BountyCounters[SpecialSkillCounter] = 1;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-            }
-            if (modifier.Contains(Modifiers.Alchemist))
-            {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[ModifierVariable] >= 300)
-                {
-                    BountyCounters[ModifierVariable] -= (int)300;
-                    for (int x = -2; x <= 2; x++)
+                    break;
+                case DangerousModifier.Reaper:
                     {
-                        Vector2 Dir = new Vector2(x * 3f, -8f);
-                        Projectile.NewProjectile(npc.Center, Dir, 328 - Math.Abs(x), (int)(npc.defDamage * 1.25f), 3f);
+                        if (BountyCounters[SpecialSkillCounter] >= 180)
+                        {
+                            bool Trigger = BountyCounters[SpecialSkillCounter] % 20 == 0;
+                            if (BountyCounters[SpecialSkillCounter] >= 300)
+                                BountyCounters[SpecialSkillCounter] -= 300;
+                            if (Trigger && npc.target > -1)
+                            {
+                                Vector2 Dir = Main.player[npc.target].Center - npc.Center;
+                                Dir.Normalize();
+                                Projectile.NewProjectile(npc.Center, Dir * 8f, 44, (int)(npc.defDamage * 1.2f), 3f);
+                            }
+                        }
                     }
-                }
-            }
-            if (modifier.Contains(Modifiers.Sharknado))
-            {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[ModifierVariable] >= 60 * 30)
-                {
-                    BountyCounters[ModifierVariable] -= 60 * 30;
-                    if (npc.target > -1)
+                    break;
+                case DangerousModifier.Cyclops:
                     {
-                        Vector2 Dir = Main.player[npc.target].Center - npc.Center;
-                        Dir.Normalize();
-                        Projectile.NewProjectile(npc.Center, Dir * 10f, 385, (int)(npc.defDamage * 1.25f), 3f);
+                        float DelayTime = 300 - 180 * (1f - (float)npc.life / npc.lifeMax);
+                        if (BountyCounters[SpecialSkillCounter] >= DelayTime)
+                        {
+                            BountyCounters[SpecialSkillCounter] -= (int)DelayTime;
+                            if (npc.target > -1)
+                            {
+                                Vector2 Dir = Main.player[npc.target].Center - npc.Center;
+                                Dir.Normalize();
+                                Vector2 SpawnPosition = npc.position;
+                                SpawnPosition.X += npc.width * 0.5f;
+                                SpawnPosition.Y += npc.height * 0.25f;
+                                Projectile.NewProjectile(SpawnPosition, Dir * 10f, 259, (int)(npc.defDamage * 0.8f), 3f);
+                            }
+                        }
                     }
-                }
-            }
-            if (modifier.Contains(Modifiers.Sapper))
-            {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[ModifierVariable] >= 60 * 15)
-                {
-                    BountyCounters[ModifierVariable] -= 60 * 15;
-                    if (npc.target > -1)
+                    break;
+                case DangerousModifier.GoldenShower:
                     {
-                        NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, 387);
+                        if (BountyCounters[SpecialSkillCounter] >= 300)
+                        {
+                            bool Trigger = BountyCounters[SpecialSkillCounter] % 5 == 0;
+                            if (BountyCounters[SpecialSkillCounter] >= 360)
+                                BountyCounters[SpecialSkillCounter] -= 360;
+                            if (Trigger && npc.target > -1)
+                            {
+                                Vector2 Dir = Main.player[npc.target].Center - npc.Center;
+                                Dir.Normalize();
+                                Vector2 ShotPosition = npc.position;
+                                ShotPosition.X += npc.width * 0.5f;
+                                ShotPosition.Y += npc.height * 0.6f;
+                                Projectile.NewProjectile(ShotPosition, Dir * 8f, 288, (int)(npc.defDamage * 0.75f), 3f);
+                            }
+                        }
                     }
-                }
-            }
-            if (modifier.Contains(Modifiers.Cursed))
-            {
-                BountyCounters[ModifierVariable]++;
-                if (BountyCounters[ModifierVariable] >= 60)
-                {
-                    BountyCounters[ModifierVariable] -= 60;
-                    if (npc.target > -1)
+                    break;
+                case DangerousModifier.Haunted:
                     {
-                        Projectile.NewProjectile(npc.Center, Vector2.Zero, 596, (int)(npc.defDamage * 1.25f), 3f);
+                        if (BountyCounters[SpecialSkillCounter] >= 300)
+                        {
+                            BountyCounters[SpecialSkillCounter] -= (int)300;
+                            if (npc.target > -1)
+                            {
+                                Vector2 Dir = Main.player[npc.target].Center - npc.Center;
+                                Dir.Normalize();
+                                Projectile.NewProjectile(npc.Center, Dir * 10f, 293, (int)(npc.defDamage * 1.25f), 3f);
+                            }
+                        }
                     }
-                }
+                    break;
+                case DangerousModifier.Alchemist:
+                    {
+                        if (BountyCounters[SpecialSkillCounter] >= 300)
+                        {
+                            BountyCounters[SpecialSkillCounter] -= (int)300;
+                            for (int x = -2; x <= 2; x++)
+                            {
+                                Vector2 Dir = new Vector2(x * 3f, -8f);
+                                Projectile.NewProjectile(npc.Center, Dir, 328 - Math.Abs(x), (int)(npc.defDamage * 1.25f), 3f);
+                            }
+                        }
+                    }
+                    break;
+                case DangerousModifier.Sharknado:
+                    {
+                        if (BountyCounters[SpecialSkillCounter] >= 60 * 30)
+                        {
+                            BountyCounters[SpecialSkillCounter] -= 60 * 30;
+                            if (npc.target > -1)
+                            {
+                                Vector2 Dir = Main.player[npc.target].Center - npc.Center;
+                                Dir.Normalize();
+                                Projectile.NewProjectile(npc.Center, Dir * 10f, 385, (int)(npc.defDamage * 1.25f), 3f);
+                            }
+                        }
+                    }
+                    break;
+                case DangerousModifier.Sapper:
+                    {
+                        if (BountyCounters[SpecialSkillCounter] >= 60 * 15)
+                        {
+                            BountyCounters[SpecialSkillCounter] -= 60 * 15;
+                            if (npc.target > -1)
+                            {
+                                NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, 387);
+                            }
+                        }
+                    }
+                    break;
+                case DangerousModifier.Cursed:
+                    {
+                        if (BountyCounters[SpecialSkillCounter] >= 60)
+                        {
+                            BountyCounters[SpecialSkillCounter] -= 60;
+                            if (npc.target > -1)
+                            {
+                                Projectile.NewProjectile(npc.Center, Vector2.Zero, 596, (int)(npc.defDamage * 1.25f), 3f);
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -329,35 +661,62 @@ namespace giantsummon
                         case Modifiers.HealthRegen:
                             Extra += 0.1f;
                             break;
-                        case Modifiers.KBImmunity:
+                        case Modifiers.Armored:
                             Extra += 0.4f;
                             break;
-                        case Modifiers.Reaper:
-                            Extra += 0.03f;
+                        case Modifiers.Petrifying:
+                            Extra += 0.3f;
                             break;
-                        case Modifiers.Cyclops:
-                            Extra += 0.2f;
+                        case Modifiers.Leader:
+                            Extra += 0.45f;
                             break;
-                        case Modifiers.GoldenShower:
-                            Extra += 0.1f;
-                            break;
-                        case Modifiers.Haunted:
+                        case Modifiers.FireRain:
                             Extra += 0.25f;
                             break;
-                        case Modifiers.Alchemist:
-                            Extra += 0.05f;
+                        case Modifiers.Sapping:
+                            Extra += 0.4f;
                             break;
-                        case Modifiers.Sharknado:
-                            Extra += 0.5f;
+                        case Modifiers.Osmose:
+                            Extra += 0.2f;
                             break;
-                        case Modifiers.Sapper:
-                            Extra += 0.35f;
+                        case Modifiers.Retaliate:
+                            Extra += 0.15f;
                             break;
-                        case Modifiers.Cursed:
-                            Extra += 0.08f;
+                        case Modifiers.ManaBurn:
+                            Extra += 0.25f;
                             break;
                     }
                 }
+            }
+            switch (dangerousModifier)
+            {
+                case DangerousModifier.Reaper:
+                    Extra += 0.03f;
+                    break;
+                case DangerousModifier.Cyclops:
+                    Extra += 0.2f;
+                    break;
+                case DangerousModifier.GoldenShower:
+                    Extra += 0.1f;
+                    break;
+                case DangerousModifier.Haunted:
+                    Extra += 0.25f;
+                    break;
+                case DangerousModifier.Alchemist:
+                    Extra += 0.05f;
+                    break;
+                case DangerousModifier.Sharknado:
+                    Extra += 0.5f;
+                    break;
+                case DangerousModifier.Sapper:
+                    Extra += 0.35f;
+                    break;
+                case DangerousModifier.Cursed:
+                    Extra += 0.08f;
+                    break;
+                case DangerousModifier.Invoker:
+                    Extra += 0.12f;
+                    break;
             }
             return Extra;
         }
@@ -450,7 +809,7 @@ namespace giantsummon
                     Item ni = i.Clone();
                     GiveRewardToPlayer(ni, player);
                     if (ni.value > 1)
-                        ValueStack += ni.value * i.stack / 16;
+                        ValueStack += ni.value * i.stack / 8;
                     else
                         ValueStack += ni.value * i.stack;
                     //player.GetItem(player.whoAmI, ni, true);
@@ -1514,33 +1873,51 @@ namespace giantsummon
             float ChanceCounter = 0.75f;
             while (Main.rand.NextDouble() < ChanceCounter)
             {
-                Modifiers newMod = (Modifiers)Main.rand.Next(7);
+                Modifiers newMod = (Modifiers)Main.rand.Next((int)Modifiers.Count);
+                if ((newMod == Modifiers.Osmose || newMod == Modifiers.Sapping) && !(NPC.downedBoss2 || NPC.downedBoss3 || Main.hardMode))
+                    continue;
                 if (!modifier.Contains(newMod))
                     modifier.Add(newMod);
                 else
                     break;
                 ChanceCounter *= 0.5f;
             }
-            if (Main.rand.NextDouble() <= 0.333)
+            CoinReward = 5000;
+            dangerousModifier = DangerousModifier.None;
+            if (Main.rand.NextDouble() <= 0.333) //Boss Mods
             {
-                if (NPC.downedGolemBoss && Main.rand.NextDouble() < 0.4)
-                    modifier.Add(Modifiers.Cyclops);
-                else if (NPC.downedFishron && Main.rand.NextDouble() < 0.4)
-                    modifier.Add(Modifiers.Sharknado);
-                else if (Main.rand.NextDouble() < 0.4)
-                    modifier.Add(Modifiers.GoldenShower);
-                else if (Main.rand.NextDouble() < 0.4)
-                    modifier.Add(Modifiers.Haunted);
-                else if (Main.rand.NextDouble() < 0.4)
-                    modifier.Add(Modifiers.Alchemist);
-                else if (Main.hardMode && Main.rand.NextDouble() < 0.4)
-                    modifier.Add(Modifiers.Sapper);
-                else if (Main.rand.NextDouble() < 0.4)
-                    modifier.Add(Modifiers.Cursed);
-                else
-                    modifier.Add(Modifiers.Reaper);
+                List<KeyValuePair<DangerousModifier, float>> SpecialModifier = new List<KeyValuePair<DangerousModifier, float>>();
+                if (NPC.downedGolemBoss)
+                    SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.Cyclops, 0.4f));
+                if (NPC.downedFishron)
+                    SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.Sharknado, 0.4f));
+                SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.GoldenShower, 0.4f));
+                SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.Haunted, 0.4f));
+                SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.Alchemist, 0.4f));
+                if (Main.hardMode)
+                    SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.Sapper, 0.4f));
+                SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.Cursed, 0.4f));
+                SpecialModifier.Add(new KeyValuePair<DangerousModifier, float>(DangerousModifier.Reaper, 0.4f));
+                if (SpecialModifier.Count > 0)
+                {
+                    float PickedRate = Main.rand.NextFloat() * SpecialModifier.Sum(x => x.Value);
+                    float CurrentSum = 0;
+                    bool PickedSpecialMod = false;
+                    foreach (KeyValuePair<DangerousModifier, float> mod in SpecialModifier)
+                    {
+                        if(PickedRate >= CurrentSum && PickedRate < CurrentSum + mod.Value)
+                        {
+                            dangerousModifier = mod.Key;
+                            PickedSpecialMod = true;
+                            break;
+                        }
+                        CurrentSum += mod.Value;
+                    }
+                    if (PickedSpecialMod)
+                        CoinReward += 1250;
+                }
             }
-            CoinReward = 5000 + ExtraCoinRewardFromProgress();
+            CoinReward += ExtraCoinRewardFromProgress();
             CoinReward = (int)(GetExtraRewardFromModifiers() * CoinReward * (Main.rand.Next(80, 121) * 0.01f));
 
             CreateRewards(GetExtraRewardFromModifiers());
@@ -2199,9 +2576,19 @@ namespace giantsummon
                         First = false;
                     else
                         DifficultyString += ", ";
-                    DifficultyString += mod.ToString();
+                    bool FirstLetter = true;
+                    foreach(char c in mod.ToString())
+                    {
+                        if (char.IsUpper(c) && !First)
+                            DifficultyString += " ";
+                        DifficultyString += c;
+                        FirstLetter = false;
+                    }
+                    //DifficultyString += mod.ToString();
                 }
             }
+            if (DifficultyString == "")
+                DifficultyString = "None";
             return DifficultyString;
         }
 
@@ -2218,7 +2605,8 @@ namespace giantsummon
                 else if (TargetMonsterID > 0)
                 {
                     Text = "Hunt " + TargetFullName + ".";
-                    Text += "\n  Difficulty: " + GetDifficultyList();
+                    Text += "\n  Difficulty: " + GetDifficultyList() + ".";
+                    Text += "\n  Dangerous Trait: " + dangerousModifier.ToString();
                     Text += "\n  Last seen in the " + spawnBiome.ToString() + ".";
                     Text += "\n  Reward: " + Main.ValueToCoins(CoinReward);
                     Text += "\n  ";
@@ -2392,10 +2780,28 @@ namespace giantsummon
             ExtraHealth,
             ExtraDamage,
             ExtraDefense,
-            KBImmunity,
+            Armored,
             HealthRegen,
             Boss,
             Noob,
+            Petrifying,
+            Leader,
+            FireRain,
+            Fatal,
+            Imobilizer,
+            MeleeDefense,
+            RangedDefense,
+            MagicDefense,
+            Sapping,
+            Osmose,
+            Retaliate,
+            ManaBurn,
+            Count
+        }
+
+        public enum DangerousModifier : byte
+        {
+            None,
             Reaper,
             Cyclops,
             GoldenShower,
@@ -2403,7 +2809,8 @@ namespace giantsummon
             Alchemist,
             Sharknado,
             Sapper,
-            Cursed
+            Cursed,
+            Invoker
         }
     }
 }

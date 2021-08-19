@@ -6051,9 +6051,9 @@ namespace giantsummon
             if (HasDangerousTileBellow || (HasPitfall && OwnerY - 64 < Position.Y))
             {
                 float DangerDistance = DangerPosition - Position.X;
-                if (Math.Abs(DangerDistance) < 20)
+                if (Math.Abs(DangerDistance) < 10)
                 {
-                    if (DangerPosition < Position.X)
+                    if (Direction < 0)
                     {
                         MoveLeft = false;
                         MoveRight = true;
@@ -11142,6 +11142,10 @@ namespace giantsummon
                                 DamageStack = Main.npc[n].damage;
                                 AttackDirection = Main.npc[n].direction;
                             }
+                            if(GuardianBountyQuest.TargetMonsterID == n)
+                            {
+                                GuardianBountyQuest.OnBountyMonsterHitTerraGuardian(this);
+                            }
                             LastAttacker = n;
                         }
                         NpcsPos.Add(n);
@@ -12867,6 +12871,17 @@ namespace giantsummon
                                 {
                                     float DamageMult = Main.player[OwnerPos].GetModPlayer<PlayerMod>().DamageMod;
                                     NewDamage = (int)(NewDamage * DamageMult);
+                                }
+                                if (GuardianBountyQuest.TargetMonsterID == t)
+                                {
+                                    byte AttackType = 0;
+                                    if (Inventory[SelectedItem].ranged)
+                                        AttackType = 1;
+                                    if (Inventory[SelectedItem].magic)
+                                        AttackType = 2;
+                                    if (Inventory[SelectedItem].summon)
+                                        AttackType = 3;
+                                    GuardianBountyQuest.ModifyBountyMonsterHitByGuardianAttack(this, AttackType, ref NewDamage, ref Knockback, ref Critical);
                                 }
                                 double result = Main.npc[t].StrikeNPC(NewDamage, Knockback, HitDirection, Critical);
                                 Main.PlaySound(Main.npc[t].HitSound, Main.npc[t].Center);

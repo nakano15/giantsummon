@@ -50,3 +50,24 @@ Companions will no longer comment whenever they see the Eternia Crystal Stand.
 	Instead, they will now comment when the Old One's Army event starts.
 You can now equip certain guardian accessories, like Blue's Hairclip.
 Reduced Blue's Hairpin drop rate from her quests from 100% to 10%.
+Bounty Quest system gained a few changes:
+	They will now all be kind of bossy.
+		10x more health. 20 more damage and 10 more defense.
+	Added a Dangerous Modifier category for them.
+		Dangerous Modifier takes some of the modifiers the bounty could have, but could only have one of them active at once.
+		The dangerous modifier will be very visible on the list of modifiers the npc has.
+	Added the Difficulty Modifiers:
+		Petrifying = Has the chance of petrifying foes on touch;
+		Leader = Will invoke minions when close to a player;
+		Fire Rain = When at the surface, will cause fire to rain from the sky. When on the underground, will launch fire from It's body;
+		Imobilizer = Fires spider web at their foes;
+		Melee Defense = Halves melee damage received;
+		Ranged Defense = Halves ranged damage received;
+		Magic Defense = Halves magic damage received;
+		Sapping = Drains health of their nearby foes;
+		Osmose = Drains mana of their nearby foes. If mana is empty, will damage health instead;
+		Retaliate = Has the chance of returning 10% of damage received to their attacker;
+		Mana Burn = Has the chance of returning 10% of damage received to their attacker, damaging their mana;
+	Added the Dangerous Modifier:
+		Invoker = Invokes a boss when a player gets close.
+	Bounty board text for modifiers will now have spacing between their words.
