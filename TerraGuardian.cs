@@ -6070,7 +6070,7 @@ namespace giantsummon
                     MoveRight = false;
                     if (Velocity.X == 0 && Velocity.Y == 0)
                     {
-                        LookingLeft = DangerPosition < Position.X;
+                        LookingLeft = DangerPosition >= Position.X;
                     }
                     IncreaseStuckTimer();
                 }

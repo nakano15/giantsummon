@@ -49,3 +49,4 @@ Fixed a mistaken dialogue on Captain Stench's recruit npc.
 Companions will no longer comment whenever they see the Eternia Crystal Stand.
 	Instead, they will now comment when the Old One's Army event starts.
 You can now equip certain guardian accessories, like Blue's Hairclip.
+Reduced Blue's Hairpin drop rate from her quests from 100% to 10%.
