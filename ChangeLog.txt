@@ -71,3 +71,4 @@ Bounty Quest system gained a few changes:
 	Added the Dangerous Modifier:
 		Invoker = Invokes a boss when a player gets close.
 	Bounty board text for modifiers will now have spacing between their words.
+Added a little extra to the mod description.

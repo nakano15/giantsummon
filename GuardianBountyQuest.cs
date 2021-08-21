@@ -1884,7 +1884,7 @@ namespace giantsummon
             }
             CoinReward = 5000;
             dangerousModifier = DangerousModifier.None;
-            if (Main.rand.NextDouble() <= 0.333) //Boss Mods
+            if (Main.rand.NextDouble() <= 0.45) //Boss Mods
             {
                 List<KeyValuePair<DangerousModifier, float>> SpecialModifier = new List<KeyValuePair<DangerousModifier, float>>();
                 if (NPC.downedGolemBoss)
