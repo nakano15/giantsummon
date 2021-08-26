@@ -1,4 +1,4 @@
-Name(s): Sorrow, Gloomy
+Name(s): Sorrow, Gloomy, Dismal
 
 
 Recruit Method: Can be found underground at a 25% chance or can spawn during rain at a 50% chance.
@@ -13,11 +13,15 @@ Player: "Stop doubting yourself"
 -"Sorry but this feeling is apart of me forever I can not get rid of it, please forgive me(*sob noises*)"
 Player: "Its fine"
 
-Already Met:
-
+Already Met: 
+-"Sorry about last time im such a worthless companion....(*wipes tears*)"
 
 
 Post recruitment RNG:
+-"I really dont like to hurt people(*sob noises*)....Please excuse my poor performance in combat."
+-"I wonder if there is a cure for my undying despair"
+-"
+
 
 
 
@@ -27,7 +31,15 @@ If any other emo pig is on team during recruitment: "[Pig name] is similar to me
 
 
 Reviving:
+Reviving player: "This is all my fault, im to weak to protect you"
+TG revived: "You should have just let me die, im useless either way"
 
 
 
 Comments on other entities:
+
+
+
+
+
+
