@@ -149,6 +149,7 @@
     <Compile Include="Creatures\Zacks\ZacksPullSomeoneAction.cs" />
     <Compile Include="Dialogue.cs" />
     <Compile Include="DialogueChain.cs" />
+    <Compile Include="FeatMentioning.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GuardianArmorAndSetEffects.cs" />
     <Compile Include="GuardianAttackTypeInfo.cs" />
@@ -157,6 +158,7 @@
     <Compile Include="GuardianCommonStatus.cs" />
     <Compile Include="GuardianDrawData.cs" />
     <Compile Include="GuardianDrawMoment.cs" />
+    <Compile Include="GuardianGlobalInfos.cs" />
     <Compile Include="GuardianHand.cs" />
     <Compile Include="GuardianHouseManagementInterface.cs" />
     <Compile Include="GuardianID.cs" />

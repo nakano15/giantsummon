@@ -1570,6 +1570,14 @@ namespace giantsummon
                 EventBegins = "Mes.Event.EventBegins",
                 EventEnds = "Mes.Event.EventEnds";
             public const string VladimirRecruitPlayerGetsHugged = "Mes.Recruit.VladmirHug";
+            public const string FeatMentionPlayer = "Mes.Feat.MentionPlayer",
+                FeatMentionBossDefeat = "Mes.Feat.BossKill",
+                FeatFoundSomethingGood = "Mes.Feat.FoundGoodItem",
+                FeatEventFinished = "Mes.Feat.EventFinished",
+                FeatMetSomeoneNew = "Mes.Feat.MetSomeone",
+                FeatPlayerDied = "Mes.Feat.PlayerDied",
+                FeatOpenTemple = "Mes.Feat.OpenedTemple",
+                FeatTriggeredATrap = "Mes.Feat.TrapTriggered";
         }
         
         public enum GuardianEffect
