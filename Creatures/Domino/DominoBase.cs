@@ -584,6 +584,8 @@ namespace giantsummon.Creatures
                     return "*Always good to ensure victory.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*Good...*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*You don't mind if I bottle some to sell later, right?*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*Look, we could fetch quite a price for that.*";
@@ -618,6 +620,37 @@ namespace giantsummon.Creatures
                     return "*This could have caused some damage, when I was being chased by guards.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*You do anything for a new friend, [nickname]?*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*Don't look now, but our leader fell.*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*[nickname] died... Mind if I take their items?*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Someone fell there.*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*Hahaha, you plan on sharing that, don't you?*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*Time to get some coins out of this.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*You seem in bad shape, [nickname].*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Ugh... I need to stay behind a while...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*I'm running out of potions, and that's not good.*";
+                case MessageIDs.UsesLastPotion:
+                    return "*That was my last potion!*";
+                case MessageIDs.SpottedABoss:
+                    return "*Time to fill that thing with hundreds of holes.*";
+                case MessageIDs.DefeatedABoss:
+                    return "*Let's split the loot 60/40.*";
+                case MessageIDs.InvasionBegins:
+                    return "*I hope I have enough ammo...*";
+                case MessageIDs.RepelledInvasion:
+                    return "*Time to see if they were carrying something valuable.*";
+                case MessageIDs.EventBegins:
+                    return "*Why do I feel that I will spend a long time shooting things?*";
+                case MessageIDs.EventEnds:
+                    return "*Gladly it's over.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

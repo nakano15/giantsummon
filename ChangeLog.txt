@@ -1,1 +1,32 @@
-﻿
+﻿Fargo's sign image bellow the inventory interface will no longer obstruct first companion face.
+Increased the chance of Cinnamon appear when her recruit npc requirement is met.
+Fixed a bug where Vladimir's arms were shown as carrying someone, when he's knocked out.
+Fluffles tail will now correctly be shown in front of the mount, when the player is sharing mount with her.
+Fixed Glenn's helmet placement.
+Companions that just was woke up by the player will now look at them.
+Fixed a positioning issue characters carried by Vladimir were having.
+	Now they should stay in his arms correctly, instead of having signs of "acceleration" and "deceleration" when he's in movement.
+Companions will now react to Honey buff.
+Fluffles will now be invisible when she's exposed to daylight, and she isn't close to you.
+	She will have only 10% opacity if she's in your team.
+Added new companion reactions to:
+	When player dies,
+	When player is knocked out,
+	When an ally is knocked out,
+	When spots a rare loot,
+	When leaving to sell loot,
+	When the player is at a dangerous health level (< 30%),
+	When the companion is at a dangerous health level (< 30%),
+	When running out of potions (Has 4 left on the inventory),
+	When just runs out of potions (Used the last one),
+	When spots a boss,
+	When defeats a boss,
+	When a invasion begins,
+	When an invasion ends,
+	When an event begins (Eclipse, Blood Moon, Moon events),
+	When an event ends (^).
+Added Common Status system for companions.
+	That system allows things from companions, like life crystals used, mana crystals and skill progress of each companion to be the same for any character.
+	You can turn it on or off any time on the settings.
+	Upon opening the game at least once, the game will try populating the Common Status infos, based on the highest value of health, mana and skills companions you've met have.
+		The status will not be updated again after that. Their progress will diverge, so I recommend you to focus on either playing with or without the system.

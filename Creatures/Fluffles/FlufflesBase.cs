@@ -21,6 +21,7 @@ namespace giantsummon.Creatures
             Size = GuardianSize.Large;
             Width = 26;
             Height = 92;
+            FramesInRows = 20;
             CompanionSlotWeight = 1.2f;
             DuckingHeight = 52;
             SpriteWidth = 96;
@@ -466,6 +467,37 @@ namespace giantsummon.Creatures
                     return "(She got a evil look in her eyes.)";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "(She seems to not be able to believe what is happening.)";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "(She panicks when she notices your fall.)";
+                case MessageIDs.LeaderDiesMessage:
+                    return "(Her face is filled with sorrow for your demise.)";
+                case MessageIDs.AllyFallsMessage:
+                    return "(She points at a fallen ally.)";
+                case MessageIDs.SpotsRareTreasure:
+                    return "(She looks excited to see what is that item that fell.)";
+                case MessageIDs.LeavingToSellLoot:
+                    return "(She points at the loot, telling that she'll be selling the loot.)";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "(She looks scared after noticing your health low.)";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "(She starts to fade a bit.)";
+                case MessageIDs.RunningOutOfPotions:
+                    return "(She points at the potions, telling that she's running out of them.)";
+                case MessageIDs.UsesLastPotion:
+                    return "(She looks shocked after noticing that's her last potion.)";
+                case MessageIDs.SpottedABoss:
+                    return "(She looks scared upon seeing that creature.)";
+                case MessageIDs.DefeatedABoss:
+                    return "(She sighs in relief at the creature's fall.)";
+                case MessageIDs.InvasionBegins:
+                    return "(She readies her weapon.)";
+                case MessageIDs.RepelledInvasion:
+                    return "(She celebrates the victory.)";
+                case MessageIDs.EventBegins:
+                    return "(She stares at the sky, wondering what is going on.)";
+                case MessageIDs.EventEnds:
+                    return "(She seems glad It's over.)";
             }
             return base.GetSpecialMessage(MessageID);
         }
@@ -631,7 +663,15 @@ namespace giantsummon.Creatures
                 bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && Main.tile[(int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))].wall == 0;
                 if (ReduceOpacity)
                 {
-                    const float MinOpacity = 0.2f;
+                    float MinOpacity = 0.2f;
+                    if(Math.Abs(guardian.Position.X - Main.player[Main.myPlayer].Center.X) > 120 || 
+                        Math.Abs(guardian.CenterY - Main.player[Main.myPlayer].Center.Y) > 120)
+                    {
+                        if (guardian.OwnerPos == Main.myPlayer)
+                            MinOpacity = 0.1f;
+                        else
+                            MinOpacity = 0;
+                    }
                     if (data.KnockoutAlpha > MinOpacity)
                     {
                         data.KnockoutAlpha -= 0.005f;

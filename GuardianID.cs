@@ -47,7 +47,7 @@ namespace giantsummon
         {
             if (obj is GuardianID)
                 return IsSameID((GuardianID)obj);
-            return base.Equals(obj);
+            return false;
         }
     }
 }

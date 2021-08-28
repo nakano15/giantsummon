@@ -837,6 +837,8 @@ namespace giantsummon.Creatures
                     return "Blades ready.";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "It went down well.";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "I wish I could drink this all day.";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "A Life Crystal!";
@@ -871,6 +873,37 @@ namespace giantsummon.Creatures
                     return "Time to make things easier.";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "That is so weird.";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "What? [nickname]! Hang on!";
+                case MessageIDs.LeaderDiesMessage:
+                    return "[nickname]!!!";
+                case MessageIDs.AllyFallsMessage:
+                    return "Someone's injured!";
+                case MessageIDs.SpotsRareTreasure:
+                    return "Loot! Precious loot!";
+                case MessageIDs.LeavingToSellLoot:
+                    return "I'll go sell those items. I'll be right back.";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "I can distract them while you recover, [nickname].";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "Heh... Hehe... That's not enough... To take me down...";
+                case MessageIDs.RunningOutOfPotions:
+                    return "Uh oh... I have few potions left.";
+                case MessageIDs.UsesLastPotion:
+                    return "We should definitelly restock some potions. My potions just ran out.";
+                case MessageIDs.SpottedABoss:
+                    return "I can't wait to see it falling on the ground.";
+                case MessageIDs.DefeatedABoss:
+                    return "And another victory to us!";
+                case MessageIDs.InvasionBegins:
+                    return "They don't look friendly. Good.";
+                case MessageIDs.RepelledInvasion:
+                    return "That's what you all came here for?! Know that there's more if you return!";
+                case MessageIDs.EventBegins:
+                    return "Look, [nickname]! What could that mean?";
+                case MessageIDs.EventEnds:
+                    return "Everyone is alright? Good.";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -385,6 +385,17 @@ namespace giantsummon.Creatures
 
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
+            VladimirData data = (VladimirData)guardian.Data;
+            UpdateCarriedAllyPosition(guardian);
+            if (data.CarrySomeone)
+            {
+                if (guardian.Downed)
+                {
+                    data.CarrySomeone = false;
+                }
+                else if (guardian.KnockedOut)
+                    PlaceCarriedPersonOnTheFloor(guardian);
+            }
             if (guardian.LookingLeft && (guardian.BodyAnimationFrame == ThroneSittingFrame || guardian.BodyAnimationFrame == BedSleepingFrame))
                 guardian.FaceDirection(false);
             if (guardian.OwnerPos > -1)
@@ -525,8 +536,17 @@ namespace giantsummon.Creatures
                 TryCarryingSomeone(guardian, data);
                 return;
             }
+            if(guardian.DoAction.InUse && !guardian.DoAction.IsGuardianSpecificAction && 
+                guardian.DoAction.ID == (int)GuardianActions.ActionIDs.SellItems)
+            {
+                if (data.PickedUpPerson)
+                    PlaceCarriedPersonOnTheFloor(guardian, true);
+                return;
+            }
             if (!data.PickedUpPerson)
             {
+                if (guardian.DoAction.InUse)
+                    return;
                 if (guardian.CurrentIdleAction == TerraGuardian.IdleActions.Listening)
                     return;
                 guardian.WalkMode = true;
@@ -594,8 +614,6 @@ namespace giantsummon.Creatures
             }
             if (guardian.ItemAnimationTime > 0)
                 guardian.OffHandAction = false;
-            if (guardian.KnockedOut)
-                data.CarrySomeone = false;
             if (guardian.PlayerMounted)
             {
                 Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().MountedOffset.X -= 6f * guardian.Direction;
@@ -610,6 +628,13 @@ namespace giantsummon.Creatures
                 guardian.SaySomething("*It might be dangerous, better you stay here.*");
                 data.CarrySomeone = false;
             }
+        }
+
+        public void UpdateCarriedAllyPosition(TerraGuardian guardian)
+        {
+            VladimirData data = (VladimirData)guardian.Data;
+            if (!data.CarrySomeone)
+                return;
             switch (data.CarriedPersonType)
             {
                 case TerraGuardian.TargetTypes.Guardian:
@@ -648,12 +673,12 @@ namespace giantsummon.Creatures
                         if (HeldGuardian.ItemAnimationTime == 0)
                             HeldGuardian.Direction = guardian.Direction;
                         guardian.AddDrawMomentToTerraGuardian(HeldGuardian);
-                        if(HeldGuardian.Base.Size >= GuardianSize.Large && guardian.OwnerPos == -1)
+                        if (HeldGuardian.Base.Size >= GuardianSize.Large && guardian.OwnerPos == -1)
                         {
                             if (!guardian.AttackMyTarget)
                             {
                                 guardian.ChangeIdleAction(TerraGuardian.IdleActions.Wait, 50);
-                                if(guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
+                                if (guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
                                 {
                                     guardian.MoveDown = true;
                                 }
@@ -744,12 +769,19 @@ namespace giantsummon.Creatures
             return "";
         }
 
-        public void PlaceCarriedPersonOnTheFloor(TerraGuardian guardian)
+        public void PlaceCarriedPersonOnTheFloor(TerraGuardian guardian, bool WillPickupLater = false)
         {
             VladimirData data = (VladimirData)guardian.Data;
             if (!data.CarrySomeone)
                 return;
-            data.CarrySomeone = false;
+            if (WillPickupLater)
+            {
+                data.PickedUpPerson = false;
+            }
+            else
+            {
+                data.CarrySomeone = false;
+            }
             switch (data.CarriedPersonType)
             {
                 case TerraGuardian.TargetTypes.Guardian:
@@ -1446,6 +1478,8 @@ namespace giantsummon.Creatures
                     return "*As long as It isn't to hurt my friends...*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*I needed a bit of that.*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*Lovelly. I was needing some honey.*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*A heart shaped crystal.*";
@@ -1469,6 +1503,37 @@ namespace giantsummon.Creatures
                     return "*Rare ores over there.*";
                 case MessageIDs.FoundMinecartRailTile:
                     return "*Want to ride a minecart?*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[nickname]! Don't worry, I wont let them kill you.*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*[nickname]!! You don't deserve that.. You really don't!!*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Someone needs our care!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*Check that out, [nickname]. I think you may like.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*I have some things to sell. I'll be right back, don't worry.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*[nickname], stay close to me.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*I'm fine... Don't worry...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*I have few potions left...*";
+                case MessageIDs.UsesLastPotion:
+                    return "*I ran out of potions.*";
+                case MessageIDs.SpottedABoss:
+                    return "*Watch out! Big creature incoming!*";
+                case MessageIDs.DefeatedABoss:
+                    return "*We're safe, now.*";
+                case MessageIDs.InvasionBegins:
+                    return "*There's a mob approaching! We should be ready to defend ourselves.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*Why did they attacked us? We just want to live on peace.*";
+                case MessageIDs.EventBegins:
+                    return "*I don't like this...*";
+                case MessageIDs.EventEnds:
+                    return "*I could use some rest now...*";
             }
             return base.GetSpecialMessage(MessageID);
         }

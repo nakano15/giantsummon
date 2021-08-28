@@ -1375,7 +1375,14 @@ namespace giantsummon
         {
             if (damage > 0 && player.statLife > 0) TriggerHandler.FirePlayerHurtTrigger(player.Center, player, (int)damage, crit, pvp);
             if (player.statLife > 0)
+            {
                 FriendlyDuelDefeat = false;
+                int Thereshould = (int)(player.statLifeMax2 * 0.3f);
+                if(player.statLife < Thereshould && player.statLife + damage >= Thereshould)
+                {
+                    CompanionReaction(GuardianBase.MessageIDs.PlayerAtDangerousHealthLevel);
+                }
+            }
             if (KnockedOut)
                 player.AddBuff(Terraria.ID.BuffID.Bleeding, 30 * 60);
         }
@@ -1478,6 +1485,7 @@ namespace giantsummon
         {
             KnockoutBleedingTime = 0;
             KnockedOut = true;
+            CompanionReaction(GuardianBase.MessageIDs.LeaderFallsMessage);
             if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))
             {
                 if (MainMod.PlayersDontDiesAfterDownedDefeat)
@@ -1587,32 +1595,33 @@ namespace giantsummon
         public override void Kill(double damage, int hitDirection, bool pvp, Terraria.DataStructures.PlayerDeathReason damageSource)
         {
             TriggerHandler.FirePlayerDeathTrigger(player.Center, player, (int)damage, pvp);
+            CompanionReaction(GuardianBase.MessageIDs.LeaderDiesMessage);
             if (Guardian.Active)
             {
                 Guardian.WhenPlayerDies();
             }
         }
 
-        public bool CompanionReaction(string MessageID, float Chance = 1f)
+        public bool CompanionReaction(string MessageID, float Chance = 1f, int ReactionDelay = -1)
         {
             if (Chance != 1 && Main.rand.NextFloat() >= Chance)
                 return false;
             List<KeyValuePair<TerraGuardian, string>> CompanionsReaction = new List<KeyValuePair<TerraGuardian, string>>();
-            foreach(TerraGuardian tg in GetAllGuardianFollowers)
+            foreach (TerraGuardian tg in GetAllGuardianFollowers)
             {
                 if (tg.Active && !tg.KnockedOut && !tg.Downed)
                 {
                     string Mes = tg.GetMessage(MessageID);
-                    if(Mes != "")
+                    if (Mes != "")
                     {
                         CompanionsReaction.Add(new KeyValuePair<TerraGuardian, string>(tg, Mes));
                     }
                 }
             }
-            if(CompanionsReaction.Count > 0)
+            if (CompanionsReaction.Count > 0)
             {
                 int Picked = Main.rand.Next(CompanionsReaction.Count);
-                CompanionsReaction[Picked].Key.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(CompanionsReaction[Picked].Value, CompanionsReaction[Picked].Key));
+                CompanionsReaction[Picked].Key.SaySomethingCanSchedule(GuardianMouseOverAndDialogueInterface.MessageParser(CompanionsReaction[Picked].Value, CompanionsReaction[Picked].Key), false, (ReactionDelay == -1 ? Main.rand.Next(20, 90) : ReactionDelay));
                 return true;
             }
             return false;

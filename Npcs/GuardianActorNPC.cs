@@ -62,7 +62,7 @@ namespace giantsummon.Npcs
             npc.height = Base.Height - Base.CharacterPositionYDiscount;
             npc.damage = 0;
             npc.defense = 0;
-            npc.lifeMax = Base.InitialMHP;
+            npc.lifeMax = (int)Base.InitialMHP;
             npc.HitSound = Terraria.ID.SoundID.NPCHit1;
             npc.DeathSound = Terraria.ID.SoundID.NPCDeath2;
             npc.knockBackResist = 0.33f;

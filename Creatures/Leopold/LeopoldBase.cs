@@ -643,6 +643,8 @@ namespace giantsummon.Creatures
                     return "*I could have enchanted instead, but at least saved mana.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*I don't think I'll be reading right now, so why not.*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*This removes any horrible taste from mouth.*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*Look, It's a Life Crystal.*";
@@ -677,6 +679,37 @@ namespace giantsummon.Creatures
                     return "*Me and my minion army will obliterate our opposition.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Is this the time for that? Fine...*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[nickname] can't fight more!*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*[nickname].. Rest in peace...*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Injured ally nearby!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*Mind if I study it before you use?*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*I'll be right back. All those items are making my back ache.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*I recommend you to use a potion when possible, [nickname].*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Krr... I hope I have potions left...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*I have less than 5 potions left!*";
+                case MessageIDs.UsesLastPotion:
+                    return "*That was my last potion!*";
+                case MessageIDs.SpottedABoss:
+                    return "*That's no match for my magic!*";
+                case MessageIDs.DefeatedABoss:
+                    return "*And we win, as always.*";
+                case MessageIDs.InvasionBegins:
+                    return "*If I don't use HP instead of MP, I can try casting Meteor.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*They never had a chance against the mighty [name]!*";
+                case MessageIDs.EventBegins:
+                    return "*I have a bad feeling about this.*";
+                case MessageIDs.EventEnds:
+                    return "*At the same time that was dangerous, was also rich of questions. Can we do that again?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

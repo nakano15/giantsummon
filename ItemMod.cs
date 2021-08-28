@@ -10,6 +10,15 @@ namespace giantsummon
 {
     public class ItemMod : GlobalItem
     {
+        private static List<int> LastItemsSpawned = new List<int>(),
+            NewItemsSpawned = new List<int>();
+
+        public static void RefreshItemsSpawnedLists()
+        {
+            LastItemsSpawned = NewItemsSpawned;
+            NewItemsSpawned = new List<int>();
+        }
+
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
             if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.Active)
@@ -21,6 +30,22 @@ namespace giantsummon
                 }
             }
             GuardianAccessoryEffects.CheckForAccessoryDescriptionChanges(item, tooltips);
+        }
+
+        public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
+        {
+            if (Main.netMode < 2)
+            {
+                NewItemsSpawned.Add(item.whoAmI);
+                if (!LastItemsSpawned.Contains(item.type))
+                {
+                    Player player = Main.player[Main.myPlayer];
+                    if((item.damage > 0 || item.defense > 0) && item.rare > Terraria.ID.ItemRarityID.Green)
+                    {
+                        player.GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.SpotsRareTreasure);
+                    }
+                }
+            }
         }
 
         public override bool OnPickup(Item item, Player player)

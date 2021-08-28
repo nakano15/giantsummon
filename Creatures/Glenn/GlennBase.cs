@@ -98,12 +98,12 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(18, 20, 22);
 
             //Head Vanity
-            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 12);
-            HeadVanityPosition.AddFramePoint2x(14, 16, 10);
-            HeadVanityPosition.AddFramePoint2x(15, 16, 10);
+            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 12 + 2);
+            HeadVanityPosition.AddFramePoint2x(14, 16, 10 + 2);
+            HeadVanityPosition.AddFramePoint2x(15, 16, 10 + 2);
             HeadVanityPosition.AddFramePoint2x(16, -1000, -1000);
-            HeadVanityPosition.AddFramePoint2x(18, 16, 14);
-            HeadVanityPosition.AddFramePoint2x(19, 22, 23);
+            HeadVanityPosition.AddFramePoint2x(18, 16, 14 + 2);
+            HeadVanityPosition.AddFramePoint2x(19, 22, 23 + 2);
         }
 
         public override string CallUnlockMessage => "I think my parents will not mind if I come with you. You are responsible, right?";
@@ -520,6 +520,8 @@ namespace giantsummon.Creatures
                     return "My mom wouldn't be happy to see me playing with poison...";
                 case MessageIDs.AcquiredTipsyDebuff: //He doesn't drink.
                     return "";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "Honey! Tasty and sweet!";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "[nickname], check this out.";
@@ -554,6 +556,37 @@ namespace giantsummon.Creatures
                     return "My mother would never let me use those...";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "My mother told me once not to be hugged by strangers, or something like that.";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "Someone! [nickname] is hurt!!";
+                case MessageIDs.LeaderDiesMessage:
+                    return "[nickname]!! No! That's can't be happening!";
+                case MessageIDs.AllyFallsMessage:
+                    return "Someone's hurt here!!";
+                case MessageIDs.SpotsRareTreasure:
+                    return "That looks cool! Is it a toy?";
+                case MessageIDs.LeavingToSellLoot:
+                    return "I don't think my parents would allow this, but I will sell those things for you.";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "[nickname], you seem very hurt. Try resting a bit.";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "Ugh... I can't go on... I need some rest...";
+                case MessageIDs.RunningOutOfPotions:
+                    return "I have few potions on me. I will need more.";
+                case MessageIDs.UsesLastPotion:
+                    return "It's all gone! My potions are gone!";
+                case MessageIDs.SpottedABoss:
+                    return "Aaahh!! What is that?!";
+                case MessageIDs.DefeatedABoss:
+                    return "Whew... It's dead...";
+                case MessageIDs.InvasionBegins:
+                    return "They look scary! Who are they?";
+                case MessageIDs.RepelledInvasion:
+                    return "I think that was the last of them...";
+                case MessageIDs.EventBegins:
+                    return "Did you also felt that?";
+                case MessageIDs.EventEnds:
+                    return "I think this day just returned to normal.";
             }
             return base.GetSpecialMessage(MessageID);
         }

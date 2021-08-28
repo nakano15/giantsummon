@@ -42,8 +42,8 @@ namespace giantsummon
         public float GetScale { get { if (MainMod.UseCompanionsDefinedScaleChange || ForceScale) return Scale; else return 1f; } }
         public float Accuracy = 0.9f, Agility = 0.5f, Trigger = 0.5f;
         public float JumpSpeed = 7.08f;
-        public int InitialMHP = 100, LifeCrystalHPBonus = 20, LifeFruitHPBonus = 5;
-        public int InitialMP = 20, ManaCrystalMPBonus = 20;
+        public float InitialMHP = 100, LifeCrystalHPBonus = 20, LifeFruitHPBonus = 5;
+        public float InitialMP = 20, ManaCrystalMPBonus = 20;
         public int MaxBreath = 200, BreathCooldown = 7;
         public int BlockRate = 0, DodgeRate = 0;
         public float MountBurdenPercentage = 0.05f;
@@ -1536,7 +1536,8 @@ namespace giantsummon
                 AcquiredSpeedBuff = "Mes.Buff.Swiftness",
                 AcquiredHealthIncreaseBuff = "Mes.Buff.Lifeforce",
                 AcquiredCriticalBuff = "Mes.Buff.Rage",
-                AcquiredMeleeWeaponBuff = "Mes.Buff.PoisonFlask";
+                AcquiredMeleeWeaponBuff = "Mes.Buff.PoisonFlask",
+                AcquiredHoneyBuff = "Mes.Buff.Honey";
             public const string AcquiredTipsyDebuff = "Mes.Buff.Drunk";
             public const string FoundLifeCrystalTile = "Mes.Tile.LC",
                 FoundPressurePlateTile = "Mes.Tile.PressurePlate",
@@ -1552,7 +1553,22 @@ namespace giantsummon
                 SomeoneJoinsTeamMessage = "Mes.Team.SomeoneJoins",
                 PlayerMeetsSomeoneNewMessage = "Mes.Player.MetSomeoneNew",
                 CompanionInvokesAMinion = "Mes.Item.InvokeMinion",
-                WhenOldOneArmyStarts = "Mes.Event.DD2Start";
+                WhenOldOneArmyStarts = "Mes.Event.DD2Start",
+                LeaderDiesMessage = "Mes.Party.LeaderDies",
+                LeaderFallsMessage = "Mes.Party.LeaderFalls",
+                AllyFallsMessage = "Mes.Party.AllyFalls",
+                SpotsRareTreasure = "Mes.Item.RareLoot",
+                LeavingToSellLoot = "Mes.Action.SellLoot",
+                PlayerAtDangerousHealthLevel = "Mes.Party.AllyPlayerDangerousHealth",
+                CompanionHealthAtDangerousLevel = "Mes.Party.MyHealthIsLow",
+                RunningOutOfPotions = "Mes.Item.RunningOutOfPotions",
+                UsesLastPotion = "Mes.Item.RanOutOfPotions",
+                SpottedABoss = "Mes.NPC.BossSpotted",
+                DefeatedABoss = "Mes.NPC.BossDefeated",
+                InvasionBegins = "Mes.Event.InvasionBegins",
+                RepelledInvasion = "Mes.Event.InvasionRepelled",
+                EventBegins = "Mes.Event.EventBegins",
+                EventEnds = "Mes.Event.EventEnds";
             public const string VladimirRecruitPlayerGetsHugged = "Mes.Recruit.VladmirHug";
         }
         

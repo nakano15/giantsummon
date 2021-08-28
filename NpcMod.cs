@@ -21,6 +21,7 @@ namespace giantsummon
         public bool RechargingKbResist = false;
         public static MobTypes LatestMobType = MobTypes.Normal;
         public byte ShardDebuffCount = 0;
+        public static bool HasBossSpawned = false;
 
         public override bool CloneNewInstances
         {
@@ -1609,6 +1610,26 @@ namespace giantsummon
             }
             if (mobType > MobTypes.Normal)
                 StrongMonsterLoot(npc);
+            if (Main.netMode < 2 && MainMod.LastBossSpotted)
+            {
+                bool HasBossPartAlive = false;
+                for(int i = 0; i < 200; i++)
+                {
+                    if(i != npc.type && npc.active)
+                    {
+                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[npc.type])
+                        {
+                            HasBossPartAlive = true;
+                            break;
+                        }
+                    }
+                }
+                if (!HasBossPartAlive)
+                {
+                    MainMod.LastBossSpotted = false;
+                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.DefeatedABoss);
+                }
+            }
         }
 
         public void StrongMonsterLoot(NPC npc)

@@ -35,7 +35,7 @@ namespace giantsummon.Npcs
         {
             if (Main.dayTime && Main.time < 3600 * 8.5f && NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant) && !NpcMod.HasMetGuardian(GuardianBase.Cinnamon) && !NpcMod.HasGuardianNPC(GuardianBase.Cinnamon) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Cinnamon))
             {
-                return 1f / 200; //250
+                return 1f / 125; //250
             }
             return 0;
         }

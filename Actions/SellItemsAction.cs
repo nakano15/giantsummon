@@ -26,7 +26,21 @@ namespace giantsummon.Actions
             bool TeleportedEffects = false;
             switch (Step)
             {
-                case 0: //Check distance to town, calculate time to sell items.
+                case 0:
+                    {
+                        if (StepStart)
+                        {
+                            string Message = guardian.GetMessage(GuardianBase.MessageIDs.LeavingToSellLoot);
+                            if (Message != "") guardian.SaySomething(Message);
+                            else ChangeStep();
+                        }
+                        if(guardian.MessageTime <= 0)
+                        {
+                            ChangeStep();
+                        }
+                    }
+                    break;
+                case 1: //Check distance to town, calculate time to sell items.
                     {
                         if (StepStart)
                         {
@@ -135,7 +149,7 @@ namespace giantsummon.Actions
                         }
                     }
                     break;
-                case 1:
+                case 2:
                     {
                         TeleportedEffects = true;
                         if (Time >= TeleportTime)
@@ -501,7 +515,7 @@ namespace giantsummon.Actions
                         }
                     }
                     break;
-                case 2:
+                case 3:
                     {
                         if (TeleportMethod == 0)
                         {

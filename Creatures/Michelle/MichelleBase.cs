@@ -438,6 +438,8 @@ namespace giantsummon.Creatures
                     return "Time to ease the battle.";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "Okay, no more drinks.";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "I think we can get something good by bottling those.";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "We're so lucky! A Life Crystal!";
@@ -472,6 +474,37 @@ namespace giantsummon.Creatures
                     return "Minions!";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "I really need to wash my eyes, now.";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "Hey [nickname], stop playing on the floor and stand up!";
+                case MessageIDs.LeaderDiesMessage:
+                    return "[nickname]!";
+                case MessageIDs.AllyFallsMessage:
+                    return "Someone's injured!";
+                case MessageIDs.SpotsRareTreasure:
+                    return "Treasure!!";
+                case MessageIDs.LeavingToSellLoot:
+                    return "I'll be going to sell my loot.";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "Are you okay, [nickname]?";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "I'm badly hurt...";
+                case MessageIDs.RunningOutOfPotions:
+                    return "I have a few more potions left.";
+                case MessageIDs.UsesLastPotion:
+                    return "I have no more potions!";
+                case MessageIDs.SpottedABoss:
+                    return "[nickname], ready yourself! Big bad monster there.";
+                case MessageIDs.DefeatedABoss:
+                    return "We managed to do it. Yay!";
+                case MessageIDs.InvasionBegins:
+                    return "I think that means war.";
+                case MessageIDs.RepelledInvasion:
+                    return "They were no match for us.";
+                case MessageIDs.EventBegins:
+                    return "It looks like a horrible moment to be here...";
+                case MessageIDs.EventEnds:
+                    return "That madness is over now...";
             }
             return base.GetSpecialMessage(MessageID);
         }

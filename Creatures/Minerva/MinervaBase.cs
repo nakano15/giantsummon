@@ -535,6 +535,8 @@ namespace giantsummon.Creatures
                     return "*Okay, blades coated.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*I preffer drinking while eating..*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*Sweet.. I could use some for my recipes..*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*Ah, a Life Crystal. Lucky.*";
@@ -569,6 +571,37 @@ namespace giantsummon.Creatures
                     return "*Could they also help me in cooking?*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*I guess I can wait a while longer...*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[nickname]! I'll give you something that may help you...*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*Oh no! [nickname]...*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*There's someone badly hurt here!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*Look, [nickname].*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*My bag is quite heavy right now. I'll go sell those things.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*[nickname], do you need to take a rest?*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*I can't fall like this...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*My potions...*";
+                case MessageIDs.UsesLastPotion:
+                    return "*I'm... I ran out of potions... Sorry...*";
+                case MessageIDs.SpottedABoss:
+                    return "*I... Shall face It too... As long as you're with me, [nickname].*";
+                case MessageIDs.DefeatedABoss:
+                    return "*We won... Someone wants to celebrate the victory?*";
+                case MessageIDs.InvasionBegins:
+                    return "*[nickname]! Look! At the horizon!*";
+                case MessageIDs.RepelledInvasion:
+                    return "*There's no more of them... Glad to have some peace again..*";
+                case MessageIDs.EventBegins:
+                    return "*There is something wrong...*";
+                case MessageIDs.EventEnds:
+                    return "*..It's over.. Phew... I'm glad to have some moment to rest.*";
             }
             return "";
         }

@@ -1116,6 +1116,8 @@ namespace giantsummon.Creatures
                     return "*I feel a bit dirty for doing this...*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*...I miss drinking ale... I don't feel the taste of It...*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*You're glad you can taste it, [nickname].*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*I even feel vigorous after seeing that. Life Crystal!*";
@@ -1150,6 +1152,37 @@ namespace giantsummon.Creatures
                     return "*I could use some aid on reaping.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*I don't think even the souls in my body believe in what I see.*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*...Don't make me take you too, [nickname]... Resist...*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*I'm sorry, [nickname]...*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*An ally fell nearby, we should help them.*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*Even I am curious to see that.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*I'll be right back. Try not to kill things while I'm away.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*You're hurt, [nickname]. Watch yourself.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*My plasma body wont hold much more...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*I have few healing potions disponible!*";
+                case MessageIDs.UsesLastPotion:
+                    return "*I just used my last healing potion! Do you have more?*";
+                case MessageIDs.SpottedABoss:
+                    return "*We should put that thing to rest, [nickname].*";
+                case MessageIDs.DefeatedABoss:
+                    return "*I'll try avoiding this soul from becoming twisted again.*";
+                case MessageIDs.InvasionBegins:
+                    return "*So many souls... I hope I can save all of them...*";
+                case MessageIDs.RepelledInvasion:
+                    return "*We could have solved that peacefully... If they choose that.*";
+                case MessageIDs.EventBegins:
+                    return "*The air has changed. What is going to happen?*";
+                case MessageIDs.EventEnds:
+                    return "*That is not something that happens all the time, right?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

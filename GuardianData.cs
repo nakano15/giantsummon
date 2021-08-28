@@ -11,6 +11,7 @@ namespace giantsummon
     public class GuardianData
     {
         public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, ModID); } }
+        public GuardianCommonStatus GetCommonStatus { get { return GuardianCommonStatus.GetCommonStatus(ID, ModID); } }
         public Group GetGroup { get { return Base.GetGroup; } }
         public string GroupID { get { return Base.GetGroupID; } }
         public GuardianMood Mood = new GuardianMood();
@@ -69,8 +70,8 @@ namespace giantsummon
         public bool KnockedOut = false, KnockedOutCold = false;
         public bool WofFood = false;
         public float HealthHealMult = 1f, ManaHealMult = 1f;
-        public int MaxLifeCrystalHealth { get { return Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals; } }
-        public int MaxLifeFruitHealth { get { return Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals + Base.LifeFruitHPBonus * TerraGuardian.MaxLifeFruit; } }
+        public int MaxLifeCrystalHealth { get { return (int)(Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals); } }
+        public int MaxLifeFruitHealth { get { return (int)(Base.InitialMHP + Base.LifeCrystalHPBonus * TerraGuardian.MaxLifeCrystals + Base.LifeFruitHPBonus * TerraGuardian.MaxLifeFruit); } }
         public float TravellingStacker = 0f, DamageStacker = 0f, ComfortStack = 0f; //For damagestacker to work, I need to know whose projectiles were spawned from a Guardian.
         public byte FoodStacker = 0, DrinkStacker = 0, ComfortPoints = 0;
         public CombatTactic tactic = CombatTactic.Assist;
@@ -659,9 +660,20 @@ namespace giantsummon
             }
         }
 
+        public List<GuardianSkills> GetSkillList
+        {
+            get
+            {
+                if (GuardianCommonStatus.UseSkillProgressShare)
+                    return GetCommonStatus.SkillList;
+                return SkillList;
+            }
+        }
+
         public void ResetSkillsProgress()
         {
             int TotalLevel = 0;
+            List<GuardianSkills> SkillList = GetSkillList;
             for (int s = 0; s < SkillList.Count; s++)
             {
                 TotalLevel += SkillList[s].Level;
@@ -672,7 +684,11 @@ namespace giantsummon
             int ExtraLevel = LastTotalSkillLevel - TotalLevel;
             if (ExtraLevel < 0)
                 ExtraLevel = 0;
-            LastTotalSkillLevel = TotalLevel + ExtraLevel;
+            int TotalSkillLevel = TotalLevel + ExtraLevel;
+            if (GuardianCommonStatus.UseSkillProgressShare)
+                GetCommonStatus.LastTotalSkillLevel = TotalSkillLevel;
+            else
+                LastTotalSkillLevel = TotalSkillLevel;
             Main.NewText(Name + "'s skill levels were resetted.");
         }
 
@@ -680,7 +696,7 @@ namespace giantsummon
         {
             if (SkillLevelSum < LastTotalSkillLevel)
                 Value *= 2;
-            SkillList[(byte)Skill].Progress += Value;
+            GetSkillList[(byte)Skill].Progress += Value;
         }
 
         public void UpdateData(Player player)
@@ -690,6 +706,7 @@ namespace giantsummon
             AddSecond();
             if (player.whoAmI != Main.myPlayer) return;
             int LevelSum = 0;
+            List<GuardianSkills> SkillList = GetSkillList;
             for (int s = 0; s < SkillList.Count; s++)
             {
                 if (SkillList[s].MaxProgress == 0)
@@ -1019,6 +1036,7 @@ namespace giantsummon
             tag.Add("OutfitID_" + UniqueID, OutfitID);
             tag.Add("Coins_" + UniqueID, (int)Coins - int.MaxValue);
             SaveCustom(tag, UniqueID);
+            GuardianCommonStatus.SaveStatus(ID, ModID);
         }
 
         public void Load(Terraria.ModLoader.IO.TagCompound tag, int ModVersion, int UniqueID)
@@ -1265,6 +1283,27 @@ namespace giantsummon
                 ResetSkillsProgress();
             if(ModVersion >= 83)
                 LoadCustom(tag, ModVersion, UniqueID);
+            if(ModVersion < 90)
+            {
+                GuardianCommonStatus status = GetCommonStatus;
+                if (status.LifeCrystalsUsed < LifeCrystalHealth)
+                    status.LifeCrystalsUsed = LifeCrystalHealth;
+                if (status.LifeFruitsUsed < LifeFruitHealth)
+                    status.LifeFruitsUsed = LifeFruitHealth;
+                if (status.ManaCrystalsUsed < ManaCrystals)
+                    status.ManaCrystalsUsed = ManaCrystals;
+                foreach(GuardianSkills skill in status.SkillList)
+                {
+                    foreach(GuardianSkills other in SkillList)
+                    {
+                        if(skill.skillType == other.skillType && skill.Level < other.Level)
+                        {
+                            skill.Level = other.Level;
+                            skill.Progress = other.Progress;
+                        }
+                    }
+                }
+            }
         }
 
         public void UpdateAge()

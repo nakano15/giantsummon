@@ -1238,6 +1238,8 @@ namespace giantsummon.Creatures
                     return "*Always comes in handy.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*Ahhh...*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*Hmmm..*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*Look at that beautiful crystal.*";
@@ -1272,6 +1274,37 @@ namespace giantsummon.Creatures
                     return "*This will help.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Do... You two know each other?*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*Watch out! [nickname] fell!*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*No! It can't be! [nickname]!!*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Someone fell here!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*I like the look of that.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*I'll be right back.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*Watch your health, [nickname].*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Huff... Puff... Huff...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*I'm running out of potions.*";
+                case MessageIDs.UsesLastPotion:
+                    return "*That was my last potion.*";
+                case MessageIDs.SpottedABoss:
+                    return "*Grrrr... Bring it on!*";
+                case MessageIDs.DefeatedABoss:
+                    return "*We managed to take care of it. Yay.*";
+                case MessageIDs.InvasionBegins:
+                    return "*That's a lot of hostiles.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*I think there's no more of them coming.*";
+                case MessageIDs.EventBegins:
+                    return "*I feel a horrible chill going down the spine...*";
+                case MessageIDs.EventEnds:
+                    return "*I'm so glad it's over.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

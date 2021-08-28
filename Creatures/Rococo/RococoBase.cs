@@ -797,6 +797,8 @@ namespace giantsummon.Creatures
                     return "*[name] used poison on his weapon.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*[name] seems to be enjoying the honey.*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*[name] tells you of the Life Crystal.*";
@@ -831,6 +833,37 @@ namespace giantsummon.Creatures
                     return "*[name] seems to like invoking those.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*[name] stares at you and the big bear, without understanding what is happening.*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[name] yells your name.*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*[name] is very saddened by your death.*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*[name] tells you someone nearby fell.*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*[name] points joyfully at something that fell.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*[name] waves at you, saying that will sell the items he has.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*[name] tells you to be careful of your health.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*[name] is trying to hide that he's badly hurt.*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*[name] seems shocked at the number of potions he has.*";
+                case MessageIDs.UsesLastPotion:
+                    return "*[name] tells you that has no more potions left.*";
+                case MessageIDs.SpottedABoss:
+                    return "*[name] tells you that sees a creature coming.*";
+                case MessageIDs.DefeatedABoss:
+                    return "*[name] celebrates our victory.*";
+                case MessageIDs.InvasionBegins:
+                    return "*[name] name warns you of hordes of foes coming.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*[name] seems glad that it's over.*";
+                case MessageIDs.EventBegins:
+                    return "*[name] seems scared right now.*";
+                case MessageIDs.EventEnds:
+                    return "*[name] calmed down.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

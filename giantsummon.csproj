@@ -154,6 +154,7 @@
     <Compile Include="GuardianAttackTypeInfo.cs" />
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
+    <Compile Include="GuardianCommonStatus.cs" />
     <Compile Include="GuardianDrawData.cs" />
     <Compile Include="GuardianDrawMoment.cs" />
     <Compile Include="GuardianHand.cs" />

@@ -454,6 +454,37 @@ namespace giantsummon.Creatures
                     return "*Summon!*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Even watching that doesn't make me less angry!*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[nickname]! You're still weak!*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*Grrr!! GRRRR!!! GRAAAAHH!!! YOU SHOULDN'T HAVE DONE THAT!!!*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Someone is down!!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*LOOT!*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*Okay, I'll sell this stinky loot!*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*Watch your health, fool!*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Grrr... That's all you've got?!*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*Low on potions here!*";
+                case MessageIDs.UsesLastPotion:
+                    return "*No more potions left!!*";
+                case MessageIDs.SpottedABoss:
+                    return "*Time to make some mashed meat!*";
+                case MessageIDs.DefeatedABoss:
+                    return "*Boom!*";
+                case MessageIDs.InvasionBegins:
+                    return "*Perfect! I was needing punching bags.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*Anyone else?! Come on!*";
+                case MessageIDs.EventBegins:
+                    return "*I'm ready. Bring it on!*";
+                case MessageIDs.EventEnds:
+                    return "*Already over?! That makes me more angry!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

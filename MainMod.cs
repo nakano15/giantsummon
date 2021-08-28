@@ -38,7 +38,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 88, LastModVersion = 85;
+        public const int ModVersion = 90, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -58,7 +58,7 @@ namespace giantsummon
             oldGamePadState = GamePad.GetState(controlPort);
         public static bool Gameplay2PMode = false;
         public static bool MoveLeftPress = false, MoveRightPress = false, MoveUpPress = false, MoveDownPress = false, UseItemPress = false, JumpPress = false;
-        public static Mod NExperienceMod, KalciphozMod, SubworldLibrary, TerraClassesMod, ThoriumMod;
+        public static Mod NExperienceMod, KalciphozMod, SubworldLibrary, TerraClassesMod, ThoriumMod, FargoMutantMod;
         public static bool TestForceGuardianOnFront = false;
         public static Main MainHook { get { return Main.instance; } }
         public static bool LastWof = false;
@@ -131,6 +131,7 @@ namespace giantsummon
         public static int GeneralIdleCommentCooldown = 0;
         public static List<GuardianID> CompanionBlacklist = new List<GuardianID>();
         private static Tile DefaultTile = new Tile();
+        public static bool LastBossSpotted = false, LastInvasionSpotted = false, LastEventStarted = false;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -771,6 +772,11 @@ namespace giantsummon
 
         }
 
+        public override void MidUpdateItemDust()
+        {
+            ItemMod.RefreshItemsSpawnedLists();
+        }
+
         public override void PreUpdateEntities()
         {
             Main.ignoreErrors = false;
@@ -783,6 +789,61 @@ namespace giantsummon
         {
             NpcMod.RestorePlayersPosition();
             CheckIfThereIsNpcInCameraRange();
+            if (Main.netMode < 2)
+            {
+                if (LastBossSpotted)
+                {
+                    bool HasBossAlive = false;
+                    for (int i = 0; i < 200; i++)
+                    {
+                        if (Main.npc[i].active && Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type])
+                        {
+                            HasBossAlive = true;
+                            break;
+                        }
+                    }
+                    if (!HasBossAlive)
+                        LastBossSpotted = false;
+                }
+                if (Main.invasionType > InvasionID.None) //Invasion happening
+                {
+                    if (!LastInvasionSpotted)
+                    {
+                        Player player = Main.player[Main.myPlayer];
+                        if (player.position.Y < Main.worldSurface * 16 + NPC.sHeight &&
+                            Math.Abs(player.position.X - Main.invasionX * 16) < 3000)
+                        {
+                            LastInvasionSpotted = true;
+                            player.GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.InvasionBegins);
+                        }
+                    }
+                }
+                else
+                {
+                    if (LastInvasionSpotted)
+                    {
+                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.RepelledInvasion);
+                        LastInvasionSpotted = false;
+                    }
+                }
+                bool AnEventIsHappening = Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon;
+                if (AnEventIsHappening)
+                {
+                    if (!LastEventStarted)
+                    {
+                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventBegins);
+                        LastEventStarted = true;
+                    }
+                }
+                else
+                {
+                    if (LastEventStarted)
+                    {
+                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventEnds);
+                        LastEventStarted = false;
+                    }
+                }
+            }
         }
 
         public void CheckIfThereIsNpcInCameraRange()
@@ -805,7 +866,7 @@ namespace giantsummon
             NemesisFadeEffect++;
             if (NemesisFadeEffect >= NemesisFadingTime)
                 NemesisFadeEffect -= NemesisFadeCooldown + NemesisFadingTime;
-            for (int Assists = 0; Assists < MaxExtraGuardianFollowers + 1; Assists++)
+            /*for (int Assists = 0; Assists < MaxExtraGuardianFollowers + 1; Assists++)
             {
                 if (Main.netMode > 0)
                     break;
@@ -844,7 +905,7 @@ namespace giantsummon
                 {
                     db.RestorePlayerStatus();
                 }
-            }
+            }*/
             if (LastWof && Main.wof == -1)
             {
                 for (int p = 0; p < 255; p++)
@@ -1395,6 +1456,9 @@ namespace giantsummon
                         XSum = 46f;
                     }
                 }
+                byte LifeCrystals = Guardian.GetUsedLifeCrystal,
+                    LifeFruits = Guardian.GetUsedLifeFruit,
+                    ManaCrystals = Guardian.GetUsedManaCrystal;
                 string HealthText = Guardian.Name + ": " + Guardian.HP + "/" + Guardian.MHP;
                 HealthbarPosition.X += XSum;
                 Vector2 HealthTextPosition = HealthbarPosition;
@@ -1435,7 +1499,7 @@ namespace giantsummon
                 if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + 98 &&
                     Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + 8)
                 {
-                    MouseOverText = "Life Crystals used: " + Guardian.Data.LifeCrystalHealth + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits used: " + Guardian.Data.LifeFruitHealth + "/" + TerraGuardian.MaxLifeFruit;
+                    MouseOverText = "Life Crystals used: " + LifeCrystals + "/" + TerraGuardian.MaxLifeCrystals + "  Life Fruits used: " + LifeFruits + "/" + TerraGuardian.MaxLifeFruit;
                     if (Guardian.Data.Injury > 0)
                         MouseOverText += "  [Injury " + Guardian.Data.Injury + "%]";
                     if (MainMod.SharedCrystalValues)
@@ -1455,9 +1519,9 @@ namespace giantsummon
                 {
                     for (int y = 0; y < 2; y++)
                     {
-                        int LCValue = Guardian.Data.LifeCrystalHealth,
-                            LFValue = Guardian.Data.LifeFruitHealth;
-                        if (MainMod.SharedCrystalValues && y == 1)
+                        int LCValue = LifeCrystals,
+                            LFValue = LifeFruits;
+                        if (SharedCrystalValues && y == 1)
                         {
                             LCValue = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeCrystalsUsed;
                             LFValue = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeFruitsUsed;
@@ -1505,7 +1569,7 @@ namespace giantsummon
                     Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition, new Rectangle(122 * 3 + 22, 20 + 16, (int)(98 * BarValue), 8), Color.White);
                     for (int y = 0; y < 2; y++)
                     {
-                        int MCValue = Guardian.Data.ManaCrystals;
+                        int MCValue = ManaCrystals;
                         if (MainMod.SharedCrystalValues && y == 1)
                         {
                             MCValue = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ManaCrystalsUsed;
@@ -1517,7 +1581,7 @@ namespace giantsummon
                     }
                     if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + 98 &&
                         Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + 8)
-                        MouseOverText = "Mana: " + Guardian.MP + "/" + Guardian.MMP + "  Mana Crystals: " + Guardian.Data.ManaCrystals + "/" + GuardianData.MaxManaCrystals;
+                        MouseOverText = "Mana: " + Guardian.MP + "/" + Guardian.MMP + "  Mana Crystals: " + ManaCrystals + "/" + GuardianData.MaxManaCrystals;
                 }
                 if (Guardian.Breath < Guardian.BreathMax && Guardian.BreathMax > 0)
                 {
@@ -1677,7 +1741,11 @@ namespace giantsummon
             //
             float StartX = 0;
             float StartY = 258;
-            if (MainMod.KalciphozMod != null)
+            if(MainMod.FargoMutantMod != null)
+            {
+                StartY += 28;
+            }
+            else if (MainMod.KalciphozMod != null)
             {
                 float kscale = Math.Min(1f, (float)Main.screenWidth / 3840 + 0.4f);
                 StartY = 432 * kscale;
@@ -2520,7 +2588,7 @@ namespace giantsummon
                         Utils.DrawBorderString(Main.spriteBatch, "Guardian Skills", SlotStartPosition, Color.White);
                         SlotStartPosition.Y += 36;
                         int LevelSum = 0;
-                        foreach (GuardianSkills s in Guardian.Data.SkillList)
+                        foreach (GuardianSkills s in Guardian.Data.GetSkillList)
                         {
                             Vector2 SkillInfoDimension = Utils.DrawBorderString(Main.spriteBatch, s.GetSkillInfo(Guardian), SlotStartPosition, Color.White);
                             if (Main.mouseX >= SlotStartPosition.X && Main.mouseX < SlotStartPosition.X + SkillInfoDimension.X &&
@@ -2783,6 +2851,7 @@ namespace giantsummon
             SubworldLibrary = ModLoader.GetMod("SubworldLibrary");
             TerraClassesMod = ModLoader.GetMod("TerraClasses");
             ThoriumMod = ModLoader.GetMod("ThoriumMod");
+            FargoMutantMod = ModLoader.GetMod("Fargowiltas");
         }
 
         public override void PostSetupContent()

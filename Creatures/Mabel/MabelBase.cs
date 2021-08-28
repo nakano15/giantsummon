@@ -624,6 +624,8 @@ namespace giantsummon.Creatures
                     return "*So... I should drink this, right?*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return ""; //Doesn't drinks
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*I really love this. This wont make me fat, right?*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*What a beautiful looking crystal.*";
@@ -658,6 +660,37 @@ namespace giantsummon.Creatures
                     return "*I wonder if they could teach me proper posing.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Just how much did you missed having another person around?*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[nickname]! Hang on! I'm coming.*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*[nickname]!! You couldn't have died! You didn't even watched me being a super popular model yet! [nickname]!!*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Someone fell! They need help!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*That looks cool! That looks rare!*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*I'll be right back. I will sell those things and return with the coins.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*Watch yourself [nickname]. You are very wounded.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Ahh! I should.... Keep... The pose... Stand...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*Huh? There's only all those potions?! I will need more.*";
+                case MessageIDs.UsesLastPotion:
+                    return "*My potions! Where did they go?!*";
+                case MessageIDs.SpottedABoss:
+                    return "*It's... Huge... I'm scared! We'll be fine?*";
+                case MessageIDs.DefeatedABoss:
+                    return "*I'm glad we're safe...*";
+                case MessageIDs.InvasionBegins:
+                    return "*Who are they? Are they stalkers?!*";
+                case MessageIDs.RepelledInvasion:
+                    return "*I'm glad that we managed to repell them...*";
+                case MessageIDs.EventBegins:
+                    return "*What's with the sky? It's not like a usual day.*";
+                case MessageIDs.EventEnds:
+                    return "*What was that? I hope that doesn't happen again.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

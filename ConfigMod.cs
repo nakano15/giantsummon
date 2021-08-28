@@ -146,6 +146,7 @@ namespace giantsummon
             MainMod.ForceUpdateGuardiansStatus = true;
         }
     }
+
     [Label("Knockout System Settings")]
     public class ReviveSystemConfigMod : ModConfig
     {
@@ -184,5 +185,27 @@ namespace giantsummon
         [Tooltip("Makes the companion speak to the ones they are trying to revive.")]
         [DefaultValue(true)]
         public bool GuardianCanReviveChatter { get { return MainMod.CompanionsSpeaksWhileReviving; } set { MainMod.CompanionsSpeaksWhileReviving = value; } }
+    }
+
+    [Label("Common Status System Settings")]
+    public class CommonStatusSystemConfigMod : ModConfig
+    {
+        public override ConfigScope Mode => ConfigScope.ServerSide;
+
+        [Label("Max Health and Mana progress independs on player character?")]
+        [Description("When turned on, each companion will have their max health and mana progress be the same regardless of which character you play.")]
+        public bool UseCommonStatusSystemForHealthAndManaShare
+        {
+            get { return GuardianCommonStatus.UseMaxHealthAndManaShare; }
+            set { GuardianCommonStatus.UseMaxHealthAndManaShare = value; }
+        }
+
+        [Label("Skill progress of each companion independs on player character?")]
+        [Description("When turned on, each companion will have their skills progress be the same regardless of which character you play.")]
+        public bool UseCommonStatusSystemForSkillShare
+        {
+            get { return GuardianCommonStatus.UseSkillProgressShare; }
+            set { GuardianCommonStatus.UseSkillProgressShare = value; }
+        }
     }
 }

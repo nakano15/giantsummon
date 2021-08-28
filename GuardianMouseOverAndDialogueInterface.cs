@@ -693,6 +693,7 @@ namespace giantsummon
             if (tg.IsUsingBed)
             {
                 tg.LeaveFurniture(true);
+                tg.LookAt(MainPlayer.Center);
                 string Message = "";
                 if (tg.HasRequestActive)
                     Message = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage);

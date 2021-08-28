@@ -31,6 +31,7 @@ namespace giantsummon
         public List<byte> NpcsSpotted = new List<byte>(), PlayersSpotted = new List<byte>();
         public List<int> GuardiansSpotted = new List<int>();
         public const int ItemStackCount = 100, ItemStackTurns = Main.maxItems / ItemStackCount;
+        public GuardianCommonStatus GetCommonStatus { get { return Data.GetCommonStatus; } }
         public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, Data.ModID); } }
         public GuardianData Data //Think of a way of arranging the Guardian Datas in the player, and also be able to retrieve them when necessary.
         {
@@ -211,7 +212,15 @@ namespace giantsummon
         public bool IsGuardingPlace = false;
         public List<GuardianCooldownManager> Cooldowns { get { return Data.Cooldowns; } set { Data.Cooldowns = value; } }
         public List<GuardianCooldownManager.CooldownType> CooldownException = new List<GuardianCooldownManager.CooldownType>();
-        public List<GuardianSkills> SkillList { get { return Data.SkillList; } }
+        public List<GuardianSkills> SkillList
+        {
+            get
+            {
+                if (GuardianCommonStatus.UseSkillProgressShare)
+                    return GetCommonStatus.SkillList;
+                return Data.SkillList;
+            }
+        }
         public IdleActions CurrentIdleAction = IdleActions.Wait;
         public int IdleActionTime = 0;
         public Dictionary<int, int> TileCount = new Dictionary<int, int>(), TempTileCount = new Dictionary<int, int>();
@@ -262,7 +271,7 @@ namespace giantsummon
                 return NewName;
             }
         }
-        public List<string> MessageSchedule = new List<string>();
+        public List<MessageScheduler> MessageSchedule = new List<MessageScheduler>();
         public string ChatMessage = "";
         public bool CanBeInterrupted = false;
         public bool DisplayMessageOnChat = false;
@@ -383,6 +392,18 @@ namespace giantsummon
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
         public static int CurrentDrawnOrderID = 0;
+
+        public class MessageScheduler
+        {
+            public string Message = "";
+            public int MessageDelay = 0;
+
+            public MessageScheduler(string Message, int Delay = 0)
+            {
+                this.Message = Message;
+                MessageDelay = Delay;
+            }
+        }
 
         public void TryFindingTownNpcInfo()
         {
@@ -689,6 +710,62 @@ namespace giantsummon
         public float MinionSlotCount = 0;
         public int OwnerPos = -1;
         public int RefPlayer { get { if (OwnerPos > -1) { return OwnerPos; } return 0; } }
+        public byte GetUsedLifeCrystal
+        {
+            get
+            {
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                    return GetCommonStatus.LifeCrystalsUsed;
+                return Data.LifeCrystalHealth;
+            }
+            set
+            {
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                {
+                    GetCommonStatus.LifeCrystalsUsed = value;
+                }
+                else
+                {
+                    Data.LifeCrystalHealth = value;
+                }
+            }
+        }
+        public byte GetUsedLifeFruit
+        {
+            get
+            {
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                    return GetCommonStatus.LifeFruitsUsed;
+                return Data.LifeCrystalHealth;
+            }
+            set
+            {
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                {
+                    GetCommonStatus.LifeFruitsUsed = value;
+                }
+                else
+                    Data.LifeFruitHealth = value;
+            }
+        }
+        public byte GetUsedManaCrystal
+        {
+            get
+            {
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                    return GetCommonStatus.ManaCrystalsUsed;
+                return Data.ManaCrystals;
+            }
+            set
+            {
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                {
+                    GetCommonStatus.ManaCrystalsUsed = value;
+                }
+                else
+                    Data.ManaCrystals = value;
+            }
+        }
         public byte LifeCrystalHealth
         {
             get
@@ -704,9 +781,12 @@ namespace giantsummon
                         return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeCrystalsUsed;
                     }
                 }
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                {
+                    return GetCommonStatus.LifeCrystalsUsed;
+                }
                 return Data.LifeCrystalHealth;
             }
-            set { Data.LifeCrystalHealth = value; }
         }
         public byte LifeFruitHealth
         {
@@ -723,10 +803,14 @@ namespace giantsummon
                         return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().LifeFruitsUsed;
                     }
                 }
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                {
+                    return GetCommonStatus.LifeFruitsUsed;
+                }
                 return Data.LifeFruitHealth;
             }
-            set { Data.LifeFruitHealth = value; }
         }
+
         public byte ManaCrystals
         {
             get
@@ -738,9 +822,12 @@ namespace giantsummon
                     else if (Main.netMode == 0)
                         return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ManaCrystalsUsed;
                 }
+                if (GuardianCommonStatus.UseMaxHealthAndManaShare)
+                {
+                    return GetCommonStatus.ManaCrystalsUsed;
+                }
                 return Data.ManaCrystals;
             }
-            set { Data.ManaCrystals = value; }
         }
         public const int MaxLifeCrystals = 15, MaxLifeFruit = 20; //-
         public bool UpdateStatus = true, UpdateWeapons = true;
@@ -1215,7 +1302,11 @@ namespace giantsummon
             CanBeInterrupted = true;
             ChatMessage = Message[0];
             Message.RemoveAt(0);
-            MessageSchedule = Message;
+            foreach(string mes in Message)
+            {
+                MessageScheduler m = new MessageScheduler(mes, 30);
+                MessageSchedule.Add(m);
+            }
             DisplayMessageOnChat = ChatDisplay;
             MessageTime = MainMod.CalculateMessageTime(ChatMessage);
             if (ChatDisplay)
@@ -1225,13 +1316,13 @@ namespace giantsummon
             return MessageTime;
         }
 
-        public int SaySomethingCanSchedule(string Message, bool ChatDisplay = false)
+        public int SaySomethingCanSchedule(string Message, bool ChatDisplay = false, int DelayUntilSaying = 0)
         {
             CanBeInterrupted = false;
             DisplayMessageOnChat = ChatDisplay;
-            if (MessageTime > 0)
+            if (MessageTime > 0 || DelayUntilSaying > 0)
             {
-                MessageSchedule.Add(Message);
+                MessageSchedule.Add(new MessageScheduler(Message, DelayUntilSaying));
                 return MessageTime + MainMod.CalculateMessageTime(Message);
             }
             else
@@ -1438,6 +1529,9 @@ namespace giantsummon
                     break;
                 case Terraria.ID.BuffID.Rage:
                     Mes = GetMessage(GuardianBase.MessageIDs.AcquiredCriticalBuff);
+                    break;
+                case Terraria.ID.BuffID.Honey:
+                    Mes = GetMessage(GuardianBase.MessageIDs.AcquiredHoneyBuff);
                     break;
                 case Terraria.ID.BuffID.WeaponImbueConfetti:
                 case Terraria.ID.BuffID.WeaponImbueCursedFlames:
@@ -2644,9 +2738,14 @@ namespace giantsummon
             if (MessageTime > 0)
             {
                 MessageTime--;
-                if (MessageTime <= 0 && MessageSchedule.Count > 0)
+            }
+            if (MessageTime <= 0 && MessageSchedule.Count > 0)
+            {
+                if (MessageSchedule[0].MessageDelay > 0)
+                    MessageSchedule[0].MessageDelay--;
+                else
                 {
-                    SaySomething(MessageSchedule[0], DisplayMessageOnChat);
+                    SaySomething(MessageSchedule[0].Message, DisplayMessageOnChat);
                     MessageSchedule.RemoveAt(0);
                 }
             }
@@ -3930,8 +4029,8 @@ namespace giantsummon
             }
             else
             {
-                MHP = Base.InitialMHP + Base.LifeCrystalHPBonus * LifeCrystalHealth + Base.LifeFruitHPBonus * LifeFruitHealth;
-                MMP = Base.InitialMP + Base.ManaCrystalMPBonus * ManaCrystals;
+                MHP = (int)(Base.InitialMHP + Base.LifeCrystalHPBonus * LifeCrystalHealth + Base.LifeFruitHPBonus * LifeFruitHealth);
+                MMP = (int)(Base.InitialMP + Base.ManaCrystalMPBonus * ManaCrystals);
                 HealthHealMult = (float)(Base.InitialMHP + Base.LifeCrystalHPBonus * 15 + Base.LifeFruitHPBonus * 20) * (1f / 500);
                 ManaHealMult = (float)Base.InitialMP * (1f / 20);
             }
@@ -4062,9 +4161,10 @@ namespace giantsummon
                 Compatibility.NExperienceCompatibility.ScaleStatus(this);
             if (MainMod.UseSkillsSystem)
             {
-                for (int s = 0; s < Data.SkillList.Count; s++)
+                List<GuardianSkills> SkillList = Data.GetSkillList;
+                for (int s = 0; s < SkillList.Count; s++)
                 {
-                    Data.SkillList[s].OnStatusUpdate(this);
+                    SkillList[s].OnStatusUpdate(this);
                 }
             }
             if (PlayerMounted && !ReverseMount)
@@ -5252,7 +5352,7 @@ namespace giantsummon
                 bool NearDeath = HasFlag(GuardianFlags.VergeOfDeathAlert);
                 if(!NearDeath)
                 {
-                    if (HP < MHP * 0.2f && !PlayerMounted && !SittingOnPlayerMount)
+                    if (HP < MHP * 0.3f && !PlayerMounted && !SittingOnPlayerMount)
                     {
                         AddFlag(GuardianFlags.VergeOfDeathAlert);
                         NearDeath = true;
@@ -8603,21 +8703,20 @@ namespace giantsummon
         {
             if (KnockedOut)
                 return;
-            bool TryUsingManaPotion = true;
             if (ItemAnimationTime == 0 && !HasCooldown(GuardianCooldownManager.CooldownType.HealingPotionCooldown))
             {
                 if (HP < MHP * 0.25f && AttemptToUseHealingPotion())
                 {
-                    TryUsingManaPotion = false;
+                    return;
                 }
                 /*else
                 {
                     PickWeaponForSituation();
                 }*/
             }
-            if (TryUsingManaPotion && MP < MMP * 0.25f && AttemptToUseManaPotion())
+            if (MP < MMP * 0.25f && AttemptToUseManaPotion())
             {
-
+                return;
             }
             if (MainMod.UsingGuardianNecessitiesSystem && !Action && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown) && !HasBuff(ModContent.BuffType<Buffs.FirstAidCooldown>()) && Data.Injury >= GuardianData.HeavyWoundCount && HasItem(ModContent.ItemType<Items.Consumable.FirstAidKit>()))
             {
@@ -9237,6 +9336,26 @@ namespace giantsummon
                         
                     }
                     break;
+
+                case TriggerTypes.Spotted:
+                    switch (Target.TargetType)
+                    {
+                        case giantsummon.Trigger.TriggerTarget.TargetTypes.NPC:
+                            if (!MainMod.LastBossSpotted && MessageTime <= 0)
+                            {
+                                if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[Target.TargetID].type])
+                                {
+                                    string Message = GetMessage(GuardianBase.MessageIDs.SpottedABoss);
+                                    if (Message != "")
+                                    {
+                                        MainMod.LastBossSpotted = true;
+                                        SaySomethingCanSchedule(Message, false, Main.rand.Next(20, 60));
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                    break;
             }
         }
 
@@ -9313,6 +9432,10 @@ namespace giantsummon
         {
             KnockoutBleedingTime = 0;
             KnockedOut = true;
+            if (!IsPlayerHostile(Main.player[Main.myPlayer]) && InPerceptionRange(Main.player[Main.myPlayer].Center))
+            {
+                Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.AllyFallsMessage);
+            }
             if (HasFlag(GuardianFlags.HealthGoesToZeroWhenKod))
             {
                 HP = 0;
@@ -9508,12 +9631,14 @@ namespace giantsummon
             int PotionPosition = -1;
             int LastHealingDifference = int.MaxValue;
             int ToHealValue = MHP - HP;
+            int PotionCount = 0;
             for (int i = 0; i < 50; i++)
             {
                 if (this.Inventory[i].type > 0 && this.Inventory[i].potion && this.Inventory[i].healLife > 0)// && giantsummon.IsGuardianItem(this.Inventory[i]))
                 {
                     if (!(this.Inventory[i].modItem is Items.GuardianItemPrefab) || ((Items.GuardianItemPrefab)this.Inventory[i].modItem).GuardianCanUse(this))
                     {
+                        PotionCount += this.Inventory[i].stack;
                         int RestoreResult = Math.Abs((int)(this.Inventory[i].healLife * HealthHealMult) - ToHealValue);
                         if (RestoreResult < LastHealingDifference)
                         {
@@ -9527,6 +9652,19 @@ namespace giantsummon
             {
                 SelectedItem = PotionPosition;
                 Action = true;
+                string Message = "";
+                if (PotionCount == 1)
+                {
+                    Message = GetMessage(GuardianBase.MessageIDs.UsesLastPotion);
+                }
+                else if (PotionCount == 5)
+                {
+                    Message = GetMessage(GuardianBase.MessageIDs.RunningOutOfPotions);
+                }
+                if (Message != "")
+                {
+                    SaySomethingCanSchedule(Message, false, Inventory[SelectedItem].useAnimation * 3 + Main.rand.Next(20, 60));
+                }
                 return true;
             }
             return false;
@@ -11338,6 +11476,16 @@ namespace giantsummon
                     FinalDamage += (int)(FinalDamage * 0.5f);
                 }
                 this.HP -= FinalDamage;
+                if (HP > 0)
+                {
+                    int Thereshould = (int)(MHP * 0.3f);
+                    if (HP < Thereshould && HP + FinalDamage >= Thereshould)
+                    {
+                        string Message = GetMessage(GuardianBase.MessageIDs.CompanionHealthAtDangerousLevel);
+                        if (Message != "")
+                            SaySomethingCanSchedule(Message, false, Main.rand.Next(20, 60));
+                    }
+                }
                 if (MainMod.UsingGuardianNecessitiesSystem && FinalDamage >= MHP * 0.15f && OwnerPos > -1)
                 {
                     AddInjury(1);
@@ -13186,20 +13334,20 @@ namespace giantsummon
                         {
                             if (item.type == Terraria.ID.ItemID.LifeCrystal || item.type == ModContent.ItemType<Items.Consumable.EtherHeart>())
                             {
-                                if (Data.LifeCrystalHealth < MaxLifeCrystals)
+                                if (GetUsedLifeCrystal < MaxLifeCrystals)
                                 {
                                     ForceUse = true;
-                                    Data.LifeCrystalHealth++;
+                                    GetUsedLifeCrystal++;
                                     UpdateStatus = true;
                                 }
                                 else Failed = true;
                             }
                             if (item.type == Terraria.ID.ItemID.LifeFruit || item.type == ModContent.ItemType<Items.Consumable.EtherFruit>())
                             {
-                                if (Data.LifeCrystalHealth == MaxLifeCrystals && Data.LifeFruitHealth < MaxLifeFruit)
+                                if (LifeCrystalHealth == MaxLifeCrystals && GetUsedLifeFruit < MaxLifeFruit)
                                 {
                                     ForceUse = true;
-                                    Data.LifeFruitHealth++;
+                                    GetUsedLifeFruit++;
                                     UpdateStatus = true;
                                 }
                                 else Failed = true;
@@ -13207,10 +13355,10 @@ namespace giantsummon
                         }
                         if (item.type == Terraria.ID.ItemID.ManaCrystal)
                         {
-                            if (Data.ManaCrystals < GuardianData.MaxManaCrystals)
+                            if (GetUsedManaCrystal < GuardianData.MaxManaCrystals)
                             {
                                 ForceUse = true;
-                                Data.ManaCrystals++;
+                                GetUsedManaCrystal++;
                                 UpdateStatus = true;
                             }
                             else Failed = true;
@@ -16275,19 +16423,19 @@ namespace giantsummon
             {
                 if (this.Inventory[i].newAndShiny)
                     continue;
-                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeCrystal || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherHeart>() && Base.IsTerraGuardian)) && Data.LifeCrystalHealth < MaxLifeCrystals)
+                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeCrystal || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherHeart>() && Base.IsTerraGuardian)) && GetUsedLifeCrystal < MaxLifeCrystals)
                 {
                     this.SelectedItem = i;
                     this.Action = true;
                     break;
                 }
-                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeFruit || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherFruit>() && Base.IsTerraGuardian)) && Data.LifeCrystalHealth == MaxLifeCrystals && Data.LifeFruitHealth < MaxLifeFruit)
+                if ((this.Inventory[i].type == Terraria.ID.ItemID.LifeFruit || (this.Inventory[i].type == ModContent.ItemType<Items.Consumable.EtherFruit>() && Base.IsTerraGuardian)) && GetUsedLifeCrystal == MaxLifeCrystals && GetUsedLifeFruit < MaxLifeFruit)
                 {
                     this.SelectedItem = i;
                     this.Action = true;
                     break;
                 }
-                if (this.Inventory[i].type == Terraria.ID.ItemID.ManaCrystal && Data.ManaCrystals < GuardianData.MaxManaCrystals)
+                if (this.Inventory[i].type == Terraria.ID.ItemID.ManaCrystal && GetUsedManaCrystal < GuardianData.MaxManaCrystals)
                 {
                     SelectedItem = i;
                     Action = true;

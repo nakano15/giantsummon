@@ -862,6 +862,8 @@ namespace giantsummon.Creatures
                     return "*Hm... So usefull...*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*Another cup, please.*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*How sweet. I loved having some honey.*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*Lovely, a Life Crystal.*";
@@ -896,6 +898,37 @@ namespace giantsummon.Creatures
                     return "*Aww, such lovely minions.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Already throwing yourself on the arms of strangers, [nickname]?*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*Our mighty leader is lying down on the floor. Let's help them?*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*Don't worry [nickname], I can make some good use of your body.*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*There is someone taking a rest here.*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*You know how to please a girl, don't you?*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*Don't worry, [nickname]. I'll be right back with the coins.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*Breathing hard, [nickname]? Maybe I have something for you.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Ha... Haha... Hahaha.... That's all your got... Ah...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*Uh oh... I should have stocked more potions...*";
+                case MessageIDs.UsesLastPotion:
+                    return "*I dislike this... Someone there has spare potions?*";
+                case MessageIDs.SpottedABoss:
+                    return "*Hohoho, I would like to make that my minion.*";
+                case MessageIDs.DefeatedABoss:
+                    return "*Would some of you be willing to carry the pieces of that thing?*";
+                case MessageIDs.InvasionBegins:
+                    return "*Don't look now, [nickname], but your fans seems to be coming.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*They weren't friendly, right? I'm glad I managed to snatch some for future experiments.*";
+                case MessageIDs.EventBegins:
+                    return "*Looks like this will be interesting.*";
+                case MessageIDs.EventEnds:
+                    return "*Over already? What a pity.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

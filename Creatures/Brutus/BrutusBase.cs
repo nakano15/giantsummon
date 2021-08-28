@@ -1071,6 +1071,8 @@ namespace giantsummon.Creatures
                     return "*I dislike doing this..*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*Ahh.. A nice, and good mug of ale.*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*Honey would go perfect on a well cooked steak.*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*I even feel a little healthier after seeing that.*";
@@ -1105,6 +1107,37 @@ namespace giantsummon.Creatures
                     return "*I wonder if they can cook.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*That's very weird. I don't know if I should've let you do that.*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[nickname]! I'm coming! Hang on!*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*No!!! [nickname]!! It should have been me, not you!*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Ally down! We should help them when possible!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*I didn't knew It was my birthday.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*Stay safe, [nickname]. I'll leave to sell some stuff and be back.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*[nickname], move to behind me!*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Huff... Gruff... Don't worry... I'm fine..*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*I have feel potions with me.*";
+                case MessageIDs.UsesLastPotion:
+                    return "*I ran out of potions! We should restock.*";
+                case MessageIDs.SpottedABoss:
+                    return "*Terrarian, stay behind me.*";
+                case MessageIDs.DefeatedABoss:
+                    return "*Threat eliminated.*";
+                case MessageIDs.InvasionBegins:
+                    return "*Don't worry, I will protect you from them.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*Those are the last ones of them. We're safe now.*";
+                case MessageIDs.EventBegins:
+                    return "*That doesn't look good... On guard, everyone!*";
+                case MessageIDs.EventEnds:
+                    return "*It's finally over... I could use a drink now.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

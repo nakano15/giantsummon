@@ -561,8 +561,10 @@ namespace giantsummon.Creatures
                     return "This will make combat be better!";
                 case MessageIDs.AcquiredMeleeWeaponBuff:
                     return "So, I shouldn't lick the blade?";
-                case MessageIDs.AcquiredTipsyDebuff: 
+                case MessageIDs.AcquiredTipsyDebuff:
                     return "";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "I can't stop licking honey.";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "Shiny Heart!";
@@ -595,6 +597,37 @@ namespace giantsummon.Creatures
                     return "A new friend!";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Whine whine* I want some too...";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "NO! Not [nickname]!!";
+                case MessageIDs.LeaderDiesMessage:
+                    return "[nickname]!!!";
+                case MessageIDs.AllyFallsMessage:
+                    return "One of our friends has fell!";
+                case MessageIDs.SpotsRareTreasure:
+                    return "Hey [nickname], look at that.";
+                case MessageIDs.LeavingToSellLoot:
+                    return "I'll be back with shiny coins.";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*Woof!* Watch out, [nickname].";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "I... Still can fight..";
+                case MessageIDs.RunningOutOfPotions:
+                    return "I have few of that red water!";
+                case MessageIDs.UsesLastPotion:
+                    return "I'm out of that red water!";
+                case MessageIDs.SpottedABoss:
+                    return "*Grrrr* You wont touch [nickname]!";
+                case MessageIDs.DefeatedABoss:
+                    return "Yay! We're safe!";
+                case MessageIDs.InvasionBegins:
+                    return "*Grrr* Here they come!";
+                case MessageIDs.RepelledInvasion:
+                    return "Yes! *Yip!* Run away! Run away!!";
+                case MessageIDs.EventBegins:
+                    return "Does the day look a bit... Strange, for you..?";
+                case MessageIDs.EventEnds:
+                    return "*Arf, arf* We managed to survive. *Arf*";
             }
             return base.GetSpecialMessage(MessageID);
         }

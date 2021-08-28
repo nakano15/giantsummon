@@ -887,6 +887,8 @@ namespace giantsummon.Creatures
                     return "*Blue was right, this is useful.*";
                 case MessageIDs.AcquiredTipsyDebuff:
                     return "*I keep forgetting that It escapes from the hole on my chest....*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*I think just by being in it, I already ruined the honey...*";
                 //
                 case MessageIDs.FoundLifeCrystalTile:
                     return "*Life Crystal over there.*";
@@ -921,6 +923,37 @@ namespace giantsummon.Creatures
                     return "*This looks interesting.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Hurt my friend and I'll examine your brain.*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[nickname] is in trouble!*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*Sigh... [nickname]... You too...?*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Person down!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*Perfect! Now it got more interesting.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*I'll unload the loot at some merchant. I'll be right back.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*You seem in a bad state, [nickname]. Let me take some hits for you, instead.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*My body... Is not responding sometimes...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*Hm... I will need more potions soon...*";
+                case MessageIDs.UsesLastPotion:
+                    return "*I'm out of potions. Someone has more?*";
+                case MessageIDs.SpottedABoss:
+                    return "*It looks... Delicious...*";
+                case MessageIDs.DefeatedABoss:
+                    return "*I wonder if that will satiate my hunger.*";
+                case MessageIDs.InvasionBegins:
+                    return "*[nickname], their look tells me to pull our weapon.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*Hm... I didn't had a feast like that in a long time.*";
+                case MessageIDs.EventBegins:
+                    return "*Look at the sky. That's not a good sign...*";
+                case MessageIDs.EventEnds:
+                    return "*Done, It's over.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
