@@ -736,7 +736,7 @@ namespace giantsummon
             {
                 if (GuardianCommonStatus.UseMaxHealthAndManaShare)
                     return GetCommonStatus.LifeFruitsUsed;
-                return Data.LifeCrystalHealth;
+                return Data.LifeFruitHealth;
             }
             set
             {
@@ -2695,7 +2695,11 @@ namespace giantsummon
             }
             if (FinalScale != Scale)
             {
-                if (FinalScale > Scale)
+                float ScaleChange = (FinalScale - Scale) * 0.02f;
+                Scale += ScaleChange;
+                if (Math.Abs(Scale - FinalScale) < 0.01f)
+                    Scale = FinalScale;
+                /*if (FinalScale > Scale)
                 {
                     Scale += 0.01f;
                     if (FinalScale < Scale)
@@ -2706,25 +2710,8 @@ namespace giantsummon
                     Scale -= 0.01f;
                     if (FinalScale > Scale)
                         Scale = FinalScale;
-                }
+                }*/
             }
-            /*float VerticalPositionNegator = 1f + Math.Abs(this.Velocity.X) / 3;
-            if (gfxOffY > 0)
-            {
-                gfxOffY -= VerticalPositionNegator * StepSpeed;
-                if (gfxOffY < 0)
-                    gfxOffY = 0;
-            }
-            else if (gfxOffY < 0)
-            {
-                gfxOffY += VerticalPositionNegator * StepSpeed;
-                if (gfxOffY > 0)
-                    gfxOffY = 0;
-            }
-            if (gfxOffY > 32)
-                gfxOffY = 32;
-            if (gfxOffY < -32)
-                gfxOffY = -32;*/
             NumMinions = 0;
             NumSentries = 0;
             MinionSlotCount = 0;
@@ -3116,6 +3103,11 @@ namespace giantsummon
                     }
                 }
             }
+        }
+
+        public void EnforceScale()
+        {
+            FinalScale = ScaleMult * AgeScale;
 
         }
 
@@ -3163,8 +3155,6 @@ namespace giantsummon
                 FlipGravity();
             if (MoveUp && !LastMoveUp && HasFlag(GuardianFlags.GravityChange))
                 FlipGravity();
-            if (HasBuff(Terraria.ID.BuffID.Titan) && !HasFlag(GuardianFlags.TitanGuardian))
-                FinalScale *= 2;
             if (HasFlag(GuardianFlags.VortexDebuff))
             {
                 Velocity.Y = Mass * 0.8f + (float)Math.Cos(CenterPosition.X % 120f / 120f * 6.28318548f) - Mass;
@@ -4031,8 +4021,8 @@ namespace giantsummon
             {
                 MHP = (int)(Base.InitialMHP + Base.LifeCrystalHPBonus * LifeCrystalHealth + Base.LifeFruitHPBonus * LifeFruitHealth);
                 MMP = (int)(Base.InitialMP + Base.ManaCrystalMPBonus * ManaCrystals);
-                HealthHealMult = (float)(Base.InitialMHP + Base.LifeCrystalHPBonus * 15 + Base.LifeFruitHPBonus * 20) * (1f / 500);
-                ManaHealMult = (float)Base.InitialMP * (1f / 20);
+                HealthHealMult = (Base.InitialMHP + Base.LifeCrystalHPBonus * 15 + Base.LifeFruitHPBonus * 20) * (1f / 500);
+                ManaHealMult = Base.InitialMP * (1f / 20);
             }
             if (OwnerPos > -1)
                 MHP += (int)(Main.player[OwnerPos].GetModPlayer<PlayerMod>().ExtraMaxHealthValue * HealthHealMult);
@@ -4167,6 +4157,8 @@ namespace giantsummon
                     SkillList[s].OnStatusUpdate(this);
                 }
             }
+            if (HasBuff(Terraria.ID.BuffID.Titan) && !HasFlag(GuardianFlags.TitanGuardian))
+                ScaleMult *= 2;
             if (PlayerMounted && !ReverseMount)
                 MoveSpeed -= MoveSpeed * Base.MountBurdenPercentage;
             if (Tanker)

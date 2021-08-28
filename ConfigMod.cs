@@ -194,6 +194,7 @@ namespace giantsummon
 
         [Label("Max Health and Mana progress independs on player character?")]
         [Description("When turned on, each companion will have their max health and mana progress be the same regardless of which character you play.")]
+        [DefaultValue(true)]
         public bool UseCommonStatusSystemForHealthAndManaShare
         {
             get { return GuardianCommonStatus.UseMaxHealthAndManaShare; }
@@ -202,6 +203,7 @@ namespace giantsummon
 
         [Label("Skill progress of each companion independs on player character?")]
         [Description("When turned on, each companion will have their skills progress be the same regardless of which character you play.")]
+        [DefaultValue(true)]
         public bool UseCommonStatusSystemForSkillShare
         {
             get { return GuardianCommonStatus.UseSkillProgressShare; }

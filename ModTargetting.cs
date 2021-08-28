@@ -163,7 +163,7 @@ namespace giantsummon
             {
                 if (TargettingPlayer)
                     return Character.statLifeMax2;
-                return Guardian.MHP;
+                return (int)Guardian.MHP;
             }
         }
         public int MaxHealthBonus
@@ -172,7 +172,7 @@ namespace giantsummon
             {
                 if (TargettingPlayer)
                     return Character.statLifeMax;
-                return Guardian.Base.InitialMHP + Guardian.LifeCrystalHealth * Guardian.Base.LifeCrystalHPBonus + Guardian.LifeFruitHealth * Guardian.Base.LifeFruitHPBonus;
+                return (int)(Guardian.Base.InitialMHP + Guardian.LifeCrystalHealth * Guardian.Base.LifeCrystalHPBonus + Guardian.LifeFruitHealth * Guardian.Base.LifeFruitHPBonus);
             }
         }
         public int Defense

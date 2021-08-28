@@ -30,3 +30,4 @@ Added Common Status system for companions.
 	You can turn it on or off any time on the settings.
 	Upon opening the game at least once, the game will try populating the Common Status infos, based on the highest value of health, mana and skills companions you've met have.
 		The status will not be updated again after that. Their progress will diverge, so I recommend you to focus on either playing with or without the system.
+Changed how companions scale change effect works.

@@ -35,7 +35,7 @@ namespace giantsummon.Npcs
             npc.height = AlexGuardianBase.Height;
             npc.damage = 0;
             npc.defense = 0;
-            npc.lifeMax = AlexGuardianBase.InitialMHP;
+            npc.lifeMax = (int)AlexGuardianBase.InitialMHP;
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath2;
             npc.knockBackResist = 0.33f;

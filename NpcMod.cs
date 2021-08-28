@@ -191,6 +191,8 @@ namespace giantsummon
                 tg.Position.X = X;
                 tg.Position.Y = Y;
                 tg.Active = true;
+                tg.DoUpdateGuardianStatus();
+                tg.EnforceScale();
             }
             else if (ForceMove)
             {
@@ -1592,8 +1594,6 @@ namespace giantsummon
                         tg.SaySomething("Please don't tell about this to other bounty hunters.");
                         break;
                 }
-                //int npcpos = NPC.NewNPC((int)npc.Center.X, (int)npc.Center.Y, ModContent.NPCType<GuardianNPC.List.CatGuardian>());
-                //((GuardianNPC.GuardianNPCPrefab)Main.npc[npcpos].modNPC).Guardian.AddBuff(Terraria.ID.BuffID.Slimed, 300);
                 AddGuardianMet(GuardianBase.Sardine);
                 TrappedCatKingSlime = -1;
             }

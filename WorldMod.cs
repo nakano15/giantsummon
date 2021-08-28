@@ -728,6 +728,8 @@ namespace giantsummon
                 guardian.Direction = npc.direction;
                 guardian.Active = true;
                 guardian.ChangeIdleAction(TerraGuardian.IdleActions.Wait, 200);
+                guardian.DoUpdateGuardianStatus();
+                guardian.EnforceScale();
                 MainMod.AddActiveGuardian(guardian, true);
             }
             if (!IsGuardianNpcInWorld(GuardianID, GuardianModID))

@@ -1401,7 +1401,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        price += 1000 + guardian.LifeCrystalHealth * guardian.Base.LifeCrystalHPBonus * 50 + guardian.LifeFruitHealth * guardian.Base.LifeFruitHPBonus * 1000;
+                        price += 1000 + (int)(guardian.LifeCrystalHealth * guardian.Base.LifeCrystalHPBonus * 50 + guardian.LifeFruitHealth * guardian.Base.LifeFruitHPBonus * 1000);
                     }
                 }
             }

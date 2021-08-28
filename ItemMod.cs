@@ -34,15 +34,19 @@ namespace giantsummon
 
         public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
         {
-            if (Main.netMode < 2)
+            if (item.active && Main.netMode < 2)
             {
                 NewItemsSpawned.Add(item.whoAmI);
-                if (!LastItemsSpawned.Contains(item.type))
+                if (!LastItemsSpawned.Contains(item.whoAmI))
                 {
                     Player player = Main.player[Main.myPlayer];
-                    if((item.damage > 0 || item.defense > 0) && item.rare > Terraria.ID.ItemRarityID.Green)
+                    if(!item.vanity && (item.damage > 0 || item.defense > 0 || item.accessory) && item.rare > Terraria.ID.ItemRarityID.Green)
                     {
-                        player.GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.SpotsRareTreasure);
+                        if (Math.Abs(player.Center.X - item.Center.X) < Main.screenWidth * 0.5f &&
+                            Math.Abs(player.Center.Y - item.Center.Y) < Main.screenHeight * 0.5f)
+                        {
+                            player.GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.SpotsRareTreasure);
+                        }
                     }
                 }
             }
