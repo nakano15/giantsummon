@@ -661,6 +661,23 @@ namespace giantsummon.Creatures
                     return "*I have a bad feeling..*";
                 case MessageIDs.EventEnds:
                     return "*I'm so glad it's over.*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*[player] has been checking on me recently. So glad they didn't forget about me.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*I heard that [player] managed to kill [subject]. I wish I had that courage.*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*[player] seems to have found something valuable, recently. A [subject], they say.*";
+                case MessageIDs.FeatEventFinished:
+                    return "*There was that day where a [subject] happened, and [player] managed to take care of it.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*From what I know, [player] has met [subject] recently. I should try meeting that person some time.*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*I'm not really great right now. I met a terrarian named [player], who has died recently. I'm trying to recover from that.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[player] has recently opened the door to some temple in their world. I wonder what kind of thing they found there.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*You would be impressed if you saw the same gold portal [player] has found. They got richier after it showed up.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

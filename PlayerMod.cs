@@ -176,6 +176,7 @@ namespace giantsummon
         public bool TutorialRequestIntroduction { get { return TutorialFlags[3]; } set { TutorialFlags[3] = value; } }
         public bool TutorialKnockOutIntroduction { get { return TutorialFlags[4]; } set { TutorialFlags[4] = value; } }
         public bool TutorialStatusIncreaseItemIntroduction { get { return TutorialFlags[5]; } set { TutorialFlags[5] = value; } }
+        public bool TutorialDryadIntroduction { get { return TutorialFlags[6]; } set { TutorialFlags[6] = value; } }
         public byte FriendshipLevel = 0, FriendshipExp = 0;
         public byte FriendshipMaxExp { get { return FriendshipLevel == 0 ? (byte)2 : (byte)(3 + FriendshipLevel / 5); } }
         public int LastFriendshipCount = -1;
@@ -1600,6 +1601,12 @@ namespace giantsummon
             {
                 Guardian.WhenPlayerDies();
             }
+            if(player.difficulty == 2)
+            {
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.PlayerDied,
+                    player.name, "", 12, 15,
+                    GuardianGlobalInfos.GetGuardiansInTheWorld());
+            }
         }
 
         public bool CompanionReaction(string MessageID, float Chance = 1f, int ReactionDelay = -1)
@@ -2598,6 +2605,9 @@ namespace giantsummon
                     }
                 }
                 CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
+                    player.name, MyGuardians[SpawnID].Name, 6, MyGuardians.Count,
+                    GuardianGlobalInfos.GetGuardiansInTheWorld(new GuardianID(Id, ModId)));
             }
             return AlreadySpawned;
         }

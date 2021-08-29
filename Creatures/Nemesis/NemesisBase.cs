@@ -344,6 +344,23 @@ namespace giantsummon.Creatures
                     return "Minion, do my bidding.";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "Don't we have something more important to do?";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "I have another shadow named [player]. They also check up on me frequently.";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "[player] defeated [subject] recently.";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "[player] found [subject] in their travels.";
+                case MessageIDs.FeatEventFinished:
+                    return "[player] took care of a [subject] that happened in their world.";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "I heard that [player] met [subject].";
+                case MessageIDs.FeatPlayerDied:
+                    return "A terrarian has died recently. Their name was [player].";
+                case MessageIDs.FeatOpenTemple:
+                    return "A temple door was opened by [player], recently.";
+                case MessageIDs.FeatCoinPortal:
+                    return "A coin portal isn't a myth. [player] proved that.";
             }
             return base.GetSpecialMessage(MessageID);
         }

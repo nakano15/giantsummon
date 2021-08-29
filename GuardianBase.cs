@@ -1577,7 +1577,7 @@ namespace giantsummon
                 FeatMetSomeoneNew = "Mes.Feat.MetSomeone",
                 FeatPlayerDied = "Mes.Feat.PlayerDied",
                 FeatOpenTemple = "Mes.Feat.OpenedTemple",
-                FeatTriggeredATrap = "Mes.Feat.TrapTriggered";
+                FeatCoinPortal = "Mes.Feat.CoinPortal";
         }
         
         public enum GuardianEffect

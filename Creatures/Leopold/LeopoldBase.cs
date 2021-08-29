@@ -710,6 +710,23 @@ namespace giantsummon.Creatures
                     return "*I have a bad feeling about this.*";
                 case MessageIDs.EventEnds:
                     return "*At the same time that was dangerous, was also rich of questions. Can we do that again?*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*A Terrarian named [player] has been helping me with my researches, recently. They were very resourceful.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*[player] took care of [subject] recently. What have you been doing?*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*I heard that [player] found a [subject]. I wonder if they would let me analyze it.*";
+                case MessageIDs.FeatEventFinished:
+                    return "*A strange event that people called the [subject] happened recently. [player] took care of it, but I wanted to study what caused it.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*[player] has recently met someone named [subject].. More people are arriving Terra Realm.*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*I just recently heard that [player] has died. In all my years of life, I've seen people die, but this death hurts me.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[player] has opened the door of a mysterious temple recently. I need to investigate inside it.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*A coin portal appeared for [player] recently. My theory? That portal is connected to some vault.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

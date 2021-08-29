@@ -1183,6 +1183,23 @@ namespace giantsummon.Creatures
                     return "*The air has changed. What is going to happen?*";
                 case MessageIDs.EventEnds:
                     return "*That is not something that happens all the time, right?*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*A noble soul known as [player] checks me up from time to time. I'm glad they don't fear me.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*With the help of [player], I recently saved the soul of [subject].*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*[player] found something that seems rather rare: A [subject].*";
+                case MessageIDs.FeatEventFinished:
+                    return "*I had a lot of work when a [subject] happened. So many souls to save... I'm thankful to [player] for helping me with that.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*[player] just met a new soul. Their name was [subject], if I remember well.*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*I shouldn't let this shaken me, since It's part of my job, but latelly I had to save the soul of my friend [player]. At least now I know they're resting in a good place.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[player] opened the door of a temple recently. Why that place was locked out, is the question.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*You wouldn't believe in the face [player] had when they saw coins raining off a portal.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

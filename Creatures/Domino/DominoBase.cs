@@ -651,6 +651,23 @@ namespace giantsummon.Creatures
                     return "*Why do I feel that I will spend a long time shooting things?*";
                 case MessageIDs.EventEnds:
                     return "*Gladly it's over.*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*You terrarians aren't new to me. There is another named [player] who checks me from time to time. Sometimes they don't even check what I'm selling.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*[player] recently took down [subject]. I wonder if what they found is good for bartering.*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*I envy [player] for finding a [subject]. They should have accepted my offer of selling it for 20% the price, but nooo... They had to use it.*";
+                case MessageIDs.FeatEventFinished:
+                    return "*I had enough rounds to deal with the adversities of [subject]. Gladly, [player] managed to end it.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*It seems like [player] has just met me a new customer named [subject].*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*Watch yourself during your travels, [nickname]. Another terrarian named [player] didn't returned from theirs. Yes, they was my best client.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*I heard that [player] finally opened the door of a temple in their world. I will visit it some time to see what I can take from it.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*That lucky Terrarian... [player] managed to bump into one of those coin portals.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

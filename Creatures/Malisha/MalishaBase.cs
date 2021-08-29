@@ -929,6 +929,23 @@ namespace giantsummon.Creatures
                     return "*Looks like this will be interesting.*";
                 case MessageIDs.EventEnds:
                     return "*Over already? What a pity.*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*I have another minion who is called [player], too. They were also helpful on my researches, so I'll try not to do dangerous experiments on them.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*It seems like [player] has defeated [subject]. The body parts of that creature were very helpful to my experiments.*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*You would be very jealous if you also saw [player] getting a [subject].*";
+                case MessageIDs.FeatEventFinished:
+                    return "*I really enjoyed my time when a [subject] happened. Too bad that [player] had to ruin everything.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*And [player] just met another subje... Person, they seem to be called [subject].*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*A minion of mine called [player] has died recently during their travels. Gladly I managed to recover their body, so I can use for my experiments.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*I heard that [player] opened the door to some temple. I wonder what kind of toys they had locked behind it.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*A coin portal is such a weird phenomenon, gladly [player] managed to experience it and get a bit richier.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

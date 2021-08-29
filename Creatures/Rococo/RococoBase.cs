@@ -864,6 +864,23 @@ namespace giantsummon.Creatures
                     return "*[name] seems scared right now.*";
                 case MessageIDs.EventEnds:
                     return "*[name] calmed down.*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*[name] tells you of another friend of his, called [player].*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*[name] mentions that [player] defeated [subject].*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*[name] seems really impressed by [player] finding a [subject].*";
+                case MessageIDs.FeatEventFinished:
+                    return "*[name] is telling you a story involving a [subject] and [player].*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*[name] says that [player] met someone named [subject].*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*[name] is saddened, because his friend, [player], has died.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[name] seems curious about what is inside a temple [player] opened the door of.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*[name] tells you the story of [player] finding a coin portal.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

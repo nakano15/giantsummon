@@ -587,6 +587,23 @@ namespace giantsummon.Creatures
                     return "Did you also felt that?";
                 case MessageIDs.EventEnds:
                     return "I think this day just returned to normal.";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "Do you know [player]? Is a Terrarian I met, who has been really nice to me.";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "It was so epic when [player] defeated [subject]. You should have seen it.";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "I heard that [player] has found a [subject]. Is said that It's a rare item.";
+                case MessageIDs.FeatEventFinished:
+                    return "It's not a legend, I was there when that happened! [player] took care of a [subject] that happened in their world!";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "I heard that [player] just met a new friend, their name was [subject].";
+                case MessageIDs.FeatPlayerDied:
+                    return "Hi... My friend [player] died... I miss them so much...";
+                case MessageIDs.FeatOpenTemple:
+                    return "People are saying that [player] opened some strange temple in their world. What did they found inside?";
+                case MessageIDs.FeatCoinPortal:
+                    return "I heard that the stories about coin portals are true! [player] found one, and got richier after finding it!";
             }
             return base.GetSpecialMessage(MessageID);
         }

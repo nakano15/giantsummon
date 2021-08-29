@@ -44,7 +44,7 @@ namespace giantsummon
             MetSomeoneNew,
             PlayerDied,
             OpenedTemple,
-            TriggeredATrap
+            CoinPortalSpawned
         }
     }
 }

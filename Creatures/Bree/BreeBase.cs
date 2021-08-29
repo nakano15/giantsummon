@@ -890,6 +890,23 @@ namespace giantsummon.Creatures
                     return "[nickname], did you just do that?";
                 case MessageIDs.EventEnds:
                     return "Whew... I think those were the last ones...";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "Do you know [player]? They have been trying to convince me to stay on their world for long.";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "Did you heard that [player] defeated [subject]? I'm not impressed, since I could also do the same.";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "I heard that [player] found something that seems valuable, a [subject]. He found something good sooner than my husband.";
+                case MessageIDs.FeatEventFinished:
+                    return "I really got annoyed the other day. I was minding my business, until a [subject] begun. Gladly, [player] managed to deal with it.";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "I heard that [player] met someone named [subject] recently.";
+                case MessageIDs.FeatPlayerDied:
+                    return "What do you want? Yes, I'm not in a good mood. I'm currently in mourn for [player]. They died recently.";
+                case MessageIDs.FeatOpenTemple:
+                    return "[player] seems to have opened the door of some old temple, and by now must be pillaging it.";
+                case MessageIDs.FeatCoinPortal:
+                    return "As soon as I heard from [player] about a coin portal they found, I can't stop breaking vases.";
             }
             return base.GetSpecialMessage(MessageID);
         }

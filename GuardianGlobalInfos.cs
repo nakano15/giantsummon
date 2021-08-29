@@ -30,6 +30,19 @@ namespace giantsummon
             return Hours * HourToDecimal + Days;
         }
 
+        public static GuardianID[] GetGuardiansInTheWorld(GuardianID IgnoredID = null)
+        {
+            List<GuardianID> guardians = new List<GuardianID>();
+            foreach (int guardian in MainMod.ActiveGuardians.Keys)
+            {
+                if(IgnoredID == null || !MainMod.ActiveGuardians[guardian].MyID.IsSameID(IgnoredID))
+                {
+                    guardians.Add(MainMod.ActiveGuardians[guardian].MyID);
+                }
+            }
+            return guardians.ToArray();
+        }
+
         public static FeatMentioning GetAFeatToMention(GuardianID guardian, string SpeakerPlayer)
         {
             List<FeatMentioning> feats = new List<FeatMentioning>();
@@ -48,6 +61,15 @@ namespace giantsummon
             return feats[Main.rand.Next(feats.Count)];
         }
 
+        public static void EraseFeatsFromPlayer(string PlayerName)
+        {
+            for(int f = 0; f < Feats.Count; f++)
+            {
+                if (Feats[f].PlayerName == PlayerName)
+                    Feats.RemoveAt(f);
+            }
+        }
+
         public static void AddFeat(FeatMentioning.FeatType feat, string PlayerName, string SubjectName = "", float FeatDurationDays = 8, float ImportanceLevel = 0, GuardianID[] GuardiansWhoMentionThis = null)
         {
             if (GuardiansWhoMentionThis == null)
@@ -61,7 +83,7 @@ namespace giantsummon
                         if (!f.GuardianMentionsThis(g))
                             f.AddGuardianWhoMentionsThis(g);
                     }
-                    if(f.Importance < ImportanceLevel)
+                    if(f.Importance <= ImportanceLevel)
                     {
                         f.FeatSubject = SubjectName;
                         f.Importance = ImportanceLevel;

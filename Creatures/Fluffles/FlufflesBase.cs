@@ -498,6 +498,23 @@ namespace giantsummon.Creatures
                     return "(She stares at the sky, wondering what is going on.)";
                 case MessageIDs.EventEnds:
                     return "(She seems glad It's over.)";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "(She shows you the portrait of someone that she was hugging. The name [player] is written in the bottom of it.)";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "(She makes a drawing telling that someone defeated [subject].)";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "(She draws on the floor that someone found what seems to be a [subject].)";
+                case MessageIDs.FeatEventFinished:
+                    return "(She does a drawing depicting a [subject] happening in a world, and someone facing it.)";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "(She drew someone meeting another person.)";
+                case MessageIDs.FeatPlayerDied:
+                    return "(She looks saddened while embracing the picture of someone. Once you asked about the picture, she showed you a grayed photo of a Terrarian. The name [player] is written at the bottom.)";
+                case MessageIDs.FeatOpenTemple:
+                    return "(She drew the image of someone opening the door of a kind of temple.)";
+                case MessageIDs.FeatCoinPortal:
+                    return "(She drew the image of someone finding a portal that rained coins.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

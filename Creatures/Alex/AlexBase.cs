@@ -628,6 +628,23 @@ namespace giantsummon.Creatures
                     return "Does the day look a bit... Strange, for you..?";
                 case MessageIDs.EventEnds:
                     return "*Arf, arf* We managed to survive. *Arf*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "Do you know [player]? He's one of my friends.";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*Woof!* Did you hear? [player] has defeated [subject] latelly! It's so cool.";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "I heard that [player] found some shiny [subject]. I wonder what that looks like.";
+                case MessageIDs.FeatEventFinished:
+                    return "[player] had a [subject] happening on their world.";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "I heard that [player] met someone new recently. Do you know [subject]? Probably is a cool person too, right?";
+                case MessageIDs.FeatPlayerDied:
+                    return "I'm saddened... My friend [player] died recently...";
+                case MessageIDs.FeatOpenTemple:
+                    return "I heard that [player] managed to open the door to a strange temple recently. I wonder what they found inside.";
+                case MessageIDs.FeatCoinPortal:
+                    return "How lucky! [player] found a strange glowing portal that rained coins.";
             }
             return base.GetSpecialMessage(MessageID);
         }

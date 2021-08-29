@@ -51,6 +51,14 @@ namespace giantsummon
                     projectile.melee = false;
                     projectile.thrown = true;
                     break;
+                case Terraria.ID.ProjectileID.CoinPortal:
+                    if (!Main.gameMenu)
+                    {
+                        GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.CoinPortalSpawned,
+                            Main.player[Main.myPlayer].name, "", 12, 10,
+                            GuardianGlobalInfos.GetGuardiansInTheWorld());
+                    }
+                    break;
             }
         }
 

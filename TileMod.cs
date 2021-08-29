@@ -25,5 +25,19 @@ namespace giantsummon
         {
             WorldMod.UpdateTileStateOnGuardianHouses(i, j, true);
         }
+
+        public override void RightClick(int i, int j, int type)
+        {
+            if (type == 10)
+            {
+                Tile tile = Main.tile[i, j];
+                if(tile.frameY >= 594 && tile.frameY <= 646 && Main.player[Main.myPlayer].HasItem(1141))
+                {
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.OpenedTemple,
+                        Main.player[Main.myPlayer].name, "", 8, 10,
+                        GuardianGlobalInfos.GetGuardiansInTheWorld());
+                }
+            }
+        }
     }
 }

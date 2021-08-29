@@ -132,6 +132,7 @@ namespace giantsummon
         public static List<GuardianID> CompanionBlacklist = new List<GuardianID>();
         private static Tile DefaultTile = new Tile();
         public static bool LastBossSpotted = false, LastInvasionSpotted = false, LastEventStarted = false;
+        private static byte LastEvent = 0;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -805,7 +806,7 @@ namespace giantsummon
                     if (!HasBossAlive)
                         LastBossSpotted = false;
                 }
-                if (Main.invasionType > InvasionID.None) //Invasion happening
+                if (Main.invasionType > InvasionID.None || Main.invasionSize > 0) //Invasion happening
                 {
                     if (!LastInvasionSpotted)
                     {
@@ -824,6 +825,25 @@ namespace giantsummon
                     {
                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.RepelledInvasion);
                         LastInvasionSpotted = false;
+                        string InvasionName = "";
+                        switch (Main.invasionType)
+                        {
+                            case InvasionID.GoblinArmy:
+                                InvasionName = "Goblin Army";
+                                break;
+                            case InvasionID.SnowLegion:
+                                InvasionName = "Frost Legion";
+                                break;
+                            case InvasionID.PirateInvasion:
+                                InvasionName = "Pirate Invasion";
+                                break;
+                            case InvasionID.MartianMadness:
+                                InvasionName = "Martian Madness";
+                                break;
+                        }
+                        GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
+                            Main.player[Main.myPlayer].name, InvasionName, 12, 15,
+                            GuardianGlobalInfos.GetGuardiansInTheWorld());
                     }
                 }
                 bool AnEventIsHappening = Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon;
@@ -833,6 +853,14 @@ namespace giantsummon
                     {
                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventBegins);
                         LastEventStarted = true;
+                        if (Main.bloodMoon)
+                            LastEvent = 1;
+                        else if (Main.eclipse)
+                            LastEvent = 2;
+                        if (Main.pumpkinMoon)
+                            LastEvent = 3;
+                        if (Main.snowMoon)
+                            LastEvent = 4;
                     }
                 }
                 else
@@ -841,6 +869,25 @@ namespace giantsummon
                     {
                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventEnds);
                         LastEventStarted = false;
+                        string EventName = "";
+                        switch (LastEvent)
+                        {
+                            case 1:
+                                EventName = "Blood Moon";
+                                break;
+                            case 2:
+                                EventName = "Eclipse";
+                                break;
+                            case 3:
+                                EventName = "Pumpkin Moon";
+                                break;
+                            case 4:
+                                EventName = "Frost Moon";
+                                break;
+                        }
+                        GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
+                            Main.player[Main.myPlayer].name, EventName, 12, LastEvent,
+                            GuardianGlobalInfos.GetGuardiansInTheWorld());
                     }
                 }
             }

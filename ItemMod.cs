@@ -65,6 +65,12 @@ namespace giantsummon
                     player.GetModPlayer<PlayerMod>().ShareManaReplenishWithGuardians(100);
                 }
             }
+            if(Main.npcShop == -1 && item.rare > Terraria.ID.ItemRarityID.Green)
+            {
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.FoundSomethingGood,
+                    player.name, item.Name, 8, item.rare,
+                    GuardianGlobalInfos.GetGuardiansInTheWorld());
+            }
             return base.OnPickup(item, player);
         }
     }

@@ -1138,6 +1138,23 @@ namespace giantsummon.Creatures
                     return "*That doesn't look good... On guard, everyone!*";
                 case MessageIDs.EventEnds:
                     return "*It's finally over... I could use a drink now.*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*You're not the only one I offer my services to. A terrarian named [player] is also under my protection.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*I heard that [player] defeated [subject] recently. I was there when that happened, probably.*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*[player] found something valuable during their travels. A [subject], people says.*";
+                case MessageIDs.FeatEventFinished:
+                    return "*I had lots of work recently. A [subject] broke out on [player]'s world, and I had to defend the townspeople. Gladly the Terrarian managed to take care of it.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*My work just got extended recently. [player] has met [subject], and their life is under my protection too.*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*I really wanted to drink until I drop now... I sworn to protect [player]... And still, they died... What a good for nothing bodyguard am I...*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[player] opened a mysterious temple recently. I wonder what they found inside.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*Sometimes I think I should charge by the days of protection, even more after [player] found a portal that rained coins.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

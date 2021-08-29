@@ -622,6 +622,23 @@ namespace giantsummon.Creatures
                     return "*Why the air feels so cold?*";
                 case MessageIDs.EventEnds:
                     return "*It's over... It's over... Phew...*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*Do you know [player]? That terrarian is really nice to me.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*Wow! I heard that [player] just defeated [subject] recently! That must have been so cool.*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*I heard that [player] found a [subject]. That must be really valuable.*";
+                case MessageIDs.FeatEventFinished:
+                    return "*It was scary when a [subject] begun, but thanks to [player], we were safe.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*So cool, [player] met [subject] recently!*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*Oh... Hello... I just lost a friend recently... [player] was their name... (Her eyes is filled with tears)*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*Oooohhh! Mysterious! [player] opened a temple in their world and entered. What wonders would be inside? Is there some ancient recipe?*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*[player] was so lucky when found that coin portal! And my mom complained when I accidentally destroyed her pottery once.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

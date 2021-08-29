@@ -1290,6 +1290,11 @@ namespace giantsummon
                     }
                     break;
                 case Terraria.ID.NPCID.Dryad:
+                    if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialDryadIntroduction)
+                    {
+                        Main.NewText("Speaking regularly to the Dryad can give you clues to new TerraGuardians you can find.");
+                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialDryadIntroduction = true;
+                    }
                     switch (Main.rand.Next(7))
                     {
                         case 0:
@@ -1610,14 +1615,14 @@ namespace giantsummon
             }
             if (mobType > MobTypes.Normal)
                 StrongMonsterLoot(npc);
-            if (Main.netMode < 2 && MainMod.LastBossSpotted)
+            if (Main.netMode < 2 && NPCID.Sets.TechnicallyABoss[npc.type] && MainMod.LastBossSpotted)
             {
                 bool HasBossPartAlive = false;
                 for(int i = 0; i < 200; i++)
                 {
                     if(i != npc.type && npc.active)
                     {
-                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[npc.type])
+                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[i])
                         {
                             HasBossPartAlive = true;
                             break;
@@ -1628,6 +1633,12 @@ namespace giantsummon
                 {
                     MainMod.LastBossSpotted = false;
                     Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.DefeatedABoss);
+                    int MaxHealthValue = npc.lifeMax;
+                    if (npc.type >= NPCID.EaterofWorldsHead && npc.type <= NPCID.EaterofWorldsTail)
+                        MaxHealthValue *= 30;
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.BossDefeated,
+                        Main.player[Main.myPlayer].name, npc.GivenOrTypeName, 16, npc.lifeMax * 0.025f,
+                        GuardianGlobalInfos.GetGuardiansInTheWorld());
                 }
             }
         }
