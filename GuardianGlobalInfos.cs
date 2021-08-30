@@ -11,9 +11,47 @@ namespace giantsummon
     {
         public static string GetSaveFolder { get { return Main.SavePath + "/TerraGuardians"; } }
 
+        //Feats are saved differently.
         public static List<FeatMentioning> Feats = new List<FeatMentioning>();
         public static TimeSpan LifeTime = new TimeSpan();
         public const float HourToDecimal = 1f / 24;
+
+        public static void UpdateGlobalInfos()
+        {
+            LifeTime += TimeSpan.FromSeconds(Main.dayRate);
+        }
+
+        public static void SaveGlobalInfos()
+        {
+            string SaveFolder = GetSaveFolder;
+            if (!Directory.Exists(SaveFolder)) Directory.CreateDirectory(SaveFolder);
+            string GlobalInfosFile = SaveFolder + "/globalinfos.sav";
+            if (File.Exists(GlobalInfosFile)) File.Delete(GlobalInfosFile);
+            using(FileStream stream = new FileStream(GlobalInfosFile, FileMode.Create))
+            {
+                using(BinaryWriter writer = new BinaryWriter(stream))
+                {
+                    writer.Write(MainMod.ModVersion);
+                    writer.Write(LifeTime.TotalSeconds);
+                }
+            }
+        }
+
+        public static void LoadGlobalInfos()
+        {
+            string SaveFolder = GetSaveFolder;
+            if (!Directory.Exists(SaveFolder)) return;
+            string GlobalInfosFile = SaveFolder + "/globalinfos.sav";
+            if (!File.Exists(GlobalInfosFile)) return;
+            using (FileStream stream = new FileStream(GlobalInfosFile, FileMode.Open))
+            {
+                using (BinaryReader reader = new BinaryReader(stream))
+                {
+                    int Version = reader.ReadInt32();
+                    LifeTime = TimeSpan.FromSeconds(reader.ReadDouble());
+                }
+            }
+        }
 
         public static void UpdateFeatTime()
         {
@@ -68,6 +106,50 @@ namespace giantsummon
                 if (Feats[f].PlayerName == PlayerName)
                     Feats.RemoveAt(f);
             }
+        }
+
+        public static string GetFeatMessage(FeatMentioning feat, TerraGuardian tg)
+        {
+            string Message = "";
+            switch (feat.type)
+            {
+                case FeatMentioning.FeatType.BossDefeated:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionBossDefeat);
+                    break;
+                case FeatMentioning.FeatType.CoinPortalSpawned:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatCoinPortal);
+                    break;
+                case FeatMentioning.FeatType.EventFinished:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatEventFinished);
+                    break;
+                case FeatMentioning.FeatType.FoundSomethingGood:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatFoundSomethingGood);
+                    break;
+                case FeatMentioning.FeatType.MentionPlayer:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionPlayer);
+                    break;
+                case FeatMentioning.FeatType.MetSomeoneNew:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMetSomeoneNew);
+                    break;
+                case FeatMentioning.FeatType.OpenedTemple:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatOpenTemple);
+                    break;
+                case FeatMentioning.FeatType.PlayerDied:
+                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatPlayerDied);
+                    break;
+            }
+            Message = Message.Replace("[player]", feat.PlayerName).Replace("[subject]", feat.FeatSubject);
+            return Message;
+        }
+
+        public static bool HasFeatToMention(GuardianID id)
+        {
+            foreach(FeatMentioning feat in Feats)
+            {
+                if (feat.GuardianMentionsThis(id))
+                    return true;
+            }
+            return false;
         }
 
         public static void AddFeat(FeatMentioning.FeatType feat, string PlayerName, string SubjectName = "", float FeatDurationDays = 8, float ImportanceLevel = 0, GuardianID[] GuardiansWhoMentionThis = null)

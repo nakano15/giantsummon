@@ -1025,6 +1025,8 @@ namespace giantsummon
             WorldMod.AnalyzeDrawMoment();
             if (GeneralIdleCommentCooldown > 0)
                 GeneralIdleCommentCooldown--;
+            GuardianGlobalInfos.UpdateFeatTime();
+            GuardianGlobalInfos.UpdateGlobalInfos();
         }
 
         private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh;

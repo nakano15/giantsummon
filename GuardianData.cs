@@ -10,8 +10,26 @@ namespace giantsummon
 {
     public class GuardianData
     {
-        public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, ModID); } }
-        public GuardianCommonStatus GetCommonStatus { get { return GuardianCommonStatus.GetCommonStatus(ID, ModID); } }
+        public GuardianBase Base
+        {
+            get
+            {
+                if (_Base == null)
+                    _Base = GuardianBase.GetGuardianBase(ID, ModID);
+                return _Base;
+            }
+        }
+        private GuardianBase _Base = null;
+        public GuardianCommonStatus GetCommonStatus
+        {
+            get
+            {
+                if (_CommonStatus == null)
+                    _CommonStatus = GuardianCommonStatus.GetCommonStatus(ID, ModID);
+                return _CommonStatus;
+            }
+        }
+        private GuardianCommonStatus _CommonStatus;
         public Group GetGroup { get { return Base.GetGroup; } }
         public string GroupID { get { return Base.GetGroupID; } }
         public GuardianMood Mood = new GuardianMood();

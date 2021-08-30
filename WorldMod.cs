@@ -449,6 +449,8 @@ namespace giantsummon
             tag.Add("DominoDismissed", Npcs.DominoNPC.DominoDismissed);
             tag.Add("GhostFoxHauntLifted", Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted);
             GuardianShopHandler.SaveShops(tag);
+            GuardianGlobalInfos.SaveGlobalInfos();
+            GuardianGlobalInfos.SaveFeats();
             return tag;
         }
 
@@ -571,6 +573,8 @@ namespace giantsummon
                 if (tns != null && !tns.Homeless)
                     tns.ValidateHouse();
             }
+            GuardianGlobalInfos.LoadGlobalInfos();
+            GuardianGlobalInfos.LoadFeats();
         }
 
         public override void PostDrawTiles()

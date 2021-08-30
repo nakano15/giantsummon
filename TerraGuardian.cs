@@ -32,8 +32,8 @@ namespace giantsummon
         public List<int> GuardiansSpotted = new List<int>();
         public const int ItemStackCount = 100, ItemStackTurns = Main.maxItems / ItemStackCount;
         public GuardianCommonStatus GetCommonStatus { get { return Data.GetCommonStatus; } }
-        public GuardianBase Base { get { return GuardianBase.GetGuardianBase(ID, Data.ModID); } }
-        public GuardianData Data //Think of a way of arranging the Guardian Datas in the player, and also be able to retrieve them when necessary.
+        public GuardianBase Base { get { return Data.Base; return GuardianBase.GetGuardianBase(ID, Data.ModID); } }
+        public GuardianData Data
         {
             get
             {
@@ -78,6 +78,7 @@ namespace giantsummon
                 _Data = value;
             }
         }
+        private GuardianData _Data;
         public Group GetGroup { get { return Base.GetGroup; } }
         public int GetSomeoneToSpawnProjectileFor
         {
@@ -108,7 +109,6 @@ namespace giantsummon
                 return null;
             }
         }
-        private GuardianData _Data;
         public string Name { get { if (Data.Name != null) return Data.Name; else return RealName; } set { Data.Name = value; } }
         public string RealName { get { return Data.RealName; } }
         public string GroupID { get { return Base.GetGroupID; } }
@@ -11468,7 +11468,7 @@ namespace giantsummon
                     FinalDamage += (int)(FinalDamage * 0.5f);
                 }
                 this.HP -= FinalDamage;
-                if (HP > 0)
+                if (HP > 0 && !KnockedOut)
                 {
                     int Thereshould = (int)(MHP * 0.3f);
                     if (HP < Thereshould && HP + FinalDamage >= Thereshould)

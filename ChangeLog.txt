@@ -32,3 +32,7 @@ Added Common Status system for companions.
 		The status will not be updated again after that. Their progress will diverge, so I recommend you to focus on either playing with or without the system.
 Changed how companions scale change effect works.
 Added a tutorial message for when you speak to the Dryad at least once.
+Made the game take it easy on the companion infos and datas getting.
+Feat Mentioning implemented.
+	Companions will have the chance of commenting about things you did with your other characters, when you start a dialogue with them.
+Starting a dialogue with a companion you're either mounted or sharing mount with, will no longer try making them face each other.

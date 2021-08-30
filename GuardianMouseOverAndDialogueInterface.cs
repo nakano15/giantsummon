@@ -101,20 +101,23 @@ namespace giantsummon
             modPlayer.TalkingGuardianPosition = tg.WhoAmID;
             tg.TalkPlayerID = MainPlayer.whoAmI;
             bool PlayerToTheLeft = MainPlayer.Center.X < tg.Position.X;
-            if(tg.LookingLeft != PlayerToTheLeft)
+            if (!tg.PlayerMounted && !tg.SittingOnPlayerMount)
             {
-                if (tg.UsingFurniture && tg.IsUsingChair)
+                if (tg.LookingLeft != PlayerToTheLeft)
                 {
-                    tg.LeaveFurniture(false);
+                    if (tg.UsingFurniture && tg.IsUsingChair)
+                    {
+                        tg.LeaveFurniture(false);
+                    }
+                    tg.LookingLeft = PlayerToTheLeft;
                 }
-                tg.LookingLeft = PlayerToTheLeft;
-            }
-            if (MainPlayer.velocity == Vector2.Zero && ((MainPlayer.direction > 0 && !PlayerToTheLeft) || (MainPlayer.direction < 0 && PlayerToTheLeft)))
-            {
-                if (PlayerToTheLeft)
-                    MainPlayer.direction = 1;
-                else
-                    MainPlayer.direction = -1;
+                if (MainPlayer.velocity == Vector2.Zero && ((MainPlayer.direction > 0 && !PlayerToTheLeft) || (MainPlayer.direction < 0 && PlayerToTheLeft)))
+                {
+                    if (PlayerToTheLeft)
+                        MainPlayer.direction = 1;
+                    else
+                        MainPlayer.direction = -1;
+                }
             }
             //GetCompanionDialogue
             GetDefaultOptions(tg);
@@ -140,9 +143,23 @@ namespace giantsummon
                 else
                 {
                     if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
+                    {
                         Message = tg.Base.HomelessMessage(MainPlayer, tg);
+                    }
                     else
-                        Message = tg.Base.NormalMessage(MainPlayer, tg);
+                    {
+                        FeatMentioning feat = GuardianGlobalInfos.GetAFeatToMention(tg.MyID, MainPlayer.name);
+                        bool SayNormalMessage = true;
+                        if (feat != null && Main.rand.NextDouble() < 0.3f)
+                        {
+                            Message = GuardianGlobalInfos.GetFeatMessage(feat, tg);
+                            SayNormalMessage = Message == "";
+                        }
+                        if(SayNormalMessage)
+                        {
+                            Message = tg.Base.NormalMessage(MainPlayer, tg);
+                        }
+                    }
                 }
             }
             if (!tg.Base.InvalidGuardian && !NpcMod.HasMetGuardian(tg.ID, tg.ModID))

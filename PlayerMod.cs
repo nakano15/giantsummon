@@ -1603,9 +1603,11 @@ namespace giantsummon
             }
             if(player.difficulty == 2)
             {
+                GuardianGlobalInfos.EraseFeatsFromPlayer(player.name);
                 GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.PlayerDied,
                     player.name, "", 12, 15,
                     GuardianGlobalInfos.GetGuardiansInTheWorld());
+                GuardianGlobalInfos.SaveFeats();
             }
         }
 
