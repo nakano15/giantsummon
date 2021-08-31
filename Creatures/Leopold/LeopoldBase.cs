@@ -323,7 +323,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*Of everyone you could have let move into this world, you had to let [gn:"+Malisha+"] live here? She's a menace to us all!*");
                 Mes.Add("*During my life of mentoring, I never regretted teaching someone, except for [gn:"+Malisha+"]. She's not careless, or cares about the wellbeing of the people she does experiements to.*");
                 Mes.Add("*Sometimes I think [gn:" + Malisha + "] is trying to eat me. If I suddenly disappear, try looking inside her mouth.*");
-                Mes.Add("*Huh? Sorry, I'm trying to make my house [gn:"+Malisha+"] proof.*");
+                Mes.Add("*Huh? Sorry, I'm trying to make my house \"[gn:"+Malisha+"] proof\".*");
                 Mes.Add("*My greatest misfortunes in life begins when [gn:"+Malisha+"] says that has a new experiement to test.*");
                 if (NpcMod.HasGuardianNPC(Zacks))
                 {

@@ -725,7 +725,7 @@ namespace giantsummon
                 else
                     RequestCompleteCombo++;
                 GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MentionPlayer,
-                    player.player.name, guardian.Name, 15, RequestCompleteCombo, 
+                    player.player.name, guardian.Name, 15, RequestCompleteCombo + 10, 
                     new GuardianID[] { guardian.MyID });
                 if (!IsCommonRequest && !IsTalkQuest && !RequestsCompletedIDs.Contains(RequestID))
                 {

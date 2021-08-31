@@ -40,7 +40,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 90, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1340,6 +1340,11 @@ namespace giantsummon
                     }*/
                     //New.Add("Selected Item: " + g.SelectedItem);
                     //New.Add("Action Pressed: " + g.Action);
+                }
+                New.Clear();
+                foreach(FeatMentioning feat in GuardianGlobalInfos.Feats)
+                {
+                    New.Add(feat.type.ToString() + " " + feat.PlayerName + " T:" + feat.FeatDurationInGameDays + " " + feat.FeatSubject);
                 }
                 TextsToDraw = New.ToArray();
             }

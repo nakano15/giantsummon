@@ -156,6 +156,7 @@ namespace giantsummon
         {
             if (GuardiansWhoMentionThis == null)
                 GuardiansWhoMentionThis = new GuardianID[0];
+            FeatDurationDays *= 60;
             foreach(FeatMentioning f in Feats)
             {
                 if(f.type == feat && f.PlayerName == PlayerName)

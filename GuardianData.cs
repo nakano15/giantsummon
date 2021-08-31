@@ -1371,7 +1371,7 @@ namespace giantsummon
             }
             if (Base.MoveInLevel > 0 && !MoveInMessageUnlocked && !IsStarter && FriendshipLevel >= Base.MoveInLevel)
             {
-                Text = Base.CallUnlockMessage + "\n[This companion can now move in to your world.]";
+                Text = Base.MoveInUnlockMessage + "\n[This companion can now move in to your world.]";
                 MoveInMessageUnlocked = true;
                 return true;
             }

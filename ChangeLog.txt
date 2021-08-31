@@ -36,3 +36,11 @@ Made the game take it easy on the companion infos and datas getting.
 Feat Mentioning implemented.
 	Companions will have the chance of commenting about things you did with your other characters, when you start a dialogue with them.
 Starting a dialogue with a companion you're either mounted or sharing mount with, will no longer try making them face each other.
+Changed how the comfort friendship gain works:
+	Companions will no longer gain friendship point automatically due to comfort, after their comfort reaches the max value.
+	To gain the friendship point, you need to speak to the companion. If the comfort point is at the max point or higher, you will gain a friendship point.
+	Furnitures like Beds and Chairs will give more comfort points.
+	Reduced the max comfort points necessary to increase friendship.
+In Bounty Quests, instead of saying that you hear a "deafening" roar, It will instead say that you hear a "furious" roar.
+	#SaveTerrarianEars
+Companions will now say correctly their messages saying that they can move in to the world.

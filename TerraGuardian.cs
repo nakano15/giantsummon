@@ -875,6 +875,7 @@ namespace giantsummon
         public byte DrinkStacker { get { return Data.DrinkStacker; } set { Data.DrinkStacker = value; } }
         public const int MaxComfortStack = 10 * 60;
         public float ComfortStack { get { return Data.ComfortStack; } set { Data.ComfortStack = value; } }
+        public byte MaxComfortExp { get { return checked((byte)(5 + FriendshipLevel / 3)); } }
         public byte ComfortPoints { get { return Data.ComfortPoints; } set { Data.ComfortPoints = value; } }
         public Emotions CurrentEmotion = Emotions.Neutral;
         public float EmotionDisplayTime = 0f;
@@ -2316,13 +2317,12 @@ namespace giantsummon
                 }
                 if(i < 200)
                 {
-
                     if (Math.Abs(Main.npc[i].Center.X - CenterPosition.X) < (Main.npc[i].width + Width) + DetectionDistance &&
                             Math.Abs(Main.npc[i].Center.Y - CenterPosition.Y) < (Main.npc[i].height + Height) + DetectionDistance)
                     {
                         if (!this.NpcsSpotted.Contains(i))
                         {
-                            this.DoTrigger(TriggerTypes.Spotted, new giantsummon.Trigger.TriggerTarget(Main.npc[i]));
+                            DoTrigger(TriggerTypes.Spotted, new Trigger.TriggerTarget(Main.npc[i]));
                         }
                         NpcsSpotted.Add(i);
                     }
@@ -7299,7 +7299,7 @@ namespace giantsummon
                         switch (Main.tile[furniturex, furniturey].type)
                         {
                             case Terraria.ID.TileID.Chairs:
-                                ComfortSum += 0.025f;
+                                ComfortSum += 0.035f;
                                 break;
                             case Terraria.ID.TileID.Thrones:
                                 ComfortSum += 0.05f;
@@ -7308,7 +7308,7 @@ namespace giantsummon
                                 ComfortSum += 0.043f;
                                 break;
                             case Terraria.ID.TileID.Beds:
-                                ComfortSum += 0.02f;
+                                ComfortSum += 0.06f;
                                 break;
                         }
                     }
@@ -7324,21 +7324,23 @@ namespace giantsummon
                 if (ZoneCorrupt || ZoneCrimson)
                     ComfortSum *= 0.6f;
                 if (Main.invasionProgress > 0)
-                    ComfortSum *= 0.4f;
+                    ComfortSum *= 0.5f;
                 if (NPC.TowerActiveNebula || NPC.TowerActiveSolar || NPC.TowerActiveStardust || NPC.TowerActiveVortex || NPC.MoonLordCountdown > 0 || NPC.AnyNPCs(Terraria.ID.NPCID.MoonLordCore))
-                    ComfortSum *= 0.2f;
+                    ComfortSum *= 0.3f;
                 ComfortStack += ComfortSum;
             }
             if (ComfortStack >= MaxComfortStack)
             {
-                ComfortStack -= MaxComfortStack;
-                ComfortPoints++;
-                byte MaxComfortExp = (byte)(10 + FriendshipLevel / 3);
-                if (ComfortPoints >= MaxComfortExp)
+                ComfortStack = 0;
+                if(ComfortPoints < MaxComfortExp)
+                {
+                    ComfortPoints++;
+                }
+                /*if (ComfortPoints >= MaxComfortExp)
                 {
                     ComfortPoints -= (byte)(10 + FriendshipLevel / 3);
                     IncreaseFriendshipProgress(1);
-                }
+                }*/
             }
         }
 
@@ -11467,7 +11469,7 @@ namespace giantsummon
                     RemoveBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>());
                     FinalDamage += (int)(FinalDamage * 0.5f);
                 }
-                this.HP -= FinalDamage;
+                HP -= FinalDamage;
                 if (HP > 0 && !KnockedOut)
                 {
                     int Thereshould = (int)(MHP * 0.3f);

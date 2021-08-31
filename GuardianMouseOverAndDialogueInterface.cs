@@ -122,6 +122,13 @@ namespace giantsummon
             //GetCompanionDialogue
             GetDefaultOptions(tg);
             string Message = "";
+            if(tg.ComfortPoints >= tg.MaxComfortExp)
+            {
+                tg.ComfortPoints = 0;
+                tg.IncreaseFriendshipProgress(1);
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MentionPlayer, MainPlayer.name,
+                    "", 7, 5, new GuardianID[] { tg.MyID });
+            }
             if (tg.Base.InvalidGuardian)
             {
                 Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to speak with you.)\nGuardian ID: "+tg.ID+", Guardian Mod ID: "+tg.ModID+".\nIf this isn't related to a mod you uninstalled, send It's to the mod developer.";

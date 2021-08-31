@@ -352,7 +352,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
-            MainMod.LastBossSpotted = false;
+            MainMod.LastBossSpotted = MainMod.LastInvasionSpotted = MainMod.LastEventStarted = false;
             TerraGuardian.UpdateAge = true;
             ProjMod.GuardianProj.Clear();
             MainMod.ScreenColorAlpha = 0;

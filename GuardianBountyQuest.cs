@@ -847,7 +847,7 @@ namespace giantsummon
                     }
                     if (SpawnStress == 0)
                     {
-                        Main.NewText("You hear a deafening roar coming from somewhere...", 255, 50, 0);
+                        Main.NewText("You hear a furious roar coming from somewhere...", 255, 50, 0);
                     }
                 }
                 SpawnStress--;
