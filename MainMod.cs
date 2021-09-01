@@ -38,7 +38,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 90, LastModVersion = 85;
+        public const int ModVersion = 91, LastModVersion = 85;
         public const int MaxExtraGuardianFollowers = 6;
         public static bool ShowDebugInfo = true;
         //Downed system configs
@@ -133,6 +133,7 @@ namespace giantsummon
         private static Tile DefaultTile = new Tile();
         public static bool LastBossSpotted = false, LastInvasionSpotted = false, LastEventStarted = false;
         private static byte LastEvent = 0;
+        private static sbyte LastInvasion = -1;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -790,105 +791,139 @@ namespace giantsummon
         {
             NpcMod.RestorePlayersPosition();
             CheckIfThereIsNpcInCameraRange();
-            if (Main.netMode < 2)
+            if (Main.netMode < 2 && !Main.gameMenu)
             {
-                if (LastBossSpotted)
+                UpdateReactions();
+            }
+        }
+
+        public void UpdateReactions()
+        {
+            if (LastBossSpotted)
+            {
+                bool HasBossAlive = false;
+                for (int i = 0; i < 200; i++)
                 {
-                    bool HasBossAlive = false;
-                    for (int i = 0; i < 200; i++)
+                    if (Main.npc[i].active && NpcMod.IsBoss(Main.npc[i]))
                     {
-                        if (Main.npc[i].active && Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type])
+                        HasBossAlive = true;
+                        break;
+                    }
+                }
+                LastBossSpotted = HasBossAlive;
+            }
+            else
+            {
+                bool BossInRange = false;
+                for (int i = 0; i < 200; i++)
+                {
+                    if (Main.npc[i].active && NpcMod.IsBoss(Main.npc[i]))
+                    {
+                        if (Math.Abs(Main.player[Main.myPlayer].Center.X - Main.npc[i].Center.X) < 450f &&
+                            Math.Abs(Main.player[Main.myPlayer].Center.Y - Main.npc[i].Center.Y) < 380f && 
+                            Collision.CanHitLine(Main.player[Main.myPlayer].position, Main.player[Main.myPlayer].width, Main.player[Main.myPlayer].height,
+                            Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
                         {
-                            HasBossAlive = true;
+                            BossInRange = true;
                             break;
                         }
                     }
-                    if (!HasBossAlive)
-                        LastBossSpotted = false;
                 }
-                if (Main.invasionType > InvasionID.None || Main.invasionSize > 0) //Invasion happening
+                if (BossInRange)
                 {
-                    if (!LastInvasionSpotted)
+                    LastBossSpotted = true;
+                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.SpottedABoss);
+                }
+            }
+            if (Main.invasionType > InvasionID.None || Main.invasionSize > 0) //Invasion happening
+            {
+                if (!LastInvasionSpotted)
+                {
+                    Player player = Main.player[Main.myPlayer];
+                    if (player.position.Y < Main.worldSurface * 16 + NPC.sHeight &&
+                        Math.Abs(player.position.X - Main.invasionX * 16) < 3000)
                     {
-                        Player player = Main.player[Main.myPlayer];
-                        if (player.position.Y < Main.worldSurface * 16 + NPC.sHeight &&
-                            Math.Abs(player.position.X - Main.invasionX * 16) < 3000)
-                        {
-                            LastInvasionSpotted = true;
-                            player.GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.InvasionBegins);
-                        }
+                        LastInvasionSpotted = true;
+                        LastInvasion = (sbyte)Main.invasionType;
+                        player.GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.InvasionBegins);
                     }
                 }
-                else
+            }
+            else
+            {
+                if (LastInvasionSpotted)
                 {
-                    if (LastInvasionSpotted)
+                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.RepelledInvasion);
+                    LastInvasionSpotted = false;
+                    string InvasionName = "";
+                    switch ((short)LastInvasion)
                     {
-                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.RepelledInvasion);
-                        LastInvasionSpotted = false;
-                        string InvasionName = "";
-                        switch (Main.invasionType)
-                        {
-                            case InvasionID.GoblinArmy:
-                                InvasionName = "Goblin Army";
-                                break;
-                            case InvasionID.SnowLegion:
-                                InvasionName = "Frost Legion";
-                                break;
-                            case InvasionID.PirateInvasion:
-                                InvasionName = "Pirate Invasion";
-                                break;
-                            case InvasionID.MartianMadness:
-                                InvasionName = "Martian Madness";
-                                break;
-                        }
-                        GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
-                            Main.player[Main.myPlayer].name, InvasionName, 12, 15,
-                            GuardianGlobalInfos.GetGuardiansInTheWorld());
+                        case InvasionID.GoblinArmy:
+                            InvasionName = "Goblin Army";
+                            break;
+                        case InvasionID.SnowLegion:
+                            InvasionName = "Frost Legion";
+                            break;
+                        case InvasionID.PirateInvasion:
+                            InvasionName = "Pirate Invasion";
+                            break;
+                        case InvasionID.MartianMadness:
+                            InvasionName = "Martian Madness";
+                            break;
                     }
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
+                        Main.player[Main.myPlayer].name, InvasionName, 12, 15,
+                        GuardianGlobalInfos.GetGuardiansInTheWorld());
                 }
-                bool AnEventIsHappening = Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon;
-                if (AnEventIsHappening)
+            }
+            bool AnEventIsHappening = Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon;
+            if (AnEventIsHappening)
+            {
+                if (!LastEventStarted)
                 {
-                    if (!LastEventStarted)
-                    {
-                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventBegins);
-                        LastEventStarted = true;
-                        if (Main.bloodMoon)
-                            LastEvent = 1;
-                        else if (Main.eclipse)
-                            LastEvent = 2;
-                        if (Main.pumpkinMoon)
-                            LastEvent = 3;
-                        if (Main.snowMoon)
-                            LastEvent = 4;
-                    }
+                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventBegins);
+                    LastEventStarted = true;
+                    if (Main.slimeRain)
+                        LastEvent = 1;
+                    if (Main.bloodMoon)
+                        LastEvent = 2;
+                    else if (Main.eclipse)
+                        LastEvent = 3;
+                    if (Main.pumpkinMoon)
+                        LastEvent = 4;
+                    if (Main.snowMoon)
+                        LastEvent = 5;
                 }
-                else
+            }
+            else
+            {
+                if (LastEventStarted)
                 {
-                    if (LastEventStarted)
+                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventEnds);
+                    LastEventStarted = false;
+                    string EventName = "";
+                    switch (LastEvent)
                     {
-                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.EventEnds);
-                        LastEventStarted = false;
-                        string EventName = "";
-                        switch (LastEvent)
-                        {
-                            case 1:
-                                EventName = "Blood Moon";
-                                break;
-                            case 2:
-                                EventName = "Eclipse";
-                                break;
-                            case 3:
-                                EventName = "Pumpkin Moon";
-                                break;
-                            case 4:
-                                EventName = "Frost Moon";
-                                break;
-                        }
-                        GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
-                            Main.player[Main.myPlayer].name, EventName, 12, LastEvent,
-                            GuardianGlobalInfos.GetGuardiansInTheWorld());
+                        case 1:
+                            EventName = "Slime Rain";
+                            break;
+                        case 2:
+                            EventName = "Blood Moon";
+                            break;
+                        case 3:
+                            EventName = "Eclipse";
+                            break;
+                        case 4:
+                            EventName = "Pumpkin Moon";
+                            break;
+                        case 5:
+                            EventName = "Frost Moon";
+                            break;
                     }
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
+                        Main.player[Main.myPlayer].name, EventName, 12, LastEvent,
+                        GuardianGlobalInfos.GetGuardiansInTheWorld());
+                    LastEvent = 0;
                 }
             }
         }

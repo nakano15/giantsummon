@@ -617,7 +617,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.PlayerMeetsSomeoneNewMessage:
                     return "*Another potential customer. Nice.*";
                 case MessageIDs.CompanionInvokesAMinion:
-                    return "*This could have caused some damage, when I was being chased by guards.*";
+                    return "*This would have been useful when I was being chased by guards.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*You do anything for a new friend, [nickname]?*";
                 //

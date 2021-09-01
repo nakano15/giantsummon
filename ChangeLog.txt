@@ -44,3 +44,4 @@ Changed how the comfort friendship gain works:
 In Bounty Quests, instead of saying that you hear a "deafening" roar, It will instead say that you hear a "furious" roar.
 	#SaveTerrarianEars
 Companions will now say correctly their messages saying that they can move in to the world.
+Added a fix to an issue where Captain Stench animation could show the wrong frame when using furnitures.

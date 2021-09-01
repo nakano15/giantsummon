@@ -10,7 +10,7 @@ namespace giantsummon
         public GuardianID[] GuardiansWhoMentionThis = new GuardianID[0];
         public string PlayerName = "";
         public string FeatSubject = ""; //Holds the subject of the feat, like the name of an item you acquired, or a boss you killed.
-        public float FeatDurationInGameDays = 0;
+        public uint FeatDurationInGameDays = 0;
         public float Importance = 0;
         public FeatType type = FeatType.MentionPlayer;
 
@@ -44,7 +44,8 @@ namespace giantsummon
             MetSomeoneNew,
             PlayerDied,
             OpenedTemple,
-            CoinPortalSpawned
+            CoinPortalSpawned,
+            MinibossDefeated
         }
     }
 }

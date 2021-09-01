@@ -57,7 +57,7 @@ namespace giantsummon
         {
             for(int f = 0; f < Feats.Count; f++)
             {
-                Feats[f].FeatDurationInGameDays -= HourToDecimal;
+                Feats[f].FeatDurationInGameDays -= 1;
                 if (Feats[f].FeatDurationInGameDays <= 0)
                     Feats.RemoveAt(f);
             }
@@ -114,6 +114,7 @@ namespace giantsummon
             switch (feat.type)
             {
                 case FeatMentioning.FeatType.BossDefeated:
+                case FeatMentioning.FeatType.MinibossDefeated:
                     Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionBossDefeat);
                     break;
                 case FeatMentioning.FeatType.CoinPortalSpawned:
@@ -156,23 +157,33 @@ namespace giantsummon
         {
             if (GuardiansWhoMentionThis == null)
                 GuardiansWhoMentionThis = new GuardianID[0];
-            FeatDurationDays *= 60;
+            uint Duration = (uint)(FeatDurationDays * (60 * 60 * 24));
             foreach(FeatMentioning f in Feats)
             {
                 if(f.type == feat && f.PlayerName == PlayerName)
                 {
+                    bool Skip = false;
                     foreach(GuardianID g in GuardiansWhoMentionThis)
                     {
                         if (!f.GuardianMentionsThis(g))
+                        {
+                            if (feat == FeatMentioning.FeatType.MentionPlayer)
+                            {
+                                Skip = true;
+                                break;
+                            }
                             f.AddGuardianWhoMentionsThis(g);
+                        }
                     }
+                    if (Skip)
+                        continue;
                     if(f.Importance <= ImportanceLevel)
                     {
                         f.FeatSubject = SubjectName;
                         f.Importance = ImportanceLevel;
                     }
-                    if (f.FeatSubject == SubjectName && f.FeatDurationInGameDays < FeatDurationDays)
-                        f.FeatDurationInGameDays = FeatDurationDays;
+                    if (f.FeatSubject == SubjectName && f.FeatDurationInGameDays < Duration)
+                        f.FeatDurationInGameDays = Duration;
                     return;
                 }
             }
@@ -180,7 +191,7 @@ namespace giantsummon
             newFeat.type = feat;
             newFeat.PlayerName = PlayerName;
             newFeat.FeatSubject = SubjectName;
-            newFeat.FeatDurationInGameDays = FeatDurationDays;
+            newFeat.FeatDurationInGameDays = Duration;
             newFeat.Importance = ImportanceLevel;
             newFeat.GuardiansWhoMentionThis = GuardiansWhoMentionThis;
             Feats.Add(newFeat);
@@ -234,7 +245,10 @@ namespace giantsummon
                         feat.type = (FeatMentioning.FeatType)reader.ReadInt32();
                         feat.PlayerName = ScrambleText(reader.ReadString(), false);
                         feat.FeatSubject = ScrambleText(reader.ReadString(), false);
-                        feat.FeatDurationInGameDays = reader.ReadSingle();
+                        if (Version < 91)
+                            feat.FeatDurationInGameDays = (uint)reader.ReadSingle();
+                        else
+                            feat.FeatDurationInGameDays = reader.ReadUInt32();
                         Feats.Add(feat);
                     }
                 }

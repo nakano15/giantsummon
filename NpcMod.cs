@@ -1615,32 +1615,51 @@ namespace giantsummon
             }
             if (mobType > MobTypes.Normal)
                 StrongMonsterLoot(npc);
-            if (Main.netMode < 2 && NPCID.Sets.TechnicallyABoss[npc.type] && MainMod.LastBossSpotted)
+            if (Main.netMode < 2)
             {
-                bool HasBossPartAlive = false;
-                for(int i = 0; i < 200; i++)
+                if (IsBoss(npc))
                 {
-                    if(i != npc.type && npc.active)
+                    bool HasBossPartAlive = false;
+                    for (int i = 0; i < 200; i++)
                     {
-                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[i])
+                        if (i != npc.type && npc.active)
                         {
-                            HasBossPartAlive = true;
-                            break;
+                            if (IsBoss(Main.npc[i]))
+                            {
+                                HasBossPartAlive = true;
+                                break;
+                            }
                         }
                     }
+                    if (!HasBossPartAlive)
+                    {
+                        MainMod.LastBossSpotted = false;
+                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.DefeatedABoss);
+                        int MaxHealthValue = npc.lifeMax;
+                        if (npc.type >= NPCID.EaterofWorldsHead && npc.type <= NPCID.EaterofWorldsTail)
+                            MaxHealthValue *= 30;
+                        GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.BossDefeated,
+                            Main.player[Main.myPlayer].name, npc.GivenOrTypeName, 16, npc.lifeMax * 0.025f,
+                            GuardianGlobalInfos.GetGuardiansInTheWorld());
+                    }
                 }
-                if (!HasBossPartAlive)
+                if (IsMiniboss(npc))
                 {
-                    MainMod.LastBossSpotted = false;
-                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.DefeatedABoss);
-                    int MaxHealthValue = npc.lifeMax;
-                    if (npc.type >= NPCID.EaterofWorldsHead && npc.type <= NPCID.EaterofWorldsTail)
-                        MaxHealthValue *= 30;
-                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.BossDefeated,
-                        Main.player[Main.myPlayer].name, npc.GivenOrTypeName, 16, npc.lifeMax * 0.025f,
-                        GuardianGlobalInfos.GetGuardiansInTheWorld());
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MinibossDefeated, Main.player[Main.myPlayer].name,
+                        npc.GivenOrTypeName, 10, npc.lifeMax * 0.025f, GuardianGlobalInfos.GetGuardiansInTheWorld());
                 }
             }
+        }
+
+        public static bool IsBoss(NPC npc)
+        {
+            return npc.boss || (npc.type >= Terraria.ID.NPCID.EaterofWorldsHead && npc.type <= Terraria.ID.NPCID.EaterofWorldsTail) || Terraria.ID.NPCID.Sets.TechnicallyABoss[npc.type];
+        }
+
+        public static bool IsMiniboss(NPC npc)
+        {
+            return npc.type == NPCID.IceGolem || npc.type == NPCID.SandElemental || npc.type == NPCID.Tim || npc.type == NPCID.RuneWizard || npc.type == NPCID.TheGroom || 
+                npc.type == NPCID.TheBride || npc.type == NPCID.DoctorBones;
         }
 
         public void StrongMonsterLoot(NPC npc)

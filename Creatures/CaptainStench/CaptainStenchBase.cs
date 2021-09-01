@@ -1518,6 +1518,8 @@ namespace giantsummon.Creatures
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
+            if (guardian.UsingFurniture)
+                return;
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
             bool UsingWeapon = data.HoldingWeaponTime > 0 || (guardian.OffHandAction && guardian.SelectedOffhand > -1), 
                 OpenCloak = guardian.ItemUseTime > 0 || (guardian.OffHandAction && guardian.SelectedOffhand > -1);
