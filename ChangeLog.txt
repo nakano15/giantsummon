@@ -45,3 +45,7 @@ In Bounty Quests, instead of saying that you hear a "deafening" roar, It will in
 	#SaveTerrarianEars
 Companions will now say correctly their messages saying that they can move in to the world.
 Added a fix to an issue where Captain Stench animation could show the wrong frame when using furnitures.
+Companions will now dismiss all their summons when using a better summon item.
+	They will also dismiss all summons if you remove their summoning items from their inventory.
+Did some changes to summons AI to avoid summons invoked by companions of crashing the game on tile collision checking.
+	Also added a out of bounds preventing measure to avoid that from happening again.

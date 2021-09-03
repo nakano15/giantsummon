@@ -721,12 +721,14 @@ namespace giantsummon
                     }
                 }
                 if (!IsCommonRequest && !IsTalkQuest)
+                {
                     RequestCompleteCombo = 0;
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MentionPlayer,
+                        player.player.name, guardian.Name, 15, RequestCompleteCombo + 10,
+                        new GuardianID[] { guardian.MyID });
+                }
                 else
                     RequestCompleteCombo++;
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MentionPlayer,
-                    player.player.name, guardian.Name, 15, RequestCompleteCombo + 10, 
-                    new GuardianID[] { guardian.MyID });
                 if (!IsCommonRequest && !IsTalkQuest && !RequestsCompletedIDs.Contains(RequestID))
                 {
                     RequestsCompletedIDs.Add(RequestID);

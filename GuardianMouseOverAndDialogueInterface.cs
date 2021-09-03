@@ -127,7 +127,7 @@ namespace giantsummon
                 tg.ComfortPoints = 0;
                 tg.IncreaseFriendshipProgress(1);
                 GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MentionPlayer, MainPlayer.name,
-                    "", 7, 5, new GuardianID[] { tg.MyID });
+                    tg.Name, 7, 5, new GuardianID[] { tg.MyID });
             }
             if (tg.Base.InvalidGuardian)
             {

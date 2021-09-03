@@ -1736,7 +1736,7 @@ namespace giantsummon
                                 --num2;
                             if (flag2)
                                 ++num2;
-                            if (WorldGen.SolidTile(num2 + (int)proj.velocity.X, j))
+                            if (WorldGen.SolidTile(num2 + (int)(proj.velocity.X * (1f / 16)), j))
                                 flag4 = true;
                         }
                         if ((double)guardian.Position.Y - 8.0 > (double)proj.position.Y + (double)proj.height)
@@ -1776,7 +1776,7 @@ namespace giantsummon
                                                 --num2;
                                             if (flag2)
                                                 ++num2;
-                                            int i2 = num2 + (int)proj.velocity.X;
+                                            int i2 = num2 + (int)(proj.velocity.X * (1f / 16));
                                             if (!WorldGen.SolidTile(i2, num3 - 1) && !WorldGen.SolidTile(i2, num3 - 2))
                                                 proj.velocity.Y = -5.1f;
                                             else if (!WorldGen.SolidTile(i2, num3 - 2))

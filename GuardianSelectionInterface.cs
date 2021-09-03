@@ -1593,7 +1593,7 @@ namespace giantsummon
                         if (Selected == index)
                             color = Color.Yellow;
                         else if (ce.Summoned)
-                            color = Color.Cyan;
+                            color = Color.LightGreen;
                         else if (ce.LivingHere)
                             color = Color.White;
                         else
@@ -1602,7 +1602,7 @@ namespace giantsummon
                         if (Main.mouseX >= ElementPosition.X && Main.mouseX < ElementPosition.X + 118 &&
                             Main.mouseY >= ElementPosition.Y - 18 && Main.mouseY < ElementPosition.Y - 6)
                         {
-                            color = Color.LightCyan;
+                            color = Color.Yellow;
                             if (Main.mouseLeft && Main.mouseLeftRelease)
                             {
                                 ChangeSelectedGuardian(index, player);

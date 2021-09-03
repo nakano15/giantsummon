@@ -698,6 +698,7 @@ namespace giantsummon
         public GuardianItemSlotFlag[] InventorySlotFlags { get { return Data.InventorySlotFlags; } set { Data.InventorySlotFlags = value; } }
         public Item BodyDye { get { return Data.BodyDye; } set { Data.BodyDye = value; } }
         public int SelectedItem = 0, SelectedOffhand = -1, LastSelectedItem = -2, LastSelectedOffhand = -2;
+        public int LastUsedSummonItem = 0;
         public float OffhandRotation = 0f;
         public ItemUseTypes ItemUseType = ItemUseTypes.HeavyVerticalSwing;
         public Dictionary<string, GuardianAttackTypeInfo> CombatTypeInfo = new Dictionary<string, GuardianAttackTypeInfo>();
@@ -7149,7 +7150,7 @@ namespace giantsummon
                 if (!UsingFurniture)
                 {
                     float DistanceFromTile = Math.Abs(Position.X + Velocity.X - TileCenterX);
-                    if (DistanceFromTile > 4)
+                    if (DistanceFromTile > 8)
                     {
                         MoveLeft = MoveRight = false;
                         if (Position.X < TileCenterX)
@@ -7361,7 +7362,7 @@ namespace giantsummon
 
         public void CheckIfCanSummon()
         {
-            if (OwnerPos == -1 || ItemAnimationTime > 0 || MinionSlotCount >= MaxMinions || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            if (OwnerPos == -1 || ItemAnimationTime > 0 || HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
                 return;
             }
@@ -7377,8 +7378,15 @@ namespace giantsummon
             }
             if (SummonerWeaponPosition > -1)
             {
+                if (MinionSlotCount >= MaxMinions)
+                    return;
                 SelectedItem = SummonerWeaponPosition;
                 Action = true;
+                if(Inventory[SelectedItem].type != LastUsedSummonItem)
+                {
+                    KillAllMySummons();
+                    LastUsedSummonItem = Inventory[SelectedItem].type;
+                }
                 if(NumMinions == 0 && MainMod.GeneralIdleCommentCooldown <= 0)
                 {
                     string Mes = GetMessage(GuardianBase.MessageIDs.CompanionInvokesAMinion);
@@ -7386,6 +7394,29 @@ namespace giantsummon
                     {
                         SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
                         MainMod.SetIdleCommentCooldown();
+                    }
+                }
+            }
+            else
+            {
+                if(LastUsedSummonItem > 0)
+                {
+                    KillAllMySummons();
+                    LastUsedSummonItem = 0;
+                }
+            }
+        }
+
+        public void KillAllMySummons()
+        {
+            for(int p = 0; p < Main.maxProjectiles; p++)
+            {
+                if (Main.projectile[p].active && ProjMod.IsGuardianProjectile(p) && ProjMod.GuardianProj[p].WhoAmID == this.WhoAmID)
+                {
+                    Projectile proj = Main.projectile[p];
+                    if (proj.minion)
+                    {
+                        proj.Kill();
                     }
                 }
             }
@@ -7578,7 +7609,31 @@ namespace giantsummon
             bool IsTownNpc = OwnerPos == -1;
             bool DoIdleMovement = true;
             int HouseX = -1, HouseY = -1;
-            if (IsTownNpc)
+            if(CurrentIdleAction == IdleActions.DefendVillage)
+            {
+                if(Main.invasionType > Terraria.ID.InvasionID.None)
+                {
+                    IdleActionTime++;
+                    DoIdleMovement = false;
+                    int CenterX = (int)(Position.X * DivisionBy16), 
+                        CenterY = (int)(this.CenterY * DivisionBy16);
+                    Tile tile = MainMod.GetTile(CenterX, CenterY);
+                    if(tile.wall > 0 && Main.wallHouse[tile.wall])
+                    {
+                        if (LookingLeft)
+                        {
+                            MoveLeft = true;
+                            MoveRight = false;
+                        }
+                        else
+                        {
+                            MoveRight = true;
+                            MoveLeft = false;
+                        }
+                    }
+                }
+            }
+            else if (IsTownNpc)
             {
                 bool MoveIndoors = Main.raining || Main.eclipse || Main.snowMoon || Main.pumpkinMoon;
                 if (OwnerPos == -1)
@@ -7926,8 +7981,26 @@ namespace giantsummon
                                 break;
                             }
                         }
-                        byte Gap = 0;
-                        for (int height = 0; height < 8; height++)
+                        /*byte Gap = 0;
+                        byte TilesUntilBlockedAbove = 8;
+                        {
+                            int StartCheckX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), 
+                                EndCheckX = (int)((Position.X + CollisionWidth * 0.5f + 1) * DivisionBy16);
+                            for(int y = 3; y < 8; y++)
+                            {
+                                for(int x = StartCheckX; x < EndCheckX; x++)
+                                {
+                                    if (MainMod.IsSolidTile(x, CheckAheadStartY - y) && !Terraria.ID.TileID.Sets.Platforms[Main.tile[x, CheckAheadStartY - y].type])
+                                    {
+                                        TilesUntilBlockedAbove = (byte)y;
+                                        break;
+                                    }
+                                }
+                                if (TilesUntilBlockedAbove != 0)
+                                    break;
+                            }
+                        }
+                        for (int height = 0; height < TilesUntilBlockedAbove; height++)
                         {
                             if (MainMod.IsSolidTile(CheckAheadX, CheckAheadStartY - height) && !Terraria.ID.TileID.Sets.Platforms[Main.tile[CheckAheadX, CheckAheadStartY - height].type])
                             {
@@ -7943,7 +8016,9 @@ namespace giantsummon
                         if (Gap < 3)
                         {
                             LookingLeft = !LookingLeft;
-                        }
+                        }*/
+                        if (IsBlockedAhead())
+                            FaceDirection(!LookingLeft);
                         if (LookingLeft)
                             MoveLeft = true;
                         else
@@ -10322,6 +10397,77 @@ namespace giantsummon
             }*/
             //if (SelectedOffhand > -1)
             OffHandAction = true;
+        }
+
+        public bool IsBlockedAhead()
+        {
+            byte CeilingMaxJumpHeightCheck = 8;
+            int FeetY = (int)(Position.Y * DivisionBy16);
+            {
+                int StartTileX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16),
+                    EndTileX = (int)((Position.X + CollisionWidth * 0.5f + 1) * DivisionBy16);
+                for (byte y = 3; y < 8; y++)
+                {
+                    for(int x = StartTileX; x < EndTileX; x++)
+                    {
+                        if(MainMod.IsSolidTile(x, FeetY - y) && !Terraria.ID.TileID.Sets.Platforms[MainMod.GetTile(x, FeetY - y).type])
+                        {
+                            CeilingMaxJumpHeightCheck = y;
+                            break;
+                        }
+                    }
+                    if (CeilingMaxJumpHeightCheck >= y)
+                        break;
+                }
+            }
+            int CheckAhead = (int)((Position.X + (CollisionWidth * 0.5f + 8) * Direction) * DivisionBy16);
+            byte Gap = 0;
+            for(int y = 0; y < CeilingMaxJumpHeightCheck; y++)
+            {
+                bool BlocksWay = false;
+                if(MainMod.IsSolidTile(CheckAhead, FeetY - y))
+                {
+                    BlocksWay = true;
+                    Tile tile = MainMod.GetTile(CheckAhead, FeetY - y);
+                    if (Terraria.ID.TileID.Sets.Platforms[tile.type] ||
+                        tile.type == Terraria.ID.TileID.ClosedDoor ||
+                        tile.type == Terraria.ID.TileID.TallGateClosed)
+                    {
+                        BlocksWay = false;
+                    }
+                }
+                if (!BlocksWay)
+                {
+                    Gap++;
+                    if (Gap >= 3)
+                        return false;
+                }
+                else
+                    Gap = 0;
+            }
+            return true;
+        }
+
+        public bool CheckIfBlockedAbove()
+        {
+            int StartCheckX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16),
+                EndCheckX = (int)((Position.X + CollisionWidth * 0.5f + 1) * DivisionBy16);
+            int FeetY = (int)(Position.Y * DivisionBy16);
+            for(int y = 3; y < 8; y++)
+            {
+                for(int x = StartCheckX; x < EndCheckX; x++)
+                {
+                    Tile tile = MainMod.GetTile(x, FeetY - y);
+                    if(tile.active() && Main.tileSolid[tile.type])
+                    {
+                        if(!Terraria.ID.TileID.Sets.Platforms[tile.type])
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         public bool UseMagicMirror()
@@ -18526,7 +18672,9 @@ namespace giantsummon
             UseNearbyFurnitureHome,
             TryGoingSleep,
             GoHome,
-            LookingAtTheBackground
+            LookingAtTheBackground,
+            DefendVillage,
+            JoinOldOneArmy
         }
     }
 

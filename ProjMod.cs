@@ -104,6 +104,13 @@ namespace giantsummon
             if (IsGuardianProjectile(projectile.whoAmI))
             {
                 TerraGuardian g = GuardianProj[projectile.whoAmI];
+                if(projectile.position.X < 5 * 16 || projectile.position.X > (Main.maxTilesX - 5) * 16 ||
+                    projectile.position.Y < 5 * 16 || projectile.position.Y > (Main.maxTilesY - 5) * 16)
+                {
+                    projectile.Kill();
+                    GuardianProj.Remove(projectile.whoAmI);
+                    return false;
+                }
                 if (projectile.minion)
                 {
                     Main.player[projectile.owner].slotsMinions += -projectile.minionSlots;
@@ -132,6 +139,18 @@ namespace giantsummon
                         projectile.minionPos = g.NumMinions;
                         g.NumMinions++;
                         g.MinionSlotCount += -projectile.minionSlots;
+                    }
+                }
+                if (projectile.sentry)
+                {
+                    Main.player[projectile.owner].maxTurrets--;
+                    if(!g.Active || (g.NumSentries + 1 > g.MaxSentries && projectile.owner == Main.myPlayer))
+                    {
+                        projectile.Kill();
+                    }
+                    else
+                    {
+                        g.NumSentries++;
                     }
                 }
                 if (projectile.aiStyle == 62)

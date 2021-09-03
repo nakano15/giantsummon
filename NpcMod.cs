@@ -1620,17 +1620,24 @@ namespace giantsummon
                 if (IsBoss(npc))
                 {
                     bool HasBossPartAlive = false;
+                    byte EoWParts = 0;
                     for (int i = 0; i < 200; i++)
                     {
-                        if (i != npc.type && npc.active)
+                        if (i != npc.whoAmI && npc.active)
                         {
-                            if (IsBoss(Main.npc[i]))
+                            if(Main.npc[i].type >= Terraria.ID.NPCID.EaterofWorldsHead && Main.npc[i].type <= Terraria.ID.NPCID.EaterofWorldsTail)
+                            {
+                                EoWParts++;
+                            }
+                            else if (IsBoss(Main.npc[i]))
                             {
                                 HasBossPartAlive = true;
                                 break;
                             }
                         }
                     }
+                    if (!HasBossPartAlive && EoWParts > 1)
+                        HasBossPartAlive = true;
                     if (!HasBossPartAlive)
                     {
                         MainMod.LastBossSpotted = false;
