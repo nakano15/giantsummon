@@ -156,7 +156,7 @@ namespace giantsummon.Creatures
             });
             AddTopic("We have something to give you.", Quests.ZacksMeatBagOutfit.UponDeliveringToZacksDialogue, delegate (TerraGuardian tg, PlayerMod pm)
             {
-                return pm.ZacksMeatBagOutfitQuestStep == 7;
+                return pm.ZacksMeatBagOutfitQuestStep == 6 || pm.ZacksMeatBagOutfitQuestStep == 7;
             });
         }
 

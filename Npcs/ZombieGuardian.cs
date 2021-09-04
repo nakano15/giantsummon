@@ -49,7 +49,7 @@ namespace giantsummon.Npcs
             music = Terraria.ID.MusicID.Boss2;
             if (!Main.gameMenu)
             {
-                npc.scale = Base.GetScale;
+                //npc.scale = Base.GetScale;
                 npc.width = (int)(npc.width * npc.scale);
                 npc.height = (int)(npc.height * npc.scale);
             }
@@ -320,7 +320,7 @@ namespace giantsummon.Npcs
                                         }
                                         npc.ai[2]++;
                                     }
-                                    else if (Target.ImmuneTime == 0)
+                                    else if (Target.ImmuneTime <= 0)
                                     {
                                         //Hurt player
                                         int DefBackup = Target.Defense;
@@ -599,7 +599,12 @@ namespace giantsummon.Npcs
                                 else if (!npc.getRect().Intersects(Target.GetCollision))
                                 {
                                     MoveForward = true;
-                                    //AiValue = 0;
+                                    AiValue++;
+                                    if(AiValue >= 210)
+                                    {
+                                        AiState = HasZacks ? 16 : 4;
+                                        AiValue = 0;
+                                    }
                                 }
                                 else
                                 {
@@ -1199,7 +1204,7 @@ namespace giantsummon.Npcs
                     break;
                 case 8:
                     {
-                        if (npc.velocity.X == 0)
+                        if (npc.velocity.X == 0 && AiValue > 90)
                         {
                             FrameY = LeftHandFrame = RightHandFrame = (byte)Base.ReviveFrame;
                         }

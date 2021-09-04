@@ -21,7 +21,7 @@ namespace giantsummon.Creatures
             FramesInRows = 28;
             //DuckingHeight = 54;
             //Each pig should definitelly have the same size, birthday age and time, so I moved those infos.
-            Male = true;
+            Genderless = true;
             InitialMHP = 110; //320
             LifeCrystalHPBonus = 15;
             LifeFruitHPBonus = 5;
@@ -89,13 +89,6 @@ namespace giantsummon.Creatures
         {
             g.MeleeDamageMultiplier += 0.05f;
             g.Defense -= 4;
-            if (GetIfIsCloudForm(g))
-            {
-                //if (!g.HasFlag(GuardianFlags.NoGravity))
-                //    g.AddFlag(GuardianFlags.NoGravity);
-                //if (!g.HasFlag(GuardianFlags.NoTileCollision))
-                //    g.AddFlag(GuardianFlags.NoTileCollision);
-            }
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)

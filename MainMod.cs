@@ -1259,7 +1259,12 @@ namespace giantsummon
             {
                 string Text = "Knocked Out";
                 if (playerMod.ReviveBoost > 0)
-                    Text = "Being Revived";
+                {
+                    if (playerMod.NegativeReviveBoost)
+                        Text = "Dying";
+                    else
+                        Text = "Being Revived";
+                }
                 Utils.DrawBorderStringBig(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f), Color.OrangeRed, 1f, 0.5f, 0.5f);
                 if (playerMod.KnockedOutCold)
                 {

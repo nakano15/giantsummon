@@ -14,7 +14,7 @@ namespace giantsummon
         public static bool TryPlacingCatGuardianOnSlime = false;
         public static int TrappedCatKingSlime = -1;
         public static Vector2[] PlayerPositionBackup = new Vector2[256];
-        public static bool[] PlayerDeadStatusBackup = new bool[256];
+        public static bool?[] PlayerDeadStatusBackup = new bool?[256];
         public static bool[] PlayerWetBackup = new bool[256];
         public MobTypes mobType = MobTypes.Normal;
         public short KbResistance = 1000;
@@ -674,6 +674,10 @@ namespace giantsummon
                     {
                         TerraGuardian PlayerGuardian = null;
                         float LowestAggroCount = (Main.player[p].Center - npc.Center).Length() - Main.player[p].aggro;
+                        if (!Main.player[p].dead && Main.player[p].GetModPlayer<PlayerMod>().KnockedOutCold)
+                        {
+                            Main.player[p].dead = true;
+                        }
                         foreach (TerraGuardian g in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                         {
                             if (g.Active && !g.Downed && !g.KnockedOutCold && !g.HasFlag(GuardianFlags.DontTakeAggro) && (!g.HasFlag(GuardianFlags.CantBeKnockedOutCold) || !g.KnockedOut))
@@ -697,8 +701,6 @@ namespace giantsummon
                         else
                         {
                             PlayerPositionBackup[p] = Vector2.Zero;
-                            if (Main.player[p].GetModPlayer<PlayerMod>().KnockedOutCold)
-                                Main.player[p].dead = true;
                         }
                     }
                     else
@@ -718,9 +720,10 @@ namespace giantsummon
                     if (PlayerPositionBackup[p] != Vector2.Zero)
                     {
                         Main.player[p].position = PlayerPositionBackup[p];
-                        Main.player[p].wet = PlayerWetBackup[p];
                     }
-                    Main.player[p].dead = PlayerDeadStatusBackup[p];
+                    Main.player[p].wet = PlayerWetBackup[p];
+                    if(PlayerDeadStatusBackup[p].HasValue)
+                        Main.player[p].dead = PlayerDeadStatusBackup[p].Value;
                     PlayerPositionBackup[p] = Vector2.Zero;
                 }
             }

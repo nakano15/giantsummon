@@ -77,7 +77,7 @@ namespace giantsummon
                             for (int x = -1; x < 2; x++)
                             {
                                 Tile tile = Main.tile[PositionX + x, PositionY];
-                                if (tile.active() && Main.tileSolid[tile.type] && tile.liquid == 0)
+                                if (tile.active() && Main.tileSolid[tile.type] && tile.type != 192 && tile.liquid == 0)
                                 {
                                     FloorCount++;
                                 }
@@ -105,7 +105,7 @@ namespace giantsummon
                                 TileObject.Place(to);
                                 status.Message = "Someone's tombstone placed...";
                                 //status.Message = "Tombstone placed at X:" + PositionX + "  Y:" + PositionY;
-                                System.Threading.Thread.Sleep(5000);
+                                System.Threading.Thread.Sleep(1000);
                                 TombstoneTileX = PositionX;
                                 TombstoneTileY = PositionY;
                                 int signpos = Sign.ReadSign(PositionX, PositionY);
@@ -127,7 +127,7 @@ namespace giantsummon
                     if(!Success && Retry >= 1000)
                     {
                         status.Message = "Tombstone Spawn failed...";
-                        System.Threading.Thread.Sleep(5000);
+                        System.Threading.Thread.Sleep(1000);
                         break;
                     }
                 }

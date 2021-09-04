@@ -9596,6 +9596,8 @@ namespace giantsummon
 
         public void Knockout(string DeathText = "")
         {
+            if (!Active)
+                return;
             if (ForceKill && !HasFlag(GuardianFlags.CantDie))
             {
                 ForceKill = false;

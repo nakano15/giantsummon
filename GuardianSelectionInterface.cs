@@ -952,20 +952,25 @@ namespace giantsummon
                 }
                 Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, TagPosition, new Rectangle(38, 10, 55, 53), Color.White);
             }
+            const int ElementCenterX = 175 + 131;
+            {
+                int BarWidth = (int)((float)player.FriendshipExp / (player.FriendshipMaxExp - 1) * 262);
+                Vector2 RankPosition = Vector2.Zero;
+                RankPosition.X = HudPosition.X + 175;
+                RankPosition.Y = HudPosition.Y + 87;
+                Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, RankPosition, new Rectangle(185, 87, BarWidth, 5), Color.White);
+                RankPosition.X = HudPosition.X + ElementCenterX;
+                RankPosition.Y = HudPosition.Y + 84 + 6;
+                Utils.DrawBorderString(Main.spriteBatch, "Friendship Rank: " + player.FriendshipLevel, RankPosition, Color.White, ElementScale, 0.5f, 1f);
+                int ProgressIncreasePerWidth = (int)(1f / player.FriendshipMaxExp * 262);
+                for (byte i = 1; i < player.FriendshipMaxExp; i++)
+                {
+                    Vector2 BarPosition = new Vector2(HudPosition.X + 175 + ProgressIncreasePerWidth * i, HudPosition.Y + 87);
+                    Main.spriteBatch.Draw(Terraria.Main.blackTileTexture, new Rectangle((int)BarPosition.X, (int)BarPosition.Y, 2, 6), null, Color.Black);
+                }
+            }
             if (Selected > -1)
             {
-                const int ElementCenterX = 175 + 131;
-                {
-                    int BarWidth = (int)((float)player.FriendshipExp / player.FriendshipMaxExp * 262);
-                    Vector2 RankPosition = Vector2.Zero;
-                    RankPosition.X = HudPosition.X + 175;
-                    RankPosition.Y = HudPosition.Y + 87;
-                    Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, RankPosition, new Rectangle(185, 87, BarWidth, 5), Color.White);
-                    RankPosition.X = HudPosition.X + ElementCenterX;
-                    RankPosition.Y = HudPosition.Y + 84 + 6;
-                    Utils.DrawBorderString(Main.spriteBatch, "Friendship Rank: " + player.FriendshipLevel, RankPosition, Color.White, ElementScale, 0.5f, 1f);
-
-                }
                 {
                     Vector2 TgPos = Vector2.Zero;
                     TgPos.X = Main.screenPosition.X + HudPosition.X + ElementCenterX;
@@ -1044,7 +1049,11 @@ namespace giantsummon
                 //Info Icons
                 {
                     List<sbyte> InfoIcons = new List<sbyte>();
-                    if (DisplayGuardian.Male)
+                    if (DisplayGuardian.Base.Genderless)
+                    {
+                        InfoIcons.Add(13);
+                    }
+                    else if (DisplayGuardian.Male)
                         InfoIcons.Add(4);
                     else
                         InfoIcons.Add(5);
@@ -1181,6 +1190,9 @@ namespace giantsummon
                                 case 12:
                                     MouseText = "Nocturnal";
                                     break;
+                                case 13:
+                                    MouseText = "Genderless";
+                                    break;
                             }
                         }
                         Main.spriteBatch.Draw(MainMod.GuardianInfoIcons, IconPosition, new Rectangle(Value * 16, 0, 16, 16), Color.White);
@@ -1254,7 +1266,7 @@ namespace giantsummon
                 (DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive(DisplayGuardian.Data)) ||
                 PlayerMod.PlayerHasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID)) &&
                 (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(ContentList[Selected].Index)) &&
-                ((player.GetEmptyGuardianSlot() < 255 && (player.GuardianFollowersWeight == 0 || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
+                ((player.GetEmptyGuardianSlot() < 255 && (!player.Guardian.Active || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
                 player.GetGuardianSlot(ContentList[Selected].Index) < 255))
             {
                 Vector2 ButtonCenter = Vector2.Zero;

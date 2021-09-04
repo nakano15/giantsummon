@@ -917,25 +917,25 @@ namespace giantsummon
                     RescueTime = 0;
                 }
             }
-                if (true || KnockedOutCold)
-                    eye = EyeState.Closed;
-                else
-                    eye = EyeState.HalfOpen;
-                if (player.potionDelayTime < 5)
+            if (true || KnockedOutCold)
+                eye = EyeState.Closed;
+            else
+                eye = EyeState.HalfOpen;
+            if (player.potionDelayTime < 5)
+            {
+                player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
+                player.potionDelayTime = 5;
+            }
+            if (ReviveBoost > 0 && player.breath < player.breathMax - 1)
+            {
+                player.breathCD += 1 + (ReviveBoost / 2);
+                player.breath++;
+                if (player.breathCD > 5)
                 {
-                    player.AddBuff(Terraria.ID.BuffID.PotionSickness, 5);
-                    player.potionDelayTime = 5;
-                }
-                if (ReviveBoost > 0 && player.breath < player.breathMax - 1)
-                {
-                    player.breathCD += 1 + (ReviveBoost / 2);
+                    player.breathCD -= 5;
                     player.breath++;
-                    if (player.breathCD > 5)
-                    {
-                        player.breathCD -= 5;
-                        player.breath++;
-                    }
                 }
+            }
             if (player.mount != null && player.mount.Active)
                 player.mount.Dismount(player);
             if (player.grapCount > 0)
@@ -999,7 +999,7 @@ namespace giantsummon
             if (ReviveBoost == 0 && player.HasBuff(Terraria.ID.BuffID.Bleeding))
             {
                 KnockoutBleedingTime++;
-                if(KnockoutBleedingTime >= MainMod.BleedingHealthDamageTime)
+                if (KnockoutBleedingTime >= MainMod.BleedingHealthDamageTime)
                 {
                     int HealthToDeduct = (int)(Math.Max(1, player.statLifeMax2 * MainMod.BleedingHealthDamage));
                     player.statLife -= HealthToDeduct;
@@ -1015,11 +1015,12 @@ namespace giantsummon
             {
                 LeaveDownedState();
             }
-            else if (player.statLife <= 0)
+            else if (player.statLife <= 0 && !KnockedOutCold)
             {
                 if (MainMod.PlayersDontDiesAfterDownedDefeat)
                 {
-                    if (player.statLife < 0 && !player.dead) player.statLife = 0;
+                    if (player.statLife < 0 && !player.dead)
+                        player.statLife = 0;
                 }
                 else
                 {
@@ -1038,20 +1039,26 @@ namespace giantsummon
                 {
                     foreach (TerraGuardian tg in GetAllGuardianFollowers)
                     {
-                        if (tg.WofFood)
+                        if (tg.Active && tg.WofFood)
                         {
                             tg.DoForceKill(" died with " + player.name + ".");
                         }
                     }
+                    player.Center = WofCenter;
                     DoForceKill(player.name + " was eaten by the Wall of Flesh.");
                     player.immuneAlpha = 255;
+                    return;
                 }
             }
-            if (!player.dead && KnockedOut && player.gross && Main.wof > -1)
+            if (KnockedOut && player.gross && Main.wof > -1)
             {
                 float Distance = (Main.npc[Main.wof].Center - player.Center).Length();
                 if (Distance >= 3000)
+                {
                     ForceKill = true;
+                    DoForceKill(player.name + " couldn't survive Wall of Flesh's curse.");
+                    return;
+                }
             }
             if (KnockedOutCold)
             {
@@ -1067,7 +1074,7 @@ namespace giantsummon
                             break;
                         }
                     }
-                    bool ForceReviveCooldown = player.lavaWet || player.breath <= 0|| player.controlHook;
+                    bool ForceReviveCooldown = player.lavaWet || player.breath <= 0 || player.controlHook;
                     if ((!MainMod.StartRescueCountdownWhenKnockedOutCold || !HasCompanionAlive) || ForceReviveCooldown)
                     {
                         if ((MainMod.StartRescueCountdownWhenKnockedOutCold && ReviveBoost == 0) || ForceReviveCooldown)
@@ -1114,7 +1121,7 @@ namespace giantsummon
                                         rescuer.LeaveFurniture(false);
                                     if (RescueMessage != "")
                                         Main.NewText(GuardianMouseOverAndDialogueInterface.MessageParser(RescueMessage, rescuer));
-                                        //rescuer.SaySomething(RescueMessage, true);
+                                    //rescuer.SaySomething(RescueMessage, true);
                                     player.position = rescuer.Position;
                                     player.position.X -= player.width * 0.5f;
                                     player.position.Y -= player.height + 8;
@@ -1154,7 +1161,7 @@ namespace giantsummon
                                 List<Point> ValidPositions = new List<Point>();
                                 bool BlockedLeft = false, BlockedRight = false;
                                 byte Tries = 0;
-                                while (ValidPositions.Count < GetAllGuardianFollowers.Count(x => x.Active) && Tries++ < 10)
+                                while (ValidPositions.Count < GetAllGuardianFollowers.Count(x => x != null && x.Active) && Tries++ < 10)
                                 {
                                     for (int d = 0; d < 8; d++)
                                     {
@@ -1241,7 +1248,7 @@ namespace giantsummon
                                 }
                                 foreach (TerraGuardian tg in GetAllGuardianFollowers)
                                 {
-                                    if (tg.Active)
+                                    if (tg != null && tg.Active)
                                     {
                                         if (tg.Downed)
                                             tg.Spawn();
@@ -1564,8 +1571,7 @@ namespace giantsummon
             else
                 DeathMessage = player.name + DeathMessage;
             ForceKill = true;
-            player.statLife = 0;
-            player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(DeathMessage), 1, 1, false);
+            player.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(DeathMessage), 9999, 0, false);
         }
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref Terraria.DataStructures.PlayerDeathReason damageSource)
@@ -1573,8 +1579,8 @@ namespace giantsummon
             if (ForceKill)
             {
                 ForceKill = false;
-                player.statLife = 0;
                 KnockedOut = KnockedOutCold = false;
+                return true;
             }
             else if (FriendlyDuelDefeat || (MainMod.PlayersGetKnockedOutUponDefeat && !player.dead && !KnockedOut && !player.lavaWet && player.breath > 0 && !player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()) && (player.statLife + player.statLifeMax2 / 2 > 0 || MainMod.PlayersDontDiesAfterDownedDefeat)))
             {
@@ -1595,6 +1601,7 @@ namespace giantsummon
 
         public override void Kill(double damage, int hitDirection, bool pvp, Terraria.DataStructures.PlayerDeathReason damageSource)
         {
+            NpcMod.PlayerDeadStatusBackup[player.whoAmI] = true;
             TriggerHandler.FirePlayerDeathTrigger(player.Center, player, (int)damage, pvp);
             CompanionReaction(GuardianBase.MessageIDs.LeaderDiesMessage);
             if (Guardian.Active)
@@ -1693,7 +1700,7 @@ namespace giantsummon
                     FoundFirstTitanGuardian = true;
                     TitanGuardian = AssistSlot;
                 }
-                if (!First && ((MaxCompanions > 0 && GuardianFollowersWeight > 0 && guardian.Base.CompanionSlotWeight + GuardianFollowersWeight > MaxCompanions) || (TitanGuardian < 255 && TitanGuardian != AssistSlot)))
+                if (!First && ((guardian.Base.CompanionSlotWeight + GuardianFollowersWeight > MaxCompanions) || (TitanGuardian < 255 && TitanGuardian != AssistSlot)))
                 {
                     Main.NewText(guardian.Name + " were dismissed.");
                     DismissGuardian(AssistSlot);

@@ -267,17 +267,45 @@ namespace giantsummon
             }
         }
 
+        public bool SetForceKill
+        {
+            get
+            {
+                if (TargettingPlayer)
+                    return PlayerMod.ForceKill;
+                return TerraGuardian.ForceKill;
+            }
+            set
+            {
+                if (TargettingPlayer)
+                    PlayerMod.ForceKill = value;
+                else
+                    TerraGuardian.ForceKill = value;
+            }
+        }
+
         public void SetTargetToPlayer(Player player)
         {
             TargettingPlayer = true;
             TargetPosition = player.whoAmI;
         }
 
-        public double Hurt(int Damage, int HitDirection, string HurtMessage = " was slain.")
+        public double Hurt(int Damage, int HitDirection, string HurtMessage = " was slain.", bool Lethal = false)
         {
             if (TargettingPlayer)
-                return Character.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Character.name + HurtMessage), Damage, HitDirection);
-            return Guardian.Hurt(Damage, HitDirection, false, false, HurtMessage);
+            {
+                SetForceKill = Lethal;
+                double Value = Character.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Character.name + HurtMessage), Damage, HitDirection);
+                SetForceKill = false;
+                return Value;
+            }
+            else
+            {
+                SetForceKill = Lethal;
+                double Value = Guardian.Hurt(Damage, HitDirection, false, false, HurtMessage);
+                SetForceKill = false;
+                return Value;
+            }
         }
 
         public void ReviveCharacter(byte Boost)

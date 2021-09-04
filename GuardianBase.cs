@@ -35,6 +35,7 @@ namespace giantsummon
         public float TownNpcSlot = 1f;
         public float CompanionSlotWeight = 1f;
         public bool Male = true;
+        public bool Genderless = false;
         public int MaxJumpHeight = 15;
         public float Scale = 1f;
         public bool ForceScale = false;
