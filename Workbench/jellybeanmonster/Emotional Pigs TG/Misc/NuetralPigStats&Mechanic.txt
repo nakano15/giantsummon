@@ -1,0 +1,48 @@
+Nuetral Pigs Stat/Mechanic sheet:
+
+Initial stats:
+Physical Form:
+Hp-500
+Mp-100
+
+Astral Form:
+Hp-100
+Mp-505
+
+Life Crystal Bonus(15)- 30
+Life fruit bonus(20)- 2.5
+Mana Crystal bonus(9)-55
+
+Recruitment method: Can only be obtained by fusing all 4 emo pigs. 
+
+Passives:
+
+Physical Form:
+Nuetrality(Only applied to pig)- All damage received is reduced by 50% of what it wouldve done but also all attacks done by this entity only does 50% of total damage.
+Nuetrality Link(Applied to player character when recruited)- When player character drops to 50% or below they take only 50% of all damaged received after that for 10 seconds.(Cooldown-30 seconds)
+
+Astral Form:
+Direct(Only applied to pig)-All attacks do true damage regardless of any of the targets defences.
+Equalize(Only applied to pig):All damage received reduced to 50% of total damage.
+
+Mechanics:
+
+Physical Form:
+-Uses terrarian weapons and equipment normally
+-Higher base and max health compared to astral form
+-Lower base and max mana compared to astral form
+-Player can mount
+
+
+Astral Form:
+-Uses unique attacks 
+-Lower base and max health compared to physical form
+-Higher base and max mana compared to physical form
+-Immune to fall damage
+-Player can mount(Has fly effect when mounted allowing for temporary aerial movement similar to bee mount)
+
+Unique Attacks(Astral Form only):
+(Normal Attack)Nuetralize- Beam of energy that always does 50 damage per cast(affected by "Direct" passive)
+(Super Attack)Plain vortex- A cloud spiral surrounds the pig dealing 50 damage per tick to all enemies within vicinity(affected by "Direct" passive)
+-Super Attack does not have a trigger effect currently
+
