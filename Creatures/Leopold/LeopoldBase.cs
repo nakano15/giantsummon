@@ -61,6 +61,7 @@ namespace giantsummon.Creatures
             AddInitialItem(Terraria.ID.ItemID.WaterBolt, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
             AddInitialItem(Terraria.ID.ItemID.ManaPotion, 20);
+            AddInitialItem(Terraria.ID.ItemID.TungstenBroadsword, 1);
 
             //Animation Frames
             StandingFrame = 0;

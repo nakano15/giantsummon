@@ -1,10 +1,13 @@
-﻿Fixed a problem where Zacks outfit quest could lock if you never talked to Zacks about it.
-Wrath is now genderless.
-Fixed a bug where having 0 of Max Weight allowed you to carry more companions than should.
-Fixed Alexander's backward revive arm drawing priority issues.
-Fixed an issue where some of Fluffles backward animations weren't showing correctly.
-Alex will no longer try placing Irene's tombstone on top of Living Wood Trees.
-Removed the scaling from the Zombie Guardian, to avoid issues.
-Fixed an issue where your character could have perpetual deaths on a number of boss fights.
-Reduced the occorrence of a bug related to targetting system from happening.
-	That bug could cause a number of issues, like Wall of Flesh not being able to finish off players.
+﻿Companions will now be affected by buffs of nearby tiles.
+Fixed an issue where the call dialogue added the companion to the team, when you don't have the space for it.
+Leopold now has a Tungsten Broadsword as one of his initial items.
+Malisha now has a Flintlock Pistol as one of her initial items.
+Companions will now try carrying fallen allies in combat.
+	Companion nearest to the fallen ally will try picking them up.
+	A minor recovery effect will happen when the companion is carrying the ally.
+	Upon being revived, the companion will wait a little moment before placing the ally on the floor, if it is safe to place ally on the floor.
+Shadow and Crimson set visual effects will now work on companions.
+Removed the extra difficulty boost from bosses, when you try to spawn them from the request list.
+Being rescued will now remove Bleeding debuff from everyone in your team.
+Fixed a number of moments where the companion messages didn't had their text codes interpreted by the mod.
+Fixed a few shading issues on Cinnamon's body.

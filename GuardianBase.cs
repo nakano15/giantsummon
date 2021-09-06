@@ -23,6 +23,7 @@ namespace giantsummon
 
         public virtual GuardianData GetGuardianData(int ID = -1, string ModID = "") { return new GuardianData(ID, ModID);}
 
+        public GuardianID[] IsSameAs = new GuardianID[0]; //Companions that are literally the same or result of another, should have this.
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
         public string Name = "", Description = "";

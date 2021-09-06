@@ -1382,7 +1382,7 @@ namespace giantsummon
                     bool Add = false, FacingLeft = false;
                     switch (tile.type)
                     {
-                        case Terraria.ID.TileID.Chairs:
+                        case TileID.Chairs:
                             FacingLeft = tile.frameX < 18;
                             if (tile.frameY % 40 >= 18)
                                 Add = true;
@@ -1392,7 +1392,7 @@ namespace giantsummon
                                 goto retry;
                             }
                             break;
-                        case Terraria.ID.TileID.Thrones:
+                        case TileID.Thrones:
                             if (tile.frameY % 72 >= 54 && tile.frameX == 18)
                                 Add = true;
                             else
@@ -1405,7 +1405,7 @@ namespace giantsummon
                                     PositionY++;
                             }
                             break;
-                        case Terraria.ID.TileID.Benches:
+                        case TileID.Benches:
                             if (tile.frameY % 36 >= 18 && tile.frameX == 18)
                                 Add = true;
                             else
@@ -1418,7 +1418,7 @@ namespace giantsummon
                                     PositionY++;
                             }
                             break;
-                        case Terraria.ID.TileID.Beds:
+                        case TileID.Beds:
                             //FacingLeft = tile.frameX < 72;
                             if (tile.frameY % 36 >= 18 && tile.frameX % 72 == 36)
                                 Add = true;
@@ -1443,9 +1443,9 @@ namespace giantsummon
                                     PositionY++;
                             }
                             break;
-                        case Terraria.ID.TileID.Signs:
-                        case Terraria.ID.TileID.AnnouncementBox:
-                        case Terraria.ID.TileID.Tombstones:
+                        case TileID.Signs:
+                        case TileID.AnnouncementBox:
+                        case TileID.Tombstones:
                             {
                                 PositionX -= (int)(tile.frameX * (1f / 18)) % 2;
                                 PositionY -= (int)(tile.frameY * (1f / 18));
@@ -1473,37 +1473,37 @@ namespace giantsummon
                             FurnitureInfo fi = furnitures[t];
                             switch (Type)
                             {
-                                case Terraria.ID.TileID.Chairs:
+                                case TileID.Chairs:
                                     if (fi.FurnitureX == PositionX && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
                                     {
                                         furnitures.RemoveAt(t);
                                         break;
                                     }
                                     break;
-                                case Terraria.ID.TileID.Thrones:
+                                case TileID.Thrones:
                                     if (PositionX >= fi.FurnitureX - 1 && PositionX <= fi.FurnitureX + 1 && PositionY >= fi.FurnitureY - 3 && PositionY <= fi.FurnitureY)
                                     {
                                         furnitures.RemoveAt(t);
                                         break;
                                     }
                                     break;
-                                case Terraria.ID.TileID.Benches:
+                                case TileID.Benches:
                                     if (PositionX >= fi.FurnitureX - 1 && PositionX <= fi.FurnitureX + 1 && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
                                     {
                                         furnitures.RemoveAt(t);
                                         break;
                                     }
                                     break;
-                                case Terraria.ID.TileID.Beds:
+                                case TileID.Beds:
                                     if (PositionX >= fi.FurnitureX - (fi.FacingLeft ? 1 : 2) && PositionX <= fi.FurnitureX + (fi.FacingLeft ? 2 : 1) && PositionY >= fi.FurnitureY - 1 && PositionY <= fi.FurnitureY)
                                     {
                                         furnitures.RemoveAt(t);
                                         break;
                                     }
                                     break;
-                                case Terraria.ID.TileID.Signs:
-                                case Terraria.ID.TileID.AnnouncementBox:
-                                case Terraria.ID.TileID.Tombstones:
+                                case TileID.Signs:
+                                case TileID.AnnouncementBox:
+                                case TileID.Tombstones:
                                     if(PositionX >= fi.FurnitureX && PositionX < fi.FurnitureX + 1 && PositionY >= fi.FurnitureY &&PositionY < fi.FurnitureY + 1)
                                     {
                                         furnitures.RemoveAt(t);

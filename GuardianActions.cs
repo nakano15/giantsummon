@@ -17,9 +17,10 @@ namespace giantsummon
         public int ID { get { return _ID; } set { _ID = value; } }
         public bool IsGuardianSpecificAction = false;
         public int Time = 0, Step = 0;
-        public bool IgnoreCombat = false, Cancellable = false, AvoidItemUsage = false, FocusCameraOnGuardian = false, EffectOnlyMirror = false, Invisibility = false, Immune = false, NoAggro = false, Inactivity = false, CantUseInventory = false, NpcCanFacePlayer = true, ProceedIdleAIDuringDialogue = false;
+        public bool IgnoreCombat = false, Cancellable = false, AvoidItemUsage = false, FocusCameraOnGuardian = false, EffectOnlyMirror = false, Invisibility = false, Immune = false, NoAggro = false, Inactivity = false, CantUseInventory = false, NpcCanFacePlayer = true, ProceedIdleAIDuringDialogue = false, BlockTwoHandedAttack = false;
         public bool StepStart { get { return Time == 0; } }
         public bool StepChanged = false;
+        public CombatTactic? ForcedTactic = null;
 
         public void ChangeStep(int Number = -1)
         {
@@ -266,7 +267,8 @@ namespace giantsummon
             UseSkillResetPotion,
             ReviveSomeone,
             GoSleep,
-            BuySomethingFromNpcShop
+            BuySomethingFromNpcShop,
+            CarryDownedAlly
         }
     }
 }

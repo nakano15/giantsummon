@@ -163,6 +163,37 @@ namespace giantsummon
             LightFatigueCount = 96, HeavyFatigueCount = 96 + 24;
         public sbyte Injury = 0, Fatigue = 0;
 
+        public bool IsSameAs(GuardianData guardian)
+        {
+            return IsSameAs(guardian.MyID);
+        }
+
+        public bool IsSameAs(TerraGuardian guardian)
+        {
+            return IsSameAs(guardian.MyID);
+        }
+
+        public bool IsSameAs(GuardianID GiD)
+        {
+            return IsSameAs(GiD.ID, GiD.ModID);
+        }
+
+        public bool IsSameAs(int ID, string ModID = "")
+        {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
+            if (MyID.IsSameID(ID, ModID))
+            {
+                return true;
+            }
+            foreach (GuardianID id in Base.IsSameAs)
+            {
+                if (id.IsSameID(ID, ModID))
+                    return true;
+            }
+            return false;
+        }
+
         public string GetNecessityStatus
         {
             get

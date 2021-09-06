@@ -142,6 +142,27 @@ namespace giantsummon
         }
         public int MyDrawOrderID = 0;
         public Vector2 MountedOffset = Vector2.Zero;
+        public int CarriedByGuardianID
+        {
+            get { return _CarriedByGuardianID; }
+            set
+            {
+                _CarriedByGuardianID = value;
+                _InternalCarryTimer = 5;
+            }
+        }
+        private int _CarriedByGuardianID = -1;
+        private byte _InternalCarryTimer = 0;
+
+        public static bool IsBeingCarriedByThisGuardian(Player player, TerraGuardian tg)
+        {
+            return tg.WhoAmID == player.GetModPlayer<PlayerMod>().CarriedByGuardianID;
+        }
+
+        public static bool IsBeingCarriedBySomeone(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().CarriedByGuardianID != -1;
+        }
 
         public void FriendshipLevelNotification()
         {
@@ -376,11 +397,11 @@ namespace giantsummon
             return true;
         }
 
-        public bool IsPlayerBuddy(GuardianID id)
+        public bool IsPlayerBuddy(TerraGuardian tg)
         {
             if (BuddiesModeBuddyID != null)
             {
-                return id == BuddiesModeBuddyID;
+                return tg.IsSameAs(BuddiesModeBuddyID);
             }
             return false;
         }
@@ -557,11 +578,16 @@ namespace giantsummon
             return PlayerHasGuardianSummoned(player, ID, mod.Name);
         }
 
-        public static bool PlayerHasGuardianSummoned(Player player, int ID, string ModID = "")
+        public static bool PlayerHasGuardianSummoned(Player player, int ID, string ModID = "", bool FromSameType = false)
         {
             if (ModID == "")
                 ModID = MainMod.mod.Name;
-            return player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && x.ID == ID && x.ModID == ModID);
+            foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+            {
+                if(tg.Active && ((FromSameType && tg.IsSameAs(ID, ModID)) || (tg.MyID.IsSameID(ID, ModID))))
+                    return true;
+            }
+            return false; //player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && x.ID == ID && x.ModID == ModID);
         }
 
         public bool HasGuardian(int ID, Mod mod)
@@ -649,11 +675,11 @@ namespace giantsummon
             return HasGuardianSummoned(player, ID, mod.Name);
         }
 
-        public static bool HasGuardianSummoned(Player player, int ID, string ModID = "")
+        public static bool HasGuardianSummoned(Player player, int ID, string ModID = "", bool FromSameType = false)
         {
             if (ModID == "")
                 ModID = MainMod.mod.Name;
-            return PlayerHasGuardianSummoned(player, ID, ModID);
+            return PlayerHasGuardianSummoned(player, ID, ModID, FromSameType);
         }
 
         public static bool IsGuardianBirthday(Player player, int ID, string ModID = "")
@@ -815,6 +841,12 @@ namespace giantsummon
                     if(g.OwnerPos == -1)
                         player.townNPCs += g.Base.TownNpcSlot;
                 }
+            }
+            if (_InternalCarryTimer > 0)
+            {
+                _InternalCarryTimer--;
+                if (_InternalCarryTimer == 0)
+                    _CarriedByGuardianID = -1;
             }
         }
 
@@ -1100,6 +1132,7 @@ namespace giantsummon
                                 {
                                     if (tg.OwnerPos == -1 && !tg.DoAction.InUse && !tg.Downed && !tg.KnockedOut && tg.GetTownNpcInfo != null)
                                     {
+                                        tg.RemoveBuff(Terraria.ID.BuffID.Bleeding);
                                         float Distance = player.Distance(tg.CenterPosition);
                                         bool IsHomeless = tg.GetTownNpcInfo.Homeless;
                                         if (Distance < NearestRescuerDistance)
@@ -1131,6 +1164,7 @@ namespace giantsummon
                                 {
                                     player.Spawn();
                                 }
+                                player.DelBuff(Terraria.ID.BuffID.Bleeding);
                                 const float DistanceToTeleportNearbyGuardians = 336f;
                                 foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                                 {
@@ -1654,7 +1688,7 @@ namespace giantsummon
                 {
                     g.request.UpdateRequest(g, this);
                     g.UpdateData(this.player);
-                    if (BuddiesMode && BuddiesModeBuddyID.IsSameID(g))
+                    if (BuddiesMode && g.IsSameAs(BuddiesModeBuddyID))
                     {
                         NewFriendshipCount += g.FriendshipLevel * 2;
                     }
@@ -1718,7 +1752,7 @@ namespace giantsummon
                     guardian.AddBuff(Terraria.ID.BuffID.SoulDrain, 5);
                 }
                 guardian.AssistSlot = AssistSlot;
-                if (BuddiesMode && BuddiesModeBuddyID.IsSameID(guardian) && AssistSlot > 0)
+                if (BuddiesMode && guardian.IsSameAs(BuddiesModeBuddyID) && AssistSlot > 0)
                 {
                     ChangeLeaderGuardian(AssistSlot);
                 }
@@ -2142,7 +2176,7 @@ namespace giantsummon
             }
             if (BuddiesMode)
             {
-                if (!HasGuardianSummoned(player, BuddiesModeBuddyID.ID, BuddiesModeBuddyID.ModID))
+                if (!HasGuardianSummoned(player, BuddiesModeBuddyID.ID, BuddiesModeBuddyID.ModID, true))
                     CallGuardian(BuddiesModeBuddyID.ID, BuddiesModeBuddyID.ModID);
             }
         }
@@ -2303,12 +2337,12 @@ namespace giantsummon
 
             if (BuddiesMode)
             {
-                bool HasBuddySummoned = SelectedGuardian != -1 && MyGuardians[SelectedGuardian].MyID.IsSameID(BuddiesModeBuddyID);
+                bool HasBuddySummoned = SelectedGuardian != -1 && MyGuardians[SelectedGuardian].IsSameAs(BuddiesModeBuddyID);
                 if (!HasBuddySummoned)
                 {
                     foreach(int i in MyGuardians.Keys)
                     {
-                        if (MyGuardians[i].MyID.IsSameID(BuddiesModeBuddyID))
+                        if (MyGuardians[i].IsSameAs(BuddiesModeBuddyID))
                         {
                             SelectedGuardian = i;
                             break;
@@ -2514,7 +2548,7 @@ namespace giantsummon
             }
             if (Guardian.Active)
             {
-                if (BuddiesMode && BuddiesModeBuddyID.IsSameID(Guardian)) //Never remove the buddy. NEVER.
+                if (BuddiesMode && Guardian.IsSameAs(BuddiesModeBuddyID)) //Never remove the buddy. NEVER.
                 {
                     return;
                 }
@@ -3108,7 +3142,7 @@ namespace giantsummon
             });
             layers.Add(l);*/
         }
-
+        
         // Quest Variables
         public byte ZacksMeatBagOutfitQuestStep = 0;
         //

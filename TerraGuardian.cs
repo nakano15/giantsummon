@@ -133,6 +133,15 @@ namespace giantsummon
             get { return Data.IsStarter; }
             set { Data.IsStarter = value; }
         }
+        public bool IsLeader
+        {
+            get
+            {
+                if (OwnerPos == -1) return false;
+                TerraGuardian tg = PlayerMod.GetPlayerMainGuardian(Main.player[OwnerPos]); ;
+                return tg.Active && tg.WhoAmID == WhoAmID;
+            }
+        }
         public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
         public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false;
         public bool DropFromPlatform { get { return MoveDown && Jump; } set { MoveDown = Jump = value; } }
@@ -225,6 +234,13 @@ namespace giantsummon
         public int IdleActionTime = 0;
         public Dictionary<int, int> TileCount = new Dictionary<int, int>(), TempTileCount = new Dictionary<int, int>();
         public Dictionary<int, int> SpottedTileMemoryTime = new Dictionary<int, int>();
+        public BitsByte TilePresent = new BitsByte();
+        public bool HeartLanternNearby { get { return TilePresent[0]; } set { TilePresent[0] = value; } }
+        public bool LastHeartLanternNearby { get { return TilePresent[1]; } set { TilePresent[1] = value; } }
+        public bool StarLanternNearby { get { return TilePresent[2]; } set { TilePresent[2] = value; } }
+        public bool LastStarLanternNearby { get { return TilePresent[3]; } set { TilePresent[3] = value; } }
+        public bool FireplaceNearby { get { return TilePresent[4]; } set { TilePresent[4] = value; } }
+        public bool LastFireplaceNearby { get { return TilePresent[5]; } set { TilePresent[5] = value; } }
         private Terraria.GameContent.UI.WorldUIAnchor anchor = new Terraria.GameContent.UI.WorldUIAnchor();
         private Terraria.GameContent.UI.EmoteBubble emote; 
         public const int FramesSquaredTileCount = 16; //8
@@ -249,6 +265,20 @@ namespace giantsummon
         {
             get { return (Base.ReverseMount || Age < 15); }
         }
+        public int CarriedByGuardianID
+        {
+            get
+            {
+                return _CarriedByGuardianID;
+            }
+            set
+            {
+                _CarriedByGuardianID = value;
+                _InternalCarryTimer = 5;
+            }
+        }
+        private byte _InternalCarryTimer = 0;
+        private int _CarriedByGuardianID = -1;
         public bool SittingOnPlayerMount = false;
         public bool PlayerOutOfControl
         {
@@ -392,6 +422,47 @@ namespace giantsummon
         public bool SubAttackInUse { get { return _SubAttack > 0; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
         public static int CurrentDrawnOrderID = 0;
+
+        public bool IsSameAs(GuardianData guardian)
+        {
+            return IsSameAs(guardian.MyID);
+        }
+
+        public bool IsSameAs(TerraGuardian guardian)
+        {
+            return IsSameAs(guardian.MyID);
+        }
+
+        public bool IsSameAs(GuardianID GiD)
+        {
+            return IsSameAs(GiD.ID, GiD.ModID);
+        }
+
+        public bool IsSameAs(int ID, string ModID = "")
+        {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
+            if (MyID.IsSameID(ID, ModID))
+            {
+                return true;
+            }
+            foreach(GuardianID id in Base.IsSameAs)
+            {
+                if (id.IsSameID(ID, ModID))
+                    return true;
+            }
+            return false;
+        }
+
+        public bool IsBeingCarriedByThisGuardian(TerraGuardian tg)
+        {
+            return tg.WhoAmID == CarriedByGuardianID;
+        }
+
+        public bool IsBeingCarriedBySomeone()
+        {
+            return CarriedByGuardianID != -1;
+        }
 
         public class MessageScheduler
         {
@@ -1760,7 +1831,7 @@ namespace giantsummon
                 player = Main.player[Main.myPlayer];
             }
             PlayerMod pl = player.GetModPlayer<PlayerMod>();
-            return pl.IsBuddiesMode && pl.IsPlayerBuddy(MyID);
+            return pl.IsBuddiesMode && pl.IsPlayerBuddy(this);
         }
 
         public bool NpcHasBeenHit(int id)
@@ -1857,6 +1928,19 @@ namespace giantsummon
                             if(OwnerPos != -1 && TownNpcs == 0 && Lighting.Brightness(x, y) > 0.5f && !TileMemories.Contains(Main.tile[x, y].type))
                             {
                                 TileMemories.Add(Main.tile[x, y].type);
+                                if(Main.tile[x, y].type == 42) //Lantern
+                                {
+                                    if (Main.tile[x, y].frameY >= 324 && Main.tile[x, y].frameY <= 358)
+                                        LastHeartLanternNearby = true;
+                                    else if (Main.tile[x, y].frameY >= 252 && Main.tile[x, y].frameY <= 286)
+                                        LastStarLanternNearby = true;
+                                }else if(Main.tile[x, y].type == 215)
+                                {
+                                    if(Main.tile[x, y].frameY < 36)
+                                    {
+                                        LastFireplaceNearby = true;
+                                    }
+                                }
                                 if (!HasTileMemory(Main.tile[x, y].type))
                                 {
                                     //Comment tile
@@ -1894,6 +1978,10 @@ namespace giantsummon
             {
                 DecreaseCooldownValue(GuardianCooldownManager.CooldownType.BiomeCheckStacker, FramesSquaredTileCount);
                 TileCount = TempTileCount;
+                FireplaceNearby = LastFireplaceNearby;
+                HeartLanternNearby = LastHeartLanternNearby;
+                StarLanternNearby = LastStarLanternNearby;
+                LastFireplaceNearby = LastHeartLanternNearby = LastStarLanternNearby = false;
                 TempTileCount = new Dictionary<int,int>();
                 BiomeZoneChecker();
             }
@@ -2079,18 +2167,9 @@ namespace giantsummon
 
         }
 
-        public GuardianActions StartNewGuardianAction(int ID)
+        public bool StartNewGuardianAction(GuardianActions action)
         {
-            if (!DoAction.InUse)
-            {
-                GuardianActions act = new GuardianActions();
-                act.ID = ID;
-                act.IsGuardianSpecificAction = true;
-                act.InUse = true;
-                DoAction = act;
-                return act;
-            }
-            return null;
+            return StartNewGuardianAction(action, action.ID);
         }
 
         public bool StartNewGuardianAction(GuardianActions action, int ID)
@@ -3446,7 +3525,26 @@ namespace giantsummon
                 UpdateComfortStack();
             ManageTrail();
             ManagePulse();
+            UpdateTileBuff();
             //FloorVisual(Velocity.Y != 0);
+            if(_InternalCarryTimer > 0)
+            {
+                _InternalCarryTimer--;
+                if (_InternalCarryTimer == 0)
+                    _CarriedByGuardianID = -1;
+            }
+        }
+
+        public void UpdateTileBuff()
+        {
+            if (FireplaceNearby || GetTileCount(Terraria.ID.TileID.Campfire) > 0)
+                AddBuff(Terraria.ID.BuffID.Campfire, 5);
+            if (GetTileCount(Terraria.ID.TileID.Sunflower) > 0)
+                AddBuff(Terraria.ID.BuffID.Sunflower, 5);
+            if (HeartLanternNearby)
+                AddBuff(Terraria.ID.BuffID.HeartLamp, 5);
+            if (StarLanternNearby)
+                AddBuff(Terraria.ID.BuffID.StarInBottle, 5);
         }
 
         private void SporeSacScript()
@@ -5191,6 +5289,8 @@ namespace giantsummon
                     }
                 }
             }
+            if (DoAction.InUse && DoAction.ForcedTactic.HasValue)
+                Tactic = DoAction.ForcedTactic.Value;
             Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
             bool TargetIsBoss = false;
@@ -9133,7 +9233,59 @@ namespace giantsummon
             //Add here actions that can only be triggered by one of those.
             switch (trigger)
             {
-
+                case TriggerTypes.Downed:
+                    {
+                        switch (Target.TargetType)
+                        {
+                            case giantsummon.Trigger.TriggerTarget.TargetTypes.Player:
+                            case giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian:
+                                {
+                                    bool IsPlayer = Target.TargetType == giantsummon.Trigger.TriggerTarget.TargetTypes.Player;
+                                    TerraGuardian ClosestGuardian = null;
+                                    float ClosestDistance = 600;
+                                    Player DownedPlayer = IsPlayer ? Main.player[Target.TargetID] : null;
+                                    TerraGuardian DownedGuardian = !IsPlayer ? MainMod.ActiveGuardians[Target.TargetID] : null;
+                                    foreach(TerraGuardian tg in terraguardians)
+                                    {
+                                        if (IsPlayer)
+                                        {
+                                            if (!tg.PlayerMounted && !tg.SittingOnPlayerMount && !tg.IsPlayerHostile(DownedPlayer) && !PlayerMod.IsBeingCarriedBySomeone(DownedPlayer) &&
+                                                Actions.CarryDownedAlly.CanCarryAlly(tg, DownedPlayer))
+                                            {
+                                                float Distance = tg.Distance(DownedPlayer.Center) - (DownedPlayer.width * 0.5f + tg.Width * 0.5f);
+                                                if (Distance < ClosestDistance)
+                                                {
+                                                    ClosestGuardian = tg;
+                                                    ClosestDistance = Distance;
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (!tg.PlayerMounted && !tg.SittingOnPlayerMount && tg.WhoAmID != DownedGuardian.WhoAmID && !tg.IsGuardianHostile(DownedGuardian) && !DownedGuardian.IsBeingCarriedBySomeone() &&
+                                                Actions.CarryDownedAlly.CanCarryAlly(tg, DownedGuardian))
+                                            {
+                                                float Distance = tg.Distance(DownedGuardian.CenterPosition) - (DownedGuardian.Width * 0.5f + tg.Width * 0.5f);
+                                                if (Distance < ClosestDistance)
+                                                {
+                                                    ClosestGuardian = tg;
+                                                    ClosestDistance = Distance;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if(ClosestGuardian != null)
+                                    {
+                                        if (Target.TargetType == giantsummon.Trigger.TriggerTarget.TargetTypes.Player)
+                                            ClosestGuardian.StartNewGuardianAction(new Actions.CarryDownedAlly(Main.player[Target.TargetID]));
+                                        else
+                                            ClosestGuardian.StartNewGuardianAction(new Actions.CarryDownedAlly(MainMod.ActiveGuardians[Target.TargetID]));
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    break;
             }
         }
 
@@ -9418,8 +9570,30 @@ namespace giantsummon
                                     if (Message != "")
                                     {
                                         MainMod.LastBossSpotted = true;
-                                        SaySomethingCanSchedule(Message, false, Main.rand.Next(20, 60));
+                                        SaySomethingCanSchedule(GuardianMouseOverAndDialogueInterface.MessageParser(Message, this), false, Main.rand.Next(20, 60));
                                     }
+                                }
+                            }
+                            break;
+                        case giantsummon.Trigger.TriggerTarget.TargetTypes.Player:
+                            {
+                                Player player = Main.player[Target.TargetID];
+                                if (!PlayerMounted && !SittingOnPlayerMount && !player.dead && player.GetModPlayer<PlayerMod>().KnockedOut && 
+                                    !IsPlayerHostile(player) && 
+                                    !player.GetModPlayer<PlayerMod>().MountedOnGuardian && !PlayerMod.IsBeingCarriedBySomeone(player) && 
+                                    Actions.CarryDownedAlly.CanCarryAlly(this, player))
+                                {
+                                    StartNewGuardianAction(new Actions.CarryDownedAlly(player));
+                                }
+                            }
+                            break;
+                        case giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian:
+                            {
+                                TerraGuardian guardian = MainMod.ActiveGuardians[Target.TargetID];
+                                if (!PlayerMounted && !SittingOnPlayerMount && !guardian.Downed && guardian.KnockedOut && !IsGuardianHostile(guardian) && !guardian.IsBeingCarriedBySomeone() &&
+                                    Actions.CarryDownedAlly.CanCarryAlly(this, guardian))
+                                {
+                                    StartNewGuardianAction(new Actions.CarryDownedAlly(guardian));
                                 }
                             }
                             break;
@@ -9734,7 +9908,7 @@ namespace giantsummon
                 }
                 if (Message != "")
                 {
-                    SaySomethingCanSchedule(Message, false, Inventory[SelectedItem].useAnimation * 3 + Main.rand.Next(20, 60));
+                    SaySomethingCanSchedule(GuardianMouseOverAndDialogueInterface.MessageParser(Message, this), false, Inventory[SelectedItem].useAnimation * 3 + Main.rand.Next(20, 60));
                 }
                 return true;
             }
@@ -11625,7 +11799,7 @@ namespace giantsummon
                     {
                         string Message = GetMessage(GuardianBase.MessageIDs.CompanionHealthAtDangerousLevel);
                         if (Message != "")
-                            SaySomethingCanSchedule(Message, false, Main.rand.Next(20, 60));
+                            SaySomethingCanSchedule(GuardianMouseOverAndDialogueInterface.MessageParser(Message, this), false, Main.rand.Next(20, 60));
                     }
                 }
                 if (MainMod.UsingGuardianNecessitiesSystem && FinalDamage >= MHP * 0.15f && OwnerPos > -1)
@@ -17673,7 +17847,6 @@ namespace giantsummon
             AddDrawData(dd, false);
             //dd.Draw(Main.spriteBatch);
             //Main.spriteBatch.Draw(Base.sprites.RightArmSprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect, 0f);
-
             DrawItem(NewPosition, seffect, true);
             rect = GetAnimationFrameRectangle(BodyAnimationFrame);
             dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, Base.sprites.BodySprite, NewPosition, rect, c, Rotation, Origin, Scale, seffect);

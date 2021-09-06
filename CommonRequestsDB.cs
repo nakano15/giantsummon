@@ -194,7 +194,7 @@ namespace giantsummon
             {
                 return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss1;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.EyeofCthulhu, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.EyeofCthulhu);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Eater of Worlds for you to fight against.)");
@@ -202,7 +202,7 @@ namespace giantsummon
             {
                 return !WorldGen.crimson && player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss2;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.EaterofWorldsHead, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.EaterofWorldsHead);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Brain of Cthulhu for you to fight against.)");
@@ -210,7 +210,7 @@ namespace giantsummon
             {
                 return WorldGen.crimson && player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss2;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.BrainofCthulhu, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.BrainofCthulhu);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Skeletron for you to fight against.)");
@@ -218,7 +218,7 @@ namespace giantsummon
             {
                 return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedBoss3;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.SkeletronHead, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.SkeletronHead);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the King Slime for you to fight against.)");
@@ -226,7 +226,7 @@ namespace giantsummon
             {
                 return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedSlimeKing;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.KingSlime, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.KingSlime);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 210, "", "", "", "", "(Requester can call the Queen Bee for you to fight against.)");
@@ -234,7 +234,7 @@ namespace giantsummon
             {
                 return player.statDefense >= 10 && player.statLifeMax >= 200 && NPC.downedQueenBee;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.QueenBee, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.QueenBee);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 620, "", "", "", "", "(Requester can call the Twins for you to fight against.)");
@@ -242,7 +242,7 @@ namespace giantsummon
             {
                 return Main.hardMode && NPC.downedMechBossAny;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.Spazmatism, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.Spazmatism);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 620, "", "", "", "", "(Requester can call The Destroyer for you to fight against.)");
@@ -250,7 +250,7 @@ namespace giantsummon
             {
                 return Main.hardMode && NPC.downedMechBossAny;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.TheDestroyer, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.TheDestroyer);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 620, "", "", "", "", "(Requester can call the Skeletron Prime for you to fight against.)");
@@ -258,7 +258,7 @@ namespace giantsummon
             {
                 return Main.hardMode && NPC.downedMechBossAny;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.SkeletronPrime, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.SkeletronPrime);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 840, "", "", "", "", "(You can try spawning Plantera by breaking It's bulbs.)");
@@ -266,7 +266,7 @@ namespace giantsummon
             {
                 return Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && NPC.downedPlantBoss;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.Plantera, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.Plantera);
             Requests.Add(rb);
             //
             rb = new RequestBase("", 920, "", "", "", "", "(You can try spawning The Golem by using a Lihzahrd Powercell on a Lihzahrd Altar.)");
@@ -274,7 +274,7 @@ namespace giantsummon
             {
                 return Main.hardMode && NPC.downedGolemBoss;
             });
-            rb.AddKillBossRequest(Terraria.ID.NPCID.Golem, 1);
+            rb.AddKillBossRequest(Terraria.ID.NPCID.Golem);
             Requests.Add(rb);
             //
             RequestBase.CommonRequests = Requests.ToArray();

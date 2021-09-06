@@ -60,6 +60,7 @@ namespace giantsummon.Creatures
             AddInitialItem(Terraria.ID.ItemID.AmberStaff, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
             AddInitialItem(Terraria.ID.ItemID.ManaPotion, 15);
+            AddInitialItem(Terraria.ID.ItemID.FlintlockPistol);
 
             //Animation Frames
             StandingFrame = 0;

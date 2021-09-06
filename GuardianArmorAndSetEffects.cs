@@ -689,10 +689,13 @@ namespace giantsummon
             {
                 guardian.MoveSpeed += 0.15f;
                 guardian.AddFlag(GuardianFlags.ShadowSetEffect);
+                guardian.TrailLength = 5;
+                guardian.TrailDelay = 3;
             }
             if (Head == 792 && Armor == 793 && Leggings == 794)
             {
                 guardian.AddFlag(GuardianFlags.CrimsonSetEffect);
+                guardian.PulsePower = 3;
             }
             if (Head == 231 && Armor == 232 && Leggings == 233)
             {

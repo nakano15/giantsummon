@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\BuySomethingFromNpcShopAction.cs" />
+    <Compile Include="Actions\CarryDownedAlly.cs" />
     <Compile Include="Actions\JoinPlayerMountAction.cs" />
     <Compile Include="Actions\LaunchPlayerAction.cs" />
     <Compile Include="Actions\LiftPlayerAction.cs" />
@@ -150,6 +151,7 @@
     <Compile Include="Dialogue.cs" />
     <Compile Include="DialogueChain.cs" />
     <Compile Include="FeatMentioning.cs" />
+    <Compile Include="FurnitureTypes.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GuardianArmorAndSetEffects.cs" />
     <Compile Include="GuardianAttackTypeInfo.cs" />
