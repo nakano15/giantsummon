@@ -153,7 +153,8 @@ namespace giantsummon
             Glenn = 21,
             CaptainStench = 22,
             Cinnamon = 23,
-            Quentin = 24;
+            Quentin = 24,
+            Miguel = 25;
 
         public struct DialogueTopic
         {
@@ -1169,6 +1170,9 @@ namespace giantsummon
                         break;
                     case 24:
                         gb = new QuentinBase();
+                        break;
+                    case 25:
+                        gb = new MiguelBase();
                         break;
                 }
             }

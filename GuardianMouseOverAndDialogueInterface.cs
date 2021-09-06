@@ -646,7 +646,7 @@ namespace giantsummon
             else
             {
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-                if (pm.GuardianFollowersWeight + tg.Base.CompanionSlotWeight >= pm.MaxExtraGuardiansAllowed)
+                if (pm.Guardian.Active && pm.GuardianFollowersWeight + tg.Base.CompanionSlotWeight >= pm.MaxExtraGuardiansAllowed)
                 {
                     SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for this companion in the group.)"), tg);
                 }

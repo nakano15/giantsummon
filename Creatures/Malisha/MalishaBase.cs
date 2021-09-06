@@ -434,8 +434,12 @@ namespace giantsummon.Creatures
                 Mes.Add("*That kid, [gn:" + Glenn + "], always manages to escape from me... I mean... Never accepts my invites.*");
                 Mes.Add("*I really would like [gn:" + Glenn + "] to participate of a little experiment... But how could I bypass his luck..?*");
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("*Beef guy is really useful for me, so I will not try anything on him.*");
+            }
 
-            if (guardian.IsUsingToilet)
+                if (guardian.IsUsingToilet)
             {
                 Mes.Add("*Are you curious If I can use the toilet like anyone else? If your curiosity is now gone, please could go away with It?*");
                 Mes.Add("*Why are you bothering me on my reflection moment?*");

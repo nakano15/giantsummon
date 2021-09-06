@@ -530,15 +530,19 @@ namespace giantsummon.Creatures
                 if(HasSardineMet)
                     Mes.Add("Well, teaching [gn:" + Cinnamon + "] makes me forget the stupidities my husband does.");
             }
-                if (guardian.IsPlayerRoomMate(player))
+            if (NpcMod.HasGuardianNPC(Miguel))
             {
-                if(player.Male)
+                Mes.Add("[gn:"+Miguel+"] said that he's impressed on how strong I am. I don't see why that's impressive.");
+            }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                if (player.Male)
                     Mes.Add("Okay, I can share my bedroom. Just don't try anything funny during the night.");
                 Mes.Add("As long as you keep It clean, you can use It for as long as you want.");
                 Mes.Add("If you get a bed for yourself, I can let you stay in my bedroom.");
                 if (NpcMod.HasGuardianNPC(GuardianBase.Sardine))
                 {
-                    Mes.Add("I'm sorry, but I kind of would preffer sharing my room with [gn:"+Sardine+"].");
+                    Mes.Add("I'm sorry, but I kind of would preffer sharing my room with [gn:" + Sardine + "].");
                 }
             }
             if (NpcMod.IsGuardianPlayerRoomMate(player, Sardine))

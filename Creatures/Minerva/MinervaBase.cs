@@ -295,6 +295,10 @@ namespace giantsummon.Creatures
                     Mes.Add("*Having [gn:" + Cinnamon + "] around is perfect to try improving my cooking. Maybe I could ask her to be my assistant in the future.*");
                     Mes.Add("*While my strength is knowing how to cook things, [gn:" + Cinnamon + "] is good at setting the correct seasonings and their amount on the food.*");
                 }
+                if (NpcMod.HasGuardianNPC(Miguel))
+                {
+                    Mes.Add("*[gn:"+Miguel+"] is trying to help me lose my fat, but my belly isn't going away. He told me that is because I eat too much, but how else can I find out if the meal is good?*");
+                }
             }
             else
             {

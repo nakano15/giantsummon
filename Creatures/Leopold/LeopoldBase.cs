@@ -331,6 +331,10 @@ namespace giantsummon.Creatures
                     Mes.Add("*I wouldn't be surprised if what happeend to [gn:"+Zacks+"] wasn't [gn:"+Malisha+"]s doing.*");
                 }
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("*No no no! As I said to [gn:"+Miguel+"], I'd rather do anything else than boring exercises. And tell him to stop sending people to persuade me.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*What's with you Terrarians? Don't you know that this is a moment of privacy?*");

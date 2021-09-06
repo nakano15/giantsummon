@@ -583,6 +583,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*It's very reckless of [gn:" + Cinnamon + "] to go gather ingredients alone outside of the town. From now on, she need to tell me so I can ensure her safety when doing so.*");
                 Mes.Add("*I don't think [gn:" + Cinnamon + "] has what It takes to survive outside city walls. If she gets in danger or hurt, I wont feel good.*");
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("*[gn:" + Miguel + "] is a good addition to your world. I can strain my muscles and get even stronger for my job.*");
+                Mes.Add("*[gn:" + Miguel + "] thought he could beat me on arm wrestling. Hahaha.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");

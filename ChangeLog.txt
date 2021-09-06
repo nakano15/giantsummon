@@ -11,3 +11,5 @@ Removed the extra difficulty boost from bosses, when you try to spawn them from 
 Being rescued will now remove Bleeding debuff from everyone in your team.
 Fixed a number of moments where the companion messages didn't had their text codes interpreted by the mod.
 Fixed a few shading issues on Cinnamon's body.
+Alexander will gain 2% Cover Rate for sleuthing Daphne, instead of 0,02%.
+	My bad.

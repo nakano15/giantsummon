@@ -310,6 +310,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*Sometimes, during the night, I see [gn:" + Zacks + "] staring through the window.*");
                 Mes.Add("*I fear leaving my house at night, because [gn:" + Zacks + "] may be out there.*");
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("*[gn:"+Miguel+"] gave me some tips of things I could use as alternative on my meals.*");
+            }
             //
             if (guardian.IsUsingBed)
             {

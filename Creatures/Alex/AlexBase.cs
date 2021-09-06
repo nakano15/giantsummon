@@ -330,6 +330,11 @@ namespace giantsummon.Creatures
                     Mes.Add("Sometimes [gn:"+Rococo+"] and [gn:"+Fluffles+"] play with me. It's like a dream came true. They could do that more often.");
                 }
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("[nickname]... I'm working hard... With the help of [gn:" + Miguel + "]... To get stronger... and protect you...");
+                Mes.Add("I'm exausted... [gn:" + Miguel + "]'s exercises are hardcore... But I'm feeling stronger.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("I'm trying hard to aim at the hole.");

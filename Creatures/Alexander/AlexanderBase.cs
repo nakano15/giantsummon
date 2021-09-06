@@ -228,7 +228,7 @@ namespace giantsummon.Creatures
                         g.Defense += 2;
                         break;
                     case Daphne:
-                        g.CoverRate += 0.02f;
+                        g.CoverRate += 2f;
                         break;
                     case Glenn:
                         g.Accuracy += 0.03f;
@@ -243,6 +243,10 @@ namespace giantsummon.Creatures
                     case Cinnamon:
                         g.HealthRegenPower++;
                         g.MaxJumpHeight++;
+                        break;
+                    case Miguel:
+                        g.MeleeDamageMultiplier += 0.03f;
+                        g.DefenseRate += 0.02f;
                         break;
                 }
             }

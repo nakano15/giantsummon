@@ -492,6 +492,11 @@ namespace giantsummon.Creatures
                     Mes.Add("If [gn:"+Zacks+"] keep scaring my son whenever he's outside at dark, I'll show him a version of me that he didn't met when biting me!");
                 }
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("Could [gn:"+Miguel+"] stop making jokes about my belly? They hurt!");
+                Mes.Add("I'm really getting some exercise tips from [gn:"+Miguel+"] to turn my fat into muscles, but he keeps making jokes about my belly.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("Do you humans always visits bathrooms when others are using it?");

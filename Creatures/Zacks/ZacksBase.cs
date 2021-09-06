@@ -545,6 +545,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*I hound around [gn:" + Cinnamon + "]'s house during the night, since being scared and locked inside, means not being outside and in danger.*");
                 Mes.Add("*Maybe if I take care of [gn:" + Cinnamon + "], I'll practice to be a good parent when I have a child... If I have a child...*");
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("*Even [gn:" + Miguel + "] thinks that I may not be able to grow a muscle, since my body is... Well.. You know... I'm quite happy that he still give me exercises for me to try.*");
+                Mes.Add("*It's really complicated to visit [gn:" + Miguel + "]. My ever hungry instincts make me want to devour him.*");
+            }
             if (guardian.IsPlayerRoomMate(player))
             {
                 Mes.Add("*Yes, I can share my room with you, I can't sleep at night, anyway.*");

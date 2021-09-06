@@ -898,6 +898,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*I was watching [gn:" + Cinnamon + "] earlier, and spooked her to death... Not literally, but she ran away so fast when she noticed. She should really not get scared whenever she sees me watching her.*");
                 Mes.Add("*[gn:" + Cinnamon + "]... *");
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("*Reaping also involves physical exercise. [gn:"+Miguel+"]'s pondering is really stupid.*");
+            }
             if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();

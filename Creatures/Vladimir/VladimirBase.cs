@@ -1001,6 +1001,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*[gn:" + Cinnamon + "] is a good girl. Sometimes I help her testing the food she cooks.*");
                 Mes.Add("*Sometimes [gn:" + Cinnamon + "] falls asleep when we're eating some food. I place her on my bed to sleep when that happens.*");
             }
+            if (NpcMod.HasGuardianNPC(Miguel))
+            {
+                Mes.Add("*It was so awkward. I visited [gn:"+Miguel+"] at his home the other day, and gave him a friendly hug. His wife saw, and a confusion spreaded like fire.*");
+            }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
             {
