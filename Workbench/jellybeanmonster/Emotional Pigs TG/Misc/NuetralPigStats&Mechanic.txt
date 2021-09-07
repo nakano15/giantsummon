@@ -43,6 +43,6 @@ Astral Form:
 
 Unique Attacks(Astral Form only):
 (Normal Attack)Nuetralize- Beam of energy that always does 50 damage per cast(affected by "Direct" passive)
-(Super Attack)Plain vortex- A cloud spiral surrounds the pig dealing 50 damage per tick to all enemies within vicinity(affected by "Direct" passive)
+(Super Attack)Plain Spiral- A cloud spiral surrounds the pig dealing 50 damage per tick to all enemies within vicinity(affected by "Direct" passive)
 -Super Attack does not have a trigger effect currently
 
