@@ -42,7 +42,7 @@ Astral Form:
 -Player can mount(Has fly effect when mounted allowing for temporary aerial movement similar to bee mount)
 
 Unique Attacks(Astral Form only):
-(Normal Attack)Nuetralize- Beam of energy that always does 50 damage per cast(affected by "Direct" passive)
-(Super Attack)Plain Spiral- A cloud spiral surrounds the pig dealing 50 damage per tick to all enemies within vicinity(affected by "Direct" passive)
+(Normal Attack)Nuetralize- Beam of energy that bypasses terrarian and enemies always doing 50 damage per cast(affected by "Direct" passive)
+(Super Attack)Plain Spiral- A cloud spiral surrounds the pig dealing 50 damage per tick to all enemies within vicinity lasting for 5 seconds(affected by "Direct" passive)
 -Super Attack does not have a trigger effect currently
 
