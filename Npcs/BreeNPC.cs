@@ -38,7 +38,7 @@ namespace giantsummon.Npcs
         public override void SetDefaults()
         {
             base.SetDefaults();
-            //npc.townNPC = true;
+            npc.townNPC = false;
             npc.rarity = 1;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
             npc.dontCountMe = true;

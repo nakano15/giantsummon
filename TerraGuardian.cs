@@ -9674,8 +9674,9 @@ namespace giantsummon
         public void EnterDownedState()
         {
             KnockoutBleedingTime = 0;
+            bool LastWasKOd = KnockedOut;
             KnockedOut = true;
-            if (!IsPlayerHostile(Main.player[Main.myPlayer]) && InPerceptionRange(Main.player[Main.myPlayer].Center))
+            if (!LastWasKOd && !IsPlayerHostile(Main.player[Main.myPlayer]) && InPerceptionRange(Main.player[Main.myPlayer].Center))
             {
                 Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.AllyFallsMessage);
             }
@@ -12390,7 +12391,6 @@ namespace giantsummon
             p.frostBurn = HasFlag(GuardianFlags.FrostBurn) || HasFlag(GuardianFlags.FrostSetEffect);
             p.magmaStone = HasFlag(GuardianFlags.MagmaStone);
             p.StatusNPC(weapon.type, target.whoAmI);
-            p.meleeEnchant = 0;
             p.frostBurn = false;
             p.magmaStone = false;
         }
@@ -12402,7 +12402,6 @@ namespace giantsummon
             p.frostBurn = HasFlag(GuardianFlags.FrostBurn);
             p.magmaStone = HasFlag(GuardianFlags.MagmaStone);
             p.StatusPvP(weapon.type, target.whoAmI);
-            p.meleeEnchant = 0;
             p.frostBurn = false;
             p.magmaStone = false;
         }
