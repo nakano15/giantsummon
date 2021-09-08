@@ -16,3 +16,5 @@ Alexander will gain 2% Cover Rate for sleuthing Daphne, instead of 0,02%.
 Fixed a bug where melee enchantment weren't working.
 The Weight bar in the GSI will only show up after you have got at least one companion following you.
 Increased the maximum weight of companions you can get from friendship rank to 7000.
+Companions will now comment which world the temple door was opened.
+Fixed a bug where the companion would tries to go reviving a fallen companion while mounted.

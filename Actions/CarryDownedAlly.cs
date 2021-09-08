@@ -190,7 +190,7 @@ namespace giantsummon.Actions
                 {
                     CarriedGuardian.BeingPulledByPlayer = false;
                     CarriedGuardian.Position.X = CarryPosition.X - (CarriedGuardian.Width * (Origin.X - 0.5f));
-                    CarriedGuardian.Position.Y = CarryPosition.Y + (CarriedGuardian.Height * (0.5f - Origin.Y));
+                    CarriedGuardian.Position.Y = CarryPosition.Y - (CarriedGuardian.Height * (1f - Origin.Y));
                     CarriedGuardian.SetFallStart();
                     CarriedGuardian.Direction = guardian.Direction;
                     CarriedGuardian.ReviveBoost++;

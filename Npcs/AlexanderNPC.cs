@@ -107,7 +107,8 @@ namespace giantsummon.Npcs
                         {
                             if(Main.player[p].active && !Main.player[p].dead)
                             {
-                                if(Main.player[p].getRect().Intersects(SightRange) && Collision.CanHitLine(npc.position, npc.width, npc.height, Main.player[p].position, Main.player[p].width, Main.player[p].height))
+                                if(Main.player[p].getRect().Intersects(SightRange) && Collision.CanHitLine(npc.position, npc.width, npc.height, Main.player[p].position, Main.player[p].width, Main.player[p].height) && 
+                                    !Main.player[p].GetModPlayer<PlayerMod>().ControllingGuardian)
                                 {
                                     npc.target = p;
                                     NextStep = CallingOutPlayerStep;
@@ -202,6 +203,16 @@ namespace giantsummon.Npcs
                         if (DialogueDuration == 0)
                             FindFrame(0);
                         Player player = Main.player[npc.target];
+                        if (player.mount.Active)
+                            player.mount.Dismount(player);
+                        if (player.GetModPlayer<PlayerMod>().MountedOnGuardian)
+                        {
+                            foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                            {
+                                if (tg.Active && tg.PlayerMounted)
+                                    tg.ToggleMount(true, false);
+                            }
+                        }
                         player.immuneTime = 90;
                         player.immuneNoBlink = true;
                         Vector2 PlayerPosition = new Vector2(npc.Center.X + 32 * npc.direction, npc.position.Y + npc.height);
