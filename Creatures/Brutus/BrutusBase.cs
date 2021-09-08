@@ -1157,7 +1157,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "*I really wanted to drink until I drop now... I sworn to protect [player]... And still, they died... What a good for nothing bodyguard am I...*";
                 case MessageIDs.FeatOpenTemple:
-                    return "*[player] opened a mysterious temple recently. I wonder what they found inside.*";
+                    return "*[player] opened a mysterious temple at [subject] recently. I wonder what they found inside.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*Sometimes I think I should charge by the days of protection, even more after [player] found a portal that rained coins.*";
             }

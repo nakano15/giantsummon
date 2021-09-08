@@ -9247,29 +9247,32 @@ namespace giantsummon
                                     TerraGuardian DownedGuardian = !IsPlayer ? MainMod.ActiveGuardians[Target.TargetID] : null;
                                     foreach(TerraGuardian tg in terraguardians)
                                     {
-                                        if (IsPlayer)
+                                        if (!tg.DoAction.InUse && !tg.PlayerMounted && !tg.SittingOnPlayerMount)
                                         {
-                                            if (!tg.PlayerMounted && !tg.SittingOnPlayerMount && !tg.IsPlayerHostile(DownedPlayer) && !PlayerMod.IsBeingCarriedBySomeone(DownedPlayer) &&
-                                                Actions.CarryDownedAlly.CanCarryAlly(tg, DownedPlayer))
+                                            if (IsPlayer)
                                             {
-                                                float Distance = tg.Distance(DownedPlayer.Center) - (DownedPlayer.width * 0.5f + tg.Width * 0.5f);
-                                                if (Distance < ClosestDistance)
+                                                if (!tg.IsPlayerHostile(DownedPlayer) && !PlayerMod.IsBeingCarriedBySomeone(DownedPlayer) &&
+                                                    Actions.CarryDownedAlly.CanCarryAlly(tg, DownedPlayer))
                                                 {
-                                                    ClosestGuardian = tg;
-                                                    ClosestDistance = Distance;
+                                                    float Distance = tg.Distance(DownedPlayer.Center) - (DownedPlayer.width * 0.5f + tg.Width * 0.5f);
+                                                    if (Distance < ClosestDistance)
+                                                    {
+                                                        ClosestGuardian = tg;
+                                                        ClosestDistance = Distance;
+                                                    }
                                                 }
                                             }
-                                        }
-                                        else
-                                        {
-                                            if (!tg.PlayerMounted && !tg.SittingOnPlayerMount && tg.WhoAmID != DownedGuardian.WhoAmID && !tg.IsGuardianHostile(DownedGuardian) && !DownedGuardian.IsBeingCarriedBySomeone() &&
-                                                Actions.CarryDownedAlly.CanCarryAlly(tg, DownedGuardian))
+                                            else
                                             {
-                                                float Distance = tg.Distance(DownedGuardian.CenterPosition) - (DownedGuardian.Width * 0.5f + tg.Width * 0.5f);
-                                                if (Distance < ClosestDistance)
+                                                if (tg.WhoAmID != DownedGuardian.WhoAmID && !tg.IsGuardianHostile(DownedGuardian) && !DownedGuardian.IsBeingCarriedBySomeone() &&
+                                                    Actions.CarryDownedAlly.CanCarryAlly(tg, DownedGuardian))
                                                 {
-                                                    ClosestGuardian = tg;
-                                                    ClosestDistance = Distance;
+                                                    float Distance = tg.Distance(DownedGuardian.CenterPosition) - (DownedGuardian.Width * 0.5f + tg.Width * 0.5f);
+                                                    if (Distance < ClosestDistance)
+                                                    {
+                                                        ClosestGuardian = tg;
+                                                        ClosestDistance = Distance;
+                                                    }
                                                 }
                                             }
                                         }
@@ -9578,7 +9581,7 @@ namespace giantsummon
                         case giantsummon.Trigger.TriggerTarget.TargetTypes.Player:
                             {
                                 Player player = Main.player[Target.TargetID];
-                                if (!PlayerMounted && !SittingOnPlayerMount && !player.dead && player.GetModPlayer<PlayerMod>().KnockedOut && 
+                                if (!DoAction.InUse && !PlayerMounted && !SittingOnPlayerMount && !player.dead && player.GetModPlayer<PlayerMod>().KnockedOut && 
                                     !IsPlayerHostile(player) && 
                                     !player.GetModPlayer<PlayerMod>().MountedOnGuardian && !PlayerMod.IsBeingCarriedBySomeone(player) && 
                                     Actions.CarryDownedAlly.CanCarryAlly(this, player))
@@ -9590,7 +9593,7 @@ namespace giantsummon
                         case giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian:
                             {
                                 TerraGuardian guardian = MainMod.ActiveGuardians[Target.TargetID];
-                                if (!PlayerMounted && !SittingOnPlayerMount && !guardian.Downed && guardian.KnockedOut && !IsGuardianHostile(guardian) && !guardian.IsBeingCarriedBySomeone() &&
+                                if (!DoAction.InUse && !PlayerMounted && !SittingOnPlayerMount && !guardian.Downed && guardian.KnockedOut && !IsGuardianHostile(guardian) && !guardian.IsBeingCarriedBySomeone() &&
                                     Actions.CarryDownedAlly.CanCarryAlly(this, guardian))
                                 {
                                     StartNewGuardianAction(new Actions.CarryDownedAlly(guardian));
@@ -17348,8 +17351,16 @@ namespace giantsummon
                     DrawBehind = new List<GuardianDrawData>();
                     DrawFront = new List<GuardianDrawData>();
                     MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
-                    DrawBehindDone.InsertRange(0, DrawBehind);
-                    DrawFrontDone.AddRange(DrawFront);
+                    if (!gdm.DrawAtWhoAmID)
+                    {
+                        DrawBehindDone.InsertRange(0, DrawBehind);
+                        DrawFrontDone.AddRange(DrawFront);
+                    }
+                    else
+                    {
+                        DrawBehindDone.AddRange(DrawBehind);
+                        DrawFrontDone.InsertRange(0, DrawFront);
+                    }
                 }
             }
             foreach (GuardianDrawData dd in DrawBehindDone)

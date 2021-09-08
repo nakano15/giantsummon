@@ -38,9 +38,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 91, LastModVersion = 85;
-        public const int MaxExtraGuardianFollowers = 6;
-        public static bool ShowDebugInfo = true;
+        public const int ModVersion = 92, LastModVersion = 91;
+        public const int MaxExtraGuardianFollowers = 7;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -132,8 +132,8 @@ namespace giantsummon
         public static List<GuardianID> CompanionBlacklist = new List<GuardianID>();
         private static Tile DefaultTile = new Tile();
         public static bool LastBossSpotted = false, LastInvasionSpotted = false, LastEventStarted = false;
-        private static byte LastEvent = 0;
-        private static sbyte LastInvasion = -1;
+        public static byte LastEvent = 0;
+        public static sbyte LastInvasion = -1;
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -1339,16 +1339,6 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    /*if (g.KnockedOut)
-                    {
-                        New.Add(g.Name+"'s Revive Boost: " + g.ReviveBoost);
-                    }
-                    if (g.ID == 22)
-                    {
-                        Creatures.CaptainStenchBase.CaptainStenchData data = (Creatures.CaptainStenchBase.CaptainStenchData)g.Data;
-                        New.Add(g.Name + "'s Device ID: " + data.DeviceID);
-                        New.Add("\t Device Use Time: " + data.PhantomDeviceUseTimes);
-                    }*/
                     New.Add(g.Name + " ID: " + g.WhoAmID);
                     if (g.ID == GuardianBase.Fluffles)
                     {
@@ -1382,10 +1372,13 @@ namespace giantsummon
                     //New.Add("Action Pressed: " + g.Action);
                 }
                 New.Clear();
-                foreach(FeatMentioning feat in GuardianGlobalInfos.Feats)
+                PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+                New.Add("Current exercise: " + pm.CurrentExercise.ToString());
+                New.Add("Exercise progress: " + pm.ExerciseCounter);
+                /*foreach(FeatMentioning feat in GuardianGlobalInfos.Feats)
                 {
                     New.Add(feat.type.ToString() + " " + feat.PlayerName + " T:" + feat.FeatDurationInGameDays + " " + feat.FeatSubject);
-                }
+                }*/
                 TextsToDraw = New.ToArray();
             }
             foreach (string s in TextsToDraw)

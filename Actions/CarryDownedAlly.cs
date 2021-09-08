@@ -194,7 +194,7 @@ namespace giantsummon.Actions
                     CarriedGuardian.SetFallStart();
                     CarriedGuardian.Direction = guardian.Direction;
                     CarriedGuardian.ReviveBoost++;
-                    MainMod.DrawMoment.Add(new GuardianDrawMoment(guardian.WhoAmID, TerraGuardian.TargetTypes.Guardian, CarriedGuardian.WhoAmID));
+                    MainMod.DrawMoment.Add(new GuardianDrawMoment(guardian.WhoAmID, TerraGuardian.TargetTypes.Guardian, CarriedGuardian.WhoAmID, true));
                 }
             }
         }

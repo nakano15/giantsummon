@@ -908,7 +908,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "What do you want? Yes, I'm not in a good mood. I'm currently in mourn for [player]. They died recently.";
                 case MessageIDs.FeatOpenTemple:
-                    return "[player] seems to have opened the door of some old temple, and by now must be pillaging it.";
+                    return "[player] seems to have opened the door of some old temple in [subject], and by now must be pillaging it.";
                 case MessageIDs.FeatCoinPortal:
                     return "As soon as I heard from [player] about a coin portal they found, I can't stop breaking vases.";
             }

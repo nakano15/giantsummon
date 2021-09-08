@@ -358,7 +358,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "A terrarian has died recently. Their name was [player].";
                 case MessageIDs.FeatOpenTemple:
-                    return "A temple door was opened by [player], recently.";
+                    return "A temple door was opened by [player] in [subject], recently.";
                 case MessageIDs.FeatCoinPortal:
                     return "A coin portal isn't a myth. [player] proved that.";
             }

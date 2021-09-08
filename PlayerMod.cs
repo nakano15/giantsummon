@@ -153,6 +153,9 @@ namespace giantsummon
         }
         private int _CarriedByGuardianID = -1;
         private byte _InternalCarryTimer = 0;
+        public Creatures.MiguelBase.ExerciseTypes CurrentExercise = Creatures.MiguelBase.ExerciseTypes.None;
+        public float ExerciseCounter = 0;
+        public byte ExercisesDone = 0;
 
         public static bool IsBeingCarriedByThisGuardian(Player player, TerraGuardian tg)
         {
@@ -798,6 +801,34 @@ namespace giantsummon
 
         public override void PostUpdate()
         {
+            if (player.whoAmI == Main.myPlayer)
+            {
+                switch (CurrentExercise)
+                {
+                    case Creatures.MiguelBase.ExerciseTypes.WaitUntilNextDay:
+                        if (WorldMod.DayChange)
+                        {
+                            CurrentExercise = Creatures.MiguelBase.ExerciseTypes.None;
+                        }
+                        break;
+                    case Creatures.MiguelBase.ExerciseTypes.TravelDistance:
+                        if (ExerciseCounter > 0)
+                        {
+                            ExerciseCounter -= Math.Abs(player.velocity.X * 0.5f);
+                            if (ExerciseCounter <= 0)
+                                Main.NewText("I have travelled enough distance for today's exercise.");
+                        }
+                        break;
+                    case Creatures.MiguelBase.ExerciseTypes.JumpTimes:
+                        if (ExerciseCounter > 0 && player.justJumped)
+                        {
+                            ExerciseCounter--;
+                            if (ExerciseCounter <= 0)
+                                Main.NewText("I did enough jumps for today's exercise.");
+                        }
+                        break;
+                }
+            }
             UpdateGuardian();
             for (int e = 0; e < 3; e++)
             {
@@ -1893,6 +1924,16 @@ namespace giantsummon
             }
         }
 
+        public void CountForAttackExercise()
+        {
+            if(CurrentExercise == Creatures.MiguelBase.ExerciseTypes.AttackTimes && ExerciseCounter > 0)
+            {
+                ExerciseCounter--;
+                if (ExerciseCounter <= 0)
+                    Main.NewText("I have attacked enough foes for today's exercise.");
+            }
+        }
+
         public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
         {
             foreach (TerraGuardian guardian in GetAllGuardianFollowers)
@@ -1900,6 +1941,7 @@ namespace giantsummon
                 if (guardian.Active && guardian.AttackMyTarget)
                     guardian.SetTargetNpc(target);
             }
+            CountForAttackExercise();
         }
 
         public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
@@ -1913,6 +1955,7 @@ namespace giantsummon
                     if (guardian.Active && !proj.minion && guardian.AttackMyTarget)
                         guardian.SetTargetNpc(target);
                 }
+                CountForAttackExercise();
             }
             else
             {
@@ -1934,6 +1977,7 @@ namespace giantsummon
                     guardian.SetTargetPlayer(target);
             }
             base.OnHitPvp(item, target, damage, crit);
+            CountForAttackExercise();
         }
 
         public override void OnHitPvpWithProj(Projectile proj, Player target, int damage, bool crit)
@@ -1951,6 +1995,10 @@ namespace giantsummon
                     tg.OnHitSomething(target);
                     tg.IncreaseSkillByProjDamage(proj, damage, crit);
                 }
+            }
+            else
+            {
+                CountForAttackExercise();
             }
             base.OnHitPvpWithProj(proj, target, damage, crit);
         }
@@ -2225,6 +2273,9 @@ namespace giantsummon
             }
             tag.Add("ReceivedFoodFromMinerva", ReceivedFoodFromMinerva);
             tag.Add("ZacksMeatBagQuestStatus", ZacksMeatBagOutfitQuestStep);
+            tag.Add("MiguelExerciseType" , (byte)CurrentExercise);
+            tag.Add("MiguelExerciseProgress", ExerciseCounter);
+            tag.Add("MiguelExercisesDone", ExercisesDone);
             return tag;
         }
 
@@ -2333,6 +2384,12 @@ namespace giantsummon
             if(ModVersion >= 87)
             {
                 ZacksMeatBagOutfitQuestStep = tag.GetByte("ZacksMeatBagQuestStatus");
+            }
+            if(ModVersion >= 92)
+            {
+                CurrentExercise = (Creatures.MiguelBase.ExerciseTypes)tag.GetByte("MiguelExerciseType");
+                ExerciseCounter = tag.GetFloat("MiguelExerciseProgress");
+                ExercisesDone = tag.GetByte("MiguelExercisesDone");
             }
 
             if (BuddiesMode)
@@ -2825,7 +2882,7 @@ namespace giantsummon
                 bool HasDrawMoment = false;
                 foreach(GuardianDrawMoment gdm in MainMod.DrawMoment)
                 {
-                    if(gdm.GuardianWhoAmID == g.WhoAmID)
+                    if(gdm.GuardianWhoAmID == g.WhoAmID && !gdm.DrawAtWhoAmID)
                     {
                         HasDrawMoment = true;
                         break;
@@ -2846,8 +2903,16 @@ namespace giantsummon
                                 TerraGuardian.DrawBehind = new List<GuardianDrawData>();
                                 TerraGuardian.DrawFront = new List<GuardianDrawData>();
                                 MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
-                                drawbehind.InsertRange(0, TerraGuardian.DrawBehind);
-                                drawfront.AddRange(TerraGuardian.DrawFront);
+                                if (!gdm.DrawAtWhoAmID)
+                                {
+                                    drawbehind.InsertRange(0, TerraGuardian.DrawBehind);
+                                    drawfront.AddRange(TerraGuardian.DrawFront);
+                                }
+                                else
+                                {
+                                    drawbehind.AddRange(TerraGuardian.DrawBehind);
+                                    drawfront.InsertRange(0, TerraGuardian.DrawFront);
+                                }
                             }
                         }
                         TerraGuardian.DrawBehind = drawbehind;

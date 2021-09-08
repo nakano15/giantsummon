@@ -13,3 +13,6 @@ Fixed a number of moments where the companion messages didn't had their text cod
 Fixed a few shading issues on Cinnamon's body.
 Alexander will gain 2% Cover Rate for sleuthing Daphne, instead of 0,02%.
 	My bad.
+Fixed a bug where melee enchantment weren't working.
+The Weight bar in the GSI will only show up after you have got at least one companion following you.
+Increased the maximum weight of companions you can get from friendship rank to 7000.

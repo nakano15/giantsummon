@@ -973,7 +973,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "*... Sorry... My head is somewhere else... My friend [player] died... And I couldn't do much other than bury them...*";
                 case MessageIDs.FeatOpenTemple:
-                    return "*I heard that [player] opened a temple door. Who would've guessed there's more secrets to uncover?*";
+                    return "*I heard that [player] opened a temple door at [subject]. Who would've guessed there's more secrets to uncover?*";
                 case MessageIDs.FeatCoinPortal:
                     return "*That lucky one... [player] found a coin portal. I wish was I who found it.*";
             }

@@ -911,7 +911,8 @@ namespace giantsummon
             const float ElementScale = 0.7f;
             string MouseText = "";
             DrawNameList(HudPosition, player);
-            DrawWeightBar(HudPosition, player, Selected > -1 ? ContentList[Selected].Index == player.SelectedGuardian ? 0 : (DisplayGuardian.Base.CompanionSlotWeight * (!PlayerMod.HasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID) ? 1 : -1)) : 0);
+            if(player.Guardian.Active)
+                DrawWeightBar(HudPosition, player, Selected > -1 ? ContentList[Selected].Index == player.SelectedGuardian ? 0 : (DisplayGuardian.Base.CompanionSlotWeight * (!PlayerMod.HasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID) ? 1 : -1)) : 0);
             //Book Tag
             {
                 Vector2 TagPosition = Vector2.Zero;

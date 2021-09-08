@@ -729,7 +729,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "*I just recently heard that [player] has died. In all my years of life, I've seen people die, but this death hurts me.*";
                 case MessageIDs.FeatOpenTemple:
-                    return "*[player] has opened the door of a mysterious temple recently. I need to investigate inside it.*";
+                    return "*[player] has opened the door of a mysterious temple at [subject] recently. I need to investigate inside it.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*A coin portal appeared for [player] recently. My theory? That portal is connected to some vault.*";
             }

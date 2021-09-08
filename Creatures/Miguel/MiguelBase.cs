@@ -112,6 +112,8 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(26, 25 - 2, 24 + 2);
         }
 
+        #region Messages
+
         public override string CallUnlockMessage => "*Hey, you! I need to find out if you are doing the exercises correctly. If you need me to train you personally, all you need is just to call. I can help you on your adventure too, on the way.*";
         public override string MountUnlockMessage => "*You look in bad shape, [nickname]. I need some weight on my arm to keep it's muscle strong, so you may help me with that.*";
         public override string ControlUnlockMessage => "*I believe there are some things you may not be able to do yourself. I can do it for you, as long as you keep doing your exercises.*";
@@ -183,7 +185,7 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("*I will love sleeping with the sound of rain drops and chill weather.*");
                     Mes.Add("*Can't sleep, [nickname]? Let the rain help you fall asleep.*");
-                    Mes.Add("*Seeking an advice? I was wanting to enjoy the weather.*");
+                    Mes.Add("*Seeking an more training? I was wanting to enjoy the weather.*");
                 }
             }
 
@@ -224,7 +226,13 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(Leopold))
             {
                 Mes.Add("*[gn:"+Leopold+"] keeps refusing my proposal of training him. He keeps saying that would rather watch slimes procreate.*");
-                Mes.Add("*It's funny how for someone who uses magical weapons, [gn:"+Leopold+"] charges full on melee when his mana runs out.*");
+                Mes.Add("*It's funny how for someone who uses magical weapons, [gn:" + Leopold + "] charges full on melee when his mana runs out.*");
+                Mes.Add("*If you see [gn:" + Leopold + "], can you try convincing him to do some exercises?*");
+            }
+            if (NpcMod.HasGuardianNPC(Mabel))
+            {
+                Mes.Add("*It's quite complicated to train [gn:" + Mabel + "]. She makes me sweat... A lot....*");
+                Mes.Add("*Normally I would ask [gn:"+Mabel+"] out for a date, but I'm a married man, so I wont.*");
             }
             if (NpcMod.HasGuardianNPC(Vladimir))
             {
@@ -241,7 +249,7 @@ namespace giantsummon.Creatures
             }
             if(NpcMod.HasGuardianNPC(Minerva))
             {
-                Mes.Add("*I'm giving [gn:"+Minerva+"] some rigorous training to make her lose fat.*");
+                Mes.Add("*I'm giving [gn:"+Minerva+"] some rigorous exercises to make her lose fat.*");
                 Mes.Add("*I can wonder how much [gn:"+Minerva+"] likes to taste her own food, but that is very unhealthy for her.*");
                 Mes.Add("*If you're hungry, go visit [gn:"+Minerva+"] so she gives you something for you to eat. That way you'll refill your energy.*");
             }
@@ -254,7 +262,7 @@ namespace giantsummon.Creatures
             if (guardian.IsUsingToilet)
             {
                 Mes.Clear();
-                Mes.Add("*[nickname], this is not the place and time for that. If you want an advice, you could wait until I'm done with my things.*");
+                Mes.Add("*[nickname], this is not the place and time for that. If you want another training, or just to talk, you could wait until I'm done with my things.*");
                 Mes.Add("*I think this toilet is going to overflow... Ah... Wh.. [nickname]! When did you appeared?*");
                 Mes.Add("*Yes, I do my business like anyone else. You watching me is making it harder for me to finish this.*");
             }
@@ -321,9 +329,9 @@ namespace giantsummon.Creatures
         public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*You overdid yourself. Let me take a look at that.*");
+            Mes.Add("*You overdid yourself. Let me take a look at that wound.*");
             Mes.Add("*It's just a flesh wound. You'll be walking soon.*");
-            Mes.Add("*Rest for a while, while I take care of those wounds.*");
+            Mes.Add("*Rest for a while, I'll take care of those wounds.*");
             Mes.Add("*Gladly I know a bit of first aid.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -332,12 +340,13 @@ namespace giantsummon.Creatures
         {
             List<string> Mes = new List<string>();
             Mes.Add("*My wife is currently unsure about visiting this world. She doesn't think it's safe.*");
-            Mes.Add("*I've been exercising my muscles since 15, and learned about physical education at 17. It has been a long road.*");
+            Mes.Add("*I've been exercising my muscles since 15, and learned about methods to exercise them at 17. It has been a long road.*");
             Mes.Add("*People tend to avoid me because they think I will only speak to them about exercises, but I also speak about other things.*");
             Mes.Add("*Some day I'll introduce you to my wife. I'm sure you'll like her since the greeting.*");
             Mes.Add("*Why some of your citizens want to mount on my back? Do I look like a chariot?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -531,7 +540,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "*One of the people I trained has died recently. Their name was [player]. I'm gonna miss that person.*";
                 case MessageIDs.FeatOpenTemple:
-                    return "*It seems that [player] opened a temple door in their world. What kind of marvels could be inside? Or dangers?*";
+                    return "*It seems that [player] opened a temple door in [subject]. What kind of marvels could be inside? Or dangers?*";
                 case MessageIDs.FeatCoinPortal:
                     return "*A coin portal appeared in front of [player] the other day.*";
             }
@@ -548,6 +557,119 @@ namespace giantsummon.Creatures
                 case 2:
                     return "*If you're going to have me around, could at least give me a house.*";
             }
+        }
+
+        #endregion
+
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogue = base.GetGuardianExtraDialogueActions(guardian);
+            if (!PlayerHasExercise())
+            {
+                Dialogue.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Do you have any exercise I can do?", GiveExerciseButtonAction));
+            }
+            else
+            {
+                PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+                string DialogueText = "What is my exercise progress?";
+                if (pm.CurrentExercise == ExerciseTypes.WaitUntilNextDay)
+                    DialogueText = "Do you have any other exercise for me?";
+                else if (pm.ExerciseCounter <= 0)
+                    DialogueText = "I have completed the exercise.";
+                Dialogue.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption(DialogueText, CheckExerciseButtonAction));
+            }
+            return Dialogue;
+        }
+
+        private void GiveExerciseButtonAction(TerraGuardian tg)
+        {
+            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            pm.CurrentExercise = (ExerciseTypes)Main.rand.Next(1, (int)ExerciseTypes.Count);
+            switch (pm.CurrentExercise)
+            {
+                case ExerciseTypes.AttackTimes:
+                    pm.ExerciseCounter = Main.rand.Next(2, 8) * 20;
+                    Dialogue.ShowEndDialogueMessage("*Yes, I do. Today's exercise may interest you, since will use something you Terrarians loves doing. I want you to attack anything "+(int)pm.ExerciseCounter+" times. Once you do that, come back to me.*", false);
+                    break;
+                case ExerciseTypes.JumpTimes:
+                    pm.ExerciseCounter = Main.rand.Next(2, 7) * 5;
+                    Dialogue.ShowEndDialogueMessage("*This time I want to see you jumping like popcorn. Jump "+(int)pm.ExerciseCounter+" times and then come talk to me.*", false);
+                    break;
+                case ExerciseTypes.TravelDistance:
+                    pm.ExerciseCounter = Main.rand.Next(2, 6) * 1500;
+                    Dialogue.ShowEndDialogueMessage("*Time to exercise your legs. You need to walk "+(int)(pm.ExerciseCounter * 0.5f)+" feets and then talk to me.*", false);
+                    break;
+            }
+        }
+
+        private void CheckExerciseButtonAction(TerraGuardian tg)
+        {
+            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            if(pm.CurrentExercise == ExerciseTypes.WaitUntilNextDay)
+            {
+                Dialogue.ShowEndDialogueMessage("*There is no other exercise for you today. For your muscles to recover from today's exercise, wait until tomorrow.*", false);
+            }
+            else if (pm.ExerciseCounter <= 0)
+            {
+                int FitBuffID = Terraria.ModLoader.ModContent.BuffType<Buffs.Fit>();
+                int NewBuffTime = 30 * 60 * 60;
+                if (pm.player.HasBuff(FitBuffID))
+                {
+                    for(int b = 0; b < pm.player.buffType.Length; b++)
+                    {
+                        if(pm.player.buffType[b] == FitBuffID)
+                        {
+                            NewBuffTime += pm.player.buffTime[b];
+                            if (NewBuffTime > 60 * 60 * 60)
+                                NewBuffTime = 60 * 60 * 60;
+                            break;
+                        }
+                    }
+                }
+                pm.player.AddBuff(FitBuffID, NewBuffTime);
+                pm.ExercisesDone++;
+                if (pm.ExercisesDone >= 10)
+                {
+                    pm.ExercisesDone = 0;
+                    tg.IncreaseFriendshipProgress(1);
+                    Dialogue.ShowEndDialogueMessage("*Good job, [nickname]. You have really impressed me those days. Let your muscles take a rest until tomorrow and then I will give you another exercise.*");
+                }
+                else
+                {
+                    Dialogue.ShowEndDialogueMessage("*Good job, [nickname]. Now take a rest and return to me tomorrow for another exercise.*");
+                }
+                pm.CurrentExercise = ExerciseTypes.WaitUntilNextDay;
+            }
+            else
+            {
+                switch (pm.CurrentExercise)
+                {
+                    case ExerciseTypes.AttackTimes:
+                        Dialogue.ShowEndDialogueMessage("*I tasked you into attacking anything a number of times. It seems like you still need to hit anything "+(int)pm.ExerciseCounter+" times. I'm sure you know how you will do that.*", false);
+                        break;
+                    case ExerciseTypes.JumpTimes:
+                        Dialogue.ShowEndDialogueMessage("*I told you to jump a number of times. You still need to jump "+(int)pm.ExerciseCounter+" more times to complete this exercise.*", false);
+                        break;
+                    case ExerciseTypes.TravelDistance:
+                        Dialogue.ShowEndDialogueMessage("*You need to travel "+(int)(pm.ExerciseCounter * 0.5f)+" feets more to complete this exercise.*", false);
+                        break;
+                }
+            }
+        }
+
+        private bool PlayerHasExercise()
+        {
+            return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CurrentExercise != ExerciseTypes.None;
+        }
+
+        public enum ExerciseTypes : byte
+        {
+            None,
+            JumpTimes,
+            TravelDistance,
+            AttackTimes,
+            Count,
+            WaitUntilNextDay = 255 //So whenever a new exercise is added, It doesn't counts as Count.
         }
     }
 }

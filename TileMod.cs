@@ -34,7 +34,7 @@ namespace giantsummon
                 if(tile.frameY >= 594 && tile.frameY <= 646 && Main.player[Main.myPlayer].HasItem(1141))
                 {
                     GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.OpenedTemple,
-                        Main.player[Main.myPlayer].name, "", 8, 10,
+                        Main.player[Main.myPlayer].name, Main.worldName, 8, 10,
                         GuardianGlobalInfos.GetGuardiansInTheWorld());
                 }
             }

@@ -665,7 +665,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "*Watch yourself during your travels, [nickname]. Another terrarian named [player] didn't returned from theirs. Yes, they was my best client.*";
                 case MessageIDs.FeatOpenTemple:
-                    return "*I heard that [player] finally opened the door of a temple in their world. I will visit it some time to see what I can take from it.*";
+                    return "*I heard that [player] finally opened the door of a temple in [subject]. I will visit it some time to see what I can take from it.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*That lucky Terrarian... [player] managed to bump into one of those coin portals.*";
             }

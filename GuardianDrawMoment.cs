@@ -10,12 +10,14 @@ namespace giantsummon
         public TerraGuardian.TargetTypes DrawTargetType;
         public int DrawTargetID;
         public int GuardianWhoAmID;
+        public bool DrawAtWhoAmID;
 
-        public GuardianDrawMoment(int GuardianWhoAmID, TerraGuardian.TargetTypes TargetType, int TargetID)
+        public GuardianDrawMoment(int GuardianWhoAmID, TerraGuardian.TargetTypes TargetType, int TargetID, bool DrawOnWhoAmID = false)
         {
             this.DrawTargetType = TargetType;
             this.DrawTargetID = TargetID;
             this.GuardianWhoAmID = GuardianWhoAmID;
+            this.DrawAtWhoAmID = DrawOnWhoAmID;
         }
     }
 }

@@ -1003,7 +1003,7 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Miguel))
             {
-                Mes.Add("*It was so awkward. I visited [gn:"+Miguel+"] at his home the other day, and gave him a friendly hug. His wife saw, and a confusion spreaded like fire.*");
+                Mes.Add("*[gn:"+Miguel+"] keeps making jokes about me, saying that I keep exercising my arms by carrying weight everyday.*");
             }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)
@@ -1552,7 +1552,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatPlayerDied:
                     return "*Hi terrarian... Could you give me a hug...? A friend of mine... [player]... Has died recently...*";
                 case MessageIDs.FeatOpenTemple:
-                    return "*[player] seems to have managed to open the door to a temple.*";
+                    return "*[player] seems to have managed to open the door to a temple in [subject].*";
                 case MessageIDs.FeatCoinPortal:
                     return "*[player] found a coin portal when they were exploring the world.*";
             }
