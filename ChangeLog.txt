@@ -18,3 +18,9 @@ The Weight bar in the GSI will only show up after you have got at least one comp
 Increased the maximum weight of companions you can get from friendship rank to 7000.
 Companions will now comment which world the temple door was opened.
 Fixed a bug where the companion would tries to go reviving a fallen companion while mounted.
+Fixed a bug where newly met companion mentioning were counting as event finished.
+	Depending on the companion you spoke with while having that bug, would sound like as if they were extremelly anti social.
+The mod now knows who is the bounty monster, so you no longer is affected by debuffs from monsters that doesn't make sense.
+Fixed an issue where bosses special effects and attacks weren't working.
+	Gladly, that didn't made a bug from Sapping and Osmose attacks to cause lots of rage.
+Terrarian companions can now have skin and outfit options.

@@ -17713,7 +17713,7 @@ namespace giantsummon
             }
             else
             {
-                DrawTerrarianData(NewPosition, seffect, Rotation, c, armorColor, Origin, IgnoreLighting, Shader);
+                DrawTerrarianData(seffect, Rotation, c, armorColor, IgnoreLighting, Shader, ref NewPosition, ref Origin);
             }
             if (mount.Active)
             {
@@ -17721,10 +17721,8 @@ namespace giantsummon
                 gdds.AddRange(mount.Draw(0, this, NewPosition + Main.screenPosition, c, seffect, 0f));
                 gdds.AddRange(mount.Draw(1, this, NewPosition + Main.screenPosition, c, seffect, 0f));
                 DrawBehind.AddRange(gdds);
-            }
-            if (mount.Active)
-            {
-                List<GuardianDrawData> gdds = new List<GuardianDrawData>();
+
+                gdds = new List<GuardianDrawData>();
                 gdds.AddRange(mount.Draw(2, this, NewPosition + Main.screenPosition, c, seffect, 0f));
                 gdds.AddRange(mount.Draw(3, this, NewPosition + Main.screenPosition, c, seffect, 0f));
                 DrawFront.AddRange(gdds);
@@ -18024,7 +18022,7 @@ namespace giantsummon
                 gdd.Draw(Main.spriteBatch);
         }
 
-        public void DrawTerrarianData(Vector2 Position, SpriteEffects seffect, float Rotation, Color color, Color armorColor, Vector2 Origin, bool IgnoreLightingColor, int Shader)
+        public void DrawTerrarianData(SpriteEffects seffect, float Rotation, Color color, Color armorColor, bool IgnoreLightingColor, int Shader, ref Vector2 Position, ref Vector2 Origin)
         {
             Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56), 
                 bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56), 
@@ -18037,17 +18035,20 @@ namespace giantsummon
             Origin.X = 20;
             Origin.Y = 56;
             byte EyeState = 0;
-            if (KnockedOut && !Downed)
+            if (!Downed)
             {
-                Origin.Y *= 0.5f;
-                Position.Y -= 20 - 6;
-                EyeState = 2;
-            }
-            else if (IsUsingBed)
-            {
-                Origin.Y *= 0.5f;
-                Position.Y -= 20 + 6;
-                EyeState = 2;
+                if (KnockedOut)
+                {
+                    Origin.Y *= 0.5f;
+                    Position.Y -= 20 - 6;
+                    EyeState = 2;
+                }
+                else if (IsUsingBed)
+                {
+                    Origin.Y *= 0.5f;
+                    Position.Y -= 20 + 6;
+                    EyeState = 2;
+                }
             }
             Color HairColor = Base.TerrarianInfo.HairColor,
                 EyesColor = Base.TerrarianInfo.EyeColor,

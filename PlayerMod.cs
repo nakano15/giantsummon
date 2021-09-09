@@ -2705,7 +2705,7 @@ namespace giantsummon
                     }
                 }
                 CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.EventFinished,
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MetSomeoneNew,
                     player.name, MyGuardians[SpawnID].Name, 6, MyGuardians.Count,
                     GuardianGlobalInfos.GetGuardiansInTheWorld(new GuardianID(Id, ModId)));
             }

@@ -299,7 +299,7 @@ namespace giantsummon
             }
             if (modifier.Contains(Modifiers.HealthRegen))
             {
-                if (BountyCounters[HealthRegenCounter] >= 30)
+                if (BountyCounters[HealthRegenCounter]++ >= 30)
                 {
                     BountyCounters[HealthRegenCounter] -= 30;
                     npc.life += npc.defense;
@@ -331,7 +331,7 @@ namespace giantsummon
             }
             if (modifier.Contains(Modifiers.FireRain))
             {
-                if (BountyCounters[FireRainCounter] >= Main.rand.Next(20, 30))
+                if (BountyCounters[FireRainCounter]++ >= Main.rand.Next(20, 30))
                 {
                     BountyCounters[FireRainCounter] = 0;
                     Vector2 RainSpawnPosition = npc.Center;
@@ -348,7 +348,7 @@ namespace giantsummon
             }
             if (modifier.Contains(Modifiers.Imobilizer))
             {
-                if (BountyCounters[ImobilizeCounter] >= 10 * 60)
+                if (BountyCounters[ImobilizeCounter]++ >= 10 * 60)
                 {
                     BountyCounters[ImobilizeCounter] = 0;
                     Vector2 RainSpawnPosition = npc.Center;
@@ -360,105 +360,109 @@ namespace giantsummon
             }
             if (modifier.Contains(Modifiers.Sapping))
             {
-                bool DamageHealth = BountyCounters[SappingCounter] >= 30;
+                bool DamageHealth = BountyCounters[SappingCounter]++ >= 30;
                 if (DamageHealth)
+                {
                     BountyCounters[SappingCounter] = 0;
-                for (int p = 0; p < 255; p++)
-                {
-                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].Distance(npc.Center) < 240)
+                    for (int p = 0; p < 255; p++)
                     {
-                        Main.player[p].lifeRegen = 0;
-                        if (DamageHealth)
+                        if (Main.player[p].active && !Main.player[p].dead && Main.player[p].Distance(npc.Center) < 240)
                         {
-                            int HealthDamage = (int)(Main.player[p].statLifeMax2 / Main.player[p].statLifeMax);
-                            if (HealthDamage < 1)
-                                HealthDamage = 1;
-                            Main.player[p].statLife -= HealthDamage;
-                            if (Main.player[p].statLife <= 0)
-                                Main.player[p].KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" didn't had anymore spare blood."), 1, 0);
-                            CombatText.NewText(Main.player[p].getRect(), CombatText.LifeRegenNegative, HealthDamage, false, true);
-                        }
-                    }
-                }
-                foreach(TerraGuardian tg in MainMod.ActiveGuardians.Values)
-                {
-                    if(!tg.Downed && tg.Distance(npc.Center) < 240)
-                    {
-                        tg.HealthRegenTime = 0;
-                        if (DamageHealth)
-                        {
-                            int Damage = (int)(tg.HealthHealMult);
-                            if (Damage < 1)
-                                Damage = 1;
-                            tg.HP -= Damage;
-                            if (tg.HP <= 0)
-                                tg.Knockout(" didn't had anymore spare blood.");
-                            CombatText.NewText(tg.HitBox, CombatText.LifeRegenNegative, Damage, false, true);
-                        }
-                    }
-                }
-            }
-            if (modifier.Contains(Modifiers.Osmose))
-            {
-                bool DamageMana = BountyCounters[SappingCounter] >= 30;
-                if (DamageMana)
-                    BountyCounters[SappingCounter] = 0;
-                for (int p = 0; p < 255; p++)
-                {
-                    if (Main.player[p].active && !Main.player[p].dead && Main.player[p].Distance(npc.Center) < 240)
-                    {
-                        Main.player[p].manaRegen = 0;
-                        if (Main.player[p].statMana <= 0)
                             Main.player[p].lifeRegen = 0;
-                        if (DamageMana)
-                        {
-                            if (Main.player[p].statMana > 0)
-                            {
-                                int ManaDamage = (int)(Main.player[p].statManaMax2 / Main.player[p].statManaMax);
-                                if (ManaDamage < 1)
-                                    ManaDamage = 1;
-                                Main.player[p].statMana -= ManaDamage;
-                            }
-                            else
+                            if (DamageHealth)
                             {
                                 int HealthDamage = (int)(Main.player[p].statLifeMax2 / Main.player[p].statLifeMax);
                                 if (HealthDamage < 1)
                                     HealthDamage = 1;
                                 Main.player[p].statLife -= HealthDamage;
                                 if (Main.player[p].statLife <= 0)
-                                    Main.player[p].KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" was dried out."), 1, 0);
+                                    Main.player[p].KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" didn't had anymore spare blood."), 1, 0);
                                 CombatText.NewText(Main.player[p].getRect(), CombatText.LifeRegenNegative, HealthDamage, false, true);
                             }
                         }
                     }
-                }
-                foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
-                {
-                    if (!tg.Downed && tg.Distance(npc.Center) < 240)
+                    foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
                     {
-                        tg.ManaRegenTime = 0;
-                        if (tg.MP <= 0)
-                            tg.HealthRegenTime = 0;
-                        if (DamageMana)
+                        if (!tg.Downed && tg.Distance(npc.Center) < 240)
                         {
-                            if (tg.MP > 0)
-                            {
-                                int Damage = (int)tg.ManaHealMult;
-                                if (Damage < 1)
-                                    Damage = 1;
-                                tg.MP -= Damage;
-                                if (tg.MP < 0)
-                                    tg.MP = 0;
-                            }
-                            else
+                            tg.HealthRegenTime = 0;
+                            if (DamageHealth)
                             {
                                 int Damage = (int)(tg.HealthHealMult);
                                 if (Damage < 1)
                                     Damage = 1;
                                 tg.HP -= Damage;
                                 if (tg.HP <= 0)
-                                    tg.Knockout(" was dried out.");
+                                    tg.Knockout(" didn't had anymore spare blood.");
                                 CombatText.NewText(tg.HitBox, CombatText.LifeRegenNegative, Damage, false, true);
+                            }
+                        }
+                    }
+                }
+            }
+            if (modifier.Contains(Modifiers.Osmose))
+            {
+                bool DamageMana = BountyCounters[SappingCounter]++ >= 30;
+                if (DamageMana)
+                {
+                    BountyCounters[SappingCounter] = 0;
+                    for (int p = 0; p < 255; p++)
+                    {
+                        if (Main.player[p].active && !Main.player[p].dead && Main.player[p].Distance(npc.Center) < 240)
+                        {
+                            Main.player[p].manaRegen = 0;
+                            if (Main.player[p].statMana <= 0)
+                                Main.player[p].lifeRegen = 0;
+                            if (DamageMana)
+                            {
+                                if (Main.player[p].statMana > 0)
+                                {
+                                    int ManaDamage = (int)(Main.player[p].statManaMax2 / Main.player[p].statManaMax);
+                                    if (ManaDamage < 1)
+                                        ManaDamage = 1;
+                                    Main.player[p].statMana -= ManaDamage;
+                                }
+                                else
+                                {
+                                    int HealthDamage = (int)(Main.player[p].statLifeMax2 / Main.player[p].statLifeMax);
+                                    if (HealthDamage < 1)
+                                        HealthDamage = 1;
+                                    Main.player[p].statLife -= HealthDamage;
+                                    if (Main.player[p].statLife <= 0)
+                                        Main.player[p].KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" was dried out."), 1, 0);
+                                    CombatText.NewText(Main.player[p].getRect(), CombatText.LifeRegenNegative, HealthDamage, false, true);
+                                }
+                            }
+                        }
+                    }
+                    foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                    {
+                        if (!tg.Downed && tg.Distance(npc.Center) < 240)
+                        {
+                            tg.ManaRegenTime = 0;
+                            if (tg.MP <= 0)
+                                tg.HealthRegenTime = 0;
+                            if (DamageMana)
+                            {
+                                if (tg.MP > 0)
+                                {
+                                    int Damage = (int)tg.ManaHealMult;
+                                    if (Damage < 1)
+                                        Damage = 1;
+                                    tg.MP -= Damage;
+                                    if (tg.MP < 0)
+                                        tg.MP = 0;
+                                }
+                                else
+                                {
+                                    int Damage = (int)(tg.HealthHealMult);
+                                    if (Damage < 1)
+                                        Damage = 1;
+                                    tg.HP -= Damage;
+                                    if (tg.HP <= 0)
+                                        tg.Knockout(" was dried out.");
+                                    CombatText.NewText(tg.HitBox, CombatText.LifeRegenNegative, Damage, false, true);
+                                }
                             }
                         }
                     }
@@ -514,7 +518,7 @@ namespace giantsummon
                     break;
                 case DangerousModifier.Reaper:
                     {
-                        if (BountyCounters[SpecialSkillCounter] >= 180)
+                        if (BountyCounters[SpecialSkillCounter]++ >= 180)
                         {
                             bool Trigger = BountyCounters[SpecialSkillCounter] % 20 == 0;
                             if (BountyCounters[SpecialSkillCounter] >= 300)
@@ -531,7 +535,7 @@ namespace giantsummon
                 case DangerousModifier.Cyclops:
                     {
                         float DelayTime = 300 - 180 * (1f - (float)npc.life / npc.lifeMax);
-                        if (BountyCounters[SpecialSkillCounter] >= DelayTime)
+                        if (BountyCounters[SpecialSkillCounter]++ >= DelayTime)
                         {
                             BountyCounters[SpecialSkillCounter] -= (int)DelayTime;
                             if (npc.target > -1)
@@ -548,7 +552,7 @@ namespace giantsummon
                     break;
                 case DangerousModifier.GoldenShower:
                     {
-                        if (BountyCounters[SpecialSkillCounter] >= 300)
+                        if (BountyCounters[SpecialSkillCounter]++ >= 300)
                         {
                             bool Trigger = BountyCounters[SpecialSkillCounter] % 5 == 0;
                             if (BountyCounters[SpecialSkillCounter] >= 360)
@@ -567,7 +571,7 @@ namespace giantsummon
                     break;
                 case DangerousModifier.Haunted:
                     {
-                        if (BountyCounters[SpecialSkillCounter] >= 300)
+                        if (BountyCounters[SpecialSkillCounter]++ >= 300)
                         {
                             BountyCounters[SpecialSkillCounter] -= (int)300;
                             if (npc.target > -1)
@@ -581,7 +585,7 @@ namespace giantsummon
                     break;
                 case DangerousModifier.Alchemist:
                     {
-                        if (BountyCounters[SpecialSkillCounter] >= 300)
+                        if (BountyCounters[SpecialSkillCounter]++ >= 300)
                         {
                             BountyCounters[SpecialSkillCounter] -= (int)300;
                             for (int x = -2; x <= 2; x++)
@@ -594,7 +598,7 @@ namespace giantsummon
                     break;
                 case DangerousModifier.Sharknado:
                     {
-                        if (BountyCounters[SpecialSkillCounter] >= 60 * 30)
+                        if (BountyCounters[SpecialSkillCounter]++ >= 60 * 30)
                         {
                             BountyCounters[SpecialSkillCounter] -= 60 * 30;
                             if (npc.target > -1)
@@ -608,7 +612,7 @@ namespace giantsummon
                     break;
                 case DangerousModifier.Sapper:
                     {
-                        if (BountyCounters[SpecialSkillCounter] >= 60 * 15)
+                        if (BountyCounters[SpecialSkillCounter]++ >= 60 * 15)
                         {
                             BountyCounters[SpecialSkillCounter] -= 60 * 15;
                             if (npc.target > -1)
@@ -620,7 +624,7 @@ namespace giantsummon
                     break;
                 case DangerousModifier.Cursed:
                     {
-                        if (BountyCounters[SpecialSkillCounter] >= 60)
+                        if (BountyCounters[SpecialSkillCounter]++ >= 60)
                         {
                             BountyCounters[SpecialSkillCounter] -= 60;
                             if (npc.target > -1)

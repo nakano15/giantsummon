@@ -790,7 +790,7 @@ namespace giantsummon
 
         public override void OnHitPlayer(NPC npc, Player target, int damage, bool crit)
         {
-            if(GuardianBountyQuest.TargetMonsterID == npc.whoAmI)
+            if(GuardianBountyQuest.TargetMonsterSpawnPosition == npc.whoAmI)
             {
                 GuardianBountyQuest.OnBountyMonsterHitPlayer(target);
             }

@@ -75,6 +75,7 @@
     <Compile Include="BuffMod.cs" />
     <Compile Include="Buffs\Defended.cs" />
     <Compile Include="Buffs\DrainingHealth.cs" />
+    <Compile Include="Buffs\Fit.cs" />
     <Compile Include="Buffs\GhostFoxHaunts\BeeHaunt.cs" />
     <Compile Include="Buffs\GhostFoxHaunts\ConstructHaunt.cs" />
     <Compile Include="Buffs\GhostFoxHaunts\SawHaunt.cs" />
@@ -314,6 +315,7 @@
     <Content Include="Buffs\Defended.png" />
     <Content Include="Buffs\DrainingHealth.png" />
     <Content Include="Buffs\FirstAidCooldown.png" />
+    <Content Include="Buffs\Fit.png" />
     <Content Include="Buffs\GhostFoxHaunts\BeeHaunt.png" />
     <Content Include="Buffs\GhostFoxHaunts\ConstructHaunt.png" />
     <Content Include="Buffs\GhostFoxHaunts\SawHaunt.png" />

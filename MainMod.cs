@@ -40,7 +40,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 92, LastModVersion = 91;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -2143,7 +2143,7 @@ namespace giantsummon
                         {
                             Utils.DrawBorderString(Main.spriteBatch, "Equipments", SlotStartPosition, Color.White);
                             SlotStartPosition.Y += 20;
-                            if (Guardian.Base.IsCustomSpriteCharacter)
+                            //if (Guardian.Base.IsCustomSpriteCharacter)
                             {
                                 SlotStartPosition.X = 0;
                                 string[] EquipmentTab = new string[] { "Equipment", "Skins", "Outfits" }; //Set the empty string to always be the last

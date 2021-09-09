@@ -56,6 +56,8 @@ namespace giantsummon.Creatures
 
             AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 10);
+
+            AddSkin(1, "Remove Hat", delegate (GuardianData gd, Player player) { return true; });
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -65,16 +67,16 @@ namespace giantsummon.Creatures
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
         {
-            Rectangle rect = new Rectangle(0,0,40,56);
+            Rectangle rect = new Rectangle(0, 0, 40, 58);
             Vector2 Position = new Vector2(DrawPosition.X, DrawPosition.Y);
             Vector2 NewOrigin = new Vector2(Origin.X, Origin.Y);
-            NewOrigin.Y -= -2 * guardian.GravityDirection;
-            NewOrigin.X += -2 * guardian.Direction;
+            Position.Y -= 2 * guardian.GravityDirection;
+            //Position.X += 2 * guardian.Direction;
             if (guardian.ItemAnimationTime == 0 && 
-                ((guardian.LeftArmAnimationFrame >= 7 && guardian.LeftArmAnimationFrame < 11) ||
-                (guardian.LeftArmAnimationFrame >= 14 && guardian.LeftArmAnimationFrame < 18)))
-                NewOrigin.Y -= -2 * guardian.GravityDirection;
-            rect.Y = rect.Height * 2;
+                ((guardian.LeftArmAnimationFrame >= 7 && guardian.LeftArmAnimationFrame < 10) ||
+                (guardian.LeftArmAnimationFrame >= 14 && guardian.LeftArmAnimationFrame < 17)))
+                Position.Y -= 2 * guardian.GravityDirection;
+            rect.Y = rect.Height * (guardian.SkinID == 1 ? 2 : 1);
             Texture2D texture = sprites.GetExtraTexture(HeadTextureID);
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
                 color, Rotation, NewOrigin, Scale, seffect);
