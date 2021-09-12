@@ -581,6 +581,7 @@ namespace giantsummon
                 Failed = false;
                 requestState = RequestState.Cooldown;
                 Time = Main.rand.Next(MinRequestSpawnTime, MaxRequestSpawnTime);
+                guardian.ChangeTrustValue(TrustLevels.TrustLossOnFailRequest);
                 return true;
             }
             if (RequestCompleted || IsTalkQuest)
@@ -729,6 +730,7 @@ namespace giantsummon
                 }
                 else
                     RequestCompleteCombo++;
+                guardian.ChangeTrustValue(TrustLevels.TrustGainFromComplettingRequest);
                 if (!IsCommonRequest && !IsTalkQuest && !RequestsCompletedIDs.Contains(RequestID))
                 {
                     RequestsCompletedIDs.Add(RequestID);

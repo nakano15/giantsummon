@@ -10,7 +10,7 @@ namespace giantsummon.Actions
         public TerraGuardian CarriedGuardian;
         public bool Carrying = false;
         private ushort DelayBeforePlacingOnGround = 0;
-        private const ushort MaxDelay = 7 * 60;
+        private const ushort MaxDelay = 3 * 60;
 
         public CarryDownedAlly(Player player)
         {
@@ -190,7 +190,7 @@ namespace giantsummon.Actions
                 {
                     CarriedGuardian.BeingPulledByPlayer = false;
                     CarriedGuardian.Position.X = CarryPosition.X - (CarriedGuardian.Width * (Origin.X - 0.5f));
-                    CarriedGuardian.Position.Y = CarryPosition.Y - (CarriedGuardian.Height * (1f - Origin.Y));
+                    CarriedGuardian.Position.Y = CarryPosition.Y + (CarriedGuardian.Height * (1f - Origin.Y));
                     CarriedGuardian.SetFallStart();
                     CarriedGuardian.Direction = guardian.Direction;
                     CarriedGuardian.ReviveBoost++;

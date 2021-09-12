@@ -484,8 +484,17 @@ namespace giantsummon
                 WindowStartPosition.X += 4;
                 Utils.DrawBorderStringBig(Main.spriteBatch, tg.Name, WindowStartPosition, Color.White);
                 WindowStartPosition.X -= 52;
-                tg.DrawFriendshipHeart(WindowStartPosition + new Vector2(24,24));
+                tg.DrawFriendshipHeart(WindowStartPosition + new Vector2(0,24));
                 WindowStartPosition.Y += 48;
+                {
+                    Vector2 TrustIconPosition = new Vector2(WindowStartPosition.X + WindowSizeX, WindowStartPosition.Y - 52);
+                    int TrustLevel = TrustLevels.GetTrustLevel(tg.TrustLevel);
+                    Main.spriteBatch.Draw(MainMod.TrustIconsTexture, TrustIconPosition, new Rectangle(TrustLevels.GetTrustLevel(tg.TrustLevel) * 32, 0, 32, 32), Color.White, 0f, Vector2.One * 16, 1f, SpriteEffects.None, 0);
+                    if (Main.mouseX >= TrustIconPosition.X - 16 && Main.mouseX < TrustIconPosition.X + 16 && Main.mouseY >= TrustIconPosition.Y - 16 && Main.mouseY < TrustIconPosition.Y + 16)
+                    {
+                        Utils.DrawBorderString(Main.spriteBatch, TrustLevels.GetTrustInfo(tg.TrustLevel), TrustIconPosition + new Vector2(12, 12), Color.White);
+                    }
+                }
             }
             Color color = new Color(200, 200, 200, 200);
             DrawBackgroundPanel(WindowStartPosition, WindowSizeX, WindowSizeY, color);
@@ -560,7 +569,8 @@ namespace giantsummon
                     }
                     else if (tg.request.requestState == RequestData.RequestState.NewRequestReady)
                     {
-                        OptionText = "Need Something?";
+                        if(tg.TrustLevel >= TrustLevels.RequestGivingTrust)
+                            OptionText = "Need Something?";
                     }
                     else if (tg.request.requestState == RequestData.RequestState.HasExistingRequestReady)
                     {
@@ -573,7 +583,8 @@ namespace giantsummon
                             OptionText = "Let's talk about your request?";
                         }
                     }
-                    AddOption(OptionText, CheckRequestButtonAction);
+                    if(OptionText != "")
+                        AddOption(OptionText, CheckRequestButtonAction);
                     if (GuardianShopHandler.HasShop(tg.MyID))
                     {
                         AddOption("What do you have for sale?", OpenShopButtonAction);
@@ -637,7 +648,7 @@ namespace giantsummon
 
         public static void AskGuardianToFollowYouButtonPressed(TerraGuardian tg)
         {
-            if (!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && (!tg.request.Active || !tg.request.RequiresGuardianActive(tg.Data)))
+            if ((!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && (!tg.request.Active || !tg.request.RequiresGuardianActive(tg.Data))) || tg.TrustLevel < TrustLevels.FollowTrust)
             {
                 SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), tg);
                 HideCallDismissButton = true;
@@ -835,6 +846,7 @@ namespace giantsummon
             AddOption("Yes", delegate (TerraGuardian tg2)
             {
                 SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.CancelRequestYesAnswered, (tg.Male ? "He" : "She") + " seems a bit disappointed towards you.)"));
+                tg2.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
                 GetDefaultOptions(tg2);
                 tg2.request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime);
                 tg2.request.requestState = RequestData.RequestState.Cooldown;

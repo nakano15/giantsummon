@@ -1067,6 +1067,14 @@ namespace giantsummon
             {
                 Messages.Add("I heard from a Travelling Merchant that there's a Squirrel TerraGuardian that sometimes follows him. If that's about right, It may show up sometimes when one appears.");
             }
+            if (!HasMetGuardian(GuardianBase.Miguel) && Npcs.MiguelNPC.CanSpawnMe())
+            {
+                Messages.Add("There's a buffed TerraGuardian travelling around this world. He insulted me just because I'm not fit.");
+            }
+            if (!HasMetGuardian(GuardianBase.Quentin))
+            {
+                Messages.Add("I heard from another person, that they heard someone crying for help on the dungeon. You should take a look.");
+            }
         }
 
         public override void GetChat(NPC npc, ref string chat)
@@ -1604,6 +1612,16 @@ namespace giantsummon
                 }
                 AddGuardianMet(GuardianBase.Sardine);
                 TrappedCatKingSlime = -1;
+            }
+            if(NPC.downedGoblins && npc.type == NPCID.DarkCaster)
+            {
+                if(!HasMetGuardian(GuardianBase.Quentin) && !HasGuardianNPC(GuardianBase.Quentin) && Main.rand.Next(80) == 0)
+                {
+                    TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Quentin, "");
+                    tg.SaySomethingCanSchedule("Thanks for rescue me from that dark sorcerer, he wanted to force me to become his familiar, by the way i am Quentin, the Mage's apprentice bunny.", true, Main.rand.Next(40, 60));
+                    AddGuardianMet(tg.ID, tg.ModID);
+                    PlayerMod.AddPlayerGuardian(Main.player[npc.target], tg.ID, tg.ModID);
+                }
             }
             if (GuardianBountyQuest.TargetMonsterID > 0)
             {

@@ -801,22 +801,22 @@ namespace giantsummon
 
         public override void PostUpdate()
         {
-            if (player.whoAmI == Main.myPlayer)
+            if (player.whoAmI == Main.myPlayer && !MountedOnGuardian && !ControllingGuardian)
             {
                 switch (CurrentExercise)
                 {
-                    case Creatures.MiguelBase.ExerciseTypes.WaitUntilNextDay:
-                        if (WorldMod.DayChange)
-                        {
-                            CurrentExercise = Creatures.MiguelBase.ExerciseTypes.None;
-                        }
-                        break;
                     case Creatures.MiguelBase.ExerciseTypes.TravelDistance:
                         if (ExerciseCounter > 0)
                         {
                             ExerciseCounter -= Math.Abs(player.velocity.X * 0.5f);
                             if (ExerciseCounter <= 0)
-                                Main.NewText("I have travelled enough distance for today's exercise.");
+                            {
+                                if(HasGuardianSummoned(player, GuardianBase.Miguel))
+                                {
+                                    GetPlayerSummonedGuardian(player, GuardianBase.Miguel).SaySomething("*That's enough travelling distance. Talk to me to end this exercise.*");
+                                }
+                                else Main.NewText("I have travelled enough distance for today's exercise.");
+                            }
                         }
                         break;
                     case Creatures.MiguelBase.ExerciseTypes.JumpTimes:
@@ -824,7 +824,35 @@ namespace giantsummon
                         {
                             ExerciseCounter--;
                             if (ExerciseCounter <= 0)
-                                Main.NewText("I did enough jumps for today's exercise.");
+                            {
+                                if (HasGuardianSummoned(player, GuardianBase.Miguel))
+                                {
+                                    GetPlayerSummonedGuardian(player, GuardianBase.Miguel).SaySomething("*That's enough jumps. Talk to me to end this exercise.*");
+                                }
+                                else
+                                    Main.NewText("I did enough jumps for today's exercise.");
+                            }
+                            else
+                            {
+                                if (HasGuardianSummoned(player, GuardianBase.Miguel))
+                                {
+                                    string Message = ExerciseCounter +"!";
+                                    if(ExerciseCounter % 5 == 0)
+                                    {
+                                        if (ExerciseCounter > 40)
+                                            Message += " Perfect!";
+                                        else if (ExerciseCounter > 30)
+                                            Message += " Amazing!";
+                                        else if (ExerciseCounter > 20)
+                                            Message += " Great!";
+                                        else if (ExerciseCounter > 10)
+                                            Message += " Good!";
+                                        else
+                                            Message += " Nice!";
+                                    }
+                                    GetPlayerSummonedGuardian(player, GuardianBase.Miguel).SaySomething("*"+Message+"*");
+                                }
+                            }
                         }
                         break;
                 }
@@ -1930,7 +1958,23 @@ namespace giantsummon
             {
                 ExerciseCounter--;
                 if (ExerciseCounter <= 0)
-                    Main.NewText("I have attacked enough foes for today's exercise.");
+                {
+                    if (HasGuardianSummoned(player, GuardianBase.Miguel))
+                    {
+                        GetPlayerSummonedGuardian(player, GuardianBase.Miguel).SaySomething("*That's enough arm exercise. Talk to me to end this exercise.*");
+                    }
+                    else
+                    {
+                        Main.NewText("I have attacked enough foes for today's exercise.");
+                    }
+                }
+                else
+                {
+                    if (HasGuardianSummoned(player, GuardianBase.Miguel) && ExerciseCounter % 50 == 0)
+                    {
+                        GetPlayerSummonedGuardian(player, GuardianBase.Miguel).SaySomething("*Just "+ExerciseCounter+" attacks left!*");
+                    }
+                }
             }
         }
 

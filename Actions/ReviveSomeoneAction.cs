@@ -49,7 +49,7 @@ namespace giantsummon.Actions
                 InUse = false;
                 return;
             }
-            if ((guardian.PlayerMounted && (TargetIsPlayer && RevivePlayer.whoAmI != guardian.OwnerPos)) || guardian.Is2PControlled)
+            if ((guardian.PlayerMounted && !Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut) || guardian.Is2PControlled)
             {
                 if (!guardian.MoveDown)
                 {
@@ -158,7 +158,7 @@ namespace giantsummon.Actions
                 {
                     guardian.Jump = false;
                     float DistanceFromTarget = Math.Abs(guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f));
-                    if (!IsMountedPlayer && DistanceFromTarget < 8)
+                    if (DistanceFromTarget < 8)
                     {
                         if (Math.Abs(guardian.Velocity.X) < 2f)
                         {
@@ -172,7 +172,7 @@ namespace giantsummon.Actions
                             }
                         }
                     }
-                    else if (!IsMountedPlayer && guardian.Velocity.X != 0)
+                    else if (guardian.Velocity.X != 0)
                     {
                         if (Math.Abs(guardian.Position.X + guardian.Velocity.X - (TargetPosition.X + TargetWidth * 0.5f)) < 12)
                         {

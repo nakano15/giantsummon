@@ -157,6 +157,7 @@ namespace giantsummon
             {
                 AlexRecruitScripts.CheckIfAlexIsInTheWorld();
                 Creatures.MinervaBase.AllowGettingMoreFoodFromMinerva();
+                Creatures.MiguelBase.RefreshExercisesOfAllPlayers();
                 if (Math.Abs(TimeParser - LastTime) < 30f)
                 {
                     HasTimeOfDayChanged = true;
@@ -222,7 +223,7 @@ namespace giantsummon
                 List<GuardianID> PossibleIDs = new List<GuardianID>();
                 List<GuardianID> GuardianListToCheck = GuardiansMet;
                 bool IsFromSchedule = false;
-                if(ScheduledVisits.Count > 0)
+                if (ScheduledVisits.Count > 0)
                 {
                     IsFromSchedule = true;
                     GuardianListToCheck = ScheduledVisits;
@@ -365,7 +366,7 @@ namespace giantsummon
             {
                 GuardianNPCsInWorld[i] = null;
             }
-            if(Compatibility.NExperienceCompatibility.IsModActive)
+            if (Compatibility.NExperienceCompatibility.IsModActive)
                 Compatibility.NExperienceCompatibility.ResetOnWorldLoad();
             GuardianBountyQuest.Reset();
             AlexRecruitScripts.SpawnedTombstone = false;
@@ -387,7 +388,7 @@ namespace giantsummon
 
         public override void ModifyWorldGenTasks(List<Terraria.World.Generation.GenPass> tasks, ref float totalWeight)
         {
-            tasks.Add(new PassLegacy("Spawning Starter Guardian.", delegate(GenerationProgress progress)
+            tasks.Add(new PassLegacy("Spawning Starter Guardian.", delegate (GenerationProgress progress)
             {
                 progress.Message = "Spawning Starter Guardian";
                 MainMod.GetInitialCompanionsList();
@@ -402,7 +403,7 @@ namespace giantsummon
                 AllowGuardianNPCToSpawn(id.ID, id.ModID);
                 SpawnGuardian = new KeyValuePair<int, string>(id.ID, id.ModID);
             }));
-            tasks.Add(new PassLegacy("Spawning Tombstone.", delegate(GenerationProgress progress)
+            tasks.Add(new PassLegacy("Spawning Tombstone.", delegate (GenerationProgress progress)
             {
                 AlexRecruitScripts.TrySpawningTombstone(progress);
             }));
@@ -472,7 +473,7 @@ namespace giantsummon
             {
                 int[] Ids = tag.GetIntArray("GuardiansMet");
                 string ModID = MainMod.mod.Name;
-                foreach(int i in Ids)
+                foreach (int i in Ids)
                     GuardiansMet.Add(new GuardianID(i, ModID));
             }
             else
@@ -564,13 +565,13 @@ namespace giantsummon
                 GuardianBountyQuest.Load(tag, Version);
             if (Version >= 40)
                 AlexRecruitScripts.Load(tag, Version);
-            if(Version >= 54)
+            if (Version >= 54)
                 Npcs.DominoNPC.DominoDismissed = tag.GetBool("DominoDismissed");
             if (Version >= 77)
                 Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = tag.GetBool("GhostFoxHauntLifted");
             if (Version >= 74)
                 GuardianShopHandler.LoadShops(tag, Version);
-            foreach(GuardianTownNpcState tns in GuardianNPCsInWorld)
+            foreach (GuardianTownNpcState tns in GuardianNPCsInWorld)
             {
                 if (tns != null && !tns.Homeless)
                     tns.ValidateHouse();
@@ -743,7 +744,7 @@ namespace giantsummon
                 GuardianTownNPC.Add(guardian);
             }
             guardian.SetAimPositionToCenter();
-            if(npc.modNPC is Npcs.GuardianActorNPC)
+            if (npc.modNPC is Npcs.GuardianActorNPC)
             {
                 Npcs.GuardianActorNPC n = (Npcs.GuardianActorNPC)npc.modNPC;
                 guardian.SaySomething(n.MessageText);
@@ -786,7 +787,7 @@ namespace giantsummon
         public static void CheckIfGuardianNPCCanSpawn()
         {
             GuardianID ToSpawn = null;
-             //Making use of this else to get the list of companions to spawn
+            //Making use of this else to get the list of companions to spawn
             {
                 List<GuardianID> PotentialGuardians = new List<GuardianID>();
                 bool HasHomelessGuardian = false;
@@ -804,10 +805,10 @@ namespace giantsummon
                                 PotentialGuardians.Add(new GuardianID(GuardianNPCsInWorld[g].CharID.ID, GuardianNPCsInWorld[g].CharID.ModID));
                             }
                         }
-                        else if(!HasHomelessGuardian)
+                        else if (!HasHomelessGuardian)
                         {
                             GuardianBase gb = GuardianBase.GetGuardianBase(GuardianNPCsInWorld[g].CharID.ID, GuardianNPCsInWorld[g].CharID.ModID);
-                            if(gb.IsNocturnal == !Main.dayTime)
+                            if (gb.IsNocturnal == !Main.dayTime)
                                 PotentialGuardians.Add(new GuardianID(GuardianNPCsInWorld[g].CharID.ID, GuardianNPCsInWorld[g].CharID.ModID));
                         }
                     }
@@ -857,7 +858,7 @@ namespace giantsummon
                 ModID = MainMod.mod.Name;
             if (GuardianBase.GetGuardianBase(ID, ModID).MoveInLevel == 0)
                 return true;
-            for(int i = 0; i < 255; i++)
+            for (int i = 0; i < 255; i++)
             {
                 if (Main.player[i].active && PlayerMod.PlayerHasGuardian(Main.player[i], ID, ModID))
                 {
@@ -1013,7 +1014,7 @@ namespace giantsummon
             bool CanMoveIn = (int)(gb.Height * gb.GetScale) / 16 <= WorldGen.roomY2 - WorldGen.roomY1; //(gb.Height * gb.Scale)
             return CanMoveIn;
         }
-        
+
         public static bool Housing_IsRoomCrowded(GuardianBase tg)
         {
             int TownNPCCounterForHouse = Housing_GetMaxNumberOfHabitants();
@@ -1092,7 +1093,7 @@ namespace giantsummon
         {
             if (!WorldGen.StartRoomCheck(x, y))
             {
-                if(!Silent)Main.NewText("Is that a house?", new Color(255, 240, 20), false);
+                if (!Silent) Main.NewText("Is that a house?", new Color(255, 240, 20), false);
                 return false;
             }
             if (!tg.Base.RoomNeeds())
@@ -1118,7 +1119,7 @@ namespace giantsummon
                 return false;
             }
             GuardianTownNpcState townstate = tg.GetTownNpcInfo;
-            if(townstate == null)
+            if (townstate == null)
             {
                 AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
                 tg.TryFindingTownNpcInfo();
@@ -1265,7 +1266,7 @@ namespace giantsummon
                                         score = 0;
                                 }
                             }
-                            else if(Main.tile[x2, y2].type == 21)
+                            else if (Main.tile[x2, y2].type == 21)
                             {
                                 if (score > 0)
                                 {
@@ -1347,22 +1348,12 @@ namespace giantsummon
         public static void UpdateTileStateOnGuardianHouses(int PositionX, int PositionY, bool Addition)
         {
             Tile tile = MainMod.GetTile(PositionX, PositionY);
-            switch (tile.type)
+            foreach (GuardianBuildingInfo ghi in HouseInfos)
             {
-                case Terraria.ID.TileID.Chairs:
-                case Terraria.ID.TileID.Beds:
-                case Terraria.ID.TileID.Thrones:
-                case Terraria.ID.TileID.Benches:
-                    {
-                        foreach(GuardianBuildingInfo ghi in HouseInfos)
-                        {
-                            if(PositionX >= ghi.HouseStartX && PositionX <= ghi.HouseEndX && PositionY >= ghi.HouseStartY && PositionY <= ghi.HouseEndY)
-                            {
-                                ghi.UpdateTileState(tile.type, PositionX, PositionY, Addition);
-                            }
-                        }
-                    }
-                    break;
+                if (PositionX >= ghi.HouseStartX && PositionX <= ghi.HouseEndX && PositionY >= ghi.HouseStartY && PositionY <= ghi.HouseEndY)
+                {
+                    ghi.UpdateTileState(tile.type, PositionX, PositionY, Addition);
+                }
             }
         }
 

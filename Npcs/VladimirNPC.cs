@@ -609,6 +609,7 @@ namespace giantsummon.Npcs
                     {
                         Main.npcChatText = "*Aww... I wanted some more hug...*";
                         HuggingPlayer = -1;
+                        HasHugCommentHappened = false;
                     }
                 }
                 else

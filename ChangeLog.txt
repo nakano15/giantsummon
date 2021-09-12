@@ -24,3 +24,45 @@ The mod now knows who is the bounty monster, so you no longer is affected by deb
 Fixed an issue where bosses special effects and attacks weren't working.
 	Gladly, that didn't made a bug from Sapping and Osmose attacks to cause lots of rage.
 Terrarian companions can now have skin and outfit options.
+Miguel arrives!
+Quentin arrives!
+Companions will no longer have their last message on their head upon KO or Death.
+Changed where the friendship heart is shown on the companion dialogue interface.
+	Will be shown on the left of their head part, instead of the right.
+Added Trust system to the mod.
+	Companions gains trust with you:
+		When their friendship exp increases.
+		When their comfort stack increases (trust continues increasing even if comfort stacks are at max).
+		If the Trust level is lower than 20. Increases by 1 everyday. Also increases by 1 extra point if the companion is now living in your world.
+		Helped companion revive.
+	Companions loses trust with you:
+		When they enter knocked out state.
+		When they die.
+			For the above two, if the reason is seem to be by the player fault, the companion will lose more trust than usual.
+		When wall of flesh swallows them.
+		Cancelling a request from them that you've accepted.
+		Failing a request.
+	Depending on how low the friendship level of the companion is, they will refuse to:
+		Live in your world.
+		Follow you.
+		Giving Requests.
+		Letting you control them.
+	Depending on how low the friendship level drops, those may happen:
+		Companions will stop following you.
+		Companion will move out of the world.
+	You can check the trust level of the companion on the dialogue window.
+Companions will now try using certain potions depending on situation:
+	Obsidian Potion when they're inside lava, or are in the Underworld.
+	Gills potion, when they're underwater, and their breath metter is under 20%.
+Fixed an animation issue with Fluffles backward standing animation.
+	It were borrowing a frame from revive, instead of playing it correctly.
+Fixed a bug where tile placement in houses weren't updating correctly.
+Companions will try to abuse of pull saves for when:
+	About to take fall damage.
+	About to fall on lava.
+	When being inside lava.
+	When about to drown and your character isn't drowning.
+	Pull saves only happens when the companion is following you.
+Fixed a issue with the revive action for mounted companions.
+Companions afflicted by buffs or debuffs will no longer affect general companions commentaries.
+	That means there will be no delay before another companion be able to comment something.

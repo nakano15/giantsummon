@@ -143,7 +143,10 @@ namespace giantsummon.Npcs
             if (Idle)
             {
                 if (npc.direction == 0)
-                    npc.direction = (Main.rand.NextDouble() < 0.5 ? -1 : 1);
+                {
+                    npc.TargetClosest(true);
+                    //npc.direction = (Main.rand.NextDouble() < 0.5 ? -1 : 1);
+                }
                 if (IdleBehaviorTime <= 0)
                 {
                     IdleBehaviorType = (byte)Main.rand.Next(2);
@@ -280,10 +283,12 @@ namespace giantsummon.Npcs
             return base.CanChat();
         }
 
-        public int SayMessage(string Text)
+        public int SayMessage(string Text, bool Faster = false)
         {
             MessageText = Text;
             MessageTime = MainMod.CalculateMessageTime(Text);
+            if (Faster)
+                MessageTime = (int)(MessageTime * 0.8f);
             return MessageTime;
         }
         

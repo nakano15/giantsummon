@@ -30,7 +30,7 @@ namespace giantsummon.Creatures
             Mass = 0.45f;
             MaxSpeed += 1.8f;
             Acceleration = 0.26f;
-            SlowDown = 0.34f;
+            SlowDown = 0.38f;
             MaxJumpHeight = 12;
             JumpSpeed = 7.08f;
             CanDuck = true;
@@ -59,11 +59,12 @@ namespace giantsummon.Creatures
             ThroneSittingFrame = 22;
             BedSleepingFrame = 23;
             SleepingOffset.X = 16;
-            ReviveFrame = 24;
+            //ReviveFrame = 24;  //Rework animation before enabling this.
+            ReviveFrame = 21;
             DownedFrame = 25;
 
             BackwardStanding = 1;
-            BackwardRevive = 26;
+            //BackwardRevive = 26; //Needs animation rework, just like frame 24
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(16, 0);
@@ -112,6 +113,16 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(26, 25 - 2, 24 + 2);
         }
 
+        public override void Attributes(TerraGuardian g)
+        {
+            g.MeleeDamageMultiplier += 0.1f;
+            g.MeleeCriticalRate += 8;
+            g.DefenseRate += 0.02f;
+            if (g.BlockRate > 0)
+                g.BlockRate += 3;
+            g.CoverRate += 10;
+        }
+
         #region Messages
 
         public override string CallUnlockMessage => "*Hey, you! I need to find out if you are doing the exercises correctly. If you need me to train you personally, all you need is just to call. I can help you on your adventure too, on the way.*";
@@ -124,22 +135,12 @@ namespace giantsummon.Creatures
                 Frame = 0;
         }
 
-        public override void Attributes(TerraGuardian g)
-        {
-            g.MeleeDamageMultiplier += 0.1f;
-            g.MeleeCriticalRate += 8;
-            g.DefenseRate += 0.02f;
-            if (g.BlockRate > 0)
-                g.BlockRate += 3;
-            g.CoverRate += 10;
-        }
-
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             switch (Main.rand.Next(3))
             {
                 default:
-                    return "*Hey Terrarian, are you carrying many loots in that pouch of yours, or is that because you haven't been doing abdominal exercises? Hahahaha. Don't worry, though, I will help you take carry of that belly.*";
+                    return "*I see that you need some help making your muscles show up. Gladly I can help you with that.*";
                 case 1:
                     return "*It seems like you have been eating more than burning fat. I will prepare some exercises for you to do.*";
                 case 2:
@@ -157,6 +158,19 @@ namespace giantsummon.Creatures
             Mes.Add("*Just because you're doing exercises doesn't means you must eat poorly or light food. You need energy to burn, so eat a moderate plate of food. If you don't have energy, you'll pass out. Got it?*");
             Mes.Add("*I wonder if my wife will visit this world some day.*");
             Mes.Add("*Only because you get stronger doesn't means you get stupidier. The same is valid for the inverse. Keep that on mind.*");
+
+            if (player.HasBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.Fit>()))
+            {
+                Mes.Add("*I can already see some muscles on your body. Nice job.*");
+                Mes.Add("*Aren't you feeling better now that you are fit, [nickname]?*");
+                Mes.Add("*I see that you have been doing exercises frequently. That's really good.*");
+            }
+            else
+            {
+                Mes.Add("*You look a bit skinny right now. I can fix that with daily exercises specially for you.*");
+                Mes.Add("*Why your belly has more volume than the rest of your body? Let's change that.*");
+                Mes.Add("*Have you been eating many chips and junk food? Let's convert that fat into muscles.*");
+            }
 
             if (Main.dayTime)
             {
@@ -255,8 +269,12 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Liebre))
             {
-                Mes.Add("*I can't believe. [gn:"+Liebre+"] actually asked me for some exercises he cold do. I hope his plasma shell actually gets stronger.*");
-                Mes.Add("*Seeing [gn:"+Liebre+"] watching around, makes me feel like someone is about to die soon. It's creepy.*");
+                Mes.Add("*I can't believe. [gn:" + Liebre + "] actually asked me for some exercises he cold do. I hope his plasma shell actually gets stronger.*");
+                Mes.Add("*Seeing [gn:" + Liebre + "] watching around, makes me feel like someone is about to die soon. It's creepy.*");
+            }
+            if (NpcMod.HasGuardianNPC(Quentin))
+            {
+                Mes.Add("*[gn:" + Quentin + "] may have really strong willpower, but he need to have stronger arm and body too. Nobody wants to be knocked out by a punch in the face, right?*");
             }
 
             if (guardian.IsUsingToilet)
@@ -351,6 +369,13 @@ namespace giantsummon.Creatures
         {
             switch (MessageID)
             {
+                case MessageIDs.LeopoldMessage1:
+                    return "*Murmuring... Murmuring... Murmuring...*";
+                case MessageIDs.LeopoldMessage2:
+                    return "*Hey! Don't mock me. Why are you following that Terrarian?*";
+                case MessageIDs.LeopoldMessage3:
+                    return "*Pft. I'm their personal trainer, and that Terrarian is not stupid, they heard everything you said.*";
+                //
                 case MessageIDs.BuddySelected:
                     return "*Don't think I will take lightly with you for that, but thanks, anyways.*";
                 case MessageIDs.RescueMessage:
@@ -660,6 +685,19 @@ namespace giantsummon.Creatures
         private bool PlayerHasExercise()
         {
             return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CurrentExercise != ExerciseTypes.None;
+        }
+
+        public static void RefreshExercisesOfAllPlayers()
+        {
+            for(int i = 0; i < 255; i++)
+            {
+                if(Main.player[i].active)
+                {
+                    PlayerMod pm = Main.player[i].GetModPlayer<PlayerMod>();
+                    if (pm.CurrentExercise == ExerciseTypes.WaitUntilNextDay)
+                        pm.CurrentExercise = ExerciseTypes.None;
+                }
+            }
         }
 
         public enum ExerciseTypes : byte

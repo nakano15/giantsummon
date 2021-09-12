@@ -15,7 +15,8 @@ namespace giantsummon
 	public class MainMod : Mod
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
-            GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture, GSI_ForegroundInterfaceTexture, GSI_BackgroundInterfaceTexture;
+            GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture, GSI_ForegroundInterfaceTexture, GSI_BackgroundInterfaceTexture,
+            TrustIconsTexture;
         public static Texture2D EyeTexture;
         public static Texture2D TacticsBarTexture, TacticsIconsTexture;
         public static Texture2D TrappedCatTexture;
@@ -38,9 +39,9 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 92, LastModVersion = 91;
+        public const int ModVersion = 93, LastModVersion = 91;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -2925,6 +2926,7 @@ namespace giantsummon
                 GSI_BackgroundInterfaceTexture = GetTexture("Interface/gsi_bg");
                 GSI_ForegroundInterfaceTexture = GetTexture("Interface/gsi_fg");
                 ContributorIconTexture = GetTexture("Interface/Contributor_Icon");
+                TrustIconsTexture = GetTexture("Interface/Trust_Icons");
             }
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);

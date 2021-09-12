@@ -218,8 +218,8 @@ namespace giantsummon
                                         ((SelectedGuardian == 255 && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && x.HasMagicMirror)) ||
                                         (SelectedGuardian != 255 && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers[SelectedGuardian].HasMagicMirror)));
                                     AddOption(Option.OptionType.PlayerControl,
-                                        (SelectedGuardian == 255 && Guardians.Any(x => x.Active && x.HasFlag(GuardianFlags.PlayerControl))) ||
-                                        (SelectedGuardian < 255 && Guardians[SelectedGuardian].Active && Guardians[SelectedGuardian].HasFlag(GuardianFlags.PlayerControl)));
+                                        (SelectedGuardian == 255 && Guardians.Any(x => x.Active && x.HasFlag(GuardianFlags.PlayerControl) && x.TrustLevel >= TrustLevels.ControlTrust)) ||
+                                        (SelectedGuardian < 255 && Guardians[SelectedGuardian].Active && Guardians[SelectedGuardian].HasFlag(GuardianFlags.PlayerControl) && Guardians[SelectedGuardian].TrustLevel >= TrustLevels.ControlTrust));
                                     AddOption(Option.OptionType.SetLeader, SelectedGuardian != 0 && SelectedGuardian != 255 && !player.ControllingGuardian);
                                 }
                                 break;

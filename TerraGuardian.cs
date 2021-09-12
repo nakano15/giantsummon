@@ -937,6 +937,7 @@ namespace giantsummon
                 return Text;
             }
         }
+        public sbyte TrustLevel { get { return Data.TrustLevel; } }
         //For the display.
         public byte LastFriendshipLevel = 0, LastFriendshipValue = 0;
         public float FriendshipHeartDisplayTime = 0f;
@@ -1529,7 +1530,7 @@ namespace giantsummon
 
         public void BuffCommentary(int ID)
         {
-            if (MainMod.GeneralIdleCommentCooldown > 0 || HasCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown) || Downed || KnockedOut)
+            if (HasCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown) || Downed || KnockedOut)
                 return;
             string Mes = "";
             bool IsFoodBuff = false;
@@ -1625,7 +1626,7 @@ namespace giantsummon
                 SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
                 if (!IsFoodBuff)
                 {
-                    MainMod.SetIdleCommentCooldown();
+                    //MainMod.SetIdleCommentCooldown();
                     AddCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown, Main.rand.Next(45 * 60, 80 * 60));
                 }
             }
@@ -1828,7 +1829,10 @@ namespace giantsummon
         {
             if (player is null)
             {
-                player = Main.player[Main.myPlayer];
+                if (OwnerPos > -1)
+                    player = Main.player[OwnerPos];
+                else
+                    player = Main.player[Main.myPlayer];
             }
             PlayerMod pl = player.GetModPlayer<PlayerMod>();
             return pl.IsBuddiesMode && pl.IsPlayerBuddy(this);
@@ -3932,9 +3936,10 @@ namespace giantsummon
                                 if (KnockedOut)
                                 {
                                     Main.PlaySound(Terraria.ID.SoundID.NPCDeath13, ResultingPosition);
-                                    Main.NewText(Name + " was eaten by the Wall of Flesh.", Color.Red);
+                                    Main.NewText(Name + " was swallowed by the Wall of Flesh.", Color.Red);
                                     //DoForceKill(" was eaten by the Wall of Flesh.");
                                     WofFood = true;
+                                    ChangeTrustValue(TrustLevels.TrustLossWhenEatenByWof);
                                 }
                                 else
                                 {
@@ -5937,6 +5942,8 @@ namespace giantsummon
         {
             if (!MountedEdition && OwnerPos > -1 && !Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut && (PlayerMounted || SittingOnPlayerMount))
                 return;
+            if (MountedEdition && !MoveDown)
+                return;
             if (!DoAction.InUse && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
                 if (IsAttackingSomething)
@@ -6079,7 +6086,9 @@ namespace giantsummon
                     CheckIfCanDoAction();
                     if(!CanDualWield)
                         OffHandAction = true;
+                    CheckForSituationalPotionUsage();
                     CheckForLifeCrystals();
+                    CheckForPullSave();
                     if (!SittingOnPlayerMount && !PlayerMounted)
                     {
                         TryJumpingTallTiles();
@@ -6143,6 +6152,82 @@ namespace giantsummon
                     }
                 }
             }*/
+        }
+
+        public void CheckForPullSave()
+        {
+            if (OwnerPos == -1 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3) return;
+            bool LavaImmunity = HasFlag(GuardianFlags.LavaImmunity) || HasFlag(GuardianFlags.LavaTolerance);
+            if (Velocity.Y > 0)
+            {
+                bool WillTakeFallDamage = Position.Y * DivisionBy16 - FallStart >= FallHeightTolerance;
+                int TileStartX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16),
+                    TileEndX = (int)((Position.X + CollisionWidth * 0.5f + 1) * DivisionBy16);
+                int TileY = (int)(Position.Y * DivisionBy16);
+                for (byte y = 1; y <= 3; y++)
+                {
+                    for (int x = TileStartX; x <= TileEndX; x++)
+                    {
+                        if (WillTakeFallDamage && MainMod.IsSolidTile(x, y + TileY))
+                        {
+                            BePulledByPlayer();
+                            return;
+                        }
+                        Tile tile = MainMod.GetTile(x, y + TileY);
+                        if (tile.lava() && tile.liquid > 32 && !LavaImmunity)
+                        {
+                            BePulledByPlayer();
+                            return;
+                        }
+                    }
+                }
+            }
+            if(LavaWet && !LavaImmunity)
+            {
+                BePulledByPlayer();
+                return;
+            }
+            if(Breath < BreathMax * 0.1f && Main.player[OwnerPos].breath >= Main.player[OwnerPos].breathMax)
+            {
+                BePulledByPlayer();
+                return;
+            }
+        }
+
+        public void CheckForSituationalPotionUsage()
+        {
+            if (ItemAnimationTime > 0 || GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) != 5)
+                return;
+            if (LavaWet || Position.Y >= (Main.maxTilesY - 130) * 16)
+            {
+                if (HasItem(Terraria.ID.ItemID.ObsidianSkinPotion))
+                {
+                    for(int i = 0; i < 50; i++)
+                    {
+                        if(Inventory[i].type == Terraria.ID.ItemID.ObsidianSkinPotion)
+                        {
+                            SelectedItem = i;
+                            Action = true;
+                            return;
+                        }
+                    }
+                }
+            }
+            if (Wet && Breath < BreathMax * 0.2f)
+            {
+                if (HasItem(Terraria.ID.ItemID.GillsPotion))
+                {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        if (Inventory[i].type == Terraria.ID.ItemID.GillsPotion)
+                        {
+                            SelectedItem = i;
+                            Action = true;
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         public bool CheckIfIsSafeAhead()
@@ -7437,6 +7522,7 @@ namespace giantsummon
                 {
                     ComfortPoints++;
                 }
+                ChangeTrustValue(TrustLevels.TrustPointsPerComfortStack);
                 /*if (ComfortPoints >= MaxComfortExp)
                 {
                     ComfortPoints -= (byte)(10 + FriendshipLevel / 3);
@@ -9674,10 +9760,39 @@ namespace giantsummon
             IgnoreMass = false;
         }
 
+        public bool IsPlayerFaultCompanionKO()
+        {
+            for(int n = 0; n < 200; n++)
+            {
+                if(Main.npc[n].active && IsNpcHostile(Main.npc[n]) && InPerceptionRange(Main.npc[n].Center))
+                {
+                    return false;
+                }
+            }
+            for(int p = 0; p < Main.maxProjectiles; p++)
+            {
+                if(Main.projectile[p].active && Main.projectile[p].hostile && InPerceptionRange(Main.projectile[p].Center))
+                {
+                    return false;
+                }
+            }
+            if (LavaWet && TownNpcs > 0)
+            {
+                return true;
+            }
+            return true;
+        }
+
         public void EnterDownedState()
         {
             KnockoutBleedingTime = 0;
             bool LastWasKOd = KnockedOut;
+            if (!KnockedOut)
+            {
+                ChangeTrustValue((sbyte)(IsPlayerFaultCompanionKO() ? -15 : -5));
+                ChatMessage = "";
+                MessageSchedule.Clear();
+            }
             KnockedOut = true;
             if (!LastWasKOd && !IsPlayerHostile(Main.player[Main.myPlayer]) && InPerceptionRange(Main.player[Main.myPlayer].Center))
             {
@@ -9752,6 +9867,8 @@ namespace giantsummon
             HP = (int)((MHP / 2 + ReviveBoost * 10) * HealthRegenValue);
             Rotation = 0f;
             CombatText.NewText(HitBox, Color.Green, "Revived!", true);
+            if (ReviveBoost > 0)
+                ChangeTrustValue(TrustLevels.ReviveHelpTrustGain);
             if (OwnerPos == Main.myPlayer || OwnerPos == -1)
             {
                 string Mes = GetMessage(ReviveBoost > 0 ? GuardianBase.MessageIDs.ReviveByOthersHelp : GuardianBase.MessageIDs.RevivedByRecovery);
@@ -9810,6 +9927,11 @@ namespace giantsummon
                     Main.player[OwnerPos].KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason("'s " + Name + " has been defeated while under control."), 9999, 0);
                 }
             }
+            //
+            ChatMessage = "";
+            MessageSchedule.Clear();
+            //
+            ChangeTrustValue((sbyte)(IsPlayerFaultCompanionKO() ? -20 : -10));
             UsingFurniture = false;
             furniturex = furniturey = -1;
             BeingPulledByPlayer = false;
@@ -15000,6 +15122,12 @@ namespace giantsummon
             if (NewState != LastAnimationState)
                 AnimationTime = 0;
             LastAnimationState = NewState;
+            if(CarriedByGuardianID > -1)
+            {
+                BodyAnimationFrame = Base.StandingFrame;
+                LeftArmAnimationFrame = RightArmAnimationFrame = Base.JumpFrame;
+                return;
+            }
             if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()) && Velocity.X == 0 && Velocity.Y == 0 && !BeingPulledByPlayer)
             {
                 if (Base.DownedFrame > -1)
@@ -16726,9 +16854,38 @@ namespace giantsummon
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Value"></param>
+        public void ChangeTrustValue(sbyte Value)
+        {
+            sbyte LastTrustLevel = TrustLevel;
+            int NewTrustValue = LastTrustLevel + Value;
+            if (NewTrustValue < -100)
+                NewTrustValue = -100;
+            if (NewTrustValue > 100)
+                NewTrustValue = 100;
+            Data.TrustLevel = (sbyte)NewTrustValue;
+            if (!IsPlayerBuddy())
+            {
+                if (NewTrustValue <= TrustLevels.StopFollowingTrustLevel && OwnerPos > -1)
+                {
+                    Main.player[OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian(ID, ModID);
+                    Main.NewText(Name + " left your team.", Color.Red);
+                }
+                if (NewTrustValue < TrustLevels.MoveOutOfWorldTrustLevel && IsTownNpc)
+                {
+                    WorldMod.RemoveGuardianNPCToSpawn(ID, ModID);
+                    Main.NewText(Name + " doesn't want to live in your world anymore for now.", Color.Red);
+                }
+            }
+        }
+
         public void IncreaseFriendshipProgress(byte Value)
         {
             FriendshipProgression += Value;
+            ChangeTrustValue(TrustLevels.TrustPointsPerFriendshipExp);
         }
 
         public void CheckForLifeCrystals()
