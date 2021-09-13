@@ -1,69 +1,8 @@
-﻿Companions will now be affected by buffs of nearby tiles.
-Fixed an issue where the call dialogue added the companion to the team, when you don't have the space for it.
-Leopold now has a Tungsten Broadsword as one of his initial items.
-Malisha now has a Flintlock Pistol as one of her initial items.
-Companions will now try carrying fallen allies in combat.
-	Companion nearest to the fallen ally will try picking them up.
-	A minor recovery effect will happen when the companion is carrying the ally.
-	Upon being revived, the companion will wait a little moment before placing the ally on the floor, if it is safe to place ally on the floor.
-Shadow set visual effects will now work on companions.
-Removed the extra difficulty boost from bosses, when you try to spawn them from the request list.
-Being rescued will now remove Bleeding debuff from everyone in your team.
-Fixed a number of moments where the companion messages didn't had their text codes interpreted by the mod.
-Fixed a few shading issues on Cinnamon's body.
-Alexander will gain 2% Cover Rate for sleuthing Daphne, instead of 0,02%.
-	My bad.
-Fixed a bug where melee enchantment weren't working.
-The Weight bar in the GSI will only show up after you have got at least one companion following you.
-Increased the maximum weight of companions you can get from friendship rank to 7000.
-Companions will now comment which world the temple door was opened.
-Fixed a bug where the companion would tries to go reviving a fallen companion while mounted.
-Fixed a bug where newly met companion mentioning were counting as event finished.
-	Depending on the companion you spoke with while having that bug, would sound like as if they were extremelly anti social.
-The mod now knows who is the bounty monster, so you no longer is affected by debuffs from monsters that doesn't make sense.
-Fixed an issue where bosses special effects and attacks weren't working.
-	Gladly, that didn't made a bug from Sapping and Osmose attacks to cause lots of rage.
-Terrarian companions can now have skin and outfit options.
-Miguel arrives!
-	Do his daily exercises and get fit.
-Quentin arrives!
-Companions will no longer have their last message on their head upon KO or Death.
-Changed where the friendship heart is shown on the companion dialogue interface.
-	Will be shown on the left of their head part, instead of the right.
-Added Trust system to the mod.
-	Companions gains trust with you:
-		When their friendship exp increases.
-		When their comfort stack increases (trust continues increasing even if comfort stacks are at max).
-		If the Trust level is lower than 20. Increases by 1 everyday. Also increases by 1 extra point if the companion is now living in your world.
-		Helped companion revive.
-	Companions loses trust with you:
-		When they enter knocked out state.
-		When they die.
-			For the above two, if the reason is seem to be by the player fault, the companion will lose more trust than usual.
-		When wall of flesh swallows them.
-		Cancelling a request from them that you've accepted.
-		Failing a request.
-	Depending on how low the friendship level of the companion is, they will refuse to:
-		Live in your world.
-		Follow you.
-		Giving Requests.
-		Letting you control them.
-	Depending on how low the friendship level drops, those may happen:
-		Companions will stop following you.
-		Companion will move out of the world.
-	You can check the trust level of the companion on the dialogue window.
-Companions will now try using certain potions depending on situation:
-	Obsidian Potion when they're inside lava, or are in the Underworld.
-	Gills potion, when they're underwater, and their breath metter is under 20%.
-Fixed an animation issue with Fluffles backward standing animation.
-	It were borrowing a frame from revive, instead of playing it correctly.
-Fixed a bug where tile placement in houses weren't updating correctly.
-Companions will try to abuse of pull saves for when:
-	About to take fall damage.
-	About to fall on lava.
-	When being inside lava.
-	When about to drown and your character isn't drowning.
-	Pull saves only happens when the companion is following you.
-Fixed a issue with the revive action for mounted companions.
-Companions afflicted by buffs or debuffs will no longer affect general companions commentaries.
-	That means there will be no delay before another companion be able to comment something.
+﻿Added Alexander's missing greet messages.
+Glenn's recruit npc will no longer be saved with the world.
+Changed Quentin's colors.
+Quentin gained a description.
+Removed unnecessary extra info from Blue's description.
+	Of course she wouldn't rip apart creatures with her claws, right? Right?
+Fixed Quentin's face being the one of a Terrarian.
+Added Michelle's missing homeless dialogues.

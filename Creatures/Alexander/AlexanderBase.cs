@@ -252,6 +252,15 @@ namespace giantsummon.Creatures
             }
         }
 
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*You! No, you aren't the Terrarian I'm looking for. I can smell it.*");
+            Mes.Add("*You, stop! *snif snif* Hmmm... No, you're not who I wanted to find.*");
+            Mes.Add("*Hold on. *snif, snif snif, snif* Hm... I was checking if you were who I'm looking for, and you are not.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
@@ -277,6 +286,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*I can identify anyone by sleuthing them, but not everyone may like that idea.*");
                 Mes.Add("*Everytime I sleuth someone, I can replicate part of their strength.*");
                 Mes.Add("*I can identify Terrarians by sleuthing them, but I don't get stronger by doing so.*");
+                Mes.Add("*The only clue I've got from my investigation, is the scent of a unknown person that was at the place. I will find the one who has that scent.*");
 
                 if (!Main.dayTime && !Main.bloodMoon)
                 {

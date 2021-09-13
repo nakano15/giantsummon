@@ -53,7 +53,7 @@ namespace giantsummon.Npcs
         
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault(Base.Name);
+            DisplayName.SetDefault(NpcAlias);
         }
 
         public override void SetDefaults()

@@ -1468,7 +1468,7 @@ namespace giantsummon.Creatures
             return new CaptainStenchData(ID, ModID);
         }
 
-        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, SpriteEffects seffect, ref List<GuardianDrawData> gdds)
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, SpriteEffects seffect, Vector2 Origin, ref List<GuardianDrawData> gdds)
         {
             if (guardian.LookingLeft)
             {

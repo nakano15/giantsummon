@@ -493,7 +493,7 @@ namespace giantsummon.Creatures
             return new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, ScytheTexture, ScythePosition, new Rectangle(ScytheType * 66, 0, 66, 66), color, ScytheRotation, ScytheOrigin, Scale, ScytheEffect);
         }
 
-        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, SpriteEffects seffect, ref List<GuardianDrawData> gdds)
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, SpriteEffects seffect, Vector2 Origin, ref List<GuardianDrawData> gdds)
         {
             ReaperGuardianData data = (ReaperGuardianData)guardian.Data;
             Color NewColor = Lighting.GetColor((int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16)));

@@ -751,7 +751,7 @@ namespace giantsummon
         /// <param name="Scale">The sprite scale.</param>
         /// <param name="seffect">The direction the sprite is facing.</param>
         /// <param name="gdd">Modify this list to change how the companion head will be drawn. You can even alter elements. Check textureType variable inside the list contents to check what It will draw.</param>
-        public virtual void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdds)
+        public virtual void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, Vector2 Origin, ref List<GuardianDrawData> gdds)
         {
 
         }

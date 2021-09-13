@@ -169,7 +169,7 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(MeatBagTextureFrontID, "meatbagoutfit_f");
         }
 
-        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, ref List<GuardianDrawData> gdd)
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, Vector2 Origin, ref List<GuardianDrawData> gdd)
         {
             if (guardian.SkinID == OldBodySkinID)
             {

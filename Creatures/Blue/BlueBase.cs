@@ -33,7 +33,7 @@ namespace giantsummon.Creatures
         public BlueBase()
         {
             Name = "Blue"; //Green Eyes
-            Description = "It may not look like it, but she really cares about her look.\nShe constantly does her hair and paints her nail.\nSometimes they are painted red, but doesn't really mean...";
+            Description = "It may not look like it, but she really cares about her look.\nShe constantly does her hair and paints her nail.";
             //She also likes bunnies.
             Size = GuardianSize.Large;
             Width = 26;

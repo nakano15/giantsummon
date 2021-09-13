@@ -18116,13 +18116,14 @@ namespace giantsummon
                 DrawTerrarianHeadData(Position, Scale);
                 return;
             }
+            Vector2 Origin = Vector2.Zero;
             Position.X -= Base.sprites.HeadSprite.Width * XOffset;
             Position.Y -= Base.sprites.HeadSprite.Height * YOffset;
             List<GuardianDrawData> gddlist = new List<GuardianDrawData>();
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, Base.sprites.HeadSprite, Position,
-                null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None);
+                null, Color.White, 0f, Origin, Scale, SpriteEffects.None);
             gddlist.Add(gdd);
-            Base.GuardianModifyDrawHeadScript(this, Position, Color.White, Scale, SpriteEffects.None, ref gddlist);
+            Base.GuardianModifyDrawHeadScript(this, Position, Color.White, Scale, SpriteEffects.None, Origin, ref gddlist);
             foreach (GuardianDrawData d in gddlist)
                 d.Draw(Main.spriteBatch);
         }
@@ -18175,7 +18176,7 @@ namespace giantsummon
                     gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect));
                 }
             }
-            Base.GuardianModifyDrawHeadScript(this, Position, SkinColor, Scale, seffect, ref gddlist);
+            Base.GuardianModifyDrawHeadScript(this, Position, SkinColor, Scale, seffect, Origin, ref gddlist);
             foreach (GuardianDrawData gdd in gddlist)
                 gdd.Draw(Main.spriteBatch);
         }

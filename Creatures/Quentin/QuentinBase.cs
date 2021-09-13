@@ -15,7 +15,7 @@ namespace giantsummon.Creatures
         public QuentinBase()
         {
             Name = "Quentin";
-            Description = "totote97 forgot about this.\nEven Nakano15 forgot about this too.";
+            Description = "He is a young green bunny who dreams of becoming \na powerful wizard one day, his hobbies are reading \nfiction books and telling stories.";
             Age = 15;
             SetBirthday(SEASON_AUTUMN, 3);
             Male = true;
@@ -36,19 +36,20 @@ namespace giantsummon.Creatures
             //Effect = GuardianEffect.Wraith;
             //IsNocturnal = true;
             SetTerrarian();
+            Scale += 0.03f;
             //HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit54);
             //DeadSound = new SoundData(Terraria.ID.SoundID.NPCDeath52);
             CallUnlockLevel = 0;
 
             TerrarianInfo.HairStyle = 15;
             TerrarianInfo.SkinVariant = 0;
-            TerrarianInfo.HairColor = new Color(215, 90, 55);
-            TerrarianInfo.EyeColor = new Color(105, 90, 75);
-            TerrarianInfo.SkinColor = new Color(203, 255, 90);
-            TerrarianInfo.ShirtColor = new Color(203, 255, 90);
-            TerrarianInfo.UnderShirtColor = new Color(203, 255, 90);
-            TerrarianInfo.PantsColor = new Color(203, 255, 90);
-            TerrarianInfo.ShoeColor = new Color(203, 255, 90);
+            TerrarianInfo.HairColor = new Color(153, 229, 80); //old: 215, 90, 55
+            TerrarianInfo.EyeColor = new Color(0, 0, 0); //old: 105, 90, 75
+            TerrarianInfo.SkinColor = new Color(153, 229, 80); //old: 203, 255, 90
+            TerrarianInfo.ShirtColor = new Color(153, 229, 80); //old: 203, 255, 90
+            TerrarianInfo.UnderShirtColor = new Color(153, 229, 80); //old: 203, 255, 90
+            TerrarianInfo.PantsColor = new Color(153, 229, 80); //old: 203, 255, 90
+            TerrarianInfo.ShoeColor = new Color(153, 229, 80); //old: 203, 255, 90
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
@@ -63,6 +64,38 @@ namespace giantsummon.Creatures
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
             sprites.AddExtraTexture(HeadTextureID, "QuentinHead");
+        }
+
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, SpriteEffects seffect, Vector2 Origin, ref List<GuardianDrawData> gdds)
+        {
+            Texture2D texture = sprites.GetExtraTexture(HeadTextureID);
+            Vector2 Position = DrawPosition;
+            Position.Y -= 2;
+            for(int i = gdds.Count - 1; i >= 0; i--)
+            {
+                if (gdds[i].textureType == GuardianDrawData.TextureType.PlEye ||
+                    gdds[i].textureType == GuardianDrawData.TextureType.PlEyeWhite)
+                {
+                    gdds.RemoveAt(i);
+                }
+                if (gdds[i].textureType == GuardianDrawData.TextureType.PlHead)
+                {
+                    Rectangle rect = new Rectangle(0, 0, 40, 58);
+                    GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
+                        Color.White, 0f, Origin, Scale, seffect);
+                    if (i + 1 >= gdds.Count)
+                        gdds.Add(gdd);
+                    else
+                        gdds.Insert(i + 1, gdd);
+                    rect.Y = rect.Height * (guardian.SkinID == 1 ? 2 : 1);
+                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
+                         Color.White, 0f, Origin, Scale, seffect);
+                    if (i + 2 >= gdds.Count)
+                        gdds.Add(gdd);
+                    else
+                        gdds.Insert(i + 2, gdd);
+                }
+            }
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)

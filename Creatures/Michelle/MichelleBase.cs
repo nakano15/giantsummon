@@ -272,6 +272,14 @@ namespace giantsummon.Creatures
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("Come on, give me a house, will you?");
+            Mes.Add("I need a place to stay when not in an adventure.");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
         public override string BirthdayMessage(Terraria.Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();

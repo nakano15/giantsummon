@@ -19,6 +19,12 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetDefaults()
+        {
+            npc.townNPC = false;
+            npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
+        }
+
         public override void AI()
         {
             Idle = true;
@@ -43,7 +49,12 @@ namespace giantsummon.Npcs
             }
             else
             {
-                if (!Main.player[npc.target].active)
+                if(npc.target < 0 || npc.target > 255)
+                {
+                    DialogueStep = 0;
+                    SayMessage("...");
+                }
+                else if (!Main.player[npc.target].active)
                 {
                     DialogueStep = 0;
                     SayMessage((Main.player[npc.target].Male ? "He's" : "She's") + " gone. How?");
@@ -55,16 +66,17 @@ namespace giantsummon.Npcs
                 }
                 else
                 {
+                    Player player = Main.player[npc.target];
                     Idle = false;
-                    bool HasBree = PlayerMod.PlayerHasGuardianSummoned(Main.player[npc.target], GuardianBase.Bree),
-                        HasSardine = PlayerMod.PlayerHasGuardianSummoned(Main.player[npc.target], GuardianBase.Sardine),
-                        HasZacks = PlayerMod.PlayerHasGuardianSummoned(Main.player[npc.target], GuardianBase.Zacks);
+                    bool HasBree = PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Bree),
+                        HasSardine = PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Sardine),
+                        HasZacks = PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Zacks);
                     if (HasSardine)
-                        PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine).LookAt(npc.Center);
+                        PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).LookAt(npc.Center);
                     if (HasBree)
-                        PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree).LookAt(npc.Center);
+                        PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree).LookAt(npc.Center);
                     if (HasZacks && (!HasBree && !HasSardine))
-                        PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Zacks).LookAt(npc.Center);
+                        PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Zacks).LookAt(npc.Center);
                     if (Delay > 0)
                         Delay--;
                     else
@@ -75,30 +87,30 @@ namespace giantsummon.Npcs
                                 {
                                     if (PlayerHasMetGlenn)
                                     {
-                                        StareAt(Main.player[npc.target]);
+                                        StareAt(player);
                                         Delay = SayMessage("Hey Terrarian, over here!");
                                     }
                                     else if (HasBree && HasSardine)
                                     {
                                         if (Main.rand.Next(2) == 0)
-                                            StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree));
+                                            StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree));
                                         else
-                                            StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine));
+                                            StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine));
                                         Delay = SayMessage("Mom! Dad! I'm glad you're alright.");
                                     }
                                     else if (HasBree)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree));
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree));
                                         Delay = SayMessage("Mom! I'm glad you're safe, but... Where's dad?");
                                     }
                                     else if (HasSardine)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine));
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine));
                                         Delay = SayMessage("Dad! I'm glad you're safe, but... Where's mom?");
                                     }
                                     else
                                     {
-                                        StareAt(Main.player[npc.target]);
+                                        StareAt(player);
                                         Delay = SayMessage("Hey, Terrarian. Can you help me?");
                                     }
                                     DialogueStep = 2;
@@ -108,36 +120,36 @@ namespace giantsummon.Npcs
                                 {
                                     if (PlayerHasMetGlenn)
                                     {
-                                        StareAt(Main.player[npc.target]);
+                                        StareAt(player);
                                         Delay = SayMessage("Since you moved out of the world, I was trying to look for where my house is at.");
                                     }
                                     else if (HasBree && HasSardine)
                                     {
-                                        PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree).SaySomething("Glenn!!");
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine).SaySomething("Glenn, what are you doing here?");
+                                        PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree).SaySomething("Glenn!!");
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).SaySomething("Glenn, what are you doing here?");
                                     }
                                     else if (HasBree)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree).SaySomething("Glenn!! I'm glad you're safe. You didn't found your dad, either?");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree).SaySomething("Glenn!! I'm glad you're safe. You didn't found your dad, either?");
                                     }
                                     else if (HasSardine)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine).SaySomething("Glenn, what are you doing here? And what you're saying about your mom? Wasn't she with you?");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).SaySomething("Glenn, what are you doing here? And what you're saying about your mom? Wasn't she with you?");
                                     }
                                     else
                                     {
-                                        if (Math.Abs(Main.player[npc.target].Center.X - npc.Center.X) >= 600 ||
-                                            Math.Abs(Main.player[npc.target].Center.Y - npc.Center.Y) >= 400)
+                                        if (Math.Abs(player.Center.X - npc.Center.X) >= 600 ||
+                                            Math.Abs(player.Center.Y - npc.Center.Y) >= 400)
                                         {
-                                            Delay = SayMessage("And " + (Main.player[npc.target].Male ? "he" : "she") + "'s gone....");
+                                            Delay = SayMessage("And " + (player.Male ? "he" : "she") + "'s gone....");
                                             DialogueStep = 0;
                                             //npc.target = -1;
                                         }
                                         else
                                         {
-                                            StareAt(Main.player[npc.target]);
+                                            StareAt(player);
                                         }
                                         break;
                                     }
@@ -148,7 +160,7 @@ namespace giantsummon.Npcs
                                 {
                                     if (PlayerHasMetGlenn)
                                     {
-                                        StareAt(Main.player[npc.target]);
+                                        StareAt(player);
                                         Delay = SayMessage("So far, I didn't had any luck with that...");
                                     }
                                     else if (HasBree && HasSardine)
@@ -165,7 +177,7 @@ namespace giantsummon.Npcs
                                     }
                                     else if (HasZacks) //Deactivated for now
                                     {
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Zacks).SaySomething(
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Zacks).SaySomething(
                                             "**");
                                     }
                                     else
@@ -181,22 +193,22 @@ namespace giantsummon.Npcs
                                 {
                                     if (PlayerHasMetGlenn)
                                     {
-                                        StareAt(Main.player[npc.target]);
+                                        StareAt(player);
                                         Delay = SayMessage("Anyways, I'm here, if you need me.");
                                         NpcMod.AddGuardianMet(GuardianID);
-                                        PlayerMod.AddPlayerGuardian(Main.player[npc.target], GuardianID);
+                                        PlayerMod.AddPlayerGuardian(player, GuardianID);
                                         WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID);
                                         return;
                                     }
                                     else if (HasBree)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree).SaySomething("But, It's too dangerous for you to be travelling alone.");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree).SaySomething("But, It's too dangerous for you to be travelling alone.");
                                     }
                                     else if (HasSardine)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine).SaySomething("You should have waited for us at home.");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).SaySomething("You should have waited for us at home.");
                                     }
                                     else
                                     {
@@ -226,13 +238,13 @@ namespace giantsummon.Npcs
                                 {
                                     if (HasSardine)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine).SaySomething("At least you managed to get here safe. So, do you remember which world we came from?");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).SaySomething("At least you managed to get here safe. So, do you remember which world we came from?");
                                     }
                                     else if (HasBree)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree).SaySomething("I feel a bit better for seeing you again... Do you know our way back home?");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree).SaySomething("I feel a bit better for seeing you again... Do you know our way back home?");
                                     }
                                     else
                                     {
@@ -262,13 +274,13 @@ namespace giantsummon.Npcs
                                 {
                                     if (HasBree)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree).SaySomething("...");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree).SaySomething("...");
                                     }
                                     else if (HasSardine)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine).SaySomething("Well... Looks like you'll have to stay here meanwhile.");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).SaySomething("Well... Looks like you'll have to stay here meanwhile.");
                                     }
                                     else
                                     {
@@ -302,13 +314,13 @@ namespace giantsummon.Npcs
                                 {
                                     if (HasBree)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Bree).SaySomething("It seems like we'll have to live here for longer, until we remember where our home is.");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Bree).SaySomething("It seems like we'll have to live here for longer, until we remember where our home is.");
                                     }
                                     else if (HasSardine)
                                     {
-                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine));
-                                        Delay = PlayerMod.GetPlayerSummonedGuardian(Main.player[npc.target], GuardianBase.Sardine).SaySomething("Don't worry about It, the people here are very nice.");
+                                        StareAt(PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine));
+                                        Delay = PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).SaySomething("Don't worry about It, the people here are very nice.");
                                     }
                                     else
                                     {
@@ -321,7 +333,7 @@ namespace giantsummon.Npcs
                                 break;
                             case 11:
                                 {
-                                    StareAt(Main.player[npc.target]);
+                                    StareAt(player);
                                     if (HasBree)
                                     {
                                         Delay = SayMessage("Alright. My name is " + Base.Name + ", I hope you don't mind if I stay with my parents.");
@@ -337,7 +349,7 @@ namespace giantsummon.Npcs
                                         break;
                                     }
                                     NpcMod.AddGuardianMet(GuardianID, "", true);
-                                    PlayerMod.AddPlayerGuardian(Main.player[npc.target], GuardianID);
+                                    PlayerMod.AddPlayerGuardian(player, GuardianID);
                                     WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID);
                                 }
                                 break;
