@@ -569,8 +569,7 @@ namespace giantsummon
                     }
                     else if (tg.request.requestState == RequestData.RequestState.NewRequestReady)
                     {
-                        if(tg.TrustLevel >= TrustLevels.RequestGivingTrust)
-                            OptionText = "Need Something?";
+                        OptionText = "Need Something?";
                     }
                     else if (tg.request.requestState == RequestData.RequestState.HasExistingRequestReady)
                     {
@@ -648,7 +647,7 @@ namespace giantsummon
 
         public static void AskGuardianToFollowYouButtonPressed(TerraGuardian tg)
         {
-            if ((!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && (!tg.request.Active || !tg.request.RequiresGuardianActive(tg.Data))) || tg.TrustLevel < TrustLevels.FollowTrust)
+            if ((!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && (!tg.request.Active || !tg.request.RequiresGuardianActive(tg.Data))) || (!MainMod.ShowDebugInfo && tg.TrustLevel < TrustLevels.FollowTrust))
             {
                 SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), tg);
                 HideCallDismissButton = true;
@@ -744,93 +743,102 @@ namespace giantsummon
         public static void CheckRequestButtonAction(TerraGuardian tg)
         {
             GuardianData data = tg.Data;
-            if (data.request.requestState == RequestData.RequestState.NewRequestReady)
-                data.request.SpawnNewRequest(data, MainPlayer.GetModPlayer<PlayerMod>());
-            switch (data.request.requestState)
+            if (!MainMod.ShowDebugInfo && tg.TrustLevel < TrustLevels.RequestGivingTrust)
             {
-                case RequestData.RequestState.Cooldown:
-                    SetDialogue(data.Base.NoRequestMessage(MainPlayer, tg), tg);
-                    break;
-                case RequestData.RequestState.HasExistingRequestReady:
-                    if (data.request.IsTalkQuest)
-                    {
-                        data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>());
-                        GetDefaultOptions(tg);
-                    }
-                    else
-                    {
-                        string Mes = data.request.GetRequestBrief(data, tg);
-                        if (Mes == "")
-                        {
-                            Mes = data.Base.HasRequestMessage(MainPlayer, tg);
-                        }
-                        if (data.request.IsCommonRequest)
-                        {
-                            foreach (string s in data.request.GetRequestText(MainPlayer, data, true))
-                            {
-                                Mes += "\n" + s;
-                            }
-                        }
-                        SetDialogue(Mes, tg);
-                        Options.Clear();
-                        AddOption("Accept", AcceptRequestButtonAction);
-                        AddOption("Reject", RejectRequestButtonAction);
-                        AddOption("Maybe later", PostponeRequestButtonAction);
-                    }
-                    break;
-                case RequestData.RequestState.RequestActive:
-                    {
-                        bool GiveOptionToCancelRequest = false;
-                        if (data.request.IsTalkQuest && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
-                        {
-                            //GiveOptionToCancelRequest = true;
-                            GetDefaultOptions(tg);
-                        }
-                        else if (data.request.Failed)
+                SetDialogue(data.Base.NoRequestMessage(MainPlayer, tg) + "\n[It doesn't seems to trust you enough for this.]", tg);
+                GetDefaultOptions(tg);
+            }
+            else
+            {
+                if (data.request.requestState == RequestData.RequestState.NewRequestReady)
+                    data.request.SpawnNewRequest(data, MainPlayer.GetModPlayer<PlayerMod>());
+                switch (data.request.requestState)
+                {
+                    case RequestData.RequestState.Cooldown:
+                        SetDialogue(data.Base.NoRequestMessage(MainPlayer, tg), tg);
+                        break;
+                    case RequestData.RequestState.HasExistingRequestReady:
+                        if (data.request.IsTalkQuest)
                         {
                             data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>());
-                            SetDialogue(data.request.GetRequestFailed(data, tg), tg);
-                            //GiveOptionToCancelRequest = true;
                             GetDefaultOptions(tg);
-                        }
-                        else if (data.request.RequestCompleted && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
-                        {
-                            string Mes = data.request.GetRequestComplete(data, tg);
-                            if (Mes == "")
-                                Mes = data.Base.CompletedRequestMessage(MainPlayer, tg);
-                            SetDialogue(Mes, tg);
-                            //GiveOptionToCancelRequest = true;
-                            //GetDefaultOptions(tg);
-                            Options.Clear();
-                            AddOption("No problem.", delegate (TerraGuardian tg2) {
-                                if(!ShowImportantMessages(tg2))
-                                {
-                                    GetDefaultOptions(tg2);
-                                }
-                            });
                         }
                         else
                         {
-                            string Mes = data.request.GetRequestInfo(data);
+                            string Mes = data.request.GetRequestBrief(data, tg);
                             if (Mes == "")
                             {
-                                Mes = "(I were given a list of things you need to do.)";
+                                Mes = data.Base.HasRequestMessage(MainPlayer, tg);
                             }
-                            Mes += "\n---------------------";
-                            foreach (string s in data.request.GetRequestText(MainPlayer, data))
+                            if (data.request.IsCommonRequest)
                             {
-                                Mes += "\n" + s;
+                                foreach (string s in data.request.GetRequestText(MainPlayer, data, true))
+                                {
+                                    Mes += "\n" + s;
+                                }
                             }
                             SetDialogue(Mes, tg);
                             Options.Clear();
-                            AddOption("Cancel Request", CancelRequestButtonAction);
-                            AddOption("Thanks", delegate (TerraGuardian tg2)
-                            {
-                                GetDefaultOptions(tg2);
-                            });
+                            AddOption("Accept", AcceptRequestButtonAction);
+                            AddOption("Reject", RejectRequestButtonAction);
+                            AddOption("Maybe later", PostponeRequestButtonAction);
                         }
-                    }
-                    break;
+                        break;
+                    case RequestData.RequestState.RequestActive:
+                        {
+                            bool GiveOptionToCancelRequest = false;
+                            if (data.request.IsTalkQuest && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
+                            {
+                                //GiveOptionToCancelRequest = true;
+                                GetDefaultOptions(tg);
+                            }
+                            else if (data.request.Failed)
+                            {
+                                data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>());
+                                SetDialogue(data.request.GetRequestFailed(data, tg), tg);
+                                //GiveOptionToCancelRequest = true;
+                                GetDefaultOptions(tg);
+                            }
+                            else if (data.request.RequestCompleted && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
+                            {
+                                string Mes = data.request.GetRequestComplete(data, tg);
+                                if (Mes == "")
+                                    Mes = data.Base.CompletedRequestMessage(MainPlayer, tg);
+                                SetDialogue(Mes, tg);
+                                //GiveOptionToCancelRequest = true;
+                                //GetDefaultOptions(tg);
+                                Options.Clear();
+                                AddOption("No problem.", delegate (TerraGuardian tg2)
+                                {
+                                    if (!ShowImportantMessages(tg2))
+                                    {
+                                        GetDefaultOptions(tg2);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                string Mes = data.request.GetRequestInfo(data);
+                                if (Mes == "")
+                                {
+                                    Mes = "(I were given a list of things you need to do.)";
+                                }
+                                Mes += "\n---------------------";
+                                foreach (string s in data.request.GetRequestText(MainPlayer, data))
+                                {
+                                    Mes += "\n" + s;
+                                }
+                                SetDialogue(Mes, tg);
+                                Options.Clear();
+                                AddOption("Cancel Request", CancelRequestButtonAction);
+                                AddOption("Thanks", delegate (TerraGuardian tg2)
+                                {
+                                    GetDefaultOptions(tg2);
+                                });
+                            }
+                        }
+                        break;
+                }
             }
         }
 

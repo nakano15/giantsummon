@@ -16868,7 +16868,7 @@ namespace giantsummon
             if (NewTrustValue > 100)
                 NewTrustValue = 100;
             Data.TrustLevel = (sbyte)NewTrustValue;
-            if (!IsPlayerBuddy())
+            if (!IsPlayerBuddy() && !MainMod.ShowDebugInfo)
             {
                 if (NewTrustValue <= TrustLevels.StopFollowingTrustLevel && OwnerPos > -1)
                 {

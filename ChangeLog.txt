@@ -6,7 +6,7 @@ Companions will now try carrying fallen allies in combat.
 	Companion nearest to the fallen ally will try picking them up.
 	A minor recovery effect will happen when the companion is carrying the ally.
 	Upon being revived, the companion will wait a little moment before placing the ally on the floor, if it is safe to place ally on the floor.
-Shadow and Crimson set visual effects will now work on companions.
+Shadow set visual effects will now work on companions.
 Removed the extra difficulty boost from bosses, when you try to spawn them from the request list.
 Being rescued will now remove Bleeding debuff from everyone in your team.
 Fixed a number of moments where the companion messages didn't had their text codes interpreted by the mod.
@@ -25,6 +25,7 @@ Fixed an issue where bosses special effects and attacks weren't working.
 	Gladly, that didn't made a bug from Sapping and Osmose attacks to cause lots of rage.
 Terrarian companions can now have skin and outfit options.
 Miguel arrives!
+	Do his daily exercises and get fit.
 Quentin arrives!
 Companions will no longer have their last message on their head upon KO or Death.
 Changed where the friendship heart is shown on the companion dialogue interface.

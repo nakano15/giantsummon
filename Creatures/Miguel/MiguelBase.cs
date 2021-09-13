@@ -87,7 +87,9 @@ namespace giantsummon.Creatures
             LeftHandPoints.AddFramePoint2x(20, 33, 23);
             LeftHandPoints.AddFramePoint2x(21, 32, 42);
 
-            LeftHandPoints.AddFramePoint2x(24, 37, 46);
+            LeftHandPoints.AddFramePoint2x(24, 32, 46);
+
+            LeftHandPoints.AddFramePoint2x(26, 32, 46);
 
             //Right Arm
             RightHandPoints.AddFramePoint2x(12, 24, 12);
@@ -99,7 +101,9 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(20, 36, 23);
             RightHandPoints.AddFramePoint2x(21, 35, 42);
 
-            RightHandPoints.AddFramePoint2x(24, 40, 46);
+            RightHandPoints.AddFramePoint2x(24, 32, 46);
+
+            RightHandPoints.AddFramePoint2x(26, 32, 46);
 
             //Mount Position
             MountShoulderPoints.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(17, 23);

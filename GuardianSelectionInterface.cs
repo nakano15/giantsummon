@@ -1274,7 +1274,7 @@ namespace giantsummon
             //Dismiss Button (left)
             if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian &&
                 (!PlayerMod.HasBuddiesModeOn(player.player) || !PlayerMod.GetPlayerBuddy(player.player).IsSameID(DisplayGuardian)) &&
-                (((DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter) && DisplayGuardian.TrustLevel >= TrustLevels.FollowTrust) || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive(DisplayGuardian.Data)) ||
+                (((DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter) && (MainMod.ShowDebugInfo || DisplayGuardian.TrustLevel >= TrustLevels.FollowTrust)) || (DisplayGuardian.request.Active && DisplayGuardian.request.RequiresGuardianActive(DisplayGuardian.Data)) ||
                 PlayerMod.PlayerHasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID)) &&
                 (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(ContentList[Selected].Index)) &&
                 ((player.GetEmptyGuardianSlot() < 255 && (!player.Guardian.Active || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
@@ -1347,7 +1347,7 @@ namespace giantsummon
             }
             //Home Button (Center)
             if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel) && 
-                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID) || DisplayGuardian.TrustLevel >= TrustLevels.MoveInTrust))
+                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID) || (MainMod.ShowDebugInfo || DisplayGuardian.TrustLevel >= TrustLevels.MoveInTrust)))
             {
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 265 + 41;

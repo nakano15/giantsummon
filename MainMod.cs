@@ -219,7 +219,7 @@ namespace giantsummon
         public static GuardianID[] GetPossibleStarterGuardians()
         {
             List<GuardianID> PossibleGuardians = new List<GuardianID>();
-            PossibleGuardians.AddRange(MainMod.InitialGuardians);
+            PossibleGuardians.AddRange(InitialGuardians);
             foreach (Terraria.IO.PlayerFileData pfd in Main.PlayerList)
             {
                 try

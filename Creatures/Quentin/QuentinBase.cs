@@ -15,7 +15,7 @@ namespace giantsummon.Creatures
         public QuentinBase()
         {
             Name = "Quentin";
-            Description = "";
+            Description = "totote97 forgot about this.\nEven Nakano15 forgot about this too.";
             Age = 15;
             SetBirthday(SEASON_AUTUMN, 3);
             Male = true;
