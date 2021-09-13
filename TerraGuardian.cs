@@ -11722,7 +11722,7 @@ namespace giantsummon
                                 DamageStack = Main.npc[n].damage;
                                 AttackDirection = Main.npc[n].direction;
                             }
-                            if(GuardianBountyQuest.TargetMonsterID == n)
+                            if(GuardianBountyQuest.TargetMonsterSpawnPosition == n)
                             {
                                 GuardianBountyQuest.OnBountyMonsterHitTerraGuardian(this);
                             }
@@ -15122,10 +15122,11 @@ namespace giantsummon
             if (NewState != LastAnimationState)
                 AnimationTime = 0;
             LastAnimationState = NewState;
-            if(CarriedByGuardianID > -1)
+            if (CarriedByGuardianID > -1)
             {
                 BodyAnimationFrame = Base.StandingFrame;
                 LeftArmAnimationFrame = RightArmAnimationFrame = Base.JumpFrame;
+                ApplyFrameAnimationChangeScripts();
                 return;
             }
             if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()) && Velocity.X == 0 && Velocity.Y == 0 && !BeingPulledByPlayer)

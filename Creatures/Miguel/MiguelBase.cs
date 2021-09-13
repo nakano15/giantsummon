@@ -59,16 +59,18 @@ namespace giantsummon.Creatures
             ThroneSittingFrame = 22;
             BedSleepingFrame = 23;
             SleepingOffset.X = 16;
-            //ReviveFrame = 24;  //Rework animation before enabling this.
-            ReviveFrame = 21;
+            ReviveFrame = 24;  //Rework animation before enabling this.
+            //ReviveFrame = 21;
             DownedFrame = 25;
 
             BackwardStanding = 1;
-            //BackwardRevive = 26; //Needs animation rework, just like frame 24
+            BackwardRevive = 26; //Needs animation rework, just like frame 24
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(16, 0);
             BodyFrontFrameSwap.Add(17, 0);
+
+            RightArmFrontFrameSwap.Add(24, 0);
 
             SittingPoint2x = new Microsoft.Xna.Framework.Point(22, 47);
 

@@ -428,6 +428,7 @@
     <Content Include="Creatures\Miguel\head.png" />
     <Content Include="Creatures\Miguel\left_arm.png" />
     <Content Include="Creatures\Miguel\right_arm.png" />
+    <Content Include="Creatures\Miguel\right_arm_front.png" />
     <Content Include="Creatures\Minerva\body.png" />
     <Content Include="Creatures\Minerva\body_front.png" />
     <Content Include="Creatures\Minerva\head.png" />
