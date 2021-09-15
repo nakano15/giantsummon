@@ -1154,7 +1154,7 @@ namespace giantsummon
                         gb = new DaphneBase();
                         break;
                     case 19:
-                        gb = new BunnyReaperGuardianBase();
+                        gb = new LiebreBase();
                         break;
                     case 20:
                         gb = new BaphaBase();

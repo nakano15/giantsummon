@@ -14,6 +14,7 @@ namespace giantsummon
         public static PlayerDataBackup backup, drawBackup;
         public static bool BackupUsed = false, drawBackupUsed = false;
         private int MyParent = -1;
+        public bool SpawnClearOwnership = false;
 
         public override bool InstancePerEntity
         {
@@ -43,6 +44,7 @@ namespace giantsummon
 
         public override void SetDefaults(Projectile projectile)
         {
+            SpawnClearOwnership = true;
             MyParent = ProjParent;
             switch (projectile.type)
             {
@@ -69,6 +71,15 @@ namespace giantsummon
         
         public override bool PreAI(Projectile projectile)
         {
+            if (SpawnClearOwnership)
+            {
+                if (IsGuardianProjectile(projectile.whoAmI))
+                {
+                    GuardianProj.Remove(projectile.whoAmI);
+                }
+                SpawnClearOwnership = false;
+            }
+            BackupUsed = false;
             if (MyParent > -1 && GuardianProj.ContainsKey(MyParent))
             {
                 if (GuardianProj.ContainsKey(projectile.whoAmI))
@@ -207,7 +218,7 @@ namespace giantsummon
         public override void PostAI(Projectile projectile)
         {
             ProjParent = -1;
-            TryRestoringPlayerStatus(projectile);
+            TryRestoringPlayerStatus();
             if (!projectile.hostile || projectile.damage == 0)
                 return;
             for (int p = 0; p < 255; p++)
@@ -275,7 +286,7 @@ namespace giantsummon
             }
         }
 
-        public void TryRestoringPlayerStatus(Projectile projectile)
+        public void TryRestoringPlayerStatus()
         {
             if (BackupUsed)
             {
@@ -343,11 +354,6 @@ namespace giantsummon
             }
         }
 
-        public override bool PreKill(Projectile projectile, int timeLeft)
-        {
-            return base.PreKill(projectile, timeLeft);
-        }
-
         public static bool IsGuardianProjectile(int ProjPos)
         {
             return GuardianProj.ContainsKey(ProjPos);
@@ -357,7 +363,7 @@ namespace giantsummon
         {
             if (GuardianProj.ContainsKey(projectile.whoAmI))
                 GuardianProj.Remove(projectile.whoAmI);
-            TryRestoringPlayerStatus(projectile);
+            TryRestoringPlayerStatus();
             if (projectile.aiStyle == 52 && projectile.owner == Main.myPlayer && !IsGuardianProjectile(projectile.whoAmI) && !Main.player[projectile.owner].moonLeech)
             {
                 int HealthValue = (int)projectile.ai[1];

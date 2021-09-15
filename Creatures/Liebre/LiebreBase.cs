@@ -10,12 +10,12 @@ using giantsummon.Trigger;
 
 namespace giantsummon.Creatures
 {
-    public class BunnyReaperGuardianBase : GuardianBase
+    public class LiebreBase : GuardianBase
     {
         public const string SkeletonBodyID = "skeletonbody", SkeletonLeftArmID = "skeletonlarm", SkeletonRightArmID = "skeletonrarm", 
             MouthID = "mouth", MouthLitID = "mouthlit", ScytheID = "scythe", HeadPlasmaID = "head_plasma";
 
-        public BunnyReaperGuardianBase()
+        public LiebreBase()
         {
             Name = "Liebre";
             Description = "Tasked with collecting souls from the\nTerra Realm and deliver to their destination.\nFeared by many, but he only want to have friends.";

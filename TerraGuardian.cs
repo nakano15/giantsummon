@@ -6397,14 +6397,26 @@ namespace giantsummon
                 return;
             bool OnDamageTile = false;
             int MinTileX = (int)((Position.X - Width * 0.5f) * DivisionBy16), MaxTileX = (int)((Position.X + Width * 0.5f) * DivisionBy16), TileY = (int)(Position.Y * DivisionBy16);
-            for (int x = MinTileX; x <= MaxTileX; x++)
             {
                 for (int y = 0; y < 2; y++)
                 {
-                    Tile tile = Main.tile[x, TileY + y];
-                    if(tile.active() && (Terraria.ID.TileID.Sets.TouchDamageHot[tile.type] > 0 || Terraria.ID.TileID.Sets.TouchDamageOther[tile.type] > 0))
+                    bool HasSolidTileOnTheWay = false;
+                    for (int x = MinTileX; x <= MaxTileX; x++)
                     {
-                        OnDamageTile = true;
+                        Tile tile = Main.tile[x, TileY + y];
+                        if (tile.active())
+                        {
+                            if (Terraria.ID.TileID.Sets.TouchDamageHot[tile.type] > 0 || Terraria.ID.TileID.Sets.TouchDamageOther[tile.type] > 0)
+                            {
+                                OnDamageTile = true;
+                                break;
+                            }
+                            if (Main.tileSolid[tile.type])
+                                HasSolidTileOnTheWay = true;
+                        }
+                    }
+                    if(!OnDamageTile && HasSolidTileOnTheWay)
+                    {
                         break;
                     }
                 }
@@ -8282,7 +8294,7 @@ namespace giantsummon
                 }*/
                 if (HasOpening)
                 {
-                    for (int y = 0; y < 4; y++)
+                    for (int y = 0; y < 6; y++)
                     {
                         for (int x = 0; x < 2; x++)
                         {
@@ -10750,28 +10762,6 @@ namespace giantsummon
             return true;
         }
 
-        public bool CheckIfBlockedAbove()
-        {
-            int StartCheckX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16),
-                EndCheckX = (int)((Position.X + CollisionWidth * 0.5f + 1) * DivisionBy16);
-            int FeetY = (int)(Position.Y * DivisionBy16);
-            for(int y = 3; y < 8; y++)
-            {
-                for(int x = StartCheckX; x < EndCheckX; x++)
-                {
-                    Tile tile = MainMod.GetTile(x, FeetY - y);
-                    if(tile.active() && Main.tileSolid[tile.type])
-                    {
-                        if(!Terraria.ID.TileID.Sets.Platforms[tile.type])
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
         public bool UseMagicMirror()
         {
             bool CanUseItem = !LastAction && ItemAnimationTime == 0;
@@ -11686,6 +11676,11 @@ namespace giantsummon
                     bool moveleft = MoveLeft;
                     MoveLeft = MoveRight;
                     MoveRight = moveleft;
+                }
+                if (IsBlockedAhead())
+                {
+                    MoveLeft = MoveRight = false;
+                    IncreaseStuckTimer();
                 }
             }
         }
@@ -14475,6 +14470,7 @@ namespace giantsummon
                 ProjMod.GuardianProj[projPos] = this;
             Main.projectile[projPos].noDropItem = true;
             Main.projectile[projPos].noEnchantments = true;
+            Main.projectile[projPos].GetGlobalProjectile<ProjMod>().SpawnClearOwnership = false;
             if (OwnerPos > -1) Main.projectile[projPos].playerImmune[OwnerPos] = int.MaxValue;
             Main.projectile[projPos].minionSlots *= -1;
         }

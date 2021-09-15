@@ -1,8 +1,2 @@
-﻿Added Alexander's missing greet messages.
-Glenn's recruit npc will no longer be saved with the world.
-Changed Quentin's colors.
-Quentin gained a description.
-Removed unnecessary extra info from Blue's description.
-	Of course she wouldn't rip apart creatures with her claws, right? Right?
-Fixed Quentin's face being the one of a Terrarian.
-Added Michelle's missing homeless dialogues.
+﻿Fixed a bug where if a dangerous tile is under the tile the companion is stepping, the companion will try avoiding it like as if was stepping on the tile.
+Increased the pitfall distance checking from 4 times to 6.

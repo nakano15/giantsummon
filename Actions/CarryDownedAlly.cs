@@ -179,8 +179,8 @@ namespace giantsummon.Actions
                 CarryPosition += guardian.Position;
                 if(CarriedPlayer != null)
                 {
-                    CarriedPlayer.position.X = CarryPosition.X - CarriedPlayer.width * Origin.X;
-                    CarriedPlayer.position.Y = CarryPosition.Y - CarriedPlayer.height * Origin.X;
+                    CarriedPlayer.position.X = CarryPosition.X - CarriedPlayer.width * Origin.X + guardian.OffsetX;
+                    CarriedPlayer.position.Y = CarryPosition.Y - CarriedPlayer.height * Origin.Y + guardian.OffsetY;
                     CarriedPlayer.fallStart = (int)(CarriedPlayer.position.Y * TerraGuardian.DivisionBy16);
                     CarriedPlayer.direction = guardian.Direction;
                     CarriedPlayer.GetModPlayer<PlayerMod>().ReviveBoost++;
@@ -189,8 +189,8 @@ namespace giantsummon.Actions
                 else
                 {
                     CarriedGuardian.BeingPulledByPlayer = false;
-                    CarriedGuardian.Position.X = CarryPosition.X - (CarriedGuardian.Width * (Origin.X - 0.5f));
-                    CarriedGuardian.Position.Y = CarryPosition.Y + (CarriedGuardian.Height * (1f - Origin.Y));
+                    CarriedGuardian.Position.X = CarryPosition.X - (CarriedGuardian.Width * (Origin.X - 0.5f)) + guardian.OffsetX;
+                    CarriedGuardian.Position.Y = CarryPosition.Y + (CarriedGuardian.Height * (1f - Origin.Y)) + guardian.OffsetY;
                     CarriedGuardian.SetFallStart();
                     CarriedGuardian.Direction = guardian.Direction;
                     CarriedGuardian.ReviveBoost++;
