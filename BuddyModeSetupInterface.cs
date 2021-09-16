@@ -137,7 +137,7 @@ namespace giantsummon
                 if (DisplayGuardian != null)
                 {
                     DisplayGuardian.Position = DrawPosition + Main.screenPosition;
-                    DisplayGuardian.Draw(true);
+                    DisplayGuardian.Draw(true, true);
                     Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Name, DrawPosition, Color.White, 1.1f, 0.5f);
                     DrawPosition.Y += 28;
                     Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Base.Description, DrawPosition, Color.White, 1, 0.5f);

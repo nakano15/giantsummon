@@ -508,7 +508,7 @@ namespace giantsummon
                 {
                     MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
                     foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
-                        gdd.Draw(Main.spriteBatch);
+                        TerraGuardian.DoDrawCompanionDrawData(gdd, true); //gdd.Draw(Main.spriteBatch);
                     GuardianPostDrawData.AddRange(TerraGuardian.DrawFront);
                 }
             }

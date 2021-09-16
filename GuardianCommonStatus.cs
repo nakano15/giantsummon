@@ -12,6 +12,8 @@ namespace giantsummon
         public byte LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
         public List<GuardianSkills> SkillList = new List<GuardianSkills>();
         public int LastTotalSkillLevel = 0;
+        public TimeSpan? LifeTime = null;
+
         public static string GetSaveFolder { get { return Main.SavePath + "/TerraGuardians"; } }
 
         public static bool UseMaxHealthAndManaShare = true, UseSkillProgressShare = true;
@@ -57,6 +59,9 @@ namespace giantsummon
                     writer.Write(status.LifeCrystalsUsed);
                     writer.Write(status.LifeFruitsUsed);
                     writer.Write(status.ManaCrystalsUsed);
+                    writer.Write(status.LifeTime.HasValue);
+                    if (status.LifeTime.HasValue)
+                        writer.Write(status.LifeTime.Value.TotalSeconds);
                     int Skills = status.SkillList.Count;
                     writer.Write(Skills);
                     for(int s = 0; s < Skills; s++)
@@ -93,6 +98,13 @@ namespace giantsummon
                     status.LifeCrystalsUsed = reader.ReadByte();
                     status.LifeFruitsUsed = reader.ReadByte();
                     status.ManaCrystalsUsed = reader.ReadByte();
+                    if(ModVersion >= 94)
+                    {
+                        if (reader.ReadBoolean())
+                        {
+                            status.LifeTime = TimeSpan.FromSeconds(reader.ReadDouble());
+                        }
+                    }
                     int Skills = reader.ReadInt32();
                     for(int s = 0; s < Skills;s++)
                     {

@@ -364,14 +364,16 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            if (NpcMod.HasGuardianNPC(2))
+            bool HasSardineMet = PlayerMod.PlayerHasGuardian(player, Sardine), HasGlennMet = PlayerMod.PlayerHasGuardian(player, Glenn);
+            if (HasSardineMet)
             {
                 Mes.Add("A year after that imbecile I call husband went out on one of his \"adventures\", I started searching for him.");
+                if(!HasGlennMet)
+                    Mes.Add("[gn:2] and I have a son, he's currently at home. He's old enough to take care of himself, but he's probably missing us.");
             }
             Mes.Add("The floor is awful, nobody cleans this place? Looks like I'll have to clean this place.");
             Mes.Add("The people in your town are nice, but I preffer a quiet and less noisy place.");
             Mes.Add("I wont place my things on the floor, soon I'll be going back home. I just need to remember which world I lived.");
-            Mes.Add("[gn:2] and I have a son, he's currently at home. He's old enough to take care of himself, but he's probably missing us.");
             Mes.Add("At first, this bag was being quite heavy on my shoulders. As I kept using it, started to feel ligher. Did I grow stronger?");
             Mes.Add("Most of the time I'm busy cleaning up the place, looks like nobody else does.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Dryad))
@@ -382,7 +384,6 @@ namespace giantsummon.Creatures
                 Mes.Add("[nn:" + Terraria.ID.NPCID.ArmsDealer + "] should be ashamed of selling such outdated guns.");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Angler))
                 Mes.Add("Do you want to hear a joke? [nn:" + Terraria.ID.NPCID.Angler + "] doesn't knows how to catch two fishs at once, can you believe? Wait, you don't either? You must be kidding!");
-            bool HasSardineMet = PlayerMod.PlayerHasGuardian(player, Sardine), HasGlennMet = PlayerMod.PlayerHasGuardian(player, Glenn);
             if (HasSardineMet && HasGlennMet)
             {
                 Mes.Add("Thank you for finding my son and my husband. We should now try finding out which world we came from, now...");
@@ -427,7 +428,7 @@ namespace giantsummon.Creatures
                 if(NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
                     Mes.Add("Have you passed through [nn:" + Terraria.ID.NPCID.Stylist + "]'s shop? I'm waiting about 4 hours for her to finish [gn:1]'s hair treatment so I can start mine.");
             }
-            if (NpcMod.HasGuardianNPC(2))
+            if (HasSardineMet)
             {
                 Mes.Add("Once I remember which world I lived, I'm taking [gn:2] back with me.");
                 Mes.Add("I used to be happy and cheerful, until [gn:2] happened. I should have heard my mom.");
@@ -505,7 +506,7 @@ namespace giantsummon.Creatures
                 Mes.Add("[gn:" + Minerva + "] still haven't got into the level for my refined taste. She still has a lot to cook.");
                 Mes.Add("I tried teaching [gn:" + Minerva + "] how to cook properly, but she always misses the point when cooking.");
             }
-            if (NpcMod.HasGuardianNPC(Glenn))
+            if (HasGlennMet)
             {
                 Mes.Add("My son is very studious, he literally devours several books every week.");
                 Mes.Add("My son is quite introvert, so the only moment you get him to talk, is when someone else does first.");
@@ -540,7 +541,7 @@ namespace giantsummon.Creatures
                     Mes.Add("Okay, I can share my bedroom. Just don't try anything funny during the night.");
                 Mes.Add("As long as you keep It clean, you can use It for as long as you want.");
                 Mes.Add("If you get a bed for yourself, I can let you stay in my bedroom.");
-                if (NpcMod.HasGuardianNPC(GuardianBase.Sardine))
+                if (HasSardineMet)
                 {
                     Mes.Add("I'm sorry, but I kind of would preffer sharing my room with [gn:" + Sardine + "].");
                 }

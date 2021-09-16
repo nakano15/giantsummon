@@ -94,13 +94,16 @@ namespace giantsummon
         public float TravellingStacker = 0f, DamageStacker = 0f, ComfortStack = 0f; //For damagestacker to work, I need to know whose projectiles were spawned from a Guardian.
         public byte FoodStacker = 0, DrinkStacker = 0, ComfortPoints = 0;
         public CombatTactic tactic = CombatTactic.Assist;
-        public TimeSpan? LifeTime = null;
-        public TimeSpan GetLifeTime { get
+        public TimeSpan? LifeTime { get { return GetCommonStatus.LifeTime; } set { GetCommonStatus.LifeTime = value; } } //Must go to Common Status
+        public TimeSpan GetLifeTime
+        {
+            get
             {
                 if (LifeTime.HasValue)
                     return LifeTime.Value;
-                return Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TimeDuration;
-            } }
+                return GuardianGlobalInfos.LifeTime; //Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TimeDuration; //Take from Global Infos.
+            }
+        }
         public int SavedAge = 0;
         public bool CanBeCalled { get { return FriendshipLevel >= Base.CallUnlockLevel; } }
         public bool CanChangeName { get { return _Name == null; } }
@@ -108,7 +111,7 @@ namespace giantsummon
         public List<GuardianSkills> SkillList = new List<GuardianSkills>();
         public int SkillLevelSum = -1;
         public float LastSkillRateMaxValue = 100;
-        public const double DaysToYears = 32;
+        public const double DaysToYears = GuardianGlobalInfos.DaysInAYear; //32;
         public bool GiftGiven = false;
         public bool IsBirthday
         {

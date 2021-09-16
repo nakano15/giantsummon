@@ -1932,15 +1932,16 @@ namespace giantsummon
                             if(OwnerPos != -1 && TownNpcs == 0 && Lighting.Brightness(x, y) > 0.5f && !TileMemories.Contains(Main.tile[x, y].type))
                             {
                                 TileMemories.Add(Main.tile[x, y].type);
-                                if(Main.tile[x, y].type == 42) //Lantern
+                                if (Main.tile[x, y].type == 42) //Lantern
                                 {
                                     if (Main.tile[x, y].frameY >= 324 && Main.tile[x, y].frameY <= 358)
                                         LastHeartLanternNearby = true;
                                     else if (Main.tile[x, y].frameY >= 252 && Main.tile[x, y].frameY <= 286)
                                         LastStarLanternNearby = true;
-                                }else if(Main.tile[x, y].type == 215)
+                                }
+                                else if (Main.tile[x, y].type == 215)
                                 {
-                                    if(Main.tile[x, y].frameY < 36)
+                                    if (Main.tile[x, y].frameY < 36)
                                     {
                                         LastFireplaceNearby = true;
                                     }
@@ -11649,6 +11650,23 @@ namespace giantsummon
                     TrySwimming = Wet && (HasFlag(GuardianFlags.SwimmingAbility) || HasFlag(GuardianFlags.Merfolk));
                 bool PlayerAboveMe = Owner.velocity.Y != 0 && (Velocity.Y == 0 ? LeaderBottom < Position.Y - (LeaderHeight * 2 + Height) : LeaderBottom < Position.Y - LeaderHeight * 0.5f),
                     PlayerAboveMeSwim = TrySwimming && ((LeaderWet && LeaderBottom < Position.Y - 8) || (!LeaderWet && LeaderBottom < Position.Y + Height - 8));
+                bool CarryingPlayer = false;
+                if (DoAction.InUse && DoAction.IsGuardianSpecificAction && DoAction.ID == (int)GuardianActions.ActionIDs.CarryDownedAlly)
+                {
+                    Actions.CarryDownedAlly CarryAction = (Actions.CarryDownedAlly)DoAction;
+                    if (CarryAction.CarriedPlayer != null && CarryAction.CarriedPlayer.whoAmI == OwnerPos)
+                    {
+                        CarryingPlayer = true;
+                    }
+                    else if(CarryAction.CarriedGuardian != null && CarryAction.CarriedGuardian.OwnerPos == OwnerPos && CarryAction.CarriedGuardian.PlayerControl)
+                    {
+                        CarryingPlayer = true;
+                    }
+                    if (CarryingPlayer)
+                    {
+                        PlayerAboveMe = false;
+                    }
+                }
                 if (PlayerAboveMeSwim)
                 {
                     Jump = true;
@@ -11661,9 +11679,13 @@ namespace giantsummon
                         WingFlightTime++;
                     }
                 }
-                else if (Breath < BreathMax && !TryFlying && !TrySwimming && Wet && !LeaderWet)
+                else if (Breath < BreathMax && Wet && (!LeaderWet || CarryingPlayer)) //!TryFlying && !TrySwimming && 
                 {
                     //Try leaving water when drowning by going to where the leader is, If the leader isn't at water.
+                    if (IsBlockedAhead())
+                    {
+                        LookingLeft = !LookingLeft;
+                    }
                     if (Position.X < LeaderCenterX)
                         MoveRight = true;
                     else
@@ -11679,7 +11701,7 @@ namespace giantsummon
                 }
                 if (IsBlockedAhead())
                 {
-                    MoveLeft = MoveRight = false;
+                    MoveLeft = MoveRight = Jump = false;
                     IncreaseStuckTimer();
                 }
             }
@@ -16728,10 +16750,6 @@ namespace giantsummon
             {
                 return;
             }
-            int DefenseBackup = Defense;
-            float DefenseRateBackup = DefenseRate;
-            Defense = 0;
-            DefenseRate = 0;
             if (TileInfo.Y == 20 && !FireImmune)
             {
                 AddBuff(67, 20);
@@ -16757,8 +16775,6 @@ namespace giantsummon
             {
                 AddCooldown(GuardianCooldownManager.CooldownType.TileHurt, DefaultImmuneTime);
             }
-            Defense = DefenseBackup;
-            DefenseRate = DefenseRateBackup;
         }
 
         public void UpdateLavaScript()
@@ -17491,13 +17507,12 @@ namespace giantsummon
 
         public static bool DrawingIgnoringLighting = false;
 
-        public void Draw(bool IgnoreLighting = false)
+        public void Draw(bool IgnoreLighting = false, bool DoShading = false)
         {
             DrawingIgnoringLighting = IgnoreLighting;
             DrawDataCreation(IgnoreLighting);
             List<GuardianDrawData> DrawBehindDone = DrawBehind,
                 DrawFrontDone = DrawFront;
-
             foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
             {
                 if (gdm.DrawTargetType == TargetTypes.Guardian && gdm.DrawTargetID == WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
@@ -17518,9 +17533,26 @@ namespace giantsummon
                 }
             }
             foreach (GuardianDrawData dd in DrawBehindDone)
-                dd.Draw(Main.spriteBatch);
+            {
+                DoDrawCompanionDrawData(dd, DoShading);
+                //dd.Draw(Main.spriteBatch);
+            }
             foreach (GuardianDrawData dd in DrawFrontDone)
-                dd.Draw(Main.spriteBatch);
+            {
+                DoDrawCompanionDrawData(dd, DoShading);
+                //dd.Draw(Main.spriteBatch);
+            }
+            if (DoShading)
+            {
+                Main.pixelShader.CurrentTechnique.Passes[0].Apply();
+            }
+        }
+
+        public static void DoDrawCompanionDrawData(GuardianDrawData dd, bool DoShading)
+        {
+            if (DoShading)
+                GameShaders.Armor.Apply(dd.Shader, null, dd.GetDrawData());
+            dd.Draw(Main.spriteBatch);
         }
 
         public List<Terraria.DataStructures.DrawData> GetTrailsDataAsDrawData()

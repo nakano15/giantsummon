@@ -561,13 +561,15 @@ namespace giantsummon.Creatures
                                 {
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthLitID), DrawPosition,
                                         new Rectangle(SpriteWidth * MouthFrameX, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
-                                    if(i + 3 < TerraGuardian.DrawBehind.Count) TerraGuardian.DrawBehind.Insert(i + 3, gdd);
+                                    gdd.Shader = guardian.BodyDye.dye;
+                                    if (i + 3 < TerraGuardian.DrawBehind.Count) TerraGuardian.DrawBehind.Insert(i + 3, gdd);
                                     else TerraGuardian.DrawBehind.Add(gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthID), DrawPosition,
                                         new Rectangle(SpriteWidth * MouthFrameX, SpriteHeight, SpriteWidth, SpriteHeight), PlasmaOpacity, Rotation, Origin, Scale, seffect);
                                     TerraGuardian.DrawBehind.Insert(i + 3, gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthLitID), DrawPosition,
                                         new Rectangle(SpriteWidth * MouthFrameX, 0, SpriteWidth, SpriteHeight), Color.White, Rotation, Origin, Scale, seffect);
+                                    gdd.Shader = guardian.BodyDye.dye;
                                     TerraGuardian.DrawBehind.Insert(i + 1, gdd);
                                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MouthID), DrawPosition,
                                         new Rectangle(SpriteWidth * MouthFrameX, 0, SpriteWidth, SpriteHeight), color, Rotation, Origin, Scale, seffect);

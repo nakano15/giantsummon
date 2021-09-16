@@ -978,7 +978,7 @@ namespace giantsummon
                     TgPos.Y = Main.screenPosition.Y + HudPosition.Y + 235;
                     DisplayGuardian.Position = TgPos;
                     DisplayGuardian.UpdateAnimation();
-                    DisplayGuardian.Draw(true);
+                    DisplayGuardian.Draw(true, true);
                 }
                 {
                     Vector2 NamePos = Vector2.Zero;

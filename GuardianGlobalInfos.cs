@@ -15,6 +15,7 @@ namespace giantsummon
         public static List<FeatMentioning> Feats = new List<FeatMentioning>();
         public static TimeSpan LifeTime = new TimeSpan();
         public const float HourToDecimal = 1f / 24;
+        public const int DaysInAYear = 128; //32
 
         public static void UpdateGlobalInfos()
         {

@@ -611,7 +611,7 @@ namespace giantsummon
                 }
                 if (HasDrawMoment)
                     continue;
-                tg.Draw();
+                tg.Draw(DoShading: true);
                 /*if ((tg.OwnerPos == -1 || Main.player[tg.OwnerPos].ghost || (tg.UsingFurniture && !tg.PlayerMounted) || Main.player[tg.OwnerPos].stoned) && tg.InCameraRange())
                 {
                     bool HasDrawMoment = false;

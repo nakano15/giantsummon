@@ -1,2 +1,8 @@
 ﻿Fixed a bug where if a dangerous tile is under the tile the companion is stepping, the companion will try avoiding it like as if was stepping on the tile.
 Increased the pitfall distance checking from 4 times to 6.
+Fixed Miguel's arms being drawn in the incorrect order when facing the background.
+Companions ages are now universal.
+	No more character bound ages for your companions.
+Companions will no longer try sending their fallen leaders to heaven.
+Damage companions receives from tiles like Spikes will now have their damage discounted by Defense and Defense Rate.
+Bree should no longer mention someone you don't have in your world yet.
