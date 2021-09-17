@@ -527,14 +527,9 @@ namespace giantsummon.Creatures
             g.AddFlag(GuardianFlags.FallDamageImmunity);
             g.AddFlag(GuardianFlags.CantDie);
             g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
-            //g.TrailLength += 2;
-            //if(g.TrailDelay == 0)
-            //    g.TrailDelay = 4;
-            if (g.KnockedOut)
-            {
-                g.AddFlag(GuardianFlags.DontTakeAggro);
-                g.AddFlag(GuardianFlags.CantBeHurt);
-            }
+            g.AddFlag(GuardianFlags.CantTakeDamageWhenKod);
+            g.AddFlag(GuardianFlags.BreathUnderwater);
+            g.AddFlag(GuardianFlags.FireblocksImmunity);
         }
 
         public static Color GhostfyColor(Color Original, float KoAlpha, float ColorMod)

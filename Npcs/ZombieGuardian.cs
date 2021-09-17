@@ -21,12 +21,12 @@ namespace giantsummon.Npcs
         private float PlayerPullTime = 0f;
         private byte LeftHandFrame = 0, RightHandFrame = 0;
         private ModTargetting Target = new ModTargetting();
-        private int SwordSwingTime { get { if (Main.expertMode) return 47; else return 62; } }
+        private int SwordSwingTime { get { if (Main.expertMode) return 33; else return 38; } }
         private float WeaponRotation = 0f;
         private int ItemPositionX = 0, ItemPositionY = 0;
         const int ItemWidth = 22, ItemHeight = 96, ItemOriginX = 10, ItemOriginY = 88;
-        private int SwordAttackReactionTime { get { if (Main.expertMode) { return 15; } return 30; } }
-        private int PosSwordAttackRecoveryTime { get { if (Main.expertMode) { return 15; } return 60; } }
+        private int SwordAttackReactionTime { get { if (Main.expertMode) { return 15; } return 25; } }
+        private int PosSwordAttackRecoveryTime { get { if (Main.expertMode) { return 15; } return 30; } }
         private bool DeceivedOnce = false;
 
         public override void SetStaticDefaults()
@@ -38,15 +38,47 @@ namespace giantsummon.Npcs
         {
             npc.width = 30;
             npc.height = 86;
-            npc.damage = 0;
-            npc.defense = 0;
-            npc.lifeMax = 3000;
+            byte BossLevel = GetBossLevel();
+            switch (BossLevel)
+            {
+                default:
+                    npc.lifeMax = 3000;
+                    npc.damage = 15;
+                    npc.defense = 5;
+                    break;
+                case 1:
+                    npc.lifeMax = 4500;
+                    npc.damage = 45;
+                    npc.defense = 20;
+                    break;
+                case 2:
+                    npc.lifeMax = 9000;
+                    npc.damage = 56;
+                    npc.defense = 24;
+                    break;
+                case 3:
+                    npc.lifeMax = 18000;
+                    npc.damage = 64;
+                    npc.defense = 28;
+                    break;
+                case 4:
+                    npc.lifeMax = 36000;
+                    npc.damage = 78;
+                    npc.defense = 32;
+                    break;
+                case 5:
+                    npc.lifeMax = 42000;
+                    npc.damage = 106;
+                    npc.defense = 36;
+                    break;
+            }
+            npc.friendly = true;
             npc.HitSound = SoundID.NPCHit1;
             npc.DeathSound = SoundID.NPCDeath2;
             npc.knockBackResist = 0.33f;
             npc.aiStyle = -1;
             npc.boss = true;
-            music = Terraria.ID.MusicID.Boss2;
+            music = MusicID.Boss2;
             if (!Main.gameMenu)
             {
                 //npc.scale = Base.GetScale;
@@ -91,42 +123,9 @@ namespace giantsummon.Npcs
         public override void AI()
         {
             byte BossLevel = GetBossLevel();
-            switch (BossLevel)
-            {
-                default:
-                    npc.lifeMax = 3000;
-                    npc.damage = 15;
-                    npc.defense = 5;
-                    break;
-                case 1:
-                    npc.lifeMax = 4500;
-                    npc.damage = 45;
-                    npc.defense = 20;
-                    break;
-                case 2:
-                    npc.lifeMax = 9000;
-                    npc.damage = 56;
-                    npc.defense = 24;
-                    break;
-                case 3:
-                    npc.lifeMax = 18000;
-                    npc.damage = 64;
-                    npc.defense = 28;
-                    break;
-                case 4:
-                    npc.lifeMax = 36000;
-                    npc.damage = 78;
-                    npc.defense = 32;
-                    break;
-                case 5:
-                    npc.lifeMax = 42000;
-                    npc.damage = 106;
-                    npc.defense = 36;
-                    break;
-            }
             npc.knockBackResist = 0.33f;
-            npc.defDamage = npc.damage;
-            npc.defDefense = npc.defense;
+            npc.damage = npc.defDamage;
+            npc.defense = npc.defDefense;
             npc.friendly = false;
             bool RiseFromGroundAI = false;
             if (AiState == 0)
@@ -143,7 +142,7 @@ namespace giantsummon.Npcs
                         {
                             if (!Main.player[i].dead && !Main.player[i].ghost)
                             {
-                                if (npc.playerInteraction[i])
+                                if (npc.playerInteraction[i] && Main.player[i].Distance(npc.Center) < 800)
                                 {
                                     if (Math.Abs(Main.player[i].Center.X - npc.Center.X) >= 368f || Math.Abs(Main.player[i].Center.Y - npc.Center.Y) >= 256f)
                                     {
@@ -414,28 +413,28 @@ namespace giantsummon.Npcs
                             VomitSpawnPosition.Y -= npc.height * 0.25f + 4;
                             VomitSpawnPosition.X += npc.width * 0.25f * npc.direction;
                             const float MaxVomitTime = 90;
-                            if (AiValue == 60)
+                            if (AiValue == 30)
                             {
-                                Main.PlaySound(Terraria.ID.SoundID.Zombie, npc.Center);
+                                Main.PlaySound(SoundID.Zombie, npc.Center);
                             }
-                            if (AiValue < 30)
+                            if (AiValue < 10)
                             {
                                 VomitSpawnPosition.X -= 2;
                                 VomitSpawnPosition.Y -= 2;
                                 Dust.NewDust(VomitSpawnPosition, 4, 4, 5, Main.rand.Next(-20, 21) * 0.01f, Main.rand.Next(10, 41) * 0.01f);
                             }
-                            else if (AiValue >= 60 + MaxVomitTime)
+                            else if (AiValue >= 30 + MaxVomitTime)
                             {
-                                if (AiValue >= 60 + 60 + MaxVomitTime)
+                                if (AiValue >= 30 + 20 + MaxVomitTime)
                                 {
                                     AiState = 1;
                                     AiValue = 0;
                                 }
                             }
-                            else if (AiValue >= 60 && AiValue % 3 == 0)
+                            else if (AiValue >= 30 && AiValue % 3 == 0)
                             {
                                 float SpawnDirection = 1.570796326794897f;
-                                float Percentage = (float)(AiValue - 60) / MaxVomitTime;
+                                float Percentage = (float)(AiValue - 30) / MaxVomitTime;
                                 SpawnDirection -= 3.141592653589793f * Percentage * npc.direction;
                                 //if (npc.direction < 0)
                                 //    SpawnDirection += 3.141592653589793f;
@@ -538,7 +537,7 @@ namespace giantsummon.Npcs
 
                     case 7: //Rear attack.
                         {
-                            int TimeUntilUse = 90, TimePosLease = 30;
+                            int TimeUntilUse = 60, TimePosLease = 20;
                             if (Main.expertMode)
                             {
                                 TimeUntilUse = 35;
@@ -1105,11 +1104,11 @@ namespace giantsummon.Npcs
 
         public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
         {
-            double newDamage = damage - defense * 0.5;
-            double DamageDeductor = 0.2 + GetBossLevel() * 0.1;
+            damage = (damage - defense * 0.5) * 0.25;
+            /*double DamageDeductor = 0.2 + GetBossLevel() * 0.1;
             damage -= newDamage * (1 - DamageDeductor);
             if (damage < 1)
-                damage = 1;
+                damage = 1;*/
             return false;
         }
 

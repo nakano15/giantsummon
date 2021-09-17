@@ -190,6 +190,7 @@ namespace giantsummon
         DisableMountSharing,
         CantDie,
         VergeOfDeathAlert,
-        DisableMovement
+        DisableMovement,
+        CantTakeDamageWhenKod
     }
 }

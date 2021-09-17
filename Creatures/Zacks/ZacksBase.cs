@@ -301,11 +301,7 @@ namespace giantsummon.Creatures
             g.DefenseRate += 0.1f;
             g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
             g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
-            if (g.KnockedOut)
-            {
-                g.AddFlag(GuardianFlags.CantBeHurt);
-                g.AddFlag(GuardianFlags.DontTakeAggro);
-            }
+            g.AddFlag(GuardianFlags.CantTakeDamageWhenKod);
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)

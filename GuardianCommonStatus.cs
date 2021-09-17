@@ -59,9 +59,15 @@ namespace giantsummon
                     writer.Write(status.LifeCrystalsUsed);
                     writer.Write(status.LifeFruitsUsed);
                     writer.Write(status.ManaCrystalsUsed);
-                    writer.Write(status.LifeTime.HasValue);
                     if (status.LifeTime.HasValue)
+                    {
+                        writer.Write(true);
                         writer.Write(status.LifeTime.Value.TotalSeconds);
+                    }
+                    else
+                    {
+                        writer.Write(false);
+                    }
                     int Skills = status.SkillList.Count;
                     writer.Write(Skills);
                     for(int s = 0; s < Skills; s++)
@@ -133,7 +139,7 @@ namespace giantsummon
 
             private void AddCommonStatus(int CompanionID, string CompanionModID)
             {
-                CompanionStatus.Add(CompanionID, GuardianCommonStatus.LoadStatus(CompanionID, CompanionModID));
+                CompanionStatus.Add(CompanionID, LoadStatus(CompanionID, CompanionModID));
             }
 
             public GuardianCommonStatus GetCompanion(int ID, string ModID)

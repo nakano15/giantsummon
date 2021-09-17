@@ -352,7 +352,7 @@ namespace giantsummon.Creatures
 
             if (NpcMod.HasGuardianNPC(Rococo))
             {
-                Mes.Add("*I tried to analyze [gn:" + Rococo + "]'s intelligence once, I got a NotANumber Exception Error at line 297.*");
+                Mes.Add("*I tried to analyze [gn:" + Rococo + "]'s intelligence once, I got a NotANumber Exception Error at line 411.*"); //Refferences the GreetMessage script from Rococo.
                 Mes.Add("*Sometimes I wonder that [gn:" + Rococo + "] is like a link between this world and Ether Realm. That may probably be wrong.*");
             }
             if (NpcMod.HasGuardianNPC(Blue))

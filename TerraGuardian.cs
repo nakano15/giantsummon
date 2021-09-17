@@ -4227,6 +4227,12 @@ namespace giantsummon
                 AddFlag(GuardianFlags.MountDamageReceivedReduction);
             if (FriendshipLevel >= Base.MaySellYourLoot)
                 AddFlag(GuardianFlags.MayGoSellLoot);
+            if (KnockedOut && HasFlag(GuardianFlags.CantBeKnockedOutCold))
+                AddFlag(GuardianFlags.DontTakeAggro);
+            if (KnockedOut && HasFlag(GuardianFlags.CantTakeDamageWhenKod))
+            {
+                AddFlag(GuardianFlags.CantBeHurt);
+            }
             if (OwnerPos > -1 && HasFlag(GuardianFlags.FriendshipBondBuff))
             {
                 //float StatusSum = (Main.player[OwnerPos].meleeDamage + Main.player[OwnerPos].rangedDamage + Main.player[OwnerPos].magicDamage + Main.player[OwnerPos].minionDamage - 4f) * 0.05f;
@@ -9763,7 +9769,7 @@ namespace giantsummon
             if (OwnerPos == Main.myPlayer && OwnerPos > -1 && AfkCounter >= 180 * 60 && !CreatureAllowsAFK && (!PlayerMod.HasBuddiesModeOn(Main.player[OwnerPos]) || !PlayerMod.GetPlayerBuddy(Main.player[OwnerPos]).IsSameID(this)))
             {
                 Main.player[OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian();
-                Main.NewText(this.Name + " has left your battle.", Color.Red);
+                Main.NewText(Name + " has left your battle.", Color.Red);
             }
         }
 
@@ -9777,9 +9783,10 @@ namespace giantsummon
         {
             for(int n = 0; n < 200; n++)
             {
-                if(Main.npc[n].active && IsNpcHostile(Main.npc[n]) && InPerceptionRange(Main.npc[n].Center))
+                if(Main.npc[n].active && IsNpcHostile(Main.npc[n]))
                 {
-                    return false;
+                    if(InPerceptionRange(Main.npc[n].Center) || Main.npc[n].boss || Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[n].type])
+                        return false;
                 }
             }
             for(int p = 0; p < Main.maxProjectiles; p++)
@@ -9802,7 +9809,7 @@ namespace giantsummon
             bool LastWasKOd = KnockedOut;
             if (!KnockedOut)
             {
-                ChangeTrustValue((sbyte)(IsPlayerFaultCompanionKO() ? -15 : -5));
+                ChangeTrustValue((sbyte)(IsPlayerFaultCompanionKO() ? -9 : -3));
                 ChatMessage = "";
                 MessageSchedule.Clear();
             }
@@ -9836,7 +9843,7 @@ namespace giantsummon
             TriggerHandler.FireGuardianDownedTrigger(this.CenterPosition, this, 0, false);
             UpdateStatus = true;
             DoAction.InUse = false;
-            if (OwnerPos == Main.myPlayer)
+            if (LastWasKOd && OwnerPos == Main.myPlayer)
             {
                 Main.NewText(Name + " has been knocked out.", Color.OrangeRed);
                 if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialKnockOutIntroduction)
@@ -10716,12 +10723,12 @@ namespace giantsummon
 
         public bool IsBlockedAhead()
         {
-            byte CeilingMaxJumpHeightCheck = 8;
+            byte CeilingMaxJumpHeightCheck = 12; //8
             int FeetY = (int)(Position.Y * DivisionBy16);
             {
                 int StartTileX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16),
                     EndTileX = (int)((Position.X + CollisionWidth * 0.5f + 1) * DivisionBy16);
-                for (byte y = 3; y < 8; y++)
+                for (byte y = 3; y < CeilingMaxJumpHeightCheck; y++)
                 {
                     for(int x = StartTileX; x < EndTileX; x++)
                     {
@@ -11590,10 +11597,23 @@ namespace giantsummon
                 }
                 else if (Math.Abs(PositionDifference.X - LeaderSpeedX) > Distance + DistanceBonus - XDiscount)
                 {
-                    if (PositionDifference.X < 0)
-                        MoveLeft = true;
+                    if (Math.Abs(PositionDifference.X) > 8)
+                    {
+                        if (PositionDifference.X < 0)
+                            MoveLeft = true;
+                        else
+                            MoveRight = true;
+                    }
                     else
-                        MoveRight = true;
+                    {
+                        if (Velocity.X == 0 && Velocity.Y == 0 && !UsingFurniture && !IsAttackingSomething)
+                        {
+                            if (Position.X >= LeaderCenterX)
+                                Direction = 1;
+                            else
+                                Direction = -1;
+                        }
+                    }
                 }
                 else if (ChargeAhead && LeaderSpeedX != 0) //To try keeping up with the player when on charge AI.
                 {
@@ -11642,8 +11662,6 @@ namespace giantsummon
                             Direction = 1;
                         else
                             Direction = -1;
-                        if (ChargeAhead)
-                            Direction *= -1;
                     }
                 }
                 bool TryFlying = WingType > 0,
@@ -11699,10 +11717,11 @@ namespace giantsummon
                     MoveLeft = MoveRight;
                     MoveRight = moveleft;
                 }
-                if (IsBlockedAhead())
+                if (IsBlockedAhead() && ((MoveLeft && LookingLeft) || (MoveRight && !LookingLeft)))
                 {
                     MoveLeft = MoveRight = Jump = false;
-                    IncreaseStuckTimer();
+                    if(!ChargeAhead || (Direction > 0 && Position.X < LeaderCenterX) || (Direction < 0 && Position.X > LeaderCenterX))
+                        IncreaseStuckTimer();
                 }
             }
         }
@@ -16873,6 +16892,8 @@ namespace giantsummon
         /// <param name="Value"></param>
         public void ChangeTrustValue(sbyte Value)
         {
+            if (Main.netMode > 0 || (Main.netMode == 1 && OwnerPos == -1))
+                return;
             sbyte LastTrustLevel = TrustLevel;
             int NewTrustValue = LastTrustLevel + Value;
             if (NewTrustValue < -100)
@@ -16880,6 +16901,14 @@ namespace giantsummon
             if (NewTrustValue > 100)
                 NewTrustValue = 100;
             Data.TrustLevel = (sbyte)NewTrustValue;
+            if (Main.netMode < 2 && OwnerPos == Main.myPlayer)
+            {
+                int NewTrustLevel = TrustLevels.GetTrustLevel(Data.TrustLevel), OldTrustLevel = TrustLevels.GetTrustLevel(LastTrustLevel);
+                if (NewTrustLevel != OldTrustLevel)
+                {
+                    Main.NewText(Name + "'s trust towards you " + (NewTrustLevel < OldTrustLevel ? "degraded" : "increased") + " to " + Enum.GetName(typeof(TrustLevels.TrustLevelEnum), TrustLevels.GetTrustLevel(Data.TrustLevel)) + ".");
+                }
+            }
             if (!IsPlayerBuddy() && !MainMod.ShowDebugInfo)
             {
                 if (NewTrustValue <= TrustLevels.StopFollowingTrustLevel && OwnerPos > -1)

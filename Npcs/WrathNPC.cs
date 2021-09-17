@@ -21,6 +21,7 @@ namespace giantsummon.Npcs
         public bool ForceLeave = false;
         private bool PlayerGot = false;
         private bool LastWasReflect = false;
+        private byte BulletsHit = 0, HitsReceived = 0;
 
         public WrathNPC()
             : base(GuardianBase.Wrath, "", "Angry Pig Cloud")
@@ -869,8 +870,20 @@ namespace giantsummon.Npcs
 
         public override bool CheckDead()
         {
+            if (Main.rand.Next(2) == 0)
+                SayMessage("*I can't... Fight... Anymore...*");
+            else
+                SayMessage("*You... Were better...*");
             Defeated = true;
             npc.life = npc.lifeMax;
+            if (behavior == Behaviors.BodySlam && BodySlamResist > 0)
+            {
+                Player player = Target.Character;
+                player.velocity.Y = -6f;
+                player.fullRotation = 0f;
+                player.fullRotationOrigin.X = 0;
+                player.fullRotationOrigin.Y = 0;
+            }
             return false;
         }
 
@@ -1054,24 +1067,30 @@ namespace giantsummon.Npcs
             return "";
         }
 
-        public override void ModifyHitByItem(Player player, Item item, ref int damage, ref float knockback, ref bool crit)
+        public override bool StrikeNPC(ref double damage, int defense, ref float knockback, int hitDirection, ref bool crit)
         {
-            if (damage > 1)
-                damage = (int)(damage * 0.5f);
-        }
-
-        public override void ModifyHitByProjectile(Projectile projectile, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
-        {
-            if (damage > 1)
-                damage = (int)(damage * 0.5f);
+            damage = Math.Max((damage - defense * 0.5) * 0.25, 1);
+            return false;
         }
 
         public override void OnHitByItem(Player player, Item item, int damage, float knockback, bool crit)
         {
-            if (Main.rand.Next(2) == 0)
-                SayMessage("*I can't... Fight... Anymore...*");
-            else
-                SayMessage("*You... Were better...*");
+            HitsReceived++;
+            if(HitsReceived >= 20)
+            {
+                if (Main.rand.NextFloat() < 0.6f)
+                {
+                    behavior = Behaviors.ReachPlayer;
+                    ActionTime = 0;
+                    SayMessage("*Better I try something else..*");
+                }
+                else
+                {
+                    behavior = Behaviors.DestructiveRush;
+                    ActionTime = 0;
+                    SayMessage("*Take this!*");
+                }
+            }
         }
 
         public override void OnHitByProjectile(Projectile projectile, int damage, float knockback, bool crit)
@@ -1080,6 +1099,14 @@ namespace giantsummon.Npcs
                 SayMessage("*Grr... It's easy when you're far away. No fair!*");
             else
                 SayMessage("*You... Cheated... Krr...*");
+            BulletsHit++;
+            if(BulletsHit > 10)
+            {
+                BulletsHit = 0;
+                behavior = Behaviors.BulletReflectingBelly;
+                ActionTime = 0;
+                SayMessage("*Alright! Shoot as much as possible!*");
+            }
         }
 
         public void PigStatus(out int HP, out int Damage, out int Defense)

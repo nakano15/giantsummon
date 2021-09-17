@@ -162,14 +162,10 @@ namespace giantsummon.Creatures
         public override void Attributes(TerraGuardian g)
         {
             g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
+            g.AddFlag(GuardianFlags.CantTakeDamageWhenKod);
             g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
             g.AddFlag(GuardianFlags.HideKOBar);
             g.AddFlag(GuardianFlags.NotPulledWhenKOd);
-            if (g.KnockedOut)
-            {
-                g.AddFlag(GuardianFlags.DontTakeAggro);
-                g.AddFlag(GuardianFlags.CantBeHurt);
-            }
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)

@@ -7,12 +7,12 @@ namespace giantsummon
 {
     public class TrustLevels
     {
-        public const sbyte MoveInTrust = 0, RequestGivingTrust = -5, FollowTrust = -10, ControlTrust = 60;
+        public const sbyte VisitTrust = -30, MoveInTrust = 0, FollowTrust = -10, ControlTrust = 60;
         public const sbyte TrustPointsPerFriendshipExp = 2, TrustPointsPerComfortStack = 1, ReviveHelpTrustGain = 5, TrustGainFromComplettingRequest = 1;
         public const sbyte TrustLossWhenEatenByWof = -10, TrustLossWhenCancellingRequest = -3, TrustLossOnFailRequest = -3;
 
         public const sbyte MoveOutOfWorldTrustLevel = -60,
-            StopFollowingTrustLevel = -40;
+            StopFollowingTrustLevel = -20;
 
         public static int GetTrustLevel(sbyte Trust)
         {
@@ -43,22 +43,6 @@ namespace giantsummon
             {
                 Info += "\n - Will not follow you.";
             }
-            if (TrustLevel >= FollowTrust)
-            {
-                Info += "\n - Will follow you on your quest.";
-            }
-            else
-            {
-                Info += "\n - Will not follow you.";
-            }
-            if (TrustLevel >= RequestGivingTrust)
-            {
-                Info += "\n - Will give you requests.";
-            }
-            else
-            {
-                Info += "\n - Doesn't trusts you to give requests.";
-            }
             if (TrustLevel >= ControlTrust)
             {
                 Info += "\n - Will let you control them.";
@@ -66,6 +50,14 @@ namespace giantsummon
             else
             {
                 Info += "\n - Doesn't trust their control to you.";
+            }
+            if (TrustLevel >= VisitTrust)
+            {
+                Info += "\n - Will visit your world sometimes.";
+            }
+            else
+            {
+                Info += "\n - Will not visit your world.";
             }
             return Info;
         }

@@ -825,10 +825,16 @@ namespace giantsummon
             }
             if (WorldMod.DayChange && TrustLevel < 20)
             {
-                ChangeTrustValue(1);
+				sbyte TrustIncrease = 1;
                 TrustLevel++;
-                if (TrustLevel < 20 && !NpcMod.HasGuardianNPC(ID, ModID))
-                    ChangeTrustValue(1);
+				if(!NpcMod.HasGuardianNPC(ID, ModID))
+				{
+					if (TrustLevel < -40 )
+						TrustIncrease += 2;
+					else if (TrustLevel < 20 )
+						TrustIncrease++;
+				}
+                ChangeTrustValue(TrustIncrease);
             }
             if (StatusUpdate)
             {
@@ -1102,9 +1108,9 @@ namespace giantsummon
             tag.Add("InjuryCount_" + UniqueID, (byte)Injury);
             request.Save(tag, UniqueID);
             //request.Save(tag, UniqueID);
-            tag.Add("HasExistenceTime_" + UniqueID, LifeTime.HasValue);
+            /*tag.Add("HasExistenceTime_" + UniqueID, LifeTime.HasValue);
             if(LifeTime.HasValue)
-                tag.Add("ExistenceTime_" + UniqueID, LifeTime.Value.TotalSeconds);
+                tag.Add("ExistenceTime_" + UniqueID, LifeTime.Value.TotalSeconds);*/
             tag.Add("SkinID_" + UniqueID, SkinID);
             tag.Add("OutfitID_" + UniqueID, OutfitID);
             tag.Add("Coins_" + UniqueID, (int)Coins - int.MaxValue);
@@ -1333,18 +1339,21 @@ namespace giantsummon
             }
             //if (ModVersion >= 8)
             //    request.Load(tag, ModVersion, UniqueID);
-            if (ModVersion <= 80)
+            /*if (ModVersion < 95)
             {
-                if (ModVersion >= 15)
-                    LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
-            }
-            else
-            {
-                if (tag.GetBool("HasExistenceTime_" + UniqueID))
+                if (ModVersion <= 80)
                 {
-                    LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
+                    if (ModVersion >= 15)
+                        LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
                 }
-            }
+                else
+                {
+                    if (tag.GetBool("HasExistenceTime_" + UniqueID))
+                    {
+                        LifeTime = TimeSpan.FromSeconds(tag.GetDouble("ExistenceTime_" + UniqueID));
+                    }
+                }
+            }*/
             if (ModVersion >= 66)
             {
                 SkinID = tag.GetByte("SkinID_" + UniqueID);
@@ -1379,6 +1388,8 @@ namespace giantsummon
                     }
                 }
             }
+            if (ModVersion < 95 && TrustLevel < 30)
+                TrustLevel = 30;
         }
 
         public void UpdateAge()
@@ -1416,7 +1427,7 @@ namespace giantsummon
             }
             if (!MountMessageUnlocked && FriendshipLevel >= Base.MountUnlockLevel)
             {
-                Text = Base.MountUnlockMessage + "\n[You can now mount on this companion]";
+                Text = Base.MountUnlockMessage + (!Base.ReverseMount ? "\n[You can now mount on this companion]" : "\n[This companion can now mount on your back.");
                 MountMessageUnlocked = true;
                 return true;
             }

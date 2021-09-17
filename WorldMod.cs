@@ -233,7 +233,38 @@ namespace giantsummon
                     if (!MainMod.IsGuardianInTheWorld(ids.ID, ids.ModID) && !GuardianNPCsInWorld.Any(x => x != null && x.IsID(ids.ID, ids.ModID)))
                     {
                         GuardianBase gb = GuardianBase.GetGuardianBase(ids.ID, ids.ModID);
-                        if (Main.dayTime && !gb.IsNocturnal)
+                        bool SomeoneHasTheTrust = false;
+                        if (Main.netMode == 0)
+                        {
+                            GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], ids.ID, ids.ModID);
+                            if (gd != null)
+                            {
+                                if (gd.TrustLevel >= TrustLevels.VisitTrust)
+                                {
+                                    SomeoneHasTheTrust = true;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            for (int p = 0; p < 255; p++)
+                            {
+                                if (Main.player[p].active)
+                                {
+                                    GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[p], ids.ID, ids.ModID);
+                                    if (gd != null)
+                                    {
+                                        if (gd.TrustLevel >= TrustLevels.VisitTrust)
+                                        {
+                                            SomeoneHasTheTrust = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (SomeoneHasTheTrust && Main.dayTime && !gb.IsNocturnal)
                         {
                             PossibleIDs.Add(ids);
                         }
@@ -319,8 +350,11 @@ namespace giantsummon
             }
             //pick a random guardian to try making leave.
             int Pos = Main.rand.Next(GuardianTownNPC.Count);
-            if (GuardianTownNPC[Pos].GetTownNpcInfo != null)
-                return false;
+            if (GuardianTownNPC[Pos].GetTownNpcInfo != null && !GuardianTownNPC[Pos].GetTownNpcInfo.Homeless)
+            {
+                if(!GuardianTownNPC[Pos].IsStarter)
+                    return false;
+            }
             if ((!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && !Main.dayTime))
             {
                 return false;

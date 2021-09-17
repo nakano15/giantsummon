@@ -203,21 +203,23 @@ namespace giantsummon
             }
             return base.PreAI(projectile);
         }
-        
+
         public override GlobalProjectile NewInstance(Projectile projectile)
         {
-            if (ProjParent > -1 && IsGuardianProjectile(ProjParent))
+            MyParent = ProjParent;
+            return base.NewInstance(projectile);
+        }
+
+        public override void PostAI(Projectile projectile)
+        {
+            ProjParent = -1;
+            if (MyParent > -1 && IsGuardianProjectile(ProjParent))
             {
                 GuardianProj[ProjParent].SetProjectileOwnership(projectile.whoAmI);
                 if (Main.projectile[ProjParent].minion)
                     projectile.minion = true;
-            }
-            return base.NewInstance(projectile);
-        }
-                
-        public override void PostAI(Projectile projectile)
-        {
-            ProjParent = -1;
+                MyParent = -1;
+            };
             TryRestoringPlayerStatus();
             if (!projectile.hostile || projectile.damage == 0)
                 return;

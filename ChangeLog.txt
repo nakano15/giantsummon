@@ -6,3 +6,32 @@ Companions ages are now universal.
 Companions will no longer try sending their fallen leaders to heaven.
 Damage companions receives from tiles like Spikes will now have their damage discounted by Defense and Defense Rate.
 Bree should no longer mention someone you don't have in your world yet.
+Increased trust acquired when companion isn't in the team.
+	Trust increase is higher for companions that are furious towards you.
+Reduced the penalty on trust for having the companion be knocked out cold.
+The mod will now tell when the trust level of a companion following you drops or increases to a new level.
+Fixed an issue where the follow trust message were showing twice, when checking the trust possibilities.
+Remember the request trust requirement? No more exists.
+Added a trust level requirement for the companion to visit your world.
+Companions that can't die will no longer enter KO state several times.
+Changed a few things about Wrath's mini boss fight.
+	Wrath shall no longer leave your character flattened.
+	Fixed a bug where he says his defeat message whenever he's hit by an attack;
+	Hits inflicted on Wrath will be 1/4 effective.
+		By that I mean, the game will get the damage inflicted on him, reduced by defense, and the result will be 25% of it.
+	Wrath will be less tolerant to ranged attacks.
+	Wrath will try retaliating several melee attacks.
+Changed a few things about the Zombie Guardian boss fight.
+	All attacks inflicted on him will be 1/4 effective.
+		Just like on Wrath.
+	Teleporting far away from it will no longer make it pull you through the entire map.
+	His rear attack now happens faster on normal worlds.
+	His sword attack is also faster.
+	Blood Vomit attack is also faster.
+Companions will now be less rigid about positioning when following you on your travels.
+	That also fixes an issue with "Follow Ahead" AI.
+Fluffles will no longer drown or be affected by fireblocks.
+Companions following you will no longer jump facing the wall like complete morons, when they face one during the travels.
+	They will also be pulled towards you.
+Fixed a crash that happened when a projectile that spawns more projectiles caused the game to crash. Ex:. Beenades.
+Homeless companions will leave the world, and return when they have a house for them.

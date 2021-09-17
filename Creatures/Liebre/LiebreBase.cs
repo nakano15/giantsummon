@@ -107,8 +107,7 @@ namespace giantsummon.Creatures
         public override void Attributes(TerraGuardian g)
         {
             g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
-            //g.AddFlag(GuardianFlags.CantReceiveHelpOnReviving);
-            //g.AddFlag(GuardianFlags.HideKOBar);
+            g.AddFlag(GuardianFlags.CantDie);
             g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
             const float TrailLength = 4;
             if(g.TrailLength == 0)
@@ -117,11 +116,6 @@ namespace giantsummon.Creatures
                 g.TrailLength += (int)TrailLength / 2;
             if (g.TrailDelay == 0)
                 g.TrailDelay = 3;
-            if (g.KnockedOut)
-            {
-                g.AddFlag(GuardianFlags.DontTakeAggro);
-                g.AddFlag(GuardianFlags.CantBeHurt);
-            }
         }
 
         public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
