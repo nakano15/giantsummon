@@ -32,7 +32,7 @@ namespace giantsummon
         public List<int> GuardiansSpotted = new List<int>();
         public const int ItemStackCount = 100, ItemStackTurns = Main.maxItems / ItemStackCount;
         public GuardianCommonStatus GetCommonStatus { get { return Data.GetCommonStatus; } }
-        public GuardianBase Base { get { return Data.Base; return GuardianBase.GetGuardianBase(ID, Data.ModID); } }
+        public GuardianBase Base { get { return Data.Base; } }// return GuardianBase.GetGuardianBase(ID, Data.ModID); } }
         public GuardianData Data
         {
             get

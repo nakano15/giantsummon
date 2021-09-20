@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace giantsummon
 {
-    public class GuardianSprites
+    public class GuardianSprites : IDisposable
     {
         public Texture2D HeadSprite, BodySprite, LeftArmSprite, RightArmSprite;
         public Texture2D BodyFrontSprite, RightArmFrontSprite;
@@ -112,20 +112,27 @@ namespace giantsummon
                 ErrorLoading = false;
                 return;
             }
-            if (ReferedBase.IsCustomSpriteCharacter)
+            if (!ReferedBase.InvalidGuardian && ReferedBase.IsCustomSpriteCharacter)
             {
                 HeadSprite.Dispose();
                 BodySprite.Dispose();
                 LeftArmSprite.Dispose();
                 RightArmSprite.Dispose();
             }
+            HeadSprite = null;
+            BodySprite = null;
+            LeftArmSprite = null;
+            RightArmSprite = null;
             foreach (ExtraTextureHolder eth in ExtraTextures.Values)
             {
                 eth.Texture.Dispose();
             }
             ExtraTextures.Clear();
+            ExtraTextures = null;
             TexturesLoaded = false;
             ErrorLoading = false;
+            ReferedBase = null;
+            mod = null;
         }
 
         protected class ExtraTextureHolder

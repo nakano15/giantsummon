@@ -724,6 +724,8 @@ namespace giantsummon
         public override void Unload()
         {
             GuardianBase.UnloadGuardians();
+            GuardianShopHandler.UnloadShops();
+            GuardianCommonStatus.UnloadCommonStatus();
             TriedLoadingCustomGuardians = false;
         }
 

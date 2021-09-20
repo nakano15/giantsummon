@@ -5,7 +5,7 @@ using System.Text;
 
 namespace giantsummon
 {
-    public class GuardianSpecialAttack
+    public class GuardianSpecialAttack : IDisposable
     {
         public List<GuardianSpecialAttackFrame> SpecialAttackFrames = new List<GuardianSpecialAttackFrame>();
         public SubAttackCombatType combatType = SubAttackCombatType.Melee;
@@ -40,6 +40,23 @@ namespace giantsummon
             Cooldown = s * 60 + m * 3600 + h * (3600 * 3600);
         }
 
+        public void Dispose()
+        {
+            foreach(GuardianSpecialAttackFrame f in SpecialAttackFrames)
+            {
+                f.Dispose();
+            }
+            SpecialAttackFrames.Clear();
+            SpecialAttackFrames = null;
+            WhenFrameBeginsScript = null;
+            WhenFrameUpdatesScript = null;
+            WhenCompanionIsBeingDrawn = null;
+            WhenSubAttackBegins = null;
+            WhenSubAttackEnds = null;
+            AnimationReplacer = null;
+            CalculateAttackDamage = null;
+        }
+
         public enum SubAttackCombatType
         {
             Melee,
@@ -48,9 +65,14 @@ namespace giantsummon
         }
     }
 
-    public class GuardianSpecialAttackFrame
+    public class GuardianSpecialAttackFrame : IDisposable
     {
         public int Duration = 8;
         public int BodyFrame = 0, LeftArmFrame = 0, RightArmFrame = 0;
+
+        public void Dispose()
+        {
+
+        }
     }
 }

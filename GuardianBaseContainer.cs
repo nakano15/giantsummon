@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace giantsummon
 {
-    public class GuardianBaseContainer
+    public class GuardianBaseContainer : IDisposable
     {
         public string modid;
         private Dictionary<int, GuardianBase> GuardianList = new Dictionary<int, GuardianBase>();
@@ -19,11 +19,13 @@ namespace giantsummon
             int[] keys = GuardianList.Keys.ToArray();
             foreach (int k in keys)
             {
-                if(!GuardianList[k].InvalidGuardian)
+                /*if(!GuardianList[k].InvalidGuardian)
                     GuardianList[k].sprites.Dispose();
-                GuardianList.Remove(k);
+                GuardianList.Remove(k);*/
+                GuardianList[k].Dispose();
             }
             GuardianList.Clear();
+            GuardianList = null;
         }
 
         public GuardianBaseContainer(string mod)
@@ -53,12 +55,17 @@ namespace giantsummon
             gd.SetupShop(ID, modid);
         }
 
-        public void UpdateContainers()
+        public void UpdateContainers(bool UpdateBase)
         {
             int[] keys = GuardianList.Keys.ToArray();
             foreach (int key in keys)
             {
-                if(GuardianList[key].sprites.IsTextureLoaded)
+                if (UpdateBase && GuardianList[key].UpdateLifeTimeCounter())
+                {
+                    GuardianList[key].Dispose();
+                    GuardianList.Remove(key);
+                }
+                else if(GuardianList[key].sprites.IsTextureLoaded)
                     GuardianList[key].sprites.UpdateActivity();
             }
         }

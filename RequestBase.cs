@@ -6,14 +6,14 @@ using Terraria;
 
 namespace giantsummon
 {
-    public class RequestBase
+    public class RequestBase : IDisposable
     {
         public static RequestBase[] CommonRequests = new RequestBase[0];
         public string Name = "";
         public string BriefText = "", AcceptText = "", DenyText = "", CompleteText = "", RequestInfoText = "", FailureText = "";
         public List<RequestObjective> Objectives = new List<RequestObjective>();
-        public delegate bool RequestRequirementDel(Terraria.Player player);
-        public RequestRequirementDel Requirement = delegate(Terraria.Player player) { return true; };
+        public delegate bool RequestRequirementDel(Player player);
+        public RequestRequirementDel Requirement = delegate(Player player) { return true; };
         public int RequestScore = 500;
 
         public RequestBase(string Name, int RequestScore, string BriefText = "", string AcceptText = "", string DenyText = "", string CompleteText = "", string RequestInfoText = "", string FailureText = "")
@@ -173,6 +173,24 @@ namespace giantsummon
             Objectives.Add(req);
         }
 
+        public void Dispose()
+        {
+            foreach(RequestObjective ro in Objectives)
+            {
+                ro.Dispose();
+            }
+            Objectives.Clear();
+            Objectives = null;
+            Requirement = null;
+            Name = null;
+            BriefText = null;
+            AcceptText = null;
+            DenyText = null;
+            CompleteText = null;
+            RequestInfoText = null;
+            FailureText = null;
+        }
+
         public class KillBossRequest : RequestObjective
         {
             public int BossID = 0, DifficultyBonus = 0;
@@ -207,6 +225,12 @@ namespace giantsummon
                 : base(ObjectiveTypes.ObjectCollection)
             {
 
+            }
+
+            public override void OnDispose()
+            {
+                DropFromMobs.Clear();
+                DropFromMobs = null;
             }
 
             public struct DropRateFromMonsters
@@ -326,13 +350,23 @@ namespace giantsummon
             }
         }
 
-        public class RequestObjective
+        public class RequestObjective : IDisposable
         {
             public ObjectiveTypes objectiveType = ObjectiveTypes.None;
 
             public RequestObjective(ObjectiveTypes otype)
             {
                 objectiveType = otype;
+            }
+
+            public void Dispose()
+            {
+                OnDispose();
+            }
+
+            public virtual void OnDispose()
+            {
+
             }
 
             public enum ObjectiveTypes

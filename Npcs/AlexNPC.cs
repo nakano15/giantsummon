@@ -14,7 +14,17 @@ namespace giantsummon.Npcs
     public class AlexNPC : ModNPC
     {
         public const int AlexID = 5;
-        public GuardianBase AlexGuardianBase { get { return GuardianBase.GetGuardianBase(AlexID); } }
+        public GuardianBase AlexGuardianBase
+        {
+            get
+            {
+                if (_Base == null)
+                    _Base = GuardianBase.GetGuardianBase(AlexID);
+                _Base.RefreshBaseLifeTime();
+                return _Base;
+            }
+        }
+        private GuardianBase _Base;
         public int BodyAnimation = 0, LeftArmAnimation = 0;
         public float AnimationTime = 0;
         public const int AI_TYPE = 0, AI_TIMER = 1;

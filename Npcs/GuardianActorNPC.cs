@@ -30,8 +30,15 @@ namespace giantsummon.Npcs
         public bool MoveLeft = false, MoveRight = false, DropFromPlatform = false, Action = false, Jump = false, Walk = false, Dash = false, Idle = false;
         public GuardianBase Base
         {
-            get { return GuardianBase.GetGuardianBase(GuardianID, GuardianModID); }
+            get
+            {
+                if (_Base == null)
+                    _Base = GuardianBase.GetGuardianBase(GuardianID, GuardianModID);
+                _Base.RefreshBaseLifeTime();
+                return _Base;
+            }
         }
+        private GuardianBase _Base;
         public byte IdleBehaviorType = 0;
         public int IdleBehaviorTime = 0;
         public List<int> DrawInFrontOfPlayers = new List<int>();

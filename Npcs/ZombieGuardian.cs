@@ -12,7 +12,17 @@ namespace giantsummon.Npcs
 {
     public class ZombieGuardian : ModNPC
     {
-        private GuardianBase Base { get { return GuardianBase.GetGuardianBase(3); } }
+        private GuardianBase Base
+        {
+            get
+            {
+                if (_Base == null)
+                    _Base = GuardianBase.GetGuardianBase(3);
+                _Base.RefreshBaseLifeTime();
+                return _Base;
+            }
+        }
+        private GuardianBase _Base;
         private int JumpHeightValue = 0;
         private byte TileStuckTimer = 0;
         private float LastX = 0;

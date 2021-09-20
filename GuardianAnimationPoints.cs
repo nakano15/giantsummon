@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace giantsummon
 {
-    public class GuardianAnimationPoints
+    public class GuardianAnimationPoints : IDisposable
     {
         public Point DefaultCoordinate = Point.Zero;
         private Dictionary<int, AnimationPoint> SpecificCoordinates = new Dictionary<int, AnimationPoint>();
@@ -83,6 +83,12 @@ namespace giantsummon
                 SpecificCoordinates[Frame].X = Position.X;
                 SpecificCoordinates[Frame].Y = Position.Y;
             }
+        }
+
+        public void Dispose()
+        {
+            SpecificCoordinates.Clear();
+            SpecificCoordinates = null;
         }
 
         public class AnimationPoint

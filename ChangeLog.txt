@@ -35,3 +35,4 @@ Companions following you will no longer jump facing the wall like complete moron
 	They will also be pulled towards you.
 Fixed a crash that happened when a projectile that spawns more projectiles caused the game to crash. Ex:. Beenades.
 Homeless companions will leave the world, and return when they have a house for them.
+Attempted to make the mod clean up memory overtime.

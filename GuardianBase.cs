@@ -9,8 +9,9 @@ using giantsummon.Creatures;
 
 namespace giantsummon
 {
-    public class GuardianBase
+    public class GuardianBase : IDisposable
     {
+        private byte BaseLifetime = 60;
         private static Dictionary<string, GuardianBaseContainer> GuardianList = new Dictionary<string, GuardianBaseContainer>();
         public delegate void ModGuardianDB(int ID, out GuardianBase guardian);
         public InvalidGuardianPoints invalidGuardianPoints = new InvalidGuardianPoints(true);
@@ -156,7 +157,18 @@ namespace giantsummon
             Quentin = 24,
             Miguel = 25;
 
-        public struct DialogueTopic
+        public void RefreshBaseLifeTime()
+        {
+            BaseLifetime = 60;
+        }
+
+        public bool UpdateLifeTimeCounter()
+        {
+            BaseLifetime--;
+            return BaseLifetime == 0;
+        }
+
+        public struct DialogueTopic : IDisposable
         {
             public string TopicText;
             public Action TopicMethod;
@@ -170,6 +182,11 @@ namespace giantsummon
                     this.Requirement = delegate (TerraGuardian tg, PlayerMod pl) { return true; };
                 else
                     this.Requirement = Requirement;
+            }
+
+            public void Dispose()
+            {
+                Requirement = null;
             }
         }
 
@@ -1023,7 +1040,9 @@ namespace giantsummon
                 GuardianBaseContainer gbc = new GuardianBaseContainer(modid);
                 GuardianList.Add(modid, gbc);
             }
-            return GuardianList[modid].GetGuardian(ID);
+            GuardianBase gb = GuardianList[modid].GetGuardian(ID);
+            gb.RefreshBaseLifeTime();
+            return gb;
         }
 
         public static int GetTotalGuardianDataCount()
@@ -1240,13 +1259,17 @@ namespace giantsummon
             }
         }
 
+        private static byte LastContainerUpdateTimer = 0;
         public static void UpdateContainers()
         {
             string[] keys = GuardianList.Keys.ToArray();
             foreach (string key in keys)
             {
-                GuardianList[key].UpdateContainers();
+                GuardianList[key].UpdateContainers(LastContainerUpdateTimer == 60);
             }
+            LastContainerUpdateTimer++;
+            if (LastContainerUpdateTimer > 60)
+                LastContainerUpdateTimer = 1;
         }
 
         public static void UnloadContainer(Mod mod)
@@ -1470,6 +1493,83 @@ namespace giantsummon
                     break;
                 }
             }*/
+        }
+
+        public void Dispose()
+        {
+            if (sprites != null)
+                sprites.Dispose();
+            sprites = null;
+            foreach (GuardianSpecialAttack gsa in SpecialAttackList)
+                gsa.Dispose();
+            SpecialAttackList.Clear();
+            SpecialAttackList = null;
+            foreach (RequestBase rb in RequestDB)
+            {
+                rb.Dispose();
+            }
+            RequestDB.Clear();
+            RequestDB = null;
+            RewardsList.Clear();
+            RewardsList = null;
+            foreach (SkinReqStruct sk in SkinList)
+                sk.Dispose();
+            foreach (SkinReqStruct sk in OutfitList)
+                sk.Dispose();
+            SkinList = null;
+            OutfitList = null;
+            if (HurtSound != null)
+            {
+                HurtSound.Dispose();
+                HurtSound = null;
+            }
+            if (DeadSound != null)
+            {
+                DeadSound.Dispose();
+                DeadSound = null;
+            }
+            LeftHandPoints.Dispose();
+            LeftHandPoints = null;
+            //
+            RightHandPoints.Dispose();
+            RightHandPoints = null;
+            //
+            MountShoulderPoints.Dispose();
+            MountShoulderPoints = null;
+            //
+            LeftArmOffSet.Dispose();
+            LeftArmOffSet = null;
+            //
+            RightArmOffSet.Dispose();
+            RightArmOffSet = null;
+            //
+            HeadVanityPosition.Dispose();
+            HeadVanityPosition = null;
+            //
+            WingPosition.Dispose();
+            WingPosition = null;
+
+            InitialItems.Clear();
+            InitialItems = null;
+
+            WalkingFrames = null;
+            HeavySwingFrames = null;
+            ItemUseFrames = null;
+            DuckingSwingFrames = null;
+            SittingItemUseFrames = null;
+
+            BodyFrontFrameSwap.Clear();
+            BodyFrontFrameSwap = null;
+            DrawLeftArmInFrontOfHead.Clear();
+            DrawLeftArmInFrontOfHead = null;
+
+            foreach (DialogueTopic topic in Topics)
+                topic.Dispose();
+            Topics.Clear();
+            Topics = null;
+
+            Name = null;
+            Description = null;
         }
 
         public class MessageIDs
