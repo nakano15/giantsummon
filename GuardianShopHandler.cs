@@ -17,14 +17,15 @@ namespace giantsummon
                 shop.Dispose();
             }
             Shops.Clear();
-            Shops = null;
         }
 
         public static GuardianShop CreateShop(int OwnerID, string OwnerModID)
         {
-            GuardianShop shop = new GuardianShop();
-            shop.OwnerID = OwnerID;
-            shop.OwnerModID = OwnerModID;
+            GuardianShop shop = new GuardianShop
+            {
+                OwnerID = OwnerID,
+                OwnerModID = OwnerModID
+            };
             Shops.Add(shop);
             return shop;
         }

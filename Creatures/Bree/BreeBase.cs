@@ -913,7 +913,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCoinPortal:
                     return "As soon as I heard from [player] about a coin portal they found, I can't stop breaking vases.";
                 case MessageIDs.FeatPlayerMetMe:
-                    if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], Sardine)
+                    if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], Sardine))
                         return "I have met [player] recently. Since I need to find out where is my house, I stayed for a while in their world too.";
                     return "I have met [player] not long ago. They are helping me find my husband, too. The quicker they find my husband, the quicker I go home.";
                 case MessageIDs.FeatCompletedAnglerQuests:

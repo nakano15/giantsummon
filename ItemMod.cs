@@ -54,22 +54,25 @@ namespace giantsummon
 
         public override bool OnPickup(Item item, Player player)
         {
-            if (player.GetModPlayer<PlayerMod>().Guardian.Active)
+            if (item.type > 0)
             {
-                if (item.type == Terraria.ID.ItemID.Heart || item.type == Terraria.ID.ItemID.CandyApple || item.type == Terraria.ID.ItemID.CandyCane)
+                if (player.GetModPlayer<PlayerMod>().Guardian.Active)
                 {
-                    player.GetModPlayer<PlayerMod>().ShareHealthReplenishWithGuardians(20);
+                    if (item.type == Terraria.ID.ItemID.Heart || item.type == Terraria.ID.ItemID.CandyApple || item.type == Terraria.ID.ItemID.CandyCane)
+                    {
+                        player.GetModPlayer<PlayerMod>().ShareHealthReplenishWithGuardians(20);
+                    }
+                    if (item.type == Terraria.ID.ItemID.Star || item.type == Terraria.ID.ItemID.SoulCake || item.type == Terraria.ID.ItemID.SugarPlum)
+                    {
+                        player.GetModPlayer<PlayerMod>().ShareManaReplenishWithGuardians(100);
+                    }
                 }
-                if (item.type == Terraria.ID.ItemID.Star || item.type == Terraria.ID.ItemID.SoulCake || item.type == Terraria.ID.ItemID.SugarPlum)
+                if (Main.npcShop <= 0 && item.rare > Terraria.ID.ItemRarityID.Green)
                 {
-                    player.GetModPlayer<PlayerMod>().ShareManaReplenishWithGuardians(100);
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.FoundSomethingGood,
+                        player.name, item.Name, 8, item.rare,
+                        GuardianGlobalInfos.GetGuardiansInTheWorld());
                 }
-            }
-            if(Main.npcShop <= 0 && item.rare > Terraria.ID.ItemRarityID.Green)
-            {
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.FoundSomethingGood,
-                    player.name, item.Name, 8, item.rare,
-                    GuardianGlobalInfos.GetGuardiansInTheWorld());
             }
             return base.OnPickup(item, player);
         }
