@@ -1,7 +1,7 @@
 Name(s): Sorrow, Gloomy, Dismal
 
 
-Recruit Method: Can be found underground at a 25% chance or can spawn during rain at a 50% chance.
+Recruit Method: Can be found anywhere underground at a 25% chance or can spawn during rain at a 50% chance.
 
 Recruit: 
 -"Oh hello there.... dont mind me im nobody. Carry along to better more important things."
@@ -27,9 +27,10 @@ Post recruitment RNG:
 
 
 
-Conditional:
-Fire Debuff: Maybe I deserve to burn for eternity im sorry for my existence.
-
+Conditional(Says outloud):
+Fire Debuff: Maybe I deserve to burn for eternity, i apologize for my existence.
+Poisoned: "This pain is not new to me"
+Raining: "This weather describes me perfectly" 
 
 
 Reviving:
@@ -39,10 +40,13 @@ TG revived: "You should have just let me die, im useless either way"
 
 
 Comments on other entities:
-Another Emo pig is on team: "I feel a strong attraction to [Place holder Pig name], what is this feeling, sorry for mentioning that....."
+Another Emo pig is on team: "I feel a strong attraction to [Place holder Pig name], what is this feeling........nevermind just forget it, sorry for mentioning that....."
 Madness Pig: "Why must [Place holder name] be so violent it makes me sad"
 Joyful Pig: "[Place holder name] is what i wish i could be. How do they keep such a great personality no matter what happens?"
 Fearful Pig: "Why must [Place holder name] be afraid of me. Im such worthless pathetic being, it makes me even more depressed knowing someone despises me"
+
+
+
 
 
 
