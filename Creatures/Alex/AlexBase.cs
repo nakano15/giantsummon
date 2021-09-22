@@ -650,6 +650,14 @@ namespace giantsummon.Creatures
                     return "I heard that [player] managed to open the door to a strange temple at [subject] recently. I wonder what they found inside.";
                 case MessageIDs.FeatCoinPortal:
                     return "How lucky! [player] found a strange glowing portal that rained coins.";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "I met a new friend! Their name is [player]. Do you know [player]?";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "I'm impressed that [player] has been catching lots of weird fish.";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "Wow! [player] has killed some creepy squid guy and saved their world!";
+                case MessageIDs.FeatStartedHardMode:
+                    return "Something scary happened on [player]'s world. They killed a giant flesh thing and the world got scarier.";
             }
             return base.GetSpecialMessage(MessageID);
         }

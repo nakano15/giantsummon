@@ -493,6 +493,8 @@ namespace giantsummon
 
         public override void Load(Terraria.ModLoader.IO.TagCompound tag)
         {
+            MainMod.LastMoonLordKilled = NPC.downedMoonlord;
+            MainMod.LastHardMode = Main.hardMode;
             GuardiansMet.Clear();
             if (!tag.ContainsKey("ModVersion"))
                 return;

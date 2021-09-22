@@ -1683,7 +1683,11 @@ namespace giantsummon
                 FeatMetSomeoneNew = "Mes.Feat.MetSomeone",
                 FeatPlayerDied = "Mes.Feat.PlayerDied",
                 FeatOpenTemple = "Mes.Feat.OpenedTemple",
-                FeatCoinPortal = "Mes.Feat.CoinPortal";
+                FeatCoinPortal = "Mes.Feat.CoinPortal",
+                FeatPlayerMetMe = "Mes.Feat.PlayerMetMe",
+                FeatCompletedAnglerQuests = "Mes.Feat.AnglerQuestsCompleted",
+                FeatKilledMoonLord = "Mes.Feat.KilledMoonLord",
+                FeatStartedHardMode = "Mes.Feat.StartedHardMode";
         }
         
         public enum GuardianEffect

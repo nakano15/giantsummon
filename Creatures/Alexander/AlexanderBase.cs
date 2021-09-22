@@ -692,6 +692,14 @@ namespace giantsummon.Creatures
                     return "*[player] has recently opened the door to some temple at [subject]. I wonder what kind of thing they found there.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*You would be impressed if you saw the same gold portal [player] has found. They got richier after it showed up.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I have met [player] recently. They're not the one I'm looking for, but may help me find who I seek.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*It seems like [player] has been really into helping the angler kid.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*I heard that [player] has defeated [subject] and saved their world, but I think they actually caused the danger to surge.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*Looks like [player] caused a chaotic event to happen in their world. Now stronger creatures roams around it.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -708,6 +708,14 @@ namespace giantsummon.Creatures
                     return "*Is said that [player] has opened a temple door at [subject]. They must be exploring it right now.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*A coin portal has appeared before [player]! They're so lucky!*";
+                case MessageIDs.FeatPlayerMetMe: //Todo - Add the dialogues to her, and other companions.
+                    return "";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "";
+                case MessageIDs.FeatStartedHardMode:
+                    return "";
             }
             return base.GetSpecialMessage(MessageID);
         }

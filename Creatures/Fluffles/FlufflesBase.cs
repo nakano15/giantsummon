@@ -515,6 +515,14 @@ namespace giantsummon.Creatures
                     return "(She drew the image of someone opening the door of a kind of temple.)";
                 case MessageIDs.FeatCoinPortal:
                     return "(She drew the image of someone finding a portal that rained coins.)";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "(She seems to be happy about meeting someone new recently.)";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "(She looks impressed that someone managed to get many fish.)";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "(She tells you of a Terrarian who saved their world from evil.)";
+                case MessageIDs.FeatStartedHardMode:
+                    return "(She seems to be telling you of something horrible that happened at someone's world.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

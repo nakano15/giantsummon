@@ -92,9 +92,10 @@ namespace giantsummon
                 }
                 MyParent = -1;
             }
-            if (IsHook(projectile))
+            ProjParent = projectile.whoAmI;
+            if (IsGuardianProjectile(projectile.whoAmI))
             {
-                if (IsGuardianProjectile(projectile.whoAmI))
+                if (IsHook(projectile) || (projectile.minion && projectile.minionSlots < 0))
                 {
                     if (GuardianProj[projectile.whoAmI].KnockedOut)
                     {
@@ -102,18 +103,6 @@ namespace giantsummon
                         return false;
                     }
                 }
-                else
-                {
-                    if (Main.player[projectile.owner].GetModPlayer<PlayerMod>().KnockedOut)
-                    {
-                        projectile.Kill();
-                        return false;
-                    }
-                }
-            }
-            ProjParent = projectile.whoAmI;
-            if (IsGuardianProjectile(projectile.whoAmI))
-            {
                 TerraGuardian g = GuardianProj[projectile.whoAmI];
                 if(projectile.position.X < 5 * 16 || projectile.position.X > (Main.maxTilesX - 5) * 16 ||
                     projectile.position.Y < 5 * 16 || projectile.position.Y > (Main.maxTilesY - 5) * 16)
@@ -124,7 +113,7 @@ namespace giantsummon
                 }
                 if (projectile.minion)
                 {
-                    Main.player[projectile.owner].slotsMinions += -projectile.minionSlots;
+                    Main.player[projectile.owner].slotsMinions += projectile.minionSlots; //Was -projectile.minionSlots
                     if (!g.Active || (g.MinionSlotCount + projectile.minionSlots > g.MaxMinions && projectile.owner == Main.myPlayer))
                     {
                         if (projectile.type == 627 || projectile.type == 628)
@@ -194,6 +183,14 @@ namespace giantsummon
             }
             else
             {
+                if (IsHook(projectile) || (projectile.minion && projectile.minionSlots > 0))
+                {
+                    if (Main.player[projectile.owner].GetModPlayer<PlayerMod>().KnockedOut)
+                    {
+                        projectile.Kill();
+                        return false;
+                    }
+                }
                 if (Main.player[projectile.owner].GetModPlayer<PlayerMod>().Guardian.Active)
                 {
                     TerraGuardian g = Main.player[projectile.owner].GetModPlayer<PlayerMod>().Guardian;

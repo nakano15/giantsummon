@@ -732,6 +732,14 @@ namespace giantsummon.Creatures
                     return "*[player] has opened the door of a mysterious temple at [subject] recently. I need to investigate inside it.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*A coin portal appeared for [player] recently. My theory? That portal is connected to some vault.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*Ah, yes. I have met [player] already. They may be a valuable asset for my researches.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*Interesting the amount of fish [player] found in their world. I want to study them.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*Some weird prophecy on [player]'s world has happened, and a giant godly creature surged to obliterate everything. The terrarian managed to get it killed and save everyone. Good thing that I was there to study that.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*A weird event happened in [player]'s world. They killed a giant flesh creature, and spirits of dark and light were freed, trying to take over their world. I wonder what the Terrarian will do now.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

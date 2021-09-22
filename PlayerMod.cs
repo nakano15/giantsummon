@@ -2751,7 +2751,7 @@ namespace giantsummon
                 CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
                 GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MetSomeoneNew,
                     player.name, MyGuardians[SpawnID].Name, 6, MyGuardians.Count,
-                    GuardianGlobalInfos.GetGuardiansInTheWorld(new GuardianID(Id, ModId)));
+                    GuardianGlobalInfos.GetGuardiansInTheWorld());
             }
             return AlreadySpawned;
         }
@@ -3251,7 +3251,15 @@ namespace giantsummon
             });
             layers.Add(l);*/
         }
-        
+
+        public override void AnglerQuestReward(float rareMultiplier, List<Item> rewardItems)
+        {
+            if(player.anglerQuestsFinished % 10 == 0)
+            {
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.ManyAnglerQuestsCompleted, player.name, "", 10, player.anglerQuestsFinished * 0.1f, GuardianGlobalInfos.GetGuardiansInTheWorld());
+            }
+        }
+
         // Quest Variables
         public byte ZacksMeatBagOutfitQuestStep = 0;
         //

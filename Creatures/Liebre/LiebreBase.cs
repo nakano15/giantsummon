@@ -1200,6 +1200,14 @@ namespace giantsummon.Creatures
                     return "*[player] opened the door of a temple in [subject] recently. Why that place was locked out, is the question.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*You wouldn't believe in the face [player] had when they saw coins raining off a portal.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I have met a new soul recently. They said their name is [player].*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*[player] really throwed themself into fishing.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*I have saved the soul of a giant celestial creature that appeared on [player]'s world. Now their world is more at peace.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*[player] managed to unleash more dangers into their world. I have many creatures to appease there, too.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

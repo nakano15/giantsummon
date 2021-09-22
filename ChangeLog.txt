@@ -36,3 +36,10 @@ Companions following you will no longer jump facing the wall like complete moron
 Fixed a crash that happened when a projectile that spawns more projectiles caused the game to crash. Ex:. Beenades.
 Homeless companions will leave the world, and return when they have a house for them.
 Attempted to make the mod clean up memory overtime.
+Companions will now comment when players gets something cool.
+When a companion is talking about someone meeting them, they will instead comment in first person, instead of in third person.
+	Didn't got it? Instead of saying "Someone has met x, I hope they're nice.", the companion will instead say "I have met x, they're nice.".
+Companions will now mention about:
+	Completting a number of angler quests.
+	Killing Moon Lord for the first time.
+	Starting Hardmode.

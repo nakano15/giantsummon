@@ -643,6 +643,14 @@ namespace giantsummon.Creatures
                     return "*Oooohhh! Mysterious! [player] opened a temple in [subject] and entered. What wonders would be inside? Is there some ancient recipe?*";
                 case MessageIDs.FeatCoinPortal:
                     return "*[player] was so lucky when found that coin portal! And my mom complained when I accidentally destroyed her pottery once.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*Hey! Hey! Listen! I met another Terrarian! They are called [player]! They look cool.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*[player] could have given me some of the fish they gave to the Angler. I could try making some tasty meal out of them.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*I'm so happy for [player]! They were like my hero when they killed giant squid guy.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*The day the world of [player] got the hallow and evil clashing each other, I felt on my fur the change happening to it. It was really a horrible feeling.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

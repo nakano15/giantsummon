@@ -912,6 +912,16 @@ namespace giantsummon.Creatures
                     return "[player] seems to have opened the door of some old temple in [subject], and by now must be pillaging it.";
                 case MessageIDs.FeatCoinPortal:
                     return "As soon as I heard from [player] about a coin portal they found, I can't stop breaking vases.";
+                case MessageIDs.FeatPlayerMetMe:
+                    if (PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], Sardine)
+                        return "I have met [player] recently. Since I need to find out where is my house, I stayed for a while in their world too.";
+                    return "I have met [player] not long ago. They are helping me find my husband, too. The quicker they find my husband, the quicker I go home.";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "[player] has made me impressed. They managed to get quite a number of weird fish. Sadly they don't know yet how to catch 2 fish at once.";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "It was really scary! The world went dark and creepy, and then a flash light appeared, and a giant creature surged. Gladly [player] managed to deal with it for good.";
+                case MessageIDs.FeatStartedHardMode:
+                    return "I think [player] did something they shouldn't. The evil in their world begun advancing agressivelly, and the holy lands appeared, and also wants to kill us all. Is it the end of times?";
             }
             return base.GetSpecialMessage(MessageID);
         }

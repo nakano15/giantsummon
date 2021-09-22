@@ -45,7 +45,10 @@ namespace giantsummon
             PlayerDied,
             OpenedTemple,
             CoinPortalSpawned,
-            MinibossDefeated
+            MinibossDefeated,
+            ManyAnglerQuestsCompleted,
+            KilledMoonLordFirstTime,
+            StartedHardMode
         }
     }
 }

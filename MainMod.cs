@@ -132,7 +132,7 @@ namespace giantsummon
         public static int GeneralIdleCommentCooldown = 0;
         public static List<GuardianID> CompanionBlacklist = new List<GuardianID>();
         private static Tile DefaultTile = new Tile();
-        public static bool LastBossSpotted = false, LastInvasionSpotted = false, LastEventStarted = false;
+        public static bool LastBossSpotted = false, LastInvasionSpotted = false, LastEventStarted = false, LastMoonLordKilled = false, LastHardMode = false;
         public static byte LastEvent = 0;
         public static sbyte LastInvasion = -1;
 
@@ -750,7 +750,7 @@ namespace giantsummon
         {
             return mod.GetSoundSlot(SoundType.Custom, Directory);
         }
-        
+
         public override void MidUpdateGoreProjectile()
         {
             foreach (int p in ProjMod.GuardianProj.Keys)
@@ -802,6 +802,18 @@ namespace giantsummon
 
         public void UpdateReactions()
         {
+            if (!LastMoonLordKilled && NPC.downedMoonlord)
+            {
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.KilledMoonLordFirstTime, Main.player[Main.myPlayer].name, "Moon Lord", 30, 45,
+                    GuardianGlobalInfos.GetGuardiansInTheWorld());
+            }
+            LastMoonLordKilled = NPC.downedMoonlord;
+            if (!LastHardMode && Main.hardMode)
+            {
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.StartedHardMode, Main.player[Main.myPlayer].name, "", 15, 45,
+                    GuardianGlobalInfos.GetGuardiansInTheWorld());
+            }
+            LastHardMode = Main.hardMode;
             if (LastBossSpotted)
             {
                 bool HasBossAlive = false;

@@ -112,6 +112,7 @@ namespace giantsummon
         public static string GetFeatMessage(FeatMentioning feat, TerraGuardian tg)
         {
             string Message = "";
+            string Subject = feat.FeatSubject;
             switch (feat.type)
             {
                 case FeatMentioning.FeatType.BossDefeated:
@@ -131,7 +132,16 @@ namespace giantsummon
                     Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionPlayer);
                     break;
                 case FeatMentioning.FeatType.MetSomeoneNew:
-                    Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMetSomeoneNew);
+                    {
+                        if (!(tg.Base.Name == feat.FeatSubject || tg.Base.PossibleNames.Contains(feat.FeatSubject)))
+                        {
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMetSomeoneNew);
+                        }
+                        else
+                        {
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatPlayerMetMe);
+                        }
+                    }
                     break;
                 case FeatMentioning.FeatType.OpenedTemple:
                     Message = tg.GetMessage(GuardianBase.MessageIDs.FeatOpenTemple);
@@ -140,7 +150,7 @@ namespace giantsummon
                     Message = tg.GetMessage(GuardianBase.MessageIDs.FeatPlayerDied);
                     break;
             }
-            Message = Message.Replace("[player]", feat.PlayerName).Replace("[subject]", feat.FeatSubject);
+            Message = Message.Replace("[player]", feat.PlayerName).Replace("[subject]", Subject);
             return Message;
         }
 

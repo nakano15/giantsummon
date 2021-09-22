@@ -40,7 +40,7 @@ namespace giantsummon
                 if (!LastItemsSpawned.Contains(item.whoAmI))
                 {
                     Player player = Main.player[Main.myPlayer];
-                    if(!item.vanity && (item.damage > 0 || item.defense > 0 || item.accessory) && item.rare > Terraria.ID.ItemRarityID.Green)
+                    if(player.active && !item.vanity && (item.damage > 0 || item.defense > 0 || item.accessory) && item.rare > Terraria.ID.ItemRarityID.Green)
                     {
                         if (Math.Abs(player.Center.X - item.Center.X) < Main.screenWidth * 0.5f &&
                             Math.Abs(player.Center.Y - item.Center.Y) < Main.screenHeight * 0.5f)
@@ -65,7 +65,7 @@ namespace giantsummon
                     player.GetModPlayer<PlayerMod>().ShareManaReplenishWithGuardians(100);
                 }
             }
-            if(Main.npcShop == -1 && item.rare > Terraria.ID.ItemRarityID.Green)
+            if(Main.npcShop <= 0 && item.rare > Terraria.ID.ItemRarityID.Green)
             {
                 GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.FoundSomethingGood,
                     player.name, item.Name, 8, item.rare,

@@ -604,6 +604,24 @@ namespace giantsummon.Creatures
                     return "People are saying that [player] opened some strange temple in [subject]. What did they found inside?";
                 case MessageIDs.FeatCoinPortal:
                     return "I heard that the stories about coin portals are true! [player] found one, and got richier after finding it!";
+                case MessageIDs.FeatPlayerMetMe:
+                    {
+                        bool HasSardine = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], Sardine),
+                            HasBree = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], Bree);
+                        if (HasSardine && HasBree)
+                            return "I met another Terrarian some days ago. Their name was [player].";
+                        else if(HasSardine || HasBree)
+                        {
+                            return "There is a Terrarian named [player] who is also helping me find my parents. They found one of them, the other is still missing.";
+                        }
+                        return "There is another Terrarian helping me find my parents. Their name is [player]. If you see them, ask if they found them.";
+                    }
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "[player] has been giving many weird fish to the Angler kid.";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "It was so cool watching [player] kill the Moon Lord. You should have seen that.";
+                case MessageIDs.FeatStartedHardMode:
+                    return "[player]'s world got many creepy creatures attacking us. Even the evil is trying to take over our town.";
             }
             return base.GetSpecialMessage(MessageID);
         }

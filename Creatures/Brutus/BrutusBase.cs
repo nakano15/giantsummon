@@ -1160,6 +1160,14 @@ namespace giantsummon.Creatures
                     return "*[player] opened a mysterious temple at [subject] recently. I wonder what they found inside.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*Sometimes I think I should charge by the days of protection, even more after [player] found a portal that rained coins.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I have made a contract with [player] too. They are also under my protection, so don't try anything hostile towards them.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*I think that instead of [player] helping that odious kid, they could have kept the fish for themself. What they would do with it? I don't know, maybe place in a fishbowl?*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*Even though [player] got the giant creature killed in their world, doesn't means my job is done. I will keep protecting their life as if was my own.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*I think my job just got harder on [player]'s world. They managed to make menacing creatures surge.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

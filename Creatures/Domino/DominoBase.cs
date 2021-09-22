@@ -668,6 +668,14 @@ namespace giantsummon.Creatures
                     return "*I heard that [player] finally opened the door of a temple in [subject]. I will visit it some time to see what I can take from it.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*That lucky Terrarian... [player] managed to bump into one of those coin portals.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I met a potential new client latelly. They are called [player].*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*[player] could have made some money, if he let me smuggle some of the fish they gave to the Angler.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*It seems like [player]'s world got saved from some weird creature. By the way, if you're interessed in buying some Luminite, be sure to give me a word.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*[player] managed to get more things to shot at in their world.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
