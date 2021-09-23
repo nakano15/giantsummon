@@ -3,25 +3,42 @@ Name(s): Joy, Cheery, Glee
 Recruit Method: Found in hollow biome at 35% chance 
 
 First Meet:
--Oh my! a new face! Whats your name? Mine is [Joy,Cheery,Glee] nice to meet you!
-Player: Hey Im [Place holder Name]
--Thats a nice name you have, would you like to be friends? I would love to venture with a person such as yourself.
-Player: Sure why not? or No im fine.
-Yes option- Yay! we will be the best of friends. I'll be 
-No option- Aww thats unfortunate, well if you ever change your mind i will be here in this beautiful colored biome. I hope you have a nice day!
+-"Oh my! a new face! Whats your name? Mine is [Joy,Cheery,Glee] nice to meet you!"
+Player: "Hey Im [Place holder Name]"
+-"Thats a nice name you have, would you like to be friends? I would love to venture with a person such as yourself."
+Player: "Sure why not? or No im fine."
+Yes option- "Yay! we will be the best of friends. I'll be sure to share what i find with you because sharing is caring."
+No option- "Aww thats unfortunate, well if you ever change your mind i will be here in this beautiful colored biome. I hope you have a nice day!"
 
 Already Met:
+-"Hey there best buddy! Are you planning on me tagging along with you?"
+Player: "Sure" or "No im fine for now"
+
 
 
 Post recruitment RNG:
+-"Do you like picnics? Im sure you would love it, lets try it sometime with a group of buddies."
+-"I want you to know that whatever happens I will always be there for you if you ever need anything pal"
+-"
+-"
+-"
 
 
 
-Conditional:
+Conditional(Says outloud):
+Fire debuff: Haha theres nothing like the warm feeling on fire.
+Poisoned: The numbness it brings me pleasure.
+
+
+
+
 
 
 
 Reviving:
+Reviving player- "Don't worry I have you back buddy!"
+Is revived- Im back and better than ever hahaha!
+
 
 
 
