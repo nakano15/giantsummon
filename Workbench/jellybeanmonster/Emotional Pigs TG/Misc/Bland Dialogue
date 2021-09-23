@@ -18,14 +18,14 @@ Player" "I'll take that as a yes then..."
 
 Already Met:
 -"..."
-Player: Want to join me again?
--"Whatever..."
+Player: (Rerecruit)"Want to join me again?" or "Bye"
+Rerecruit answer-"Whatever..."
 
 Post recruitment RNG:
 -"..."
 -"...*Cough*..."
 -"...*Sniff*..."
--".............*Awkward Silence*"
+-".............*awkward silence*"
 -"*Stares at you with a blank face*"
 
 Conditional(Says outloud):
@@ -34,6 +34,9 @@ Gets hit by anything: "Ok..."
 Dies:"Who cares..."
 
 Reviving(says outloud):
-Reviving teammates: "..."
-Is revivied:"Ok..."
+Reviving teammates: "Yep..."
+Is revivied:"..."
+
+Comments on other entities:
+All companions:"I dont care"
 
