@@ -6,13 +6,14 @@ First Meet:
 -"Oh my! a new face! Whats your name? Mine is [Joy,Cheery,Glee] nice to meet you!"
 Player: "Hey Im [Place holder Name]"
 -"Thats a nice name you have, would you like to be friends? I would love to venture with a person such as yourself."
-Player: "Sure why not? or No im fine."
-Yes option- "Yay! we will be the best of friends. I'll be sure to share what i find with you because sharing is caring."
+Player: "Sure why not?" or "No im fine."
+Yes option- "Yay! we will be the best of friends."
 No option- "Aww thats unfortunate, well if you ever change your mind i will be here in this beautiful colored biome. I hope you have a nice day!"
 
 Already Met:
 -"Hey there best buddy! Are you planning on me tagging along with you?"
 Player: "Sure" or "No im fine for now"
+Rerecruit option- Yay! lets go then!
 
 
 
@@ -21,24 +22,19 @@ Post recruitment RNG:
 -"I want you to know that whatever happens I will always be there for you if you ever need anything pal"
 -"If you dont want me to help in battle, the least I can do is cheer you on from the sidelines"
 -"Im always happy to just wake up to see another day. Everyday is a new day to spread positivity."
--"
-
+-"Every week I will craft a heart crystal for you just to show how much i appreciate you as a friend"
+-"Dont be afraid to ask me to share anything because sharing is caring."
 
 
 Conditional(Says outloud):
 Fire debuff: "Theres nothing like the warm feeling on fire."
 Poisoned: "The numbness it brings me pleasure."
+Detects enemy in 10 block radius: "Lets play.....to the DEATH!"
+Dies: "My happiness will never fade!"
 
-
-
-
-
-
-
-Reviving:
-Reviving player- "Don't worry I have you back buddy!"
-Is revived- "Im back and better than ever hahaha!"
-
+Reviving(says outloud):
+Reviving player or other tg- "Don't worry I have your back buddy!"
+Is revived- "Im back and better than ever!"
 
 
 
@@ -47,5 +43,6 @@ Wrath: "[Wrath] loves to play fight with me, they say they are trying to kill me
 Fright: "[Fright] always wants to play hide n seek even when I didnt ask them to play."
 Sorrow: "Dont worry I will eventually cheer up [Sorrow] no matter what it takes."
 Miguel: "Have you tried exercising with my other friend [Miguel]? We both enjoy staying happy and healthy"
-Roccoco: "Roccoco is the sweetest person but its unfortunate that i am unable to comprehend what he says"
+Roccoco: "[Roccoco] is a sweet person but its unfortunate that i am unable to comprehend what he says"
+All Dog tgs: "Belly rubs are [Place holder name]'s favorite thing it seems, Im happy to please them" 
 
