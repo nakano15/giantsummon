@@ -26,8 +26,9 @@ Post recruitment RNG:
 -"Hey! Stay away from me!"
 -"Whats this? why would they want to speak with me? maybe they are trying to kill me like they always planned from the beginning?([Fright] thinks)"
 -"I have nothing to discuss, you should be on your way far from me"
--"Hey stop walking around me its giving me anxiety"
+-"Hey! stop moving around me its giving me anxiety"
 -"Just exisitng here gives me the creeps"
+
 
 
 
@@ -38,9 +39,11 @@ Detects enemy in 5 block radius: "SOMEONE HELP ME!!!!!"
 Is damaged by anything: "AHHHHHH!!!"
 Fire Debuff: "IT BURNS! IT BURNS!"
 Posioned: "I CAN FEEL IT CREEP THROUGH MY VEINS!"
-
+Bloodmoon:"WE'RE ALL GONNA DIE!"
 
 Reviving:
+Reviving teammates: Get up! get up! you need to protect me!
+is revived: "The feeling of death terrifies me..."
 
 
 
