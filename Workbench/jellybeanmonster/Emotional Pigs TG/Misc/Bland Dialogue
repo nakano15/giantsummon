@@ -1,5 +1,6 @@
-Recruit Method: Need to take all 4 emo pigs to Sage Leopold to fuse them.
+Names: Bland, Dull
 
+Recruit Method: Need to take all 4 emo pigs to Sage Leopold to fuse them.
 
 First Meet:
 -"..."
@@ -9,8 +10,30 @@ Player: You should know your ownself right?
 -"Maybe...who cares?"
 Player: "Ok well what is your name?"
 -"Doesn't really matter..."
-Player: "You have a very bland attitude I'll just call you that then"
+Player: "You have a very [Bland,Dull] attitude I'll just call you that then"
 -"Ok..."
-Player: "Do you want to join my team?" or "I'll see you later then"
--"I dont care"
-Player" "I'll take  that as a yes then..."
+Player: (Recruit Option)"Do you want to join my team?" or "I'll see you later then"
+Recruit option answer-"I dont care"
+Player" "I'll take that as a yes then..."
+
+Already Met:
+-"..."
+Player: Want to join me again?
+-"Whatever..."
+
+Post recruitment RNG:
+-"..."
+-"...*Cough*..."
+-"...*Sniff*..."
+-".............*Awkward Silence*"
+-"*Stares at you with a blank face*"
+
+Conditional(Says outloud):
+All debuffs: "Whatever"
+Gets hit by anything: "Ok..."
+Dies:"Who cares..."
+
+Reviving(says outloud):
+Reviving teammates: "..."
+Is revivied:"Ok..."
+
