@@ -19,15 +19,15 @@ Player: "Sure" or "No im fine for now"
 Post recruitment RNG:
 -"Do you like picnics? Im sure you would love it, lets try it sometime with a group of buddies."
 -"I want you to know that whatever happens I will always be there for you if you ever need anything pal"
--"
--"
+-"If you dont want me to help in battle, the least I can do is cheer you on from the sidelines"
+-"Im always happy to just wake up to see another day. Everyday is a new day to spread positivity."
 -"
 
 
 
 Conditional(Says outloud):
-Fire debuff: Haha theres nothing like the warm feeling on fire.
-Poisoned: The numbness it brings me pleasure.
+Fire debuff: "Theres nothing like the warm feeling on fire."
+Poisoned: "The numbness it brings me pleasure."
 
 
 
@@ -37,12 +37,13 @@ Poisoned: The numbness it brings me pleasure.
 
 Reviving:
 Reviving player- "Don't worry I have you back buddy!"
-Is revived- Im back and better than ever hahaha!
+Is revived- "Im back and better than ever hahaha!"
 
 
 
 
 Comments on other entities:
-Wrath: Haha [Wrath] loves to play wrestle with me, he says that he is trying to choke me out but i think its just a playful act of his.
-
+Wrath: [Wrath] loves to play fight with me, he says that they are trying to kill me but I think its just a playful act of them.
+Fright: [Fright] always wants to play hide n seek even when I didnt ask them to play.
+Sorrow: Dont worry I will eventually cheer up [Sorrow] no matter what it takes it must be done.
 
