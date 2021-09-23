@@ -708,14 +708,14 @@ namespace giantsummon.Creatures
                     return "*Is said that [player] has opened a temple door at [subject]. They must be exploring it right now.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*A coin portal has appeared before [player]! They're so lucky!*";
-                case MessageIDs.FeatPlayerMetMe: //Todo - Add the dialogues to her, and other companions.
-                    return "";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I've met a cool Terrarian named [player] latelly.*";
                 case MessageIDs.FeatCompletedAnglerQuests:
-                    return "";
+                    return "*[player] seems to be enjoying helping the Angler Kid.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "";
+                    return "*[player] saved us all from danger in [subject]. You should have seen them fighting the giant squid monster.*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "";
+                    return "*It looks like [subject] got more dangerous. I don't know if I'll stay there for longer that way.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

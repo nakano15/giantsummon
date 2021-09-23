@@ -623,6 +623,14 @@ namespace giantsummon.Creatures
                     return "*[player] opened the door of some kind of temple in [subject], so the people there are launching expeditions to it. I wonder if there's a lost recipe in there.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*I'm just a little jealous of [player]. They found a coin portal, and got quite a lot of coins from it.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I met [player]... Recently.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*[player] seems to be really enjoying fishing.. It's good to spend time with something you like.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*We celebrated with a feast on [subject], after [player] killed some godly creature.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*I'm a bit scared of returning to [subject]... Things seems dangerous there... But [player]'s presence comforts me into staying...*";
             }
             return "";
         }

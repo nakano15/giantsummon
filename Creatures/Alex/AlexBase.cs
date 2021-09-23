@@ -655,9 +655,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "I'm impressed that [player] has been catching lots of weird fish.";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "Wow! [player] has killed some creepy squid guy and saved their world!";
+                    return "Wow! [player] has killed some creepy squid guy in [subject] and saved their world!";
                 case MessageIDs.FeatStartedHardMode:
-                    return "Something scary happened on [player]'s world. They killed a giant flesh thing and the world got scarier.";
+                    return "Something scary happened on [subject]'s world. [player] killed a giant flesh thing and the world got scarier.";
             }
             return base.GetSpecialMessage(MessageID);
         }

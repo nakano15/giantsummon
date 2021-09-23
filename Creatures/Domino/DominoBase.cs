@@ -673,9 +673,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "*[player] could have made some money, if he let me smuggle some of the fish they gave to the Angler.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*It seems like [player]'s world got saved from some weird creature. By the way, if you're interessed in buying some Luminite, be sure to give me a word.*";
+                    return "*It seems like [subject] was saved from some weird creature by [player]. By the way, if you're interessed in buying some Luminite, be sure to give me a word.*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "*[player] managed to get more things to shot at in their world.*";
+                    return "*[player] managed to get more things to shot at in [subject].*";
             }
             return base.GetSpecialMessage(MessageID);
         }

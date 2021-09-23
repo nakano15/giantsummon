@@ -530,6 +530,14 @@ namespace giantsummon.Creatures
                     return "Hey, [player] found a temple in [subject], and managed to open it. Want to check it inside?";
                 case MessageIDs.FeatCoinPortal:
                     return "A coin portal appeared just in front of [player]! They're so lucky.";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "Hey, Listen! I have met [player] recently.";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "[player] has been spending much time helping the Angler Kid. I'd preffer spending time adventuring, myself.";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "[player] killed a giant squid thing in [subject]. It was so cool!";
+                case MessageIDs.FeatStartedHardMode:
+                    return "Things aren't going well on [subject]. After killing the Wall of Flesh, the evil biome got more aggressive, and there's also the hallow to worry about.";
             }
             return base.GetSpecialMessage(MessageID);
         }

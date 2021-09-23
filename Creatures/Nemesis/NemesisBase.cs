@@ -361,6 +361,14 @@ namespace giantsummon.Creatures
                     return "A temple door was opened by [player] in [subject], recently.";
                 case MessageIDs.FeatCoinPortal:
                     return "A coin portal isn't a myth. [player] proved that.";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "I'm also [player]'s shadow.";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "[player] spends too much time helping the Angler Kid.";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "Yes, I know that [player] killed the Moon Lord at [subject].";
+                case MessageIDs.FeatStartedHardMode:
+                    return "Looks like the tides shifted on [subject].";
             }
             return base.GetSpecialMessage(MessageID);
         }

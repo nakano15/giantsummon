@@ -804,13 +804,13 @@ namespace giantsummon
         {
             if (!LastMoonLordKilled && NPC.downedMoonlord)
             {
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.KilledMoonLordFirstTime, Main.player[Main.myPlayer].name, "Moon Lord", 30, 45,
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.KilledMoonLordFirstTime, Main.player[Main.myPlayer].name, Main.worldName, 30, 45,
                     GuardianGlobalInfos.GetGuardiansInTheWorld());
             }
             LastMoonLordKilled = NPC.downedMoonlord;
             if (!LastHardMode && Main.hardMode)
             {
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.StartedHardMode, Main.player[Main.myPlayer].name, "", 15, 45,
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.StartedHardMode, Main.player[Main.myPlayer].name, Main.worldName, 15, 45,
                     GuardianGlobalInfos.GetGuardiansInTheWorld());
             }
             LastHardMode = Main.hardMode;

@@ -282,6 +282,14 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*[gn:" + Quentin + "] may have really strong willpower, but he need to have stronger arm and body too. Nobody wants to be knocked out by a punch in the face, right?*");
             }
+            if (NpcMod.HasGuardianNPC(Wrath))
+            {
+                Mes.Add("*[gn:"+Wrath+"] is very hostile, I'm neglecting to ask them to train.*");
+            }
+            if (NpcMod.HasGuardianNPC(CaptainStench))
+            {
+                Mes.Add("*For some reason, [gn:"+CaptainStench+"] said she would do exercise if she gets some materialistic reward as compensation. Can you believe that? As if being fit wasn't a reward in itself.*");
+            }
 
             if (guardian.IsUsingToilet)
             {
@@ -574,6 +582,14 @@ namespace giantsummon.Creatures
                     return "*It seems that [player] opened a temple door in [subject]. What kind of marvels could be inside? Or dangers?*";
                 case MessageIDs.FeatCoinPortal:
                     return "*A coin portal appeared in front of [player] the other day.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I've met a new person who also needs to have their muscles be awaken. Their name was [player]. If you see them, try helping them on their exercises.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*Did you heard that [player] has catched many weird fish recently? That wouldn't be possible if he wasn't training his arms, beside fishing also does that somehow.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*[player] has defeated some godly creature in [subject]. Of course, that wouldn't be possible if they didn't trained their muscles and got stronger. Continue doing your exercises and someday you may do such a feat too.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*It was so strange. I had a weird feeling when I was in [subject], after that, I heard that the creatures got scarier and tougher. I hope [player] knows what they're doing.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -951,6 +951,14 @@ namespace giantsummon.Creatures
                     return "*I heard that [player] opened the door to some temple at [subject]. I wonder what kind of toys they had locked behind it.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*A coin portal is such a weird phenomenon, gladly [player] managed to experience it and get a bit richier.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*You're no longer the only minion I have. [player] can easily take your place, if you don't watch out.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*I wonder if [player] would agree giving me some of the weird fish they got. I have some experimenting purposes that would make use of them.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*You Terrarians certainly are interesting. Even though you are small and weaker than us, managed to kill a demi god creature. At least [player] did at [subject], about you I don't know.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*Looks like [player] did an oopsie in [subject]. Several new angry creatures are roaming their world. I even felt on my fur when that change happened.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

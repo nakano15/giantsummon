@@ -697,9 +697,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "*It seems like [player] has been really into helping the angler kid.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*I heard that [player] has defeated [subject] and saved their world, but I think they actually caused the danger to surge.*";
+                    return "*I heard that [player] has defeated Moon Lord in [subject], and saved their world, but I think they actually caused the danger to surge.*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "*Looks like [player] caused a chaotic event to happen in their world. Now stronger creatures roams around it.*";
+                    return "*Looks like [player] caused a chaotic event to happen in [subject]. Now stronger creatures roams around it.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

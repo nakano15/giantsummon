@@ -1327,9 +1327,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "*[player] has been really been trying to make that hateable child like them. The many fish they got could let us make a feast for weeks.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*I was there on the day [player] defeated a creepy giant creature. They saved us all.*";
+                    return "*I was there on the day [player] defeated a creepy giant creature at [subject]. They saved us all.*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "*I was minding my business on [player] world, until a horrible chill went down my spine. Then a villager came saying that their village was engulfed by evil.*";
+                    return "*I was minding my business in [subject], until a horrible chill went down my spine. Then a villager came saying that their village was engulfed by evil.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

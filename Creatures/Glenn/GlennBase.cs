@@ -619,9 +619,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "[player] has been giving many weird fish to the Angler kid.";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "It was so cool watching [player] kill the Moon Lord. You should have seen that.";
+                    return "It was so cool watching [player] kill the Moon Lord at [subject] world. You should have seen that.";
                 case MessageIDs.FeatStartedHardMode:
-                    return "[player]'s world got many creepy creatures attacking us. Even the evil is trying to take over our town.";
+                    return "[subject] got many creepy creatures attacking us. Even the evil is trying to take over our town.";
             }
             return base.GetSpecialMessage(MessageID);
         }

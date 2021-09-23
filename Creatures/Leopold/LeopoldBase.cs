@@ -737,9 +737,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "*Interesting the amount of fish [player] found in their world. I want to study them.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*Some weird prophecy on [player]'s world has happened, and a giant godly creature surged to obliterate everything. The terrarian managed to get it killed and save everyone. Good thing that I was there to study that.*";
+                    return "*Some weird prophecy on [subject] has happened, and a giant godly creature surged to obliterate everything. [player] managed to get it killed and saved everyone. Good thing that I was there to study that.*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "*A weird event happened in [player]'s world. They killed a giant flesh creature, and spirits of dark and light were freed, trying to take over their world. I wonder what the Terrarian will do now.*";
+                    return "*A weird event happened in [subject]. [player] killed a giant flesh creature, and spirits of dark and light were freed, trying to take over their world. I wonder what the Terrarian will do now.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

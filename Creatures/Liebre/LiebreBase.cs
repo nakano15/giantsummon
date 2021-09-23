@@ -1205,9 +1205,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "*[player] really throwed themself into fishing.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*I have saved the soul of a giant celestial creature that appeared on [player]'s world. Now their world is more at peace.*";
+                    return "*I have saved the soul of a giant celestial creature that appeared on [subject]. [player] now managed to have their world at peace.*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "*[player] managed to unleash more dangers into their world. I have many creatures to appease there, too.*";
+                    return "*[player] managed to unleash more dangers into [subject]. I have many creatures to appease there now.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -648,9 +648,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "*[player] could have given me some of the fish they gave to the Angler. I could try making some tasty meal out of them.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*I'm so happy for [player]! They were like my hero when they killed giant squid guy.*";
+                    return "*I'm so happy for [player]! They were like my hero when they killed giant squid guy at [subject].*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "*The day the world of [player] got the hallow and evil clashing each other, I felt on my fur the change happening to it. It was really a horrible feeling.*";
+                    return "*The day [subject] world got the hallow and evil clashing each other, I felt on my fur the change happening to it. It was really a horrible feeling.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

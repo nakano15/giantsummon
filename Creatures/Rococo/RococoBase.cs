@@ -881,6 +881,14 @@ namespace giantsummon.Creatures
                     return "*[name] seems curious about what is inside a temple [player] opened the door of, at [subject].*";
                 case MessageIDs.FeatCoinPortal:
                     return "*[name] tells you the story of [player] finding a coin portal.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*[name] is saying that has met [player].*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*[name] is impressed by the number of fish [player] caught.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*[name] is happy for [player], for having killed Moon Lord in [subject].*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*[name] told me that creepy creatures are now roaming [subject].*";
             }
             return base.GetSpecialMessage(MessageID);
         }

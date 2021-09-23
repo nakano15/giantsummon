@@ -919,7 +919,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "[player] has made me impressed. They managed to get quite a number of weird fish. Sadly they don't know yet how to catch 2 fish at once.";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "It was really scary! The world went dark and creepy, and then a flash light appeared, and a giant creature surged. Gladly [player] managed to deal with it for good.";
+                    return "You should have been in [subject] world a few days ago. The world went dark and creepy, and then a flash light appeared, and a giant creature surged. Gladly [player] managed to deal with it for good.";
                 case MessageIDs.FeatStartedHardMode:
                     return "I think [player] did something they shouldn't. The evil in their world begun advancing agressivelly, and the holy lands appeared, and also wants to kill us all. Is it the end of times?";
             }

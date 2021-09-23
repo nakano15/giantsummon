@@ -3256,7 +3256,7 @@ namespace giantsummon
         {
             if(player.anglerQuestsFinished % 10 == 0)
             {
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.ManyAnglerQuestsCompleted, player.name, "", 10, player.anglerQuestsFinished * 0.1f, GuardianGlobalInfos.GetGuardiansInTheWorld());
+                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.ManyAnglerQuestsCompleted, player.name, player.anglerQuestsFinished.ToString(), 10, player.anglerQuestsFinished * 0.1f, GuardianGlobalInfos.GetGuardiansInTheWorld());
             }
         }
 

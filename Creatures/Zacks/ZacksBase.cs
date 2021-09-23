@@ -972,6 +972,14 @@ namespace giantsummon.Creatures
                     return "*I heard that [player] opened a temple door at [subject]. Who would've guessed there's more secrets to uncover?*";
                 case MessageIDs.FeatCoinPortal:
                     return "*That lucky one... [player] found a coin portal. I wish was I who found it.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I actually know of another Terrarian. [player] is how they're called.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*I can't stand watching [player] fish. It keeps building my hunger, and that's not good...*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*Yes, I know that [player] saved their world from [subject]. I had lots of trouble trying to clean up the mess... I mean... Celestial creatures bodies wont be gone by themselves.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*It looks like [player] managed to make [subject] be a harder place to live. Gladly It isn't affecting our town that much.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
