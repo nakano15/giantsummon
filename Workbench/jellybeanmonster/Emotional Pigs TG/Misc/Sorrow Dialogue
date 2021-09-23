@@ -7,14 +7,14 @@ Recruit:
 -"Oh hello there.... dont mind me im nobody. Carry along to better more important things."
 Player: "Whats wrong"
 -"Nothing of importance for you, just leave me to grief alone"
-Player: "I want to help"
--"Well since you persist I guess you can help end my misery, just know that I am terrible at everything and I apologize in advance."
+Player: "I want to help" or "Ok bye"
+Recruit choice answer-"Well since you persist I guess you can help end my misery, just know that I am terrible at everything and I apologize in advance."
 Player: "Stop doubting yourself"
 -"Sorry but this feeling is apart of me forever I can not get rid of it, please forgive me(*sob noises*)"
 Player: "Its fine"
 
 Already Met: 
--"Sorry about last time im such a worthless companion....(*wipes tears*)"
+-"Sorry about last time im such a worthless companion, i can join you again if you want....(*wipes tears*)"
 
 
 Post recruitment RNG:
