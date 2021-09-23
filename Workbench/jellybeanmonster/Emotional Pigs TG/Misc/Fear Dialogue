@@ -18,15 +18,16 @@ Already Met:
 -"Hey! dont come too close! I still dont trust you!
 Player: (Rerecruit)"Ok I'll be leaving then" or "Ok bye dont follow me"
 If player team is full-"Those companions of theirs seems dangerous, its best I dont follow them, [Fright] thought."
-Rerecruit option answer-"The plan stays the same use them as sheild but still keep a distance,[Fright] thinks to themself"
+Rerecruit option answer-"The plan stays the same, use them as sheild but still keep a distance,[Fright] thinks to themself"
 
 
 Post recruitment RNG:
--""
--"Hey! Keep your distance from me!"
+-"I need my space why are you so close!?"
+-"Hey! Stay away from me!"
 -"Whats this? why would they want to speak with me? maybe they are trying to kill me like they always planned from the beginning?([Fright] thinks)"
--""
--"
+-"I have nothing to discuss, you should be on your way far from me"
+-"Hey stop walking around me its giving me anxiety"
+-"Just exisitng here gives me the creeps"
 
 
 
@@ -47,4 +48,4 @@ Comments on other entities:
 Wrath: "Make sure [Wrath] stays VERY VERY far from me, they are a menace and should be caged up"
 Joy: "I dont care how nice [Joy] may seem, they are just trying to gain my trust now to hurt me later"
 Sorrow: "[Sorrow]'s tears are vicious and pose a serious threat. 
-Migeul: "Those abs on [Migeul] are menacing its best I keep my distance away from him"
+Migeul: "Those abs on [Migeul] are menacing"
