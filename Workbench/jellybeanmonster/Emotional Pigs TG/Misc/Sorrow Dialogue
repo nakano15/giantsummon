@@ -34,7 +34,7 @@ Poisoned: "This pain is not new to me"
 Raining: "This weather describes me perfectly" 
 
 
-Reviving:
+Reviving(Says outloud):
 Reviving player: "This is all my fault, im too weak to protect you"
 TG revived: "You should have just let me die, im useless either way"
 

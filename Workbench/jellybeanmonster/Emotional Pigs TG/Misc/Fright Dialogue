@@ -1,0 +1,54 @@
+Name(s): Fear, Fright, Terror
+
+
+Recruit Method: Can be found in dugeon at 45% chance or can spawn anywhere during Holloween season at 50% chance
+(Requires the player to actually catch the tg kind of like leopolds rectuit method)
+
+First Meet:
+-PLEASE DONT HURT ME!!!!
+Player:"Im not here to harm" or "Ok bye"
+-STAY BACK! I dont trust you even if you do slay scary monsters...
+Player:"Well I haven't slayed you yet so...."
+-"Uh I guess your right...BUT! that still doesn't mean you cant turn on me!
+Player: (Recruit option)"Whatever im leaving now" or "Bye and dont follow me"
+Recruit option answer-"I'll trail behind them carefully for now, maybe they will prove a useful sheild, [Fright] thought to themself"
+
+
+Already Met:
+-"Hey! dont come too close! I still dont trust you!
+Player: (Rerecruit)"Ok I'll be leaving then" or "Ok bye dont follow me"
+If player team is full-"Those companions of theirs seems dangerous, its best I dont follow them, [Fright] thought."
+Rerecruit option answer-"The plan stays the same, use them as sheild but still keep a distance,[Fright] thinks to themself"
+
+
+Post recruitment RNG:
+-"I need my space why are you so close!?"
+-"Hey! Stay away from me!"
+-"Whats this? why would they want to speak with me? maybe they are trying to kill me like they always planned from the beginning?([Fright] thinks)"
+-"I have nothing to discuss, you should be on your way far from me"
+-"Hey! stop moving around me its giving me anxiety"
+-"Just exisitng here gives me the creeps"
+
+
+
+
+Conditional(Says Outloud):
+Detects enemy in 20 block radius: "WHAT IS THAT APPROACHING??!!" 
+Detects enemy in 10 block radius: "YOUR GETTING TO CLOSE STAY BACK!"
+Detects enemy in 5 block radius: "SOMEONE HELP ME!!!!!"
+Is damaged by anything: "AHHHHHH!!!"
+Fire Debuff: "IT BURNS! IT BURNS!"
+Posioned: "I CAN FEEL IT CREEP THROUGH MY VEINS!"
+Bloodmoon:"WE'RE ALL GONNA DIE!"
+
+Reviving:
+Reviving teammates: Get up! get up! you need to protect me!
+is revived: "The feeling of death terrifies me..."
+
+
+
+Comments on other entities:
+Wrath: "Make sure [Wrath] stays VERY VERY far from me, they are a menace and should be caged up"
+Joy: "I dont care how nice [Joy] may seem, they are just trying to gain my trust now to hurt me later"
+Sorrow: "[Sorrow]'s tears are vicious and pose a serious threat. 
+Migeul: "Those abs on [Migeul] are menacing"
