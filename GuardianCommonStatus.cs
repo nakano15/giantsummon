@@ -143,9 +143,10 @@ namespace giantsummon
         public static void UnloadCommonStatus()
         {
             foreach (string s in CommonStatusContainerList.Keys)
+            {
                 CommonStatusContainerList[s].Dispose();
+            }
             CommonStatusContainerList.Clear();
-            CommonStatusContainerList = null;
         }
 
         private class CommonStatusContainer : IDisposable
