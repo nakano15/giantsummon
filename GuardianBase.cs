@@ -1028,11 +1028,6 @@ namespace giantsummon
 
         public static GuardianBase GetGuardianBase(int ID, string modid = "") //Add Mod Id
         {
-            if (!MainMod.TriedLoadingCustomGuardians)
-            {
-                MainMod.LoadCustomGuardians();
-                MainMod.TriedLoadingCustomGuardians = true;
-            }
             if (modid == "")
                 modid = MainMod.mod.Name;
             if (!GuardianList.ContainsKey(modid))

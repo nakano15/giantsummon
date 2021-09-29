@@ -425,7 +425,6 @@ namespace giantsummon
             tasks.Add(new PassLegacy("Spawning Starter Guardian.", delegate (GenerationProgress progress)
             {
                 progress.Message = "Spawning Starter Guardian";
-                MainMod.GetInitialCompanionsList();
                 GuardianID[] PossibleGuardians = MainMod.GetPossibleStarterGuardians();
                 GuardianID id = PossibleGuardians[Main.rand.Next(PossibleGuardians.Length)];
                 TerraGuardian tg = new TerraGuardian(id.ID, id.ModID);

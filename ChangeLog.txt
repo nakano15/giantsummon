@@ -43,3 +43,6 @@ Companions will now mention about:
 	Completting a number of angler quests.
 	Killing Moon Lord for the first time.
 	Starting Hardmode.
+Removed the moments where the mod fires "Call" to all mods, looking for companion entries.
+	Now you need to add the custom companion infos on PostSetupContent().
+Fixed a bug where Miguel could spawn regardless of his spawn requirement.

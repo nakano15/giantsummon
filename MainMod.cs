@@ -124,7 +124,6 @@ namespace giantsummon
         public static bool SoulSaved = false;
         public static int LastChatTime = 0;
         public const string CustomCompanionCallString = "loadcompanions", CustomStarterCallString = "loadstarters";
-        public static bool TriedLoadingCustomGuardians = false;
         public static bool NpcInCameraRange = false;
         public static List<TerraGuardian> CompanionsToShowArrowFor = new List<TerraGuardian>();
         public const float BleedingHealthDamage = 0.015f;
@@ -300,45 +299,12 @@ namespace giantsummon
             GuardianBase.UnloadContainer(mod);
         }
 
-        public static bool IsntExceptionMod(string s)
-        {
-            return s != "ItemCustomizer" && s != "ShopExpander";
-        }
-
-        public static void LoadCustomGuardians()
-        {
-            foreach (Mod mod in ModLoader.Mods)
-            {
-                if (IsntExceptionMod(mod.Name))
-                {
-                    try
-                    {
-                        mod.Call(new string[] { CustomCompanionCallString });
-                    }
-                    catch //Ignore crashes.
-                    {
-                    }
-                }
-            }
-        }
-
         public static void GetInitialCompanionsList()
         {
             InitialGuardians.Clear();
             InitialGuardians.Add(new GuardianID(GuardianBase.Rococo));
             InitialGuardians.Add(new GuardianID(GuardianBase.Blue));
             InitialGuardians.Add(new GuardianID(GuardianBase.Cinnamon));
-            foreach (Mod mod in ModLoader.Mods)
-            {
-                if (IsntExceptionMod(mod.Name))
-                {
-                    try
-                    {
-                        mod.Call(new string[] { CustomStarterCallString });
-                    }
-                    catch { }
-                }
-            }
         }
 
         public static List<Terraria.ModLoader.Config.ItemDefinition> GetDefaultDualwieldableItems()
@@ -725,8 +691,7 @@ namespace giantsummon
         {
             GuardianBase.UnloadGuardians();
             GuardianShopHandler.UnloadShops();
-            GuardianCommonStatus.UnloadCommonStatus();
-            TriedLoadingCustomGuardians = false;
+            //GuardianCommonStatus.UnloadCommonStatus(); //Crashes the mod loader
         }
 
         public static bool IsGuardianInTheWorld(int ID, string ModId = "")
