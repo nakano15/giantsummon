@@ -46,3 +46,6 @@ Companions will now mention about:
 Removed the moments where the mod fires "Call" to all mods, looking for companion entries.
 	Now you need to add the custom companion infos on PostSetupContent().
 Fixed a bug where Miguel could spawn regardless of his spawn requirement.
+Fluffles will no longer despawn when her recruit npc bumps on someone she already met.
+You will get Liebre on your team if you enter a world with your characters during 2021's October.
+	Liebre will be counted as a Starter companion, so you can also call and ask him to move in without any other requirement.

@@ -2487,14 +2487,19 @@ namespace giantsummon
             }
             if (!HasGuardian(4) && MainMod.CanGiveFreeNemesis())
             {
-                AddNewGuardian(4);
+                AddNewGuardian(4, Starter: true);
                 Main.NewText("You gained a free Nemesis guardian as halloween reward.");
             }
             if (!HasGuardian(GuardianBase.Vladimir) && MainMod.CanGiveFreeVladimir())
             {
-                AddNewGuardian(GuardianBase.Vladimir);
+                AddNewGuardian(GuardianBase.Vladimir, Starter: true);
                 int DaysCounter = (int)(new DateTime(2020, 05, 19) - DateTime.Now).TotalDays;
                 Main.NewText("With Terraria 1.4 just " + DaysCounter + " days away, Vladimir is being given away until then.");
+            }
+            if (!HasGuardian(GuardianBase.Liebre) && MainMod.CanGiveFreeLiebre())
+            {
+                AddNewGuardian(GuardianBase.Liebre, Starter:true);
+                Main.NewText("Liebre has joined your companion rooster. You feel a chill going down on your spine.");
             }
             RecalculateFriendshipLevel();
         }
@@ -2713,12 +2718,12 @@ namespace giantsummon
             }
         }
 
-        public bool AddNewGuardian(int Id, Mod mod, int FixedPosition = -1)
+        public bool AddNewGuardian(int Id, Mod mod, int FixedPosition = -1, bool Starter = false)
         {
-            return AddNewGuardian(Id, mod.Name, FixedPosition);
+            return AddNewGuardian(Id, mod.Name, FixedPosition, Starter);
         }
 
-        public bool AddNewGuardian(int Id, string ModId = "", int FixedPosition = -1)
+        public bool AddNewGuardian(int Id, string ModId = "", int FixedPosition = -1, bool Starter = false)
         {
             if (ModId == "")
                 ModId = MainMod.mod.Name;
@@ -2740,6 +2745,7 @@ namespace giantsummon
                 MyGuardians.Add(SpawnID, GuardianBase.GetGuardianBase(Id, ModId).GetGuardianData(Id, ModId));
                 if (MyGuardians[SpawnID].Base.CanChangeGender)
                     MyGuardians[SpawnID].Male = Main.rand.Next(2) == 0;
+                MyGuardians[SpawnID].IsStarter = Starter;
                 if (FirstGuardian)
                 {
                     if (player.whoAmI == Main.myPlayer && !TutorialCompanionIntroduction)

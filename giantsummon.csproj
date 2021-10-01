@@ -129,6 +129,7 @@
     <Compile Include="Creatures\Glenn\GlennBase.cs" />
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
+    <Compile Include="Creatures\Liebre\SoulUnloadingAction.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\Miguel\MiguelBase.cs" />

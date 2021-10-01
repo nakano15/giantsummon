@@ -485,6 +485,11 @@ namespace giantsummon
             }
         }
 
+        public static void CloseDialogue()
+        {
+            GuardianMouseOverAndDialogueInterface.CloseDialogue(LastSpeaker);
+        }
+
         public static void CompanionSaySomething(TerraGuardian Speaker, string Message, bool DisplayOnChat = false, int ExtraDialogueTime = 0)
         {
             LastSpeaker = Speaker;

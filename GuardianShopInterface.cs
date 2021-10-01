@@ -83,7 +83,8 @@ namespace giantsummon
             PlayerMod pm = MainPlayer.GetModPlayer<PlayerMod>();
             if (!Main.playerInventory)
             {
-                MainPlayer.GetModPlayer<PlayerMod>().IsTalkingToAGuardian = false;
+                GuardianMouseOverAndDialogueInterface.CloseDialogue();
+                //MainPlayer.GetModPlayer<PlayerMod>().IsTalkingToAGuardian = false;
                 ShopOpen = false;
                 return;
             }

@@ -300,8 +300,10 @@ namespace giantsummon.Npcs
                     {
                         if (PlayerMod.PlayerHasGuardian(player, GuardianBase.Fluffles))
                         {
-                            npc.active = false;
-                            Main.NewText(PlayerMod.GetPlayerGuardian(player, GuardianBase.Fluffles).Name + " fades away.");
+                            SayMessage(Main.rand.NextDouble() <= 0.5 ? "(She seems to have missed your company.)" : "(She seems really happy for seeing you.)");
+                            WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                            //npc.active = false;
+                            //Main.NewText(PlayerMod.GetPlayerGuardian(player, GuardianBase.Fluffles).Name + " fades away.");
                             return;
                         }
                         else
@@ -357,9 +359,9 @@ namespace giantsummon.Npcs
         {
             if (!spawnInfo.water && ((spawnInfo.player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0) ||
                 (spawnInfo.player.position.Y >= Main.worldSurface * 16)) && !spawnInfo.playerSafe && !spawnInfo.playerInTown && CanGhostFoxSpawn(spawnInfo.player) && 
-                !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type) && Main.rand.NextDouble() < GetSpawnRate)
+                !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type))
             {
-                return 1f;
+                return GetSpawnRate;
             }
             return 0f;
         }

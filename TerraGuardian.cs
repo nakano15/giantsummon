@@ -1364,6 +1364,12 @@ namespace giantsummon
             }
         }
 
+        public void ClearMessagesSaid()
+        {
+            MessageTime = 0;
+            MessageSchedule.Clear();
+        }
+
         public int SaySomething(string[] Message, bool ChatDisplay = false, bool CanInterrupt = false)
         {
             return SaySomething(Message.ToList(), ChatDisplay);

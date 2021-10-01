@@ -687,6 +687,12 @@ namespace giantsummon
             return dt.Year == 2020 && (dt.Month < 5 || (dt.Month == 5 && dt.Day < 19));
         }
 
+        public static bool CanGiveFreeLiebre()
+        {
+            DateTime dt = DateTime.Now;
+            return dt.Year == 2021 && dt.Month == 10;
+        }
+
         public override void Unload()
         {
             GuardianBase.UnloadGuardians();

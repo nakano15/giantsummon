@@ -252,7 +252,10 @@ namespace giantsummon
             if (player.KnockedOut)
             {
                 if (player.IsTalkingToAGuardian)
-                    player.IsTalkingToAGuardian = false;
+                {
+                    CloseDialogue();
+                    //player.IsTalkingToAGuardian = false;
+                }
             }
             else if (!player.IsTalkingToAGuardian)
             {
@@ -282,14 +285,16 @@ namespace giantsummon
             {
                 if (!MainMod.ActiveGuardians.ContainsKey(player.TalkingGuardianPosition))
                 {
-                    player.IsTalkingToAGuardian = false;
+                    CloseDialogue();
+                    //player.IsTalkingToAGuardian = false;
                     return;
                 }
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
                 if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut || 
                     (tg.DoAction.InUse && (tg.DoAction.Invisibility || tg.DoAction.Inactivity)))
                 {
-                    player.IsTalkingToAGuardian = false;
+                    CloseDialogue();
+                    //player.IsTalkingToAGuardian = false;
                     if (Main.playerInventory)
                         Main.playerInventory = false;
                 }
@@ -960,10 +965,18 @@ namespace giantsummon
 
         public static void CloseDialogueButtonAction(TerraGuardian tg)
         {
+            CloseDialogue(tg);
+        }
+
+        public static void CloseDialogue(TerraGuardian tg = null)
+        {
             PlayerMod pm = MainPlayer.GetModPlayer<PlayerMod>();
             pm.IsTalkingToAGuardian = false;
-            tg.TalkPlayerID = -1;
+            if (tg != null)
+                tg.TalkPlayerID = -1;
             Options.Clear();
+            if (giantsummon.Dialogue.DialogueThread != null && giantsummon.Dialogue.DialogueThread.IsAlive)
+                giantsummon.Dialogue.DialogueThread.Abort();
             Dialogue = new string[0];
         }
 
