@@ -64,6 +64,7 @@ namespace giantsummon.Creatures.Liebre
                     Inactivity = false;
                     if (StepStart)
                     {
+                        guardian.Spawn();
                         if (guardian.OwnerPos > -1)
                         {
                             guardian.Position = Main.player[guardian.OwnerPos].Bottom;

@@ -1079,42 +1079,16 @@ namespace giantsummon
 
         public override void GetChat(NPC npc, ref string chat)
         {
-            //Checking zacks outfit quest line
+            foreach(QuestData qd in PlayerMod.GetPlayerQuestDatas(Main.LocalPlayer))
             {
-                int QuestStep = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep;
-                if (QuestStep > 0 && QuestStep < 8)
+                if (!qd.IsInvalid)
                 {
-                    switch (npc.type)
+                    QuestBase.Data = qd;
+                    string Text = qd.GetBase.QuestNpcDialogue(npc);
+                    if(Text != "")
                     {
-                        case NPCID.Clothier:
-                            {
-                                if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Blue) &&
-                                    (QuestStep == 4 || QuestStep == 5))
-                                {
-                                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep += 2;
-                                    chat = "So, you want a shirt for " + GetGuardianNPCName(GuardianBase.Zacks) + "? I have quite a selection, feel free to browse.";
-                                    PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).SaySomething("*This one! This one is perfect. I'll take It. Thank you. Let's give It to Zacks.*", true);
-                                    if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Zacks))
-                                        PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks).SaySomething("*I hope you picked something cool for me.*", true);
-                                    return;
-                                }
-
-                            }
-                            break;
-                        case NPCID.Nurse:
-                            {
-                                if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Blue) &&
-                                    (QuestStep == 2 || QuestStep == 3))
-                                {
-                                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ZacksMeatBagOutfitQuestStep += 2;
-                                    chat = "You want some bandages for " + GetGuardianNPCName(GuardianBase.Zacks) + "? Gladly I have an extra number of them. Feel free to take them.";
-                                    PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).SaySomething("*That's perfect! Thanks " + npc.GivenOrTypeName + ". Now we should visit the Clothier.*", true);
-                                    if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Zacks))
-                                        PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks).SaySomething("*That's a lot of bandages, just how wounded am I? I could even use some to wipe myself.*", true);
-                                    return;
-                                }
-                            }
-                            break;
+                        chat = Text;
+                        return;
                     }
                 }
             }

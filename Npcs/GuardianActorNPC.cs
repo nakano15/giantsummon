@@ -130,7 +130,7 @@ namespace giantsummon.Npcs
                 }
                 else
                 {
-                    float AgeValue = TerraGuardian.GetAgeDecimalValue(Base.Age, Base.Birthday, Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TimeDuration, Base.GetGroup.AgingSpeed);
+                    float AgeValue = TerraGuardian.GetAgeDecimalValue(Base.Age, Base.Birthday, GuardianGlobalInfos.LifeTime, Base.GetGroup.AgingSpeed);
                     AgeScale = TerraGuardian.GetAgeSizeValue(AgeValue);
                 }
             }

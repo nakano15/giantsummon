@@ -49,3 +49,8 @@ Fixed a bug where Miguel could spawn regardless of his spawn requirement.
 Fluffles will no longer despawn when her recruit npc bumps on someone she already met.
 You will get Liebre on your team if you enter a world with your characters during 2021's October.
 	Liebre will be counted as a Starter companion, so you can also call and ask him to move in without any other requirement.
+Fixed a bug where companions npcs weren't aging based on global mod time.
+Controlling a companion will make a number of the controlled companion status to increase based on your character status.
+The dialogue "I want to talk to you." has now be changed to "Let's talk about other things.".
+	That dialogue is now also present all the time.
+The dialogue "Talk about other things" has been changed to "Let's review some things".

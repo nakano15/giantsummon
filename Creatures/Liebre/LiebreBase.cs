@@ -137,8 +137,9 @@ namespace giantsummon.Creatures
             return dialogues;
         }
 
-        public void UnloadActionButtonPressed(TerraGuardian tg)
+        public void UnloadActionButtonPressed()
         {
+            TerraGuardian tg = Dialogue.GetSpeaker;
             ReaperGuardianData data = (ReaperGuardianData)tg.Data;
             if (data.SoulsLoaded < 0.2f * MaxSoulsContainedValue)
             {

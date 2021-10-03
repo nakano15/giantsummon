@@ -230,9 +230,9 @@ namespace giantsummon
             return Value;
         }
 
-        public static TerraGuardian GetSpeaker()
+        public static TerraGuardian GetSpeaker
         {
-            return GuardianMouseOverAndDialogueInterface.Speaker;
+            get { return GuardianMouseOverAndDialogueInterface.Speaker; }
         }
 
         public static void ChangeSpeaker(int ParticipantID)
@@ -265,12 +265,14 @@ namespace giantsummon
             LastSpeaker = tg;
         }
 
-        public static void AddParticipant(TerraGuardian tg)
+        public static int AddParticipant(TerraGuardian tg)
         {
             List<TerraGuardian> NewParticipants = new List<TerraGuardian>();
             NewParticipants.AddRange(DialogueParticipants);
+            int Position = NewParticipants.Count;
             NewParticipants.Add(tg);
             DialogueParticipants = NewParticipants.ToArray();
+            return Position;
         }
 
         public static void RemoveGatheringPoint()
@@ -316,7 +318,7 @@ namespace giantsummon
                 return;
             IsDialogue = true;
             DialogueParticipants = Participants;
-            GuardianMouseOverAndDialogueInterface.Speaker = LastSpeaker = Participants[0];
+            GuardianMouseOverAndDialogueInterface.Speaker = LastSpeaker = GuardianMouseOverAndDialogueInterface.StarterSpeaker = Participants[0];
             ThreadStart ts = new ThreadStart(delegate () {
                 try
                 {
@@ -360,7 +362,7 @@ namespace giantsummon
         /// </summary>
         /// <param name="Text">The text of the option, displayed on the list.</param>
         /// <param name="OptionAction">The action of the option. The TerraGuardian attribute in the action is the speaker.</param>
-        public static void AddOption(string Text, Action<TerraGuardian> OptionAction)
+        public static void AddOption(string Text, Action OptionAction)
         {
             GuardianMouseOverAndDialogueInterface.AddOption(Text, OptionAction);
         }
@@ -379,7 +381,7 @@ namespace giantsummon
         /// </summary>
         /// <param name="Text">The message the speaker says.</param>
         /// <param name="Speaker">The companion who speakes this. Leaving as null picks the last speaker.</param>
-        public static void ShowDialogueWithContinue(string Text, TerraGuardian Speaker = null)
+        public static void ShowDialogueWithContinue(string Text, TerraGuardian Speaker = null, string ContinueText = "Continue")
         {
             if (Speaker == null)
                 Speaker = LastSpeaker;
@@ -389,7 +391,7 @@ namespace giantsummon
             ProceedButtonPressed = false;
             GuardianMouseOverAndDialogueInterface.SetDialogue(Text, Speaker);
             GuardianMouseOverAndDialogueInterface.Options.Clear();
-            GuardianMouseOverAndDialogueInterface.AddOption("Continue", delegate (TerraGuardian tg)
+            GuardianMouseOverAndDialogueInterface.AddOption(ContinueText, delegate ()
             {
                 ProceedButtonPressed = true;
                 GuardianMouseOverAndDialogueInterface.Options.Clear();
@@ -404,7 +406,7 @@ namespace giantsummon
         /// <param name="Text">The message the speaker says.</param>
         /// <param name="CloseDialogue">Set to true, will close the dialogue with this companion. Setting to false, returns to the default dialogue and options of the companion.</param>
         /// <param name="Speaker">The companion who speakes this. Leaving as null picks the last speaker.</param>
-        public static void ShowEndDialogueMessage(string Text, bool CloseDialogue = true, TerraGuardian Speaker = null)
+        public static void ShowEndDialogueMessage(string Text, bool CloseDialogue = true, TerraGuardian Speaker = null, string CloseOptionText = "End")
         {
             if (Speaker == null)
                 Speaker = LastSpeaker;
@@ -416,14 +418,14 @@ namespace giantsummon
             GuardianMouseOverAndDialogueInterface.Options.Clear();
             if (CloseDialogue)
             {
-                GuardianMouseOverAndDialogueInterface.AddOption("End", EndDialogueButtonAction);
+                GuardianMouseOverAndDialogueInterface.AddOption(CloseOptionText, EndDialogueButtonAction);
             }
             else
             {
                 //GuardianMouseOverAndDialogueInterface.AddOption("Return", delegate(TerraGuardian tg)
                 //{
                 GuardianMouseOverAndDialogueInterface.Options.Clear();
-                GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Speaker);
+                GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
                 ProceedButtonPressed = true;
                 //});
             }
@@ -454,7 +456,7 @@ namespace giantsummon
                 if (OptionText == null || OptionText == "")
                     continue;
                 int ThisOption = o;
-                GuardianMouseOverAndDialogueInterface.AddOption(OptionText, delegate(TerraGuardian tg)
+                GuardianMouseOverAndDialogueInterface.AddOption(OptionText, delegate()
                 {
                     SelectedOption = ThisOption;
                     ProceedButtonPressed = true;
@@ -507,9 +509,9 @@ namespace giantsummon
                 Main.player[Main.myPlayer].direction = -1;
         }
 
-        private static void EndDialogueButtonAction(TerraGuardian tg)
+        private static void EndDialogueButtonAction()
         {
-            GuardianMouseOverAndDialogueInterface.CloseDialogueButtonAction(tg);
+            GuardianMouseOverAndDialogueInterface.CloseDialogueButtonAction();
             ProceedButtonPressed = true;
         }
 

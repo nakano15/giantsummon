@@ -159,9 +159,9 @@ namespace giantsummon.Creatures
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Can you cook something for me?", delegate (TerraGuardian tg)
+            Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Can you cook something for me?", delegate ()
             {
-                Dialogue.StartNewDialogue(CookDialogue, tg);
+                Dialogue.StartNewDialogue(CookDialogue, Dialogue.GetSpeaker);
             }));
             return Options;
         }

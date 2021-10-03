@@ -256,8 +256,9 @@ namespace giantsummon.Creatures
             return Options;
         }
 
-        public void BountyQuestProgressCheckButtonAction(TerraGuardian tg)
+        public void BountyQuestProgressCheckButtonAction()
         {
+            TerraGuardian tg = Dialogue.GetSpeaker;
             if (!GuardianBountyQuest.SardineTalkedToAboutBountyQuests)
             {
                 GuardianMouseOverAndDialogueInterface.SetDialogue("Since It's so boring staying at home, I decided to do something in to make me busy. I will open a Bounty Hunting agency here, but first I need a Sign inside my house. If you end up placing one, I will place the latest bounty here.");

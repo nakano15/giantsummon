@@ -51,7 +51,7 @@ namespace giantsummon
             }
         }
         private static bool HideCallDismissButton = false;
-        public static TerraGuardian Speaker;
+        public static TerraGuardian Speaker, StarterSpeaker;
 
         public static void SetDialogue(string Message)
         {
@@ -65,6 +65,7 @@ namespace giantsummon
 
         public static void SetDialogue(string Message, TerraGuardian tg) //And with auto parser :D
         {
+            Speaker = tg;
             if (tg != null)
             {
                 Dialogue = Utils.WordwrapString(MessageParser(Message, tg), Main.fontMouseText, DialogueWidth - 16, 10, out DialogueLines);
@@ -80,7 +81,7 @@ namespace giantsummon
 
         public static void StartDialogue(TerraGuardian tg)
         {
-            Speaker = tg;
+            Speaker = StarterSpeaker = tg;
             
             HideCallDismissButton = false;
             GuardianShopInterface.ShopOpen = false;
@@ -119,8 +120,20 @@ namespace giantsummon
                         MainPlayer.direction = -1;
                 }
             }
+            foreach (QuestData data in PlayerMod.GetPlayerQuestDatas(MainPlayer))
+            {
+                if (data.IsInvalid)
+                    continue;
+                Action dialogue = data.GetBase.ImportantDialogueMessage(data, Speaker.ID, Speaker.ModID);
+                if (dialogue != null)
+                {
+                    QuestBase.Data = data;
+                    giantsummon.Dialogue.StartNewDialogue(dialogue, Speaker);
+                    return;
+                }
+            }
             //GetCompanionDialogue
-            GetDefaultOptions(tg);
+            GetDefaultOptions();
             string Message = "";
             if(tg.ComfortPoints >= tg.MaxComfortExp)
             {
@@ -143,7 +156,7 @@ namespace giantsummon
             }
             else
             {
-                if (ShowImportantMessages(tg))
+                if (ShowImportantMessages())
                     return;
                 if (PlayerMod.IsGuardianBirthday(MainPlayer, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
                     Message = tg.Base.BirthdayMessage(MainPlayer, tg);
@@ -212,19 +225,19 @@ namespace giantsummon
             SetDialogue(Message, tg);
         }
 
-        public static bool ShowImportantMessages(TerraGuardian tg)
+        public static bool ShowImportantMessages()
         {
             string Message = "";
-            tg.Data.CheckForImportantMessages(out Message);
+            Speaker.Data.CheckForImportantMessages(out Message);
             if (Message == "")
             {
-                SetDialogue(tg.Base.NormalMessage(MainPlayer, tg), tg);
-                GetDefaultOptions(tg);
+                SetDialogue(Speaker.Base.NormalMessage(MainPlayer, Speaker), Speaker);
+                GetDefaultOptions();
                 return false;
             }
             SetDialogue(Message);
             Options.Clear();
-            AddOption("Okay", delegate(TerraGuardian tg2) { ShowImportantMessages(tg2); });
+            AddOption("Okay", delegate() { ShowImportantMessages(); });
             return true;
         }
 
@@ -324,7 +337,14 @@ namespace giantsummon
                         }
                         if (DoAction && MouseOverOptionNumber > -1)
                         {
-                            Options[MouseOverOptionNumber].Action(tg);
+                            if (Options[MouseOverOptionNumber].ThreadedDialogue)
+                            {
+                                giantsummon.Dialogue.StartNewDialogue(Options[MouseOverOptionNumber].Action, Speaker);
+                            }
+                            else
+                            {
+                                Options[MouseOverOptionNumber].Action();
+                            }
                         }
                     }
                 }
@@ -534,26 +554,32 @@ namespace giantsummon
             }
         }
 
-        public static void GetDefaultOptions(TerraGuardian tg)
+        public static void RefreshToStarterGuardian()
         {
+            Speaker = StarterSpeaker;
+        }
+
+        public static void GetDefaultOptions()
+        {
+            RefreshToStarterGuardian();
             Options.Clear();
-            if (tg.HasBuff(ModContent.BuffType<Buffs.Sleeping>()))
+            if (Speaker.HasBuff(ModContent.BuffType<Buffs.Sleeping>()))
             {
 
             }
-            else if (tg.IsUsingBed && tg.Base.SleepsAtBed)
+            else if (Speaker.IsUsingBed && Speaker.Base.SleepsAtBed)
             {
                 AddOption("Wake Up", WakeUpCompanionButtonAction);
             }
             else
             {
-                if (!tg.Base.InvalidGuardian)
+                if (!Speaker.Base.InvalidGuardian)
                 {
                     if (!HideCallDismissButton)
                     {
-                        if (!PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]) || !PlayerMod.GetPlayerBuddy(Main.player[Main.myPlayer]).IsSameID(tg))
+                        if (!PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]) || !PlayerMod.GetPlayerBuddy(Main.player[Main.myPlayer]).IsSameID(Speaker))
                         {
-                            if (tg.OwnerPos == Main.myPlayer)
+                            if (Speaker.OwnerPos == Main.myPlayer)
                             {
                                 AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
                             }
@@ -564,21 +590,21 @@ namespace giantsummon
                         }
                     }
                     string OptionText = "Check Request";
-                    if (tg.request.Failed)
+                    if (Speaker.request.Failed)
                     {
                         OptionText = "Report Failing the Request";
                     }
-                    else if (tg.request.RequestCompleted)
+                    else if (Speaker.request.RequestCompleted)
                     {
                         OptionText = "Report Request";
                     }
-                    else if (tg.request.requestState == RequestData.RequestState.NewRequestReady)
+                    else if (Speaker.request.requestState == RequestData.RequestState.NewRequestReady)
                     {
                         OptionText = "Need Something?";
                     }
-                    else if (tg.request.requestState == RequestData.RequestState.HasExistingRequestReady)
+                    else if (Speaker.request.requestState == RequestData.RequestState.HasExistingRequestReady)
                     {
-                        if (tg.request.IsTalkQuest)
+                        if (Speaker.request.IsTalkQuest)
                         {
                             OptionText = "You wanted to talk to me?";
                         }
@@ -589,60 +615,83 @@ namespace giantsummon
                     }
                     if(OptionText != "")
                         AddOption(OptionText, CheckRequestButtonAction);
-                    if (GuardianShopHandler.HasShop(tg.MyID))
+                    if (GuardianShopHandler.HasShop(Speaker.MyID))
                     {
                         AddOption("What do you have for sale?", OpenShopButtonAction);
                     }
-                    if (MayGiveBirthdayGift(tg) && (!tg.DoAction.InUse || tg.DoAction.IsGuardianSpecificAction || tg.DoAction.ID != (int)GuardianActions.ActionIDs.OpenGiftBox))
+                    if (MayGiveBirthdayGift(Speaker) && (!Speaker.DoAction.InUse || Speaker.DoAction.IsGuardianSpecificAction || Speaker.DoAction.ID != (int)GuardianActions.ActionIDs.OpenGiftBox))
                     {
                         AddOption("I have a gift for you", GiveGiftButtonAction);
                     }
-                    if(tg.Base.Topics.Count > 0)
+                    if(true || Speaker.Base.Topics.Count > 0)
                     {
-                        AddOption("I want to talk with you.", LetsChatButtonPressed);
+                        AddOption("Let's talk about other things.", LetsChatButtonPressed);
                     }
-                    AddOption("Talk about other things.", SomethingElseButtonPressed);
-                    if (tg.OwnerPos == Main.myPlayer && PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
+                    AddOption("Let's review some things.", SomethingElseButtonPressed);
+                    foreach(QuestData qd in PlayerMod.GetPlayerQuestDatas(MainPlayer))
+                    {
+                        if (!qd.IsInvalid)
+                        {
+                            QuestBase.Data = qd;
+                            foreach(DialogueOption Do in qd.GetBase.AddDialogueOptions(false, Speaker.ID, Speaker.ModID)){
+                                Do.SetAsThreadedDialogue();
+                                Options.Add(Do);
+                            }
+                        }
+                    }
+                    if (Speaker.OwnerPos == Main.myPlayer && PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
                         AddOption("Let's get some rest.", RestButtonAction);
                     }
                 }
-                if(tg.OwnerPos == -1 && tg.FriendshipLevel >= tg.Base.FriendsLevel)
+                if(Speaker.OwnerPos == -1 && Speaker.FriendshipLevel >= Speaker.Base.FriendsLevel)
                     AddOption("Let me see your inventory.", OpenInventoryManagementButtonAction);
-                Options.AddRange(tg.Base.GetGuardianExtraDialogueActions(tg));
+                Options.AddRange(Speaker.Base.GetGuardianExtraDialogueActions(Speaker));
             }
             AddOption("Goodbye", CloseDialogueButtonAction);
         }
 
-        public static void LetsChatButtonPressed(TerraGuardian tg)
+        public static void LetsChatButtonPressed()
         {
             Options.Clear();
-            string Mes = tg.GetMessage(GuardianBase.MessageIDs.ChatAboutSomething);
+            string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.ChatAboutSomething);
             if(Mes != "")
             {
-                SetDialogue(Mes, tg);
+                SetDialogue(Mes, Speaker);
             }
-            foreach (GuardianBase.DialogueTopic topic in tg.Base.Topics)
+            foreach (GuardianBase.DialogueTopic topic in Speaker.Base.Topics)
             {
-                if (topic.Requirement(tg, MainPlayer.GetModPlayer<PlayerMod>()))
+                if (topic.Requirement(Speaker, MainPlayer.GetModPlayer<PlayerMod>()))
                 {
                     Action a = topic.TopicMethod;
-                    AddOption(topic.TopicText, delegate (TerraGuardian tg2)
+                    AddOption(topic.TopicText, delegate ()
                     {
-                        giantsummon.Dialogue.StartNewDialogue(a, tg2);
+                        giantsummon.Dialogue.StartNewDialogue(a, Speaker);
                     });
                 }
             }
-            AddOption("Nevermind", delegate(TerraGuardian tg2)
+            foreach (QuestData qd in PlayerMod.GetPlayerQuestDatas(MainPlayer))
             {
-                GetDefaultOptions(tg2);
-                string Mes2 = tg.GetMessage(GuardianBase.MessageIDs.NevermindTheChatting);
+                if (!qd.IsInvalid)
+                {
+                    QuestBase.Data = qd;
+                    foreach (DialogueOption Do in qd.GetBase.AddDialogueOptions(true, Speaker.ID, Speaker.ModID))
+                    {
+                        Do.SetAsThreadedDialogue();
+                        Options.Add(Do);
+                    }
+                }
+            }
+            AddOption("Nevermind", delegate()
+            {
+                GetDefaultOptions();
+                string Mes2 = Speaker.GetMessage(GuardianBase.MessageIDs.NevermindTheChatting);
                 if (Mes2 != "")
-                    SetDialogue(Mes2, tg2);
+                    SetDialogue(Mes2, Speaker);
             });
         }
 
-        public static void AddOption(string Mes, Action<TerraGuardian> Action)
+        public static void AddOption(string Mes, Action Action)
         {
             DialogueOption option = new DialogueOption(Mes, Action);
             Options.Add(option);
@@ -650,123 +699,123 @@ namespace giantsummon
 
         //Call/Dismiss Related
 
-        public static void AskGuardianToFollowYouButtonPressed(TerraGuardian tg)
+        public static void AskGuardianToFollowYouButtonPressed()
         {
-            if ((!tg.Data.IsStarter && tg.FriendshipLevel < tg.Base.CallUnlockLevel && (!tg.request.Active || !tg.request.RequiresGuardianActive(tg.Data))) || (!MainMod.ShowDebugInfo && tg.TrustLevel < TrustLevels.FollowTrust))
+            if ((!Speaker.Data.IsStarter && Speaker.FriendshipLevel < Speaker.Base.CallUnlockLevel && (!Speaker.request.Active || !Speaker.request.RequiresGuardianActive(Speaker.Data))) || (!MainMod.ShowDebugInfo && Speaker.TrustLevel < TrustLevels.FollowTrust))
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), tg);
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), Speaker);
                 HideCallDismissButton = true;
-                GetDefaultOptions(tg);
+                GetDefaultOptions();
             }
             else
             {
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-                if (pm.Guardian.Active && pm.GuardianFollowersWeight + tg.Base.CompanionSlotWeight >= pm.MaxExtraGuardiansAllowed)
+                if (pm.Guardian.Active && pm.GuardianFollowersWeight + Speaker.Base.CompanionSlotWeight >= pm.MaxExtraGuardiansAllowed)
                 {
-                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for this companion in the group.)"), tg);
+                    SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for this companion in the group.)"), Speaker);
                 }
                 else
                 {
-                    SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess, "(It seems happy to follow you.)"), tg);
-                    pm.CallGuardian(tg.ID, tg.ModID);
+                    SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess, "(It seems happy to follow you.)"), Speaker);
+                    pm.CallGuardian(Speaker.ID, Speaker.ModID);
                 }
                 HideCallDismissButton = true;
-                GetDefaultOptions(tg);
+                GetDefaultOptions();
             }
         }
 
-        public static void AskGuardianToLeaveGroupButtonPressed(TerraGuardian tg)
+        public static void AskGuardianToLeaveGroupButtonPressed()
         {
             Options.Clear();
             //If not in town, ask if the player is sure. If in town, go right away to Yes option press.
-            if (tg.TownNpcs >= 1)
-                AskGuardianToLeaveGroupYesButtonPressed(tg);
+            if (Speaker.TownNpcs >= 1)
+                AskGuardianToLeaveGroupYesButtonPressed();
             else
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure, "(It asks if It's really okay to leave It alone in this place.)"), tg);
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure, "(It asks if It's really okay to leave It alone in this place.)"), Speaker);
                 AddOption("Yes", AskGuardianToLeaveGroupYesButtonPressed);
                 AddOption("No", AskGuardianToLeaveGroupNoButtonPressed);
             }
         }
 
-        public static void AskGuardianToLeaveGroupYesButtonPressed(TerraGuardian tg)
+        public static void AskGuardianToLeaveGroupYesButtonPressed()
         {
             PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-            pm.DismissGuardian(tg.ID, tg.ModID);
-            if (tg.TownNpcs < 3)
+            pm.DismissGuardian(Speaker.ID, Speaker.ModID);
+            if (Speaker.TownNpcs < 3)
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace, "(They say that will try getting to the town safelly.)"), tg);
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace, "(They say that will try getting to the town safelly.)"), Speaker);
             }
             else
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer, "(They give you a farewell, and wishes you a good journey.)"), tg);
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer, "(They give you a farewell, and wishes you a good journey.)"), Speaker);
             }
             HideCallDismissButton = true;
-            GetDefaultOptions(tg);
+            GetDefaultOptions();
         }
 
-        public static void AskGuardianToLeaveGroupNoButtonPressed(TerraGuardian tg)
+        public static void AskGuardianToLeaveGroupNoButtonPressed()
         {
-            SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer, "(They say that didn't wanted to leave the group, anyway.)"), tg);
-            GetDefaultOptions(tg);
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer, "(They say that didn't wanted to leave the group, anyway.)"), Speaker);
+            GetDefaultOptions();
         }
 
         //End Call/Dismiss Related
 
-        public static void SomethingElseButtonPressed(TerraGuardian tg)
+        public static void SomethingElseButtonPressed()
         {
             Options.Clear();
             AddOption("Change my Nickname.", ChangeNicknameButtonPressed);
             AddOption("Nevermind.", GetDefaultOptions);
         }
 
-        public static void ChangeNicknameButtonPressed(TerraGuardian tg)
+        public static void ChangeNicknameButtonPressed()
         {
             Main.chatText = "/changenickname ";
             Main.drawingPlayerChat = true;
-            CloseDialogueButtonAction(tg);
+            CloseDialogueButtonAction();
         }
 
-        public static void WakeUpCompanionButtonAction(TerraGuardian tg)
+        public static void WakeUpCompanionButtonAction()
         {
-            if (tg.IsUsingBed)
+            if (Speaker.IsUsingBed)
             {
-                tg.LeaveFurniture(true);
-                tg.LookAt(MainPlayer.Center);
+                Speaker.LeaveFurniture(true);
+                Speaker.LookAt(MainPlayer.Center);
                 string Message = "";
-                if (tg.HasRequestActive)
-                    Message = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage);
+                if (Speaker.HasRequestActive)
+                    Message = Speaker.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage);
                 if (Message == "")
-                    Message = tg.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerMessage);
+                    Message = Speaker.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerMessage);
                 if (Message == "")
-                    Message = tg.Base.NormalMessage(MainPlayer, tg);
+                    Message = Speaker.Base.NormalMessage(MainPlayer, Speaker);
                 SetDialogue(Message);
             }
-            GetDefaultOptions(tg);
+            GetDefaultOptions();
         }
 
-        public static void CheckRequestButtonAction(TerraGuardian tg)
+        public static void CheckRequestButtonAction()
         {
-            GuardianData data = tg.Data;
+            GuardianData data = Speaker.Data;
             if (data.request.requestState == RequestData.RequestState.NewRequestReady)
                 data.request.SpawnNewRequest(data, MainPlayer.GetModPlayer<PlayerMod>());
             switch (data.request.requestState)
             {
                 case RequestData.RequestState.Cooldown:
-                    SetDialogue(data.Base.NoRequestMessage(MainPlayer, tg), tg);
+                    SetDialogue(data.Base.NoRequestMessage(MainPlayer, Speaker), Speaker);
                     break;
                 case RequestData.RequestState.HasExistingRequestReady:
                     if (data.request.IsTalkQuest)
                     {
-                        data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>());
-                        GetDefaultOptions(tg);
+                        data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>());
+                        GetDefaultOptions();
                     }
                     else
                     {
-                        string Mes = data.request.GetRequestBrief(data, tg);
+                        string Mes = data.request.GetRequestBrief(data, Speaker);
                         if (Mes == "")
                         {
-                            Mes = data.Base.HasRequestMessage(MainPlayer, tg);
+                            Mes = data.Base.HasRequestMessage(MainPlayer, Speaker);
                         }
                         if (data.request.IsCommonRequest)
                         {
@@ -775,7 +824,7 @@ namespace giantsummon
                                 Mes += "\n" + s;
                             }
                         }
-                        SetDialogue(Mes, tg);
+                        SetDialogue(Mes, Speaker);
                         Options.Clear();
                         AddOption("Accept", AcceptRequestButtonAction);
                         AddOption("Reject", RejectRequestButtonAction);
@@ -785,32 +834,32 @@ namespace giantsummon
                 case RequestData.RequestState.RequestActive:
                     {
                         bool GiveOptionToCancelRequest = false;
-                        if (data.request.IsTalkQuest && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
+                        if (data.request.IsTalkQuest && data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>()))
                         {
                             //GiveOptionToCancelRequest = true;
-                            GetDefaultOptions(tg);
+                            GetDefaultOptions();
                         }
                         else if (data.request.Failed)
                         {
-                            data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>());
-                            SetDialogue(data.request.GetRequestFailed(data, tg), tg);
+                            data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>());
+                            SetDialogue(data.request.GetRequestFailed(data, Speaker), Speaker);
                             //GiveOptionToCancelRequest = true;
-                            GetDefaultOptions(tg);
+                            GetDefaultOptions();
                         }
-                        else if (data.request.RequestCompleted && data.request.CompleteRequest(tg, data, MainPlayer.GetModPlayer<PlayerMod>()))
+                        else if (data.request.RequestCompleted && data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>()))
                         {
-                            string Mes = data.request.GetRequestComplete(data, tg);
+                            string Mes = data.request.GetRequestComplete(data, Speaker);
                             if (Mes == "")
-                                Mes = data.Base.CompletedRequestMessage(MainPlayer, tg);
-                            SetDialogue(Mes, tg);
+                                Mes = data.Base.CompletedRequestMessage(MainPlayer, Speaker);
+                            SetDialogue(Mes, Speaker);
                             //GiveOptionToCancelRequest = true;
-                            //GetDefaultOptions(tg);
+                            //GetDefaultOptions(Speaker);
                             Options.Clear();
-                            AddOption("No problem.", delegate (TerraGuardian tg2)
+                            AddOption("No problem.", delegate ()
                             {
-                                if (!ShowImportantMessages(tg2))
+                                if (!ShowImportantMessages())
                                 {
-                                    GetDefaultOptions(tg2);
+                                    GetDefaultOptions();
                                 }
                             });
                         }
@@ -826,12 +875,12 @@ namespace giantsummon
                             {
                                 Mes += "\n" + s;
                             }
-                            SetDialogue(Mes, tg);
+                            SetDialogue(Mes, Speaker);
                             Options.Clear();
                             AddOption("Cancel Request", CancelRequestButtonAction);
-                            AddOption("Thanks", delegate (TerraGuardian tg2)
+                            AddOption("Thanks", delegate ()
                             {
-                                GetDefaultOptions(tg2);
+                                GetDefaultOptions();
                             });
                         }
                     }
@@ -839,133 +888,133 @@ namespace giantsummon
             }
         }
 
-        public static void CancelRequestButtonAction(TerraGuardian tg)
+        public static void CancelRequestButtonAction()
         {
-            SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.CancelRequestAskIfSure, "(It seems like " + (tg.Male ? "he" : "she") + " is wonder if you are sure about that.)"));
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CancelRequestAskIfSure, "(It seems like " + (Speaker.Male ? "he" : "she") + " is wonder if you are sure about that.)"));
             Options.Clear();
-            AddOption("No", delegate (TerraGuardian tg2)
+            AddOption("No", delegate ()
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.CancelRequestNoAnswered, (tg.Male ? "He" : "She") + " seems relieved after hearing that.)"));
-                GetDefaultOptions(tg2);
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CancelRequestNoAnswered, (Speaker.Male ? "He" : "She") + " seems relieved after hearing that.)"));
+                GetDefaultOptions();
             });
-            AddOption("Yes", delegate (TerraGuardian tg2)
+            AddOption("Yes", delegate ()
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.CancelRequestYesAnswered, (tg.Male ? "He" : "She") + " seems a bit disappointed towards you.)"));
-                tg2.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
-                GetDefaultOptions(tg2);
-                tg2.request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime);
-                tg2.request.requestState = RequestData.RequestState.Cooldown;
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CancelRequestYesAnswered, (Speaker.Male ? "He" : "She") + " seems a bit disappointed towards you.)"));
+                Speaker.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
+                GetDefaultOptions();
+                Speaker.request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime);
+                Speaker.request.requestState = RequestData.RequestState.Cooldown;
             });
         }
 
-        public static void RestButtonAction(TerraGuardian tg)
+        public static void RestButtonAction()
         {
             Options.Clear();
             if (Main.bloodMoon || Main.eclipse || Main.invasionType >= Terraria.ID.InvasionID.GoblinArmy) //Todo - Add dialogues for when the companion asks for how long will rest, and for when It's not possible to
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.RestNotPossible, "(Maybe It's not a good idea to rest right now.)"));
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RestNotPossible, "(Maybe It's not a good idea to rest right now.)"));
             }
             else
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.RestAskForHowLong, "(How long should we rest?)"));
-                AddOption("4 Hours", delegate (TerraGuardian tg2)
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RestAskForHowLong, "(How long should we rest?)"));
+                AddOption("4 Hours", delegate ()
                 {
                     if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
-                        string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                        string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
                         if (Mes != "")
                         {
-                            Mes = MessageParser(Mes, tg2);
-                            tg2.SaySomething(Mes);
+                            Mes = MessageParser(Mes, Speaker);
+                            Speaker.SaySomething(Mes);
                         }
-                        GuardianActions.RestCommand(tg2, 0);
-                        CloseDialogueButtonAction(tg2);
+                        GuardianActions.RestCommand(Speaker, 0);
+                        CloseDialogue(Speaker);
                     }
                 });
-                AddOption("8 Hours", delegate (TerraGuardian tg2)
+                AddOption("8 Hours", delegate ()
                 {
-                    string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                    string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
                     if (Mes != "")
                     {
-                        Mes = MessageParser(Mes, tg2);
-                        tg2.SaySomething(Mes);
+                        Mes = MessageParser(Mes, Speaker);
+                        Speaker.SaySomething(Mes);
                     }
                     if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                     {
-                        GuardianActions.RestCommand(tg2, 1);
-                        CloseDialogueButtonAction(tg2);
+                        GuardianActions.RestCommand(Speaker, 1);
+                        CloseDialogue(Speaker);
                     }
                 });
                 if (!Main.dayTime)
                 {
-                    AddOption("Until Dawn", delegate (TerraGuardian tg2)
+                    AddOption("Until Dawn", delegate ()
                     {
-                        string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                        string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
                         if (Mes != "")
                         {
-                            Mes = MessageParser(Mes, tg2);
-                            tg2.SaySomething(Mes);
+                            Mes = MessageParser(Mes, Speaker);
+                            Speaker.SaySomething(Mes);
                         }
                         if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                         {
-                            GuardianActions.RestCommand(tg2, 2);
-                            CloseDialogueButtonAction(tg2);
+                            GuardianActions.RestCommand(Speaker, 2);
+                            CloseDialogue(Speaker);
                         }
                     });
                 }
                 else
                 {
-                    AddOption("Until Night", delegate (TerraGuardian tg2)
+                    AddOption("Until Night", delegate ()
                     {
-                        string Mes = tg2.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
+                        string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RestWhenGoingSleep);
                         if (Mes != "")
                         {
-                            Mes = MessageParser(Mes, tg2);
-                            tg2.SaySomething(Mes);
+                            Mes = MessageParser(Mes, Speaker);
+                            Speaker.SaySomething(Mes);
                         }
                         if (PlayerMod.IsInASafePlace(Main.player[Main.myPlayer]))
                         {
-                            GuardianActions.RestCommand(tg2, 3);
-                            CloseDialogueButtonAction(tg2);
+                            GuardianActions.RestCommand(Speaker, 3);
+                            CloseDialogue(Speaker);
                         }
                     });
                 }
             }
-            AddOption("Nevermind", delegate(TerraGuardian tg2)
+            AddOption("Nevermind", delegate()
             {
-                GetDefaultOptions(tg2);
+                GetDefaultOptions();
             });
         }
 
-        public static void AcceptRequestButtonAction(TerraGuardian tg)
+        public static void AcceptRequestButtonAction()
         {
             if (PlayerMod.GetPlayerAcceptedRequestCount(MainPlayer) >= RequestData.MaxRequestCount)
             {
-                SetDialogue(tg.GetMessage(GuardianBase.MessageIDs.RequestCantAcceptTooManyRequests, "(You have too many requests active.)"), tg);
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RequestCantAcceptTooManyRequests, "(You have too many requests active.)"), Speaker);
             }
             else
             {
-                tg.request.UponAccepting();
-                tg.request.UpdateRequest(tg.Data, MainPlayer.GetModPlayer<PlayerMod>());
-                tg.request.Time++;
-                string Mes = tg.request.GetRequestAccept(tg.Data);
+                Speaker.request.UponAccepting();
+                Speaker.request.UpdateRequest(Speaker.Data, MainPlayer.GetModPlayer<PlayerMod>());
+                Speaker.request.Time++;
+                string Mes = Speaker.request.GetRequestAccept(Speaker.Data);
                 if (Mes == "")
                     Mes = "(You accepted the request.)";
-                SetDialogue(Mes, tg);
+                SetDialogue(Mes, Speaker);
             }
-            GetDefaultOptions(tg);
+            GetDefaultOptions();
         }
 
-        public static void RejectRequestButtonAction(TerraGuardian tg)
+        public static void RejectRequestButtonAction()
         {
-            tg.request.UponRejecting();
-            SetDialogue(tg.request.GetRequestDeny(tg.Data), tg);
-            GetDefaultOptions(tg);
+            Speaker.request.UponRejecting();
+            SetDialogue(Speaker.request.GetRequestDeny(Speaker.Data), Speaker);
+            GetDefaultOptions();
         }
 
-        public static void CloseDialogueButtonAction(TerraGuardian tg)
+        public static void CloseDialogueButtonAction()
         {
-            CloseDialogue(tg);
+            CloseDialogue(Speaker);
         }
 
         public static void CloseDialogue(TerraGuardian tg = null)
@@ -973,19 +1022,25 @@ namespace giantsummon
             PlayerMod pm = MainPlayer.GetModPlayer<PlayerMod>();
             pm.IsTalkingToAGuardian = false;
             if (tg != null)
-                tg.TalkPlayerID = -1;
+            {
+                if (Speaker != null)
+                    Speaker.TalkPlayerID = -1;
+                else
+                    tg.TalkPlayerID = -1;
+            }
+            Speaker = null;
             Options.Clear();
             if (giantsummon.Dialogue.DialogueThread != null && giantsummon.Dialogue.DialogueThread.IsAlive)
                 giantsummon.Dialogue.DialogueThread.Abort();
             Dialogue = new string[0];
         }
 
-        public static void GiveGiftButtonAction(TerraGuardian Guardian)
+        public static void GiveGiftButtonAction()
         {
             int GiftSlot = -1, EmptyGuardianSlot = -1;
             for (int i = 0; i < 50; i++)
             {
-                if (Guardian.Inventory[i].type == 0)
+                if (Speaker.Inventory[i].type == 0)
                 {
                     EmptyGuardianSlot = i;
                 }
@@ -996,11 +1051,11 @@ namespace giantsummon
             }
             if (GiftSlot > -1 && EmptyGuardianSlot > -1)
             {
-                Guardian.Inventory[EmptyGuardianSlot] = MainPlayer.inventory[GiftSlot].Clone();
+                Speaker.Inventory[EmptyGuardianSlot] = MainPlayer.inventory[GiftSlot].Clone();
                 MainPlayer.inventory[GiftSlot].SetDefaults(0);
-                GuardianActions.OpenBirthdayPresent(Guardian, EmptyGuardianSlot);
+                GuardianActions.OpenBirthdayPresent(Speaker, EmptyGuardianSlot);
                 SetDialogue("*You gave the gift.*");
-                GetDefaultOptions(Guardian);
+                GetDefaultOptions();
                 return;
             }
             else
@@ -1029,25 +1084,25 @@ namespace giantsummon
             return GiveGift;
         }
 
-        public static void PostponeRequestButtonAction(TerraGuardian Guardian)
+        public static void PostponeRequestButtonAction()
         {
-            string Mes = Guardian.GetMessage(GuardianBase.MessageIDs.RequestPostpone);
+            string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RequestPostpone);
             if (Mes != "")
-                Guardian.SaySomething(MessageParser(Mes, Guardian));
-            CloseDialogueButtonAction(Guardian);
+                Speaker.SaySomething(MessageParser(Mes, Speaker));
+            CloseDialogueButtonAction();
         }
 
-        public static void OpenShopButtonAction(TerraGuardian Guardian)
+        public static void OpenShopButtonAction()
         {
             GuardianShopInterface.OpenShop();
         }
 
-        public static void OpenInventoryManagementButtonAction(TerraGuardian Guardian)
+        public static void OpenInventoryManagementButtonAction()
         {
             PlayerMod pm = MainPlayer.GetModPlayer<PlayerMod>();
             foreach (int Key in pm.MyGuardians.Keys)
             {
-                if (pm.MyGuardians[Key].ID == Guardian.ID && pm.MyGuardians[Key].ModID == Guardian.ModID)
+                if (pm.MyGuardians[Key].ID == Speaker.ID && pm.MyGuardians[Key].ModID == Speaker.ModID)
                 {
                     GuardianManagement.OpenInterfaceForGuardian(Key);
                     break;
@@ -1148,12 +1203,19 @@ namespace giantsummon
         public struct DialogueOption
         {
             public string Text;
-            public Action<TerraGuardian> Action;
+            public Action Action;
+            public bool ThreadedDialogue;
 
-            public DialogueOption(string OptionText, Action<TerraGuardian> Result)
+            public DialogueOption(string OptionText, Action Result)
             {
                 Text = OptionText;
                 Action = Result;
+                ThreadedDialogue = false;
+            }
+
+            public void SetAsThreadedDialogue()
+            {
+                ThreadedDialogue = true;
             }
         }
     }

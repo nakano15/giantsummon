@@ -95,14 +95,14 @@ namespace giantsummon
         public float TravellingStacker = 0f, DamageStacker = 0f, ComfortStack = 0f; //For damagestacker to work, I need to know whose projectiles were spawned from a Guardian.
         public byte FoodStacker = 0, DrinkStacker = 0, ComfortPoints = 0;
         public CombatTactic tactic = CombatTactic.Assist;
-        public TimeSpan? LifeTime { get { return GetCommonStatus.LifeTime; } set { GetCommonStatus.LifeTime = value; } } //Must go to Common Status
+        public TimeSpan? LifeTime { get { return GetCommonStatus.LifeTime; } set { GetCommonStatus.LifeTime = value; } }
         public TimeSpan GetLifeTime
         {
             get
             {
                 if (LifeTime.HasValue)
                     return LifeTime.Value;
-                return GuardianGlobalInfos.LifeTime; //Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TimeDuration; //Take from Global Infos.
+                return GuardianGlobalInfos.LifeTime;
             }
         }
         public int SavedAge = 0;

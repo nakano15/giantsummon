@@ -54,9 +54,7 @@ namespace giantsummon
         public int LastHealthValue = -1;
         public byte LifeCrystalsUsed = 0, LifeFruitsUsed = 0, ManaCrystalsUsed = 0;
         public int ExtraMaxHealthValue = 0;
-        public bool InEtherRealm = false;
         public BehaviorChanges CurrentTactic = BehaviorChanges.FreeWill;
-        public TimeSpan TimeDuration = new TimeSpan();
         public bool MountedOnGuardian
         {
             get
@@ -156,6 +154,24 @@ namespace giantsummon
         public Creatures.MiguelBase.ExerciseTypes CurrentExercise = Creatures.MiguelBase.ExerciseTypes.None;
         public float ExerciseCounter = 0;
         public byte ExercisesDone = 0;
+        public List<QuestData> QuestDatas = new List<QuestData>();
+
+        public static QuestData[] GetPlayerQuestDatas(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().QuestDatas.ToArray();
+        }
+
+        public static QuestData GetQuestData(Player player, int QuestID, string QuestModID = "")
+        {
+            if (QuestModID == "")
+                QuestModID = MainMod.mod.Name;
+            foreach(QuestData qd in player.GetModPlayer<PlayerMod>().QuestDatas)
+            {
+                if (!qd.IsInvalid && qd.QuestID == QuestID && qd.QuestModID == QuestModID)
+                    return qd;
+            }
+            return QuestContainer.GetQuestBase(QuestID, QuestModID).GetQuestData;
+        }
 
         public static bool IsBeingCarriedByThisGuardian(Player player, TerraGuardian tg)
         {
@@ -346,6 +362,11 @@ namespace giantsummon
 
         public PlayerMod()
         {
+            QuestDatas.Clear();
+            foreach (QuestBase qb in QuestContainer.GetAllQuests())
+            {
+                QuestDatas.Add(qb.GetQuestData);
+            }
             for (int g = 0; g < MainMod.MaxExtraGuardianFollowers; g++)
             {
                 AssistGuardians[g] = new TerraGuardian();
@@ -769,38 +790,16 @@ namespace giantsummon
             return MyGuardians.Values.ToArray();
         }
 
-        public void EnterEtherRealm()
-        {
-            if (!Guardian.Active)
-            {
-                Main.NewText("You need to have a guardian summoned to enter it.");
-                return;
-            }
-            if (Guardian.FriendshipLevel < Guardian.Base.ControlUnlockLevel)
-            {
-                Main.NewText("Not enough Friendship level to do that.");
-                return;
-            }
-            InEtherRealm = true;
-            if (!Guardian.PlayerControl)
-                Guardian.TogglePlayerControl(true);
-            Guardian.Position.X = Main.spawnTileX * 16;
-            Guardian.Position.Y = Main.spawnTileY * 16;
-            Guardian.UpdateStatus = true;
-        }
-
-        public void ExitEtherRealm()
-        {
-            InEtherRealm = false;
-            Guardian.Position.X = Main.spawnTileX * 16;
-            Guardian.Position.Y = Main.spawnTileY * 16;
-            if (Guardian.PlayerControl)
-                Guardian.TogglePlayerControl(true);
-            Guardian.UpdateStatus = true;
-        }
-
         public override void PostUpdate()
         {
+            if(player.whoAmI == Main.myPlayer)
+            {
+                foreach(QuestData qd in QuestDatas)
+                {
+                    if(!qd.IsInvalid)
+                        qd.GetBase.UpdatePlayer(player, qd);
+                }
+            }
             if (player.whoAmI == Main.myPlayer && !MountedOnGuardian && !ControllingGuardian)
             {
                 switch (CurrentExercise)
@@ -1431,7 +1430,6 @@ namespace giantsummon
                 UpdateGuardian();
             }
             eye = EyeState.Open;
-            TimeDuration += TimeSpan.FromSeconds(Main.dayRate);
             if (player.whoAmI == Main.myPlayer && HasGhostFoxHauntDebuff)
             {
                 bool ReduceOpacity = Main.dayTime && !Main.eclipse && player.position.Y < Main.worldSurface * 16 && Main.tile[(int)(player.Center.X) / 16, (int)(player.Center.Y / 16)].wall == 0;
@@ -2294,7 +2292,6 @@ namespace giantsummon
                 tag.Add("BuddyID", BuddiesModeBuddyID.ID);
                 tag.Add("BuddyModID", BuddiesModeBuddyID.ModID);
             }
-            tag.Add("TimeDuration", TimeDuration.TotalMilliseconds);
             tag.Add("KnockedOut", KnockedOut);
             int[] Keys = MyGuardians.Keys.ToArray();
             tag.Add("GuardianUIDs", Keys);
@@ -2316,7 +2313,6 @@ namespace giantsummon
                 tag.Add("PigForm_" + i, PigGuardianCloudForm[i]);
             }
             tag.Add("ReceivedFoodFromMinerva", ReceivedFoodFromMinerva);
-            tag.Add("ZacksMeatBagQuestStatus", ZacksMeatBagOutfitQuestStep);
             tag.Add("MiguelExerciseType" , (byte)CurrentExercise);
             tag.Add("MiguelExerciseProgress", ExerciseCounter);
             tag.Add("MiguelExercisesDone", ExercisesDone);
@@ -2396,24 +2392,6 @@ namespace giantsummon
                     }
                 }
             }
-            if (ModVersion >= 81)
-            {
-                TimeDuration = TimeSpan.FromMilliseconds(tag.GetDouble("TimeDuration"));
-            }
-            else
-            {
-                double MaxDuration = 0;
-                foreach(GuardianData gd in MyGuardians.Values)
-                {
-                    double Duration = gd.LifeTime.Value.TotalMilliseconds;
-                    if (Duration > MaxDuration)
-                    {
-                        MaxDuration = Duration;
-                    }
-                    gd.LifeTime = null;
-                }
-                TimeDuration = TimeSpan.FromMilliseconds(MaxDuration);
-            }
             if (ModVersion >= 71)
             {
                 for (int i = 0; i < 5; i++)
@@ -2424,10 +2402,6 @@ namespace giantsummon
             if(ModVersion >= 79)
             {
                 ReceivedFoodFromMinerva = tag.GetBool("ReceivedFoodFromMinerva");
-            }
-            if(ModVersion >= 87)
-            {
-                ZacksMeatBagOutfitQuestStep = tag.GetByte("ZacksMeatBagQuestStatus");
             }
             if(ModVersion >= 92)
             {
@@ -3265,10 +3239,6 @@ namespace giantsummon
                 GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.ManyAnglerQuestsCompleted, player.name, player.anglerQuestsFinished.ToString(), 10, player.anglerQuestsFinished * 0.1f, GuardianGlobalInfos.GetGuardiansInTheWorld());
             }
         }
-
-        // Quest Variables
-        public byte ZacksMeatBagOutfitQuestStep = 0;
-        //
 
         public enum EyeState
         {

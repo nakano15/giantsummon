@@ -1083,6 +1083,12 @@ namespace giantsummon
                     }, InterfaceScaleType.UI);
                     InterfacesSetup = true;
                 }
+                //Todo - This is only for testing purpose
+                layers.Add(new LegacyGameInterfaceLayer("Terra Guardians: Test Quest Interface", delegate ()
+                {
+                    GuardianQuestInterface.Draw();
+                    return true;
+                }, InterfaceScaleType.UI));
                 if (ShowDebugInfo)
                 {
                     layers.Add(gi);
@@ -2919,6 +2925,7 @@ namespace giantsummon
             AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "Giant Dog Guardian", 4.6667f, true, true);
             GetInitialCompanionsList();
             CommonRequestsDB.PopulateCommonRequestsDB();
+            AddQuestContainer(this, new Quests.TgQuestContainer());
             //
             NExperienceMod = ModLoader.GetMod("NExperience");
             KalciphozMod = ModLoader.GetMod("kRPG");
@@ -2926,6 +2933,11 @@ namespace giantsummon
             TerraClassesMod = ModLoader.GetMod("TerraClasses");
             ThoriumMod = ModLoader.GetMod("ThoriumMod");
             FargoMutantMod = ModLoader.GetMod("Fargowiltas");
+        }
+
+        public static void AddQuestContainer(Mod mod, QuestContainer container)
+        {
+            QuestContainer.AddQuestContainer(mod, container);
         }
 
         public override void PostSetupContent()

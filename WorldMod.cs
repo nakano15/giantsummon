@@ -25,6 +25,7 @@ namespace giantsummon
         public static List<GuardianID> ScheduledVisits = new List<GuardianID>();
         public static List<GuardianBuildingInfo> HouseInfos = new List<GuardianBuildingInfo>();
         private static bool OldOneArmyWasLastActive = false;
+        public static bool IsEtherRealm = false;
 
         public static void AllowGuardianNPCToSpawn(int ID, string ModID = "")
         {

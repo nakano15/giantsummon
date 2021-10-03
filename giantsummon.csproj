@@ -237,6 +237,9 @@
     <Compile Include="Projectiles\CrimsonFlameProjectile.cs" />
     <Compile Include="Projectiles\TopazGP.cs" />
     <Compile Include="Projectiles\ZombieFart.cs" />
+    <Compile Include="QuestBase.cs" />
+    <Compile Include="QuestContainer.cs" />
+    <Compile Include="QuestData.cs" />
     <Compile Include="Quests\ZacksMeatBagOutfit.cs" />
     <Compile Include="RenameGuardianCommand.cs" />
     <Compile Include="MainMod.cs" />

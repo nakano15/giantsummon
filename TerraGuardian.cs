@@ -4257,7 +4257,7 @@ namespace giantsummon
                 MagicDamageMultiplier += SummonDamageBonus;
                 SummonDamageMultiplier += SummonDamageBonus;
             }
-            EtherRealmStatusShare();
+            PlayerControlStatusShare();
             if (PlayerMounted && !ReverseMount)
                 CoverRate += 20;
             Base.Attributes(this);
@@ -4297,19 +4297,18 @@ namespace giantsummon
             }
         }
 
-        public void EtherRealmStatusShare() //Initially, the ideas was that the player wasn't supposed to enter the Ether Realm without a TerraGuardian to be It's "shell". That idea changed, and this is obsolete.
+        public void PlayerControlStatusShare()
         {
-            if (OwnerPos != -1 && Main.player[OwnerPos].GetModPlayer<PlayerMod>().InEtherRealm)
+            if (OwnerPos != -1 && PlayerControl)
             {
                 Player owner = Main.player[OwnerPos];
-                this.MHP += owner.statLifeMax2;
-                this.MMP += owner.statManaMax2;
-                float DamageBonusCount = owner.meleeDamage + owner.rangedDamage + owner.magicDamage + owner.minionDamage - 4f;
-                this.MeleeDamageMultiplier += DamageBonusCount;
-                this.RangedDamageMultiplier += DamageBonusCount;
-                this.MagicDamageMultiplier += DamageBonusCount;
-                this.SummonDamageMultiplier += DamageBonusCount;
-                this.Defense += owner.statDefense;
+                MHP += owner.statLifeMax2;
+                MMP += owner.statManaMax2;
+                MeleeDamageMultiplier += owner.meleeDamage;
+                RangedDamageMultiplier += owner.rangedDamage;
+                MagicDamageMultiplier += owner.magicDamage;
+                SummonDamageMultiplier += owner.minionDamage;
+                Defense += owner.statDefense;
             }
         }
 

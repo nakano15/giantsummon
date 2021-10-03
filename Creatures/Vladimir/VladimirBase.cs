@@ -187,7 +187,7 @@ namespace giantsummon.Creatures
                 if (data.CarriedPersonType != TerraGuardian.TargetTypes.Player)
                 {
                     Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("I want to speak with " + GetCarriedOneName(Guardian) + ".",
-                        delegate (TerraGuardian tg)
+                        delegate ()
                         {
                             Guardian.SaySomething("*I will wait until you two end speaking.*");
                             if (data.CarriedPersonType == TerraGuardian.TargetTypes.Npc)
@@ -243,8 +243,9 @@ namespace giantsummon.Creatures
             return GetCarryableCompanions(player).Length > 0;
         }
 
-        public void CarrySomeoneButtonAction(TerraGuardian Vladimir)
+        public void CarrySomeoneButtonAction()
         {
+            TerraGuardian Vladimir = Dialogue.GetSpeaker;
             TerraGuardian[] Guardians = GetCarryableCompanions(Main.player[Main.myPlayer]);
             GuardianMouseOverAndDialogueInterface.DialogueOption Option;
             GuardianMouseOverAndDialogueInterface.Options.Clear();
@@ -252,31 +253,32 @@ namespace giantsummon.Creatures
             for (int i = 0; i < Guardians.Length; i++)
             {
                 TerraGuardian guardian = Guardians[i];
-                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption(guardian.Name, delegate (TerraGuardian tg)
+                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption(guardian.Name, delegate ()
                 {
                     CarrySomeoneAction(Vladimir, guardian);
                     GuardianMouseOverAndDialogueInterface.SetDialogue("*Alright, I will pick them up after we finish talking.*");
-                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
+                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
                 });
                 GuardianMouseOverAndDialogueInterface.Options.Add(Option);
             }
-            Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Nevermind.", delegate (TerraGuardian tg)
+            Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Nevermind.", delegate ()
             {
                 GuardianMouseOverAndDialogueInterface.SetDialogue("*Changed your mind, [nickname]? It's fine.*");
-                GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
+                GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
             });
             GuardianMouseOverAndDialogueInterface.Options.Add(Option);
         }
 
-        public void PlaceCarriedPersonOnTheFloorButtonAction(TerraGuardian Vladimir)
+        public void PlaceCarriedPersonOnTheFloorButtonAction()
         {
-            PlaceCarriedPersonOnTheFloor(Vladimir);
+            PlaceCarriedPersonOnTheFloor(Dialogue.GetSpeaker);
             GuardianMouseOverAndDialogueInterface.SetDialogue("*Okay, done...*");
-            GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Vladimir);
+            GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
         }
 
-        public void HugOptionAction(TerraGuardian Guardian)
+        public void HugOptionAction()
         {
+            TerraGuardian Guardian = Dialogue.GetSpeaker;
             if (Guardian.DoAction.InUse && Guardian.DoAction.ID == HugActionID && Guardian.DoAction.IsGuardianSpecificAction)
             {
                 Guardian.DoAction.InUse = false;
@@ -303,7 +305,7 @@ namespace giantsummon.Creatures
             {
                 GuardianMouseOverAndDialogueInterface.SetDialogue("*I can't right now.*");
             }
-            GuardianMouseOverAndDialogueInterface.GetDefaultOptions(Guardian);
+            GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
         }
 
         public override void ForceDrawInFrontOfPlayer(TerraGuardian guardian, ref bool LeftArmInFront, ref bool RightArmInFront)

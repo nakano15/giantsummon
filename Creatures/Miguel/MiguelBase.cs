@@ -628,8 +628,9 @@ namespace giantsummon.Creatures
             return Dialogue;
         }
 
-        private void GiveExerciseButtonAction(TerraGuardian tg)
+        private void GiveExerciseButtonAction()
         {
+            TerraGuardian tg = Dialogue.GetSpeaker;
             PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
             pm.CurrentExercise = (ExerciseTypes)Main.rand.Next(1, (int)ExerciseTypes.Count);
             switch (pm.CurrentExercise)
@@ -649,8 +650,9 @@ namespace giantsummon.Creatures
             }
         }
 
-        private void CheckExerciseButtonAction(TerraGuardian tg)
+        private void CheckExerciseButtonAction()
         {
+            TerraGuardian tg = Dialogue.GetSpeaker;
             PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
             if(pm.CurrentExercise == ExerciseTypes.WaitUntilNextDay)
             {

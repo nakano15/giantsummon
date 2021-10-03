@@ -477,8 +477,9 @@ namespace giantsummon.Creatures
                         Text = "Solidify " + PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Wrath).Name + "'s Body";
                     else
                         Text = "Cloudify " + PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Wrath).Name + "'s Body";
-                    GuardianMouseOverAndDialogueInterface.DialogueOption action = new GuardianMouseOverAndDialogueInterface.DialogueOption(Text, delegate(TerraGuardian tg)
+                    GuardianMouseOverAndDialogueInterface.DialogueOption action = new GuardianMouseOverAndDialogueInterface.DialogueOption(Text, delegate()
                     {
+                        TerraGuardian tg = Dialogue.GetSpeaker;
                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID] =
                             !Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID];
                         if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
@@ -491,7 +492,7 @@ namespace giantsummon.Creatures
                             GuardianMouseOverAndDialogueInterface.SetDialogue("*He's now in flesh and bones now. Beware not to infuriate him on that state, who knows what his rage could do to you.*");
                             PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Wrath).SaySomething("Amazing, now I can really hurt things.");
                         }
-                        GuardianMouseOverAndDialogueInterface.GetDefaultOptions(tg);
+                        GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
                     });
                     Actions.Add(action);
                 }
@@ -501,7 +502,7 @@ namespace giantsummon.Creatures
             return Actions;
         }
 
-        public void SubworldTestScript(TerraGuardian tg)
+        public void SubworldTestScript()
         {
             Maps.TestMap map = new Maps.TestMap();
             if (map.Register())
