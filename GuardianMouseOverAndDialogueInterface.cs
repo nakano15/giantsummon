@@ -392,6 +392,8 @@ namespace giantsummon
 
         public static bool IsInChattingRange(TerraGuardian tg)
         {
+            if (giantsummon.Dialogue.IsImportantDialogue())
+                return true;
             if (DialogueCloseCheckDelayTime > 0)
             {
                 DialogueCloseCheckDelayTime--;

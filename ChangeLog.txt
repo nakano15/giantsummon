@@ -54,3 +54,8 @@ Controlling a companion will make a number of the controlled companion status to
 The dialogue "I want to talk to you." has now be changed to "Let's talk about other things.".
 	That dialogue is now also present all the time.
 The dialogue "Talk about other things" has been changed to "Let's review some things".
+Added a Quests system.
+	The quest system will better let you track the current quests in the game world.
+	Quests will also show you the story progress of the quest, based on what you did during that quest, in case you want to read it in the future.
+	Zacks Meatbag Outfit has been implemented as that quest. Due to that, you need to redo that quest line to unlock the outfit, if you did it at least once.
+Fixed a issue where Zacks counted as a Medium sized companion.

@@ -29,7 +29,7 @@ namespace giantsummon
             QuestData[] quests = PlayerMod.GetPlayerQuestDatas(Main.player[Main.myPlayer]);
             for (int i = 0; i < quests.Length; i++)
             {
-                if(!quests[i].IsInvalid && (true || quests[i].IsQuestStarted))
+                if(!quests[i].IsInvalid && quests[i].IsQuestStarted)
                 {
                     QuestList.Add(i);
                 }
@@ -54,6 +54,7 @@ namespace giantsummon
             StoryText = new string[0];
             ObjectiveText = new string[0];
             QuestList.Clear();
+            IsActive = false;
         }
 
         private static void ChangeQuest(int NewQuestPosition)
@@ -64,10 +65,14 @@ namespace giantsummon
                 SelectedQuestInfo = PlayerMod.GetPlayerQuestDatas(Main.LocalPlayer)[QuestList[SelectedItem]];
                 StoryPage = 0;
                 DescriptionText = ParseText(SelectedQuestInfo.Description);
-                StoryText = ParseText(SelectedQuestInfo.Story);
+                string storyText = SelectedQuestInfo.Story;
+                if (storyText != "")
+                    StoryText = ParseText("Story\n\n" + storyText);
+                else
+                    StoryText = new string[0];
                 string objectiveText = SelectedQuestInfo.Objective;
                 if (objectiveText != "")
-                    ObjectiveText = ParseText("> " + objectiveText);
+                    ObjectiveText = ParseText("Objective: " + objectiveText);
                 else
                     ObjectiveText = new string[0];
             }
@@ -136,7 +141,10 @@ namespace giantsummon
             if (Main.playerInventory)
             {
                 if (IsActive)
+                {
                     CloseInterface();
+                    return;
+                }
                 Vector2 TextPos = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.8f);
                 Color c = Color.White;
                 if(Main.mouseX >= TextPos.X - 40 && Main.mouseX < TextPos.X + 40 && Main.mouseY >= TextPos.Y - 10 && Main.mouseY < TextPos.Y + 10)
@@ -194,7 +202,8 @@ namespace giantsummon
                 InterfacePos = new Vector2(Position.X + ListWidth + 4 * 2, Position.Y + 44);
                 Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)InterfacePos.X, (int)InterfacePos.Y, RightPanelWidth, 30), null, Color.LightGreen);
                 InterfacePos.X += (int)(RightPanelWidth * 0.5f);
-                if(HasQuestSelected)
+                InterfacePos.Y += 6;
+                if (HasQuestSelected)
                     Utils.DrawBorderString(Main.spriteBatch, SelectedQuestInfo.QuestName, InterfacePos, Color.White, anchorx: 0.5f);
             }
             //Quest Body
@@ -208,7 +217,10 @@ namespace giantsummon
                     InterfacePos.Y += 2;
                     if (SelectedQuestInfo.IsQuestCompleted)
                     {
-                        Utils.DrawBorderStringBig(Main.spriteBatch, "Complete!!", InterfacePos, Color.Yellow);
+                        float XBackup = InterfacePos.X;
+                        InterfacePos.X += RightPanelWidth * 0.5f;
+                        Utils.DrawBorderStringBig(Main.spriteBatch, "Complete!!", InterfacePos, Color.Yellow, anchorx:0.5f);
+                        InterfacePos.X = XBackup;
                         InterfacePos.Y += 60;
                         MaxLines = (InterfaceHeight - 60) / 20;
                     }
@@ -236,48 +248,60 @@ namespace giantsummon
                             Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)InterfacePos.X, (int)InterfacePos.Y - 1, RightPanelWidth, 2), null, Color.Black);
                         }
                         MaxLines = (InterfaceHeight - 30 * DescriptionText.Length) / 20;
+                        if(DescriptionText.Length > 0)
+                            MaxLines -= DescriptionText.Length;
                     }
                     MaxLines--;
                     Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)InterfacePos.X, (int)InterfacePos.Y - 1, RightPanelWidth, 2), null, Color.Black);
                     {
-                        Color storyLineColor = new Color(192,192,192);
+                        Color storyLineColor = Color.White;
                         for(int i = 0; i < MaxLines; i++)
                         {
                             int Index = i + StoryPage * MaxLines;
                             if (Index >= StoryText.Length)
                                 break;
-                            Vector2 Position = new Vector2(InterfacePos.X + 2, InterfacePos.Y + i * 20);
-                            Utils.DrawBorderString(Main.spriteBatch, StoryText[Index], Position, storyLineColor, 0.75f);
+                            Vector2 Position = new Vector2(InterfacePos.X + RightPanelWidth * 0.5f, InterfacePos.Y + i * 20 + 4);
+                            float Scale = 0.75f;
+                            if (StoryPage == 0 && Index == 0)
+                            {
+                                Scale = 0.9f;
+                            }
+                            Utils.DrawBorderString(Main.spriteBatch, StoryText[Index], Position, storyLineColor, Scale, 0.5f);
                         }
                     }
                     int TotalPages = StoryText.Length / MaxLines;
-                    if (StoryPage > 0)
+                    if(TotalPages > 0)
                     {
-                        Vector2 PreviousPageButtonPos = new Vector2(InterfacePos.X + 10, Position.Y + Height - 18);
-                        Color color = Color.White;
-                        if (Main.mouseX >= PreviousPageButtonPos.X - 10 && Main.mouseX < PreviousPageButtonPos.X + 10 &&
-                            Main.mouseY >= PreviousPageButtonPos.Y - 10 && Main.mouseY < PreviousPageButtonPos.Y + 10)
+                        Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)InterfacePos.X, (int)(Position.Y + Height - 30), RightPanelWidth, 2), null, Color.Black);
+                        const float YDiscount = 12;
+                        if (StoryPage > 0)
                         {
-                            color = Color.Yellow;
-                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                StoryPage--;
+                            Vector2 PreviousPageButtonPos = new Vector2(InterfacePos.X + 10, Position.Y + Height - YDiscount);
+                            Color color = Color.White;
+                            if (Main.mouseX >= PreviousPageButtonPos.X - 10 && Main.mouseX < PreviousPageButtonPos.X + 10 &&
+                                Main.mouseY >= PreviousPageButtonPos.Y - 10 && Main.mouseY < PreviousPageButtonPos.Y + 10)
+                            {
+                                color = Color.Yellow;
+                                if (Main.mouseLeft && Main.mouseLeftRelease)
+                                    StoryPage--;
+                            }
+                            Utils.DrawBorderString(Main.spriteBatch, "<", PreviousPageButtonPos, color, anchorx: 0.5f, anchory: 0.5f);
                         }
-                        Utils.DrawBorderString(Main.spriteBatch, "<", PreviousPageButtonPos, color, anchorx: 0.5f, anchory: 0.5f);
-                    }
-                    if (StoryPage < TotalPages - 1)
-                    {
-                        Vector2 NextPageButtonPos = new Vector2(Position.X + Width - 10, Position.Y + Height - 18);
-                        Color color = Color.White;
-                        if (Main.mouseX >= NextPageButtonPos.X - 10 && Main.mouseX < NextPageButtonPos.X + 10 &&
-                            Main.mouseY >= NextPageButtonPos.Y - 10 && Main.mouseY < NextPageButtonPos.Y + 10)
+                        if (StoryPage < TotalPages)
                         {
-                            color = Color.Yellow;
-                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                StoryPage++;
+                            Vector2 NextPageButtonPos = new Vector2(Position.X + Width - 10, Position.Y + Height - YDiscount);
+                            Color color = Color.White;
+                            if (Main.mouseX >= NextPageButtonPos.X - 10 && Main.mouseX < NextPageButtonPos.X + 10 &&
+                                Main.mouseY >= NextPageButtonPos.Y - 10 && Main.mouseY < NextPageButtonPos.Y + 10)
+                            {
+                                color = Color.Yellow;
+                                if (Main.mouseLeft && Main.mouseLeftRelease)
+                                    StoryPage++;
+                            }
+                            Utils.DrawBorderString(Main.spriteBatch, ">", NextPageButtonPos, color, anchorx: 0.5f, anchory: 0.5f);
                         }
-                        Utils.DrawBorderString(Main.spriteBatch, ">", NextPageButtonPos, color, anchorx: 0.5f, anchory: 0.5f);
+                        Utils.DrawBorderString(Main.spriteBatch, "Page: " + (StoryPage + 1) + "/" + (TotalPages + 1), new Vector2(InterfacePos.X + RightPanelWidth * 0.5f, Position.Y + Height - YDiscount), Color.White, anchorx: 0.5f, anchory: 0.5f);
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, "Page: " + (StoryPage + 1) + "/" + (TotalPages + 1), new Vector2(InterfacePos.X + RightPanelWidth * 0.5f, Position.Y + Height - 18), Color.White, anchorx: 0.5f, anchory: 0.5f);
                 }
             }
             //

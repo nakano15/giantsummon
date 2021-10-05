@@ -14,6 +14,7 @@ namespace giantsummon
         public static bool InDialogue { get { return DialogueThread != null && DialogueThread.ThreadState == ThreadState.Running; } }
         public static TerraGuardian[] DialogueParticipants = new TerraGuardian[0];
         public static bool IsDialogue = false;
+        private static bool ImportantDialogue = false;
         public static Thread DialogueThread;
         private static TerraGuardian LastSpeaker { get { return GuardianMouseOverAndDialogueInterface.Speaker; } set { GuardianMouseOverAndDialogueInterface.Speaker = value; } }
         public static bool ProceedButtonPressed = false;
@@ -42,6 +43,17 @@ namespace giantsummon
             GatherAroundPlayer,
             GatherAroundGuardian,
             GatherAroundPosition
+        }
+
+        public static void SetImportantDialogue()
+        {
+            if (DialogueThread != null && DialogueThread.IsAlive)
+                ImportantDialogue = true;
+        }
+
+        public static bool IsImportantDialogue()
+        {
+            return ImportantDialogue;
         }
 
         /// <summary>
@@ -316,6 +328,7 @@ namespace giantsummon
         {
             if (DialogueThread != null && DialogueThread.ThreadState == ThreadState.Running)
                 return;
+            ImportantDialogue = false;
             IsDialogue = true;
             DialogueParticipants = Participants;
             GuardianMouseOverAndDialogueInterface.Speaker = LastSpeaker = GuardianMouseOverAndDialogueInterface.StarterSpeaker = Participants[0];
@@ -335,6 +348,7 @@ namespace giantsummon
 
         private static void EndDialogues()
         {
+            ImportantDialogue = false;
             IsDialogue = false;
             DialogueParticipants = new TerraGuardian[0];
             SelectedOption = 0;

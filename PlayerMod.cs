@@ -165,9 +165,9 @@ namespace giantsummon
         {
             if (QuestModID == "")
                 QuestModID = MainMod.mod.Name;
-            foreach(QuestData qd in player.GetModPlayer<PlayerMod>().QuestDatas)
+            foreach (QuestData qd in player.GetModPlayer<PlayerMod>().QuestDatas)
             {
-                if (!qd.IsInvalid && qd.QuestID == QuestID && qd.QuestModID == QuestModID)
+                if (qd.QuestID == QuestID && qd.QuestModID == QuestModID)
                     return qd;
             }
             return QuestContainer.GetQuestBase(QuestID, QuestModID).GetQuestData;
@@ -362,11 +362,7 @@ namespace giantsummon
 
         public PlayerMod()
         {
-            QuestDatas.Clear();
-            foreach (QuestBase qb in QuestContainer.GetAllQuests())
-            {
-                QuestDatas.Add(qb.GetQuestData);
-            }
+            QuestContainer.CreateQuestListToPlayer(this);
             for (int g = 0; g < MainMod.MaxExtraGuardianFollowers; g++)
             {
                 AssistGuardians[g] = new TerraGuardian();
@@ -2308,6 +2304,14 @@ namespace giantsummon
             {
                 tag.Add("SelectedAssistGuardian_" + i, SelectedAssistGuardians[i]);
             }
+            tag.Add("QuestCount", QuestDatas.Count);
+            {
+                int QuestId = 0;
+                foreach (QuestData qd in QuestDatas)
+                {
+                    qd.SaveQuest("Quest_" + QuestId++, tag);
+                }
+            }
             for (int i = 0; i < 5; i++)
             {
                 tag.Add("PigForm_" + i, PigGuardianCloudForm[i]);
@@ -2390,6 +2394,14 @@ namespace giantsummon
                     {
                         SelectedAssistGuardians[i] = tag.GetInt("SelectedAssistGuardian_" + i);
                     }
+                }
+            }
+            if (ModVersion >= 97)
+            {
+                int Quests = tag.GetInt("QuestCount");
+                for (int i = 0; i < Quests; i++)
+                {
+                    QuestData.LoadQuest("Quest_" + i, tag, ModVersion, this);
                 }
             }
             if (ModVersion >= 71)

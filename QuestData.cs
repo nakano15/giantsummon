@@ -17,6 +17,8 @@ namespace giantsummon
         public bool IsInvalid { get { return GetBase.Invalid; } }
         public bool IsQuestStarted { get { return GetBase.IsQuestStarted(this); } }
         public bool IsQuestCompleted { get { return GetBase.IsQuestComplete(this); } }
+        public bool IsUnexistingQuest = false;
+        private Terraria.ModLoader.IO.TagCompound SavedQuestData = null;
 
         public int QuestID = 0;
         public string QuestModID = "";
@@ -26,14 +28,41 @@ namespace giantsummon
         {
             Writer.Add(QuestKey + "_ID", QuestID);
             Writer.Add(QuestKey + "_ModID", QuestModID);
-            CustomSaveQuest(QuestKey, Writer);
+            Terraria.ModLoader.IO.TagCompound QuestData = new Terraria.ModLoader.IO.TagCompound();
+            if (IsUnexistingQuest)
+                QuestData = SavedQuestData;
+            else
+                CustomSaveQuest(QuestKey, QuestData);
+            Writer.Add(QuestKey + "_QuestData", QuestData);
         }
 
-        public void LoadQuest(string QuestKey, Terraria.ModLoader.IO.TagCompound Reader, int ModVersion)
+        public static void LoadQuest(string QuestKey, Terraria.ModLoader.IO.TagCompound Reader, int ModVersion, PlayerMod pm)
         {
-            QuestID = Reader.GetInt(QuestKey + "_ID");
-            QuestModID = Reader.GetString(QuestKey + "_ModID");
-            CustomLoadQuest(QuestKey, Reader, ModVersion);
+            int QuestID = Reader.GetInt(QuestKey + "_ID");
+            string QuestModID = Reader.GetString(QuestKey + "_ModID");
+            QuestData qd = null;
+            foreach(QuestData qd2 in pm.QuestDatas)
+            {
+                if(qd2.QuestID == QuestID && qd2.QuestModID == QuestModID)
+                {
+                    qd = qd2;
+                    break;
+                }
+            }
+            Terraria.ModLoader.IO.TagCompound QuestData = Reader.Get<Terraria.ModLoader.IO.TagCompound>(QuestKey + "_QuestData");
+            if (qd == null)
+            {
+                qd = QuestContainer.GetQuestBase(QuestID, QuestModID).GetQuestData;
+                qd.QuestID = QuestID;
+                qd.QuestModID = QuestModID;
+                qd.IsUnexistingQuest = true;
+                qd.SavedQuestData = QuestData;
+                pm.QuestDatas.Add(qd);
+            }
+            else
+            {
+                qd.CustomLoadQuest(QuestKey, QuestData, ModVersion);
+            }
         }
 
         public virtual void CustomSaveQuest(string QuestKey, Terraria.ModLoader.IO.TagCompound Writer)

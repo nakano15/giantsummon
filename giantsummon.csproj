@@ -175,6 +175,7 @@
     <Compile Include="GuardianMouseOverAndDialogueInterface.cs" />
     <Compile Include="GuardianOrderHudNew.cs" />
     <Compile Include="GuardianProjAI.cs" />
+    <Compile Include="GuardianQuestInterface.cs" />
     <Compile Include="GuardianSchedule.cs" />
     <Compile Include="GuardianShopHandler.cs" />
     <Compile Include="GuardianShopInterface.cs" />
@@ -240,6 +241,7 @@
     <Compile Include="QuestBase.cs" />
     <Compile Include="QuestContainer.cs" />
     <Compile Include="QuestData.cs" />
+    <Compile Include="Quests\TgQuestContainer.cs" />
     <Compile Include="Quests\ZacksMeatBagOutfit.cs" />
     <Compile Include="RenameGuardianCommand.cs" />
     <Compile Include="MainMod.cs" />

@@ -566,7 +566,7 @@ namespace giantsummon.Creatures
             DrawPos.Y -= 2;
             DrawPos.X -= 6;
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, sprites.GetExtraTexture(HeadPlasmaID), DrawPos, null, PlasmaOpacity,
-                0f,Vector2.Zero, 1f, seffect);
+                0f,Vector2.Zero, Scale, seffect);
             gdds.Add(gdd);
         }
 

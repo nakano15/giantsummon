@@ -38,7 +38,6 @@ namespace giantsummon.Creatures
             Scale = 107f / 86;
             CompanionSlotWeight = 1.25f;
             Age = 16;
-            Size = GuardianSize.Medium;
             SetBirthday(SEASON_AUTUMN, 12);
             Male = true;
             InitialMHP = 185; //1275

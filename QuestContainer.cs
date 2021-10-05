@@ -22,17 +22,19 @@ namespace giantsummon
             container.CreateQuestDB();
         }
 
-        public static QuestBase[] GetAllQuests()
+        public static void CreateQuestListToPlayer(PlayerMod Player)
         {
-            List<QuestBase> qb = new List<QuestBase>();
-            foreach(string s in ModQuestContainer.Keys)
+            Player.QuestDatas.Clear();
+            foreach (string s in ModQuestContainer.Keys)
             {
                 foreach(int i in ModQuestContainer[s].QuestList.Keys)
                 {
-                    qb.Add(ModQuestContainer[s].QuestList[i]);
+                    QuestData qd = ModQuestContainer[s].QuestList[i].GetQuestData;
+                    qd.QuestID = i;
+                    qd.QuestModID = s;
+                    Player.QuestDatas.Add(qd);
                 }
             }
-            return qb.ToArray();
         }
 
         public virtual void CreateQuestDB()
