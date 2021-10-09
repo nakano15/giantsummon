@@ -27,7 +27,7 @@ namespace giantsummon
             return new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
         }
 
-        public virtual Action ImportantDialogueMessage(QuestData data, int GuardianID, string GuardianModID) //Shows up once you talk to the companion. If return an action, will make the dialogue on the action to show up.
+        public virtual Action ImportantDialogueMessage(QuestData data, TerraGuardian tg, int GuardianID, string GuardianModID) //Shows up once you talk to the companion. If return an action, will make the dialogue on the action to show up.
         {
             return null;
         }

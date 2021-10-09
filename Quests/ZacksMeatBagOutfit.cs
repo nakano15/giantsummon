@@ -151,7 +151,7 @@ namespace giantsummon.Quests
             return base.AddDialogueOptions(IsChatDialogue, GuardianID, GuardianModID);
         }
 
-        public override Action ImportantDialogueMessage(QuestData data, int GuardianID, string GuardianModID)
+        public override Action ImportantDialogueMessage(QuestData data, TerraGuardian tg, int GuardianID, string GuardianModID)
         {
             if (GuardianModID == MainMod.mod.Name && GuardianID == GuardianBase.Blue)
             {
@@ -160,7 +160,7 @@ namespace giantsummon.Quests
                     return new Action(BlueTellsYouAboutHerRequest);
                 }
             }
-            return base.ImportantDialogueMessage(data, GuardianID, GuardianModID);
+            return base.ImportantDialogueMessage(data, tg, GuardianID, GuardianModID);
         }
 
         public override QuestData GetQuestData => new ZacksOutfitQuestData();

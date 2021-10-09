@@ -241,6 +241,7 @@
     <Compile Include="QuestBase.cs" />
     <Compile Include="QuestContainer.cs" />
     <Compile Include="QuestData.cs" />
+    <Compile Include="Quests\PigCompanionsQuest.cs" />
     <Compile Include="Quests\TgQuestContainer.cs" />
     <Compile Include="Quests\ZacksMeatBagOutfit.cs" />
     <Compile Include="RenameGuardianCommand.cs" />

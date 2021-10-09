@@ -454,6 +454,26 @@ namespace giantsummon
             }
         }
 
+        public static void ShowDialogueWithOptions(string Text, GuardianMouseOverAndDialogueInterface.DialogueOption[] Options, TerraGuardian Speaker = null)
+        {
+            if (Speaker == null)
+                Speaker = LastSpeaker;
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian = true;
+            Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition = Speaker.WhoAmID;
+            PlayerFaceGuardian(Speaker);
+            ProceedButtonPressed = false;
+            GuardianMouseOverAndDialogueInterface.SetDialogue(Text, Speaker);
+            GuardianMouseOverAndDialogueInterface.Options.Clear();
+            for (int o = 0; o < Options.Length; o++)
+            {
+                GuardianMouseOverAndDialogueInterface.AddOption(Options[o].Text, Options[o].Action);
+            }
+            while (!ProceedButtonPressed)
+            {
+                Thread.Sleep(100);
+            }
+        }
+
         public static int ShowDialogueWithOptions(string Text, string[] Options, TerraGuardian Speaker = null)
         {
             if (Speaker == null)
