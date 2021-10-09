@@ -19,7 +19,7 @@ namespace giantsummon.Quests
 
         public override string Description(QuestData data)
         {
-            return "You met a companion split into different emotions. Find them all and try fusing them together.";
+            return "You met a emotional pig fragment. Find them all to fuse back to their original embodiment.";
         }
 
         public class PigQuestData : QuestData
