@@ -142,9 +142,9 @@ namespace giantsummon.Quests
             {
                 if (!data.SpokeToLeopoldAboutTheEmotionalPigs)
                 {
-                    return "I've found a emotionally fragmented TerraGuardian. I should seek someone who could help with this.";
+                    return "I've found a fragmented piece of a TerraGuardian. I should seek someone who could help with this.";
                 }
-                return "I've found " + PigsFound + " pieces of a TerraGuardian, but didn't found all of them.";
+                return "I've found " + PigsFound + " pieces of a TerraGuardian, but didn't find all of them yet.";
             }
             else
             {
@@ -159,7 +159,7 @@ namespace giantsummon.Quests
             string Story = "";
             if(PigsFound == 0)
             {
-                Story = "I didn't met any of the emotional Pig TerraGuardians yet. I may end up bumping into them during my travels.";
+                Story = "I haven't met any of the emotional Pig TerraGuardians yet. I may end up bumping into them during my travels.";
             }
             else
             {
@@ -215,9 +215,9 @@ namespace giantsummon.Quests
                         switch (i)
                         {
                             case WrathID:
-                                Story += "The Pig of Wrath said that was tired of being a red cloud, and asked me to find a way of solidifying their body.";
+                                Story += "The Pig of Wrath said that it was tired of being a astral, and asked me to find a way of getting a physical form.";
                                 if (Solidified)
-                                    Story += " Gladly, Leopold helped giving a solution to allow solidifying their body, and also vaporize too.";
+                                    Story += " Gladly, Leopold helped giving a solution to allow mortalizing their body, and also .";
                                 break;
                         }
                     }
