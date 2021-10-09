@@ -148,7 +148,7 @@ namespace giantsummon.Quests
             }
             else
             {
-                return "I need to find a way of fusing the pig TerraGuardians together.";
+                return "I need to find a way of fusing the pigs together.";
             }
         }
 
@@ -215,16 +215,16 @@ namespace giantsummon.Quests
                         switch (i)
                         {
                             case WrathID:
-                                Story += "The Pig of Wrath said that it was tired of being a astral, and asked me to find a way of getting a physical form.";
+                                Story += "The Pig of Wrath said that it was tired of being astral, and asked me to find a way of getting a physical form.";
                                 if (Solidified)
-                                    Story += " Gladly, Leopold helped giving a solution to allow mortalizing their body, and also .";
+                                    Story += " Gladly, Leopold helped giving a solution to allow mortalizing their body, and also re-astralizing if needed.";
                                 break;
                         }
                     }
                 }
                 if (data.UnlockedBland)
                 {
-                    Story += "\n\nI managed to get Leopold to help me fuse all pigs together into a TerraGuardian, and it resulted into a emotionless TerraGuardian with incredible powers.\n\nTHE END";
+                    Story += "\n\nI managed to get Leopold to help me fuse all pigs together into a TerraGuardian, and it resulted into a emotionless TerraGuardian with impressive capabilities and a bland attitude.\n\nTHE END";
                 }
             }
 
@@ -289,9 +289,9 @@ namespace giantsummon.Quests
         public static void WrathTellingYouAboutFormChanging()
         {
             PigQuestData data = (PigQuestData)Data;
-            if(Dialogue.ShowDialogueWithOptions("*This form is revolting, I'm boiling out of rage due to this. There must be a way of making me solid again, maybe that nerdy guy can help me in this, let's talk to him.*", new string[] { "Who? [gn:"+GuardianBase.Leopold+"]? Sure, Let's visit him.", "Not right now.." }) == 0)
+            if(Dialogue.ShowDialogueWithOptions("*I need flesh and muscle to give more impact to my attacks. There must be a way of giving me a solid body,that white bunny needs to help me now, go talk to him and im not accepting no for a answer.*", new string[] { "Who? [gn:"+GuardianBase.Leopold+"]? Sure, Let's visit him.", "Not right now.." }) == 0)
             {
-                Dialogue.ShowEndDialogueMessage("*Great, or else I would give you a beating.*", false);
+                Dialogue.ShowEndDialogueMessage("*Great, or else I would give you a pounding.*", false);
             }
             else
             {
@@ -310,7 +310,7 @@ namespace giantsummon.Quests
                 {
                     Dialogue.ShowDialogueWithContinue("*Ah, I see what you mean now.*");
                     Dialogue.ShowDialogueWithContinue("*Hm... Actually, I do know about their condition. It seems like its body has vaporized at the moment its personality was split.*");
-                    Dialogue.ShowDialogueWithContinue("*I can try doing something to make his personality solid, but I can only merge its personalities if you find them.*");
+                    Dialogue.ShowDialogueWithContinue("*I can try doing something to make its personality solid, but I can only merge its personalities if you find them.*");
                     data.SpokeToLeopoldAboutTheEmotionalPigs = true;
                 }
                 else
@@ -350,15 +350,15 @@ namespace giantsummon.Quests
                 if(data.MetPigCount < 4)
                 {
                     Dialogue.ShowDialogueWithContinue("*Oh yes, the case of the TerraGuardian shattered into different emotions.*");
-                    Dialogue.ShowDialogueWithContinue("*I'm studying what could be the causer of that issue.*");
+                    Dialogue.ShowDialogueWithContinue("*I'm studying what could be the cause of that issue.*");
                     Dialogue.ShowDialogueWithContinue("*If you manage to know about something, or know of anything they may remember, do tell me. I'm curious to know what actually happened.*");
                     Dialogue.ShowEndDialogueMessage("*Meanwhile, all we can do is either research, or theorize what may have happened.*", false);
                 }
                 else
                 {
                     Dialogue.ShowDialogueWithContinue("*Ah, them. It seems like you managed to find all of them. Funny, I thought there were more.*");
-                    Dialogue.ShowDialogueWithContinue("*Oh well, when you find out that they're ready for the fusion, I'll take care of merging them together into their final form.*");
-                    Dialogue.ShowEndDialogueMessage("*I'm curious about what that final form may look like, probably into someone really strong.*", false);
+                    Dialogue.ShowDialogueWithContinue("*Oh well, when you find out that they're ready for the fusion, I'll take care of merging them together into their original form.*");
+                    Dialogue.ShowEndDialogueMessage("*I'm curious about what that original form may look like, probably would result in something fascinating.*", false);
                 }
             }
         }
@@ -425,7 +425,7 @@ namespace giantsummon.Quests
                     }
                     else
                     {
-                        if(Dialogue.ShowDialogueWithOptions("*Do you really want to change " + tg.Name + "'s form to " + (player.PigGuardianCloudForm[PickedOption] ? "Cloud" : "Solid") + "?*", new string[] { "Yes", "No" }) == 0)
+                        if(Dialogue.ShowDialogueWithOptions("*Do you really want to change " + tg.Name + "'s form to " + (player.PigGuardianCloudForm[PickedOption] ? "Astral" : "Solid") + "?*", new string[] { "Yes", "No" }) == 0)
                         {
                             player.PigGuardianCloudForm[PickedOption] = !player.PigGuardianCloudForm[PickedOption];
                             TerraGuardian Speaker = Dialogue.GetSpeaker;
