@@ -73,6 +73,7 @@
     <Compile Include="BuddyModeSetupInterface.cs" />
     <Compile Include="BuffData.cs" />
     <Compile Include="BuffMod.cs" />
+    <Compile Include="Buffs\BurningRage.cs" />
     <Compile Include="Buffs\Defended.cs" />
     <Compile Include="Buffs\DrainingHealth.cs" />
     <Compile Include="Buffs\Fit.cs" />

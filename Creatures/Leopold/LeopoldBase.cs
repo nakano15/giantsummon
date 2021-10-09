@@ -485,12 +485,12 @@ namespace giantsummon.Creatures
                         if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID])
                         {
                             GuardianMouseOverAndDialogueInterface.SetDialogue("*I've managed to revert his form back to Cloud Form. I'm not sure if he's happy about that.*");
-                            PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Wrath).SaySomething("Grrr. I hate this! I hate It!");
+                            PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Wrath).SaySomething("*Grrr. I hate this! I hate It!*");
                         }
                         else
                         {
                             GuardianMouseOverAndDialogueInterface.SetDialogue("*He's now in flesh and bones now. Beware not to infuriate him on that state, who knows what his rage could do to you.*");
-                            PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Wrath).SaySomething("Amazing, now I can really hurt things.");
+                            PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], Wrath).SaySomething("*Amazing, now I can really hurt things.*");
                         }
                         GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
                     });

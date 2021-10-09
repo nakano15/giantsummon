@@ -19,7 +19,7 @@ namespace giantsummon.Quests
 
         public override string Description(QuestData data)
         {
-            return "You met a companion split into different emotions. Find them all and try fusing them together.";
+            return "You met a emotional pig fragment. Find them all to fuse back to their original embodiment.";
         }
 
         public class PigQuestData : QuestData
@@ -142,13 +142,13 @@ namespace giantsummon.Quests
             {
                 if (!data.SpokeToLeopoldAboutTheEmotionalPigs)
                 {
-                    return "I've found a emotionally fragmented TerraGuardian. I should seek someone who could help with this.";
+                    return "I've found a fragmented piece of a TerraGuardian. I should seek someone who could help with this.";
                 }
-                return "I've found " + PigsFound + " pieces of a TerraGuardian, but didn't found all of them.";
+                return "I've found " + PigsFound + " pieces of a TerraGuardian, but didn't find all of them yet.";
             }
             else
             {
-                return "I need to find a way of fusing the pig TerraGuardians together.";
+                return "I need to find a way of fusing the pigs together.";
             }
         }
 
@@ -159,7 +159,7 @@ namespace giantsummon.Quests
             string Story = "";
             if(PigsFound == 0)
             {
-                Story = "I didn't met any of the emotional Pig TerraGuardians yet. I may end up bumping into them during my travels.";
+                Story = "I haven't met any of the emotional Pig TerraGuardians yet. I may end up bumping into them during my travels.";
             }
             else
             {
@@ -215,19 +215,18 @@ namespace giantsummon.Quests
                         switch (i)
                         {
                             case WrathID:
-                                Story += "The Pig of Wrath said that was tired of being a red cloud, and asked me to find a way of solidifying their body.";
+                                Story += "The Pig of Wrath said that it was tired of being astral, and asked me to find a way of getting a physical form.";
                                 if (Solidified)
-                                    Story += " Gladly, Leopold helped giving a solution to allow solidifying their body, and also vaporize too.";
+                                    Story += " Gladly, Leopold helped giving a solution to allow mortalizing their body, and also re-astralizing if needed.";
                                 break;
                         }
                     }
                 }
                 if (data.UnlockedBland)
                 {
-                    Story += "\n\nI managed to get Leopold to help me fuse all pigs together into a TerraGuardian, and it resulted into a emotionless TerraGuardian with incredible powers.\n\nTHE END";
+                    Story += "\n\nI managed to get Leopold to help me fuse all pigs together into a TerraGuardian, and it resulted into a emotionless TerraGuardian with impressive capabilities and a bland attitude.\n\nTHE END";
                 }
             }
-
             return Story;
         }
 
@@ -289,9 +288,9 @@ namespace giantsummon.Quests
         public static void WrathTellingYouAboutFormChanging()
         {
             PigQuestData data = (PigQuestData)Data;
-            if(Dialogue.ShowDialogueWithOptions("*This form is revolting, I'm boiling out of rage due to this. There must be a way of making me solid again, maybe that nerdy guy can help me in this, let's talk to him.*", new string[] { "Who? [gn:"+GuardianBase.Leopold+"]? Sure, Let's visit him.", "Not right now.." }) == 0)
+            if(Dialogue.ShowDialogueWithOptions("*I need flesh and muscle to give more impact to my attacks. There must be a way of giving me a solid body,that white bunny needs to help me now, go talk to him and im not accepting no for a answer.*", new string[] { "Who? [gn:"+GuardianBase.Leopold+"]? Sure, Let's visit him.", "Not right now.." }) == 0)
             {
-                Dialogue.ShowEndDialogueMessage("*Great, or else I would give you a beating.*", false);
+                Dialogue.ShowEndDialogueMessage("*Great, or else I would give you a pounding.*", false);
             }
             else
             {
@@ -310,7 +309,7 @@ namespace giantsummon.Quests
                 {
                     Dialogue.ShowDialogueWithContinue("*Ah, I see what you mean now.*");
                     Dialogue.ShowDialogueWithContinue("*Hm... Actually, I do know about their condition. It seems like its body has vaporized at the moment its personality was split.*");
-                    Dialogue.ShowDialogueWithContinue("*I can try doing something to make his personality solid, but I can only merge its personalities if you find them.*");
+                    Dialogue.ShowDialogueWithContinue("*I can try doing something to make its personality solid, but I can only merge its personalities if you find them.**");
                     data.SpokeToLeopoldAboutTheEmotionalPigs = true;
                 }
                 else
@@ -357,8 +356,8 @@ namespace giantsummon.Quests
                 else
                 {
                     Dialogue.ShowDialogueWithContinue("*Ah, them. It seems like you managed to find all of them. Funny, I thought there were more.*");
-                    Dialogue.ShowDialogueWithContinue("*Oh well, when you find out that they're ready for the fusion, I'll take care of merging them together into their final form.*");
-                    Dialogue.ShowEndDialogueMessage("*I'm curious about what that final form may look like, probably into someone really strong.*", false);
+                    Dialogue.ShowDialogueWithContinue("*Oh well, when you find out that they're ready for the fusion, I'll take care of merging them together into their original form.*");
+                    Dialogue.ShowEndDialogueMessage("*I'm curious about what that original form may look like, probably would result in something fascinating.*", false);
                 }
             }
         }
@@ -416,6 +415,8 @@ namespace giantsummon.Quests
                         case WrathID:
                             {
                                 tg = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Wrath);
+                                CloudFormDialogue = "*Grrr. I hate this! I hate It!*";
+                                SolidFormDialogue = "*Now I can really hurt things.*";
                             }
                             break;
                     }
@@ -425,7 +426,7 @@ namespace giantsummon.Quests
                     }
                     else
                     {
-                        if(Dialogue.ShowDialogueWithOptions("*Do you really want to change " + tg.Name + "'s form to " + (player.PigGuardianCloudForm[PickedOption] ? "Cloud" : "Solid") + "?*", new string[] { "Yes", "No" }) == 0)
+                        if(Dialogue.ShowDialogueWithOptions("*Do you really want to change " + tg.Name + "'s form to " + (player.PigGuardianCloudForm[PickedOption] ? "Astral" : "Solid") + "?*", new string[] { "Yes", "No" }) == 0)
                         {
                             player.PigGuardianCloudForm[PickedOption] = !player.PigGuardianCloudForm[PickedOption];
                             TerraGuardian Speaker = Dialogue.GetSpeaker;

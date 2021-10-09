@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using giantsummon.Trigger;
 using Terraria;
 
 namespace giantsummon.Creatures
@@ -90,6 +91,29 @@ namespace giantsummon.Creatures
             g.MeleeDamageMultiplier += 0.05f;
             g.Defense -= 4;
         }
+
+        /*public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
+        {
+            if(trigger == TriggerTypes.Hurt)
+            {
+                if(Sender.TargetType == TriggerTarget.TargetTypes.TerraGuardian)
+                {
+                    if(Sender.TargetID == guardian.WhoAmID)
+                    {
+                        if (!guardian.HasBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.BurningRage>()))
+                        {
+                            int BuffChance = 1 + (int)((1f - (float)guardian.HP / guardian.MHP) * 10);
+                            if(Main.rand.Next(100) < BuffChance)
+                            {
+                                guardian.AddBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.BurningRage>(), 45 * 60);
+                                guardian.SaySomething("*You are in trouble now!*");
+                            }
+                        }
+                    }
+                }
+            }
+            return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
+        }*/
 
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
