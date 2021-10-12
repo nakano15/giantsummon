@@ -322,6 +322,7 @@
     <Compile Include="WorldMod.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Buffs\BurningRage.png" />
     <Content Include="Buffs\Defended.png" />
     <Content Include="Buffs\DrainingHealth.png" />
     <Content Include="Buffs\FirstAidCooldown.png" />

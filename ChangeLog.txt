@@ -58,4 +58,7 @@ Added a Quests system.
 	The quest system will better let you track the current quests in the game world.
 	Quests will also show you the story progress of the quest, based on what you did during that quest, in case you want to read it in the future.
 	Zacks Meatbag Outfit has been implemented as that quest. Due to that, you need to redo that quest line to unlock the outfit, if you did it at least once.
+	The unused button that once was destined to Guardian Spells, has changed function to instead open the Quest Interface.
+		It was also relocated to be right next to the guardian selection interface button.
 Fixed a issue where Zacks counted as a Medium sized companion.
+Button list on the interface under the inventory will no longer be resetted when a companion is active.

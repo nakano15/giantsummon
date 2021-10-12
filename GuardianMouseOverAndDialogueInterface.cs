@@ -124,7 +124,7 @@ namespace giantsummon
             {
                 if (data.IsInvalid)
                     continue;
-                Action dialogue = data.GetBase.ImportantDialogueMessage(data, Speaker.ID, Speaker.ModID);
+                Action dialogue = data.GetBase.ImportantDialogueMessage(data, Speaker, Speaker.ID, Speaker.ModID);
                 if (dialogue != null)
                 {
                     QuestBase.Data = data;

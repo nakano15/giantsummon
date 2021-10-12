@@ -145,7 +145,7 @@ namespace giantsummon
                     CloseInterface();
                     return;
                 }
-                Vector2 TextPos = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.8f);
+                /*Vector2 TextPos = new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.8f);
                 Color c = Color.White;
                 if(Main.mouseX >= TextPos.X - 40 && Main.mouseX < TextPos.X + 40 && Main.mouseY >= TextPos.Y - 10 && Main.mouseY < TextPos.Y + 10)
                 {
@@ -154,7 +154,7 @@ namespace giantsummon
                     if(Main.mouseLeft && Main.mouseLeftRelease)
                         OpenInterface();
                 }
-                Utils.DrawBorderString(Main.spriteBatch, "Open Quest List", TextPos, c, anchorx: 0.5f, anchory: 0.5f);
+                Utils.DrawBorderString(Main.spriteBatch, "Open Quest List", TextPos, c, anchorx: 0.5f, anchory: 0.5f);*/
             }
             if (!IsActive)
                 return;

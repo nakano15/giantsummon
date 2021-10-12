@@ -1050,7 +1050,7 @@ namespace giantsummon
             GuardianGlobalInfos.UpdateGlobalInfos();
         }
 
-        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh;
+        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh,dgqi;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
@@ -1081,19 +1081,20 @@ namespace giantsummon
                         BuddyModeSetupInterface.Draw();
                         return true;
                     }, InterfaceScaleType.UI);
+                    dgqi = new LegacyGameInterfaceLayer("Terra Guardians: Test Quest Interface", delegate ()
+                    {
+                        GuardianQuestInterface.Draw();
+                        return true;
+                    }, InterfaceScaleType.UI);
                     InterfacesSetup = true;
                 }
                 //Todo - This is only for testing purpose
-                layers.Add(new LegacyGameInterfaceLayer("Terra Guardians: Test Quest Interface", delegate ()
-                {
-                    GuardianQuestInterface.Draw();
-                    return true;
-                }, InterfaceScaleType.UI));
                 if (ShowDebugInfo)
                 {
                     layers.Add(gi);
                 }
                 layers.Insert(CursorLayer, gsi);
+                layers.Insert(CursorLayer, dgqi);
                 if (BuddyModeSetupInterface.WindowActive)
                 {
                     layers.Insert(CursorLayer, bmsi);
@@ -1897,10 +1898,11 @@ namespace giantsummon
             }
             List<GuardianItemSlotButtons> Buttons = new List<GuardianItemSlotButtons>();
             Buttons.Add(GuardianItemSlotButtons.GuardianSelection);
+            Buttons.Add(GuardianItemSlotButtons.QuestBook);
             Buttons.Add(GuardianItemSlotButtons.Requests);
             if (Guardian.Active)
             {
-                Buttons.Clear();
+                //Buttons.Clear();
                 for (int b = 0; b < InventoryMenuButtons; b++)
                 {
                     if (!Buttons.Contains((GuardianItemSlotButtons)b))
@@ -1951,8 +1953,8 @@ namespace giantsummon
                                 case GuardianItemSlotButtons.Skills:
                                     MouseOverText = "Guardian Life Skills";
                                     break;
-                                case GuardianItemSlotButtons.SpellBook:
-                                    MouseOverText = "Guardian Spells";
+                                case GuardianItemSlotButtons.QuestBook:
+                                    MouseOverText = "Quest List";
                                     break;
                                 case GuardianItemSlotButtons.CombatTactics:
                                     MouseOverText = "Guardian Behavior Settings";
@@ -2688,7 +2690,8 @@ namespace giantsummon
                         }
                         break;
 
-                    case GuardianItemSlotButtons.SpellBook:
+                    case GuardianItemSlotButtons.QuestBook:
+                        GuardianQuestInterface.OpenInterface();
                         break;
                 }
                 LastTrashItemID = Main.player[Main.myPlayer].trashItem.type;
@@ -3074,7 +3077,7 @@ namespace giantsummon
             CombatTactics,
             Requests,
             Skills,
-            SpellBook
+            QuestBook
         }
 	}
 }
