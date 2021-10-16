@@ -141,7 +141,7 @@ namespace giantsummon.Creatures
         {
             TerraGuardian tg = Dialogue.GetSpeaker;
             ReaperGuardianData data = (ReaperGuardianData)tg.Data;
-            if (data.SoulsLoaded < 0.2f * MaxSoulsContainedValue)
+            if (data.SoulsLoaded < 0.6f * MaxSoulsContainedValue)
             {
                 Dialogue.ShowEndDialogueMessage("*There is no need for me to go right now, I can carry some more souls before I do.*", false);
             }
@@ -272,7 +272,6 @@ namespace giantsummon.Creatures
                 data.MouthOpenTime--;
             if (data.ScythePickupDelay > 0)
                 data.ScythePickupDelay--;
-            const float MaxSoulSpeed = 8f;
             Vector2 SoulEndPos = GetMouthPosition(guardian.BodyAnimationFrame) * guardian.Scale;
             SoulEndPos.X -= guardian.SpriteWidth * 0.5f;
             if (guardian.LookingLeft)
@@ -284,6 +283,7 @@ namespace giantsummon.Creatures
                 (guardian.DoAction.InUse && guardian.DoAction.Inactivity));
             for (int s = 0; s < data.ActiveSouls.Count; s++)
             {
+                float MaxSoulSpeed = 12f;
                 ReaperGuardianData.FallenSoul soul = data.ActiveSouls[s];
                 Vector2 DirectionComparer = ((soul.HoverOnly ? guardian.GetGuardianRightHandPosition - new Vector2(0, 8) : SoulEndPos) + guardian.Velocity - soul.Position);
                 if (soul.HoverOnly)
@@ -311,14 +311,14 @@ namespace giantsummon.Creatures
                                 }
                                 break;
                         }
-                        if(Main.rand.Next(2) == 0)
+                        if (Main.rand.Next(2) == 0)
                             guardian.SaySomething("*Welcome back.*");
                         else
                             guardian.SaySomething("*You returned.*");
                         data.ActiveSouls.RemoveAt(s);
                         continue;
                     }
-                    else if(soul.Owner == TerraGuardian.TargetTypes.Player && Main.player[soul.OwnerID].ghost)
+                    else if (soul.Owner == TerraGuardian.TargetTypes.Player && Main.player[soul.OwnerID].ghost)
                     {
                         soul.HoverOnly = false;
                         switch (Main.rand.Next(2))
@@ -330,7 +330,7 @@ namespace giantsummon.Creatures
                                 guardian.SaySomething("*Your time has came, " + Main.player[soul.OwnerID].name + ".*");
                                 break;
                         }
-                        if(soul.OwnerID == Main.myPlayer)
+                        if (soul.OwnerID == Main.myPlayer)
                         {
                             MainMod.SoulSaved = true;
                         }
@@ -338,68 +338,104 @@ namespace giantsummon.Creatures
                             data.PlayerDeathCounter.Remove(soul.OwnerID);
                         data.PlayerDeathCounter.Add(soul.OwnerID, 0);
                     }
-                    if(data.LastDefeatedAllyCount > 1)
+                    if (data.LastDefeatedAllyCount > 1)
                         DirectionComparer += new Vector2(5f * (float)Math.Sin((float)DefeatedAllyCount / data.LastDefeatedAllyCount * 360), 5f * (float)Math.Cos((float)DefeatedAllyCount / data.LastDefeatedAllyCount * 360));
                     DefeatedAllyCount++;
+                }
+                else
+                {
+                    if (soul.LifeTime == 255)
+                    {
+                        data.ActiveSouls.RemoveAt(s);
+                        continue;
+                    }
+                    soul.LifeTime++;
                 }
                 if (CanPullSouls)
                 {
                     float Distance = DirectionComparer.Length();
-                    if (Distance < 40)
+                    if(Distance > 160)
                     {
-                        soul.Velocity *= 0.5f;
-                        if (!soul.HoverOnly)
-                            data.MouthOpenTime = 3;
+                        MaxSoulSpeed *= 2;
                     }
-                    if (Distance < 2)
                     {
-                        if (!soul.HoverOnly)
+                        if (Distance < 40)
                         {
-                            data.ActiveSouls.RemoveAt(s);
-                            data.SoulsLoaded++;
-                            Main.PlaySound(Terraria.ID.SoundID.Item3, guardian.CenterPosition).Volume *= 0.333f;
-                            if (data.SoulsLoaded >= MaxSoulsContainedValue)
-                            {
-                                guardian.StartNewGuardianAction(new Liebre.SoulUnloadingAction(), SoulUnloadingActionID);
-                            }
-                            else
-                            {
-                                if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.9f))
-                                {
-                                    guardian.SaySomething("*I'm nearly reaching my capacity...*");
-                                }
-                                if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.3f))
-                                {
-                                    guardian.SaySomething("*I can deliver the souls now.*");
-                                }
-                            }
-                            for (int effect = 0; effect < 5; effect++)
-                            {
-                                int dustid = Dust.NewDust(soul.Position, 8, 8, 175, Main.rand.Next(-300, 300) * 0.01f, 0f, 100, default(Color), 2f);
-                                Main.dust[dustid].noGravity = true;
-                                Dust dust = Main.dust[dustid];
-                                dust.velocity *= 0f;
-                            }
-                            continue;
+                            soul.Velocity *= 0.9f;
+                            if (!soul.HoverOnly)
+                                data.MouthOpenTime = 3;
                         }
-                        soul.Velocity *= 0.99f;
+                        /*if (Distance < 4)
+                        {
+                            if (soul.HoverOnly)
+                            {
+                                soul.Velocity *= 0.99f;
+                            }
+                        }
+                        else*/
+                        {
+                            //DirectionComparer.Normalize();
+                            soul.Velocity++;// += DirectionComparer;
+                        }
+                        if (soul.Velocity > MaxSoulSpeed)
+                        {
+                            soul.Velocity = MaxSoulSpeed;
+                        }
                     }
-                    else
+                    if (Distance < soul.Velocity)
                     {
-                        DirectionComparer.Normalize();
-                        soul.Velocity += DirectionComparer;
-                    }
-                    if (soul.Velocity.Length() > MaxSoulSpeed)
-                    {
-                        soul.Velocity.Normalize();
-                        soul.Velocity *= MaxSoulSpeed;
+                        soul.Velocity = Distance;
                     }
                 }
                 else
                 {
                     soul.Velocity *= 0.99f;
                 }
-                soul.Position += soul.Velocity;
+                DirectionComparer.Normalize();
+                {
+                    int PixelDistanceCalc = (int)((soul.Position - (soul.Position + DirectionComparer * soul.Velocity)).Length());
+                    for(int i = 0; i < PixelDistanceCalc; i++)
+                    {
+                        Vector2 EffectPos = new Vector2(soul.Position.X, soul.Position.Y) + DirectionComparer * i;
+                        int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
+                        Main.dust[dustid].noGravity = true;
+                        Dust dust = Main.dust[dustid];
+                        dust.velocity *= 0f;
+                    }
+                }
+                soul.Position += DirectionComparer * soul.Velocity;
+                if ((soul.Position - SoulEndPos).Length() < 4)
+                {
+                    if (!soul.HoverOnly)
+                    {
+                        data.ActiveSouls.RemoveAt(s);
+                        data.SoulsLoaded++;
+                        Main.PlaySound(Terraria.ID.SoundID.Item3, guardian.CenterPosition).Volume *= 0.333f;
+                        if (data.SoulsLoaded >= MaxSoulsContainedValue)
+                        {
+                            guardian.StartNewGuardianAction(new Liebre.SoulUnloadingAction(), SoulUnloadingActionID);
+                        }
+                        else
+                        {
+                            if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.9f))
+                            {
+                                guardian.SaySomething("*I'm nearly reaching my capacity...*");
+                            }
+                            if (data.SoulsLoaded == (int)(MaxSoulsContainedValue * 0.3f))
+                            {
+                                guardian.SaySomething("*I can deliver the souls now.*");
+                            }
+                        }
+                        for (int effect = 0; effect < 5; effect++)
+                        {
+                            int dustid = Dust.NewDust(soul.Position, 8, 8, 175, Main.rand.Next(-300, 300) * 0.01f, 0f, 100, default(Color), 2f);
+                            Main.dust[dustid].noGravity = true;
+                            Dust dust = Main.dust[dustid];
+                            dust.velocity *= 0f;
+                        }
+                        continue;
+                    }
+                }
                 if (soul.Owner == TerraGuardian.TargetTypes.Player && soul.OwnerID == Main.myPlayer)
                     MainMod.PlayerSoulPosition = soul.Position;
                 for (int effect = 0; effect < 5; effect++)
@@ -428,7 +464,7 @@ namespace giantsummon.Creatures
                         switch (Main.rand.Next(3))
                         {
                             case 0:
-                                guardian.SaySomething("Time to take you to your final destination.");
+                                guardian.SaySomething("Time to take you to your resting place.");
                                 break;
                             case 1:
                                 guardian.SaySomething("I'll make sure to bring you to your resting place safe and sound.");
@@ -441,22 +477,6 @@ namespace giantsummon.Creatures
                 }
             }
             data.LastDefeatedAllyCount = (byte)DefeatedAllyCount;
-            if(Main.netMode < 2)
-            {
-                float SoulsValue = data.SoulsLoaded;
-                const int SparkleDelay = 2500;
-                while (SoulsValue > 0)
-                {
-                    if (Main.rand.NextFloat() < SoulsValue / (SparkleDelay + SoulsValue))
-                    {
-                        Dust d = Dust.NewDustDirect(guardian.TopLeftPosition, guardian.Width, guardian.Height, Terraria.ID.DustID.SilverCoin);
-                        d.noGravity = true;
-                        d.noLight = true;
-                        d.velocity = guardian.Velocity;
-                    }
-                    SoulsValue -= SparkleDelay;
-                }
-            }
         }
 
         public void SpawnSoul(Vector2 Position, TerraGuardian guardian, TerraGuardian.TargetTypes OwnerType, int OwnerID, bool HoverOnly = false)
@@ -582,6 +602,21 @@ namespace giantsummon.Creatures
             bool BodyIsFront = false;
             GuardianDrawData ScytheSlot = DrawEquippedScythe(data, guardian, DrawPosition, color, Rotation, Origin, Scale, seffect);
             byte MouthFrameX = 0;
+            {
+                float SoulsValue = data.SoulsLoaded;
+                const int SparkleDelay = 7500;
+                while (SoulsValue > 0)
+                {
+                    if (Main.rand.NextFloat() < (SoulsValue / (SparkleDelay + SoulsValue)) * OpacityRate)
+                    {
+                        Dust d = Dust.NewDustDirect(guardian.TopLeftPosition, guardian.Width, guardian.Height, Terraria.ID.DustID.SilverCoin);
+                        d.noGravity = true;
+                        d.noLight = true;
+                        d.velocity = guardian.Velocity;
+                    }
+                    SoulsValue -= SparkleDelay;
+                }
+            }
             switch (guardian.BodyAnimationFrame)
             {
                 case 16:
@@ -1317,10 +1352,11 @@ namespace giantsummon.Creatures
             public class FallenSoul
             {
                 public Vector2 Position = Vector2.Zero;
-                public Vector2 Velocity = Vector2.Zero;
+                public float Velocity = 0;
                 public TerraGuardian.TargetTypes Owner = TerraGuardian.TargetTypes.Npc;
                 public int OwnerID = 0;
                 public bool HoverOnly = false;
+                public byte LifeTime = 0;
 
                 public bool IsOwnerActive
                 {

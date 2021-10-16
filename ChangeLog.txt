@@ -62,3 +62,4 @@ Added a Quests system.
 		It was also relocated to be right next to the guardian selection interface button.
 Fixed a issue where Zacks counted as a Medium sized companion.
 Button list on the interface under the inventory will no longer be resetted when a companion is active.
+The trust ranks will now have spaces between their words.

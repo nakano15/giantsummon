@@ -41,7 +41,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 97, LastModVersion = 93;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1050,10 +1050,10 @@ namespace giantsummon
             GuardianGlobalInfos.UpdateGlobalInfos();
         }
 
-        private static Terraria.UI.LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh,dgqi;
+        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh,dgqi;
         private static bool InterfacesSetup = false;
 
-        public override void ModifyInterfaceLayers(System.Collections.Generic.List<Terraria.UI.GameInterfaceLayer> layers)
+        public override void ModifyInterfaceLayers(List<Terraria.UI.GameInterfaceLayer> layers)
         {
             const int TownNpcHeadBannersLayer = 7, EntityHealthBarLayer = 14, NpcSignDialogueLayer = 23, HealthBarLayer = 25, InventoryLayer = 27, HotbatLayer = 30, 
                 MouseTextLayer = 33, PlayerChatLayer = 34, PlayerDeathLayer = 35, CursorLayer = 36, MouseOverLayer = 39;

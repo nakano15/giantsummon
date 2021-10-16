@@ -52,6 +52,8 @@ namespace giantsummon
         {
             if (ExtraTextures.ContainsKey(TextureKey))
             {
+                if (!ExtraTextures[TextureKey].TextureLoaded)
+                    ExtraTextures[TextureKey].LoadTexture(SpriteDir, mod);
                 return ExtraTextures[TextureKey].Texture;
             }
             return null;
@@ -100,6 +102,7 @@ namespace giantsummon
                 DisposeCooldown++;
                 if (DisposeCooldown == 255)
                 {
+                    DisposeCooldown = 0;
                     Dispose();
                 }
             }
@@ -112,12 +115,24 @@ namespace giantsummon
                 ErrorLoading = false;
                 return;
             }
+            TexturesLoaded = false;
+            ErrorLoading = false;
             if (!ReferedBase.InvalidGuardian && ReferedBase.IsCustomSpriteCharacter)
             {
                 HeadSprite.Dispose();
                 BodySprite.Dispose();
                 LeftArmSprite.Dispose();
                 RightArmSprite.Dispose();
+                if (BodyFrontSprite != null)
+                {
+                    BodyFrontSprite.Dispose();
+                    BodyFrontSprite = null;
+                }
+                if (RightArmFrontSprite != null)
+                {
+                    RightArmFrontSprite.Dispose();
+                    RightArmFrontSprite = null;
+                }
             }
             HeadSprite = null;
             BodySprite = null;
@@ -125,12 +140,14 @@ namespace giantsummon
             RightArmSprite = null;
             foreach (ExtraTextureHolder eth in ExtraTextures.Values)
             {
-                eth.Texture.Dispose();
+                if (eth.TextureLoaded)
+                {
+                    eth.Texture.Dispose();
+                    eth.Texture = null;
+                }
             }
-            ExtraTextures.Clear();
-            ExtraTextures = null;
-            TexturesLoaded = false;
-            ErrorLoading = false;
+            //ExtraTextures.Clear();
+            //ExtraTextures = null;
             ReferedBase = null;
             mod = null;
         }
@@ -139,7 +156,7 @@ namespace giantsummon
         {
             public Texture2D Texture;
             public string TextureFileName;
-            public bool TextureLoaded { get { return Texture != null; } }
+            public bool TextureLoaded { get { return Texture != null && !Texture.IsDisposed; } }
 
             public ExtraTextureHolder(string TextureFileName)
             {

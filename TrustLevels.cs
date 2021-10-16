@@ -24,9 +24,31 @@ namespace giantsummon
             return TrustValue;
         }
 
+        public static string GetTrustLevelName(sbyte TrustLevel)
+        {
+            return GetTrustLevelName((TrustLevelEnum)GetTrustLevel(TrustLevel));
+        }
+
+        public static string GetTrustLevelName(TrustLevelEnum trustLevel)
+        {
+            string Result = "";
+            string TrustText = trustLevel.ToString();
+            bool First = true;
+            foreach (char c in TrustText)
+            {
+                if (!First && c >= 'A' && c <= 'Z')
+                {
+                    Result += ' ';
+                }
+                Result += c;
+                First = false;
+            }
+            return Result;
+        }
+
         public static string GetTrustInfo(sbyte TrustLevel)
         {
-            string Info = "Trust: " + TrustLevel + "\n" + Enum.GetName(typeof(TrustLevelEnum), GetTrustLevel(TrustLevel));
+            string Info = "Trust: " + TrustLevel + "\n" + GetTrustLevelName(TrustLevel);
             if (TrustLevel >= MoveInTrust)
             {
                 Info += "\n - Will move in to your world.";

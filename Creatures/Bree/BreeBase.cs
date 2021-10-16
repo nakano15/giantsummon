@@ -10,8 +10,10 @@ namespace giantsummon.Creatures
 {
     public class BreeBase : GuardianBase
     {
-        public const string BagTextureID = "bag", DamselOutfitTextureID = "damsel", DamselOutfitFrontTextureID = "damsel_f";
-        public const int BaglessSkinID = 1, DamselOutfitID = 1;
+        public const string BagTextureID = "bag", DamselOutfitTextureID = "damsel", DamselOutfitFrontTextureID = "damsel_f",
+            WitchBodyTextureID = "witch_b", WitchBodyFrontTextureID = "witch_bf", WitchBroomTextureID = "witch_broom";
+        public const int BaglessSkinID = 1, WitchSkinID = 2,
+                         DamselOutfitID = 1, WitchOutfitID = 2;
 
         /// <summary>
         /// -A bit grumpy.
@@ -134,11 +136,19 @@ namespace giantsummon.Creatures
 
         public void LoadSkinList()
         {
-            AddSkin(BaglessSkinID, "Bagless", delegate(GuardianData gd, Player player)
+            AddSkin(BaglessSkinID, "Bagless", delegate (GuardianData gd, Player player)
+            {
+                return gd.HasPersonalRequestBeenCompleted(0);
+            });
+            AddSkin(WitchSkinID, "Witch Body", delegate (GuardianData gd, Player player)
             {
                 return gd.HasPersonalRequestBeenCompleted(0);
             });
             AddOutfit(DamselOutfitID, "Damsel", delegate (GuardianData gd, Player player)
+            {
+                return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
+            });
+            AddOutfit(WitchOutfitID, "Witch Outfit", delegate (GuardianData gd, Player player)
             {
                 return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
             });
@@ -204,25 +214,52 @@ namespace giantsummon.Creatures
             sprites.AddExtraTexture(BagTextureID, "bags");
             sprites.AddExtraTexture(DamselOutfitTextureID, "damsel_outfit");
             sprites.AddExtraTexture(DamselOutfitFrontTextureID, "damsel_outfit_front");
+            //
+            sprites.AddExtraTexture(WitchBodyTextureID, "witch_body");
+            sprites.AddExtraTexture(WitchBroomTextureID, "witch_broom");
+            sprites.AddExtraTexture(WitchBodyFrontTextureID, "witch_leg");
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
         {
-            switch (guardian.Data.SkinID)
+            switch (guardian.SkinID)
             {
                 case 0:
                     {
-                        Microsoft.Xna.Framework.Graphics.Texture2D BagTexture = sprites.GetExtraTexture(BagTextureID);
-                        Rectangle backrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
-                            frontrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
-                        backrect.Y += backrect.Height;
-                        GuardianDrawData bagback = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, backrect, color, Rotation, Origin, Scale, seffect),
-                            bagfront = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, frontrect, color, Rotation, Origin, Scale, seffect);
-                        InjectTexturesAt(GuardianDrawData.TextureType.TGBody, new GuardianDrawData[] { bagback }, new GuardianDrawData[] { bagfront });
+                        if (guardian.OutfitID != WitchOutfitID)
+                        {
+                            Microsoft.Xna.Framework.Graphics.Texture2D BagTexture = sprites.GetExtraTexture(BagTextureID);
+                            Rectangle backrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
+                                frontrect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                            backrect.Y += backrect.Height;
+                            GuardianDrawData bagback = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, backrect, color, Rotation, Origin, Scale, seffect),
+                                bagfront = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BagTexture, DrawPosition, frontrect, color, Rotation, Origin, Scale, seffect);
+                            InjectTexturesAt(GuardianDrawData.TextureType.TGBody, new GuardianDrawData[] { bagback }, new GuardianDrawData[] { bagfront });
+                        }
+                    }
+                    break;
+                case WitchSkinID:
+                    {
+                        Microsoft.Xna.Framework.Graphics.Texture2D BodyTexture = sprites.GetExtraTexture(WitchBodyTextureID);
+                        Rectangle rect = guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame);
+                        GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, BodyTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGRightArm, gdd);
+                        //
+                        rect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                        rect.Y += rect.Height * 2;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, BodyTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        //
+                        rect = guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame);
+                        rect.Y += rect.Height * 5;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, BodyTexture, DrawPosition, rect, color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
+                        //
+                        ReplaceTexture(GuardianDrawData.TextureType.TGBodyFront, sprites.GetExtraTexture(WitchBodyFrontTextureID));
                     }
                     break;
             }
-            switch (guardian.Data.OutfitID)
+            switch (guardian.OutfitID)
             {
                 case DamselOutfitID:
                     {
@@ -247,6 +284,38 @@ namespace giantsummon.Creatures
                         }
                         bodyRect.Y += bodyRect.Height;
                         gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, bodyRect, color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
+                    }
+                    break;
+                case WitchOutfitID:
+                    {
+                        Microsoft.Xna.Framework.Graphics.Texture2D OutfitTexture = sprites.GetExtraTexture(WitchBodyTextureID);
+                        Rectangle BodyRect = guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame);
+                        BodyRect.Y += BodyRect.Height;
+                        GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, BodyRect, color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGRightArm, gdd);
+                        //
+                        {
+                            Microsoft.Xna.Framework.Graphics.Texture2D BroomTexture = sprites.GetExtraTexture(WitchBroomTextureID);
+                            BodyRect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BroomTexture, DrawPosition, BodyRect, color, Rotation, Origin, Scale, seffect);
+                            InjectTextureBefore(GuardianDrawData.TextureType.TGBody, gdd);
+                            BodyRect.Y += BodyRect.Height;
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BroomTexture, DrawPosition, BodyRect, color, Rotation, Origin, Scale, seffect);
+                            InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        }
+                        //
+                        BodyRect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+                        BodyRect.Y += BodyRect.Height * 3;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, BodyRect, color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        BodyRect.Y += BodyRect.Height;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, BodyRect, color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        //
+                        BodyRect = guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame);
+                        BodyRect.Y += BodyRect.Height * 6;
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, BodyRect, color, Rotation, Origin, Scale, seffect);
                         InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
                     }
                     break;

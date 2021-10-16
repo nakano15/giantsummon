@@ -65,8 +65,12 @@ namespace giantsummon
                     GuardianList[key].Dispose();
                     GuardianList.Remove(key);
                 }
-                else if(GuardianList[key].sprites.IsTextureLoaded)
+                else if (GuardianList[key].sprites.IsTextureLoaded)
+                {
                     GuardianList[key].sprites.UpdateActivity();
+                    if (!GuardianList[key].sprites.IsTextureLoaded)
+                        Main.NewText(GuardianList[key].Name + "'s textures were unloaded.");
+                }
             }
         }
     }

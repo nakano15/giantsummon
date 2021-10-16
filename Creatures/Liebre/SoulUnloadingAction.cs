@@ -98,35 +98,34 @@ namespace giantsummon.Creatures.Liebre
                             Dust.NewDust(EffectPosition, 1, 1, 192, 0, -0.2f, 192, Scale: Main.rand.NextFloat(0.8f, 1.2f));
                         }
                     }
-                    if(Time >= 100)
+                    if (Time >= 100)
                     {
-                        switch (Main.rand.Next(5))
                         {
-                            default:
-                                {
-                                    int BuffDuration = (int)((float)SoulsValue / LiebreBase.MaxSoulsContainedValue * 900) * 60;
-                                    if (SoulsValue > LiebreBase.MaxSoulsContainedValue)
-                                        BuffDuration = (int)(BuffDuration * 0.75f);
-                                    int BuffID = Utils.SelectRandom(Main.rand, new int[] { Terraria.ID.BuffID.Lifeforce, Terraria.ID.BuffID.Regeneration,
+                            float CapacityPercentage = (float)SoulsValue / LiebreBase.MaxSoulsContainedValue;
+                            int BuffDuration = (int)(CapacityPercentage * 900) * 60;
+                            if (SoulsValue > LiebreBase.MaxSoulsContainedValue)
+                                BuffDuration = (int)(BuffDuration * 0.75f);
+                            for (int i = 0; i < CapacityPercentage * 5; i++)
+                            {
+                                int BuffID = Utils.SelectRandom(Main.rand, new int[] { Terraria.ID.BuffID.Lifeforce, Terraria.ID.BuffID.Regeneration,
                                     Terraria.ID.BuffID.Endurance, Terraria.ID.BuffID.ManaRegeneration, Terraria.ID.BuffID.Mining, Terraria.ID.BuffID.ObsidianSkin,
                                     Terraria.ID.BuffID.Thorns});
-                                    for(int p = 0; p < 255; p++)
+                                for (int p = 0; p < 255; p++)
+                                {
+                                    if (Main.player[p].active && !guardian.IsPlayerHostile(Main.player[p]))
                                     {
-                                        if(Main.player[p].active && !guardian.IsPlayerHostile(Main.player[p]))
-                                        {
-                                            Main.player[p].AddBuff(BuffID, BuffDuration);
-                                        }
+                                        Main.player[p].AddBuff(BuffID, BuffDuration);
                                     }
-                                    foreach (TerraGuardian g in MainMod.ActiveGuardians.Values)
-                                    {
-                                        if (g.OwnerPos == guardian.OwnerPos && !g.IsGuardianHostile(guardian))
-                                        {
-                                            g.AddBuff(BuffID, BuffDuration);
-                                        }
-                                    }
-                                    guardian.SaySomethingCanSchedule("*Take this blessing as a reward for helping me.*");
                                 }
-                                break;
+                                foreach (TerraGuardian g in MainMod.ActiveGuardians.Values)
+                                {
+                                    if (g.OwnerPos == guardian.OwnerPos && !g.IsGuardianHostile(guardian))
+                                    {
+                                        g.AddBuff(BuffID, BuffDuration);
+                                    }
+                                }
+                            }
+                            guardian.SaySomethingCanSchedule("*Take this blessing as a reward for helping me.*");
                         }
                         guardian.DoAction.InUse = false;
                     }

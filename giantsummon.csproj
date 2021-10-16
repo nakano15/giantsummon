@@ -359,6 +359,9 @@
     <Content Include="Creatures\Bree\bags.png" />
     <Content Include="Creatures\Bree\damsel_outfit.png" />
     <Content Include="Creatures\Bree\damsel_outfit_front.png" />
+    <Content Include="Creatures\Bree\witch_body.png" />
+    <Content Include="Creatures\Bree\witch_broom.png" />
+    <Content Include="Creatures\Bree\witch_leg.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit_f.png" />
     <Content Include="Creatures\Liebre\body.png" />

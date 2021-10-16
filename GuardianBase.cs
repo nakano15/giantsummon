@@ -1252,6 +1252,7 @@ namespace giantsummon
                 GuardianList[k].Dispose();
                 GuardianList.Remove(k);
             }
+            GuardianList = new Dictionary<string, GuardianBaseContainer>();
         }
 
         private static byte LastContainerUpdateTimer = 0;
@@ -1488,6 +1489,42 @@ namespace giantsummon
                     break;
                 }
             }*/
+        }
+
+        public void ReplaceTexture(GuardianDrawData.TextureType textureType, Microsoft.Xna.Framework.Graphics.Texture2D texture)
+        {
+            for(byte sprite = 0; sprite < 2; sprite++)
+            {
+                List<GuardianDrawData> gddList = null;
+                if (sprite == 0)
+                    gddList = TerraGuardian.DrawBehind;
+                else
+                    gddList = TerraGuardian.DrawFront;
+                foreach(GuardianDrawData gdd in gddList)
+                {
+                    if(gdd.textureType == textureType)
+                    {
+                        gdd.Texture = texture;
+                    }
+                }
+            }
+        }
+
+        public void ReplaceDrawData(GuardianDrawData.TextureType textureType, GuardianDrawData gdd)
+        {
+            for (byte sprite = 0; sprite < 2; sprite++)
+            {
+                List<GuardianDrawData> gddList = null;
+                if (sprite == 0)
+                    gddList = TerraGuardian.DrawBehind;
+                else
+                    gddList = TerraGuardian.DrawFront;
+                for (int i = 0; i < gddList.Count; i++)
+                {
+                    if (gddList[i].textureType == textureType)
+                        gddList[i] = gdd;
+                }
+            }
         }
 
         public void Dispose()

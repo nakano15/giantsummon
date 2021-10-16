@@ -3832,7 +3832,7 @@ namespace giantsummon
                         if (Velocity.Length() > MovementDirection.Length())
                             Velocity = MovementDirection;
                     }
-                    Position += Velocity;// + p.velocity;
+                    Position += Velocity;
                     IgnoreCollisions = true;
                 }
                 else
@@ -16911,7 +16911,7 @@ namespace giantsummon
                 int NewTrustLevel = TrustLevels.GetTrustLevel(Data.TrustLevel), OldTrustLevel = TrustLevels.GetTrustLevel(LastTrustLevel);
                 if (NewTrustLevel != OldTrustLevel)
                 {
-                    Main.NewText(Name + "'s trust towards you " + (NewTrustLevel < OldTrustLevel ? "degraded" : "increased") + " to " + Enum.GetName(typeof(TrustLevels.TrustLevelEnum), TrustLevels.GetTrustLevel(Data.TrustLevel)) + ".");
+                    Main.NewText(Name + "'s trust towards you " + (NewTrustLevel < OldTrustLevel ? "degraded" : "increased") + " to " + TrustLevels.GetTrustLevelName(Data.TrustLevel) + ".");
                 }
             }
             if (!IsPlayerBuddy() && !MainMod.ShowDebugInfo)
@@ -18042,6 +18042,8 @@ namespace giantsummon
                 {
                     gdd.IgnorePlayerRotation = true;
                 }
+                if (gdd.Position != null)
+                    gdd.Position = new Vector2((int)gdd.Position.Value.X, (int)gdd.Position.Value.Y);
             }
             foreach (GuardianDrawData gdd in DrawFront)
             {
@@ -18049,6 +18051,8 @@ namespace giantsummon
                 {
                     gdd.IgnorePlayerRotation = true;
                 }
+                if (gdd.Position != null)
+                    gdd.Position = new Vector2((int)gdd.Position.Value.X, (int)gdd.Position.Value.Y);
             }
         }
 
@@ -18187,7 +18191,9 @@ namespace giantsummon
             gddlist.Add(gdd);
             Base.GuardianModifyDrawHeadScript(this, Position, Color.White, Scale, SpriteEffects.None, Origin, ref gddlist);
             foreach (GuardianDrawData d in gddlist)
+            {
                 d.Draw(Main.spriteBatch);
+            }
         }
 
         public void DrawTerrarianHeadData(Vector2 Position, float Scale = 1f)
