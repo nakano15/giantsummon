@@ -142,7 +142,7 @@ namespace giantsummon.Creatures
             });
             AddSkin(WitchSkinID, "Witch Body", delegate (GuardianData gd, Player player)
             {
-                return gd.HasPersonalRequestBeenCompleted(0);
+                return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
             });
             AddOutfit(DamselOutfitID, "Damsel", delegate (GuardianData gd, Player player)
             {
@@ -150,7 +150,7 @@ namespace giantsummon.Creatures
             });
             AddOutfit(WitchOutfitID, "Witch Outfit", delegate (GuardianData gd, Player player)
             {
-                return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
+                return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
             });
         }
 

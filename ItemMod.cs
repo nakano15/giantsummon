@@ -76,5 +76,17 @@ namespace giantsummon
             }
             return base.OnPickup(item, player);
         }
+
+        public override void OpenVanillaBag(string context, Player player, int arg)
+        {
+            if(context == "goodieBag")
+            {
+                if(Main.rand.Next(1000) == 0)
+                {
+                    Item.NewItem(player.getRect(), ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
+                }
+            }
+            base.OpenVanillaBag(context, player, arg);
+        }
     }
 }

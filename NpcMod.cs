@@ -771,6 +771,10 @@ namespace giantsummon
                         {
                             shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
                         }
+                        if (!Main.halloween)
+                        {
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
+                        }
                     }
                     break;
             }

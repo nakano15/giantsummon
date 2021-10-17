@@ -63,3 +63,5 @@ Added a Quests system.
 Fixed a issue where Zacks counted as a Medium sized companion.
 Button list on the interface under the inventory will no longer be resetted when a companion is active.
 The trust ranks will now have spaces between their words.
+Bree gained a Witch outfit.
+	You can get it from Goodie Bags.
