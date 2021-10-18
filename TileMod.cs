@@ -14,9 +14,13 @@ namespace giantsummon
             if (!fail)
             {
                 WorldMod.UpdateTileStateOnGuardianHouses(i, j, false);
-                if(Main.tileSign[type] && GuardianBountyQuest.SignID > -1 && Sign.ReadSign(i, j, false) == GuardianBountyQuest.SignID)
+                if (Main.tileSign[type] && GuardianBountyQuest.SignID > -1 && Sign.ReadSign(i, j, false) == GuardianBountyQuest.SignID)
                 {
                     GuardianBountyQuest.SignID = -1;
+                }
+                if(Main.halloween && (type == Terraria.ID.TileID.ShadowOrbs || type == Terraria.ID.TileID.DemonAltar) && Main.rand.Next(50) == 0)
+                {
+                    MainMod.TriggerAnyPlayerCompanionJS();
                 }
             }
         }
@@ -31,7 +35,7 @@ namespace giantsummon
             if (type == 10)
             {
                 Tile tile = Main.tile[i, j];
-                if(tile.frameY >= 594 && tile.frameY <= 646 && Main.player[Main.myPlayer].HasItem(1141))
+                if (tile.frameY >= 594 && tile.frameY <= 646 && Main.player[Main.myPlayer].HasItem(1141))
                 {
                     GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.OpenedTemple,
                         Main.player[Main.myPlayer].name, Main.worldName, 8, 10,

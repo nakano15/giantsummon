@@ -17,3 +17,4 @@ namespace giantsummon.Items.Outfit.Wrath
             item.rare = Terraria.ID.ItemRarityID.Lime;
         }
     }
+}

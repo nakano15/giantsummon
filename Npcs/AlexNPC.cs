@@ -156,6 +156,8 @@ namespace giantsummon.Npcs
                                 npc.ai[AI_TYPE] = 2;
                                 npc.ai[AI_TIMER] = 0;
                                 MessageTime = 30;
+                                if (Main.halloween)
+                                    MainMod.TriggerAlexJS();
                                 if (!PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], AlexID))
                                 {
                                     PlayerOnFloor = true;

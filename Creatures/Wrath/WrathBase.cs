@@ -83,7 +83,7 @@ namespace giantsummon.Creatures
         {
             AddSkin(WrathDevilSkinID, "Devil Outfit", delegate (GuardianData gd, Player player)
             {
-                return true;
+                return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Wrath.UnholyAmulet>());
             });
         }
 

@@ -133,7 +133,10 @@ namespace giantsummon.Npcs
                             }
                             else
                             {
-                                SayMessage("*Hey! You there! Stop!*");
+                                if(Main.rand.Next(2) == 0)
+                                    SayMessage("*Hey! You there! Stop!*");
+                                else
+                                    SayMessage("*Hey! You! Don't move!*");
                             }
                         }
                         if(DialogueDuration >= 150)
@@ -177,6 +180,8 @@ namespace giantsummon.Npcs
                         }
                         else if (player.getRect().Intersects(npc.getRect()))
                         {
+                            if (Main.halloween)
+                                MainMod.TriggerCompanionJS(GuardianID);
                             if (PlayerMod.PlayerHasGuardian(Main.player[npc.target], GuardianID, GuardianModID))
                             {
                                 NextStep = SpeakingToAlreadyKnownPlayer;

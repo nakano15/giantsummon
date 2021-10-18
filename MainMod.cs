@@ -1,18 +1,17 @@
-using Terraria.ModLoader;
-using Terraria;
-using Terraria.ID;
-using Terraria.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Terraria.Graphics;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace giantsummon
 {
-	public class MainMod : Mod
+    public class MainMod : Mod
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
             GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture, GSI_ForegroundInterfaceTexture, GSI_BackgroundInterfaceTexture,
@@ -134,6 +133,62 @@ namespace giantsummon
         public static bool LastBossSpotted = false, LastInvasionSpotted = false, LastEventStarted = false, LastMoonLordKilled = false, LastHardMode = false;
         public static byte LastEvent = 0;
         public static sbyte LastInvasion = -1;
+        public static byte CompanionFaceJS = 0;
+        private const byte CompanionFaceJSMaxTime = 30;
+        private static int CompanionFaceJSID = GuardianBase.Alex;
+        private static string CompanionFaceJSModID = "";
+
+        public static void TriggerAlexJS()
+        {
+            TriggerCompanionJS(GuardianBase.Alex);
+        }
+
+        public static void TriggerAnyPlayerCompanionJS()
+        {
+            List<GuardianData> validGds = new List<GuardianData>();
+            {
+                foreach(GuardianData gd in Main.LocalPlayer.GetModPlayer<PlayerMod>().GetGuardians())
+                {
+                    if (gd.Base.IsCustomSpriteCharacter)
+                        validGds.Add(gd);
+                }
+            }
+            if (validGds.Count == 0)
+            {
+                TriggerCompanionJS(Main.rand.Next(2));
+            }
+            else
+            {
+                GuardianData picked = validGds[Main.rand.Next(validGds.Count)];
+                TriggerCompanionJS(picked.ID, picked.ModID);
+            }
+        }
+
+        public static void TriggerCompanionJS(int CompanionID, string CompanionModID = "")
+        {
+            if (Main.gameMenu)
+                return;
+            if (CompanionModID == "")
+                CompanionModID = mod.Name;
+            CompanionFaceJS = CompanionFaceJSMaxTime;
+            CompanionFaceJSID = CompanionID;
+            CompanionFaceJSModID = CompanionModID;
+            switch (Main.rand.Next(4))
+            {
+                case 0:
+                    Main.PlaySound(4, Main.LocalPlayer.Center, 10);
+                    break;
+                case 1:
+                    Main.PlaySound(29, Main.LocalPlayer.Center, Main.rand.Next(88, 92));
+                    break;
+                case 2:
+                    Main.PlaySound(3, Main.LocalPlayer.Center, 1);
+                    break;
+                case 3:
+                    Main.PlaySound(29, Main.LocalPlayer.Center, 20);
+                    break;
+            }
+        }
 
         public static Vector2 GetScreenCenter { get { return new Vector2(Main.screenWidth, Main.screenHeight) * 0.5f + Main.screenPosition; } }
 
@@ -1048,9 +1103,44 @@ namespace giantsummon
                 GeneralIdleCommentCooldown--;
             GuardianGlobalInfos.UpdateFeatTime();
             GuardianGlobalInfos.UpdateGlobalInfos();
+            if (CompanionFaceJS > 0)
+                UpdateJumpscare();
+            if (Main.halloween)
+            {
+                if(Main.LocalPlayer.chest != Main.LocalPlayer.lastChest && Main.LocalPlayer.lastChest == -1 && Main.rand.Next(256) == 0)
+                {
+                    TriggerAnyPlayerCompanionJS();
+                }
+            }
         }
 
-        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh,dgqi;
+        private static void UpdateJumpscare()
+        {
+            CompanionFaceJS--;
+        }
+
+        private static bool DrawAlexJumpscare()
+        {
+            float Percentage = 1f - (float)CompanionFaceJS / CompanionFaceJSMaxTime;
+            Vector2 HeadPosition = new Vector2(Main.screenWidth, Main.screenHeight) * 0.1f;
+            float Scale = 1f + Percentage * 3;
+            HeadPosition *= Scale;
+            GuardianBase guardianbase = GuardianBase.GetGuardianBase(CompanionFaceJSID, CompanionFaceJSModID);
+            if (!guardianbase.IsCustomSpriteCharacter || guardianbase.sprites.HasErrorLoadingOccurred)
+                return true;
+            if (!guardianbase.sprites.IsTextureLoaded)
+            {
+                guardianbase.sprites.LoadTextures();
+            }
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Black);
+            Texture2D texture = guardianbase.sprites.HeadSprite;
+            if (texture == null)
+                texture = MainMod.LosangleOfUnnown;
+            Main.spriteBatch.Draw(texture, HeadPosition, null, Color.DarkRed, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0);
+            return true;
+        }
+
+        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(List<Terraria.UI.GameInterfaceLayer> layers)
@@ -1076,6 +1166,7 @@ namespace giantsummon
                     dcs = new LegacyGameInterfaceLayer("Terra Guardians: Colored Screen", DrawColoredScreen, InterfaceScaleType.UI);
                     umos = new LegacyGameInterfaceLayer("Terra Guardians: Update Mouse Over Revive", UpdateMouseOverScript, InterfaceScaleType.Game);
                     dngh = new LegacyGameInterfaceLayer("Terra Guardians: Draw Nearby Guardian Head", DrawCompanionPointingArrow, InterfaceScaleType.UI);
+                    alexjslayer = new LegacyGameInterfaceLayer("Terra Guardians: Alex Jump Scare", DrawAlexJumpscare, InterfaceScaleType.UI);
                     bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
                     {
                         BuddyModeSetupInterface.Draw();
@@ -1135,6 +1226,8 @@ namespace giantsummon
                         layers.RemoveAt(l);
                     }
                 }
+                if (CompanionFaceJS > 0)
+                    layers.Add(alexjslayer);
             }
             catch
             {
