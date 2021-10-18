@@ -83,10 +83,21 @@ namespace giantsummon
             {
                 if(Main.rand.Next(1000) == 0)
                 {
-                    Item.NewItem(player.getRect(), ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
+                    switch (Main.rand.Next(3))
+                    {
+                        default:
+                            Item.NewItem(player.getRect(), ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
+                            break;
+                        case 1:
+                            Item.NewItem(player.getRect(), ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>());
+                            break;
+                        case 2:
+                            Item.NewItem(player.getRect(), ModContent.ItemType<Items.Outfit.Wrath.UnholyAmulet>());
+                            break;
+                    }
                 }
             }
-            base.OpenVanillaBag(context, player, arg);
+            //base.OpenVanillaBag(context, player, arg);
         }
     }
 }

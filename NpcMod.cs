@@ -765,15 +765,30 @@ namespace giantsummon
                             shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.FirstAidKit>());
                     }
                     break;
+                case NPCID.Cyborg:
+                    {
+                        if (!Main.halloween && PlayerMod.PlayerHasGuardianSummoned(Main.LocalPlayer, GuardianBase.Alex))
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>());
+                    }
+                    break;
+                case NPCID.Mechanic:
+                    {
+                        if (!Main.halloween && PlayerMod.PlayerHasGuardianSummoned(Main.LocalPlayer, GuardianBase.Alex))
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>());
+                    }
+                    break;
                 case NPCID.Clothier:
                     {
-                        if(Main.dayTime && !Main.raining && Main.moonPhase % 4 < 2)
+                        if (PlayerMod.PlayerHasGuardianSummoned(Main.LocalPlayer, GuardianBase.Bree))
                         {
-                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
-                        }
-                        if (!Main.halloween)
-                        {
-                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
+                            if (Main.dayTime && !Main.raining && Main.moonPhase % 4 < 2)
+                            {
+                                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
+                            }
+                            if (!Main.halloween)
+                            {
+                                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
+                            }
                         }
                     }
                     break;
@@ -1498,6 +1513,10 @@ namespace giantsummon
             if (npc.type == Terraria.ID.NPCID.Plantera && Main.rand.Next(50) == 0)
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Weapons.UprootedTree>());
+            }
+            if (!Main.halloween && npc.type == Terraria.ID.NPCID.RedDevil && NpcMod.HasGuardianNPC(GuardianBase.Wrath) && Main.rand.Next(100) == 0)
+            {
+                Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Outfit.Wrath.UnholyAmulet>());
             }
             if (npc.type == Terraria.ID.NPCID.WallofFlesh)
                 MainMod.LastWof = false;

@@ -5,12 +5,17 @@ using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
 using giantsummon.Trigger;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace giantsummon.Creatures
 {
     public class AlexBase : GuardianBase
     {
         public const int HealingLickAction = 0;
+        public const int AlexAndroidSkinID = 1;
+
+        public const string AndroidSkinBodyTextureID = "android_body", AndroidSkinLeftArmTextureID = "android_arm", AndroidSkinBodyFrontTextureID = "android_bodyf";
+
         /// <summary>
         /// -Very playful.
         /// -Blames himself for his old partner's demise.
@@ -141,6 +146,15 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(26, -1000, -1000);
             HeadVanityPosition.AddFramePoint2x(27, -1000, -1000);
             HeadVanityPosition.AddFramePoint2x(28, -1000, -1000);
+
+            AddSkinsAndOutfits();
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(AndroidSkinBodyTextureID, "alex_android_body");
+            sprites.AddExtraTexture(AndroidSkinLeftArmTextureID, "alex_android_leftarm");
+            sprites.AddExtraTexture(AndroidSkinBodyFrontTextureID, "alex_android_bodyf");
         }
 
         public override string MountUnlockMessage
@@ -207,6 +221,31 @@ namespace giantsummon.Creatures
                 }
             }*/
             return base.WhenTriggerActivates(guardian, trigger, Sender, Value, Value2, Value3, Value4, Value5);
+        }
+
+        public void AddSkinsAndOutfits()
+        {
+            AddSkin(AlexAndroidSkinID, "Alex Model 3000- Turquoise Shark", delegate (GuardianData gd, Player pl)
+            {
+                return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>());
+            });
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
+        {
+            switch (guardian.SkinID)
+            {
+                case AlexAndroidSkinID:
+                    {
+                        Texture2D bodytexture = sprites.GetExtraTexture(AndroidSkinBodyTextureID),
+                            leftarmtexture = sprites.GetExtraTexture(AndroidSkinLeftArmTextureID),
+                            bodyftexture = sprites.GetExtraTexture(AndroidSkinBodyFrontTextureID);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGBody, bodytexture);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGLeftArm, leftarmtexture);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGBodyFront, bodyftexture);
+                    }
+                    break;
+            }
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)

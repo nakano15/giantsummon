@@ -65,3 +65,10 @@ Button list on the interface under the inventory will no longer be resetted when
 The trust ranks will now have spaces between their words.
 Bree gained a Witch outfit.
 	You can get it from Goodie Bags.
+	Outside of the Halloween event, her outfit can be acquired from other ways.
+Alex gained a Cyborg outfit.
+	You can get it from Goodie Bags.
+	Outside of the Halloween event, his outfit can be acquired from other ways.
+Wrath gained a Devil outfit.
+	You can get it from Goodie Bags.
+	Outside of the Halloween event, his outfit can be acquired from other ways.

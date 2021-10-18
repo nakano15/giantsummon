@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using giantsummon.Trigger;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
 namespace giantsummon.Creatures
 {
     public class WrathBase : PigGuardianFragmentBase
     {
+        public const string WrathDevilBodyTextureID = "wrath_devil_body", WrathDevilBodyFrontTextureID = "wrath_devil_bodyf",
+            WrathDevilLeftArmTextureID = "wrath_devil_larm", WrathDevilRightArmTextureID = "wrath_devil_rarm", WrathDevilRightArmFTextureID = "wrath_devil_rarmf";
+        public const int WrathDevilSkinID = 1;
+
         public WrathBase() //I'll need to think how I'll make the cloud form of them work, and toggle.
             : base(AngerPigGuardianID)
         {
@@ -70,6 +76,46 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(25, 23 + 2, 18);
 
             GetRequests();
+            SkinsAndOutfits();
+        }
+
+        public void SkinsAndOutfits()
+        {
+            AddSkin(WrathDevilSkinID, "Devil Outfit", delegate (GuardianData gd, Player player)
+            {
+                return true;
+            });
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(WrathDevilBodyTextureID, "Wrath_Devil");
+            sprites.AddExtraTexture(WrathDevilBodyFrontTextureID, "Wrath_Devil_BodyF");
+            sprites.AddExtraTexture(WrathDevilLeftArmTextureID, "Wrath_Devil_LeftArm");
+            sprites.AddExtraTexture(WrathDevilRightArmTextureID, "Wrath_Devil_RightArm");
+            sprites.AddExtraTexture(WrathDevilRightArmFTextureID, "Wrath_Devil_RightArmF");
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
+        {
+            switch (guardian.SkinID)
+            {
+                case WrathDevilSkinID:
+                    {
+                        Texture2D Body = sprites.GetExtraTexture(WrathDevilBodyTextureID),
+                            BodyFront = sprites.GetExtraTexture(WrathDevilBodyFrontTextureID),
+                            LeftArm = sprites.GetExtraTexture(WrathDevilLeftArmTextureID),
+                            RightArm = sprites.GetExtraTexture(WrathDevilRightArmTextureID),
+                            RightArmF = sprites.GetExtraTexture(WrathDevilRightArmFTextureID);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGBody, Body);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGBodyFront, BodyFront);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGLeftArm, LeftArm);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGRightArm, RightArm);
+                        ReplaceTexture(GuardianDrawData.TextureType.TGRightArmFront, RightArmF);
+                    }
+                    break;
+            }
+            base.GuardianPostDrawScript(guardian, DrawPosition, color, armorColor, Rotation, Origin, Scale, seffect);
         }
 
         public void GetRequests()
