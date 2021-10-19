@@ -10,7 +10,63 @@ namespace giantsummon
 {
     public class GuardianSprites : IDisposable
     {
-        public Texture2D HeadSprite, BodySprite, LeftArmSprite, RightArmSprite;
+        public Texture2D HeadSprite
+        {
+            get
+            {
+                if (!IsTextureLoaded)
+                    LoadTextures();
+                ResetCooldown();
+                return _HeadSprite;
+            }
+            set
+            {
+                _HeadSprite = value;
+            }
+        }
+        public Texture2D BodySprite
+        {
+            get
+            {
+                if (!IsTextureLoaded)
+                    LoadTextures();
+                ResetCooldown();
+                return _BodySprite;
+            }
+            set
+            {
+                _BodySprite = value;
+            }
+        }
+        public Texture2D LeftArmSprite
+        {
+            get
+            {
+                if (!IsTextureLoaded)
+                    LoadTextures();
+                ResetCooldown();
+                return _LeftArmSprite;
+            }
+            set
+            {
+                _LeftArmSprite = value;
+            }
+        }
+        public Texture2D RightArmSprite
+        {
+            get
+            {
+                if (!IsTextureLoaded)
+                    LoadTextures();
+                ResetCooldown();
+                return _RightArmSprite;
+            }
+            set
+            {
+                _RightArmSprite = value;
+            }
+        }
+        private Texture2D _HeadSprite, _BodySprite, _LeftArmSprite, _RightArmSprite;
         public Texture2D BodyFrontSprite, RightArmFrontSprite;
         private bool TexturesLoaded = false, ErrorLoading = false;
         public bool IsTextureLoaded { get { return TexturesLoaded; } }
@@ -87,6 +143,7 @@ namespace giantsummon
             {
                 TexturesLoaded = false;
                 ErrorLoading = true;
+                Terraria.Main.NewText("Error loading " + ReferedBase.Name+ "'s texture.");
             }
         }
 
@@ -95,17 +152,18 @@ namespace giantsummon
             DisposeCooldown = 0;
         }
 
-        public void UpdateActivity()
+        public void UpdateActivity() //Broken
         {
-            if (TexturesLoaded)
+            /*if (TexturesLoaded)
             {
                 DisposeCooldown++;
                 if (DisposeCooldown == 255)
                 {
                     DisposeCooldown = 0;
+                    Terraria.Main.NewText(ReferedBase.Name + "'s textures unloaded.");
                     Dispose();
                 }
-            }
+            }*/
         }
 
         public void Dispose()
@@ -148,15 +206,13 @@ namespace giantsummon
             }
             //ExtraTextures.Clear();
             //ExtraTextures = null;
-            ReferedBase = null;
-            mod = null;
         }
 
         protected class ExtraTextureHolder
         {
             public Texture2D Texture;
             public string TextureFileName;
-            public bool TextureLoaded { get { return Texture != null && !Texture.IsDisposed; } }
+            public bool TextureLoaded { get { return Texture != null; } }
 
             public ExtraTextureHolder(string TextureFileName)
             {

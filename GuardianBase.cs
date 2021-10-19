@@ -11,7 +11,7 @@ namespace giantsummon
 {
     public class GuardianBase : IDisposable
     {
-        private byte BaseLifetime = 60;
+        private byte BaseLifetime = 10;
         private static Dictionary<string, GuardianBaseContainer> GuardianList = new Dictionary<string, GuardianBaseContainer>();
         public delegate void ModGuardianDB(int ID, out GuardianBase guardian);
         public InvalidGuardianPoints invalidGuardianPoints = new InvalidGuardianPoints(true);
@@ -159,7 +159,7 @@ namespace giantsummon
 
         public void RefreshBaseLifeTime()
         {
-            BaseLifetime = 60;
+            BaseLifetime = 10;
         }
 
         public bool UpdateLifeTimeCounter()
@@ -1529,9 +1529,7 @@ namespace giantsummon
 
         public void Dispose()
         {
-            if (sprites != null)
-                sprites.Dispose();
-            sprites = null;
+            sprites.Dispose();
             foreach (GuardianSpecialAttack gsa in SpecialAttackList)
                 gsa.Dispose();
             SpecialAttackList.Clear();

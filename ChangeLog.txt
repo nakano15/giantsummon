@@ -1,2 +1,2 @@
-﻿Mod buffs will no longer be saved by companions.
-The mod will now check if the buff id is valid, before trying to draw it on the interface.
+﻿Fixed a bug where the game spammed knock out message on companions that are already ko'd.
+The companions head banners will now be drawn correctly on their houses.

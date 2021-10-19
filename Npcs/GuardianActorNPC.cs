@@ -389,7 +389,6 @@ namespace giantsummon.Npcs
                 {
                     Base.sprites.LoadTextures();
                 }
-                Base.sprites.ResetCooldown();
                 List<GuardianDrawData> dds = new List<GuardianDrawData>();
                 Vector2 DrawPos = npc.position - Main.screenPosition;
                 DrawPos.X += XOffSet;

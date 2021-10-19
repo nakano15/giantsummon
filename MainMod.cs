@@ -1112,6 +1112,7 @@ namespace giantsummon
                     TriggerAnyPlayerCompanionJS();
                 }
             }
+            GuardianBase.UpdateContainers();
         }
 
         private static void UpdateJumpscare()
@@ -1140,7 +1141,7 @@ namespace giantsummon
             return true;
         }
 
-        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer;
+        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, dghmig, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(List<Terraria.UI.GameInterfaceLayer> layers)
@@ -1163,6 +1164,7 @@ namespace giantsummon
                     dgdi = new LegacyGameInterfaceLayer("Terra Guardians: Dialogue Inteface", DrawGuardianDialogueInterface, InterfaceScaleType.UI);
                     dgmo = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, InterfaceScaleType.Game);
                     dghmi = new LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, InterfaceScaleType.UI);
+                    dghmig = new LegacyGameInterfaceLayer("Terra Guardians: House Management Game UI", DrawGuardianHouseManagementInterfaceGame, InterfaceScaleType.Game);
                     dcs = new LegacyGameInterfaceLayer("Terra Guardians: Colored Screen", DrawColoredScreen, InterfaceScaleType.UI);
                     umos = new LegacyGameInterfaceLayer("Terra Guardians: Update Mouse Over Revive", UpdateMouseOverScript, InterfaceScaleType.Game);
                     dngh = new LegacyGameInterfaceLayer("Terra Guardians: Draw Nearby Guardian Head", DrawCompanionPointingArrow, InterfaceScaleType.UI);
@@ -1210,6 +1212,7 @@ namespace giantsummon
                 layers.Insert(HealthBarLayer - 1, hsi);
                 layers.Insert(EntityHealthBarLayer, dgrb);
                 layers.Insert(TownNpcHeadBannersLayer, dghmi);
+                layers.Insert(TownNpcHeadBannersLayer, dghmig);
                 layers.Insert(TownNpcHeadBannersLayer, umos);
                 layers.Insert(TownNpcHeadBannersLayer, dcs);
                 layers.Insert(TownNpcHeadBannersLayer, dgmo);
@@ -1253,6 +1256,12 @@ namespace giantsummon
         public static bool DrawGuardianHouseManagementInterface()
         {
             GuardianHouseManagementInterface.Draw();
+            return true;
+        }
+
+        public static bool DrawGuardianHouseManagementInterfaceGame()
+        {
+            GuardianHouseManagementInterface.DrawBannerGame();
             return true;
         }
 

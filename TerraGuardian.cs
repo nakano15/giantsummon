@@ -1640,7 +1640,7 @@ namespace giantsummon
 
         public void AddBuff(int ID, int Time)
         {
-            if (ID < 0)
+            if (ID < 1)
                 return;
             if (BuffImmunity.Contains(ID)) return;
             foreach (BuffData b in Buffs)
@@ -9850,7 +9850,7 @@ namespace giantsummon
             TriggerHandler.FireGuardianDownedTrigger(this.CenterPosition, this, 0, false);
             UpdateStatus = true;
             DoAction.InUse = false;
-            if (LastWasKOd && OwnerPos == Main.myPlayer)
+            if (!LastWasKOd && OwnerPos == Main.myPlayer)
             {
                 Main.NewText(Name + " has been knocked out.", Color.OrangeRed);
                 if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialKnockOutIntroduction)
@@ -17739,6 +17739,7 @@ namespace giantsummon
                 return;
             if (WofFood)
                 return;
+            Base.RefreshBaseLifeTime();
             DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount || (AssistSlot == 0 && LeftArmAnimationFrame == Base.ReviveFrame) || UsingFurniture;
             DrawRightBodyPartsInFrontOfPlayer = false;
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);
@@ -17755,7 +17756,7 @@ namespace giantsummon
             }
             LastDrawFrame = -1;
             FirstDrawFrame = Main.playerDrawData.Count - 1;
-            if (OwnerPos > -1 && Main.player[OwnerPos].mount.Active && (Main.player[OwnerPos].mount.Type == Mount.MinecartWood || Main.player[OwnerPos].mount.Type == Mount.MinecartMech || Main.player[OwnerPos].mount.Type == Mount.Minecart))
+            if (OwnerPos > -1 && Main.player[OwnerPos].mount != null &&  Main.player[OwnerPos].mount.Active && (Main.player[OwnerPos].mount.Type == Mount.MinecartWood || Main.player[OwnerPos].mount.Type == Mount.MinecartMech || Main.player[OwnerPos].mount.Type == Mount.Minecart))
             {
                 for (int DrawData = 0; DrawData < Main.playerDrawData.Count; DrawData++)
                 {
@@ -17776,7 +17777,6 @@ namespace giantsummon
                 DrawItem(Position, errorDir, false);
                 return;
             }
-            Base.sprites.ResetCooldown();
             FaceSlot = 0;
             FrontSlot = 0;
             BackSlot = 0;
@@ -17808,7 +17808,8 @@ namespace giantsummon
                     HeadSlot = 44;
                 }
             }
-            if ((Base.IsCustomSpriteCharacter && BodyAnimationFrame == Base.BedSleepingFrame) || BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame)
+            if ((Base.IsCustomSpriteCharacter && BodyAnimationFrame == Base.BedSleepingFrame) || 
+                BodyAnimationFrame == Base.ThroneSittingFrame || BodyAnimationFrame == Base.DownedFrame)
             {
                 HeadSlot = 0;
                 FaceSlot = 0;
@@ -18011,7 +18012,7 @@ namespace giantsummon
             HitboxDisplay.Y -= (int)Main.screenPosition.Y;
             dd = new GuardianDrawData(GuardianDrawData.TextureType.Unknown, Main.blackTileTexture, HitboxDisplay, null, Color.Red * 0.5f);
             AddDrawData(dd, false);*/
-            foreach (PathFinder.Breadcrumbs path in Paths)
+            /*foreach (PathFinder.Breadcrumbs path in Paths)
             {
                 Vector2 Pos = new Vector2(path.X * 16, path.Y * 16) - Main.screenPosition;
                 Main.spriteBatch.Draw(Main.blackTileTexture, Pos, Color.Blue);
@@ -18032,7 +18033,7 @@ namespace giantsummon
                         break;
                 }
                 Utils.DrawBorderString(Main.spriteBatch, s, Pos, Color.White);
-            }
+            }*/
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);
             //DrawBehind.Insert(0, new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.blackTileTexture, new Rectangle((int)(HitBox.X - Main.screenPosition.X), (int)(HitBox.Y - Main.screenPosition.Y), HitBox.Width, HitBox.Height), null, Color.Red));

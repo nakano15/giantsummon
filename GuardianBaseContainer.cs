@@ -60,16 +60,11 @@ namespace giantsummon
             int[] keys = GuardianList.Keys.ToArray();
             foreach (int key in keys)
             {
+                GuardianList[key].sprites.UpdateActivity();
                 if (UpdateBase && GuardianList[key].UpdateLifeTimeCounter())
                 {
                     GuardianList[key].Dispose();
                     GuardianList.Remove(key);
-                }
-                else if (GuardianList[key].sprites.IsTextureLoaded)
-                {
-                    GuardianList[key].sprites.UpdateActivity();
-                    if (!GuardianList[key].sprites.IsTextureLoaded)
-                        Main.NewText(GuardianList[key].Name + "'s textures were unloaded.");
                 }
             }
         }

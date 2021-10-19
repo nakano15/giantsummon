@@ -29,73 +29,6 @@ namespace giantsummon
             try
             {
                 string MouseText = "";
-                for (int g = 0; g < WorldMod.MaxGuardianNpcsInWorld; g++)
-                {
-                    WorldMod.GuardianTownNpcState townnpc = WorldMod.GuardianNPCsInWorld[g];
-                    if (townnpc != null && !townnpc.Homeless && WorldMod.IsGuardianNpcInWorld(townnpc.CharID))
-                    {
-                        int BannerX = townnpc.HomeX, BannerY = townnpc.HomeY;
-                        if (BannerX < 0 || BannerY < 0)
-                            continue;
-                        BannerY--;
-                        if (Main.tile[BannerX, BannerY] == null)
-                            continue;
-                        bool EndsOnNullTile = false;
-                        while (!Main.tile[BannerX, BannerY].active() || !Main.tileSolid[(int)Main.tile[BannerX, BannerY].type])
-                        {
-                            BannerY--;
-                            if (BannerY < 10)
-                                break;
-                            if (Main.tile[BannerX, BannerY] == null)
-                            {
-                                EndsOnNullTile = true;
-                                break;
-                            }
-                        }
-                        if (EndsOnNullTile)
-                            continue;
-                        TerraGuardian guardian = null;
-                        foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
-                        {
-                            if (townnpc.IsID(tg.ID, tg.ModID))
-                            {
-                                guardian = tg;
-                                break;
-                            }
-                        }
-                        if (guardian == null)
-                            continue;
-                        const int PaddingX = 8;
-                        int PaddingY = 18;
-                        if (Main.tile[BannerX, BannerY].type == 19)
-                            PaddingY -= 8;
-                        BannerY++;
-                        Vector2 BannerPosition = new Vector2(BannerX * 16 + PaddingX, BannerY * 16 + PaddingY) - Main.screenPosition;
-                        DrawBanner(guardian, BannerPosition, Lighting.GetColor(BannerX, BannerY));
-                        BannerPosition -= new Vector2(Main.HouseBannerTexture[1].Width * 0.5f, Main.HouseBannerTexture[1].Height * 0.5f);
-                        if (Main.mouseX >= BannerPosition.X && Main.mouseX < BannerPosition.X + Main.HouseBannerTexture[1].Width &&
-                            Main.mouseY >= BannerPosition.Y && Main.mouseY < BannerPosition.Y + Main.HouseBannerTexture[1].Height)
-                        {
-                            //MainPlayer.mouseInterface = true;
-                            MouseText = guardian.Name;
-                            if (Main.mouseRight && Main.mouseRightRelease)
-                            {
-                                if (!guardian.IsStarter && guardian.FriendshipLevel < guardian.Base.MoveInLevel)
-                                {
-                                    Main.NewText(guardian.Name + (Main.rand.Next(2) == 0 ? " refuses to leave their house." : " doesn't want to be kicked out of their house."));
-                                }
-                                else
-                                {
-                                    townnpc.Homeless = true;
-                                    townnpc.HomeX =
-                                    townnpc.HomeY = -1;
-                                    townnpc.ValidateHouse();
-                                    Main.PlaySound(12, -1, -1, 1, 1f, 0f);
-                                }
-                            }
-                        }
-                    }
-                }
                 float Scale = 0.85f;
                 float SlotSpace = (56 * Scale);
                 int MaxRowItems = (int)((Main.screenWidth - 64) / SlotSpace);
@@ -172,6 +105,91 @@ namespace giantsummon
                 }
             }
             catch { }
+        }
+
+        public static void DrawBannerGame()
+        {
+            if (!ManagingGuardianHouses)
+                return;
+            try
+            {
+                string MouseText = "";
+                for (int g = 0; g < WorldMod.MaxGuardianNpcsInWorld; g++)
+                {
+                    WorldMod.GuardianTownNpcState townnpc = WorldMod.GuardianNPCsInWorld[g];
+                    if (townnpc != null && !townnpc.Homeless && WorldMod.IsGuardianNpcInWorld(townnpc.CharID))
+                    {
+                        int BannerX = townnpc.HomeX, BannerY = townnpc.HomeY;
+                        if (BannerX < 0 || BannerY < 0)
+                            continue;
+                        BannerY--;
+                        if (Main.tile[BannerX, BannerY] == null)
+                            continue;
+                        bool EndsOnNullTile = false;
+                        while (!Main.tile[BannerX, BannerY].active() || !Main.tileSolid[(int)Main.tile[BannerX, BannerY].type])
+                        {
+                            BannerY--;
+                            if (BannerY < 10)
+                                break;
+                            if (Main.tile[BannerX, BannerY] == null)
+                            {
+                                EndsOnNullTile = true;
+                                break;
+                            }
+                        }
+                        if (EndsOnNullTile)
+                            continue;
+                        TerraGuardian guardian = null;
+                        foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
+                        {
+                            if (townnpc.IsID(tg.ID, tg.ModID))
+                            {
+                                guardian = tg;
+                                break;
+                            }
+                        }
+                        if (guardian == null)
+                            continue;
+                        const int PaddingX = 8;
+                        int PaddingY = 18;
+                        if (Main.tile[BannerX, BannerY].type == 19)
+                            PaddingY -= 8;
+                        BannerY++;
+                        Vector2 BannerPosition = new Vector2(BannerX * 16 + PaddingX, BannerY * 16 + PaddingY) - Main.screenPosition;
+                        DrawBanner(guardian, BannerPosition, Lighting.GetColor(BannerX, BannerY));
+                        BannerPosition -= new Vector2(Main.HouseBannerTexture[1].Width * 0.5f, Main.HouseBannerTexture[1].Height * 0.5f);
+                        if (Main.mouseX >= BannerPosition.X && Main.mouseX < BannerPosition.X + Main.HouseBannerTexture[1].Width &&
+                            Main.mouseY >= BannerPosition.Y && Main.mouseY < BannerPosition.Y + Main.HouseBannerTexture[1].Height)
+                        {
+                            //MainPlayer.mouseInterface = true;
+                            MouseText = guardian.Name;
+                            if (Main.mouseRight && Main.mouseRightRelease)
+                            {
+                                if (!guardian.IsStarter && guardian.FriendshipLevel < guardian.Base.MoveInLevel)
+                                {
+                                    Main.NewText(guardian.Name + (Main.rand.Next(2) == 0 ? " refuses to leave their house." : " doesn't want to be kicked out of their house."));
+                                }
+                                else
+                                {
+                                    townnpc.Homeless = true;
+                                    townnpc.HomeX =
+                                    townnpc.HomeY = -1;
+                                    townnpc.ValidateHouse();
+                                    Main.PlaySound(12, -1, -1, 1, 1f, 0f);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (MouseText != "")
+                {
+                    Utils.DrawBorderString(Main.spriteBatch, MouseText, new Vector2(Main.mouseX, Main.mouseY + 16), Color.White, 1f, 0.5f);
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         public static void DrawBanner(TerraGuardian tg, Vector2 Position, Color color)
