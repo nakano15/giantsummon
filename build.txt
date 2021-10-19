@@ -1,5 +1,5 @@
 author = Nakano15
-version = 36.15
+version = 36.15.0.1
 displayName = TerraGuardians
 homepage = https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/
 hideCode = true

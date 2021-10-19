@@ -1640,6 +1640,8 @@ namespace giantsummon
 
         public void AddBuff(int ID, int Time)
         {
+            if (ID < 0)
+                return;
             if (BuffImmunity.Contains(ID)) return;
             foreach (BuffData b in Buffs)
             {

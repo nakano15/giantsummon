@@ -1093,8 +1093,11 @@ namespace giantsummon
             tag.Add("BuffCount_" + UniqueID, BuffCount);
             for (int b = 0; b < Buffs.Count; b++)
             {
-                tag.Add("Buff_" + b + "_type_" + UniqueID, Buffs[b].ID);
-                tag.Add("Buff_" + b + "_time_" + UniqueID, Buffs[b].Time);
+                int ID = Buffs[b].ID, Time = Buffs[b].Time;
+                if (ID < 0 || ID >= Main.maxBuffTypes)
+                    ID = Time = 0;
+                tag.Add("Buff_" + b + "_type_" + UniqueID, ID);
+                tag.Add("Buff_" + b + "_time_" + UniqueID, Time);
             }
             int SkillCount = SkillList.Count;
             tag.Add("SkillCount_"+UniqueID, SkillCount);
@@ -1304,7 +1307,10 @@ namespace giantsummon
                 int BuffCount = tag.GetInt("BuffCount_" + UniqueID);
                 for (int b = 0; b < BuffCount; b++)
                 {
-                    Buffs.Add(new BuffData(tag.GetInt("Buff_" + b + "_type_" + UniqueID), tag.GetInt("Buff_" + b + "_time_" + UniqueID)));
+                    int ID = tag.GetInt("Buff_" + b + "_type_" + UniqueID),
+                        Time = tag.GetInt("Buff_" + b + "_time_" + UniqueID);
+                    if(Time > 0)
+                        Buffs.Add(new BuffData(ID, Time));
                 }
             }
             if (ModVersion >= 23)

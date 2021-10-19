@@ -38,7 +38,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 97, LastModVersion = 93;
+        public const int ModVersion = 97, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -1581,13 +1581,10 @@ namespace giantsummon
         {
             if (Main.playerInventory || Main.mapFullscreen || Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian)
                 return true;
-            //TerraGuardian Guardian = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian;
             const float StartY = 138;
             Vector2 HealthbarPosition = new Vector2(16f, StartY);
             string MouseOverText = "";
             bool IsMainGuardian = true;
-            //Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", HealthbarPosition, Color.White, 0.95f);
-            //HealthbarPosition.Y += 22f;
             foreach (TerraGuardian Guardian in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
             {
                 float XSum = 0f;
@@ -1605,7 +1602,6 @@ namespace giantsummon
                 {
                     if (Guardian.Base.IsCustomSpriteCharacter)
                     {
-                        Texture2D HeadTexture = Guardian.Base.sprites.HeadSprite;
                         Vector2 HeadDrawPosition = HealthbarPosition;
                         HeadDrawPosition.X += 16;
                         HeadDrawPosition.Y += 16;
@@ -1618,7 +1614,6 @@ namespace giantsummon
                     }
                     else
                     {
-                        Texture2D HeadTexture = Guardian.Base.sprites.HeadSprite;
                         Vector2 HeadDrawPosition = HealthbarPosition;
                         HeadDrawPosition.X += 16;
                         HeadDrawPosition.Y -= 8;
@@ -1747,7 +1742,7 @@ namespace giantsummon
                         {
                             MCValue = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().ManaCrystalsUsed;
                         }
-                        float ManaCrystalProgress = (float)(MCValue) / GuardianData.MaxManaCrystals;
+                        float ManaCrystalProgress = (float)MCValue / GuardianData.MaxManaCrystals;
                         if (ManaCrystalProgress > BarValue)
                             ManaCrystalProgress = BarValue;
                         Main.spriteBatch.Draw(GuardianHealthBar, HealthbarPosition + new Vector2(0, 4 * y), new Rectangle(122 * 3 + 22, 20 + 4 * y, (int)(98 * ManaCrystalProgress), 4), Color.White);
@@ -1790,6 +1785,8 @@ namespace giantsummon
                 {
                     for (int b = 0; b < Guardian.Buffs.Count; b++)
                     {
+                        if (Guardian.Buffs[b].ID < 0 || Guardian.Buffs[b].ID >= Main.buffTexture.Length)
+                            continue;
                         Main.spriteBatch.Draw(Main.buffTexture[Guardian.Buffs[b].ID], HealthbarPosition, Color.White * 0.5f);
                         int TextureWidth = Main.buffTexture[Guardian.Buffs[b].ID].Width, TextureHeight = Main.buffTexture[Guardian.Buffs[b].ID].Height;
                         string TimeText = "";
@@ -1822,7 +1819,6 @@ namespace giantsummon
                         if (Main.mouseX >= HealthbarPosition.X && Main.mouseX < HealthbarPosition.X + TextureWidth && Main.mouseY >= HealthbarPosition.Y && Main.mouseY < HealthbarPosition.Y + TextureHeight)
                         {
                             MouseOverText = Lang.GetBuffName(Guardian.Buffs[b].ID) + "\n" + Lang.GetBuffDescription(Guardian.Buffs[b].ID);
-                            //Utils.DrawBorderString(Main.spriteBatch, Lang.GetBuffName(Guardian.Buffs[b].ID) + "\n" + Lang.GetBuffDescription(Guardian.Buffs[b].ID), new Vector2(Main.mouseX + 8, Main.mouseY + 8), Color.White);
                         }
                         HealthbarPosition.X += TextureWidth * 1.10f;
                     }
@@ -1831,6 +1827,8 @@ namespace giantsummon
                 HealthbarPosition.X = 16;
                 IsMainGuardian = false;
             }
+            Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", HealthbarPosition, Color.White, 0.95f);
+            HealthbarPosition.Y += 22f;
             if (MouseOverText != "")
             {
                 Utils.DrawBorderString(Main.spriteBatch, MouseOverText, new Vector2(Main.mouseX + 16, Main.mouseY + 16), Color.White);
