@@ -48,7 +48,8 @@ namespace giantsummon
             MinibossDefeated,
             ManyAnglerQuestsCompleted,
             KilledMoonLordFirstTime,
-            StartedHardMode
+            StartedHardMode,
+            SomeonePickedABuddy
         }
     }
 }

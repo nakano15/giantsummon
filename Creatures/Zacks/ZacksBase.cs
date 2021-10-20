@@ -967,6 +967,10 @@ namespace giantsummon.Creatures
                     return "*Yes, I know that [player] saved their world from [subject]. I had lots of trouble trying to clean up the mess... I mean... Celestial creatures bodies wont be gone by themselves.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*It looks like [player] managed to make [subject] be a harder place to live. Gladly It isn't affecting our town that much.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*Yeah, yeah... [player] got [subject] as their buddy. Nothing special... So... Want to be my buddy? *";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*I'm still shocked, [nickname]. Of everyone else, you picked me.. Me. From all the people who are alive, and whole... You picked me as your buddy. Thank you.... Really...*";
             }
             return base.GetSpecialMessage(MessageID);
         }

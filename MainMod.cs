@@ -38,7 +38,7 @@ namespace giantsummon
         public const int LastContestModVersion = 62;
         public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
         //End contest related
-        public const int ModVersion = 97, LastModVersion = 97;
+        public const int ModVersion = 98, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -750,8 +750,8 @@ namespace giantsummon
 
         public override void Unload()
         {
-            GuardianBase.UnloadGuardians();
-            GuardianShopHandler.UnloadShops();
+            //GuardianBase.UnloadGuardians();
+            //GuardianShopHandler.UnloadShops();
             //GuardianCommonStatus.UnloadCommonStatus(); //Crashes the mod loader
         }
 
@@ -1141,7 +1141,7 @@ namespace giantsummon
             return true;
         }
 
-        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, dghmig, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer;
+        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, dghmig, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer,dsi;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(List<Terraria.UI.GameInterfaceLayer> layers)
@@ -1169,6 +1169,7 @@ namespace giantsummon
                     umos = new LegacyGameInterfaceLayer("Terra Guardians: Update Mouse Over Revive", UpdateMouseOverScript, InterfaceScaleType.Game);
                     dngh = new LegacyGameInterfaceLayer("Terra Guardians: Draw Nearby Guardian Head", DrawCompanionPointingArrow, InterfaceScaleType.UI);
                     alexjslayer = new LegacyGameInterfaceLayer("Terra Guardians: Alex Jump Scare", DrawAlexJumpscare, InterfaceScaleType.UI);
+                    dsi = new LegacyGameInterfaceLayer("Terra Guardians: Season Info Interface", DrawSeasonInfos, InterfaceScaleType.UI);
                     bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
                     {
                         BuddyModeSetupInterface.Draw();
@@ -1207,6 +1208,7 @@ namespace giantsummon
                 layers.Insert(PlayerChatLayer, dnagd);
                 layers.Insert(HotbatLayer, goi);
                 layers.Insert(MouseOverLayer, gmi);
+                layers.Insert(InventoryLayer, dsi);
                 layers.Insert(InventoryLayer, dgi);
                 layers.Insert(NpcSignDialogueLayer, dgdi);
                 layers.Insert(HealthBarLayer - 1, hsi);
@@ -1236,6 +1238,47 @@ namespace giantsummon
             {
 
             }
+        }
+
+        public static bool DrawSeasonInfos()
+        {
+            if (!Main.playerInventory)
+                return true;
+            Vector2 Position = new Vector2(Main.screenWidth - 304, 88);
+            Position.Y += Utils.DrawBorderStringBig(Main.spriteBatch, GuardianGlobalInfos.GetSeason.ToString(), Position, Color.White, 0.6f, 1f).Y;
+            Position.Y += Utils.DrawBorderString(Main.spriteBatch, "Day: " + (GuardianGlobalInfos.GetDay + 1), Position, Color.White, 1f, 1f).Y;
+            Position.Y += Utils.DrawBorderString(Main.spriteBatch, "Ether Realm Time: " + GuardianGlobalInfos.GetTime.ToString(@"h\:mm"), Position, Color.White, 1f, 1f).Y;
+            {
+                Vector2 WeekDaysPosition = new Vector2(Position.X, Position.Y);
+                WeekDaysPosition.X -= 8;
+                for(byte i = 6; i < 254; i--)
+                {
+                    char Letter = ' ';
+                    switch (i)
+                    {
+                        case 0:
+                        case 6:
+                            Letter = 'S';
+                            break;
+                        case 5:
+                            Letter = 'F';
+                            break;
+                        case 4:
+                        case 2:
+                            Letter = 'T';
+                            break;
+                        case 3:
+                            Letter = 'W';
+                            break;
+                        case 1:
+                            Letter = 'M';
+                            break;
+                    }
+                    Utils.DrawBorderString(Main.spriteBatch, Letter.ToString(), WeekDaysPosition, (i == (byte)GuardianGlobalInfos.GetDayOfWeek ? Color.Yellow : Color.White), 1f, 0.5f);
+                    WeekDaysPosition.X -= 18;
+                }
+            }
+            return true;
         }
 
         public static bool UpdateMouseOverScript()

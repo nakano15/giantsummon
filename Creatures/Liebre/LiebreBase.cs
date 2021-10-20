@@ -461,17 +461,24 @@ namespace giantsummon.Creatures
                     data.PlayerDeathCounter[k]++;
                     if (data.PlayerDeathCounter[k] == 150)
                     {
-                        switch (Main.rand.Next(3))
+                        if (guardian.IsPlayerBuddy(Main.player[k]))
                         {
-                            case 0:
-                                guardian.SaySomething("Time to take you to your resting place.");
-                                break;
-                            case 1:
-                                guardian.SaySomething("I'll make sure to bring you to your resting place safe and sound.");
-                                break;
-                            case 2:
-                                guardian.SaySomething("You fought well until the very end, time to get you some rest.");
-                                break;
+                            guardian.SaySomething("*You took care of me while you was alive. Time for me to retribute the favor.*");
+                        }
+                        else
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    guardian.SaySomething("Time to take you to your resting place.");
+                                    break;
+                                case 1:
+                                    guardian.SaySomething("I'll make sure to bring you to your resting place safe and sound.");
+                                    break;
+                                case 2:
+                                    guardian.SaySomething("You fought well until the very end, time to get you some rest.");
+                                    break;
+                            }
                         }
                     }
                 }
@@ -1311,6 +1318,10 @@ namespace giantsummon.Creatures
                     return "*I have saved the soul of a giant celestial creature that appeared on [subject]. [player] now managed to have their world at peace.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*[player] managed to unleash more dangers into [subject]. I have many creatures to appease there now.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*Looks like [player] and [subject] bound their fates together. Don't feel scared about that, buddiship is actually a good thing for TerraGuardians. I can rest easy about them now.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*You know that this buddiship will last very long, right Terrarian? I can't die, so I guess I'll retire to ensure your rest when you die.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

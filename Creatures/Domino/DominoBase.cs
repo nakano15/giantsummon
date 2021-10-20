@@ -676,6 +676,10 @@ namespace giantsummon.Creatures
                     return "*It seems like [subject] was saved from some weird creature by [player]. By the way, if you're interessed in buying some Luminite, be sure to give me a word.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*[player] managed to get more things to shot at in [subject].*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*Hmph... I heard about [player] picking [subject] as their buddy. I hope they don't hinder each other.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*Just because I'm your buddy doesn't means I'll give you freebies, but I guess you could be my business partner.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

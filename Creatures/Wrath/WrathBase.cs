@@ -573,6 +573,10 @@ namespace giantsummon.Creatures
                     return "*You should have seen the beating I gave to Moon Lord at [subject]. [player] just helped a bit with the dps, though.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*Even though freaky creatures begun appearing at [subject], beating them up doesn't help me get less angry.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*Yeah, [player] got [subject] as their buddy! Like do I care?*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*Yeah, you're my buddy! Don't feel bad about my anger, I'm always like this.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

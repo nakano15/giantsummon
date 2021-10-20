@@ -1316,6 +1316,10 @@ namespace giantsummon.Creatures
                     return "*I was there on the day [player] defeated a creepy giant creature at [subject]. They saved us all.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*I was minding my business in [subject], until a horrible chill went down my spine. Then a villager came saying that their village was engulfed by evil.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*I heard that [subject] got picked by [player] as their buddy. I hope their adventures go well.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*I was not expecting you to pick me as your buddy, but now I guess I'll have to work not to make you regret the choice, hahaha.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

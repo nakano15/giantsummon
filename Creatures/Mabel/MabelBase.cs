@@ -716,6 +716,10 @@ namespace giantsummon.Creatures
                     return "*[player] saved us all from danger in [subject]. You should have seen them fighting the giant squid monster.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*It looks like [subject] got more dangerous. I don't know if I'll stay there for longer that way.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*Wow! Did you hear? [player] has picked [subject] as their buddy! That's so amazing!*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*Hi? Do you want something? Came to check on me? Sorry, I'm just anxious. I never thought I'd get my own buddy!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -1346,8 +1346,10 @@ namespace giantsummon
                 Utils.DrawBorderString(Main.spriteBatch, "Can't Call", ButtonCenter, Color.Red, ElementScale, 0.5f, 0.5f);
             }
             //Home Button (Center)
-            if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel) && 
-                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID) || (MainMod.ShowDebugInfo || DisplayGuardian.TrustLevel >= TrustLevels.MoveInTrust)))
+            if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.IsPlayerBuddy(Main.LocalPlayer) || 
+                DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel) && 
+                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID) || 
+                (MainMod.ShowDebugInfo || DisplayGuardian.TrustLevel >= TrustLevels.MoveInTrust)))
             {
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 265 + 41;

@@ -1168,6 +1168,10 @@ namespace giantsummon.Creatures
                     return "*Even though [player] got the giant creature killed in [subject], doesn't means my job is done. I will keep protecting their life as if was my own.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*I think my job just got harder on [subject]. [player] managed to make menacing creatures surge.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*It's good to hear that [player] got someone to look for, and also to look for himself. I think [subject] by their side will help ensure their safety on their adventure.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*Since you picked me as your buddy, that means all my focus will be on your safety. I only ask you to take me to a tavern sometimes, we could use some drinks sometimes.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

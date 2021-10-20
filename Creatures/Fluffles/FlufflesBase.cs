@@ -523,6 +523,10 @@ namespace giantsummon.Creatures
                     return "(She tells you of a Terrarian who saved their world from evil.)";
                 case MessageIDs.FeatStartedHardMode:
                     return "(She seems to be telling you of something horrible that happened at someone's world.)";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "(She seems happy that someone Terrarian picked another person as their buddy.)";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "(She crouches to watch attentiously watch you're going to say, while smiling very happily.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

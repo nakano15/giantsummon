@@ -538,6 +538,10 @@ namespace giantsummon.Creatures
                     return "[player] killed a giant squid thing in [subject]. It was so cool!";
                 case MessageIDs.FeatStartedHardMode:
                     return "Things aren't going well on [subject]. After killing the Wall of Flesh, the evil biome got more aggressive, and there's also the hallow to worry about.";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "I heard about [player] picking [subject] as their buddy. I wonder if I can pick one too, but who would it be?";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "Hey buddy! Came to check on me? I'm so happy for being picked as buddy.";
             }
             return base.GetSpecialMessage(MessageID);
         }

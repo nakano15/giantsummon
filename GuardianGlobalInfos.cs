@@ -15,19 +15,95 @@ namespace giantsummon
         public static List<FeatMentioning> Feats = new List<FeatMentioning>();
         public static TimeSpan LifeTime = new TimeSpan();
         public const float HourToDecimal = 1f / 24;
-        public const int DaysInAYear = 128; //32
+        public const int DaysInAYear = 128,
+            QuarterOfAYear = DaysInAYear / 4; //32
+        private static int LoggedDay = 0;
+        private static Season LoggedSeason = Season.Summer;
+        private static DayOfWeek LoggedWeekday = DayOfWeek.Sunday;
+        private static bool GlobalInfosLoaded = false, FeatsLoaded = false;
+
+        public static Season GetSeason
+        {
+            get
+            {
+                return LoggedSeason;
+            }
+        }
+
+        public static int GetDay
+        {
+            get
+            {
+                return LoggedDay;
+            }
+        }
+
+        public static DayOfWeek GetDayOfWeek
+        {
+            get
+            {
+                return LoggedWeekday;
+            }
+        }
+
+        public static TimeSpan GetTime
+        {
+            get
+            {
+                return LifeTime;
+                /*double TimeToDiscount = Main.time;
+                if (Main.dayTime)
+                    TimeToDiscount += 4.5 * 3600;
+                else
+                {
+                    if (Main.time >= 4.5f * 3600)
+                    {
+                        TimeToDiscount -= (4.5f) * 3600;
+                    }
+                    else
+                    {
+                        TimeToDiscount += (12 + 7.5) * 3600;
+                    }
+                }
+                return LifeTime - TimeSpan.FromSeconds(24 * 3600 - TimeToDiscount);*/
+            }
+        }
+
+        public static void UpdateSeason()
+        {
+            GetDayAndSeason();
+        }
 
         public static void UpdateGlobalInfos()
         {
+            int Day = LifeTime.Days;
             LifeTime += TimeSpan.FromSeconds(Main.dayRate);
+            if (Day != LifeTime.Days)
+                UpdateSeason();
+        }
+
+        public static void GetDayAndSeason()
+        {
+            TimeSpan NewTime = GetTime;
+            int Year = NewTime.Days % DaysInAYear;
+            LoggedDay = Year % QuarterOfAYear;
+            LoggedSeason = (Season)(Year / QuarterOfAYear);
+            LoggedWeekday = (DayOfWeek)(NewTime.Days % 7);
         }
 
         public static void SaveGlobalInfos()
         {
+            if (!GlobalInfosLoaded)
+            {
+                LoadGlobalInfos();
+                GlobalInfosLoaded = true;
+            }
             string SaveFolder = GetSaveFolder;
-            if (!Directory.Exists(SaveFolder)) Directory.CreateDirectory(SaveFolder);
+            if (!Directory.Exists(SaveFolder))
+                Directory.CreateDirectory(SaveFolder);
             string GlobalInfosFile = SaveFolder + "/globalinfos.sav";
-            if (File.Exists(GlobalInfosFile)) File.Delete(GlobalInfosFile);
+            if (File.Exists(GlobalInfosFile))
+                File.Delete(GlobalInfosFile);
             using(FileStream stream = new FileStream(GlobalInfosFile, FileMode.Create))
             {
                 using(BinaryWriter writer = new BinaryWriter(stream))
@@ -40,10 +116,13 @@ namespace giantsummon
 
         public static void LoadGlobalInfos()
         {
+            GlobalInfosLoaded = true;
             string SaveFolder = GetSaveFolder;
-            if (!Directory.Exists(SaveFolder)) return;
+            if (!Directory.Exists(SaveFolder))
+                return;
             string GlobalInfosFile = SaveFolder + "/globalinfos.sav";
-            if (!File.Exists(GlobalInfosFile)) return;
+            if (!File.Exists(GlobalInfosFile))
+                return;
             using (FileStream stream = new FileStream(GlobalInfosFile, FileMode.Open))
             {
                 using (BinaryReader reader = new BinaryReader(stream))
@@ -149,6 +228,18 @@ namespace giantsummon
                 case FeatMentioning.FeatType.PlayerDied:
                     Message = tg.GetMessage(GuardianBase.MessageIDs.FeatPlayerDied);
                     break;
+                case FeatMentioning.FeatType.SomeonePickedABuddy:
+                    {
+                        if (!(tg.Base.Name == feat.FeatSubject || tg.Base.PossibleNames.Contains(feat.FeatSubject)))
+                        {
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionSomeonePickedAsBuddy);
+                        }
+                        else
+                        {
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy);
+                        }
+                    }
+                    break;
             }
             Message = Message.Replace("[player]", feat.PlayerName).Replace("[subject]", Subject);
             return Message;
@@ -210,6 +301,11 @@ namespace giantsummon
 
         public static void SaveFeats()
         {
+            if (!FeatsLoaded)
+            {
+                FeatsLoaded = true;
+                LoadFeats();
+            }
             string SaveFolder = GetSaveFolder;
             if (!Directory.Exists(SaveFolder))
                 Directory.CreateDirectory(SaveFolder);
@@ -237,6 +333,7 @@ namespace giantsummon
 
         public static void LoadFeats()
         {
+            FeatsLoaded = true;
             Feats.Clear();
             string SaveFolder = GetSaveFolder;
             if (!Directory.Exists(SaveFolder))

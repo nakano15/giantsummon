@@ -1,2 +1,12 @@
 ﻿Fixed a bug where the game spammed knock out message on companions that are already ko'd.
 The companions head banners will now be drawn correctly on their houses.
+Fixed an issue where you needed 2 characters created before you can have Portrait of a Friend spawn with a new character.
+Fixed a bug where buddies couldn't be assigned a house.
+Fixed another bug where certain infos were being saved when they shouldn't, like companion life time and their status.
+Liebre will now comment something else when he saves the soul of a player who's his buddy, and dies on hardcore mode.
+Companions will now mention when someone pick them as their buddy.
+	If the person speaking to the companion, is the buddy of the companion that is mentioned the message, the message will change to a message from the companion to the player, instead.
+Added a interface telling the current season, days and day of week. It's visible when inventory is opened.
+	The time shown there is different from world time, so the time passed is irregular compared to the world.
+	Think of this as a "Ether Realm time".
+New worlds have the chance of spawning with more than one companion, depending on number of companions met on other characters, and your luck.

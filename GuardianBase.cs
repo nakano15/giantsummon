@@ -1717,7 +1717,9 @@ namespace giantsummon
                 FeatPlayerMetMe = "Mes.Feat.PlayerMetMe",
                 FeatCompletedAnglerQuests = "Mes.Feat.AnglerQuestsCompleted",
                 FeatKilledMoonLord = "Mes.Feat.KilledMoonLord",
-                FeatStartedHardMode = "Mes.Feat.StartedHardMode";
+                FeatStartedHardMode = "Mes.Feat.StartedHardMode",
+                FeatMentionSomeonePickedAsBuddy = "Mes.Feat.PickedAsBuddy",
+                FeatSpeakerPlayerPickedMeAsBuddy = "Mes.Feat.SpeakerPickedMeAsBuddy";
         }
         
         public enum GuardianEffect

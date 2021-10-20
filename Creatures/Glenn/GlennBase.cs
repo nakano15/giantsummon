@@ -622,6 +622,10 @@ namespace giantsummon.Creatures
                     return "It was so cool watching [player] kill the Moon Lord at [subject] world. You should have seen that.";
                 case MessageIDs.FeatStartedHardMode:
                     return "[subject] got many creepy creatures attacking us. Even the evil is trying to take over our town.";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "Hey? What is it of having a buddy? [player] and [subject] are said to now be buddies, but I don't know what that is.";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "Hey there, buddy! I'm still surprised that you picked me as your buddy, and am really happy due to that.";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -651,6 +651,10 @@ namespace giantsummon.Creatures
                     return "*I'm so happy for [player]! They were like my hero when they killed giant squid guy at [subject].*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*The day [subject] world got the hallow and evil clashing each other, I felt on my fur the change happening to it. It was really a horrible feeling.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*I have hot gossip incoming, [nickname]! I heard that [player] declared [subject] as their buddy, and both seems happy!*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*I'm still trying to recover from the news. I was so excited when you picked me as buddy that my heart even was pounding really fast. I'm so happy.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

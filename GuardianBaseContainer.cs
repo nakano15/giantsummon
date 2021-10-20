@@ -61,7 +61,7 @@ namespace giantsummon
             foreach (int key in keys)
             {
                 GuardianList[key].sprites.UpdateActivity();
-                if (UpdateBase && GuardianList[key].UpdateLifeTimeCounter())
+                if (false && UpdateBase && GuardianList[key].UpdateLifeTimeCounter())
                 {
                     GuardianList[key].Dispose();
                     GuardianList.Remove(key);

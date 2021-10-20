@@ -959,6 +959,10 @@ namespace giantsummon.Creatures
                     return "*You Terrarians certainly are interesting. Even though you are small and weaker than us, managed to kill a demi god creature. At least [player] did at [subject], about you I don't know.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*Looks like [player] did an oopsie in [subject]. Several new angry creatures are roaming their world. I even felt on my fur when that change happened.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*Hm... So [player] picked [subject] to be a minion of? Will be harder for me to induce them into helping me on my experiments like that.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*Hello minion. I'm still surprised you picked me as your buddy, it must be my charismatic appearance. Don't worry, I will treat you nicelly. Hehehe.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

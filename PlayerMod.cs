@@ -396,6 +396,7 @@ namespace giantsummon
             {
                 CallGuardian(BuddyID, BuddyModID, 0);
             }
+            WorldMod.AddTownGuardianNpc(GetPlayerSummonedGuardian(player, BuddyID, BuddyModID));
             if (Guardian.Base.GetSpecialMessage(GuardianBase.MessageIDs.BuddySelected) != "")
             {
                 Guardian.SaySomething(Guardian.Base.GetSpecialMessage(GuardianBase.MessageIDs.BuddySelected), true);
@@ -414,6 +415,7 @@ namespace giantsummon
                 Main.mouseItem.SetDefaults(0);
             if(player.whoAmI == Main.myPlayer)
                 Main.NewText("Buddy mode activated.");
+            GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.SomeonePickedABuddy, player.name, GetGuardian(BuddyID, BuddyModID).Name, 30, 75);
             return true;
         }
 
@@ -2269,7 +2271,7 @@ namespace giantsummon
 
         public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
         {
-            if (!mediumcoreDeath && Main.PlayerList.Count > 1)
+            if (!mediumcoreDeath && Main.PlayerList.Count >= 1)
             {
                 Item i = new Item();
                 i.SetDefaults(ModContent.ItemType<Items.Consumable.PortraitOfAFriend>());
@@ -2441,6 +2443,10 @@ namespace giantsummon
 
         public override void OnEnterWorld(Player player)
         {
+            if(player.whoAmI == Main.myPlayer)
+            {
+                GuardianGlobalInfos.UpdateSeason();
+            }
             MainMod.PlayerGuardianSync.Clear();
             if (SelectedGuardian > -1)
             {

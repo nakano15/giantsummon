@@ -741,6 +741,10 @@ namespace giantsummon.Creatures
                     return "*Some weird prophecy on [subject] has happened, and a giant godly creature surged to obliterate everything. [player] managed to get it killed and saved everyone. Good thing that I was there to study that.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*A weird event happened in [subject]. [player] killed a giant flesh creature, and spirits of dark and light were freed, trying to take over their world. I wonder what the Terrarian will do now.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*I see, so [player] just did it... They picked [subject] as a buddy. You may think that may be trivial, but that's actually of heavy importance for TerraGuardians. Their fate are now literally linked together.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*I'm sorry if I don't end up being a good buddy for you, but I also have researches to do. If you help me with them, I think would be like a time we spend together, right?*";
             }
             return base.GetSpecialMessage(MessageID);
         }

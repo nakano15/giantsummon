@@ -697,6 +697,10 @@ namespace giantsummon.Creatures
                     return "Wow! [player] has killed some creepy squid guy in [subject] and saved their world!";
                 case MessageIDs.FeatStartedHardMode:
                     return "Something scary happened on [subject]'s world. [player] killed a giant flesh thing and the world got scarier.";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "I'm so jealous of [subject]... They got picked by [player] as their bff.";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "Hey there Buddy-Buddy! Want to play something? Rubby my belly? Want some licking? Sorry, I'm really new to this, and i'm excited!";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -991,6 +991,10 @@ namespace giantsummon.Creatures
                     return "You should have been in [subject] world a few days ago. The world went dark and creepy, and then a flash light appeared, and a giant creature surged. Gladly [player] managed to deal with it for good.";
                 case MessageIDs.FeatStartedHardMode:
                     return "I think [player] did something they shouldn't. The evil in their world begun advancing agressivelly, and the holy lands appeared, and also wants to kill us all. Is it the end of times?";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "Someone told me that [subject] seems to be bound to [player] now... I wonder if they even have privacy to use toilet alone.";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "There are three things you need to know: 1: Don't try anything funny, 2: I wont cook or clean for you, and 3: I'm already married. Other than those, I'll be nice to you.";
             }
             return base.GetSpecialMessage(MessageID);
         }

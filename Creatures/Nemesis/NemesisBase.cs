@@ -369,6 +369,10 @@ namespace giantsummon.Creatures
                     return "Yes, I know that [player] killed the Moon Lord at [subject].";
                 case MessageIDs.FeatStartedHardMode:
                     return "Looks like the tides shifted on [subject].";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "I heard about [player] picking [subject] as their buddy. I don't care.";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "Does being your buddy means that I'm officially your shadow?";
             }
             return base.GetSpecialMessage(MessageID);
         }

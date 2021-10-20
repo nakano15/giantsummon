@@ -700,6 +700,10 @@ namespace giantsummon.Creatures
                     return "*I heard that [player] has defeated Moon Lord in [subject], and saved their world, but I think they actually caused the danger to surge.*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*Looks like [player] caused a chaotic event to happen in [subject]. Now stronger creatures roams around it.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*It seems like [player] picked [subject] as their buddy. I hope their buddiship go well.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*I hope you don't mind sharing the spot of buddy, since I have someone else who's also my buddy.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

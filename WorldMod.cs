@@ -17,15 +17,45 @@ namespace giantsummon
         public static List<GuardianID> GuardiansMet = new List<GuardianID>();
         public static bool LastWasDay = false, DelayedWasDay = false, DayChange = false, HourChange = false;
         public static double LastTime = 0;
-        public static List<TerraGuardian> GuardianTownNPC = new List<TerraGuardian>(); //Companions you call to follow you could be the same as the town npcs. But when you dismiss them, they will try going home. 
-        public static GuardianTownNpcState[] GuardianNPCsInWorld = new GuardianTownNpcState[MaxGuardianNpcsInWorld]; //Change this to a objects, key must contain ID and GuardianID, value contain Homeless, HomeX and HomeY.
-        public static KeyValuePair<int, string> SpawnGuardian = new KeyValuePair<int, string>(0, "");
+        public static List<TerraGuardian> GuardianTownNPC = new List<TerraGuardian>();
+        public static GuardianTownNpcState[] GuardianNPCsInWorld = new GuardianTownNpcState[MaxGuardianNpcsInWorld];
+        public static GuardianID[] SpawnGuardian = new GuardianID[0];
         public static int GuardiansMetCount { get { return GuardiansMet.Count; } }
         public static byte SpawnDelay = 0, LeaveCooldown = 0;
         public static List<GuardianID> ScheduledVisits = new List<GuardianID>();
         public static List<GuardianBuildingInfo> HouseInfos = new List<GuardianBuildingInfo>();
         private static bool OldOneArmyWasLastActive = false;
         public static bool IsEtherRealm = false;
+
+        public static bool IsStarter(TerraGuardian guardian)
+        {
+            return IsStarter(guardian.MyID);
+        }
+
+        public static bool IsStarter(GuardianData gd)
+        {
+            return IsStarter(gd.MyID);
+        }
+
+        public static bool IsStarter(GuardianID gid)
+        {
+            foreach (GuardianID ngid in SpawnGuardian)
+            {
+                if (ngid.IsSameID(gid))
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool IsStarter(int ID, string ModID)
+        {
+            foreach(GuardianID gid in SpawnGuardian)
+            {
+                if (gid.IsSameID(ID, ModID))
+                    return true;
+            }
+            return false;
+        }
 
         public static void AllowGuardianNPCToSpawn(int ID, string ModID = "")
         {
@@ -166,6 +196,7 @@ namespace giantsummon
                 if (Main.dayTime && HasTimeOfDayChanged)
                 {
                     DayChange = true;
+                    GuardianGlobalInfos.UpdateSeason();
                 }
                 TriggerHandler.FireDayNightChange(Main.dayTime);
             }
@@ -426,16 +457,33 @@ namespace giantsummon
             tasks.Add(new PassLegacy("Spawning Starter Guardian.", delegate (GenerationProgress progress)
             {
                 progress.Message = "Spawning Starter Guardian";
-                GuardianID[] PossibleGuardians = MainMod.GetPossibleStarterGuardians();
-                GuardianID id = PossibleGuardians[Main.rand.Next(PossibleGuardians.Length)];
-                TerraGuardian tg = new TerraGuardian(id.ID, id.ModID);
-                tg.Active = true;
-                tg.Position.X = Main.spawnTileX * 16 + 8;
-                tg.Position.Y = Main.spawnTileY * 16 + 16;
-                GuardianTownNPC.Add(tg);
-                NpcMod.AddGuardianMet(id.ID, id.ModID);
-                AllowGuardianNPCToSpawn(id.ID, id.ModID);
-                SpawnGuardian = new KeyValuePair<int, string>(id.ID, id.ModID);
+                List<GuardianID> PossibleGuardians = MainMod.GetPossibleStarterGuardians().ToList();
+                List<GuardianID> Starters = new List<GuardianID>();
+                byte StartersToSpawn = 1;
+                if (PossibleGuardians.Count >= 5 && Main.rand.NextDouble() < 0.5)
+                    StartersToSpawn++;
+                if (PossibleGuardians.Count >= 10 && Main.rand.NextDouble() < 0.2)
+                    StartersToSpawn++;
+                if (PossibleGuardians.Count >= 20 && Main.rand.NextDouble() < 0.10)
+                    StartersToSpawn++;
+                if (PossibleGuardians.Count >= 30 && Main.rand.NextDouble() < 0.05)
+                    StartersToSpawn++;
+                for (int i = 0; i < StartersToSpawn; i++)
+                {
+                    if (PossibleGuardians.Count == 0)
+                        break;
+                    int Picked = Main.rand.Next(PossibleGuardians.Count);
+                    GuardianID id = PossibleGuardians[Picked];
+                    TerraGuardian tg = new TerraGuardian(id.ID, id.ModID);
+                    tg.Active = true;
+                    tg.Position.X = Main.spawnTileX * 16 + 8;
+                    tg.Position.Y = Main.spawnTileY * 16 + 16;
+                    GuardianTownNPC.Add(tg);
+                    NpcMod.AddGuardianMet(id.ID, id.ModID);
+                    AllowGuardianNPCToSpawn(id.ID, id.ModID);
+                    Starters.Add(id);
+                }
+                SpawnGuardian = Starters.ToArray();
             }));
             tasks.Add(new PassLegacy("Spawning Tombstone.", delegate (GenerationProgress progress)
             {
@@ -447,8 +495,12 @@ namespace giantsummon
         {
             Terraria.ModLoader.IO.TagCompound tag = new Terraria.ModLoader.IO.TagCompound();
             tag.Add("ModVersion", MainMod.ModVersion);
-            tag.Add("SpawnGuardian_ID", SpawnGuardian.Key);
-            tag.Add("SpawnGuardian_ModID", SpawnGuardian.Value);
+            tag.Add("SpawnGuardian_Count", SpawnGuardian.Length);
+            for (int i = 0; i < SpawnGuardian.Length; i++)
+            {
+                tag.Add("SpawnGuardian_ID_" + i, SpawnGuardian[i].ID);
+                tag.Add("SpawnGuardian_ModID_" + i, SpawnGuardian[i].ModID);
+            }
             //Save spawn guardian
             tag.Add("GuardiansMet_Count", GuardiansMet.Count);
             for (int i = 0; i < GuardiansMet.Count; i++)
@@ -501,9 +553,24 @@ namespace giantsummon
             int Version = tag.GetInt("ModVersion");
             if (Version >= 70)
             {
-                int ID = tag.GetInt("SpawnGuardian_ID");
-                string ModID = tag.GetString("SpawnGuardian_ModID");
-                SpawnGuardian = new KeyValuePair<int, string>(ID, ModID);
+                if (Version >= 98)
+                {
+                    int Count = tag.GetInt("SpawnGuardian_Count");
+                    List<GuardianID> StarterIds = new List<GuardianID>();
+                    for (int i = 0; i < Count; i++)
+                    {
+                        int ID = tag.GetInt("SpawnGuardian_ID_" + i);
+                        string ModId = tag.GetString("SpawnGuardian_ModID_" + i);
+                        StarterIds.Add(new GuardianID(ID, ModId));
+                    }
+                    SpawnGuardian = StarterIds.ToArray();
+                }
+                else
+                {
+                    int ID = tag.GetInt("SpawnGuardian_ID");
+                    string ModID = tag.GetString("SpawnGuardian_ModID");
+                    SpawnGuardian = new GuardianID[] { new GuardianID(ID, ModID) };
+                }
             }
             if (Version < 38)
             {

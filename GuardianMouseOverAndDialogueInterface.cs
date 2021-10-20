@@ -149,7 +149,7 @@ namespace giantsummon
             else if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
             {
                 modPlayer.AddNewGuardian(tg.ID, tg.ModID);
-                if (tg.ID == WorldMod.SpawnGuardian.Key && tg.ModID == WorldMod.SpawnGuardian.Value)
+                if (WorldMod.IsStarter(tg))
                     modPlayer.GetGuardian(tg.ID, tg.ModID).SetStarterGuardian();
                 Message = tg.Base.GreetMessage(MainPlayer, tg);
                 modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);

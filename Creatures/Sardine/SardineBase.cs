@@ -935,6 +935,10 @@ namespace giantsummon.Creatures
                     return "If you want to visit [subject], It seems like things are safer there. [player] killed some squid monster and now people are saying the world is saved.";
                 case MessageIDs.FeatStartedHardMode:
                     return "If you're looking for things to kill, I think you should visit [subject]. [player] managed to do something that made stronger and uglier creatures appear.";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "Be sure to give your congratulations to [player], It's such a feat having [subject] accept them as their buddy.";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "Buddy! Came to check me out? Or want something? Haha, sorry, I'm not used to that buddy thing.";
             }
             return base.GetSpecialMessage(MessageID);
         }

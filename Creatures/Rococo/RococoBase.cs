@@ -889,6 +889,10 @@ namespace giantsummon.Creatures
                     return "*[name] is happy for [player], for having killed Moon Lord in [subject].*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*[name] told me that creepy creatures are now roaming [subject].*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*[name] is really happy about knowing [player] found their own buddy, and picked [subject] to be it.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*[name] is saying that is really glad you picked him as his buddy.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
