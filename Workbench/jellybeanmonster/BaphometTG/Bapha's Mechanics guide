@@ -1,7 +1,7 @@
 Bapha's Mechanics guide:
 Key:
 HS-Hell Splitter
-ES-Embered State
+AS-Awakened State
 CF- Crimson Flame
 HF-Hell Flame
 SS- Scarlet Shredder
@@ -12,7 +12,6 @@ KB- Knock Back
 
 Bapha- Overlord of Hell.
 Age- Unknown (Likely above 100,000 years)
-Guardian Slots taken- 3
 
 Recruited Stats:
 HP- 666
@@ -20,7 +19,6 @@ MP- 200
 Life Crystal gain- 100
 Life Fruit- 5
 Mana Crystal gain-30
-Mana fruit gain-10
 
 Boss Fight Stats:
 Classic mode:
@@ -42,9 +40,9 @@ KB Resist- 100%
 Basics:
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
 -When "Embered" Bapha's health regeneration rate increases by 2.0x as well as healing for knocked out players and other terra gaurdian entities.(Recruited version only does not apply to boss form)
--Bapha takes 10x increased damage when wet or submerged in water additionally can not get into Embered State.(Rain included)
--When baphas health reaches 0 on surface or any other place besides hell, he is sent back to hell threw a portal.
--If Bapha is recruited and his health reaches 0 while in underworld, instead of being sent threw a portal he reforms back into pentagram orb and is healed to full health immediately after 5 seconds.
+-Bapha takes 10x increased damage when wet or submerged in water additionally can not get into Awakened State.(Rain included)
+-When baphas health reaches 0 on surface or any other place besides hell, his body desintagrates and gets sent back to hell. He reforms back in 10 seconds.
+-If Bapha is recruited and his health reaches 0 while in underworld, his respawn timer gets set to 5 seconds instead of 10.
 
 
 Buffs and Debuffs(are applied through certain attacks below):
@@ -81,21 +79,21 @@ Attacks-
 
 Ultimate techniques:
 
->Scarlet Shredder(Embered technique)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
--Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears)
+>Scarlet Shredder(Awakened technique)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
+-Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
 -Damage is static and does not scale with equiped weapons
 -333 damage per projectile equiling 666 if both hit
 -Applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
--Bypasses blocks and completely ignores defense value of target
+-Bypasses blocks and completely ignores 25% defense value of target
 -has very limitied tracking ai
 -150 mana cost
 -Has knockback value of 10
--20 second cooldown
+-30 second cooldown
 
->Hell Portal(Embered technique)- Opens a portal to the underworld which produces 20 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
+>Hell Portal(Awakened technique)- Opens a portal to the underworld which produces 10 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
 - 100 Mana cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
-- HeP can only be used if Bapha is in embered form
+- HeP can only be used if Bapha is in Awakened form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
 - 2:30 cooldown upon use
 
