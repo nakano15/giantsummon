@@ -1038,7 +1038,11 @@ namespace giantsummon
                 }
                 player.grapCount = 0;
             }
-            if (MountedOnGuardian)
+            if (CarriedByGuardianID != -1)
+            {
+                player.fullRotation = 0;
+            }
+            else if (MountedOnGuardian)
             {
                 if (!MountGuardian.IsAttackingSomething && MountGuardian.Velocity.X == 0)
                 {
@@ -1240,7 +1244,7 @@ namespace giantsummon
                                 {
                                     if (player.buffTime[b] > 0 && Main.debuff[player.buffType[b]] && player.buffType[b] != Terraria.ID.BuffID.PotionSickness)
                                     {
-                                        player.DelBuff(b);
+                                        player.DelBuff(player.buffType[b]);
                                     }
                                 }
                                 //player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
@@ -2077,6 +2081,10 @@ namespace giantsummon
 
         public override void SetControls()
         {
+            if (MainMod.Gameplay2PMode)
+            {
+                Terraria.GameInput.PlayerInput.CurrentInputMode = Terraria.GameInput.InputMode.Keyboard;
+            }
             if (player.whoAmI == Main.myPlayer && KnockedOut) //Controls
             {
                 if (KnockedOutCold && player.controlHook && !MainMod.PlayersDontDiesAfterDownedDefeat)

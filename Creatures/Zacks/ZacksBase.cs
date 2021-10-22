@@ -551,7 +551,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*I'm paralized, I can't move at all.*");
                 Mes.Add("*I can't move any part of my body.*");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("*I'm awaken. I can't sleep, ever since I turned into a zombie.*");

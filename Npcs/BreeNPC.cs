@@ -65,7 +65,7 @@ namespace giantsummon.Npcs
         {
             if (Main.myPlayer == -1)
                 return;
-            Player player = Main.player[Main.myPlayer];
+            Player player = Main.player[npc.target];
             if (JustSpawned)
             {
                 //if (IsInPerceptionRange(player))
@@ -84,8 +84,10 @@ namespace giantsummon.Npcs
                         }
                     }
                 }
+                if(NearestPlayer > -1)
                 {
                     player = Main.player[NearestPlayer];
+                    npc.target = NearestPlayer;
                     Main.NewText("A White Cat appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - player.Center) + " of " + player.name + " position.");
                 }
                 JustSpawned = false;

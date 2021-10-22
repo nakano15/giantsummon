@@ -341,7 +341,7 @@ namespace giantsummon.Creatures
                     Mes.Add("(He's groaning of pain.)");
                 }
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(His snores are extremelly loud.)");

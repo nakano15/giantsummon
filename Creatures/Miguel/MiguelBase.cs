@@ -298,7 +298,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*I think this toilet is going to overflow... Ah... Wh.. [nickname]! When did you appeared?*");
                 Mes.Add("*Yes, I do my business like anyone else. You watching me is making it harder for me to finish this.*");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("*(Sleep talking) Pull... Push... Pull... Push... Now do that 10 more times...*");

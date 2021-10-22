@@ -114,6 +114,7 @@ namespace giantsummon.Creatures
             g.AddFlag(GuardianFlags.CantBeKnockedOutCold);
             g.AddFlag(GuardianFlags.CantDie);
             g.AddFlag(GuardianFlags.HealthGoesToZeroWhenKod);
+            g.AddFlag(GuardianFlags.CantTakeDamageWhenKod);
             const float TrailLength = 4;
             if(g.TrailLength == 0)
                 g.TrailLength = (int)TrailLength;

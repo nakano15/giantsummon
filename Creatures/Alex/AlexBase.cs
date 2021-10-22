@@ -391,7 +391,7 @@ namespace giantsummon.Creatures
                 Mes.Add("(His wounds aren't letting him rest.)");
                 Mes.Add("I have... To protec.t... " + player.name +"...");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(He's moving his paws while sleeping, maybe he's dreaming that he's running?)");

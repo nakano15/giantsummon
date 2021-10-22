@@ -531,7 +531,7 @@ namespace giantsummon.Creatures
                     Mes.Add("(She passed out in pain.)");
                 }
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(She's speaking about many different things, in a different language.)");

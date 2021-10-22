@@ -264,7 +264,7 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            if (guardian.IsUsingBed)
+            if (guardian.IsSleeping)
             {
                 Mes.Add("(You noticed him sniffing a while, and then he slept with a smile on the face.\nI think he knows I'm near him.)");
                 Mes.Add("*Snif.. Snif... Known one... "+player.name+"... Zzzz...*");
@@ -424,7 +424,7 @@ namespace giantsummon.Creatures
                         {
                             TerraGuardian tg = MainMod.ActiveGuardians[Sender.TargetID];
                             AlexanderData data = (AlexanderData)guardian.Data;
-                            if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && tg.IsUsingBed && !data.WasGuardianIdentified(tg))
+                            if (!guardian.DoAction.InUse && !tg.MyID.IsSameID(guardian) && tg.Base.IsTerraGuardian && tg.IsSleeping && !data.WasGuardianIdentified(tg))
                             {
                                 if (guardian.StartNewGuardianAction(new Creatures.Alexander.SleuthAction(tg), 0))
                                     return true;

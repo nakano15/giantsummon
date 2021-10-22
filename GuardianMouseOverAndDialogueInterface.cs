@@ -569,7 +569,7 @@ namespace giantsummon
             {
 
             }
-            else if (Speaker.IsUsingBed && Speaker.Base.SleepsAtBed)
+            else if (Speaker.IsSleeping && Speaker.Base.SleepsAtBed)
             {
                 AddOption("Wake Up", WakeUpCompanionButtonAction);
             }
@@ -780,10 +780,11 @@ namespace giantsummon
 
         public static void WakeUpCompanionButtonAction()
         {
-            if (Speaker.IsUsingBed)
+            if (Speaker.IsSleeping)
             {
                 Speaker.LeaveFurniture(true);
                 Speaker.LookAt(MainPlayer.Center);
+                Speaker.SitOnBed();
                 string Message = "";
                 if (Speaker.HasRequestActive)
                     Message = Speaker.Base.GetSpecialMessage(GuardianBase.MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage);

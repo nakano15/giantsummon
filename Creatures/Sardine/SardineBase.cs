@@ -530,7 +530,7 @@ namespace giantsummon.Creatures
                     Mes.Add("(He's unconscious, you tried shaking him but he didn't woke up.)");
                 }
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("Ha! Take that! And that! (He must be sleeping about facing some creature.)");

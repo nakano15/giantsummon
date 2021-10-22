@@ -614,7 +614,7 @@ namespace giantsummon.Creatures
                 }
                 Mes.Add("(He seems to be trying to endure the pain)");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(You wonder if the way he sleeps wont make him have pain all over the body, during the morning.)");

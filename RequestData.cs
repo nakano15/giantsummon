@@ -372,7 +372,7 @@ namespace giantsummon
                     {
                         if (WorldMod.IsGuardianNpcInWorld(gd.ID, gd.ModID))
                         {
-                            if (!WorldMod.GuardianTownNPC.First(x => x.ID == gd.ID && x.ModID == gd.ModID).IsUsingBed)
+                            if (!WorldMod.GuardianTownNPC.First(x => x.ID == gd.ID && x.ModID == gd.ModID).IsSleeping)
                             {
                                 Time--;
                             }

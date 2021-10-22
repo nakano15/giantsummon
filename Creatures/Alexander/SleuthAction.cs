@@ -28,7 +28,7 @@ namespace giantsummon.Creatures.Alexander
             }
             guardian.MoveLeft = guardian.MoveRight = false;
             Sleuthing = false;
-            if (!Target.KnockedOut && !Target.IsUsingBed)
+            if (!Target.KnockedOut && !Target.IsSleeping)
             {
                 if (SleuthPercent > 70)
                     guardian.SaySomething("*...So close...*");
@@ -50,7 +50,7 @@ namespace giantsummon.Creatures.Alexander
                     Sleuthing = true;
                     guardian.LookingLeft = (Target.Position.X < guardian.Position.X);
                     float LastSleuthPercent = SleuthPercent;
-                    float FillSpeed = guardian.IsUsingBed ? 0.07f : 0.2f;
+                    float FillSpeed = guardian.IsSleeping ? 0.07f : 0.2f;
                     SleuthPercent += Main.rand.NextFloat() * FillSpeed;
                     if (SleuthPercent >= 100)
                     {

@@ -382,7 +382,7 @@ namespace giantsummon
             }
             //pick a random guardian to try making leave.
             int Pos = Main.rand.Next(GuardianTownNPC.Count);
-            if (GuardianTownNPC[Pos].GetTownNpcInfo != null && !GuardianTownNPC[Pos].GetTownNpcInfo.Homeless)
+            if (GuardianTownNPC[Pos].GetTownNpcInfo != null && GuardianTownNPC[Pos].GetTownNpcInfo.Homeless)
             {
                 if(!GuardianTownNPC[Pos].IsStarter)
                     return false;

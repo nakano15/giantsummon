@@ -582,7 +582,7 @@ namespace giantsummon.Creatures
                     Mes.Add("(He seems to be having pain while whited out.)");
                 }
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(He must be dreaming about playing with someone.)");

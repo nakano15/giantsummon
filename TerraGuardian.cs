@@ -165,7 +165,7 @@ namespace giantsummon
         public bool GuardianHasControlWhenMounted = false;
         public bool AttackMyTarget { get { return Data.AttackMyTarget; } set { Data.AttackMyTarget = value; } }
         public bool Passive { get { return Data.Passive; } set { Data.Passive = value; } }
-        public bool Is2PControlled { get { return OwnerPos > -1 && OwnerPos == Main.myPlayer && MainMod.Gameplay2PMode; } }
+        public bool Is2PControlled { get { return MainMod.Gameplay2PMode && AssistSlot == 0 && OwnerPos > -1 && OwnerPos == Main.myPlayer; } }
         public bool MayLootItems { get { return Data.MayLootItems; } set { Data.MayLootItems = value; } }
         public bool SetToPlayerSize { get { return Data.SetToPlayerSize; } set { Data.SetToPlayerSize = value; } }
         public bool AvoidCombat { get { return Data.AvoidCombat; } set { Data.AvoidCombat = value; } }
@@ -745,7 +745,7 @@ namespace giantsummon
         private int doorx = -1, doory = -1;
         public bool HasDoorOpened { get { return closeDoor; } }
         public int furniturex = -1, furniturey = -1;
-        public bool UsingFurniture = false;
+        public bool UsingFurniture = false, SittingOnBed = false;
         private bool closeDoor = false;
         private bool CollisionX = false, CollisionY = false;
         public bool Downed = false;
@@ -7214,6 +7214,14 @@ namespace giantsummon
             return false;
         }
 
+        public void SitOnBed()
+        {
+            if(IsUsingBed)
+            {
+                SittingOnBed = true;
+            }
+        }
+
         public void LeaveFurniture(bool StillGoingToUseFurniture = false)
         {
             if (UsingFurniture)
@@ -7226,6 +7234,7 @@ namespace giantsummon
                 furniturex = furniturey = -1;
             }
             UsingFurniture = false;
+            SittingOnBed = false;
         }
 
         public bool IsUsingToilet
@@ -7284,6 +7293,22 @@ namespace giantsummon
             }
         }
 
+        public bool IsSleeping
+        {
+            get
+            {
+                if (furniturex > -1 && furniturey > -1 && UsingFurniture && !SittingOnBed)
+                {
+                    Tile tile = MainMod.GetTile(furniturex, furniturey);
+                    if (tile.active() && tile.type == Terraria.ID.TileID.Beds)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         public bool IsUsingBed
         {
             get
@@ -7335,10 +7360,11 @@ namespace giantsummon
         {
             if (furniturex != -1 && furniturey != -1)
             {
-                if (TalkPlayerID > -1 && !UsingFurniture)
+                if (TalkPlayerID > -1 && (!UsingFurniture || SittingOnBed))
                 {
                     return;
                 }
+                SittingOnBed = false;
                 if (IsAttackingSomething)
                 {
                     if (UsingFurniture)
@@ -11425,6 +11451,7 @@ namespace giantsummon
         {
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
             Player Owner = Main.player[OwnerPos];
+            TerraGuardian LeaderGuardian = PlayerMod.GetPlayerMainGuardian(Owner);
             {
                 PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
                 if (ChargeAhead)
@@ -11437,7 +11464,17 @@ namespace giantsummon
             float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0, LeaderSpeedY = 0;
             int LeaderHeight = 1;
             bool LeaderWet = false;
-            if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
+            if(MainMod.Gameplay2PMode && LeaderGuardian != null && AssistSlot % 2 == 0)
+            {
+                PositionDifference = LeaderGuardian.CenterPosition;
+                LeaderCenterX = PositionDifference.X;
+                LeaderSpeedX = LeaderGuardian.Velocity.X;
+                LeaderSpeedY = LeaderGuardian.Velocity.Y;
+                LeaderBottom = LeaderGuardian.Position.Y;
+                LeaderHeight = LeaderGuardian.Height;
+                LeaderWet = LeaderGuardian.Wet;
+            }
+            else if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
             {
                 TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.First(x => x.Active && x.PlayerMounted && !x.ReverseMount);
                 PositionDifference = guardian.CenterPosition;
@@ -15249,7 +15286,18 @@ namespace giantsummon
                             {
                                 FurnitureOverridingAnimation = true;
                                 int AnimationID = Base.BedSleepingFrame;
-                                if (AnimationID == -1)
+                                if (SittingOnBed)
+                                {
+                                    AnimationID = Base.ThroneSittingFrame;
+                                    if (AnimationID == -1)
+                                    {
+                                        if (Base.ChairSittingFrame > -1)
+                                            AnimationID = Base.ChairSittingFrame;
+                                        else
+                                            AnimationID = Base.SittingFrame;
+                                    }
+                                }
+                                else if (AnimationID == -1)
                                 {
                                     if (Base.ChairSittingFrame > -1)
                                         AnimationID = Base.ChairSittingFrame;
@@ -18273,7 +18321,7 @@ namespace giantsummon
                     Position.Y -= 20 - 6;
                     EyeState = 2;
                 }
-                else if (IsUsingBed)
+                else if (IsSleeping)
                 {
                     Origin.Y *= 0.5f;
                     Position.Y -= 20 + 6;

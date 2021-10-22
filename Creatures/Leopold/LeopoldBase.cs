@@ -360,7 +360,7 @@ namespace giantsummon.Creatures
                 Mes.Add("(He seems to be under heavy pain.)");
                 Mes.Add("(He's unnable to speak with you because of how much pain he's having.)");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(He's theorizing to himself, while sleeping.)");

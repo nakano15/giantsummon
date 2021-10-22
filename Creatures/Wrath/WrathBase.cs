@@ -264,7 +264,7 @@ namespace giantsummon.Creatures
                     Mes.Add("(You can hear loud breathing noises coming from his nose.)");
                 }
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(He growls while sleeping, like as if was going to bite someone.)");

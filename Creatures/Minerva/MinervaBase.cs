@@ -189,7 +189,7 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            if (guardian.IsUsingBed)
+            if (guardian.IsSleeping)
             {
                 Mes.Add("(She's really deep on her sleep. She looks very tired.)");
                 Mes.Add("(You heard a weird air sound, and now is smelling something awful.)");

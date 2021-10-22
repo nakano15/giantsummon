@@ -68,7 +68,7 @@ namespace giantsummon.Actions
                         MainMod.ScreenColorAlpha = (float)Time / (5 * 60);
                         if (MainMod.ScreenColorAlpha > 1)
                             MainMod.ScreenColorAlpha = 1f;
-                        if (UseBedSharing && guardian.IsUsingBed && guardian.GrabbingPlayer)
+                        if (UseBedSharing && guardian.IsSleeping && guardian.GrabbingPlayer)
                         {
                             SetPlayerToGuardianBed = true;
                         }
@@ -151,7 +151,7 @@ namespace giantsummon.Actions
                         {
                             InUse = false;
                             MainMod.ScreenColorAlpha = 0;
-                            if (guardian.IsUsingBed)
+                            if (guardian.IsSleeping)
                             {
                                 player.fullRotation = 0;
                                 guardian.LeaveFurniture();
@@ -161,7 +161,7 @@ namespace giantsummon.Actions
                         {
                             MainMod.ScreenColor.R = MainMod.ScreenColor.G = MainMod.ScreenColor.B = 0;
                             MainMod.ScreenColorAlpha = 1f - (float)Time / (5 * 60);
-                            if (guardian.IsUsingBed)
+                            if (guardian.IsSleeping)
                             {
                                 SetPlayerToGuardianBed = true;
                             }

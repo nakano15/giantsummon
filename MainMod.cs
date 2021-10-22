@@ -814,6 +814,25 @@ namespace giantsummon
             ActiveGuardians = TempActiveGuardians;
             TempActiveGuardians = new Dictionary<int, TerraGuardian>();
             DrawMoment.Clear();
+            if (Gameplay2PMode)
+            {
+                byte ControllerCount = 0;
+                for(byte i = 0; i < 4; i++)
+                {
+                    GamePadState gps = GamePad.GetState((PlayerIndex)i);
+                    if (gps.IsConnected)
+                        ControllerCount++;
+                }
+                if(ControllerCount == 1)
+                {
+                    Update2PKeyboardControls();
+                }
+            }
+        }
+
+        public static void Update2PKeyboardControls()
+        {
+
         }
 
         public override void MidUpdateNPCGore()
@@ -1141,7 +1160,7 @@ namespace giantsummon
             return true;
         }
 
-        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, dghmig, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer,dsi;
+        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, dghmig, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer,dsi,d2pi;
         private static bool InterfacesSetup = false;
 
         public override void ModifyInterfaceLayers(List<Terraria.UI.GameInterfaceLayer> layers)
@@ -1170,6 +1189,7 @@ namespace giantsummon
                     dngh = new LegacyGameInterfaceLayer("Terra Guardians: Draw Nearby Guardian Head", DrawCompanionPointingArrow, InterfaceScaleType.UI);
                     alexjslayer = new LegacyGameInterfaceLayer("Terra Guardians: Alex Jump Scare", DrawAlexJumpscare, InterfaceScaleType.UI);
                     dsi = new LegacyGameInterfaceLayer("Terra Guardians: Season Info Interface", DrawSeasonInfos, InterfaceScaleType.UI);
+                    d2pi = new LegacyGameInterfaceLayer("Terra Guardians: Draw 2P Interface", Draw2PInterface, InterfaceScaleType.UI);
                     bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
                     {
                         BuddyModeSetupInterface.Draw();
@@ -1206,6 +1226,8 @@ namespace giantsummon
                     return;
                 }
                 layers.Insert(PlayerChatLayer, dnagd);
+                if(Gameplay2PMode)
+                    layers.Insert(HotbatLayer, d2pi);
                 layers.Insert(HotbatLayer, goi);
                 layers.Insert(MouseOverLayer, gmi);
                 layers.Insert(InventoryLayer, dsi);
@@ -1609,6 +1631,44 @@ namespace giantsummon
 
         }
 
+        public bool Draw2PInterface()
+        {
+            TerraGuardian Guardian = PlayerMod.GetPlayerMainGuardian(Main.LocalPlayer);
+            {
+                int BackupSelectedItem = Main.LocalPlayer.selectedItem;
+                Main.LocalPlayer.selectedItem = Guardian.SelectedItem;
+                int LastSlot = Guardian.SelectedItem - 2;
+                if (LastSlot < -1)
+                    LastSlot = -1;
+                if (LastSlot > 5)
+                    LastSlot = 5;
+                Main.inventoryScale = 0.75f;
+                Vector2 TextPosition = new Vector2(304 + 150, 108);
+                Utils.DrawBorderString(Main.spriteBatch, (Guardian.SelectedItem == -1 ? "Unnarmed" : Guardian.Inventory[Guardian.SelectedItem].Name), TextPosition, Color.White, anchory: 1);
+                for (int i = 0; i < 5; i++)
+                {
+                    Vector2 InventoryPosition = new Vector2(304 + 40 * i, 108);
+                    int SlotID = LastSlot + i;
+                    if (SlotID == -1)
+                    {
+                        InventoryPosition.X += 20;
+                        InventoryPosition.Y += 20;
+                        //Utils.DrawBorderStringBig(Main.spriteBatch, "X", InventoryPosition, SlotID == Guardian.SelectedItem ? Color.Yellow : Color.Red, 1f, 0.5f, 0.4f);
+                    }
+                    else
+                    {
+                        ItemSlot.Draw(Main.spriteBatch, Guardian.Inventory, 0, SlotID, InventoryPosition, Color.White * 0.5f);
+                    }
+                }
+                Main.LocalPlayer.selectedItem = BackupSelectedItem;
+            }
+
+            {
+
+            }
+            return true;
+        }
+
         public bool DrawPosDeathInterface()
         {
             Player p = Main.player[Main.myPlayer];
@@ -1680,6 +1740,8 @@ namespace giantsummon
                     LifeFruits = Guardian.GetUsedLifeFruit,
                     ManaCrystals = Guardian.GetUsedManaCrystal;
                 string HealthText = Guardian.Name + ": " + Guardian.HP + "/" + Guardian.MHP;
+                if (IsMainGuardian && Gameplay2PMode)
+                    HealthText = "2P> " + HealthText;
                 HealthbarPosition.X += XSum;
                 Vector2 HealthTextPosition = HealthbarPosition;
                 HealthbarPosition.Y += Utils.DrawBorderString(Main.spriteBatch, HealthText, HealthbarPosition, Color.White, 1f).Y;
@@ -1879,7 +1941,8 @@ namespace giantsummon
                 HealthbarPosition.X = 16;
                 IsMainGuardian = false;
             }
-            Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", HealthbarPosition, Color.White, 0.95f);
+            if(!Gameplay2PMode)
+                Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", HealthbarPosition, Color.White, 0.95f);
             HealthbarPosition.Y += 22f;
             if (MouseOverText != "")
             {
@@ -2954,7 +3017,13 @@ namespace giantsummon
             if (CheckForButtonPress(Buttons.Start))
             {
                 Gameplay2PMode = !Gameplay2PMode;
-                Main.NewText("2P gameplay is now " + (Gameplay2PMode ? "ON" : "OFF") + ".");
+                if(Gameplay2PMode && !PlayerMod.GetPlayerMainGuardian(Main.LocalPlayer).Active)
+                {
+                    Gameplay2PMode = false;
+                    Main.NewText("You must have a Leader Guardian following you to start 2P mode.");
+                }
+                else
+                    Main.NewText("2P gameplay is now " + (Gameplay2PMode ? "ON" : "OFF") + ".");
             }
             MoveUpPress = MoveDownPress = MoveLeftPress = MoveRightPress = UseItemPress = false;
             if (Gameplay2PMode && Guardian.Active)
@@ -2962,17 +3031,22 @@ namespace giantsummon
                 Vector2 MovementThumbstick = -gamePadState.ThumbSticks.Left; //Negative values brings the intended result.
                 Guardian.MoveUp = MovementThumbstick.Y < -0.2f;
                 Guardian.MoveDown = MovementThumbstick.Y > 0.2f;
-                Guardian.MoveLeft = MovementThumbstick.X < -0.2f;
-                Guardian.MoveRight = MovementThumbstick.X > 0.2f;
+                Guardian.MoveLeft = MovementThumbstick.X > 0.2f;
+                Guardian.MoveRight = MovementThumbstick.X < -0.2f;
                 Guardian.Action = CheckForButtonPress(Buttons.RightTrigger);
                 int SlotChange = Guardian.SelectedItem;
                 if (CheckForButtonPress(Buttons.LeftShoulder)) SlotChange--;
                 if (CheckForButtonPress(Buttons.RightShoulder)) SlotChange++;
-                if (SlotChange < 0) SlotChange += 10;
-                if (SlotChange >= 10) SlotChange -= 10;
+                if (SlotChange < 1) SlotChange += 11;
+                if (SlotChange >= 10) SlotChange -= 11;
                 Guardian.SelectedItem = SlotChange;
-                Guardian.Jump = CheckForButtonPress(Buttons.B);
-                Vector2 RightThumbstick = -gamePadState.ThumbSticks.Right * 128f;
+                Guardian.Jump = CheckForButtonPress(Buttons.LeftTrigger);
+                Vector2 RightThumbstick = gamePadState.ThumbSticks.Right * 128f;
+                RightThumbstick.Y *= -1;
+                if(RightThumbstick.Length() == 0)
+                {
+                    RightThumbstick.X = Guardian.Direction * Guardian.Width * 0.5f;
+                }
                 Vector2 AimDirection = Guardian.CenterPosition + new Vector2(RightThumbstick.X, RightThumbstick.Y);
                 Guardian.AimDirection = AimDirection.ToPoint();
             }

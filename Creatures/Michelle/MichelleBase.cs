@@ -215,7 +215,7 @@ namespace giantsummon.Creatures
                 Mes.Add("(She's motionless in the floor. She's still breathing.)");
                 Mes.Add("(You can notice her trying to endure the pain.)");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(She's moving her hands, like as if she was petting something.)");

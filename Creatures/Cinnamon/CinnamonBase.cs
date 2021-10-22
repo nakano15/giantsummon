@@ -315,7 +315,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*[gn:"+Miguel+"] gave me some tips of things I could use as alternative on my meals.*");
             }
             //
-            if (guardian.IsUsingBed)
+            if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("*Nom nom nom nom nom nom...* (She seems to be dreaming about eating lots of food)");

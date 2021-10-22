@@ -362,7 +362,7 @@ namespace giantsummon.Creatures
                 }
                 Mes.Add("(She seems to be breathing hard, to try reducing the pain.)");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("*I won... I won! Yes...* (She must be dreaming about winning the contest)");

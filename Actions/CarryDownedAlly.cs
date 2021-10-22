@@ -183,6 +183,9 @@ namespace giantsummon.Actions
                     CarriedPlayer.position.Y = CarryPosition.Y - CarriedPlayer.height * Origin.Y + guardian.OffsetY;
                     CarriedPlayer.fallStart = (int)(CarriedPlayer.position.Y * TerraGuardian.DivisionBy16);
                     CarriedPlayer.direction = guardian.Direction;
+                    CarriedPlayer.immune = true;
+                    CarriedPlayer.immuneTime = 3;
+                    CarriedPlayer.immuneNoBlink = true;
                     CarriedPlayer.GetModPlayer<PlayerMod>().ReviveBoost++;
                     MainMod.DrawMoment.Add(new GuardianDrawMoment(guardian.WhoAmID, TerraGuardian.TargetTypes.Player, CarriedPlayer.whoAmI));
                 }
@@ -194,6 +197,8 @@ namespace giantsummon.Actions
                     CarriedGuardian.SetFallStart();
                     CarriedGuardian.Direction = guardian.Direction;
                     CarriedGuardian.ReviveBoost++;
+                    CarriedGuardian.ImmuneTime = 3;
+                    CarriedGuardian.ImmuneNoBlink = true;
                     MainMod.DrawMoment.Add(new GuardianDrawMoment(guardian.WhoAmID, TerraGuardian.TargetTypes.Guardian, CarriedGuardian.WhoAmID, true));
                 }
             }

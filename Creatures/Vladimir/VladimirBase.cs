@@ -828,7 +828,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*I have to admit, this is quite unpleasant.*");
                 Mes.Add("*The noises scared you?*");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Add("*Zzz... Goodbyezzzz....*");
                 Mes.Add("(Continues snoring)");
@@ -1167,7 +1167,7 @@ namespace giantsummon.Creatures
                     }
                     Mes.Add("*Do I talk during sleep? Some of the people I hug say that I do.*");
                     Mes.Add("*Some people says I talk during my sleep. I don't believe.*");
-                    if (guardian.IsUsingBed)
+                    if (guardian.IsSleeping)
                     {
                         Mes.Add("(pulls closer.)");
                         Mes.Add("*Zzz... Warm.... Zzz...*");
@@ -1208,7 +1208,7 @@ namespace giantsummon.Creatures
                 Mes.Add("(He seems to have whited out.)");
                 Mes.Add("(You don't see any sign of pain or sorrow on his face, It's like as if he was sleeping.)");
             }
-            else if (guardian.IsUsingBed)
+            else if (guardian.IsSleeping)
             {
                 Mes.Clear();
                 Mes.Add("(Even when sleeping he seems happy)");
