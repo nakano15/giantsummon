@@ -69,6 +69,8 @@ Attacks-
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player
 -HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attacks apply "Crimson Conflagration" debuff 
 -Has knockback value of 8(12 in AS)
+-Crimson Eruption(Awakened State exclusive): After chopping down, hell splitter summons a shock wave that hits every 0.4 seconds dealing 25% of total damage and last for 3 seconds.
+
 
 >Hell Flame/Dual Hell flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Base damage scales with 50% of weapon damage)
 -15 Mana cost
