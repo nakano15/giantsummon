@@ -8,7 +8,7 @@ namespace giantsummon
     public class TrustLevels
     {
         public const sbyte VisitTrust = -30, MoveInTrust = 0, FollowTrust = -10, ControlTrust = 60;
-        public const sbyte TrustPointsPerFriendshipExp = 2, TrustPointsPerComfortStack = 1, ReviveHelpTrustGain = 5, TrustGainFromComplettingRequest = 1;
+        public const sbyte TrustPointsPerFriendshipExp = 2, TrustPointsPerComfortStack = 1, ReviveHelpTrustGain = 3, TrustGainFromComplettingRequest = 1;
         public const sbyte TrustLossWhenEatenByWof = -10, TrustLossWhenCancellingRequest = -3, TrustLossOnFailRequest = -3;
 
         public const sbyte MoveOutOfWorldTrustLevel = -60,

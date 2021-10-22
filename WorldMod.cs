@@ -370,9 +370,6 @@ namespace giantsummon
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns>Returns true if someone left.</returns>
         public static bool CheckIfSomeoneMustLeaveWorld()
         {
@@ -382,14 +379,18 @@ namespace giantsummon
             }
             //pick a random guardian to try making leave.
             int Pos = Main.rand.Next(GuardianTownNPC.Count);
-            if (GuardianTownNPC[Pos].GetTownNpcInfo != null && GuardianTownNPC[Pos].GetTownNpcInfo.Homeless)
-            {
-                if(!GuardianTownNPC[Pos].IsStarter)
-                    return false;
-            }
-            if ((!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && !Main.dayTime))
+            if (!GuardianTownNPC[Pos].Base.IsNocturnal == Main.dayTime) //(!GuardianTownNPC[Pos].Base.IsNocturnal && Main.dayTime) || (GuardianTownNPC[Pos].Base.IsNocturnal && !Main.dayTime))
             {
                 return false;
+            }
+            if (GuardianTownNPC[Pos].GetTownNpcInfo != null && !GuardianTownNPC[Pos].GetTownNpcInfo.Homeless)
+            {
+                return false;
+            }
+            else
+            {
+                if (GuardianTownNPC[Pos].IsStarter)
+                    return false;
             }
             bool HasPlayerNearby = false;
             for (int p = 0; p < 255; p++)

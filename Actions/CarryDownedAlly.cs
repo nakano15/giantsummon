@@ -41,15 +41,19 @@ namespace giantsummon.Actions
             bool TargetIsKod = true;
             if(CarriedPlayer != null)
             {
-                TargetIsKod = CarriedPlayer.GetModPlayer<PlayerMod>().KnockedOut;
+                PlayerMod pm = CarriedPlayer.GetModPlayer<PlayerMod>();
+                TargetIsKod = pm.KnockedOut;
                 if(CarriedPlayer.dead)
                 {
                     InUse = false;
+                    if(guardian.TargetID != -1)
+                        guardian.CheckIfSomeoneNeedsPickup();
                     return;
                 }
                 if (!PlayerMod.IsBeingCarriedBySomeone(CarriedPlayer) || PlayerMod.IsBeingCarriedByThisGuardian(CarriedPlayer, guardian))
                 {
-                    CarriedPlayer.GetModPlayer<PlayerMod>().CarriedByGuardianID = guardian.WhoAmID;
+                    pm.CarriedByGuardianID = guardian.WhoAmID;
+                    pm.BeingCarriedByGuardian = false;
                 }
                 else
                 {
@@ -68,6 +72,7 @@ namespace giantsummon.Actions
                 if(!CarriedGuardian.IsBeingCarriedBySomeone() || CarriedGuardian.IsBeingCarriedByThisGuardian(guardian))
                 {
                     CarriedGuardian.CarriedByGuardianID = guardian.WhoAmID;
+                    CarriedGuardian.BeingCarriedByGuardian = false;
                 }
                 else
                 {
@@ -186,7 +191,9 @@ namespace giantsummon.Actions
                     CarriedPlayer.immune = true;
                     CarriedPlayer.immuneTime = 3;
                     CarriedPlayer.immuneNoBlink = true;
-                    CarriedPlayer.GetModPlayer<PlayerMod>().ReviveBoost++;
+                    PlayerMod pm = CarriedPlayer.GetModPlayer<PlayerMod>();
+                    pm.ReviveBoost++;
+                    pm.BeingCarriedByGuardian = true;
                     MainMod.DrawMoment.Add(new GuardianDrawMoment(guardian.WhoAmID, TerraGuardian.TargetTypes.Player, CarriedPlayer.whoAmI));
                 }
                 else
@@ -197,6 +204,7 @@ namespace giantsummon.Actions
                     CarriedGuardian.SetFallStart();
                     CarriedGuardian.Direction = guardian.Direction;
                     CarriedGuardian.ReviveBoost++;
+                    CarriedGuardian.BeingCarriedByGuardian = true;
                     CarriedGuardian.ImmuneTime = 3;
                     CarriedGuardian.ImmuneNoBlink = true;
                     MainMod.DrawMoment.Add(new GuardianDrawMoment(guardian.WhoAmID, TerraGuardian.TargetTypes.Guardian, CarriedGuardian.WhoAmID, true));

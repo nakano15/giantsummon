@@ -149,6 +149,7 @@ namespace giantsummon
                 _InternalCarryTimer = 5;
             }
         }
+        public bool BeingCarriedByGuardian = false;
         private int _CarriedByGuardianID = -1;
         private byte _InternalCarryTimer = 0;
         public Creatures.MiguelBase.ExerciseTypes CurrentExercise = Creatures.MiguelBase.ExerciseTypes.None;
@@ -1038,7 +1039,7 @@ namespace giantsummon
                 }
                 player.grapCount = 0;
             }
-            if (CarriedByGuardianID != -1)
+            if (CarriedByGuardianID != -1 && BeingCarriedByGuardian)
             {
                 player.fullRotation = 0;
             }
@@ -1224,7 +1225,8 @@ namespace giantsummon
                                 {
                                     player.Spawn();
                                 }
-                                player.DelBuff(Terraria.ID.BuffID.Bleeding);
+                                if(player.HasBuff(Terraria.ID.BuffID.Bleeding))
+                                    player.DelBuff(player.FindBuffIndex(Terraria.ID.BuffID.Bleeding));
                                 const float DistanceToTeleportNearbyGuardians = 336f;
                                 foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                                 {
@@ -1240,11 +1242,11 @@ namespace giantsummon
                                 {
                                     Guardian.TeleportToPlayer(true, player);
                                 }
-                                for (int b = player.buffType.Length - 1; b >= 0; b--)
+                                for (int b = 0; b < player.buffType.Length; b++)
                                 {
-                                    if (player.buffTime[b] > 0 && Main.debuff[player.buffType[b]] && player.buffType[b] != Terraria.ID.BuffID.PotionSickness)
+                                    if (player.buffType[b] > 0 && player.buffTime[b] > 0 && Main.debuff[player.buffType[b]] && player.buffType[b] != Terraria.ID.BuffID.PotionSickness)
                                     {
-                                        player.DelBuff(player.buffType[b]);
+                                        player.DelBuff(b);
                                     }
                                 }
                                 //player.statLife = (int)(player.statLifeMax2 * (Main.bloodMoon || Main.eclipse || Main.pumpkinMoon || Main.snowMoon || Main.invasionProgress > 0 ? 0.8f : 0.5f));
@@ -1265,7 +1267,7 @@ namespace giantsummon
                                             {
                                                 continue;
                                             }
-                                            Point point = new Point((int)player.position.X / 16 + dir * d, (int)player.position.Y / 16);
+                                            Point point = new Point((int)(player.position.X * TerraGuardian.DivisionBy16) + dir * d, (int)((player.position.Y + player.height)* TerraGuardian.DivisionBy16));
                                             byte MoveDist = 0;
                                             while (true)
                                             {
@@ -1325,7 +1327,7 @@ namespace giantsummon
                                                 {
                                                     if (HasTileBlocking)
                                                         break;
-                                                    Tile t = MainMod.GetTile(point.X + x, point.Y + y);
+                                                    Tile t = MainMod.GetTile(point.X + x, point.Y - y);
                                                     if (t.active() && Main.tileSolid[t.type])
                                                     {
                                                         HasTileBlocking = true;
@@ -1335,6 +1337,8 @@ namespace giantsummon
                                             if (!HasTileBlocking)
                                             {
                                                 point.X++;
+                                                point.Y++;
+                                                //point.Y += 3;
                                                 ValidPositions.Add(point);
                                             }
                                         }
@@ -1346,18 +1350,19 @@ namespace giantsummon
                                     {
                                         if (tg.Downed)
                                             tg.Spawn();
+                                        tg.TeleportToPlayer(true);
+                                        if (ValidPositions.Count > 0)
+                                        {
+                                            Vector2 Position = new Vector2(ValidPositions[0].X * 16 + 8, ValidPositions[0].Y * 16 - 1);
+                                            ValidPositions.RemoveAt(0);
+                                            tg.Position = Position;
+                                            tg.SetFallStart();
+                                        }
                                         if ((tg.KnockedOut || tg.KnockedOutCold))
                                         {
-                                            tg.TeleportToPlayer();
-                                            if (ValidPositions.Count > 0)
-                                            {
-                                                Vector2 Position = new Vector2(ValidPositions[0].X * 16, ValidPositions[0].Y * 16 + 48 - 1);
-                                                ValidPositions.RemoveAt(0);
-                                                tg.Position = Position;
-                                                tg.SetFallStart();
-                                            }
                                             tg.KnockedOutCold = false;
                                             tg.HP = (int)(1 + Main.rand.Next(tg.MHP - 1));
+                                            tg.RemoveBuff(Terraria.ID.BuffID.Bleeding);
                                             //tg.ExitDownedState();
                                         }
                                     }
@@ -1930,6 +1935,13 @@ namespace giantsummon
 
         public override void ModifyScreenPosition()
         {
+            if(CarriedByGuardianID > -1 && BeingCarriedByGuardian)
+            {
+                TerraGuardian Carrier = MainMod.ActiveGuardians[CarriedByGuardianID];
+                Main.screenPosition.X = (int)(Carrier.Position.X - Main.screenWidth * 0.5f);
+                Main.screenPosition.Y = (int)(Carrier.Position.Y - Guardian.SpriteHeight * 0.5f * Guardian.Scale * Guardian.GravityDirection - Main.screenHeight * 0.5f);
+                return;
+            }
             if(MainMod.PlayerSoulPosition.Length() > 0)
             {
                 Main.screenPosition.X = (int)(MainMod.PlayerSoulPosition.X - (Main.screenWidth * 0.5f));

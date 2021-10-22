@@ -277,6 +277,7 @@ namespace giantsummon
                 _InternalCarryTimer = 5;
             }
         }
+        public bool BeingCarriedByGuardian = false;
         private byte _InternalCarryTimer = 0;
         private int _CarriedByGuardianID = -1;
         public bool SittingOnPlayerMount = false;
@@ -5958,7 +5959,7 @@ namespace giantsummon
                 return;
             if (MountedEdition && !MoveDown)
                 return;
-            if (!DoAction.InUse && !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
+            if (!DoAction.InUse) //&& !HasCooldown(GuardianCooldownManager.CooldownType.DelayedActionCooldown))
             {
                 if (IsAttackingSomething)
                 {
@@ -6054,10 +6055,11 @@ namespace giantsummon
             if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified) || KnockedOut) return;
             if (!Is2PControlled)
             {
+                bool LastHadTargetClose = TargetID > -1;
                 LookForThreatsV2();
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
-                CheckIfSomeoneNeedsRevive();
+                //CheckIfSomeoneNeedsRevive();
                 FollowPlayerAI();
                 if (!Dialogue.InDialogue && !CheckForPlayerAFK() || Dialogue.UpdateDialogueParticipationGuardian(this))
                 {
@@ -6096,13 +6098,25 @@ namespace giantsummon
                     MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -(SpriteHeight - Base.CharacterPositionYDiscount) * 0.25f));
                 if (!PlayerControl)
                 {
-                    CheckIfCanSummon();
-                    CheckIfCanDoAction();
-                    if(!CanDualWield)
-                        OffHandAction = true;
-                    CheckForSituationalPotionUsage();
-                    CheckForLifeCrystals();
-                    CheckForPullSave();
+                    if (TargetID > -1 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3 && 
+                        (!DoAction.InUse || (!DoAction.IsGuardianSpecificAction && DoAction.ID != (int)GuardianActions.ActionIDs.CarryDownedAlly)))//!LastHadTargetClose && TargetID > -1)
+                    {
+                        CheckIfSomeoneNeedsPickup();
+                    }
+                    else if(TargetID == -1 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3)
+                    {
+                        CheckIfSomeoneNeedsRevive();
+                    }
+                    else
+                    {
+                        CheckIfCanSummon();
+                        CheckIfCanDoAction();
+                        if (!CanDualWield)
+                            OffHandAction = true;
+                        CheckForSituationalPotionUsage();
+                        CheckForLifeCrystals();
+                        CheckForPullSave();
+                    }
                     if (!SittingOnPlayerMount && !PlayerMounted)
                     {
                         TryJumpingTallTiles();
@@ -6144,6 +6158,10 @@ namespace giantsummon
                     Math.Abs(CenterY - Main.player[OwnerPos].Center.Y) > (Main.screenHeight + Height) * 0.5f)
                     IncreaseStuckTimer();
                 CheckIfSomeoneNeedsRevive(true);
+                if (!MoveDown && LastMoveDown)
+                {
+                    CheckIfSomeoneNeedsPickup();
+                }
                 if (PlayerControl) TogglePlayerControl();
                 if (GuardingPosition.HasValue) ToggleWait();
             }
@@ -6166,6 +6184,60 @@ namespace giantsummon
                     }
                 }
             }*/
+        }
+
+        public void CheckIfSomeoneNeedsPickup()
+        {
+            if (PlayerMounted || SittingOnPlayerMount)
+                return;
+            float NearestKOdAllyDistance = 400;
+            Trigger.TriggerTarget NearestAlly = null;
+            for(int p = 0; p < 255; p++)
+            {
+                if(Main.player[p].active && !Main.player[p].dead && !IsPlayerHostile(Main.player[p]))
+                {
+                    PlayerMod pm = Main.player[p].GetModPlayer<PlayerMod>();
+                    if (pm.KnockedOut && pm.CarriedByGuardianID == -1)
+                    {
+                        float Distance = (Main.player[p].Center - CenterPosition).Length() - 20 - Width * 0.5f;
+                        if(Distance < NearestKOdAllyDistance)
+                        {
+                            NearestAlly = new Trigger.TriggerTarget(Main.player[p]);
+                            NearestKOdAllyDistance = Distance;
+                        }
+                    }
+                }
+            }
+            foreach(int i in MainMod.ActiveGuardians.Keys)
+            {
+                if(!MainMod.ActiveGuardians[i].Downed && !IsGuardianHostile(MainMod.ActiveGuardians[i]))
+                {
+                    TerraGuardian tg = MainMod.ActiveGuardians[i];
+                    if(tg.KnockedOut && tg.CarriedByGuardianID == -1)
+                    {
+                        float Distance = (tg.CenterPosition - CenterPosition).Length() - (tg.Width + Width) * 0.5f;
+                        if(Distance < NearestKOdAllyDistance)
+                        {
+                            NearestAlly = new Trigger.TriggerTarget(tg);
+                            NearestKOdAllyDistance = Distance;
+                        }
+                    }
+                }
+            }
+            if(NearestAlly != null)
+            {
+                switch (NearestAlly.TargetType)
+                {
+                    case giantsummon.Trigger.TriggerTarget.TargetTypes.Player:
+                        StartNewGuardianAction(new Actions.CarryDownedAlly(Main.player[NearestAlly.TargetID]));
+                        break;
+                    case giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian:
+                        StartNewGuardianAction(new Actions.CarryDownedAlly(MainMod.ActiveGuardians[NearestAlly.TargetID]));
+                        break;
+                }
+                if (UsingFurniture)
+                    LeaveFurniture();
+            }
         }
 
         public void CheckForPullSave()
@@ -15203,7 +15275,7 @@ namespace giantsummon
             if (NewState != LastAnimationState)
                 AnimationTime = 0;
             LastAnimationState = NewState;
-            if (CarriedByGuardianID > -1)
+            if (CarriedByGuardianID > -1 && BeingCarriedByGuardian)
             {
                 BodyAnimationFrame = Base.StandingFrame;
                 LeftArmAnimationFrame = RightArmAnimationFrame = Base.JumpFrame;

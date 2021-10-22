@@ -1,20 +1,6 @@
-﻿Blue's dialogue is no longer narrative.
-Your character will no longer lie vertically while being carried by a companion.
-Companions will make carried downed allies invincible from damage.
-Fixed a bug where in 2P mode, the second player could control all followed companions.
-Fixed issue where companion horizontal movement were inverted in 2P mode.
-Fixed an error that happened when the mod tried deleting debuffs from your character upon calling rescue on knock out state.
-Liebre can no longer receive damage while knocked out.
-Companions that are set to live in your world will no longer leave when they have a house, and is at the time they should be going home.
-You can now see the hotbar of the second player on 2P mode.
-	Use Left Shoulder and Right Shoulder buttons to change the inventory slot.
-	Unnarmed inventory slot is also selectable.
-The new 2P Mode key bindings is:
-	Left Thumbstick = Move Companion
-	Right Thumbstick = Move aim
-	Left Shoulder = Select Previous Hotbar Slot
-	Right Shoulder = Select Next Hotbar Slot
-	Left Trigger = Jump
-	Right Trigger = Attack
-	Start = Start/Stop 2P mode
-	The keybinding is set based on a XBox controller layout. I don't know if it will work on other kinds of controllers.
+﻿Now definitelly fixed issue where companions were leaving the world while having a home.
+Fixed a bug where downed allies about to be picked up by companions were shown as standing.
+When being carried by a companion while knocked out, the camera will center the companion.
+Fixed an error that happened when your character force rescue when KO'd.
+Reduced trust gain for helping a companion be revived, to avoid exploit.
+	Having a companion be knocked out while that isn't the player fault, reduces trust by 3. Reviving them, used to give 5 points of trust. Now it gives 3, instead.
