@@ -37,9 +37,15 @@ Defense- 40
 KB Resist- 100%
 -Can Fly
 
+Recruit Conditions-
+1.Player Must have defeated Wall of Flesh boss
+2. Player must interact with pentagram star orb,that spawns after wall of flesh is defeated, in order to have a dialogue which starts a boss fight
+3. Baphas health must reach 0 in order for him to be defeated and for the player to be able to interact wit him
+4. Player must accept Bapha's condtions for recruitment in order to have him on team
+
 Basics:
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
--When "Embered" Bapha's health regeneration rate increases by 2.0x as well as healing for knocked out players and other terra gaurdian entities.(Recruited version only does not apply to boss form)
+-When "Awakened" Bapha's health regeneration rate increases by 2.0x as well as healing for knocked out players and other terra gaurdian entities.(Recruited version only does not apply to boss form)
 -Bapha takes 10x increased damage when wet or submerged in water additionally can not get into Awakened State.(Rain included)
 -When baphas health reaches 0 on surface or any other place besides hell, his body desintagrates and gets sent back to hell. He reforms back in 10 seconds.
 -If Bapha is recruited and his health reaches 0 while in underworld, his respawn timer gets set to 5 seconds instead of 10.
@@ -47,9 +53,9 @@ Basics:
 
 Buffs and Debuffs(are applied through certain attacks below):
 >Demonic Presence(Passive)- Bapha attracts hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form) / also -All underworld enemies are non-hostile to Bapha(if possible)
->Embered State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
->(New)Crimson ignite(Debuff)(Embered form only)- While in embered form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does additional 10% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
->(New)Crimson Conflagration(Debuff)(Embered form only)- Flame that does 1% max health true damage every 0.5 seconds and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
+>Awakened State(Passive)- When Bapha is nearby any fire blocks or liquid that emit heat he becomes empowered with flames and gains extra capabilites as described below in combat section.(Also gains some new fire effects around eyes, hands, feet and horns)
+>(New)Crimson ignite(Debuff)(Awakened form only)- While in Awakened form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does additional 5% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
+>(New)Crimson Conflagration(Debuff)(Awakened form only)- Flame that does 1% max health true damage every 0.5 seconds and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
 >Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
 >Diablo numeral(debuff)- if both projectiles from "Scarlet shredder" manage to hit the same target the target receives 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
 >Featherfall(Passive)
@@ -58,34 +64,32 @@ Buffs and Debuffs(are applied through certain attacks below):
 Combat:
 
 Attacks-
->Hell Splitter(Melee)(Default-Blazing Edge/ ES-Crimson Edge)- Fire formed blade that slashes twice in one attack dealing 25(50 when in ES) base damage each and applies "On Fire" debuff("Crimson Conflagration" debuff if in ES) 
--HS scales with current weapon equiped dealing 1.2x(1.5x in ES) damage of what the weapon wouldve originally did.
+>Hell Splitter(Melee)(Default-Blazing Edge/ AS-Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AS) base damage each and applies "On Fire" debuff("Crimson Conflagration" debuff if in AS) 
+-HS scales with current weapon equiped dealing 1.2x(1.5x in AS) damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player
--HS's properties change when Bapha is embered, HS gains extra attack range, new vfx and its attacks apply "Crimson Conflagration" debuff 
--Has knockback value of 7
+-HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attacks apply "Crimson Conflagration" debuff 
+-Has knockback value of 8(12 in AS)
 
->Hell Flame(Ranged)- Fire ball that does 20 base damage by itself with no weapon equiped.
+>Hell Flame/Dual Hell flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Base damage scales with 50% of weapon damage)
 -15 Mana cost
--(Base damage stacks with whatever current weapon damage is but does not scale with weapon damage)
 -Medium Velocity
--Has knockback value of 5
+-Has knockback value of 6
 
->Crimson Flame(Ranged)- Crimson fire ball that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when getting hit.
+>Crimson Flame(Ranged)-Fire ball that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when getting hit.(Base damage scales with 80% of weapon damage)
 -30 Mana Cost
--can only be casted when ES is active
--Base damage stacks with whatever current weapon damage is
+-can only be casted when AS is active
 -High Velocity
--Has Knockback value of 10
+-Has Knockback value of 12
 
 Ultimate techniques:
 
 >Scarlet Shredder(Awakened technique)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
 -Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
--Damage is static and does not scale with equiped weapons
+-Damage is static and does not scale with anything.
 -333 damage per projectile equiling 666 if both hit
 -Applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
--Bypasses blocks and completely ignores 25% defense value of target
--has very limitied tracking ai
+-Bypasses blocks and ignores 25% defense value of target
+-has limitied tracking ai
 -150 mana cost
 -Has knockback value of 10
 -30 second cooldown
@@ -96,10 +100,3 @@ Ultimate techniques:
 - HeP can only be used if Bapha is in Awakened form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
 - 2:30 cooldown upon use
-
-Recruit Conditions-
-1.Player Must have defeated Wall of Flesh boss
-2. Player must interact with pentagram star orb,that spawns after wall of flesh is defeated, in order to have a dialogue which starts a boss fight with Bapha
-3. Baphas health must reach 0 in order for him to be defeated and for the player to be able to interact wit him
-4. Player must accept Baphas condtions for recruitment in order to have him on team
-
