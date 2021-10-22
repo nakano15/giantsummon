@@ -6,3 +6,15 @@ Fixed issue where companion horizontal movement were inverted in 2P mode.
 Fixed an error that happened when the mod tried deleting debuffs from your character upon calling rescue on knock out state.
 Liebre can no longer receive damage while knocked out.
 Companions that are set to live in your world will no longer leave when they have a house, and is at the time they should be going home.
+You can now see the hotbar of the second player on 2P mode.
+	Use Left Shoulder and Right Shoulder buttons to change the inventory slot.
+	Unnarmed inventory slot is also selectable.
+The new 2P Mode key bindings is:
+	Left Thumbstick = Move Companion
+	Right Thumbstick = Move aim
+	Left Shoulder = Select Previous Hotbar Slot
+	Right Shoulder = Select Next Hotbar Slot
+	Left Trigger = Jump
+	Right Trigger = Attack
+	Start = Start/Stop 2P mode
+	The keybinding is set based on a XBox controller layout. I don't know if it will work on other kinds of controllers.

@@ -1634,6 +1634,7 @@ namespace giantsummon
         public bool Draw2PInterface()
         {
             TerraGuardian Guardian = PlayerMod.GetPlayerMainGuardian(Main.LocalPlayer);
+            if(!Main.playerInventory)
             {
                 int BackupSelectedItem = Main.LocalPlayer.selectedItem;
                 Main.LocalPlayer.selectedItem = Guardian.SelectedItem;
@@ -1653,7 +1654,7 @@ namespace giantsummon
                     {
                         InventoryPosition.X += 20;
                         InventoryPosition.Y += 20;
-                        //Utils.DrawBorderStringBig(Main.spriteBatch, "X", InventoryPosition, SlotID == Guardian.SelectedItem ? Color.Yellow : Color.Red, 1f, 0.5f, 0.4f);
+                        Utils.DrawBorderStringBig(Main.spriteBatch, "X", InventoryPosition, SlotID == Guardian.SelectedItem ? Color.Yellow : Color.Red, 0.5f, 0.5f, 0.4f);
                     }
                     else
                     {
@@ -1661,10 +1662,6 @@ namespace giantsummon
                     }
                 }
                 Main.LocalPlayer.selectedItem = BackupSelectedItem;
-            }
-
-            {
-
             }
             return true;
         }
