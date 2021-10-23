@@ -107,6 +107,11 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(16, 18 + 2, 25);
             RightHandPoints.AddFramePoint2x(17, 15, 25);
             RightHandPoints.AddFramePoint2x(18, 28, 22);
+
+            //Headgear Position
+            HeadVanityPosition.DefaultCoordinate2x = new Point(17, 13);
+            HeadVanityPosition.AddFramePoint2x(18, 18, 16);
+            HeadVanityPosition.AddFramePoint2x(21, 18, 16);
         }
 
         public override void Attributes(TerraGuardian g)

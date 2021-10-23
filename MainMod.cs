@@ -3139,7 +3139,8 @@ namespace giantsummon
             AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
             AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
             AddNewGroup(GuardianBase.TerraGuardianCaitSithGroupID, "Cait Sith Guardian", 1f / 0.272f, true, true);
-            AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "Giant Dog Guardian", 4.6667f, true, true);
+            Group g = AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "Giant Dog Guardian", 4.6667f, true, true);
+            g.ReverseMountWhenUnderaged = false;
             GetInitialCompanionsList();
             CommonRequestsDB.PopulateCommonRequestsDB();
             AddQuestContainer(this, new Quests.TgQuestContainer());

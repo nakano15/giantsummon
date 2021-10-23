@@ -263,7 +263,7 @@ namespace giantsummon
         }
         public bool ReverseMount
         {
-            get { return (Base.ReverseMount || Age < 15); }
+            get { return (Base.ReverseMount || (Age < 15 && Base.GetGroup.ReverseMountWhenUnderaged)); }
         }
         public int CarriedByGuardianID
         {

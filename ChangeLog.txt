@@ -1,6 +1,2 @@
-﻿Now definitelly fixed issue where companions were leaving the world while having a home.
-Fixed a bug where downed allies about to be picked up by companions were shown as standing.
-When being carried by a companion while knocked out, the camera will center the companion.
-Fixed an error that happened when your character force rescue when KO'd.
-Reduced trust gain for helping a companion be revived, to avoid exploit.
-	Having a companion be knocked out while that isn't the player fault, reduces trust by 3. Reviving them, used to give 5 points of trust. Now it gives 3, instead.
+﻿Fixed Liebre's headgear positioning.
+Dog companions will no longer mount on your back just because they're underage.
