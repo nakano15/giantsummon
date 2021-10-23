@@ -86,12 +86,12 @@ Attacks-
 Ultimate techniques:
 
 >Crescent Moon Shredder(Awakened technique)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
--Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
--Damage is static and does not scale with anything.
--333 damage per projectile equiling 666 if both hit
--Applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
--Bypasses blocks and ignores 25% defense value of target
--has limitied tracking ai
+Black Crescent Moon-Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
+White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity but slows down.
+-333 damage per projectile equiling 666 if both hit(Damage is static and does not scale with anything.)
+-White Crescent Moon applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
+-Bypasses blocks and ignores 50% defense value of target
+-has very limitied tracking ai
 -150 mana cost
 -Has knockback value of 10
 -30 second cooldown
