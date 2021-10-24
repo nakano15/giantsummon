@@ -1,2 +1,6 @@
 ﻿Fixed Liebre's headgear positioning.
 Dog companions will no longer mount on your back just because they're underage.
+Companions will no longer "oscilate" when holding off hand items.
+3rd person dialogues from Zacks were turned into 1st person.
+A number of companions got dialogues they say when the player is their room mate:
+	Wrath, Alexander, Fluffles, Minerva, Liebre and Miguel.

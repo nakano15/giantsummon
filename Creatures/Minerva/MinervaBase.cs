@@ -299,6 +299,11 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("*[gn:"+Miguel+"] is trying to help me lose my fat, but my belly isn't going away. He told me that is because I eat too much, but how else can I find out if the meal is good?*");
                 }
+                if (guardian.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("*I like sharing my room with you, but I can't do anything about the gas related issue...*");
+                    Mes.Add("*What kind of breakfast do you like? I ask so I can prepare something when you wake up.*");
+                }
             }
             else
             {

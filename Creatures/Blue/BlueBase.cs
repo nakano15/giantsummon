@@ -781,6 +781,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*I'm not in the mood now.... Grr....* (She seems to have came angry from [gn:17]'s place. I wonder what happened.)"); //"*[name] seems to have came from [gn:17]'s place angry. I wonder what happened.*");
                 Mes.Add("(She seems to be eating a Squirrel on a Spit.) Oh, hi. I'm just nibbling something.");
             }
+            if (NpcMod.HasGuardianNPC(Luna))
+            {
+                Mes.Add("*I'm so happy to have [gn:"+Luna+"] around. She has so many good points.*");
+                Mes.Add("*Sometimes, [gn:"+Luna+"] and I compare whose fur has better texture.*");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[nickname], this is embarrassing... Couldn't you talk to me other time?*"); //"*[name] is saying that you're making her embarrassed.*");

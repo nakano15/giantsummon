@@ -109,9 +109,9 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(18, 28, 22);
 
             //Headgear Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(17, 13);
-            HeadVanityPosition.AddFramePoint2x(18, 18, 16);
-            HeadVanityPosition.AddFramePoint2x(21, 18, 16);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(17, 14);
+            HeadVanityPosition.AddFramePoint2x(18, 18, 17);
+            HeadVanityPosition.AddFramePoint2x(21, 18, 17);
         }
 
         public override void Attributes(TerraGuardian g)
@@ -365,11 +365,11 @@ namespace giantsummon.Creatures
                         MaxSoulSpeed *= 2;
                     }
                     {
+                        if (!soul.HoverOnly)
+                            data.MouthOpenTime = 3;
                         if (Distance < 40)
                         {
                             soul.Velocity *= 0.9f;
-                            if (!soul.HoverOnly)
-                                data.MouthOpenTime = 3;
                         }
                         /*if (Distance < 4)
                         {
@@ -464,26 +464,29 @@ namespace giantsummon.Creatures
                     {
                         MainMod.PlayerSoulPosition = guardian.CenterPosition;
                     }
-                    data.PlayerDeathCounter[k]++;
-                    if (data.PlayerDeathCounter[k] == 150)
+                    if (data.PlayerDeathCounter[k] < 151)
                     {
-                        if (guardian.IsPlayerBuddy(Main.player[k]))
+                        data.PlayerDeathCounter[k]++;
+                        if (data.PlayerDeathCounter[k] == 150)
                         {
-                            guardian.SaySomething("*You took care of me while you was alive. Time for me to retribute the favor.*");
-                        }
-                        else
-                        {
-                            switch (Main.rand.Next(3))
+                            if (guardian.IsPlayerBuddy(Main.player[k]))
                             {
-                                case 0:
-                                    guardian.SaySomething("Time to take you to your resting place.");
-                                    break;
-                                case 1:
-                                    guardian.SaySomething("I'll make sure to bring you to your resting place safe and sound.");
-                                    break;
-                                case 2:
-                                    guardian.SaySomething("You fought well until the very end, time to get you some rest.");
-                                    break;
+                                guardian.SaySomething("*You took care of me while you was alive. Time for me to retribute the favor.*");
+                            }
+                            else
+                            {
+                                switch (Main.rand.Next(3))
+                                {
+                                    case 0:
+                                        guardian.SaySomething("Time to take you to your resting place.");
+                                        break;
+                                    case 1:
+                                        guardian.SaySomething("I'll make sure to bring you to your resting place safe and sound.");
+                                        break;
+                                    case 2:
+                                        guardian.SaySomething("You fought well until the very end, time to get you some rest.");
+                                        break;
+                                }
                             }
                         }
                     }
@@ -1013,6 +1016,11 @@ namespace giantsummon.Creatures
             if (NpcMod.HasGuardianNPC(Miguel))
             {
                 Mes.Add("*Reaping also involves physical exercise. [gn:"+Miguel+"]'s pondering is really stupid.*");
+            }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*In all my years of existence, I never had a room mate. I hope it's an interesting experience.*");
+                Mes.Add("*I don't really sleep, so I guess I can instead watch for your safety during your sleep.*");
             }
             if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {

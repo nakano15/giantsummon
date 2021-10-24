@@ -2591,7 +2591,7 @@ namespace giantsummon
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = false;
             }
-            if ((UsingFurniture && (IsUsingBed || IsUsingBench || IsUsingThrone)) || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0) || (CurrentIdleAction == IdleActions.LookingAtTheBackground))
+            if (UsingFurniture || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0) || (CurrentIdleAction == IdleActions.LookingAtTheBackground))
             {
                 OffHandAction = false;
             }
@@ -2599,8 +2599,6 @@ namespace giantsummon
             {
                 if (ItemAnimationTime == 0 || !IsDualWielding)
                 {
-                    int LastOffhandItem = -1;
-                    if (SelectedOffhand > -1) LastOffhandItem = Inventory[SelectedOffhand].type;
                     PickOffhandForTheSituation(IsAttackingSomething);
                 }
             }
@@ -6098,6 +6096,8 @@ namespace giantsummon
                     MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -(SpriteHeight - Base.CharacterPositionYDiscount) * 0.25f));
                 if (!PlayerControl)
                 {
+                    if (!CanDualWield)
+                        OffHandAction = true;
                     if (TargetID > -1 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3 && 
                         (!DoAction.InUse || (!DoAction.IsGuardianSpecificAction && DoAction.ID != (int)GuardianActions.ActionIDs.CarryDownedAlly)))//!LastHadTargetClose && TargetID > -1)
                     {
@@ -6111,8 +6111,6 @@ namespace giantsummon
                     {
                         CheckIfCanSummon();
                         CheckIfCanDoAction();
-                        if (!CanDualWield)
-                            OffHandAction = true;
                         CheckForSituationalPotionUsage();
                         CheckForLifeCrystals();
                         CheckForPullSave();
@@ -19047,7 +19045,7 @@ namespace giantsummon
             bool CorrectHand = ((HeldItemHand == HeldHand.Both || HeldItemHand == HeldHand.Left) && !RightArm) || (HeldItemHand == HeldHand.Right && RightArm) || DualWield;
             if (CorrectHand)
             {
-                bool ShowItem = ItemAnimationTime > 0 || FreezeItemUseAnimation;
+                bool ShowItem = ItemAnimationTime > 0;
                 if (ShowItem)
                 {
                     if (SelectedItem > -1)

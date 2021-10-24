@@ -248,6 +248,9 @@ namespace giantsummon.Creatures
                         g.MeleeDamageMultiplier += 0.03f;
                         g.DefenseRate += 0.02f;
                         break;
+                    case Luna:
+                        g.MoveSpeed += 0.03f;
+                        break;
                 }
             }
         }
@@ -357,6 +360,22 @@ namespace giantsummon.Creatures
                 if (NpcMod.HasGuardianNPC(Nemesis))
                 {
                     Mes.Add("*I was unable to caught [gn:" + Nemesis + "] scent, no matter how hard I tried. I really hope he isn't the one I'm looking for.*");
+                }
+                if (NpcMod.HasGuardianNPC(Luna))
+                {
+                    if (HasAlexanderSleuthedGuardian(player, Luna))
+                    {
+                        Mes.Add("*[gn:" + Luna + "] is really furious about the fact that I know many things about her.*");
+                    }
+                    else
+                    {
+                        Mes.Add("*I will get to know [gn:"+Luna+"] more some time...*");
+                    }
+                }
+                if (guardian.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("*Yeah, I don't mind sharing my room with you, as long as you have a bed for yourself.*");
+                    Mes.Add("*You think I sleuth you during your sleep? What else do I need to discover about you?*");
                 }
             }
             if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)

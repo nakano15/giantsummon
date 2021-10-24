@@ -241,6 +241,11 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("(She stares at [gn:" + Cinnamon + "], then showed a soft smile.)");
                 }
+                if (guardian.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("(She seems really happy for having you as her room mate.)");
+                    Mes.Add("(She seems to be trying to apologize for the scare she gave you on the last time you slept.)");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }

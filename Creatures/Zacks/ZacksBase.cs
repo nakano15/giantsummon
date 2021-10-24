@@ -308,22 +308,22 @@ namespace giantsummon.Creatures
         public override string NoRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "*[name] is saying that he's entire right now.*";
-            return "*[name] said that his hunger is still on bearable levels.*";
+                return "*I'm whole right now.*";
+            return "*My hunger is still on bearable levels.*";
         }
 
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "*[name] said that he needs some things for his personal collection.*";
-            return "*[name] wants you to do something, but certainly isn't his final wish.*";
+                return "*I need some things for my personal collection. Can you help me with this?*";
+            return "*Glad you ask, I really need something, but certainly isn't my final wish.*";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "*[name] is so happy at you for doing his request that could die again. He then apologized for the bad pun.*";
-            return "*[name] got the things I brought him and is trying to fake his joy with a neutral look.*";
+                return "*I'm so happy that you managed to do my request that could die again. Sorry for the bad pun.*";
+            return "(He got the things I brought him and is trying to fake his joy with a neutral look.)";
         }
 
         public override string NormalMessage(Player player, TerraGuardian guardian)
@@ -334,10 +334,10 @@ namespace giantsummon.Creatures
             {
                 if (BlueInTheWorld)
                 {
-                    Mes.Add("*[name] said to not worry about your and your citizens safety, since he has an agreement with [gn:1] that he would not devour anyone in her presence.*");
+                    Mes.Add("*Don't worry about your and your citizens safety, I hadan agreement with [gn:1] that I will not devour anyone in her presence. I promisse*");
                     if (player.head == 17)
                     {
-                        Mes.Add("*[name] tells you to beware when using that hood. He says that you can end up being hugged by a known bunny lover.*");
+                        Mes.Add("*You better be careful when wearing that hoodie, you may end up being caught by a very known bunny lover.*");
                     }
                 }
                 else
@@ -349,33 +349,33 @@ namespace giantsummon.Creatures
             {
                 if (!Main.eclipse)
                 {
-                    Mes.Add("*[name] said that the sun doesn't do good on his rotten skin, so he preffers to stay on areas with shade.*");
-                    Mes.Add("*[name] misses being alive, and feels bad about not being able to move his left leg.*");
+                    Mes.Add("*The sun doesn't do good to my rotten skin, so I preffer to stay on areas with shade.*");
+                    Mes.Add("*I miss being alive, and being able to move my left leg.*");
                 }
                 else
                 {
-                    Mes.Add("*[name] said that he preffers the day like this, but with less monsters.*");
-                    Mes.Add("*[name] is puzzled about what kind of creatures are those.*");
+                    Mes.Add("*I preffer days like this, but with less monsters.*");
+                    Mes.Add("*What kind of creatures are those?*");
                 }
             }
             else
             {
                 if (!NPC.downedBoss1)
-                    Mes.Add("*[name] questions himself if that Giant Eye gazing at us is edible. But is looking weird at me after I asked what Giant Eye.*");
+                    Mes.Add("*I wonder if that Giant Eye is edible. Huh? What Giant Eye? Aren't you seeing it?*");
                 if (NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && !NPC.downedPlantBoss)
-                    Mes.Add("*[name] says that he will try a vegan meal. Is asking me when I will take him to the Jungle.*");
+                    Mes.Add("*I think I'll try some vegan food. When do you plan on taking me to the Jungle?*");
                 if (!Main.bloodMoon)
                 {
-                    Mes.Add("*[name] is telling me that beside not feeling any kind of pain on his body, he feels an unending hunger that only eases by eating something.*");
-                    Mes.Add("*[name] is asking if you will leave him behind, too.*");
-                    Mes.Add("*[name] told me that he always feels hunger for flesh, It simply doesn't end.*");
-                    Mes.Add("*[name] is asking if he could go outside... For... A walk?*");
+                    Mes.Add("*I don't feel any kind of pain in my body, but I feel an unending hunger that only ceases when I eat something.*");
+                    Mes.Add("*Are you going to leave me behind, too?*");
+                    Mes.Add("*I only feel hunger for flesh, and when I do feel too much hunger, It doesn't end well.*");
+                    Mes.Add("*Say... Could we go outside... For a walk..?*");
                 }
                 else
                 {
-                    Mes.Add("*[name] is feeling very aggressive tonight, he says he would be able to eat something whole.*");
-                    Mes.Add("*[name] is trying very hard to hold his hunger.*");
-                    Mes.Add("*[name] said that this night remembers him of when he died. He don't want to share the horrors he passed through with you. That seems to make him very angry.*");
+                    Mes.Add("*I'm trying... To hold... Myself.. I feel like eating something whole....*");
+                    Mes.Add("*Ugh.... Nghh....* (He's trying very hard to hold his hunger.");
+                    Mes.Add("*Ugh... This night... Remembers me of when I died... Better... You not know of the details...* (That seems to make him very angry.)");
                 }
             }
             switch (guardian.SkinID)
@@ -398,80 +398,80 @@ namespace giantsummon.Creatures
             }
             if (Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
             {
-                Mes.Add("*[name] has got the thriller or something.*");
+                Mes.Add("(He got the thriller or something?)");
                 Mes.Add("*What kind of dance moves are those? Seems like 90's ones?*");
                 if (BlueInTheWorld)
-                    Mes.Add("*[name] is dancing with [gn:1]. They look joyful when dancing.*");
+                    Mes.Add("(He's dancing with [gn:1]. They look joyful when dancing.)");
             }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Merchant))
-                Mes.Add("*[name] is telling me that [nn:" + Terraria.ID.NPCID.Merchant + "] asked if he had any unused skin he wanted to sell.*");
+                Mes.Add("*[nn:" + Terraria.ID.NPCID.Merchant + "] asked if I had any unused skin that I could sell. Look at me, do you think anything in this body could be of use?*");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Nurse))
-                Mes.Add("*[name] is telling me that [nn:" + Terraria.ID.NPCID.Nurse + "] asked if he wanted to donate some blood, if there is any useable blood left.*");
+                Mes.Add("*Earlier, [nn:" + Terraria.ID.NPCID.Nurse + "] asked me if I could donate some blood, if there's some left. I asked her if she was crazy.*");
             if (NPC.AnyNPCs(Terraria.ID.NPCID.Stylist))
             {
-                Mes.Add("*[name] said that he went to [nn:" + Terraria.ID.NPCID.Stylist + "] and asked her to do some treatment with his fur, she then replied that can't do miracles. And recommended a taxidermist.*");
+                Mes.Add("*I visitted [nn:" + Terraria.ID.NPCID.Stylist + "] once and asked her to do some treatment on my fur, she then told me that can't do miracles. And recommended me a taxidermist.*");
             }
             if (NpcMod.HasGuardianNPC(0))
             {
-                Mes.Add("*[name] said that If [gn:0] comes annoy him again, he'll try kicking his behind.*");
-                Mes.Add("*[name] is telling [gn:0] that if he comes back with any funny jokes again, he'll kick his behind.*");
+                Mes.Add("*If [gn:0] comes annoy him again, I'll try kicking his behind.*");
+                Mes.Add("*If [gn:0] comes back with any funny jokes again, I'll kick his behind.*");
             }
             if (NpcMod.HasGuardianNPC(1))
             {
-                Mes.Add("*[name] feels bad when goes to talk with [gn:1], because she looks partially joyful and partially saddened.*");
-                Mes.Add("*[name] is thinking about [gn:1], he wishes to be alive and entire again just to be with her.*");
+                Mes.Add("*I feel bad when I speak with [gn:1], because she looks partially joyful and partially saddened at me.*");
+                Mes.Add("*I think about [gn:1] several times, I wish to be alive and entire again just to be with her.*");
                 if(PlayerMod.PlayerHasGuardianSummoned(player, Blue))
                 {
                     switch(PlayerMod.GetPlayerGuardian(player, Blue).OutfitID)
                     {
                         case 1:
-                            Mes.Add("*[name] says that would howl at [gn:" + Blue + "], if his lungs weren't badly damaged.*");
-                            Mes.Add("*[name] says that [gn:" + Blue + "] looks as great as when they first met.*");
-                            Mes.Add("*[name] says that looking at [gn:" + Blue + "] remembered how much he liked her.*");
+                            Mes.Add("*I would howl to [gn:" + Blue + "], if my lungs weren't badly damaged.*");
+                            Mes.Add("*You look as great as when we first met, [gn:" + Blue + "].*");
+                            Mes.Add("*[gn:" + Blue + "]... Looking at you now remembered me how much I like you.*");
                             break;
                         case 2:
-                            Mes.Add("*[name] asks [gn:" + Blue + "] where is her cloak. He says that didn't really liked It, but couldn't imagine her not using It.*");
-                            Mes.Add("*[name] seems impressed at [gn:" + Blue + "]'s outfit.*");
+                            Mes.Add("*Uh, [gn:" + Blue + "], where is your cloak? I didn't really liked the cloak, but couldn't imagine you not using it.*");
+                            Mes.Add("*Wow! I'm really impressed at your outfit, [gn:" + Blue + "].*");
                             break;
                     }
                 }
             }
             else
             {
-                Mes.Add("*[name] misses being with someone.*");
+                Mes.Add("*Huh? Oh, sorry... I just... Miss someone...*");
                 if(Main.moonPhase == 0 && !Main.dayTime)
-                    Mes.Add("*[name] is trying to howl at the moon, but his lungs were too damaged to be able to do that.*");
+                    Mes.Add("(He's trying to howl at the moon, but his lungs were too damaged to be able to do that.)");
             }
             if (NpcMod.HasGuardianNPC(2))
             {
-                Mes.Add("*[name] is telling me that he's playing some game with [gn:2], should I start getting worried?*");
-                Mes.Add("*[name] is saying that he's getting better at lasso with the help of [gn:2]. But I wonder, where did he got a rope. Wait...*");
-                Mes.Add("*[name] asks if you are worried if [gn:2] will turn into a zombie, he told you that you should not worry, at least If he doesn't die, he'll be fine.*");
+                Mes.Add("*I've been playing a game with [gn:2]. I were having fun with it, but I can't say the same about [gn:2].*");
+                Mes.Add("*I've been getting really good at lasso, with the help of [gn:2]. What lasso? Well...*");
+                Mes.Add("*Let me guess, you're worried that I may end up turning [gn:2] into a zombie? Don't worry about that, at least unless he dies, he'll be fine, probably.*");
             }
             if (PlayerMod.PlayerHasGuardianSummoned(player, 0))
             {
-                Mes.Add("*[name] says that dislodged It's left knee when kicking [gn:0]'s behind, and is asking if you can help him put it into place.*");
-                Mes.Add("*[name] seems to be paying attention to what [gn:0] is saying, but as soon as he said something stupid, the conversation ended.*");
+                Mes.Add("*I dislodged my left knee when kicking [gn:0]'s behind, can you help me put it into it's place?*");
+                Mes.Add("(He seems to be paying attention to what [gn:0] is saying, but as soon as he said something stupid, the conversation ended.)");
             }
             if (PlayerMod.PlayerHasGuardianSummoned(player, 1))
             {
-                Mes.Add("*[name] told you to take real good care of [gn:1] on your adventures, or else he'll take care of you.*");
-                Mes.Add("*[name] is telling you both to take care, since he doesn't want you and [gn:1] to be another Blood moon miniboss.*");
+                Mes.Add("*Take good care of [gn:1] on your adventures, or else I'll take care of you. Understand?*");
+                Mes.Add("*Both to take care on your quest, I don't want either of you turning into another Blood moon miniboss.*");
             }
             if (PlayerMod.PlayerHasGuardianSummoned(player, 2))
             {
-                Mes.Add("*[name] shows a distorted smile while looking in [gn:2] direction, making him back away slowly.*");
-                Mes.Add("*[name] said that wants to play a game, and now [gn:2] is begging me that we should go, now.*");
+                Mes.Add("(He shows a distorted smile while looking in [gn:2] direction, making him back away slowly.)");
+                Mes.Add("*Hey [gn:2], let's play a game?* ([gn:2] is begging me that we should go, now.)");
             }
             if (NpcMod.HasGuardianNPC(5))
             {
-                Mes.Add("*[name] says that really wanted to play with [gn:5], but his left leg doesn't really helps, so he always dismisses him.*");
+                Mes.Add("*I really wanted to play with [gn:5], but my left leg doesn't really helps, so I can't do much else than dismiss him.*");
                 if (NpcMod.HasGuardianNPC(2))
                 {
-                    Mes.Add("*[name] says that ever since [gn:5] has arrived, he barelly were able to play with [gn:2].*");
+                    Mes.Add("*Ever since [gn:5] has arrived, I barelly were able to play with [gn:2].*");
                 }
                 if (NpcMod.HasGuardianNPC(1))
-                    Mes.Add("*[name] says that [gn:1] haven't been playing with [gn:5] latelly. He wonders what happened.*");
+                    Mes.Add("*Weird, [gn:1] haven't been playing with [gn:5] latelly. I wonders what happened.*");
             }
             if (NpcMod.HasGuardianNPC(7))
             {
@@ -533,6 +533,12 @@ namespace giantsummon.Creatures
                 Mes.Add("*Even [gn:" + Miguel + "] thinks that I may not be able to grow a muscle, since my body is... Well.. You know... I'm quite happy that he still give me exercises for me to try.*");
                 Mes.Add("*It's really complicated to visit [gn:" + Miguel + "]. My ever hungry instincts make me want to devour him.*");
             }
+            if (NpcMod.HasGuardianNPC(Luna))
+            {
+                Mes.Add("*[gn:"+Luna+"]... She makes me droll... Not good...*");
+                Mes.Add("*I try keeping my distance from [gn:"+Luna+"], for her safety.*");
+            }
+
             if (guardian.IsPlayerRoomMate(player))
             {
                 Mes.Add("*Yes, I can share my room with you, I can't sleep at night, anyway.*");
@@ -580,62 +586,62 @@ namespace giantsummon.Creatures
         public override string HomelessMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*[name] is saying that just because he's a zombie he doesn't need to live outdoors.*");
-            Mes.Add("*[name] doesn't want to be alone anymore, he wants a house with people to talk with.*");
-            Mes.Add("*[name] told me that wont have the other villagers as a meal. Give him some place to live.*");
-            Mes.Add("*[name] is saying that if you doesn't want to give him a house because of his smell and \"decay state\", there is nothing he can do about it, but It's not nice to be left in the wilderness.*");
+            Mes.Add("*Hey! Just because I'm a zombie doesn't mean I must live outdoor.*");
+            Mes.Add("*I don't want to be alone anymore. I want a house, I want people around to talk with.*");
+            Mes.Add("*I wont have your villagers as a meal. Give me a place to live.*");
+            Mes.Add("If you don't want to give me a house because of my smell and \"decay state\", there is nothing I can do about it, but It's not nice to be left in the wilderness.*");
             if (NpcMod.HasGuardianNPC(1))
-                Mes.Add("*[name] says that he wants to be with [gn:1], so please build him a house next to her.*");
+                Mes.Add("*I want to be with [gn:1], so please give me a house next to her.*");
             if (Main.dayTime)
-                Mes.Add("*[name] says that the sun is burning the rest of his skin, build a house for him.*");
+                Mes.Add("*The sun is burning the rest of my skin, give me a house, please.*");
             else
-                Mes.Add("*[name] doesn't want to stay on this deplorable state anymore, give him some place to live.*");
+                Mes.Add("*I don't want to stay on this deplorable state anymore, give me some place to live.*");
             if (Main.raining)
-                Mes.Add("*[name] is saying that the water is bad for his innards. Give him some place to live.*");
+                Mes.Add("*The water is bad for my innards. Give me some place to live.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string TalkMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*[name] says that being unable to move his left leg hinders him a bit, but he'll try his best to follow you anyway.*");
-            Mes.Add("*[name] is asking you if he should consider doing fishing as a hobby. He got the worms, anyway.*");
-            Mes.Add("*[name] seems to be worried, trying to keep up with me, as if I was going to leave him behind.*");
-            Mes.Add("*You asked [name] why zombies comes out from the floor, he answers that he doesn't knows, since he was never buried.*");
-            Mes.Add("*[name] is asking you if will eventually find the Terrarian that left him to the zombies.*");
+            Mes.Add("*I'm being hindered a bit by my left leg, but I'll try my best to follow you anyway.*");
+            Mes.Add("*Should I consider doing fishing as a hobby. I got the bait, anyway.*");
+            Mes.Add("*I keep trying to keep up to you, so you never leave me behind.*");
+            Mes.Add("*Why zombies comes out from the floor? I don't know, I was never buried.*");
+            Mes.Add("*Tell me [nickname], will we eventually find the Terrarian that left me to the zombies? It's not for revenge, at least a bit, but... Why?*");
             if(PlayerMod.PlayerHasGuardian(player, GuardianBase.Sardine))
                 Mes.Add("*I asked [name] what he uses to make his lasso. He told me that used his intestine for that. After knowing that, not only I got striked by an instant regret, but also think that shouldn't tell this to [gn:2].*");
             if (PlayerMod.HasGuardianSummoned(player, 3) && PlayerMod.GetPlayerSummonedGuardian(player, 3).Wet)
             {
-                Mes.Add("*[name] is saying that there's water even where you wouldn't believe. And he preffers not to give details.*");
+                Mes.Add("*There's water even where you wouldn't believe, I preffer not to give details.*");
             }
             if (NpcMod.HasGuardianNPC(5) && NpcMod.HasGuardianNPC(1))
-                Mes.Add("*[name] says that after knowing of " + NpcMod.GetGuardianNPCName(5) + "'s loss, he thinks he should take it easy with " + NpcMod.GetGuardianNPCName(1) + ", since she might have felt nearly the same.*");
+                Mes.Add("*After hearing of " + NpcMod.GetGuardianNPCName(5) + "'s loss, I think I shouldn't feel so bad about my situation with " + NpcMod.GetGuardianNPCName(1) + ", she might have felt nearly the same...*");
             if (!PlayerMod.PlayerHasGuardianSummoned(player, 0))
             {
-                Mes.Add("*[name] is asking me why [gn:0] is so annoying, looks like he's not even grown up.*");
-                Mes.Add("*[name] is showing his fist to [gn:0], and said that It's reserved for the next time he comes with a funny zombie joke.*");
-                if(NPC.AnyNPCs(Terraria.ID.NPCID.Merchant) && !PlayerMod.PlayerHasGuardianSummoned(player, 1) &&NpcMod.HasGuardianNPC(1))
-                    Mes.Add("*[name] wonders if he could gift [gn:1], to try cheering her up.*");
+                Mes.Add("*Why [gn:0] is so annoying? Looks like he's not even grown up.*");
+                Mes.Add("*See this [gn:0]? This is a fist, and It's reserved for the next time you come up with a funny zombie joke.*");
             }
+                if(NPC.AnyNPCs(Terraria.ID.NPCID.Merchant) && !PlayerMod.PlayerHasGuardianSummoned(player, 1) &&NpcMod.HasGuardianNPC(1))
+                    Mes.Add("*I wonder if I could give a gift to [gn:1]. Maybe that will cheer her up.*");
             if (!PlayerMod.PlayerHasGuardianSummoned(player, 1))
             {
-                Mes.Add("*[name] started to be happy by seeying [gn:1], but once he saw the bits of despair in her face, he started to get saddened too.*");
+                Mes.Add("(He started to be happy by seeying [gn:1], but once he saw the bits of despair in her face, he started to get saddened too.)");
             }
             if (PlayerMod.PlayerHasGuardianSummoned(player, 2))
             {
-                Mes.Add("*[name] is asking [gn:2] if he wants to play \"The Walking Guardian\", as soon as he said that, [gn:2] started to scream and run away.*");
+                Mes.Add("*Hey [gn:2], want to play \"The Walking Guardian\" with me? (As soon as he said that, [gn:2] started to scream and run away.)");
             }
             if (!Main.dayTime)
             {
                 if (!Main.bloodMoon)
-                    Mes.Add("*[name] told me that the night he died, he were walking in the forest following a Terrarian, until a blood moon started. The Terrarian left him in the middle of the hordes of zombies.*");
+                    Mes.Add("*The night I died, I were walking in the forest following a Terrarian, until a blood moon started. That Terrarian left me in the middle of the hordes of zombies to be eaten alive, after I helped him climb a corrupt cliff. I'm still furious about that.*");
                 else
-                    Mes.Add("*[name] told me that the night he died, he were walking in the forest following a Terrarian, until a blood moon started. The Terrarian left him in the middle of the hordes of zombies, whose resulted in his horrible death. He doesn't remember anything past that, other than coming to his senses and seeying yours and Blue's face.*");
+                    Mes.Add("*The night I died, I were walking in the forest following a Terrarian, until a blood moon started. The Terrarian left him in the middle of the hordes of zombies to be eaten alive, after I helped him climb a corrupt cliff. I don't remember anything after that, other than suddenly \'waking up\' after listening to Blue's voice, and seeing yours and her face.*");
             }
             if (NpcMod.HasGuardianNPC(1))
             {
-                Mes.Add("*[name] says that he doesn't knows why [gn:1] never mentions this to anybody, but she really loves bunnies. Told me to try giving her one and thank him later.*");
+                Mes.Add("*I don't know why [gn:1] never mentions this to anybody, but she really loves bunnies. Try giving her one and thank me later.*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -643,8 +649,8 @@ namespace giantsummon.Creatures
         public override string BirthdayMessage(Player player, TerraGuardian guardian)
         {
             if (!PlayerMod.HasGuardianBeenGifted(player, 3) && Main.rand.Next(2) == 0)
-                return "*[name] is saying that he's so excited wanting to know what you will give him as a gift, that he could... Oops, he couldn't hold any longer.*";
-            return "*[name] is asking if in his current state, growing older is a good thing.*";
+                return "*I'm so excited wanting to know what you will give me as a gift, that I could... Oops, ignore... The sudden puddle.*";
+            return "*Tell me, [nickname]. Growing older, in my current state, is a good thing?*";
         }
 
         public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
@@ -715,14 +721,14 @@ namespace giantsummon.Creatures
                                 Player player = Main.player[Sender.TargetID];
                                 if (!guardian.DoAction.InUse && !guardian.IsPlayerHostile(player))
                                 {
-                                    guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(player), PullSomeoneID);
+                                    guardian.StartNewGuardianAction(new Zacks.ZacksPullSomeoneAction(player), PullSomeoneID);
                                 }
                                 break;
                             case TriggerTarget.TargetTypes.TerraGuardian:
                                 TerraGuardian tg = MainMod.ActiveGuardians[Sender.TargetID];
                                 if (!guardian.DoAction.InUse && !guardian.IsGuardianHostile(tg))
                                 {
-                                    guardian.StartNewGuardianAction(new Creatures.Zacks.ZacksPullSomeoneAction(tg), PullSomeoneID);
+                                    guardian.StartNewGuardianAction(new Zacks.ZacksPullSomeoneAction(tg), PullSomeoneID);
                                 }
                                 break;
                         }

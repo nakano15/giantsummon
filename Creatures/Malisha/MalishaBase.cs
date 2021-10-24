@@ -293,6 +293,8 @@ namespace giantsummon.Creatures
             Mes.Add("*I feel like people actually look directly into my \'mana depository\' when they look at me.*");
             Mes.Add("*I'm a bit disappointed that this isn't a naturalist colony like I initially thought, but I'm glad I can do my experiments here.*");
 
+            Mes.Add("*I can't have clothings hinder my spell casting, so I don't use any.*");
+
             Mes.Add("*Take your time to trust in me, and you will find infinity.*");
 
             if (Main.dayTime)
@@ -436,7 +438,7 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Miguel))
             {
-                Mes.Add("*Beef guy is really useful for me, so I will not try anything on him.*");
+                Mes.Add("*Beef guy is really useful for me and my body, so I will not try anything on him.*");
             }
 
                 if (guardian.IsUsingToilet)

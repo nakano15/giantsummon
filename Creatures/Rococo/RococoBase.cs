@@ -557,7 +557,12 @@ namespace giantsummon.Creatures
                 Mes.Add("*[name] says that after meeting [gn:" + Cinnamon + "], he has been eating several tasty foods.*");
                 Mes.Add("*[name] asks what is wrong with the seasonings he brings to [gn:" + Cinnamon + "].*");
             }
-                if (guardian.IsUsingToilet)
+            if (NpcMod.HasGuardianNPC(Luna))
+            {
+                Mes.Add("*[name] is really happy for having [gn:"+Luna+"] around. He really seems to like her.*");
+                Mes.Add("*[name] seems to be expecting [gn:"+Luna+"]'s visit.*");
+            }
+            if (guardian.IsUsingToilet)
             {
                 Mes.Add("*[name] is telling me to plug my nose.*");
                 Mes.Add("*[name] is asking if there is no other moment to chat.*");

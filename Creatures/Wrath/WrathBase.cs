@@ -250,6 +250,12 @@ namespace giantsummon.Creatures
                 if(CloudForm)
                     Mes.Add("*I already said that I'm not a ghost. Don't compare me to [gn:"+Fluffles+"].*");
             }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*Great... A room mate. It couldn't get worse, right?*");
+                if(CloudForm)
+                    Mes.Add("*Don't think that we can share bed since I'm not solid.*");
+            }
             if (guardian.KnockedOut)
             {
                 Mes.Clear();

@@ -310,6 +310,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*I look distacted? I'm checking out if [gn:" + Fluffles + "] wont surge from somewhere to give me a scare.*");
                 //Mes.Add("*You need to speak with [gn:" + Fluffles + "]. The other day she made me faint out of a scare, when I woke up she was over me. I've never been so scared in my life!*"); //That would give a bad impression of what happened.
             }
+            if (NpcMod.HasGuardianNPC(Luna))
+            {
+                Mes.Add("*Ah... It's good to have [gn:"+Luna+"] around. She causes less influx of questions upon me.*");
+            }
             if (!Main.dayTime && !Main.bloodMoon)
             {
                 Mes.Add("*Looks like I'll have troubles sleeping this night...*");

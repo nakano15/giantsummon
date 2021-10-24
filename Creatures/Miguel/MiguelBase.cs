@@ -288,7 +288,16 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(CaptainStench))
             {
-                Mes.Add("*For some reason, [gn:"+CaptainStench+"] said she would do exercise if she gets some materialistic reward as compensation. Can you believe that? As if being fit wasn't a reward in itself.*");
+                Mes.Add("*For some reason, [gn:" + CaptainStench + "] said she would do exercise if she gets some materialistic reward as compensation. Can you believe that? As if being fit wasn't a reward in itself.*");
+            }
+            if (NpcMod.HasGuardianNPC(Luna))
+            {
+                Mes.Add("*I really would love seeing fit [gn:" + Luna + "]... I mean... I... I mean... Err... Forget it.*");
+            }
+            if (guardian.IsPlayerRoomMate(player))
+            {
+                Mes.Add("*I'm okay with sharing my room with you. I hope my morning exercises don't end up waking you.*");
+                Mes.Add("*Sorry if I sound really beaten during the night, but I really get depleted when I go sleep, so I literally sleep like a log.*");
             }
 
             if (guardian.IsUsingToilet)

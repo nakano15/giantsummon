@@ -374,6 +374,10 @@ namespace giantsummon.Creatures
                 Mes.Add("[nickname]... I'm working hard... With the help of [gn:" + Miguel + "]... To get stronger... and protect you...");
                 Mes.Add("I'm exausted... [gn:" + Miguel + "]'s exercises are hardcore... But I'm feeling stronger.");
             }
+            if (NpcMod.HasGuardianNPC(Luna))
+            {
+                Mes.Add("I like [gn:"+ Luna+ "], she always rub my belly when I ask.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("I'm trying hard to aim at the hole.");

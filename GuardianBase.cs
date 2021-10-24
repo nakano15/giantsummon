@@ -155,7 +155,8 @@ namespace giantsummon
             CaptainStench = 22,
             Cinnamon = 23,
             Quentin = 24,
-            Miguel = 25;
+            Miguel = 25,
+            Luna = 26;
 
         public void RefreshBaseLifeTime()
         {
@@ -1110,83 +1111,86 @@ namespace giantsummon
                     default:
                         InvalidGuardian = true;
                         break;
-                    case 0:
+                    case Rococo:
                         gb = new RococoBase();
                         break;
-                    case 1:
+                    case Blue:
                         gb = new BlueBase();
                         break;
-                    case 2:
+                    case Sardine:
                         gb = new SardineBase();
                         break;
-                    case 3:
+                    case Zacks:
                         gb = new ZacksBase();
                         break;
-                    case 4:
+                    case Nemesis:
                         gb = new NemesisBase();
                         break;
-                    case 5:
+                    case Alex:
                         gb = new AlexBase();
                         break;
-                    case 6:
+                    case Brutus:
                         gb = new BrutusBase();
                         break;
-                    case 7:
+                    case Bree:
                         gb = new BreeBase();
                         break;
-                    case 8:
+                    case Mabel:
                         gb = new MabelBase();
                         break;
-                    case 9:
+                    case Domino:
                         gb = new DominoBase();
                         break;
-                    case 10:
+                    case Leopold:
                         gb = new LeopoldBase();
                         break;
-                    case 11:
+                    case Vladimir:
                         gb = new VladimirBase();
                         break;
-                    case 12:
+                    case Malisha:
                         gb = new MalishaBase();
                         break;
-                    case 13:
+                    case Michelle:
                         gb = new MichelleBase();
                         break;
-                    case 14:
+                    case Wrath:
                         gb = new WrathBase();
                         break;
-                    case 15:
+                    case Alexander:
                         gb = new AlexanderBase();
                         break;
-                    case 16:
+                    case Fluffles:
                         gb = new FlufflesBase();
                         break;
-                    case 17:
+                    case Minerva:
                         gb = new MinervaBase();
                         break;
-                    case 18:
+                    case Daphne:
                         gb = new DaphneBase();
                         break;
-                    case 19:
+                    case Liebre:
                         gb = new LiebreBase();
                         break;
-                    case 20:
+                    case Bapha:
                         gb = new BaphaBase();
                         break;
-                    case 21:
+                    case Glenn:
                         gb = new GlennBase();
                         break;
-                    case 22:
+                    case CaptainStench:
                         gb = new CaptainStenchBase();
                         break;
-                    case 23:
+                    case Cinnamon:
                         gb = new CinnamonBase();
                         break;
-                    case 24:
+                    case Quentin:
                         gb = new QuentinBase();
                         break;
-                    case 25:
+                    case Miguel:
                         gb = new MiguelBase();
+                        break;
+                    case Luna:
+                        gb = new LunaBase();
                         break;
                 }
             }

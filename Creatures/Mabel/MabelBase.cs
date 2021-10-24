@@ -351,6 +351,11 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*When visitting [gn:" + Cinnamon + "], I always have to resist the temptation of nibbling everything she cooked.*");
             }
+            if (NpcMod.HasGuardianNPC(Luna))
+            {
+                Mes.Add("*Whaaaaaaaaaaat? [gn:" + Luna + "] won a edition of Miss North Pole? Like... Whaaaaaaaaaaaaat?*");
+                Mes.Add("*[gn:" + Luna + "] thinks I'm exagerating a bit about the practice of the contest, but I don't think like that.*");
+            }
             if (guardian.KnockedOut)
             {
                 Mes.Clear();

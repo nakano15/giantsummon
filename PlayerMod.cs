@@ -1603,7 +1603,7 @@ namespace giantsummon
             else
             {
                 float LifeMaxValue = 0.5f;
-                if (player.HasBuff(ModContent.BuffType<giantsummon.Buffs.Injury>()))
+                if (player.HasBuff(ModContent.BuffType<Buffs.Injury>()))
                 {
                     LifeMaxValue = 0.25f;
                 }
