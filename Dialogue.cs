@@ -376,9 +376,9 @@ namespace giantsummon
         /// </summary>
         /// <param name="Text">The text of the option, displayed on the list.</param>
         /// <param name="OptionAction">The action of the option. The TerraGuardian attribute in the action is the speaker.</param>
-        public static void AddOption(string Text, Action OptionAction)
+        public static void AddOption(string Text, Action OptionAction, bool Threaded = false)
         {
-            GuardianMouseOverAndDialogueInterface.AddOption(Text, OptionAction);
+            GuardianMouseOverAndDialogueInterface.AddOption(Text, OptionAction, Threaded);
         }
 
         /// <summary>

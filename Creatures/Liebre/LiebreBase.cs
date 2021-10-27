@@ -612,7 +612,7 @@ namespace giantsummon.Creatures
             bool HasSoulNearby = data.MouthOpenTime > 0;
             bool BodyPlaced = false, LeftArmPlaced = false, RightArmPlaced = false, MouthPlaced = false;
             GuardianDrawData gdd;
-            float MinOpacity = (float)data.SoulsLoaded / (2500 + data.SoulsLoaded);
+            float MinOpacity = (float)data.SoulsLoaded / (250 + data.SoulsLoaded);
             float OpacityRate = (1f - (Math.Max(MinOpacity, (float)(color.R + color.G + color.B) / (255 * 3))));
             Color PlasmaOpacity = Color.White * OpacityRate;
             bool BodyIsFront = false;

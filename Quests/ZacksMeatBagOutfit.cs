@@ -19,6 +19,13 @@ namespace giantsummon.Quests
         /// Step 8: Quest completed.
         /// Even = Zacks doesn't knows.
         /// Odd = Zack knows (was in the party when listening to her request).
+        /// 
+        /// ZacksKnowsOfShirt Steps
+        /// Step 0: Doesn't know that Blue picked the shirt.
+        /// Step 1: Knows Blue picked shirt.
+        /// Step 2: After asking if player picked shirt.
+        /// Step 3: After talking about Blue's choice of shirt.
+        /// Step 4: After player lied, saying that they picked the shirt.
         /// </summary>
 
         public override string Name => "Let's patch it up!";
@@ -168,18 +175,24 @@ namespace giantsummon.Quests
         public class ZacksOutfitQuestData : QuestData
         {
             public byte QuestStep = 0;
-            private const short DataVersion = 0;
+            public byte ZacksKnowsWhoPickedShirt = 0;
+            private const short DataVersion = 1;
 
             public override void CustomSaveQuest(string QuestKey, TagCompound Writer)
             {
                 Writer.Add(QuestKey + "_Version", DataVersion);
                 Writer.Add(QuestKey + "_Step", QuestStep);
+                Writer.Add(QuestKey + "_ZacksKnowOfShirt", ZacksKnowsWhoPickedShirt);
             }
 
             public override void CustomLoadQuest(string QuestKey, TagCompound Reader, int ModVersion)
             {
                 short Version = Reader.GetShort(QuestKey + "_Version");
                 QuestStep = Reader.GetByte(QuestKey + "_Step");
+                if (Version > 0)
+                {
+                    ZacksKnowsWhoPickedShirt = Reader.GetByte(QuestKey + "_ZacksKnowOfShirt");
+                }
             }
         }
 
@@ -194,6 +207,7 @@ namespace giantsummon.Quests
                     PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).SaySomethingCanSchedule("*This one! This one is perfect. I'll take It. Thank you. Let's give It to Zacks.*", true, 90);
                     if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Zacks))
                     {
+                        data.ZacksKnowsWhoPickedShirt = 1;
                         PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks).SaySomethingCanSchedule("*I hope you picked something cool for me.*", true, 90 + 150);
                     }
                     return "So, you want a shirt for " + NpcMod.GetGuardianNPCName(GuardianBase.Zacks) + "? I have quite a selection, feel free to browse.";
@@ -530,6 +544,86 @@ namespace giantsummon.Quests
                         }
                         break;
                 }
+            }
+        }
+
+        public static void AfterQuestZacks() //Needs work. Zacks dialogue looks rather bad.
+        {
+            ZacksOutfitQuestData data = (ZacksOutfitQuestData)Data;
+            Dialogue.SetImportantDialogue();
+            TerraGuardian Blue = null, Zacks = Dialogue.GetSpeaker;
+            if (PlayerMod.PlayerHasGuardianSummoned(Main.LocalPlayer, GuardianBase.Blue))
+                Dialogue.AddParticipant(Blue = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Blue));
+            switch (data.ZacksKnowsWhoPickedShirt)
+            {
+                case 0: //Don't know
+                    Dialogue.ShowDialogueWithContinue("*I really appreciate that [gn:" + GuardianBase.Blue + "] and you managed to get things to cover my wounds.*");
+                    Dialogue.ShowDialogueWithContinue("*But I really don't like this shirt calling me a \'Meat Bag\'.*");
+                    switch (Dialogue.ShowDialogueWithOptions("*You didn't had anything to do with this shirt choice, right?*", new string[] {
+                            "It was [gn:"+GuardianBase.Blue+"] who picked the shirt.",
+                            "I didn't even had the chance.",
+                            "Yes, I did."
+                        }))
+                    {
+                        case 0:
+                            if (Blue == null)
+                            {
+                                Dialogue.ShowDialogueWithContinue("*I should have wondered. Looks like I was pranked by her.*");
+                                data.ZacksKnowsWhoPickedShirt += 2;
+                                Dialogue.ShowEndDialogueMessage("*I guess I'll have to think of some way of retributing this gift she gave me.*");
+                            }
+                            else
+                            {
+                                Dialogue.ShowDialogueWithContinue("*I should have wondered. Looks like you pranked on me.*");
+                                Dialogue.ShowDialogueWithContinue("*You really know how much I like you, so I gave you a nice gift.*", Blue);
+                                data.ZacksKnowsWhoPickedShirt += 2;
+                                Dialogue.ShowEndDialogueMessage("*Then better I get into preparing my reply. Hehe.*", true, Zacks);
+                            }
+                            return;
+                        case 1:
+                            if (Blue == null)
+                            {
+                                Dialogue.ShowDialogueWithContinue("*Then It was [gn:" + GuardianBase.Blue + "].*");
+                                data.ZacksKnowsWhoPickedShirt += 2;
+                                Dialogue.ShowEndDialogueMessage("*Better I start thinking of something I could give her in reply for this shirt, then.*");
+                            }
+                            else
+                            {
+                                Dialogue.ShowDialogueWithContinue("*Then It was you.*");
+                                Dialogue.ShowDialogueWithContinue("*Disappointed?*", Blue);
+                                data.ZacksKnowsWhoPickedShirt += 2;
+                                Dialogue.ShowEndDialogueMessage("*Well, no. It's really unusual of you to prank on someone. Better I get into preparing a reply to this, then.*", Speaker: Zacks);
+                            }
+                            break;
+                        case 2:
+                            Dialogue.ShowDialogueWithContinue("*That doesn't sounds likelly, but I guess I should believe what you say.*");
+                            if (Blue != null)
+                            {
+                                Dialogue.ShowDialogueWithContinue("*([nickname], you shouldn't have said that.)*", Blue);
+                            }
+                            Dialogue.ShowDialogueWithContinue("*Even more since you don't know who you pranked with.*");
+                            data.ZacksKnowsWhoPickedShirt = 4;
+                            if (Blue != null)
+                            {
+                                Dialogue.ShowDialogueWithContinue("*(Uh oh... It was nice knowing you, [nickname].)*", Blue);
+                            }
+                            Dialogue.ShowEndDialogueMessage("*Better you watch for my reply, [nickname]. Hehehe.*");
+                            break;
+                    }
+                    break;
+                case 1:
+                    Dialogue.ShowDialogueWithContinue("*I really appreciate that [gn:" + GuardianBase.Blue + "] and you managed to get things to cover my wounds.*");
+                    switch(Dialogue.ShowDialogueWithOptions("*But this shirt... I hate it.*", new string[] {
+                        "But It was a gift.", "It actually seems fitting.", "Think of it as a gift from [gn:"+GuardianBase.Blue+"]." }))
+                    {
+                        case 0:
+                            Dialogue.ShowDialogueWithContinue("*Yes, but the label really doesn't help.*");
+                            Dialogue.ShowDialogueWithContinue("*At least the patch up was really nice.*");
+                            data.ZacksKnowsWhoPickedShirt += 2;
+                            Dialogue.ShowEndDialogueMessage("*But now I need to think of ways of showing her my affection for this gift.*");
+                            break;
+                    }
+                    break;
             }
         }
 

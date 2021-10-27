@@ -1,6 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using giantsummon.Creatures.Luna;
 
 namespace giantsummon.Creatures
 {
@@ -139,6 +140,13 @@ namespace giantsummon.Creatures
                 else
                     Frame = 0;
             }
+        }
+
+        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<GuardianMouseOverAndDialogueInterface.DialogueOption> ExtraDialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            ExtraDialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("I have some questions.", TutoringDialogues.StartTutoringDialogue, true));
+            return ExtraDialogues;
         }
 
         public override string MountUnlockMessage => "*Hey [nickname], if you want, I can carry you on my shoulder. My legs are bigger than yours, so may be faster if I carry you, while you tell me where to go.*";

@@ -6240,7 +6240,7 @@ namespace giantsummon
 
         public void CheckForPullSave()
         {
-            if (OwnerPos == -1 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3) return;
+            if (OwnerPos == -1 || GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3) return;
             bool LavaImmunity = HasFlag(GuardianFlags.LavaImmunity) || HasFlag(GuardianFlags.LavaTolerance);
             if (Velocity.Y > 0)
             {

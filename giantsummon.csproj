@@ -114,6 +114,7 @@
     <Compile Include="Creatures\Blue\FullMoonHowlingBehavior.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\Brutus\ProtectModeAction.cs" />
+    <Compile Include="Creatures\Leopold\LoreDialogues.cs" />
     <Compile Include="Creatures\Liebre\LiebreBase.cs" />
     <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
     <Compile Include="Creatures\CaptainStench\CaptainStenchBase.cs" />
@@ -131,6 +132,7 @@
     <Compile Include="Creatures\Daphne\DaphneBase.cs" />
     <Compile Include="Creatures\Fluffles\FlufflesBase.cs" />
     <Compile Include="Creatures\Liebre\SoulUnloadingAction.cs" />
+    <Compile Include="Creatures\Luna\TutoringDialogues.cs" />
     <Compile Include="Creatures\Malisha\MalishaBase.cs" />
     <Compile Include="Creatures\Michelle\MichelleBase.cs" />
     <Compile Include="Creatures\Miguel\MiguelBase.cs" />
@@ -183,6 +185,7 @@
     <Compile Include="GuardianShopInterface.cs" />
     <Compile Include="GuardianSkills.cs" />
     <Compile Include="GuardianSpawningScripts.cs" />
+    <Compile Include="GuardianSpawnTip.cs" />
     <Compile Include="GuardianSpecialAttack.cs" />
     <Compile Include="Items\Accessories\BlueHairclip.cs" />
     <Compile Include="Items\Accessories\TwoHandedMastery.cs" />

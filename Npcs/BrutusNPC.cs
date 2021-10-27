@@ -113,7 +113,7 @@ namespace giantsummon.Npcs
             }
             if (Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0)
                 return;
-            int NpcCount = 0;
+            int NpcCount = (int)(NpcMod.GetCompanionNPCCount() * 0.5f);
             for (int n = 0; n < 200; n++)
             {
                 if (Main.npc[n].active && Main.npc[n].townNPC)

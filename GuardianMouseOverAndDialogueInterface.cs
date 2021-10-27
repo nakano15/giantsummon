@@ -255,6 +255,8 @@ namespace giantsummon
                 if (DialogueDelayTime < DialogueMaxDelayTime)
                     DialogueDelayTime++;
             }
+            if (giantsummon.Dialogue.DialogueThread != null && !player.IsTalkingToAGuardian && giantsummon.Dialogue.DialogueThread.IsAlive)
+                giantsummon.Dialogue.DialogueThread.Abort();
         }
 
         public static void UpdateDialogueMouse()
@@ -693,9 +695,9 @@ namespace giantsummon
             });
         }
 
-        public static void AddOption(string Mes, Action Action)
+        public static void AddOption(string Mes, Action Action, bool Threaded = false)
         {
-            DialogueOption option = new DialogueOption(Mes, Action);
+            DialogueOption option = new DialogueOption(Mes, Action, Threaded);
             Options.Add(option);
         }
 
@@ -1209,11 +1211,11 @@ namespace giantsummon
             public Action Action;
             public bool ThreadedDialogue;
 
-            public DialogueOption(string OptionText, Action Result)
+            public DialogueOption(string OptionText, Action Result, bool ThreadedDialogue = false)
             {
                 Text = OptionText;
                 Action = Result;
-                ThreadedDialogue = false;
+                this.ThreadedDialogue = ThreadedDialogue;
             }
 
             public void SetAsThreadedDialogue()

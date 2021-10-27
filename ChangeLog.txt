@@ -4,3 +4,11 @@ Companions will no longer "oscilate" when holding off hand items.
 3rd person dialogues from Zacks were turned into 1st person.
 A number of companions got dialogues they say when the player is their room mate:
 	Wrath, Alexander, Fluffles, Minerva, Liebre and Miguel.
+Fixed an error that would cause due to the companion trying pull save when there's no leader player.
+Fixed a bug where Minerva could spawn underwater.
+Fixed issue where the Friendship Rank exp bar were not working correctly.
+Liebre's plasma shell is now more visible while under effect of light depending on how many souls he carries.
+Companions will no longer keep carrying allies revived upon carrying, until the companion carrying drowns when stuck underwater.
+Blue's requests are now in 1st person, instead of 3rd.
+Brutus spawn requirement will now count TerraGuardian companions living in the world.
+	The potence they affect his spawn rate is by half.

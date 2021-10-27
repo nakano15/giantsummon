@@ -472,6 +472,7 @@ namespace giantsummon.Creatures
         public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Actions = base.GetGuardianExtraDialogueActions(guardian);
+            Actions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("I have questions.", Creatures.Leopold.LoreDialogues.StartDialogue, true));
             if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
             {
                 if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Wrath))

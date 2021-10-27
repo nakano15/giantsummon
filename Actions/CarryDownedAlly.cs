@@ -166,7 +166,8 @@ namespace giantsummon.Actions
             }
             else
             {
-                DelayBeforePlacingOnGround = MaxDelay;
+                if(TargetIsKod)
+                    DelayBeforePlacingOnGround = MaxDelay;
                 bool AllyIsDying = CarriedPlayer != null ? CarriedPlayer.statLife < CarriedPlayer.statLifeMax2 * 0.35f : CarriedGuardian.HP < CarriedGuardian.MHP * 0.35f;
                 ForcedTactic = AllyIsDying ? CombatTactic.Snipe : CombatTactic.Assist;
             }
