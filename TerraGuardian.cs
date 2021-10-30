@@ -490,6 +490,15 @@ namespace giantsummon
             }
         }
 
+        public Rectangle GetCollisionRectangle
+        {
+            get
+            {
+                Vector2 CollisionStart = CollisionPosition;
+                return new Rectangle((int)CollisionStart.X, (int)CollisionStart.Y, CollisionWidth, CollisionHeight);
+            }
+        }
+
         public int CollisionWidth
         {
             get
@@ -7484,11 +7493,6 @@ namespace giantsummon
                         else
                         {
                             UsingFurniture = true;
-                            if (closeDoor && doorx > -1 && doory > -1)
-                            {
-                                WorldGen.CloseDoor(doorx, doory);
-                                closeDoor = false;
-                            }
                         }
                     }
                 }
@@ -8109,16 +8113,6 @@ namespace giantsummon
                                     }
                                 }
                             }
-                            if (Velocity.X == 0 && closeDoor && doorx > -1 && doory > -1)
-                            {
-                                int x = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16);
-                                if (x != doorx && x + 1 != doorx)
-                                {
-                                    if (WorldGen.CloseDoor(doorx, doory))
-                                        closeDoor = false;
-
-                                }
-                            }
                             WalkMode = true;
                         }
                         DoIdleMovement = false;
@@ -8526,7 +8520,32 @@ namespace giantsummon
 
         public void DoorHandler()
         {
-            if (!MoveLeft && !MoveRight) return;
+            if(GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 5)
+            {
+                int CheckStartX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), CheckEndX = (int)((Position.X + CollisionWidth * 0.5f) * DivisionBy16);
+                int CheckStartY = (int)((Position.Y - CollisionHeight) * DivisionBy16), CheckEndY = (int)(Position.Y * DivisionBy16);
+                for(int x = CheckStartX; x <= CheckEndX; x++)
+                {
+                    for(int y = CheckStartY; y <= CheckEndY; y++)
+                    {
+                        Tile tile = MainMod.GetTile(x, y);
+                        if (tile.type == 10)
+                        {
+                            WorldGen.OpenDoor(x, y, Direction);
+                            closeDoor = true;
+                            doorx = x;
+                            doory = y;
+                        }
+                        else if (tile.type == 388)
+                        {
+                            WorldGen.ShiftTallGate(x, y, false);
+                            closeDoor = true;
+                            doorx = x;
+                            doory = y;
+                        }
+                    }
+                }
+            }
             if (closeDoor)
             {
                 if (doorx == -1 || doory == -1)
@@ -8534,44 +8553,32 @@ namespace giantsummon
                     closeDoor = false;
                     return;
                 }
-                float DistanceFromDoor = Math.Abs(Position.X * DivisionBy16 - doorx);
-                bool ForceCloseDoor = false;
-                if (Velocity.X == 0 && Velocity.Y == 0 && (Position.X - CollisionWidth * 0.5f < doorx * 16 || Position.X + CollisionWidth * 0.5f > (doorx + 1) * 16))
-                {
-                    ForceCloseDoor = true;
-                }
-                if (ForceCloseDoor || DistanceFromDoor > Width * DivisionBy16 + 2)
+                float DistanceFromDoor = Math.Abs(Position.X - (doorx * 16 + 8));
+                bool ForceCloseDoor = (Velocity.X == 0 && Velocity.Y == 0 && DistanceFromDoor > CollisionWidth) || UsingFurniture;
+                if (ForceCloseDoor || DistanceFromDoor > CollisionWidth)
                 {
                     Tile doorTile = MainMod.GetTile(doorx, doory);
-                    if (doorTile != null)
+                    if (doorTile.type == 11)
                     {
-                        if (doorTile.type == 11)
+                        if (WorldGen.CloseDoor(doorx, doory, false))
                         {
-                            if (WorldGen.CloseDoor(doorx, doory, false))
-                            {
-                                closeDoor = false;
-                            }
-                            else if (DistanceFromDoor > Width * DivisionBy16 + 3)
-                            {
-                                closeDoor = false;
-                            }
-                        }
-                        else if (doorTile.type == 389)
-                        {
-                            if (WorldGen.ShiftTallGate(doorx, doory, true))
-                            {
-                                closeDoor = false;
-                            }
-                            else if (DistanceFromDoor > Width * DivisionBy16 + 3)
-                            {
-                                closeDoor = false;
-                            }
+                            closeDoor = false;
                         }
                     }
-                    if(closeDoor == false)
+                    else if (doorTile.type == 389)
+                    {
+                        if (WorldGen.ShiftTallGate(doorx, doory, true))
+                        {
+                            closeDoor = false;
+                        }
+                    }
+                    if (ForceCloseDoor)
+                        closeDoor = false;
+                    if (!closeDoor)
                         doorx = doory = -1;
                 }
             }
+            if (!MoveLeft && !MoveRight) return;
             float TileCheckDir = Position.X;
             int Dir = 0;
             if (MoveLeft)

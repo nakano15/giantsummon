@@ -1430,6 +1430,30 @@ namespace giantsummon
             }
         }
 
+        public static int GetTerraGuardianCompanionsFound(Player player)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            int Count = 0;
+            foreach (int i in pm.MyGuardians.Keys)
+            {
+                if (pm.MyGuardians[i].Base.IsTerraGuardian)
+                    Count++;
+            }
+            return Count;
+        }
+
+        public static int GetTerrarianCompanionsFound(Player player)
+        {
+            PlayerMod pm = player.GetModPlayer<PlayerMod>();
+            int Count = 0;
+            foreach (int i in pm.MyGuardians.Keys)
+            {
+                if (pm.MyGuardians[i].Base.IsTerrarian)
+                    Count++;
+            }
+            return Count;
+        }
+
         public override void PreUpdate()
         {
             if (player.ghost)

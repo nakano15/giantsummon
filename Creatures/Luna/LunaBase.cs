@@ -35,6 +35,10 @@ namespace giantsummon.Creatures
             SetTerraGuardian();
             CallUnlockLevel = 0;
 
+            AddInitialItem(Terraria.ID.ItemID.CopperBroadsword);
+            AddInitialItem(Terraria.ID.ItemID.RichMahoganyBow);
+            AddInitialItem(Terraria.ID.ItemID.Mushroom, 5);
+
             //Animation Frames
             StandingFrame = 2;
             WalkingFrames = new int[] { 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -133,7 +137,7 @@ namespace giantsummon.Creatures
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
-            if(BodyPartID > 0 && !guardian.PlayerMounted && !guardian.OffHandAction && guardian.ItemAnimationTime == 0 && Frame < 11)
+            if(BodyPartID > 0 && !guardian.PlayerMounted && guardian.SelectedOffhand == -1 && guardian.ItemAnimationTime == 0 && Frame < 11)
             {
                 if (Frame == 4 || Frame == 8)
                     Frame = 1;
@@ -146,7 +150,14 @@ namespace giantsummon.Creatures
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> ExtraDialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
             ExtraDialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("I have some questions.", TutoringDialogues.StartTutoringDialogue, true));
+            ExtraDialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Anything new recently?", GetRandomTip, true));
             return ExtraDialogues;
+        }
+
+        public void GetRandomTip()
+        {
+            Dialogue.ShowDialogueOnly(GuardianSpawnTip.GetRandomTip());
+            GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
         }
 
         public override string MountUnlockMessage => "*Hey [nickname], if you want, I can carry you on my shoulder. My legs are bigger than yours, so may be faster if I carry you, while you tell me where to go.*";

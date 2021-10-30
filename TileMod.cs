@@ -25,6 +25,20 @@ namespace giantsummon
             }
         }
 
+        public override bool CanPlace(int i, int j, int type)
+        {
+            if (Main.tileSolid[type])
+            {
+                Microsoft.Xna.Framework.Rectangle rect = new Microsoft.Xna.Framework.Rectangle(i * 16, j * 16, 16, 16);
+                foreach(TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                {
+                    if(tg.GetCollisionRectangle.Intersects(rect))
+                        return false;
+                }
+            }
+            return base.CanPlace(i, j, type);
+        }
+
         public override void PlaceInWorld(int i, int j, Item item)
         {
             WorldMod.UpdateTileStateOnGuardianHouses(i, j, true);

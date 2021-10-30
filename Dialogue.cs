@@ -333,6 +333,10 @@ namespace giantsummon
             DialogueParticipants = Participants;
             GuardianMouseOverAndDialogueInterface.Speaker = LastSpeaker = GuardianMouseOverAndDialogueInterface.StarterSpeaker = Participants[0];
             ThreadStart ts = new ThreadStart(delegate () {
+                if (Main.rand == null)
+                {
+                    Main.rand = new Terraria.Utilities.UnifiedRandom(); //This avoids the random variable being null when using a dialogue.
+                }
                 try
                 {
                     Dialogue();

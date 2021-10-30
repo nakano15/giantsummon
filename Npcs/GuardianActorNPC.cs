@@ -55,6 +55,7 @@ namespace giantsummon.Npcs
                 NpcAlias = Alias;
             else
                 NpcAlias = Base.Name;
+            npc.GivenName = NpcAlias;
             npc.direction = Main.rand.Next(2) == 0 ? -1 : 1;
         }
         

@@ -39,6 +39,8 @@ namespace giantsummon.Actions
         public override void Update(TerraGuardian guardian)
         {
             bool TargetIsKod = true;
+            if (guardian.UsingFurniture)
+                guardian.LeaveFurniture(true);
             if(CarriedPlayer != null)
             {
                 PlayerMod pm = CarriedPlayer.GetModPlayer<PlayerMod>();

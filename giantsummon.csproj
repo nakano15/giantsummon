@@ -225,6 +225,7 @@
     <Compile Include="Npcs\GlennNPC.cs" />
     <Compile Include="Npcs\GuardianActorNPC.cs" />
     <Compile Include="Npcs\LeopoldNPC.cs" />
+    <Compile Include="Npcs\LunaSpawnerNPC.cs" />
     <Compile Include="Npcs\MabelNPC.cs" />
     <Compile Include="Npcs\MalishaNPC.cs" />
     <Compile Include="Npcs\CinnamonSpawnerNPC.cs" />

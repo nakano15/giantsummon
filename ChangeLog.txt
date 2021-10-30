@@ -12,3 +12,12 @@ Companions will no longer keep carrying allies revived upon carrying, until the 
 Blue's requests are now in 1st person, instead of 3rd.
 Brutus spawn requirement will now count TerraGuardian companions living in the world.
 	The potence they affect his spawn rate is by half.
+Fixed a bug where companion recruit npcs weren't being renamed upon spawning.
+Cinnamon got some speed rebalancing.
+Companions that are using furnitures will now leave them to try picking up someone knocked out.
+Fixed an issue where the random variable was null when starting a dialogue.
+Luna arrives.
+	She's also a Starter guardian.
+You can no longer place solid tiles in a position that has a companion standing.
+	The hitbox used for that is the one of tiles, so It disregards sizes.
+Companions got revamp on their AI regarding doors.

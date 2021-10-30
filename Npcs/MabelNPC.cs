@@ -60,7 +60,13 @@ namespace giantsummon.Npcs
             }
         }
 
-        public static bool CanSpawnMabel { get { return !WorldMod.IsGuardianNpcInWorld(GuardianBase.Mabel) && (NPC.AnyNPCs(Terraria.ID.NPCID.PartyGirl) || Terraria.GameContent.Events.BirthdayParty.PartyIsUp); } }
+        public static bool CanSpawnMabel
+        {
+            get
+            {
+                return !WorldMod.IsGuardianNpcInWorld(GuardianBase.Mabel) && (NPC.AnyNPCs(Terraria.ID.NPCID.PartyGirl) || Terraria.GameContent.Events.BirthdayParty.PartyIsUp);
+            }
+        }
 
         public static void TrySpawningMabel()
         {
