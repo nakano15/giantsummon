@@ -625,7 +625,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.FeatOpenTemple:
                     return "*[player] has opened a temple in [subject] world. Do you think they found treasures there?*";
                 case MessageIDs.FeatCoinPortal:
-                    return "*A coin portal suddenly appeared for [player] in [subject]. Really impressive.*";
+                    return "*A coin portal suddenly appeared for [player]. That's really impressive.*";
                 case MessageIDs.FeatPlayerMetMe:
                     return "*I have met someone new recently. They are called [player]. Do you know them?*";
                 case MessageIDs.FeatCompletedAnglerQuests:

@@ -5725,7 +5725,7 @@ namespace giantsummon
                         {
                             case CombatTactic.Charge:
                                 {
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X - Velocity.X);
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X);
                                     float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
                                         RetreatDistance = HalfWidth + 8;
                                     /*if (MaxAttackRange > -1)
@@ -5734,7 +5734,7 @@ namespace giantsummon
                                     }*/
                                     if (HasHurtPanic)
                                     {
-                                        ApproachDistance += 18;
+                                        ApproachDistance += 20;
                                         RetreatDistance += 12;
                                     }
                                     if (DistanceX <= ApproachDistance + 8 && InRangeY && !NearDeath)//(SelectedItem == -1 || (SelectedItem > -1 && Inventory[SelectedItem].melee))
@@ -6070,10 +6070,7 @@ namespace giantsummon
                 FollowPlayerAI();
                 if (!Dialogue.InDialogue && !CheckForPlayerAFK() || Dialogue.UpdateDialogueParticipationGuardian(this))
                 {
-                    if(MainMod.TestNewCombatAI)
-                        NewCombatScript();
-                    else
-                        CombatBehavior();
+                    NewCombatScript();
                 }
                 CheckForPlayerControl();
                 UpdatePerception();
@@ -7888,10 +7885,18 @@ namespace giantsummon
             {
                 if ((CurrentIdleAction != IdleActions.Wait && CurrentIdleAction != IdleActions.UseNearbyFurniture && CurrentIdleAction != IdleActions.TryGoingSleep && CurrentIdleAction != IdleActions.UseNearbyFurnitureHome) || IdleActionTime < 5)
                     ChangeIdleAction(IdleActions.Listening, 200);
-                bool PlayerToTheLeft = Main.player[TalkPlayerID].Center.X < Position.X;
+                float PlayerCenterX = Main.player[TalkPlayerID].Center.X;
+                {
+                    PlayerMod pm = Main.player[TalkPlayerID].GetModPlayer<PlayerMod>();
+                    if (pm.MountedOnGuardian)
+                    {
+                        PlayerCenterX = pm.MountGuardian.Position.X;
+                    }
+                }
+                bool PlayerToTheLeft = PlayerCenterX < Position.X;
                 if (furniturex == -1 && furniturey == -1)
                 {
-                    if (Math.Abs(Position.X - Main.player[TalkPlayerID].Center.X) >= Width + 12)
+                    if (Math.Abs(Position.X - PlayerCenterX) >= Width + 12)
                     {
                         if (PlayerToTheLeft)
                             MoveLeft = true;
@@ -7912,6 +7917,8 @@ namespace giantsummon
             {
                 ChangeIdleAction(IdleActions.Wait, 50);
             }
+            if (CurrentIdleAction == IdleActions.LookingAtTheBackground && Velocity.Length() > 0)
+                CurrentIdleAction = IdleActions.Wait;
             if (OwnerPos > -1 && !Main.player[OwnerPos].ghost && (!IsPlayerIdle || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
                 CurrentIdleAction = IdleActions.Wait;
@@ -10198,131 +10205,6 @@ namespace giantsummon
             return PotionPosition;
         }
 
-        public void CombatBehavior()
-        {
-            if (!IsAttackingSomething || PlayerControl || Action || (DoAction.InUse && DoAction.IgnoreCombat) || (BeingPulledByPlayer && !SuspendedByChains))
-                return;
-            Vector2 TargetPosition = Vector2.Zero, TargetVelocity = Vector2.Zero;
-            int TargetWidth = 0, TargetHeight = 0;
-            bool TargetIsBoss = false;
-            if (TargetType == TargetTypes.Player)
-            {
-                if (Main.player[TargetID].dead)
-                {
-                    TargetID = -1;
-                    return;
-                }
-                TargetPosition = Main.player[TargetID].position;
-                TargetVelocity = Main.player[TargetID].velocity;
-                TargetWidth = Main.player[TargetID].width;
-                TargetHeight = Main.player[TargetID].height;
-            }
-            else if (TargetType == TargetTypes.Npc)
-            {
-                if (!Main.npc[TargetID].active || !Main.npc[TargetID].CanBeChasedBy())
-                {
-                    TargetID = -1;
-                    return;
-                }
-                TargetPosition = Main.npc[TargetID].position;
-                TargetVelocity = Main.npc[TargetID].velocity;
-                TargetWidth = Main.npc[TargetID].width;
-                TargetHeight = Main.npc[TargetID].height;
-                TargetIsBoss = Main.npc[TargetID].boss || Main.npc[TargetID].realLife > -1 && Main.npc[Main.npc[TargetID].realLife].boss;
-            }
-            else if (TargetType == TargetTypes.Guardian)
-            {
-                if (!MainMod.ActiveGuardians.ContainsKey(TargetID) || MainMod.ActiveGuardians[TargetID].Downed)
-                {
-                    TargetID = -1;
-                    return;
-                }
-                TargetPosition = MainMod.ActiveGuardians[TargetID].TopLeftPosition;
-                TargetVelocity = MainMod.ActiveGuardians[TargetID].Velocity;
-                TargetWidth = MainMod.ActiveGuardians[TargetID].Width;
-                TargetHeight = MainMod.ActiveGuardians[TargetID].Height;
-            }
-            else //What is being targetted?
-            {
-                TargetID = -1;
-                return;
-            }
-            if (!HasCooldown(GuardianCooldownManager.CooldownType.MemoryOfTarget))
-            {
-                TargetID = -1;
-                AttackingTarget = false;
-                return;
-            }
-            else
-            {
-                if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) < 600 &&
-                    Math.Abs(TargetPosition.Y + TargetWidth * 0.5f - CenterY) < 400 &&
-                    Collision.CanHitLine(TopLeftPosition, Width, Height, TargetPosition, TargetWidth, TargetHeight))
-                {
-                    SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
-                }
-            }
-            Vector2 TargetCenter = TargetPosition;
-            TargetCenter.X += TargetWidth * 0.5f;
-            TargetCenter.Y += TargetHeight * 0.5f;
-            Vector2 CenterPosition = this.CenterPosition; //To avoid making it recalc over and over again if the CenterPosition code be reused.
-            Vector2 PositionDifference = TargetPosition - CenterPosition;
-            float TargetDistance = PositionDifference.Length();
-            if (TargetDistance > 1024f && !TargetIsBoss) //Ignore target
-            {
-                TargetID = -1;
-                return;
-            }
-            bool IsCombatItem = true;
-            float YMod = 0;
-            if (SelectedItem > -1)
-            {
-                IsCombatItem = this.Inventory[SelectedItem].damage > 0;
-                if (Items.GuardianItemPrefab.GetProjFallRate(this.Inventory[SelectedItem]) != 0 && AimDirection.Y < CenterPosition.Y)
-                {
-                    YMod -= (int)(Math.Abs(PositionDifference.X) / Items.GuardianItemPrefab.GetProjFallRate(this.Inventory[SelectedItem]));
-                }
-                if (IsCombatItem && this.Inventory[SelectedItem].useAmmo != Terraria.ID.AmmoID.None)
-                {
-                    int id, damage;
-                    float speed, knockback;
-                    GetAmmoInfo(this.Inventory[SelectedItem], false, out id, out speed, out damage, out knockback);
-                    TargetPosition -= (PositionDifference / speed) * TargetVelocity;
-                }
-                else if (IsCombatItem && this.Inventory[SelectedItem].shoot > 0 && this.Inventory[SelectedItem].useAmmo > 0 && this.Inventory[SelectedItem].shootSpeed > 0)
-                {
-                    TargetPosition += (PositionDifference / this.Inventory[SelectedItem].shootSpeed) * TargetVelocity;
-                }
-            }
-            TargetPosition.Y += YMod;
-            TargetInAim = MoveCursorToPosition(TargetPosition, TargetWidth, TargetHeight);
-            TargetPosition.Y -= YMod;
-            //AimDirection = (TargetCenter + TargetVelocity).ToPoint();
-            bool Confused = OwnerPos > -1 && HasFlag(GuardianFlags.Confusion);
-            if (Confused)
-            {
-                Vector2 PlayerCenter = Main.player[OwnerPos].Center;
-                TargetPosition.X += (int)(PlayerCenter.X - TargetPosition.X + TargetWidth * 0.5f) * 2;
-            }
-            if (!AvoidCombat && (ItemAnimationTime > 0 && IsCombatItem || ItemAnimationTime == 0))
-            {
-                AnalizeCourseOfAction(TargetPosition, TargetWidth, TargetHeight);
-            }
-            else //Flee
-            {
-                if (PositionDifference.X >= 0 && PositionDifference.X < TargetWidth + 500)
-                    MoveLeft = true;
-                else if (PositionDifference.X < 0 && PositionDifference.X >= -(TargetWidth + 500))
-                    MoveRight = true;
-            }
-            if (Confused)
-            {
-                bool moveleft = MoveLeft;
-                MoveLeft = MoveRight;
-                MoveRight = moveleft;
-            }
-        }
-
         public void ToggleWait(bool Guarding = false)
         {
             bool OwnerIsPlayer = OwnerPos > -1 && OwnerPos == Main.myPlayer;
@@ -10479,356 +10361,6 @@ namespace giantsummon
             if (item.summon)
                 return Summon;
             return Ranged;
-        }
-
-        public void AnalizeCourseOfAction(Vector2 TargetPosition, int TargetWidth, int TargetHeight)
-        {
-            //Maybe It's about time to change the combat AI.
-            //Add support to the option of picking the weapon and AI based on the item position on the guardian inventory.
-            bool Approach = false, Retreat = false, Attack = false, GoMelee = false;
-            Vector2 SquaredDistance = new Vector2(TargetPosition.X + TargetWidth * 0.5f, TargetPosition.Y + TargetHeight * 0.5f) - CenterPosition;
-            int MeleeRange = (int)(GetMeleeWeaponRangeX());
-            bool InMeleeRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < MeleeRange + TargetWidth * 0.5f;// && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -(MeleeRange + TargetWidth * 0.5f);
-            bool TooCloseMeleeRangeX = Math.Abs(Position.X - TargetPosition.X + TargetWidth * 0.5f) < (Width + TargetWidth) * 0.5f + 28; // && CenterPosition.X - (TargetPosition.X + TargetWidth) >= -((Width + TargetWidth) * 0.5f + 28);
-            bool InMeleeRangeY = CenterY - (TargetPosition.Y + TargetHeight) >= -(MeleeRange + TargetHeight * 0.5f) && CenterY - TargetPosition.Y < MeleeRange + TargetHeight * 0.5f;
-            bool InMeleeRange = InMeleeRangeX && InMeleeRangeY;
-            bool PanicMode = HP < MHP * 0.25f;
-            float Distance = SquaredDistance.Length();
-            bool MayUseHeavyMeleeWeapon = !PlayerMounted || (!ReverseMount && UseHeavyMeleeAttackWhenMounted);
-            bool DoDuck = false;
-            bool HasMeleeWeapon = this.HasMeleeWeapon,
-                HasRangedWeapon = this.HasRangedWeapon,
-                HasMagicWeapon = this.HasMagicWeapon;
-            CombatTactic Tactic = this.tactic;
-            if (OwnerPos != -1)
-            {
-                PlayerMod.BehaviorChanges behavior = Main.player[OwnerPos].GetModPlayer<PlayerMod>().CurrentTactic;
-                if (behavior != PlayerMod.BehaviorChanges.FreeWill)
-                {
-                    switch (behavior)
-                    {
-                        case PlayerMod.BehaviorChanges.ChargeOnTarget:
-                            Tactic = CombatTactic.Charge;
-                            break;
-                        case PlayerMod.BehaviorChanges.AvoidContact:
-                            Tactic = CombatTactic.Assist;
-                            break;
-                        case PlayerMod.BehaviorChanges.StayAwayFromTarget:
-                            Tactic = CombatTactic.Snipe;
-                            break;
-                    }
-                }
-            }
-            bool TryOtherAI = true;
-            if (UsingFurniture)
-                LeaveFurniture();
-            if (Tactic == CombatTactic.Charge && InMeleeRange)
-            {
-                TryOtherAI = true;
-            }
-            else if (TryOtherAI && !WaitingForManaRecharge && HasMagicWeapon && !HasFlag(GuardianFlags.Silence))
-            {
-                if (ItemAnimationTime == 0 && CanHit(TargetPosition, TargetWidth, TargetHeight))
-                {
-                    PickWeaponForSituation(Magic);
-                    if (HasMana(Inventory[SelectedItem].mana))
-                    {
-                        if (TargetInAim) Attack = true;
-                    }
-                    else
-                    {
-                        WaitingForManaRecharge = true;
-                    }
-                }
-                if (!WaitingForManaRecharge)
-                {
-                    TryOtherAI = false;
-                    if (Tactic == CombatTactic.Charge && !InMeleeRangeX)
-                        Approach = true;
-                    else if (Math.Abs(SquaredDistance.X) >= 156 + TargetWidth * 0.5f)
-                    {
-                        Approach = true;
-                    }
-                    else
-                    {
-                        if (Math.Abs(SquaredDistance.X) <= 128 + TargetWidth * 0.5f)
-                        {
-                            Retreat = true;
-                        }
-                    }
-                    if (WingType > 0)
-                    {
-                        if (-SquaredDistance.Y > 96 + TargetHeight * 0.5f)
-                            Jump = true;
-                    }
-                }
-            }
-            if (TryOtherAI)
-            {
-                Approach = false;
-                Retreat = false;
-                if (!MayUseHeavyMeleeWeapon && !HasNonHeavyMeleeWeapon)
-                {
-                    if (CanHit(TargetPosition, TargetWidth, TargetHeight))
-                    {
-                        if (ItemAnimationTime == 0)
-                        {
-                            PickWeaponForSituation(Ranged);
-                        }
-                        if (SelectedItem > -1 && (this.Inventory[SelectedItem].ranged || this.Inventory[SelectedItem].thrown) && TargetInAim)
-                            Attack = true;
-                    }
-                }
-                else
-                {
-                    switch (Tactic)
-                    {
-                        case CombatTactic.Charge:
-                            {
-                                if (HasRangedWeapon && !InMeleeRangeX)
-                                    Approach = true;
-                                else
-                                    GoMelee = true;
-                                if (!InMeleeRange && ItemAnimationTime == 0)
-                                {
-                                    if (HasRangedWeapon)
-                                    {
-                                        bool TargetOnSight = CanHit(TargetPosition, TargetWidth, TargetHeight);
-                                        if (!TargetOnSight && CanHit(TargetPosition, TargetWidth, TargetHeight, true))
-                                        {
-                                            DoDuck = true;
-                                            TargetOnSight = true;
-                                        }
-                                        if (TargetOnSight)
-                                        {
-                                            if (ItemAnimationTime == 0)
-                                            {
-                                                PickWeaponForSituation(Ranged);
-                                            }
-                                            if (SelectedItem > -1 && (this.Inventory[SelectedItem].ranged || this.Inventory[SelectedItem].thrown) && TargetInAim)
-                                                Attack = true;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case CombatTactic.Assist:
-                            {
-                                if (HasRangedWeapon && !InMeleeRangeX)
-                                {
-                                    bool TargetOnSight = CanHit(TargetPosition, TargetWidth, TargetHeight);
-                                    if (!TargetOnSight && CanHit(TargetPosition, TargetWidth, TargetHeight, true))
-                                    {
-                                        DoDuck = true;
-                                        TargetOnSight = true;
-                                    }
-                                    if (!PlayerMounted && (Math.Abs(SquaredDistance.X) >= 350 || !TargetOnSight))
-                                    {
-                                        Approach = true;
-                                    }
-                                    else
-                                    {
-                                        if (TargetInAim)
-                                            Attack = true;
-                                        if (HasRangedWeapon && ItemAnimationTime == 0)
-                                        {
-                                            PickWeaponForSituation(Ranged);
-                                        }
-                                        if (Math.Abs(SquaredDistance.X) < TargetWidth + MeleeRange + 50)
-                                        {
-                                            Retreat = true;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    GoMelee = true;
-                                }
-                            }
-                            break;
-                        case CombatTactic.Snipe:
-                            {
-                                if (HasRangedWeapon && !InMeleeRangeX)
-                                {
-                                    bool TargetOnSight = CanHit(TargetPosition, TargetWidth, TargetHeight);
-                                    if (!TargetOnSight && CanHit(TargetPosition, TargetWidth, TargetHeight, true))
-                                    {
-                                        DoDuck = true;
-                                        TargetOnSight = true;
-                                    }
-                                    if (!PlayerMounted && (Math.Abs(SquaredDistance.X) >= 650 || !TargetOnSight))
-                                    {
-                                        Approach = true;
-                                    }
-                                    else
-                                    {
-                                        if (TargetInAim) Attack = true;
-                                        if (Math.Abs(SquaredDistance.X) < TargetWidth + MeleeRange + 200)
-                                        {
-                                            Retreat = true;
-                                        }
-                                        if (HasRangedWeapon && ItemAnimationTime == 0)
-                                        {
-                                            PickWeaponForSituation(Ranged);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    GoMelee = true;
-                                }
-                            }
-                            break;
-                    }
-                }
-            }
-            if (GoMelee)
-            {
-                Approach = Retreat = Action = DoDuck = false;
-                int AttackTime = (int)(ItemMaxAnimationTime * 0.5f);
-                bool ItemIsHeavyWeapon = SelectedItem > -1 && Items.GuardianItemPrefab.IsHeavyItem(Inventory[SelectedItem]);
-                if (PanicMode)
-                {
-                    if (Math.Abs(SquaredDistance.X) < 72f + TargetWidth * 0.5f)
-                    {
-                        Retreat = true;
-                    }
-                    else if (Math.Abs(SquaredDistance.X) >= 84f + TargetWidth * 0.5f)
-                    {
-                        Approach = true;
-                    }
-                }
-                else if (TooCloseMeleeRangeX)//Math.Abs(SquaredDistance.X) < TargetWidth * 0.5f + MeleeRange)
-                {
-                    Retreat = true;
-                }
-                else if (!InMeleeRangeX)
-                {
-                    Approach = true;
-                }
-                if (!PlayerMounted) DashCooldown = 30;
-                bool GoingMelee = true;
-                if (InMeleeRange) Attack = true;
-                else if (ItemAnimationTime == 0 && HasRangedWeapon)
-                {
-                    bool TargetOnSight = CanHit(TargetPosition, TargetWidth, TargetHeight);
-                    if (!TargetOnSight && InMeleeRangeX && CanHit(TargetPosition, TargetWidth, TargetHeight, true))
-                    {
-                        DoDuck = true;
-                        TargetOnSight = true;
-                    }
-                    if (TargetOnSight)
-                    {
-                        PickWeaponForSituation(Ranged);
-                        Attack = true;
-                        GoingMelee = false;
-                    }
-                }
-                /*if (GoingMelee && InMeleeRangeX && InMeleeRangeY && TargetPosition.Y >= CenterPosition.Y + MeleeRange * 0.4f)
-                {
-                    DoDuck = true;
-                }*/
-                if (GoingMelee && InMeleeRangeX && !InMeleeRangeY && TargetPosition.Y >= CenterY)
-                {
-                    DoDuck = true;
-                    Attack = true;
-                }
-                if (ItemAnimationTime == 0 && Attack)
-                {
-                    if (GoingMelee)
-                    {
-                        PickWeaponForSituation(Melee, MayUseHeavyMeleeWeapon && !PanicMode);
-                    }
-                    /*if (TargetPosition.X + TargetWidth * 0.5f < CenterPosition.X)
-                    {
-                        LookingLeft = true;
-                    }
-                    else
-                    {
-                        LookingLeft = false;
-                    }*/
-                    LockDirection = true;
-                    MoveRight = MoveLeft = false;
-                }
-                if ((TargetPosition.Y + TargetHeight < Position.Y - Height) || (JumpHeight > 0 && ItemAnimationTime < AttackTime))
-                {
-                    Jump = true;
-                }
-                /*if (TargetPosition.Y + TargetHeight - CenterPosition.Y - MeleeRange < -AttackTime * JumpSpeed || (JumpHeight > 0 && ItemAnimationTime < AttackTime))//PositionDifference.Y < -(DistanceOfJump - TargetHeight))
-                {
-                    Jump = true;
-                }*/
-            }
-            if (Approach)
-            {
-                if (SquaredDistance.X > 0)
-                {
-                    MoveRight = true;
-                }
-                else
-                {
-                    MoveLeft = true;
-                }
-            }
-            else if (Retreat)
-            {
-                if (SquaredDistance.X > 0)
-                {
-                    MoveLeft = true;
-                }
-                else
-                {
-                    MoveRight = true;
-                }
-            }
-            if (OwnerPos > -1)
-            {
-                Vector2 PlayerPosition = Main.player[OwnerPos].Center;
-                if (Math.Abs(PlayerPosition.X - Position.X) >= 368f)
-                {
-                    MoveLeft = MoveRight = false;
-                    if (PlayerPosition.X - Position.X > 0)
-                    {
-                        MoveRight = true;
-                    }
-                    else
-                    {
-                        MoveLeft = true;
-                    }
-                }
-            }
-            if (Jump && JumpHeight == 0 && LastJump && !HasFlag(GuardianFlags.AllowHopping))
-                Jump = false;
-            if (Attack)
-            {
-                if ((SelectedItem > -1 && HeldProj > -1 && Inventory[SelectedItem].channel) || (ItemAnimationTime == 0 && (!LastAction || (SelectedItem > -1 && Inventory[SelectedItem].autoReuse))))
-                {
-                    bool UseItem = true;
-                    if (!Inventory[SelectedItem].autoReuse && ItemAnimationTime == 0)
-                    {
-                        int CurrentStack = (int)((0.5f + Main.rand.NextFloat() * 0.5f) * Trigger * 100);
-                        if (TriggerStack + CurrentStack >= 100)
-                        {
-                            TriggerStack = 0;
-                        }
-                        else
-                        {
-                            TriggerStack += (byte)CurrentStack;
-                            UseItem = false;
-                        }
-                    }
-                    if(UseItem)
-                        Action = true;
-                }
-            }
-            if (DoDuck && !PlayerMounted)
-                MoveDown = true;
-            /*if (ItemAnimationTime == 0)
-            {
-                PickOffhandForTheSituation(true);
-            }*/
-            //if (SelectedOffhand > -1)
-            OffHandAction = true;
         }
 
         public bool IsBlockedAhead()
@@ -11423,10 +10955,6 @@ namespace giantsummon
                     }
                 }
             }
-            if (!LastHadTarget && IsAttackingSomething && !MainMod.TestNewCombatAI)
-            {
-                TargetInAim = false;
-            }
         }
 
         public bool IsGuardianHostile(TerraGuardian g)
@@ -12014,7 +11542,7 @@ namespace giantsummon
             if (!ForceHurt && ImmuneTime > 0 || Downed || (DoAction.InUse && DoAction.Immune) || KnockedOutCold || HasFlag(GuardianFlags.CantBeHurt))
                 return 0;
             if (KnockedOut)
-                AddBuff(Terraria.ID.BuffID.Bleeding, 30 * 60);
+                AddBuff(Terraria.ID.BuffID.Bleeding, 5 * 60);
             bool EvadedAttack = false;
             if (!ForceHurt)
             {
@@ -12251,10 +11779,10 @@ namespace giantsummon
             MyCenterPosition.Y -= Height * 0.5f;
             if (mount.Active)
                 Height += mount.HeightBoost;
-            return Collision.CanHit(MyCenterPosition, Width, Height, TargetPosition, TargetWidth, TargetHeight) ||
-                Collision.CanHitLine(MyCenterPosition + new Vector2(0, GravityDirection * (-(float)Height) * 0.3f), 0, 0, TargetCenter, TargetWidth, TargetHeight) ||
-                Collision.CanHitLine(MyCenterPosition + new Vector2(0, 0), 0, 0, TargetCenter, TargetWidth, TargetHeight) ||
-                Collision.CanHitLine(MyCenterPosition + new Vector2(0, GravityDirection * ((float)Height) * 0.3f), 0, 0, TargetCenter, TargetWidth, TargetHeight);
+            return Collision.CanHit(TopLeftPosition, Width, Height, TargetPosition, TargetWidth, TargetHeight) ||
+                Collision.CanHitLine(MyCenterPosition + new Vector2(0, GravityDirection * (-(float)Height) * 0.3f), 0, 0, TargetPosition, TargetWidth, TargetHeight) ||
+                Collision.CanHitLine(MyCenterPosition + new Vector2(0, 0), 0, 0, TargetPosition, TargetWidth, TargetHeight) ||
+                Collision.CanHitLine(MyCenterPosition + new Vector2(0, GravityDirection * ((float)Height) * 0.3f), 0, 0, TargetPosition, TargetWidth, TargetHeight);
         }
 
         public bool CanUseItem(Item i)
@@ -13252,6 +12780,26 @@ namespace giantsummon
                     }
                     WeaponCollision.X += ItemPositionX + (int)PositionWithOffset.X;
                     WeaponCollision.Y += ItemPositionY + (int)PositionWithOffset.Y;
+                    /*for(int i = 0; i < 4; i++)
+                    {
+                        Vector2 Position = new Vector2(WeaponCollision.X, WeaponCollision.Y);
+                        switch (i)
+                        {
+                            case 1:
+                                Position.X += WeaponCollision.Width;
+                                break;
+                            case 2:
+                                Position.Y += WeaponCollision.Height;
+                                break;
+                            case 3:
+                                Position.X += WeaponCollision.Width;
+                                Position.Y += WeaponCollision.Height;
+                                break;
+                        }
+                        Dust d = Dust.NewDustDirect(Position, 1, 1, 50);
+                        d.velocity = Vector2.Zero;
+                        d.noGravity = true;
+                    }*/
                 }
                 else if (ItemUseType == ItemUseTypes.LightVerticalSwing)
                 {
@@ -13328,8 +12876,8 @@ namespace giantsummon
                         ItemRotation += MathHelper.ToRadians(-45) * -Direction;
                     if (GravityDirection < 0)
                         ItemRotation *= -1;
-                    WeaponCollision.X = ItemPositionX + (int)PositionWithOffset.X;
-                    WeaponCollision.Y = ItemPositionY + (int)PositionWithOffset.Y;
+                    //WeaponCollision.X = ItemPositionX + (int)PositionWithOffset.X;
+                    //WeaponCollision.Y = ItemPositionY + (int)PositionWithOffset.Y;
                     WeaponCollision.Width = ItemWidth;
                     WeaponCollision.Height = ItemHeight;
                     if (Frame == 0)
@@ -13342,13 +12890,28 @@ namespace giantsummon
                     else if (Frame == 2)
                     {
                         WeaponCollision.Width *= 2;
-                        WeaponCollision.Y += (int)(WeaponCollision.Height * 0.6f * GravityDirection);
-                        WeaponCollision.Height = (int)(WeaponCollision.Height * 1.8f);
+                        WeaponCollision.Y += (int)(WeaponCollision.Height * 0.8f * GravityDirection);
+                        WeaponCollision.Height = (int)(WeaponCollision.Height * 2.2f);
                     }
                     if (LookingLeft)
+                    {
+                        //WeaponCollision.X *= -1;
                         WeaponCollision.X -= WeaponCollision.Width;
+                    }
                     if (GravityDirection == 1)
+                    {
+                        //WeaponCollision.Y *= -1;
                         WeaponCollision.Y -= WeaponCollision.Height;
+                    }
+                    WeaponCollision.X += ItemPositionX + (int)PositionWithOffset.X;
+                    WeaponCollision.Y += ItemPositionY + (int)PositionWithOffset.Y;
+                    //if (Frame == 0)
+                    /*{
+                        Dust.NewDust(new Vector2(WeaponCollision.X, WeaponCollision.Y), 1, 1, 50);
+                        Dust.NewDust(new Vector2(WeaponCollision.X + WeaponCollision.Width, WeaponCollision.Y), 1, 1, 50);
+                        Dust.NewDust(new Vector2(WeaponCollision.X, WeaponCollision.Y + WeaponCollision.Height), 1, 1, 50);
+                        Dust.NewDust(new Vector2(WeaponCollision.X + WeaponCollision.Width, WeaponCollision.Y + WeaponCollision.Height), 1, 1, 50);
+                    }*/
                 }
                 else if (ItemUseType == ItemUseTypes.AimingUse)
                 {

@@ -21,3 +21,10 @@ Luna arrives.
 You can no longer place solid tiles in a position that has a companion standing.
 	The hitbox used for that is the one of tiles, so It disregards sizes.
 Companions got revamp on their AI regarding doors.
+Added some requests that will require crafting some basic furnitures, and they also may end up asking you to craft a wooden sword too.
+Fixed an issue with the companions melee attacks, that the last frame wasn't hitting foes correctly.
+Removed old and unused combat script.
+Death triggers on companions will no longer disregard distance.
+Fixed a bug where melee attacks could end up not hitting monsters on the ground.
+If you speak to a companion while mounted in another companion, the other companion will check the distance between them and your mounted companion, instead of the distance between you and the companion you're talking to.
+The bleeding effect caused by being hurt by anything while knocked out had it's time reduced from 30 seconds to 5.

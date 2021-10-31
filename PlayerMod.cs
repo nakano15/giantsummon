@@ -1514,7 +1514,7 @@ namespace giantsummon
                 }
             }
             if (KnockedOut)
-                player.AddBuff(Terraria.ID.BuffID.Bleeding, 30 * 60);
+                player.AddBuff(Terraria.ID.BuffID.Bleeding, 5 * 60);
         }
 
         public override void ModifyNursePrice(NPC nurse, int health, bool removeDebuffs, ref int price)

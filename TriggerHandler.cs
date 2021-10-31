@@ -117,9 +117,13 @@ namespace giantsummon
             List<TerraGuardian> tgs = new List<TerraGuardian>();
             foreach (int key in MainMod.ActiveGuardians.Keys)
             {
-                if (Position == Vector2.Zero || MainMod.ActiveGuardians[key].InPerceptionRange(Position) || 
-                    ((trigger == TriggerTypes.Death || trigger == TriggerTypes.Spotted) && 
-                    (Target.TargetType != TriggerTarget.TargetTypes.TerraGuardian || Target.TargetID != key)))
+                bool Run = true;
+                if ((trigger == TriggerTypes.Death || trigger == TriggerTypes.Spotted) &&
+                    (Target.TargetType == TriggerTarget.TargetTypes.TerraGuardian && Target.TargetID == key))
+                {
+                    Run = false;
+                }
+                if (Run && (Position == Vector2.Zero || MainMod.ActiveGuardians[key].InPerceptionRange(Position)))
                 {
                     MainMod.ActiveGuardians[key].DoTrigger(trigger, Target, Value, Value2, Value3, Value4, Value5);
                     tgs.Add(MainMod.ActiveGuardians[key]);

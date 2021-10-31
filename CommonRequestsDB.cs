@@ -277,6 +277,114 @@ namespace giantsummon
             rb.AddKillBossRequest(Terraria.ID.NPCID.Golem);
             Requests.Add(rb);
             //
+            rb = new RequestBase("", 86, RequestInfoText: "(You can craft using wood on a workbench.)");
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.WoodenChair, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 94, RequestInfoText: "(You can craft using wood on a workbench.)");
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.WoodenTable, 1, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 80, RequestInfoText: "(You can craft using wood on a workbench.)");
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.WoodenSword, 1, 0.1f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 92, RequestInfoText: "(You can craft using ebonwood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return !WorldGen.crimson && NPC.downedBoss2;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.EbonwoodChair, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 100, RequestInfoText: "(You can craft using ebonwood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return !WorldGen.crimson && NPC.downedBoss2;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.EbonwoodTable, 1, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 90, RequestInfoText: "(You can craft using ebonwood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return !WorldGen.crimson && NPC.downedBoss2;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.EbonwoodSword, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 92, RequestInfoText: "(You can craft using shadewood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return WorldGen.crimson && NPC.downedBoss2;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.ShadewoodChair, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 100, RequestInfoText: "(You can craft using shadewood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return WorldGen.crimson && NPC.downedBoss2;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.ShadewoodTable, 1, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 90, RequestInfoText: "(You can craft using shadewood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return WorldGen.crimson && NPC.downedBoss2;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.ShadewoodSword, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 102, RequestInfoText: "(You can craft using rich mahogany on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return NPC.downedQueenBee;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.RichMahoganyChair, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 110, RequestInfoText: "(You can craft using rich mahogany on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return NPC.downedQueenBee;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.RichMahoganyTable, 1, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 100, RequestInfoText: "(You can craft using rich mahogany on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return NPC.downedQueenBee;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.RichMahoganySword, 1, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 122, RequestInfoText: "(You can craft using pearlwood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return NPC.downedQueenBee;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.PearlwoodChair, 1);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 130, RequestInfoText: "(You can craft using pearlwood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return NPC.downedQueenBee;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.PearlwoodTable, 1, 0.2f);
+            Requests.Add(rb);
+            //
+            rb = new RequestBase("", 120, RequestInfoText: "(You can craft using pearlwood on a workbench.)");
+            rb.AddRequestRequirement(delegate (Player player)
+            {
+                return NPC.downedQueenBee;
+            });
+            rb.AddItemCollectionRequest(Terraria.ID.ItemID.PearlwoodSword, 1, 0.2f);
+            Requests.Add(rb);
+            //
             RequestBase.CommonRequests = Requests.ToArray();
         }
     }
