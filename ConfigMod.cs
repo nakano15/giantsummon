@@ -22,6 +22,7 @@ namespace giantsummon
 
         [Label("Second player control port.")]
         [Tooltip("Change in case the second player is unable to control the guardian.")]
+        [DefaultValue(PlayerIndex.Two)]
         public PlayerIndex Control2P { get { return MainMod.controlPort; } set { MainMod.controlPort = value; } }
 
         [Label("Allow guardians to idle easier when near town npcs?")]

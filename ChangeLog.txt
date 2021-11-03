@@ -28,3 +28,5 @@ Death triggers on companions will no longer disregard distance.
 Fixed a bug where melee attacks could end up not hitting monsters on the ground.
 If you speak to a companion while mounted in another companion, the other companion will check the distance between them and your mounted companion, instead of the distance between you and the companion you're talking to.
 The bleeding effect caused by being hurt by anything while knocked out had it's time reduced from 30 seconds to 5.
+The Player Index for the second player has been changed to be the second by default.
+	Since first is taken by the game to control the player.
