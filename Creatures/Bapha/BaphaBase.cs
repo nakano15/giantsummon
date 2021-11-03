@@ -49,8 +49,6 @@ namespace giantsummon.Creatures
             ForceWeaponUseOnMainHand = true;
             IsContributedCompanion = true;
             SetTerraGuardian();
-            HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
-            DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
             VladimirBase.AddCarryBlacklist(Bapha);
 
             StandingFrame = 0;
@@ -91,6 +89,17 @@ namespace giantsummon.Creatures
             SubAttackSetup();
         }
 
+        public override ushort GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight, ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
+        {
+            DefaultBehavior = false;
+            if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) < 100)
+                Retreat = true;
+            if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) > 600)
+                Approach = true;
+            return 0;
+            //return base.GuardianSubAttackBehaviorAI(Owner, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight, ref Approach, ref Retreat, ref Jump, ref Couch, out DefaultBehavior);
+        }
+
         public void SubAttackSetup()
         {
             //Anim duration: 10~18
@@ -98,8 +107,8 @@ namespace giantsummon.Creatures
             //16 = 65º
             //17 = 120º
             //18 = 180º
-            GuardianSpecialAttack specialAttack = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Magic);
-            specialAttack.CanMove = false;
+            GuardianSpecialAttack specialAttack = AddNewSubAttack(new Bapha.FireballAttack());
+            /*specialAttack.CanMove = false;
             specialAttack.CalculateAttackDamage = delegate (TerraGuardian tg)
             {
                 int Damage = 20;
@@ -156,7 +165,7 @@ namespace giantsummon.Creatures
             for (int i = 10; i < 16; i++)
             {
                 AddNewSubAttackFrame(6, i, i, i);
-            }
+            }*/
         }
 
         public override void Attributes(TerraGuardian g)

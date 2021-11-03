@@ -1363,25 +1363,17 @@ namespace giantsummon
             return "";
         }
 
-        public GuardianSpecialAttack AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType subAttackType = GuardianSpecialAttack.SubAttackCombatType.Melee)
+        public GuardianSpecialAttack AddNewSubAttack(GuardianSpecialAttack Special)
         {
-            SpecialAttackList.Add(new GuardianSpecialAttack(subAttackType));
+            SpecialAttackList.Add(Special);
             return SpecialAttackList[SpecialAttackList.Count - 1];
         }
 
-        public void AddNewSubAttackFrame(int Duration, int BodyAnimationFrame = -1, int LeftArmAnimationFrame = -1, int RightArmAnimationFrame = -1)
-        {
-            SpecialAttackList[SpecialAttackList.Count - 1].SpecialAttackFrames.Add(new GuardianSpecialAttackFrame()
-            {
-                Duration = Duration, BodyFrame = BodyAnimationFrame, LeftArmFrame = LeftArmAnimationFrame, RightArmFrame = RightArmAnimationFrame
-            });
-        }
-
-        public virtual int GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight,
+        public virtual ushort GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight,
             ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
             DefaultBehavior = true;
-            return 0;
+            return ushort.MaxValue;
         }
 
         public GuardianDrawData GetTextureDrawData(GuardianDrawData.TextureType textureType)

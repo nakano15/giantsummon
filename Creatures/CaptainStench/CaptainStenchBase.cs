@@ -740,7 +740,7 @@ namespace giantsummon.Creatures
             }
         }
 
-        private int GetCalculatedSwordDamage(TerraGuardian tg)
+        public static int GetCalculatedSwordDamage(TerraGuardian tg)
         {
             int Damage = 20;
             if (tg.SelectedItem > -1)
@@ -755,16 +755,16 @@ namespace giantsummon.Creatures
             return (int)(Damage * tg.MeleeDamageMultiplier);
         }
 
-        private void SubAttackBegginingScript(TerraGuardian tg)
+        public static void SubAttackBegginingScript(TerraGuardian tg, GuardianSpecialAttackData sp)
         {
             CaptainStenchData data = (CaptainStenchData)tg.Data;
             switch (data.SwordID)
             {
                 case TopazFalchion:
-                    tg.SubAttackSpeed = TopazFalchionAttackSpeedMult;
+                    sp.ChangeUseTime(TopazFalchionAttackSpeedMult);
                     break;
                 case SapphireFalchion:
-                    tg.SubAttackSpeed = SapphireFalchionAttackSpeedMult;
+                    sp.ChangeUseTime(SapphireFalchionAttackSpeedMult);
                     break;
             }
         }
@@ -779,7 +779,7 @@ namespace giantsummon.Creatures
 
         public void PhantomRushSetup()
         {
-            GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee);
+            GuardianSpecialAttack special = AddNewSubAttack(new Creatures.CaptainStench.Attacks.PhantomRush()); /*AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee);
             special.MinRange = 0;
             special.MaxRange = 200;
             special.ManaCost = 20;
@@ -821,28 +821,6 @@ namespace giantsummon.Creatures
                             tg.Position.X = (int)(tg.Position.X * 0.0625f) * 16 + tg.CollisionWidth - tg.CollisionWidth * 0.5f;
                         }
                     }
-                    /*float Stack = 0f;
-                    for(int i = 0; i < 3; i++)
-                    {
-                        float SumX = i * 16;
-                        if (Collision.SolidCollision(tg.TopLeftPosition + new Vector2(SumX, 0), tg.CollisionWidth, tg.CollisionHeight))
-                        {
-                            if (tg.LookingLeft)
-                            {
-                                tg.Position.X = SumX + 16 + tg.CollisionWidth * 0.5f;
-                            }
-                            else
-                            {
-                                tg.Position.X = SumX + tg.CollisionWidth - tg.CollisionWidth * 0.5f;
-                            }
-                            Stack = 0;
-                            break;
-                        }
-                        Stack += 16;
-                        if (Stack > 40)
-                            Stack = 40;
-                    }
-                    tg.Position.X += Stack * tg.Direction;*/
                     Rectangle rect = tg.HitBox;
                     int Damage = (int)(GetCalculatedSwordDamage(tg) * 1.2f);
                     float Knockback = 1.5f;
@@ -903,12 +881,12 @@ namespace giantsummon.Creatures
                         }
                     }
                 }
-            };
+            };*/
         }
 
         public void VSwingSetup()
         {
-            GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //V Swing
+            GuardianSpecialAttack special = AddNewSubAttack(new Creatures.CaptainStench.Attacks.VerticalSwing());/*AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //V Swing
             special.MinRange = 0;//16;
             special.MaxRange = 99; //52
             special.CanMove = true;
@@ -1027,12 +1005,12 @@ namespace giantsummon.Creatures
                         }
                     }
                 }
-            };
+            };*/
         }
 
         public void GPSetup()
         {
-            GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //GP
+            GuardianSpecialAttack special = AddNewSubAttack(new Creatures.CaptainStench.Attacks.GPAttack());/*AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Melee); //GP
             special.SetCooldown(15);
             special.MinRange = 0;
             special.MaxRange = 62;
@@ -1255,12 +1233,12 @@ namespace giantsummon.Creatures
                         }
                         break;
                 }
-            };
+            };*/
         }
 
         public void ArmBlasterSetup()
         {
-            GuardianSpecialAttack special = AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Ranged); //Arm Blaster
+            GuardianSpecialAttack special = AddNewSubAttack(new Creatures.CaptainStench.Attacks.ArmBlaster()); /*AddNewSubAttack(GuardianSpecialAttack.SubAttackCombatType.Ranged); //Arm Blaster
             special.CanMove = true;
             special.ManaCost = 2;
             special.MinRange = 0;//100;
@@ -1369,13 +1347,13 @@ namespace giantsummon.Creatures
                     else
                         LeftArmFrame = 59;
                 }
-            };
+            };*/
         }
 
-        public override int GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight,
+        public override ushort GuardianSubAttackBehaviorAI(TerraGuardian Owner, CombatTactic tactic, Vector2 TargetPosition, Vector2 TargetVelocity, int TargetWidth, int TargetHeight,
             ref bool Approach, ref bool Retreat, ref bool Jump, ref bool Couch, out bool DefaultBehavior)
         {
-            int ID = -1;
+            ushort ID = ushort.MaxValue;
             float Distance = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X),
                 DistanceYTargetTop = Owner.Position.Y - TargetPosition.Y,
                 DistanceYTargetBottom = Owner.Position.Y - TargetPosition.Y + TargetHeight;

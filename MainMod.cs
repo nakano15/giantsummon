@@ -1501,41 +1501,18 @@ namespace giantsummon
                 {
                     if (!g.Active) continue;
                     New.Add(g.Name + " ID: " + g.WhoAmID);
-                    if (g.ID == GuardianBase.Fluffles)
+                    New.Add(" Sub attack in use? " + g.SubAttackInUse);
+                    if (g.SubAttackInUse)
                     {
-                        Creatures.FlufflesBase.FlufflesData data = (Creatures.FlufflesBase.FlufflesData)g.Data;
-                        New.Add("Soul Position: " + data.SoulPosition);
-                        New.Add("Soul Velocity: " + data.SoulVelocity);
-                        New.Add("Soul Opacity: " + data.SoulOpacity);
-                        New.Add("Soul Attached? " + data.SoulAttached);
+                        New.Add(" ID: " + g.SpecialAttack.Name + "{" + g.SpecialAttack.ID + "}");
+                        New.Add(" Time: " + g.SpecialAttack.Time);
+                        New.Add(" Cooldown: " + g.SpecialAttack.Cooldown);
                     }
-                    New.Add("Mana Regen Time: " + g.ManaRegenTime);
-                    /*New.Add(g.Name + "'s animation frames:");
-                    New.Add("  Body Arm:" + g.BodyAnimationFrame);
-                    New.Add("  Left Arm:" + g.LeftArmAnimationFrame);
-                    New.Add("  Right Arm:" + g.RightArmAnimationFrame);*/
-                    //New.Add(g.Name + "'s mount is active?  " + g.mount.Active);
-                    /*if(g.ID == 19)
-                    {
-                        Creatures.BunnyReaperGuardianBase.ReaperGuardianData data = (Creatures.BunnyReaperGuardianBase.ReaperGuardianData)g.Data;
-                        New.Add("Soul count: " + data.ActiveSouls.Count + "  Souls Caught: " + data.SoulsLoaded);
-                    }
-                    if(g.ID == GuardianBase.Alexander)
-                    {
-                        New.Add("Identified Guardians: ");
-                        Creatures.AlexanderBase.AlexanderData data = (Creatures.AlexanderBase.AlexanderData)g.Data;
-                        foreach(GuardianID identified in data.IdentifiedGuardians)
-                        {
-                            New.Add(identified.ID + ":" + identified.ModID);
-                        }
-                    }*/
-                    //New.Add("Selected Item: " + g.SelectedItem);
-                    //New.Add("Action Pressed: " + g.Action);
                 }
-                New.Clear();
+                /*New.Clear();
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
                 New.Add("Current exercise: " + pm.CurrentExercise.ToString());
-                New.Add("Exercise progress: " + pm.ExerciseCounter);
+                New.Add("Exercise progress: " + pm.ExerciseCounter);*/
                 /*foreach(FeatMentioning feat in GuardianGlobalInfos.Feats)
                 {
                     New.Add(feat.type.ToString() + " " + feat.PlayerName + " T:" + feat.FeatDurationInGameDays + " " + feat.FeatSubject);
@@ -2185,11 +2162,11 @@ namespace giantsummon
                             {
                                 for (int y = -1; y < 2; y++)
                                 {
-                                    Main.spriteBatch.Draw(MainMod.GuardianButtonSlots, ButtonPosition + new Vector2(x, y), new Rectangle(36 * b, 0, 36, 36), Color.White, 0f, Vector2.Zero, ButtonSize, SpriteEffects.None, 0f);
+                                    Main.spriteBatch.Draw(GuardianButtonSlots, ButtonPosition + new Vector2(x, y), new Rectangle(36 * b, 0, 36, 36), Color.White, 0f, Vector2.Zero, ButtonSize, SpriteEffects.None, 0f);
                                 }
                             }
                         }
-                        Main.spriteBatch.Draw(MainMod.GuardianButtonSlots, ButtonPosition, new Rectangle(36 * b, 0, 36, 36), Color.White, 0f, Vector2.Zero, ButtonSize, SpriteEffects.None, 0f);
+                        Main.spriteBatch.Draw(GuardianButtonSlots, ButtonPosition, new Rectangle(36 * b, 0, 36, 36), Color.White, 0f, Vector2.Zero, ButtonSize, SpriteEffects.None, 0f);
                         ButtonPosition.X += ButtonDimension + 6;
                     }
                 }
@@ -2614,7 +2591,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        int[] TestGuardianIDs = new int[] { 19, 20, 26 };
+                                        int[] TestGuardianIDs = new int[] { 19, 20, 22, 26 };
                                         bool b = false;
                                         foreach (int TestGuardianID in TestGuardianIDs)
                                         {

@@ -415,12 +415,9 @@ namespace giantsummon
         public const byte TurnLockTime = 12;
         public Vector2 PrioritaryMovementTarget = Vector2.Zero;
         public PrioritaryBehavior PrioritaryBehaviorType = PrioritaryBehavior.None;
-        private byte _SubAttack = 0;
-        public int SubAttackID { get { return _SubAttack - 1; } }
-        public int SubAttackTime = 0, SubAttackFrame = 0, SubAttackDamage = 0;
-        private Dictionary<byte, float> SubAttackCooldown = new Dictionary<byte, float>();
-        public float SubAttackSpeed = 1f;
-        public bool SubAttackInUse { get { return _SubAttack > 0; } }
+        public GuardianSpecialAttackData SpecialAttack = new GuardianSpecialAttackData(null);
+        private Dictionary<ushort, float> SubAttackCooldown = new Dictionary<ushort, float>();
+        public bool SubAttackInUse { get { return SpecialAttack.InUse; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
         public static int CurrentDrawnOrderID = 0;
 
@@ -2559,17 +2556,17 @@ namespace giantsummon
                 Spawn();
             if(LoadedWorldRegion)
                 BehaviorHandler();
-            if (HasFlag(GuardianFlags.Confusion))
+            if (SubAttackInUse && !SpecialAttack.CanMove)
+            {
+                MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
+            }
+            else if (HasFlag(GuardianFlags.Confusion))
             {
                 bool MovingLeft = MoveLeft, MovingRight = MoveRight, MovingUp = MoveUp, MovingDown = MoveDown;
                 MoveLeft = MovingRight;
                 MoveRight = MovingLeft;
                 MoveUp = MovingDown;
                 MoveDown = MovingUp;
-            }
-            if (SubAttackInUse && !Base.SpecialAttackList[SubAttackID].CanMove)
-            {
-                MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
             }
             if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()))
             {
@@ -4227,28 +4224,6 @@ namespace giantsummon
             DefenseRate = (Defense * 0.2f) * 0.01f;
             //if (DefenseRate > 0.9f)
             //    DefenseRate = 0.9f;
-            if (FriendshipLevel >= Base.LootingUnlockLevel)
-                AddFlag(GuardianFlags.MayLootItems);
-            if (Base.MountUnlockLevel != 255 && FriendshipLevel >= Base.MountUnlockLevel)
-                AddFlag(GuardianFlags.AllowMount);
-            if (FriendshipLevel >= Base.ControlUnlockLevel)
-                AddFlag(GuardianFlags.PlayerControl);
-            if (FriendshipLevel >= Base.StopMindingAFK)
-                AddFlag(GuardianFlags.StopMindingAfk);
-            if (FriendshipLevel >= Base.FriendshipBondUnlockLevel)
-                AddFlag(GuardianFlags.FriendshipBondBuff);
-            if (FriendshipLevel >= Base.FallDamageReductionLevel)
-                AddFlag(GuardianFlags.FallDamageImpactReduction);
-            if (FriendshipLevel >= Base.MountDamageReductionLevel)
-                AddFlag(GuardianFlags.MountDamageReceivedReduction);
-            if (FriendshipLevel >= Base.MaySellYourLoot)
-                AddFlag(GuardianFlags.MayGoSellLoot);
-            if (KnockedOut && HasFlag(GuardianFlags.CantBeKnockedOutCold))
-                AddFlag(GuardianFlags.DontTakeAggro);
-            if (KnockedOut && HasFlag(GuardianFlags.CantTakeDamageWhenKod))
-            {
-                AddFlag(GuardianFlags.CantBeHurt);
-            }
             if (OwnerPos > -1 && HasFlag(GuardianFlags.FriendshipBondBuff))
             {
                 //float StatusSum = (Main.player[OwnerPos].meleeDamage + Main.player[OwnerPos].rangedDamage + Main.player[OwnerPos].magicDamage + Main.player[OwnerPos].minionDamage - 4f) * 0.05f;
@@ -4283,6 +4258,28 @@ namespace giantsummon
                 {
                     SkillList[s].OnStatusUpdate(this);
                 }
+            }
+            if (FriendshipLevel >= Base.LootingUnlockLevel)
+                AddFlag(GuardianFlags.MayLootItems);
+            if (Base.MountUnlockLevel != 255 && FriendshipLevel >= Base.MountUnlockLevel)
+                AddFlag(GuardianFlags.AllowMount);
+            if (FriendshipLevel >= Base.ControlUnlockLevel)
+                AddFlag(GuardianFlags.PlayerControl);
+            if (FriendshipLevel >= Base.StopMindingAFK)
+                AddFlag(GuardianFlags.StopMindingAfk);
+            if (FriendshipLevel >= Base.FriendshipBondUnlockLevel)
+                AddFlag(GuardianFlags.FriendshipBondBuff);
+            if (FriendshipLevel >= Base.FallDamageReductionLevel)
+                AddFlag(GuardianFlags.FallDamageImpactReduction);
+            if (FriendshipLevel >= Base.MountDamageReductionLevel)
+                AddFlag(GuardianFlags.MountDamageReceivedReduction);
+            if (FriendshipLevel >= Base.MaySellYourLoot)
+                AddFlag(GuardianFlags.MayGoSellLoot);
+            if (KnockedOut && HasFlag(GuardianFlags.CantBeKnockedOutCold))
+                AddFlag(GuardianFlags.DontTakeAggro);
+            if (KnockedOut && HasFlag(GuardianFlags.CantTakeDamageWhenKod))
+            {
+                AddFlag(GuardianFlags.CantBeHurt);
             }
             if (HasBuff(Terraria.ID.BuffID.Titan) && !HasFlag(GuardianFlags.TitanGuardian))
                 ScaleMult *= 2;
@@ -5659,16 +5656,16 @@ namespace giantsummon
                             if (Base.SpecialAttackList.Count == 0)
                                 return;
                             bool ExecuteBehavior;
-                            int SubAttackPicked = Base.GuardianSubAttackBehaviorAI(this, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight,
+                            ushort SubAttackPicked = Base.GuardianSubAttackBehaviorAI(this, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight,
                                 ref Approach, ref Retreat, ref Jump, ref MoveDown, out ExecuteBehavior);
-                            if (SubAttackPicked > -1)
+                            if (SubAttackPicked < ushort.MaxValue)
                             {
                                 GuardianSpecialAttack gsa = Base.SpecialAttackList[SubAttackPicked];
                                 SelectedItem = -1;
                                 int LastHighestDamage = 0;
                                 for (int i = 0; i < 10; i++)
                                 {
-                                    switch (gsa.combatType)
+                                    switch (gsa.AttackType)
                                     {
                                         case GuardianSpecialAttack.SubAttackCombatType.Melee:
                                             if (Inventory[i].type > 0 && Inventory[i].melee && Inventory[i].damage > LastHighestDamage)
@@ -14673,66 +14670,70 @@ namespace giantsummon
             return false;
         }
 
-        public void UseSubAttack(int ID)
+        public void UseSubAttack(ushort ID)
         {
             if (ID >= Base.SpecialAttackList.Count)
                 return;
-            _SubAttack = (byte)(ID + 1);
-            SubAttackTime = 0;
-            SubAttackFrame = 0;
-            SubAttackSpeed = 1f;
             GuardianSpecialAttack gsa = Base.SpecialAttackList[ID];
-            int ManaCost = (int)(gsa.ManaCost * this.ManaCostMult);
-            if(SubAttackCooldown.ContainsKey(_SubAttack) || !UseMana(ManaCost))
+            int ManaCost = (int)(gsa.ManaCost * ManaCostMult);
+            if(SubAttackCooldown.ContainsKey(ID) || !UseMana(ManaCost))
             {
-                _SubAttack = 0;
                 return;
             }
             LookingLeft = AimDirection.X < Position.X;
-            SubAttackDamage = gsa.CalculateAttackDamage(this);
-            gsa.WhenSubAttackBegins(this);
+            SpecialAttack = gsa.GetSpecialAttackData;
+            SpecialAttack.ID = ID;
+            gsa.OnUse(this, SpecialAttack);
         }
 
-        public bool CanUseSubAttack(byte ID)
+        public bool CanUseSubAttack(ushort ID)
         {
             GuardianBase b = Base;
-            if (ID < 0 || ID >= b.SpecialAttackList.Count)
+            if (ID >= b.SpecialAttackList.Count)
                 return false;
             return MP >= (int)(b.SpecialAttackList[ID].ManaCost * ManaCostMult) && !SubAttackInCooldown(ID);
         }
 
-        public bool SubAttackInCooldown(byte ID)
+        public bool SubAttackInCooldown(ushort ID)
         {
-            return SubAttackCooldown.ContainsKey((byte)(ID + 1));
+            return SubAttackCooldown.ContainsKey(ID);
         }
 
-        public void ResetSubAttackCooldown(byte ID)
+        public void ResetSubAttackCooldown(ushort ID)
         {
             if (SubAttackInCooldown(ID))
             {
-                SubAttackCooldown.Remove((byte)(ID + 1));
+                SubAttackCooldown.Remove(ID);
             }
         }
 
-        public void ChangeSubAttackCooldown(byte ID, float Value)
+        public void ChangeSubAttackCooldown(ushort ID, float Value)
         {
             if (SubAttackInCooldown(ID))
             {
-                SubAttackCooldown[(byte)(ID + 1)] += Value;
+                SubAttackCooldown[ID] += Value;
+            }
+            else
+            {
+                SubAttackCooldown.Add(ID, Value);
             }
         }
 
-        public void ChangeSubAttackCooldown (byte ID, int Time)
+        public void ChangeSubAttackCooldown (ushort ID, int Time)
         {
             if (SubAttackInCooldown(ID))
             {
-                SubAttackCooldown[(byte)(ID + 1)] = Time;
+                SubAttackCooldown[ID] = Time;
+            }
+            else
+            {
+                SubAttackCooldown.Add(ID, Time);
             }
         }
 
         public void UpdateSubAttack()
         {
-            byte[] CooldownKeys = SubAttackCooldown.Keys.ToArray();
+            ushort[] CooldownKeys = SubAttackCooldown.Keys.ToArray();
             foreach(byte k in CooldownKeys)
             {
                 SubAttackCooldown[k]--;
@@ -14744,7 +14745,9 @@ namespace giantsummon
             if (!SubAttackInUse)
                 return;
             LockDirection = true;
-            int LastAttackTime = SubAttackTime - 1;
+            SpecialAttack.Update(this);
+            return;
+            /*int LastAttackTime = SubAttackTime - 1;
             if(SubAttackTime == 0 && SubAttackID >= Base.SpecialAttackList.Count)
             {
                 _SubAttack = 0;
@@ -14800,10 +14803,8 @@ namespace giantsummon
                 subattack.AnimationReplacer(this, SubAttackFrame, SubAttackTime, ref SubAttackBodyFrame, ref SubAttackLeftArmFrame, ref SubAttackRightArmFrame);
             }
             subattack.WhenFrameUpdatesScript(this, CurrentFrame, FrameTime);
-            SubAttackTime++;
+            SubAttackTime++;*/
         }
-
-        private static int SubAttackBodyFrame = -1, SubAttackLeftArmFrame = -1, SubAttackRightArmFrame = -1;
 
         public static bool UsingLeftArmAnimation = false, UsingRightArmAnimation = false;
         public enum AnimationState : byte
@@ -15501,9 +15502,7 @@ namespace giantsummon
             Base.GuardianAnimationOverride(this, 2, ref RightArmAnimationFrame);
             if (SubAttackInUse)
             {
-                if(SubAttackBodyFrame > -1) BodyAnimationFrame = SubAttackBodyFrame;
-                if (SubAttackLeftArmFrame > -1) LeftArmAnimationFrame = SubAttackLeftArmFrame;
-                if (SubAttackRightArmFrame > -1) RightArmAnimationFrame = SubAttackRightArmFrame;
+                SpecialAttack.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
             }
         }
 
@@ -17229,6 +17228,11 @@ namespace giantsummon
             return rect;
         }
 
+        public Texture2D GetExtraTexture(string TextureID)
+        {
+            return Base.sprites.GetExtraTexture(TextureID);
+        }
+
         public static bool DrawingIgnoringLighting = false;
 
         public void Draw(bool IgnoreLighting = false, bool DoShading = false)
@@ -17687,7 +17691,7 @@ namespace giantsummon
             DoAction.DrawAction(this);
             if (SubAttackInUse)
             {
-                Base.SpecialAttackList[SubAttackID].WhenCompanionIsBeingDrawn(this, SubAttackFrame, SubAttackTime);
+                SpecialAttack.UpdateDrawing(this);
             }
             //DrawBuffWheel(); //Will live forever in our memory... Said nobody.
             /*Rectangle DisplayPosition = WeaponCollision;

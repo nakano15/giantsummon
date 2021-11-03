@@ -111,9 +111,14 @@
     <Compile Include="Creatures\Alex\AlexBase.cs" />
     <Compile Include="Creatures\Alex\HealingLickAction.cs" />
     <Compile Include="Creatures\Bapha\BaphaBase.cs" />
+    <Compile Include="Creatures\Bapha\FireballAttack.cs" />
     <Compile Include="Creatures\Blue\FullMoonHowlingBehavior.cs" />
     <Compile Include="Creatures\Brandon\BrandonBase.cs" />
     <Compile Include="Creatures\Brutus\ProtectModeAction.cs" />
+    <Compile Include="Creatures\CaptainStench\Attacks\ArmBlaster.cs" />
+    <Compile Include="Creatures\CaptainStench\Attacks\GPAttack.cs" />
+    <Compile Include="Creatures\CaptainStench\Attacks\PhantomRush.cs" />
+    <Compile Include="Creatures\CaptainStench\Attacks\VerticalSwing.cs" />
     <Compile Include="Creatures\Leopold\LoreDialogues.cs" />
     <Compile Include="Creatures\Liebre\LiebreBase.cs" />
     <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
