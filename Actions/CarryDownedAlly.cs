@@ -17,6 +17,7 @@ namespace giantsummon.Actions
             ID = (int)ActionIDs.CarryDownedAlly;
             InUse = true;
             CarriedPlayer = player;
+            BlockOffHandUsage = true;
         }
 
         public CarryDownedAlly(TerraGuardian tg)
@@ -24,6 +25,7 @@ namespace giantsummon.Actions
             ID = (int)ActionIDs.CarryDownedAlly;
             InUse = true;
             CarriedGuardian = tg;
+            BlockOffHandUsage = true;
         }
 
         public static bool CanCarryAlly(TerraGuardian Carrier, Player player)
@@ -203,7 +205,7 @@ namespace giantsummon.Actions
                 {
                     CarriedGuardian.BeingPulledByPlayer = false;
                     CarriedGuardian.Position.X = CarryPosition.X - (CarriedGuardian.Width * (Origin.X - 0.5f)) + guardian.OffsetX;
-                    CarriedGuardian.Position.Y = CarryPosition.Y + (CarriedGuardian.Height * (1f - Origin.Y)) + guardian.OffsetY;
+                    CarriedGuardian.Position.Y = CarryPosition.Y + (CarriedGuardian.Height * (1.1f - Origin.Y)) + guardian.OffsetY;
                     CarriedGuardian.SetFallStart();
                     CarriedGuardian.Direction = guardian.Direction;
                     CarriedGuardian.ReviveBoost++;

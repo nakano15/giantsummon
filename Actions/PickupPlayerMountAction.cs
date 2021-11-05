@@ -39,6 +39,7 @@ namespace giantsummon.Actions
             }
             else //Pickup Player animation.
             {
+                BlockOffHandUsage = true;
                 //guardian.PlayerMounted = true;
                 if (guardian.ReverseMount || guardian.Base.DontUseRightHand || guardian.UsingFurniture)
                 {

@@ -119,6 +119,8 @@
     <Compile Include="Creatures\CaptainStench\Attacks\GPAttack.cs" />
     <Compile Include="Creatures\CaptainStench\Attacks\PhantomRush.cs" />
     <Compile Include="Creatures\CaptainStench\Attacks\VerticalSwing.cs" />
+    <Compile Include="Creatures\Fear\FearBase.cs" />
+    <Compile Include="Creatures\Joy\JoyBase.cs" />
     <Compile Include="Creatures\Leopold\LoreDialogues.cs" />
     <Compile Include="Creatures\Liebre\LiebreBase.cs" />
     <Compile Include="Creatures\Alexander\AlexanderBase.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="Creatures\PigGuardianFragmentBase.cs" />
     <Compile Include="Creatures\Quentin\QuentinBase.cs" />
     <Compile Include="Creatures\Luna\LunaBase.cs" />
+    <Compile Include="Creatures\Sadness\SadnessBase.cs" />
     <Compile Include="Creatures\Vladimir\HugAction.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />
@@ -381,6 +384,17 @@
     <Content Include="Creatures\Bree\witch_leg.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Creatures\Brutus\royal_guard_outfit_f.png" />
+    <Content Include="Creatures\Fear\body.png" />
+    <Content Include="Creatures\Fear\body_front.png" />
+    <Content Include="Creatures\Fear\head.png" />
+    <Content Include="Creatures\Fear\left_arm.png" />
+    <Content Include="Creatures\Fear\right_arm.png" />
+    <Content Include="Creatures\Fear\right_arm_front.png" />
+    <Content Include="Creatures\Joy\body.png" />
+    <Content Include="Creatures\Joy\body_front.png" />
+    <Content Include="Creatures\Joy\head.png" />
+    <Content Include="Creatures\Joy\left_arm.png" />
+    <Content Include="Creatures\Joy\right_arm.png" />
     <Content Include="Creatures\Liebre\body.png" />
     <Content Include="Creatures\Liebre\body_front.png" />
     <Content Include="Creatures\Liebre\head.png" />
@@ -474,6 +488,11 @@
     <Content Include="Creatures\Rococo\shadedbody.png" />
     <Content Include="Creatures\Rococo\shadedbodyfront.png" />
     <Content Include="Creatures\Rococo\shadedhead.png" />
+    <Content Include="Creatures\Sadness\body.png" />
+    <Content Include="Creatures\Sadness\body_front.png" />
+    <Content Include="Creatures\Sadness\head.png" />
+    <Content Include="Creatures\Sadness\left_arm.png" />
+    <Content Include="Creatures\Sadness\right_arm.png" />
     <Content Include="Creatures\Sardine\caitsith_outfit.png" />
     <Content Include="Creatures\Vladimir\body.png" />
     <Content Include="Creatures\Vladimir\body_front.png" />

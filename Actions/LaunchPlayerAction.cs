@@ -52,6 +52,7 @@ namespace giantsummon.Actions
                     else if (hand == HeldHand.Right)
                     {
                         HandPosition = guardian.GetGuardianRightHandPosition;
+                        BlockOffHandUsage = true;
                     }
                     FocusCameraOnGuardian = true;
                     if (Time >= 24)

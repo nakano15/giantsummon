@@ -156,7 +156,10 @@ namespace giantsummon
             Cinnamon = 23,
             Quentin = 24,
             Miguel = 25,
-            Luna = 26;
+            Luna = 26,
+            Fear = 27,
+            Sadness = 28,
+            Joy = 29;
 
         public void RefreshBaseLifeTime()
         {
@@ -1191,6 +1194,15 @@ namespace giantsummon
                         break;
                     case Luna:
                         gb = new LunaBase();
+                        break;
+                    case Fear:
+                        gb = new FearBase();
+                        break;
+                    case Sadness:
+                        gb = new SadnessBase();
+                        break;
+                    case Joy:
+                        gb = new JoyBase();
                         break;
                 }
             }

@@ -26,6 +26,7 @@ namespace giantsummon
         public static Mod mod;
         public static ModPacket GetPatcket { get { return mod.GetPacket(); } }
         public static GuardianItemSlotButtons SelectedGuardianInventorySlot = GuardianItemSlotButtons.Nothing;
+        public static byte SkillListRow = 0;
         public static SoundData FemaleHitSound = new SoundData(Terraria.ID.SoundID.FemaleHit);
         public static byte SelectedGuardian = 0;
         public static int GuardianInventoryMenuSubTab = 0;
@@ -2591,7 +2592,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        int[] TestGuardianIDs = new int[] { 19, 20, 22, 26 };
+                                        int[] TestGuardianIDs = new int[] { 19, 20, 22, 26, 27, 28, 29 };
                                         bool b = false;
                                         foreach (int TestGuardianID in TestGuardianIDs)
                                         {
@@ -2847,27 +2848,58 @@ namespace giantsummon
                         break;
 
                     case GuardianItemSlotButtons.Skills:
-                        Utils.DrawBorderString(Main.spriteBatch, "Guardian Skills", SlotStartPosition, Color.White);
-                        SlotStartPosition.Y += 36;
-                        int LevelSum = 0;
-                        foreach (GuardianSkills s in Guardian.Data.GetSkillList)
                         {
-                            Vector2 SkillInfoDimension = Utils.DrawBorderString(Main.spriteBatch, s.GetSkillInfo(Guardian), SlotStartPosition, Color.White);
-                            if (Main.mouseX >= SlotStartPosition.X && Main.mouseX < SlotStartPosition.X + SkillInfoDimension.X &&
-                                Main.mouseY >= SlotStartPosition.Y && Main.mouseY < SlotStartPosition.Y + SkillInfoDimension.Y)
+                            const int MaxSkillsDisplay = 8;
+                            List<GuardianSkills> Skills = Guardian.SkillList;
+                            int SkillRows = Skills.Count / MaxSkillsDisplay;
+                            Utils.DrawBorderString(Main.spriteBatch, "Guardian Skills", SlotStartPosition, Color.White);
+                            SlotStartPosition.Y += 30;
                             {
-                                MouseOverText = s.GetSkillDescription;
+                                float RowX = SlotStartPosition.X;
+                                for (byte Row = 0; Row < SkillRows; Row++)
+                                {
+                                    Vector2 Position = new Vector2(RowX, SlotStartPosition.Y);
+                                    Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)Position.X, (int)Position.Y, 20, 20), SkillListRow == Row ? Color.White : Color.Black);
+                                    bool MouseOver = Main.mouseX >= Position.X && Main.mouseX < Position.X + 20 && Main.mouseY >= Position.Y && Main.mouseY < Position.Y + 20;
+                                    if(MouseOver)
+                                    {
+                                        Main.LocalPlayer.mouseInterface = true;
+                                        if (Main.mouseLeft && Main.mouseLeftRelease)
+                                        {
+                                            SkillListRow = Row;
+                                        }
+                                    }
+                                    Position.X += 10;
+                                    Position.Y += 12;
+                                    Utils.DrawBorderString(Main.spriteBatch, (Row + 1).ToString(), Position, MouseOver ? Color.Yellow : Color.White, 0.8f, 0.5f, 0.5f);
+                                    RowX += 22;
+                                }
                             }
-                            SlotStartPosition.Y += SkillInfoDimension.Y;
-                            LevelSum += s.Level;
-                        }
-                        SlotStartPosition.Y += 36;
-                        Utils.DrawBorderString(Main.spriteBatch, "Total Levels: " + LevelSum, SlotStartPosition, Color.White);
-                        SlotStartPosition.Y += 22;
-                        if (Guardian.Data.SkillLevelSum < Guardian.Data.LastTotalSkillLevel)
-                        {
-                            Utils.DrawBorderString(Main.spriteBatch, "Bonus Skill EXP until total level: " + Guardian.Data.LastTotalSkillLevel, SlotStartPosition, Color.White);
+                            SlotStartPosition.Y += 20;
+                            int LevelSum = 0;
+                            int Discount = -SkillListRow * MaxSkillsDisplay;
+                            foreach (GuardianSkills s in Guardian.Data.GetSkillList)
+                            {
+                                if (Discount >= 0 && Discount < MaxSkillsDisplay)
+                                {
+                                    Vector2 SkillInfoDimension = Utils.DrawBorderString(Main.spriteBatch, s.GetSkillInfo(Guardian), SlotStartPosition, Color.White, 0.85f);
+                                    if (Main.mouseX >= SlotStartPosition.X && Main.mouseX < SlotStartPosition.X + SkillInfoDimension.X &&
+                                        Main.mouseY >= SlotStartPosition.Y && Main.mouseY < SlotStartPosition.Y + SkillInfoDimension.Y)
+                                    {
+                                        MouseOverText = s.GetSkillDescription;
+                                    }
+                                    SlotStartPosition.Y += SkillInfoDimension.Y;
+                                }
+                                LevelSum += s.Level;
+                            }
+                            SlotStartPosition.Y += 36;
+                            Utils.DrawBorderString(Main.spriteBatch, "Total Levels: " + LevelSum, SlotStartPosition, Color.White, 0.9f);
                             SlotStartPosition.Y += 22;
+                            if (Guardian.Data.SkillLevelSum < Guardian.Data.LastTotalSkillLevel)
+                            {
+                                Utils.DrawBorderString(Main.spriteBatch, "Bonus Skill EXP until total level: " + Guardian.Data.LastTotalSkillLevel, SlotStartPosition, Color.White, 0.9f);
+                                SlotStartPosition.Y += 22;
+                            }
                         }
                         break;
 

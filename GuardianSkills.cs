@@ -141,43 +141,15 @@ namespace giantsummon
 
         public static float ReturnSkillMaxProgress(int StatusSum, bool IndividualSkill = false)
         {
-            if (false && IndividualSkill)
-            {
-                float Value = 2000 + StatusSum * 250; //20 + x * 25
-                if (StatusSum >= 10)
-                {
-                    Value += Value * 0.1f;
-                }
-                if (StatusSum >= 20)
-                {
-                    Value += Value * 0.1f;
-                }
-                if (StatusSum >= 40)
-                {
-                    Value += Value * 0.25f;
-                }
-                if (StatusSum >= 60)
-                {
-                    Value += Value * 0.4f;
-                }
-                if (StatusSum >= 80)
-                {
-                    Value += Value * 0.6f;
-                }
-                return Value;
-            }
+            float Value = 0;
+            if (IndividualSkill)
+                Value = 20 + StatusSum * 25 - (StatusSum - 1) * 12;
             else
-            {
-                float Value = 0;
-                if (IndividualSkill)
-                    Value = 20 + StatusSum * 25 - (StatusSum - 1) * 12;
-                else
-                    Value = 20 + StatusSum * 15 - (StatusSum - 1) * 8;
-                const int MaxPossibleValue = 500000000;
-                if (Value > MaxPossibleValue || Value < 0) //To avoid overflow
-                    Value = MaxPossibleValue;
-                return Value;
-            }
+                Value = 20 + StatusSum * 15 - (StatusSum - 1) * 8;
+            const int MaxPossibleValue = 500000000;
+            if (Value > MaxPossibleValue || Value < 0) //To avoid overflow
+                Value = MaxPossibleValue;
+            return Value;
         }
 
         public enum SkillTypes : byte

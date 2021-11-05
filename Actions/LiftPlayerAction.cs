@@ -43,6 +43,7 @@ namespace giantsummon.Actions
                 case 1:
                     guardian.Ducking = false;
                     Vector2 HandPosition = guardian.GetGuardianBetweenHandPosition;
+                    BlockOffHandUsage = true;
                     if (Time < 12)
                     {
                         Target.Center = HandPosition;

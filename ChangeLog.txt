@@ -36,3 +36,11 @@ Sub Attack system was reworked.
 	Companions that had special attacks, had their special attacks reworked to work on the new system.
 Fixed a bug with Captain Stench's vertical swing attack.
 Fixed an issue where some innate attributes from companions weren't working.
+Companions will now comment when they step on burning tiles.
+Companions shall now try trampling less on their foes, when attempting melee combat.
+Reduced the size of the text on the skills list.
+Torches and glowsticks lighting distance and strength is now based on the companion scale.
+	Minimum lighting scale is set to 100%, so companions set smaller will not give less lighting distance.
+Your companions will avoid using their offhand items while doing a number of actions.
+Fallen companions carried by others will now be held a bit more above their chest.
+Resting now makes the Ether Realm time pass.

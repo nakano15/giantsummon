@@ -1557,6 +1557,7 @@ namespace giantsummon
                 case Terraria.ID.BuffID.CursedInferno:
                 case Terraria.ID.BuffID.Frostburn:
                 case Terraria.ID.BuffID.ShadowFlame:
+                case Terraria.ID.BuffID.Burning:
                     Mes = GetMessage(GuardianBase.MessageIDs.AcquiredBurningDebuff);
                     break;
                 case Terraria.ID.BuffID.Darkness:
@@ -2597,7 +2598,7 @@ namespace giantsummon
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = false;
             }
-            if (UsingFurniture || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0) || (CurrentIdleAction == IdleActions.LookingAtTheBackground))
+            if (UsingFurniture || (DoAction.InUse && DoAction.BlockOffHandUsage) || (ItemAnimationTime > 0 && (ItemUseType == ItemUseTypes.HeavyVerticalSwing || ItemUseType == ItemUseTypes.ItemDrink2h || Base.DontUseRightHand || !Base.IsCustomSpriteCharacter)) || (FreezeItemUseAnimation && HeldItemHand == HeldHand.Both) || HasFlag(GuardianFlags.Cursed) || (PlayerMounted && ItemAnimationTime > 0) || (CurrentIdleAction == IdleActions.LookingAtTheBackground))
             {
                 OffHandAction = false;
             }
@@ -5722,7 +5723,7 @@ namespace giantsummon
                         {
                             case CombatTactic.Charge:
                                 {
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X);
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X + SlowDown * Direction); //Testing the addition of Slowdown
                                     float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
                                         RetreatDistance = HalfWidth + 8;
                                     /*if (MaxAttackRange > -1)
@@ -5858,7 +5859,7 @@ namespace giantsummon
                                 Duck = true;
                         }
                         float AttackRange = GetMeleeWeaponRangeX(SelectedItem, NeedsDucking) + (TargetWidth * 0.5f),
-                            DistanceAbs = Math.Abs((Position.X + Velocity.X * 0.5f) - (TargetPosition.X + TargetWidth * 0.5f));
+                            DistanceAbs = Math.Abs((Position.X + Velocity.X + SlowDown * Direction) - (TargetPosition.X + TargetWidth * 0.5f));
                         Approach = Retreat = false;
                         if (HurtPanic)
                         {
@@ -11901,20 +11902,42 @@ namespace giantsummon
             }
             if (SelectedOffhand == -1)
             {
-                for (int i = 0; i < 50; i++)
+                /*bool NeedOfUsingLight = false;
+                float LightingCounter = 0;
+                if (LastSelectedOffhand > -1)
+                    LightingCounter -= 1f;
+                for (int y = -1; y < 2; y++)
                 {
-                    int type2 = this.Inventory[i].type;
-                    if (type2 == 282 || type2 == 286 || type2 == 523 || type2 == 1333 || type2 == 3002 || type2 == 3112)
+                    for (int x = -1; x < 2; x++)
                     {
-                        SelectedOffhand = i;
-                        break;
+                        if (x == 0 && y == 0)
+                            continue;
+                        int TileX = (int)(Position.X * DivisionBy16) + 10 * x, TileY = (int)(CenterY * DivisionBy16) + 10 * y;
+                        if (TileX >= 0 && TileY >= 0 && TileX < Main.maxTilesX && TileY < Main.maxTilesY)
+                        {
+                            //Tile tile = MainMod.GetTile(TileX, TileY);
+                            LightingCounter += Lighting.Brightness(TileX, TileY);
+                        }
                     }
-                    if (!Wet)
+                }
+                NeedOfUsingLight = LightingCounter * (1f / 9) < 0.6f;
+                if (NeedOfUsingLight)*/
+                {
+                    for (int i = 0; i < 50; i++)
                     {
-                        if (type2 == 8 || type2 == 427 || type2 == 428 || type2 == 429 || type2 == 430 || type2 == 431 || type2 == 432 || type2 == 433 || type2 == 974 || type2 == 1245 || type2 == 2274 || type2 == 3004 || type2 == 3045 || type2 == 3114)
+                        int type2 = this.Inventory[i].type;
+                        if (type2 == 282 || type2 == 286 || type2 == 523 || type2 == 1333 || type2 == 3002 || type2 == 3112)
                         {
                             SelectedOffhand = i;
                             break;
+                        }
+                        if (!Wet)
+                        {
+                            if (type2 == 8 || type2 == 427 || type2 == 428 || type2 == 429 || type2 == 430 || type2 == 431 || type2 == 432 || type2 == 433 || type2 == 974 || type2 == 1245 || type2 == 2274 || type2 == 3004 || type2 == 3045 || type2 == 3114)
+                            {
+                                SelectedOffhand = i;
+                                break;
+                            }
                         }
                     }
                 }
@@ -13950,6 +13973,7 @@ namespace giantsummon
 
         public void TorchLightingHandler(Item item, bool OffHand)
         {
+            float Scale = Math.Max(1f, this.Scale);
             if ((((item.type == 974 || item.type == 8 || item.type == 1245 || item.type == 2274 || item.type == 3004 || item.type == 3045 || item.type == 3114 || (item.type >= 427 && item.type <= 433)) && !this.Wet) || item.type == 523 || item.type == 1333))
             {
                 float num52 = 1f;
@@ -14149,27 +14173,27 @@ namespace giantsummon
                     }
                 }
                 Vector2 position = new Vector2(ItemLocation.X + 6f * Direction + Velocity.X, ItemLocation.Y - 14f + Velocity.Y);
-                Lighting.AddLight(position, num52, num53, num54);
+                Lighting.AddLight(position, num52 * Scale, num53 * Scale, num54 * Scale);
             }
             if (item.type == 282)
             {
                 Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
-                Lighting.AddLight(position11, 0.7f, 1f, 0.8f);
+                Lighting.AddLight(position11, 0.7f * Scale, 1f * Scale, 0.8f * Scale);
             }
             if (item.type == 286)
             {
                 Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
-                Lighting.AddLight(position11, 0.7f, 0.8f, 1f);
+                Lighting.AddLight(position11, 0.7f * Scale, 0.8f * Scale, 1f * Scale);
             }
             if (item.type == 3002)
             {
                 Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
-                Lighting.AddLight(position11, 1.05f, 0.95f, 0.55f);
+                Lighting.AddLight(position11, 1.05f * Scale, 0.95f * Scale, 0.55f * Scale);
             }
             if (item.type == 3112)
             {
                 Vector2 position11 = new Vector2(PositionWithOffset.X + ItemPositionX + Velocity.X, PositionWithOffset.Y + ItemPositionY);
-                Lighting.AddLight(position11, 1f, 0.6f, 0.85f);
+                Lighting.AddLight(position11, 1f * Scale, 0.6f * Scale, 0.85f * Scale);
             }
         }
 

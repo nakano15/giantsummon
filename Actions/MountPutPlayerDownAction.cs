@@ -12,6 +12,7 @@ namespace giantsummon.Actions
             ID = (int)ActionIDs.MountPutPlayerDown;
             InUse = true;
             PlayerToPlaceOnFloor = Target;
+            BlockOffHandUsage = true;
         }
 
         public override void Update(TerraGuardian guardian)

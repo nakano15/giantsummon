@@ -122,6 +122,7 @@ namespace giantsummon
         public static void SkipTime(float Time)
         {
             Main.time += Time * 3600;
+            GuardianGlobalInfos.LifeTime += TimeSpan.FromSeconds(Time * 3600);
             bool CheckDayPhaseChange = true;
             while (CheckDayPhaseChange)
             {
