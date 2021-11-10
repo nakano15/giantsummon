@@ -983,119 +983,6 @@ namespace giantsummon
             }
         }
 
-        public static void GetRecruitmentTipMessages(ref List<string> Messages)
-        {
-            if (!HasMetGuardian(0))
-            {
-                Messages.Add("I have seen a guardian earlier this day, he's looking for a town with friendly people to live with. It may still be around this world, he may show up anytime.");
-            }
-            if (!HasMetGuardian(1))
-            {
-                Messages.Add("I've once met a Guardian that liked camping, If you place a campfire somewhere, It may show up.");
-            }
-            if (!HasMetGuardian(2))
-            {
-                Messages.Add("There was that cat... I forgot his name... He told me that was going to pursue his biggest bounty: The King Slime. I wonder If he were successfull.");
-            }
-            if (!HasMetGuardian(3))
-            {
-                if (HasMetGuardian(1))
-                {
-                    Messages.Add("There was a Bloodmoon which I couldn't forget, I was on the far lands of the world, being attacked by zombies, until a big wolf zombie appeared. That zombie, looked a lot like " + GetGuardianNPCName(1) + ".");
-                }
-                else
-                {
-                    Messages.Add("There was a Bloodmoon which I couldn't forget, I was on the far lands of the world, being attacked by zombies, until a big wolf zombie appeared.");
-                }
-            }
-            if (!HasMetGuardian(4) && Main.hardMode)
-            {
-                Messages.Add("Do you think one of those troubled souls that roams in the world could help you on your quest? Your laugh really gives off how ridiculous this is.");
-            }
-            if (!HasMetGuardian(5))
-            {
-                Messages.Add("There is a story about a Giant Dog and a Terrarian Woman, they lived happy, went into adventures and played together everyday, until one day she died, legends says that the giant dog guards her tombstone since the day she was buried. I don't know if those legends are true, but nothing stops you from finding that out.");
-            }
-            if (!HasMetGuardian(6))
-            {
-                int TownNpcCount = 0;
-                for (int n = 0; n < 200; n++)
-                {
-                    if (Main.npc[n].active && Main.npc[n].townNPC)
-                        TownNpcCount++;
-                }
-                if (TownNpcCount >= 5)
-                {
-                    Messages.Add("I've heard stories of an old Royal Guard from the Ether Realm who lost his job, and is now roaming through worlds to work as a bodyguard for anyone who either is able to hurt him, or pay for his job. I think he may end up appearing in this world.");
-                }
-                else
-                {
-                    Messages.Add("I've heard stories of an old Royal Guard from the Ether Realm that lost his job, and now is now roaming through worlds to work as a bodyguard for someone. I think he may want to visit worlds with quite a number of humans living in.");
-                }
-            }
-            if (!HasMetGuardian(7))
-            {
-                Messages.Add("I've bumped with a cat during my travels who was looking for her husband. She's been travelling world by world looking for him, and she looked a bit worn out the last time I saw her. I tried to convince her to stay for a while, but she didn't wanted. Maybe you will be able to?");
-            }
-            if (!HasMetGuardian(8) && Npcs.MabelNPC.CanSpawnMabel)
-            {
-                Messages.Add("I've met a Guardian that was trying to fly like a reindeer, the problem is that she's not a reindeer. Please find her before she get hurt?");
-            }
-            if (!HasMetGuardian(9) && Npcs.DominoNPC.CanSpawnDomino(Main.player[Main.myPlayer]))
-            {
-                if (HasGuardianNPC(GuardianBase.Brutus))
-                {
-                    Messages.Add("There is a shady Guardian wandering around the world. It looks like he's running from something. I think It's a good idea to ask him what is he up to. Maybe you should bring " + GetGuardianNPCName(GuardianBase.Brutus) + " with you.");
-                }
-                else
-                {
-                    Messages.Add("There is a shady Guardian wandering around the world. It looks like he's running from something. I think It's a good idea to ask him what is he up to.");
-                }
-            }
-            if (!HasMetGuardian(10) && Npcs.LeopoldNPC.CanSpawnLeopold)
-            {
-                Messages.Add("Hey, did you hear? A sage from the Ether Realm is exploring the Terra Realm. You may bump into him anytime! If you're goign to look for him, can I go with you?! I'm kind of his fan.");
-            }
-            if (!HasMetGuardian(11) && Npcs.VladimirNPC.CanRecruitVladimir)
-            {
-                Messages.Add("I heard a rumor about a Bear creature travelling around this world. The person who found It, said that the bear were saying that was hungry and that wanting to give a hug, that made the person imediatelly ran away from the Underground Jungle. What could that bear be doing in the Underground Jungle? Maybe It were looking for honey?");
-            }
-            if (!HasMetGuardian(12) && Npcs.MalishaNPC.MalishaCanSpawn)
-            {
-                Messages.Add("I heard weird rumors about a TerraGuardian who's came here to take vacations. That wouldn't be weird, if wasn't for the fact that a Bunny told me that.");
-            }
-            if (!HasGuardianNPC(GuardianBase.Wrath) && Npcs.WrathNPC.WrathCanSpawn)
-            {
-                Messages.Add("One of your citizens told me that was attacked by a " +
-                    (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID] ? "kind of cloud in form of a red pig" :
-                    "angry red Pig TerraGuardian") + " in the forest last night. The person were carried to the town unconscious. You should investigate that issue.");
-            }
-            if (!HasMetGuardian(GuardianBase.Fluffles) && Npcs.GhostFoxGuardianNPC.CanGhostFoxSpawn(Main.player[Main.myPlayer]))
-            {
-                Messages.Add("Watch out, I've heard that there's a ghost TerraGuardian who chases people in the forest.");
-            }
-            if (!HasMetGuardian(GuardianBase.Minerva))
-            {
-                Messages.Add("Have you heard? There seems to be a TerraGuardian travelling through the world. Try seeing if you can find her on your travels.");
-            }
-            if (!HasMetGuardian(GuardianBase.Alexander) && Npcs.AlexanderNPC.AlexanderConditionMet)
-            {
-                Messages.Add("There seems to be a TerraGuardian jumping and sleuthing anyone It finds travelling the dungeon, and saying that is not who he's are looking for. I think you may want to check that out.");
-            }
-            if (!HasMetGuardian(GuardianBase.Cinnamon))
-            {
-                Messages.Add("I heard from a Travelling Merchant that there's a Squirrel TerraGuardian that sometimes follows him. If that's about right, It may show up sometimes when one appears.");
-            }
-            if (!HasMetGuardian(GuardianBase.Miguel) && Npcs.MiguelNPC.CanSpawnMe())
-            {
-                Messages.Add("There's a buffed TerraGuardian travelling around this world. He insulted me just because I'm not fit.");
-            }
-            if (!HasMetGuardian(GuardianBase.Quentin))
-            {
-                Messages.Add("I heard from another person, that they heard someone crying for help on the dungeon. You should take a look.");
-            }
-        }
-
         public override void GetChat(NPC npc, ref string chat)
         {
             foreach(QuestData qd in PlayerMod.GetPlayerQuestDatas(Main.LocalPlayer))
@@ -1294,15 +1181,10 @@ namespace giantsummon
                     }
                     break;
                 case Terraria.ID.NPCID.Dryad:
-                    if (!Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialDryadIntroduction)
-                    {
-                        Main.NewText("Speaking regularly to the Dryad can give you clues to new TerraGuardians you can find.");
-                        Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialDryadIntroduction = true;
-                    }
                     switch (Main.rand.Next(7))
                     {
                         case 0:
-                            PossibleMessages.Add("I forgot to mention about the TerraGuardians, they are mythical creatures that live in this world. They may be willing to help you on your adventure, if you manage to find them.");
+                            PossibleMessages.Add("I forgot to mention about the TerraGuardians, they are mythical creatures that live in another realm. They may be willing to help you on your adventure, if you manage to find them.");
                             break;
                         case 1:
                             PossibleMessages.Add("The TerraGuardians have no problems with humans, at least most of them don't. But If you manage to be a good friend to them, they will retribute the favor.");
@@ -1314,7 +1196,7 @@ namespace giantsummon
                             PossibleMessages.Add("Try befriending as many TerraGuardians as possible, no one knows when we may end up needing their help.");
                             break;
                         case 4:
-                            PossibleMessages.Add("Do you ask yourself why you can understand what some guardians says without saying a word? It's easy, once they meet someone, they create a bond with it, so they not only can express themselves, but also understand what the other wants.");
+                            PossibleMessages.Add("Do you ask yourself why you can understand what some guardians says without saying a word? It's easy. Once they meet someone, they create a bond with it, so they not only can express themselves, and also understand what the other wants.");
                             break;
                         case 5:
                             PossibleMessages.Add("There are two realms in this world, the Terra realm, and the Ether realm. You live in the Terra realm, the TerraGuardians lives on the Ether realm, but It is really weird to see them here in Terra.");
@@ -1323,13 +1205,12 @@ namespace giantsummon
                             PossibleMessages.Add("The TerraGuardians grows stronger when they travel with you, they may get stronger on many of their characteristics depending on what they do during your travels.");
                             break;
                     }
-                    GetRecruitmentTipMessages(ref PossibleMessages);
                     if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], 3))
                     {
                         switch (Main.rand.Next(2))
                         {
                             case 0:
-                                PossibleMessages.Add("You said that when [gn:1] spoke to [gn:3] and then he remember who he was? It seems like at that moment of the battle where he was weakened, the bond with her has strengthened, recovering his senses.");
+                                PossibleMessages.Add("You said that when [gn:1] spoke to [gn:3] and then he remember who he was? It seems like at that moment of the battle where he was weakened, the bond with her has strengthened, making him recover his senses.");
                                 break;
                             case 1:
                                 PossibleMessages.Add("Actually, I guess I remember vaguelly that Terrarian who [gn:3] was following, It seems he had the same goal as you. But he wanted to try exploring the powers of the evil to save the world. I wonder what happened to him?");
@@ -1338,14 +1219,14 @@ namespace giantsummon
                     }
                     if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], 5))
                     {
-                        PossibleMessages.Add("Oh, you're the TerraGuardian of the tale? You says that her name was " + AlexRecruitScripts.AlexOldPartner + "? I guess I remember her, I actually guided her on the beggining of her adventure, but didn't heard about her after that.");
+                        PossibleMessages.Add("Oh, you're the TerraGuardian of the tale? You says that her name was " + AlexRecruitScripts.AlexOldPartner + "? I think I remember her, I actually aided her on the beggining of her adventure, years ago, but I didn't heard about her after that.");
                     }
                     if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], 6))
                     {
                         switch (Main.rand.Next(3))
                         {
                             case 0:
-                                PossibleMessages.Add("The TerraGuardians are leaving the Ether Realm? That is really strange. That didn't happened for over 5000 years. I didn't even existed at the time it happened.");
+                                PossibleMessages.Add("The TerraGuardians are leaving the Ether Realm? That is really strange. That didn't happened in a long time. I didn't even existed at the time they used to live here.");
                                 break;
                             case 1:
                                 PossibleMessages.Add("If you really like the TerraGuardians, then the recent events will certainly be good for you. The only problem is that the fact they are moving from the Ether Realm isn't a good sign.");
@@ -1361,7 +1242,7 @@ namespace giantsummon
                     }
                     if (NpcMod.HasGuardianNPC(GuardianBase.Leopold) && NpcMod.HasGuardianNPC(GuardianBase.Bree))
                     {
-                        PossibleMessages.Add("Even though " + NpcMod.GetGuardianNPCName(GuardianBase.Leopold) + " has said something stupid during the Popularity Contest, I'm still his number one fan! " + NpcMod.GetGuardianNPCName(GuardianBase.Leopold)+ "! I love you!!");
+                        PossibleMessages.Add("Even though " + NpcMod.GetGuardianNPCName(GuardianBase.Leopold) + " has said something stupid during the Popularity Contest, I'm still her number one fan! " + NpcMod.GetGuardianNPCName(GuardianBase.Leopold)+ "! I love you!!");
                     }
                     if (NpcMod.HasGuardianNPC(11))
                     {
@@ -1374,7 +1255,7 @@ namespace giantsummon
                     if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().HasGhostFoxHauntDebuff)
                     {
                         PossibleMessages.Add("You seems to be haunted by a ghost, gladly that one only needs your help. If you ask for It to show you visions of what is haunting It, you can find clues on how to lift the haunt.");
-                        PossibleMessages.Add("I don't know if you know, but there is a giant guardian ghost on your back. That one seems to be wanting your help, if you ask about what's haunting It, you will know how to lift the haunt.");
+                        PossibleMessages.Add("I don't know if you know, but there is a giant guardian ghost on your back. That one seems to be wanting your help. If you ask about what's haunting It, you will know how to lift the haunt.");
                     }
                     break;
                 case Terraria.ID.NPCID.Angler:

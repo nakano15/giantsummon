@@ -19,6 +19,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Panther Guardian");
+        }
+
         public override void SetDefaults()
         {
             base.SetDefaults();

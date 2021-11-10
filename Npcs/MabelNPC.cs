@@ -24,6 +24,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Deer Guardian");
+        }
+
         public override void SetDefaults()
         {
             base.SetDefaults();

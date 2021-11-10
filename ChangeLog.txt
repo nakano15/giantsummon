@@ -44,3 +44,10 @@ Torches and glowsticks lighting distance and strength is now based on the compan
 Your companions will avoid using their offhand items while doing a number of actions.
 Fallen companions carried by others will now be held a bit more above their chest.
 Resting now makes the Ether Realm time pass.
+Companions will no longer try being pulled to your position when your character is knocked out, and they're carrying your character.
+Each Ether Realm season now has 30 days, instead of 32.
+	That may alter the companions birthday too.
+The Guardian Selection Interface will now show when the companion will make birthday.
+	It will also show which season and day will it happen.
+The Dryad is now relieved from giving tips about finding TerraGuardians.
+	She also got an update on her dialogues, fixing some inconsistences and mistakes.

@@ -1227,7 +1227,9 @@ namespace giantsummon.Creatures
                 case MessageIDs.AcquiredDefenseBuff:
                     return "*Okay, I can take on the offensive now.*";
                 case MessageIDs.AcquiredWellFedBuff:
-                    return "*I don't feel the taste of this food.*";
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*I can only imagine how it tastes...*";
+                    return "*I don't feel the taste of this food...*";
                 case MessageIDs.AcquiredDamageBuff:
                     return "*Even my scythe looks sharper.*";
                 case MessageIDs.AcquiredSpeedBuff:

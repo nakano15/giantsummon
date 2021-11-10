@@ -18,6 +18,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Raccoon Guardian");
+        }
+
         public override bool CanChat()
         {
             return true;

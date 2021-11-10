@@ -110,8 +110,8 @@ namespace giantsummon.Creatures.CaptainStench.Attacks
                                     if (Main.rand.NextDouble() < 0.5)
                                         Main.npc[n].AddBuff(Terraria.ID.BuffID.Dazed, 3 * 60);
                                 }
+                                Main.PlaySound(Main.npc[n].HitSound, Main.npc[n].Center);
                             }
-                            Main.PlaySound(Main.npc[n].HitSound, Main.npc[n].Center);
                             tg.AddNpcHit(n);
                             tg.IncreaseDamageStacker((int)result, Main.npc[n].lifeMax);
                             if (result > 0)

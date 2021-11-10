@@ -14,9 +14,14 @@ namespace giantsummon.Npcs
         public byte DialogueStep = 0;
         public int Delay = 0;
 
-        public GlennNPC() : base(GuardianBase.Glenn, "", "Black and White Cat")
+        public GlennNPC() : base(GuardianBase.Glenn, "")
         {
 
+        }
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Black and White Cat");
         }
 
         public override void SetDefaults()

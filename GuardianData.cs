@@ -112,7 +112,7 @@ namespace giantsummon
         public List<GuardianSkills> SkillList = new List<GuardianSkills>();
         public int SkillLevelSum = -1;
         public float LastSkillRateMaxValue = 100;
-        public const double DaysToYears = GuardianGlobalInfos.DaysInAYear; //32;
+        public const double DaysToYears = GuardianGlobalInfos.DaysInAYear;
         public bool GiftGiven = false;
         public bool IsBirthday
         {
@@ -235,6 +235,13 @@ namespace giantsummon
                 }
                 return Status;
             }
+        }
+
+        public void GetBirthday(out Season season, out int Day)
+        {
+            float Birthday = Base.Birthday;
+            season = (Season)(Birthday / GuardianGlobalInfos.QuarterOfAYear);
+            Day = (int)(Birthday - (int)season * GuardianGlobalInfos.QuarterOfAYear);
         }
 
         public bool HasItem(int ItemID)

@@ -116,9 +116,9 @@ namespace giantsummon
                 {
                     TerraGuardian mount = MainPlayer.GetModPlayer<PlayerMod>().MountGuardian;
                     PlayerToTheLeft = mount.Position.X < tg.Position.X;
-                    if (mount.Velocity == Vector2.Zero && ((mount.Direction > 0 && PlayerToTheLeft) || (mount.Direction < 0 && PlayerToTheLeft)))
+                    if (mount.Velocity == Vector2.Zero && ((mount.Direction > 0 && !PlayerToTheLeft) || (mount.Direction < 0 && PlayerToTheLeft)))
                     {
-                        mount.LookingLeft = PlayerToTheLeft;
+                        mount.LookingLeft = !PlayerToTheLeft;
                     }
                 }
                 else if (MainPlayer.velocity == Vector2.Zero && ((MainPlayer.direction > 0 && !PlayerToTheLeft) || (MainPlayer.direction < 0 && PlayerToTheLeft)))

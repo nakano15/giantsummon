@@ -124,7 +124,7 @@ namespace giantsummon
             {
                 Messages.Add("*There's a really buff TerraGuardian exploring this world. He also likes to insult people who don't have \"proper body building\". I know because he did that to me...*");
             }
-            if (!HasMetGuardian(GuardianBase.Quentin))
+            if (!HasMetGuardian(GuardianBase.Quentin) && NPC.downedBoss3)
             {
                 Messages.Add("*A person told me that they heard someone crying, when exploring the dungeon. Whoever that is, they definitelly seems to need help.*");
             }

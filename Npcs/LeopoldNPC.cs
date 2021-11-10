@@ -23,6 +23,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Bunny Guardian");
+        }
+
         public override void SetDefaults()
         {
             base.SetDefaults();

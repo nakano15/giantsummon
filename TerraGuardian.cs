@@ -462,6 +462,11 @@ namespace giantsummon
             return CarriedByGuardianID != -1;
         }
 
+        public void GetBirthday(out Season season, out int Day)
+        {
+            Data.GetBirthday(out season, out Day);
+        }
+
         public class MessageScheduler
         {
             public string Message = "";
@@ -8559,7 +8564,7 @@ namespace giantsummon
                     return;
                 }
                 float DistanceFromDoor = Math.Abs(Position.X - (doorx * 16 + 8));
-                bool ForceCloseDoor = (Velocity.X == 0 && Velocity.Y == 0 && DistanceFromDoor > CollisionWidth) || UsingFurniture;
+                bool ForceCloseDoor = (Velocity.X == 0 && Velocity.Y == 0 && DistanceFromDoor > CollisionWidth + 8) || UsingFurniture;
                 if (ForceCloseDoor || DistanceFromDoor > CollisionWidth)
                 {
                     Tile doorTile = MainMod.GetTile(doorx, doory);

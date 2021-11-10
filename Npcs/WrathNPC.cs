@@ -24,7 +24,7 @@ namespace giantsummon.Npcs
         private byte BulletsHit = 0, HitsReceived = 0;
 
         public WrathNPC()
-            : base(GuardianBase.Wrath, "", "Angry Pig Cloud")
+            : base(GuardianBase.Wrath)
         {
 
         }

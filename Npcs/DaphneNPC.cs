@@ -18,6 +18,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Daphne");
+        }
+
         public override void AI()
         {
             switch (MeetStep) {

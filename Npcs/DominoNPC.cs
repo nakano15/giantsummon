@@ -22,6 +22,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Shady Dog Guardian");
+        }
+
         public override void SetDefaults()
         {
             base.SetDefaults();

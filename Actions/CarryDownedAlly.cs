@@ -64,6 +64,10 @@ namespace giantsummon.Actions
                     InUse = false;
                     return;
                 }
+                if(CarriedPlayer.whoAmI == guardian.OwnerPos)
+                {
+                    guardian.StuckTimer = 0;
+                }
             }
             else
             {

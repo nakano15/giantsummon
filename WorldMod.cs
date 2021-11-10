@@ -1455,7 +1455,7 @@ namespace giantsummon
             Tile tile = MainMod.GetTile(PositionX, PositionY);
             foreach (GuardianBuildingInfo ghi in HouseInfos)
             {
-                if (PositionX >= ghi.HouseStartX && PositionX <= ghi.HouseEndX && PositionY >= ghi.HouseStartY && PositionY <= ghi.HouseEndY)
+                if (ghi.BelongsToThisHousing(PositionX, PositionY)) // PositionX >= ghi.HouseStartX && PositionX <= ghi.HouseEndX && PositionY >= ghi.HouseStartY && PositionY <= ghi.HouseEndY)
                 {
                     ghi.UpdateTileState(tile.type, PositionX, PositionY, Addition);
                 }

@@ -19,9 +19,14 @@ namespace giantsummon.Npcs
         public byte LastHoneySenseValue = 0;
 
         public VladimirNPC()
-            : base(GuardianBase.Vladimir, "")
+            : base(GuardianBase.Vladimir)
         {
 
+        }
+
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Bear Guardian");
         }
 
         public override void SetDefaults()

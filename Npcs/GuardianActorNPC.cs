@@ -18,7 +18,6 @@ namespace giantsummon.Npcs
                 return "giantsummon/Npcs/Blank";
             }
         }
-        public string NpcAlias = "";
         public int GuardianID = 0;
         public string GuardianModID = "";
         public int BodyAnimationFrame = 0, LeftArmAnimationFrame = 0, RightArmAnimationFrame = 0;
@@ -45,23 +44,13 @@ namespace giantsummon.Npcs
         public float XOffSet = 0, YOffset = 0;
         private float AgeScale = 1f;
 
-        public GuardianActorNPC(int ID, string ModID = "", string Alias = "")
+        public GuardianActorNPC(int ID, string ModID = "")
         {
             this.GuardianID = ID;
             this.GuardianModID = ModID;
             if (Main.gameMenu)
                 return;
-            if (Alias != "")
-                NpcAlias = Alias;
-            else
-                NpcAlias = Base.Name;
-            npc.GivenName = NpcAlias;
             npc.direction = Main.rand.Next(2) == 0 ? -1 : 1;
-        }
-        
-        public override void SetStaticDefaults()
-        {
-            DisplayName.SetDefault(NpcAlias);
         }
 
         public override void SetDefaults()

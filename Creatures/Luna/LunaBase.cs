@@ -179,6 +179,11 @@ namespace giantsummon.Creatures
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
+            if (!player.GetModPlayer<PlayerMod>().TutorialDryadIntroduction)
+            {
+                Main.NewText(guardian.Name + " can help solve your questions. She also may know rummors about companions in your world.");
+                player.GetModPlayer<PlayerMod>().TutorialDryadIntroduction = true;
+            }
             if (Main.dayTime)
             {
                 if (Main.eclipse)

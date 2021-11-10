@@ -33,6 +33,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Wolf TerraGuardian");
+        }
+
         public override void SetDefaults()
         {
             base.SetDefaults();

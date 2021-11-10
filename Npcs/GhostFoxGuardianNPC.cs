@@ -17,7 +17,7 @@ namespace giantsummon.Npcs
         private float Opacity = 1f;
 
         public GhostFoxGuardianNPC()
-            : base(16, "")
+            : base(16)
         {
 
         }

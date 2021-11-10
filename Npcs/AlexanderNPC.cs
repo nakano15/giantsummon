@@ -18,6 +18,11 @@ namespace giantsummon.Npcs
 
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Dog TerraGuardian");
+        }
+
         public override void SetDefaults()
         {
             base.SetDefaults();

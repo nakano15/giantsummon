@@ -17,7 +17,7 @@ namespace giantsummon
         public const int GuardianDisplayWidth = 128, GuardianDisplayHeight = 192;
         public static bool HoveringSummonButton = false, HoveringMoveButton = false, HoveringWikiButton = false, HoveringEquipmentButton = false, HoveringVoteButton = false;
         public static bool VoteButtonClickedOnce = false;
-        public static string Age, Time, Name, BirthdayTime, ModName;
+        public static string Age, Time, Name, BirthdayTime, BirthdayDate, ModName;
         public static int ScrollY = 0;
         public static bool HasRequestRequiringIt = false;
 
@@ -257,6 +257,28 @@ namespace giantsummon
                 else
                 {
                     BirthdayTime = "Birthday: " + DisplayGuardian.Data.TimeUntilBirthdayString();
+                }
+                {
+                    Season season;
+                    int Day;
+                    DisplayGuardian.GetBirthday(out season, out Day);
+                    Day++;
+                    BirthdayDate = "Birthday on " + season.ToString() + " " + Day;
+                    switch (Day)
+                    {
+                        case 1:
+                            BirthdayDate += "st";
+                            break;
+                        case 2:
+                            BirthdayDate += "nd";
+                            break;
+                        case 3:
+                            BirthdayDate += "rd";
+                            break;
+                        default:
+                            BirthdayDate += "th";
+                            break;
+                    }
                 }
             }
         }
@@ -629,6 +651,8 @@ namespace giantsummon
                     InfosText.Add("Size: " + DisplayGuardian.Base.Size.ToString());
                     InfosText.Add(DisplayGuardian.GetGroup.Name);
                     InfosText.Add("Mod:" + DisplayGuardian.ModID);
+                    InfosText.Add(BirthdayTime);
+                    InfosText.Add(BirthdayDate);
                     for (int y = 0; y < 4; y++)
                     {
                         for (int x = 0; x < 2; x++)

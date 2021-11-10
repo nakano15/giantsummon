@@ -51,6 +51,11 @@ namespace giantsummon.Npcs
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
         }
 
+        public override void SetStaticDefaults()
+        {
+            DisplayName.SetDefault("Lion TerraGuardian");
+        }
+
         public override void FindFrame(int frameHeight)
         {
             base.FindFrame(frameHeight);
@@ -150,7 +155,7 @@ namespace giantsummon.Npcs
                 SpawnPosY = (int)(Main.npc[PickedNPC].position.Y + Main.npc[PickedNPC].height);
             int npcPos = NPC.NewNPC(SpawnPosX, SpawnPosY, ModContent.NPCType<BrutusNPC>());
             ((BrutusNPC)Main.npc[npcPos].modNPC).WarnedAboutBrutus = true;
-            string Text = Main.npc[npcPos].GivenOrTypeName + " has came from the Ether Realm looking for someone to hire him as bodyguard.";
+            string Text = "A Lion TerraGuardian has came from the Ether Realm looking for someone to hire him as bodyguard.";
             if(Main.netMode == 0)
                 Main.NewText(Text);
             else
@@ -170,7 +175,7 @@ namespace giantsummon.Npcs
                 npc.direction = Main.player[Main.myPlayer].Center.X < npc.Center.X ? -1 : 1;
             if (!WarnedAboutBrutus)
             {
-                Main.NewText(npc.GivenOrTypeName + " is still visiting your world.");
+                Main.NewText("A Lion TerraGuardian is still visiting your world.");
                 WarnedAboutBrutus = true;
             }
             if (SteelTestingTime > 0)
@@ -245,7 +250,7 @@ namespace giantsummon.Npcs
                             }
                             if (SceneTime == 780)
                             {
-                                SayMessage("*I am " + NpcAlias + ". Your body guard, from now on.*");
+                                SayMessage("*I am " + Base.Name + ". Your body guard, from now on.*");
                             }
                             if (SceneTime >= 1080)
                             {
@@ -372,7 +377,7 @@ namespace giantsummon.Npcs
                 }
                 if (!PlayerInRange)
                 {
-                    Main.NewText(NpcAlias + " has returned to the Ether Realm.");
+                    Main.NewText("The Lion Guardian has returned to the Ether Realm.");
                     npc.active = false;
                     npc.life = 0;
                 }
@@ -505,11 +510,11 @@ namespace giantsummon.Npcs
             {
                 if (Main.player[Main.myPlayer].BuyItem(Item.buyPrice(0, HirePrice)))
                 {
-                    Main.npcChatText = "*I accept the offer. I, "+NpcAlias+", will protect you until the end of my contract.*";
+                    Main.npcChatText = "*I accept the offer. I, "+Base.Name+", will protect you until the end of my contract.*";
                     PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
                     PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                     NpcMod.AddGuardianMet(6);
-                    Main.NewText("You bought " + NpcAlias + "'s help.");
+                    Main.NewText("You bought " + Base.Name + "'s help.");
                     WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Brutus);
                 }
                 else
