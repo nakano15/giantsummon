@@ -3152,7 +3152,7 @@ namespace giantsummon
             Main.NewText(Name + " has rebirth to age " + RebirthAge + "!");
         }
 
-        public static float GetAgeDecimalValue(int StartAge, float BirthdayAge, TimeSpan Time, float AgingSpeed = 1f)
+        public static float GetAgeDecimalValue(int StartAge, double BirthdayAge, TimeSpan Time, float AgingSpeed = 1f)
         {
             return (float)(StartAge * AgingSpeed + ((Time.TotalDays - BirthdayAge) * (double)AgingSpeed) / GuardianData.DaysToYears);
         }

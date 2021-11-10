@@ -263,7 +263,7 @@ namespace giantsummon
                     int Day;
                     DisplayGuardian.GetBirthday(out season, out Day);
                     Day++;
-                    BirthdayDate = "Birthday on " + season.ToString() + " " + Day;
+                    BirthdayDate = "Birthday: " + season.ToString() + " " + Day;
                     switch (Day)
                     {
                         case 1:

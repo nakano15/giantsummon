@@ -239,9 +239,9 @@ namespace giantsummon
 
         public void GetBirthday(out Season season, out int Day)
         {
-            float Birthday = Base.Birthday;
+            double Birthday = Base.Birthday;
             season = (Season)(Birthday / GuardianGlobalInfos.QuarterOfAYear);
-            Day = (int)(Birthday - (int)season * GuardianGlobalInfos.QuarterOfAYear);
+            Day = (int)((Birthday - (int)season * GuardianGlobalInfos.QuarterOfAYear) * GuardianGlobalInfos.QuarterOfAYear);
         }
 
         public bool HasItem(int ItemID)

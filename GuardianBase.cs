@@ -92,7 +92,7 @@ namespace giantsummon
         }
         public GuardianSize Size = GuardianSize.Medium;
         public int Age = 15;
-        public float Birthday = 0;
+        public double Birthday = 0;
         public bool CanDuck = true, ReverseMount = false, DrinksBeverage = true;
         public List<ItemPair> InitialItems = new List<ItemPair>();
         //Animation frames related stuff
@@ -211,13 +211,15 @@ namespace giantsummon
         /// Aids when setting up the companion birthday.
         /// </summary>
         /// <param name="Season">There are 4 seasons, going from 0 to 3.</param>
-        /// <param name="Day">There are 32 days, going from 0 to 29</param>
+        /// <param name="Day">There are 30 days, going from 1 to 30</param>
         public void SetBirthday(byte Season, byte Day)
         {
+            if(Day > 0)
+                Day--;
             Season %= 4;
             Day %= GuardianGlobalInfos.QuarterOfAYear;
-            int DaysInASeason = (int)GuardianGlobalInfos.QuarterOfAYear;
-            Birthday = DaysInASeason * Season + (float)Day / DaysInASeason;
+            int DaysInASeason = GuardianGlobalInfos.QuarterOfAYear;
+            Birthday = DaysInASeason * Season + (double)Day / DaysInASeason;
         }
 
         /// <summary>
