@@ -64,11 +64,83 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(17, 28, 28);
 
             //Headgear
-            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16 + 2, 11);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(16 + 2, 11);
             HeadVanityPosition.AddFramePoint2x(14, 16 + 2, 9);
             HeadVanityPosition.AddFramePoint2x(17, 23 + 2, 18);
             HeadVanityPosition.AddFramePoint2x(22, 16 + 2, 9);
             HeadVanityPosition.AddFramePoint2x(25, 23 + 2, 18);
+        }
+
+        public override string CallUnlockMessage => base.CallUnlockMessage;
+
+        public override string ControlUnlockMessage => base.ControlUnlockMessage;
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("Waaah!!! Who are you?! Are you friendly or not?!");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            return base.GetSpecialMessage(MessageID);
         }
     }
 }
