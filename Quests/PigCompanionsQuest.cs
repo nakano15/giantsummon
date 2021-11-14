@@ -9,7 +9,8 @@ namespace giantsummon.Quests
 {
     public class PigCompanionsQuest : QuestBase
     {
-        public const int WrathID = 0;
+        public const int WrathID = Creatures.PigGuardianFragmentBase.AngerPigGuardianID, FearID = Creatures.PigGuardianFragmentBase.FearPigGuardianID,
+            SadnessID = Creatures.PigGuardianFragmentBase.SadnessPigGuardianID, HappinessID = Creatures.PigGuardianFragmentBase.HappinessPigGuardianID;
 
         public const int FriendshipLevelForSolidification = 5;
 
@@ -177,16 +178,25 @@ namespace giantsummon.Quests
                         switch (i)
                         {
                             case WrathID:
-                                CompanionsNames += "Wrath";
+                                CompanionsNames += "Anger";
+                                break;
+                            case SadnessID:
+                                CompanionsNames += "Sadness";
+                                break;
+                            case HappinessID:
+                                CompanionsNames += "Happiness";
+                                break;
+                            case FearID:
+                                CompanionsNames += "Fear";
                                 break;
                         }
                     }
                 }
                 Story = "During my travels, I met ";
                 if (MetOnlyOne)
-                    Story += "a TerraGuardian named " + CompanionsNames + ", whose nickname is directly tied to their emotion they express.";
+                    Story += "a TerraGuardian. The only emotion they can express is " + CompanionsNames + ".";
                 else
-                    Story += "some TerraGuardians. They were named " + CompanionsNames + ". Their nicknames were directly tied to the emotion they express.";
+                    Story += "some TerraGuardians. Based on the emotions they express, they were " + CompanionsNames + ".";
 
             }
             if (PigsFound > 0)
@@ -218,6 +228,21 @@ namespace giantsummon.Quests
                                 Story += "The Pig of Wrath said that it was tired of being astral, and asked me to find a way of getting a physical form.";
                                 if (Solidified)
                                     Story += " Gladly, Leopold helped giving a solution to allow mortalizing their body, and also re-astralizing if needed.";
+                                break;
+                            case SadnessID:
+                                Story += "";
+                                if (Solidified)
+                                    Story += " ";
+                                break;
+                            case HappinessID:
+                                Story += "";
+                                if (Solidified)
+                                    Story += " ";
+                                break;
+                            case FearID:
+                                Story += "The Pig of Fear is fearing that people think of him as a freak, just because of his astral form, and asked me to find out how to turn his body into physical form.";
+                                if (Solidified)
+                                    Story += " Leopold knew a solution for this issue, so he's able to solidify his body, and turn it to astral form when needed too.";
                                 break;
                         }
                     }
@@ -279,6 +304,33 @@ namespace giantsummon.Quests
                                 return new Action(WrathTellingYouAboutFormChanging);
                             }
                             break;
+                        case GuardianBase.Joy:
+                            data.MetPigs[HappinessID] = true;
+                            /*if (tg.FriendshipLevel >= 5 && !data.SolidificationRequestGiven[HappinessID])
+                            {
+                                data.SolidificationRequestGiven[HappinessID] = true;
+                                //Solidifying quest
+                                return new Action(WrathTellingYouAboutFormChanging);
+                            }*/
+                            break;
+                        case GuardianBase.Sadness:
+                            data.MetPigs[SadnessID] = true;
+                            /*if (tg.FriendshipLevel >= 5 && !data.SolidificationRequestGiven[SadnessID])
+                            {
+                                data.SolidificationRequestGiven[SadnessID] = true;
+                                //Solidifying quest
+                                return new Action(WrathTellingYouAboutFormChanging);
+                            }*/
+                            break;
+                        case GuardianBase.Fear:
+                            data.MetPigs[FearID] = true;
+                            if (tg.FriendshipLevel >= 5 && !data.SolidificationRequestGiven[FearID])
+                            {
+                                data.SolidificationRequestGiven[FearID] = true;
+                                //Solidifying quest
+                                return new Action(FearTellingYouAboutFormChanging);
+                            }
+                            break;
                     }
                 }
             }
@@ -288,13 +340,26 @@ namespace giantsummon.Quests
         public static void WrathTellingYouAboutFormChanging()
         {
             PigQuestData data = (PigQuestData)Data;
-            if(Dialogue.ShowDialogueWithOptions("*I need flesh and muscle to give more impact to my attacks. There must be a way of giving me a solid body,that white bunny needs to help me now, go talk to him and im not accepting no for a answer.*", new string[] { "Who? [gn:"+GuardianBase.Leopold+"]? Sure, Let's visit him.", "Not right now.." }) == 0)
+            if (Dialogue.ShowDialogueWithOptions("*I need flesh and muscle to give more impact to my attacks. There must be a way of giving me a solid body,that white bunny needs to help me now, go talk to him and im not accepting no for a answer.*", new string[] { "Who? [gn:" + GuardianBase.Leopold + "]? Sure, Let's visit him.", "Not right now.." }) == 0)
             {
                 Dialogue.ShowEndDialogueMessage("*Great, or else I would give you a pounding.*", false);
             }
             else
             {
                 Dialogue.ShowEndDialogueMessage("*Oh you...! (Insert several different insults here)*", false);
+            }
+        }
+
+        public static void FearTellingYouAboutFormChanging()
+        {
+            PigQuestData data = (PigQuestData)Data;
+            if (Dialogue.ShowDialogueWithOptions("*I don't like this form. Everyone else is solid, like you, and I look like... This. Could you go talk with [gn:"+ GuardianBase.Leopold + "] to see if he has a solution for this?*", new string[] { "Yes, I can.", "Not now." }) == 0)
+            {
+                Dialogue.ShowEndDialogueMessage("*Okay... So... Let's go then?*", false);
+            }
+            else
+            {
+                Dialogue.ShowEndDialogueMessage("*I think I can stay in this form for some more time. But it is really scary sounding like a freak.*", false);
             }
         }
 
@@ -377,6 +442,10 @@ namespace giantsummon.Quests
                             if (PlayerMod.PlayerHasGuardian(Main.LocalPlayer, GuardianBase.Wrath))
                                 HasCompanionsSummoned = true;
                             break;
+                        case FearID:
+                            if (PlayerMod.PlayerHasGuardian(Main.LocalPlayer, GuardianBase.Fear))
+                                HasCompanionsSummoned = true;
+                            break;
                     }
                     if (HasCompanionsSummoned)
                         CompanionsCanChangeForm.Add(i);
@@ -396,6 +465,9 @@ namespace giantsummon.Quests
                     {
                         case WrathID:
                             Options[i] = "Change Wrath's Form";
+                            break;
+                        case FearID:
+                            Options[i] = "Change Fear's Form";
                             break;
                     }
                 }
@@ -417,6 +489,13 @@ namespace giantsummon.Quests
                                 tg = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Wrath);
                                 CloudFormDialogue = "*Grrr. I hate this! I hate It!*";
                                 SolidFormDialogue = "*Now I can really hurt things.*";
+                            }
+                            break;
+                        case FearID:
+                            {
+                                tg = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Fear);
+                                CloudFormDialogue = "*Why? Now people will look weird at me again.*";
+                                SolidFormDialogue = "*It's good to be solid again, and I think people will no longer look weird at me.*";
                             }
                             break;
                     }
@@ -456,6 +535,10 @@ namespace giantsummon.Quests
                             if (PlayerMod.PlayerHasGuardian(Main.LocalPlayer, GuardianBase.Wrath))
                                 HasCompanionsSummoned = true;
                             break;
+                        case FearID:
+                            if (PlayerMod.PlayerHasGuardian(Main.LocalPlayer, GuardianBase.Fear))
+                                HasCompanionsSummoned = true;
+                            break;
                     }
                     if(HasCompanionsSummoned)
                        CompanionsNeedingSolidification.Add(i);
@@ -484,6 +567,16 @@ namespace giantsummon.Quests
                                 Dialogue.ShowDialogueWithContinue("*Let me try doing something...*", Leopold);
                                 Main.LocalPlayer.GetModPlayer<PlayerMod>().PigGuardianCloudForm[WrathID] = false;
                                 Dialogue.ShowDialogueWithContinue("*It worked! Great!*", Wrath);
+                            }
+                            break;
+                        case FearID:
+                            {
+                                int ParticipantID = Dialogue.AddParticipant(PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Fear));
+                                TerraGuardian Fear = Dialogue.GetParticipant(ParticipantID);
+                                Dialogue.ShowDialogueWithContinue("*This form... Can you change my body form?*", Fear);
+                                Dialogue.ShowDialogueWithContinue("*I read something related to that, I'll try doing something I read in a book...*", Leopold);
+                                Main.LocalPlayer.GetModPlayer<PlayerMod>().PigGuardianCloudForm[FearID] = false;
+                                Dialogue.ShowDialogueWithContinue("*I- I'm solid again! Amazing!! Oh... Everyone is looking at me... It's quite scary...*", Fear);
                             }
                             break;
                     }
