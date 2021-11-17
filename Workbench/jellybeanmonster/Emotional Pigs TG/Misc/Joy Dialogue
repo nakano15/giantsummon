@@ -13,7 +13,7 @@ No option- "Aww thats unfortunate, well if you ever change your mind i will be h
 Already Met:
 -"Hey there best buddy! Are you planning on me tagging along with you?"
 Player: "Sure" or "No im fine for now"
-Rerecruit option- Yay! lets go then!
+Rerecruit option- Yay! lets go then! or "Ok seeyah later then i'll be here for you"
 
 
 
@@ -27,10 +27,11 @@ Post recruitment RNG:
 
 
 Conditional(Says outloud):
-Fire debuff: "Theres nothing like the warm feeling on fire."
-Poisoned: "The numbness it brings me pleasure."
+Fire debuff: "Theres nothing like the warm feeling on fire"
+Poisoned: "The numbness it brings me pleasure"
 Detects enemy in 10 block radius: "Lets play.....to the DEATH!"
 Dies: "My happiness will never fade!"
+Gets damaged by by hostile enemy: Haha that tickled
 
 Reviving(says outloud):
 Reviving player or other tg- "Don't worry I have your back buddy!"
