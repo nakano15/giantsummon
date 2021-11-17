@@ -27,10 +27,11 @@ Post recruitment RNG:
 
 
 Conditional(Says outloud):
-Fire debuff: "Theres nothing like the warm feeling on fire."
-Poisoned: "The numbness it brings me pleasure."
+Fire debuff: "Theres nothing like the warm feeling on fire"
+Poisoned: "The numbness it brings me pleasure"
 Detects enemy in 10 block radius: "Lets play.....to the DEATH!"
 Dies: "My happiness will never fade!"
+Gets damaged by by hostile enemy: Haha that tickled
 
 Reviving(says outloud):
 Reviving player or other tg- "Don't worry I have your back buddy!"
