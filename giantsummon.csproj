@@ -229,6 +229,7 @@
     <Compile Include="Npcs\BrutusNPC.cs" />
     <Compile Include="Npcs\DaphneNPC.cs" />
     <Compile Include="Npcs\DominoNPC.cs" />
+    <Compile Include="Npcs\FearNPC.cs" />
     <Compile Include="Npcs\GhostFoxGuardianNPC.cs" />
     <Compile Include="Npcs\GlennNPC.cs" />
     <Compile Include="Npcs\GuardianActorNPC.cs" />

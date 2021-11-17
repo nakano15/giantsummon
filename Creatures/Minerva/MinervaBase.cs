@@ -285,6 +285,10 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("*I can understand that [gn:14] can't control his anger, but could he at least stop yelling at me when I'm cooking?*");
                 }
+                if (NpcMod.HasGuardianNPC(Fear))
+                {
+                    Mes.Add("*Sorry if I'm not really into talking too much right now... [gn:"+Fear+"] has been screaming due to being scared of random things, and I'm getting a minor headache...*");
+                }
                 if (NpcMod.HasGuardianNPC(Fluffles))
                 {
                     Mes.Add("*[nickname], is [gn:16] on my shoulder? No? Good. She's very scary, and I hate when she does that.*");

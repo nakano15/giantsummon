@@ -18,9 +18,9 @@ namespace giantsummon.Creatures
             Description = "One of the emotion pieces fragments\nof a TerraGuardian. Very scaredy.";
             Width = 10 * 2;
             Height = 27 * 2;
-            SpriteWidth = 72;
-            SpriteHeight = 68;
-            //FramesInRows = 28;
+            SpriteWidth = 64;
+            SpriteHeight = 64;
+            FramesInRows = 31;
             //DuckingHeight = 54;
             //Each pig should definitelly have the same size, birthday age and time, so I moved those infos.
             Genderless = true;
@@ -45,23 +45,34 @@ namespace giantsummon.Creatures
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.PurplePhaseblade, 1));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.LesserHealingPotion, 10));
 
+            RightArmFrontFrameSwap.Add(0, 0);
+            RightArmFrontFrameSwap.Add(1, 0);
+            RightArmFrontFrameSwap.Add(2, 0);
+            RightArmFrontFrameSwap.Add(3, 1);
+            RightArmFrontFrameSwap.Add(4, 1);
+            RightArmFrontFrameSwap.Add(5, 0);
+            RightArmFrontFrameSwap.Add(6, 0);
+            RightArmFrontFrameSwap.Add(7, 1);
+            RightArmFrontFrameSwap.Add(8, 1);
+
+            RightArmFrontFrameSwap.Add(19, 0);
+
             //Animation Frames
-
             //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 12, 4);
-            LeftHandPoints.AddFramePoint2x(11, 24, 11);
-            LeftHandPoints.AddFramePoint2x(12, 26, 19);
-            LeftHandPoints.AddFramePoint2x(13, 23, 25);
+            LeftHandPoints.AddFramePoint2x(10, 10, 2);
+            LeftHandPoints.AddFramePoint2x(11, 22, 9);
+            LeftHandPoints.AddFramePoint2x(12, 24, 17);
+            LeftHandPoints.AddFramePoint2x(13, 20, 22);
 
-            LeftHandPoints.AddFramePoint2x(17, 27, 29);
+            LeftHandPoints.AddFramePoint2x(17, 25, 27);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 17, 4);
-            RightHandPoints.AddFramePoint2x(11, 27, 11);
-            RightHandPoints.AddFramePoint2x(12, 29, 19);
-            RightHandPoints.AddFramePoint2x(13, 25, 24);
+            RightHandPoints.AddFramePoint2x(10, 16, 2);
+            RightHandPoints.AddFramePoint2x(11, 25, 9);
+            RightHandPoints.AddFramePoint2x(12, 27, 17);
+            RightHandPoints.AddFramePoint2x(13, 23, 22);
 
-            RightHandPoints.AddFramePoint2x(17, 28, 28);
+            RightHandPoints.AddFramePoint2x(17, 27, 27);
 
             //Headgear
             HeadVanityPosition.DefaultCoordinate2x = new Point(16 + 2, 11);
@@ -111,6 +122,12 @@ namespace giantsummon.Creatures
                 Mes.Add("*My heart is constantly racing. This is not good at all.*");
                 Mes.Add("*Everything, anything, scares me. Includding you. You wont do something bad or scary, are you?*");
 
+                Mes.Add("*I need my space, why are you so close!?*");
+                Mes.Add("*Hey! Stay away from me!*");
+                Mes.Add("*I have nothing to discuss. You should be on your way far from me.*");
+                Mes.Add("*Hey! Stop moving around me, it's giving me anxiety.*");
+                Mes.Add("*Just existing around here gives me the creeps.*");
+
                 if (Main.dayTime)
                 {
                     if (Main.eclipse)
@@ -151,6 +168,7 @@ namespace giantsummon.Creatures
                 {
                     Mes.Add("*[gn:"+Brutus+"] told me to stop seeing him everytime I get scared at something.*");
                     Mes.Add("*Even with [gn:" + Brutus + "] here, I can't feel entirelly safe.*");
+                    Mes.Add("*I sometimes also fear the presence of [gn:" + Brutus + "] here. What if we end up in a discussion? He could easily beat me up to the ground.*");
                 }
                 if (NpcMod.HasGuardianNPC(Malisha))
                 {
@@ -170,6 +188,22 @@ namespace giantsummon.Creatures
                 if (NpcMod.HasGuardianNPC(Fluffles))
                 {
                     Mes.Add("*Please! Tell that ghost to stay very far away from me!*");
+                }
+                if (NpcMod.HasGuardianNPC(Wrath))
+                {
+                    Mes.Add("*Make sure [gn:" + Wrath + "] stay VERY, VERY far away from me! They are menacing and should be caged up.*");
+                }
+                if (NpcMod.HasGuardianNPC(Joy))
+                {
+                    Mes.Add("*I don't care how nice [gn:" + Joy + "] may seem, just don't get them close to me!*");
+                }
+                /*if (NpcMod.HasGuardianNPC(Sadness))
+                {
+                    Mes.Add("*[gn:" + Sadness + "]*");
+                }*/
+                if (NpcMod.HasGuardianNPC(Miguel))
+                {
+                    Mes.Add("*Those abs on [gn:" + Miguel + "] are menacing. They really scare me.*");
                 }
                 if (guardian.IsPlayerRoomMate(player))
                 {
@@ -238,6 +272,7 @@ namespace giantsummon.Creatures
             Mes.Add("*Come on... Faster....*");
             Mes.Add("*I hope I'm doing this right...*");
             Mes.Add("*Come on... Breath....*");
+            Mes.Add("*Get up! Get up! You need to protect me!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -328,14 +363,16 @@ namespace giantsummon.Creatures
                     return "*I don't know either, their adventure is scary for me. I just joined them because they asked me.*";
                 //
                 case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*The feeling of death terrifies me...*";
                     return "*Thank you for pulling me out of that tunnel.*";
                 case MessageIDs.RevivedByRecovery:
                     return "*I'm alive?! I'm alive!!*";
                 //
                 case MessageIDs.AcquiredPoisonedDebuff:
-                    return "*My blood... Arghh...*";
+                    return "*I CAN FEEL IT CREEP THROUGH MY VEINS!*";
                 case MessageIDs.AcquiredBurningDebuff:
-                    return "*Fire!! Fire!! Fireee!!!*";
+                    return "*IT BURNS! IT BURNS!*";
                 case MessageIDs.AcquiredDarknessDebuff:
                     return "*Who turned off the lights?!*";
                 case MessageIDs.AcquiredConfusedDebuff:
@@ -357,7 +394,7 @@ namespace giantsummon.Creatures
                 case MessageIDs.AcquiredWebbedDebuff:
                     return "*No! Get away from me!! Help! I'm stuck!*";
                 case MessageIDs.AcquiredFeralBiteDebuff:
-                    return "*It bit! It bit my neck!! I'm going to turn into a vampire?!*";
+                    return "*It bit me! It bit my neck!! I'm going to turn into a vampire?!*";
                 //
                 case MessageIDs.AcquiredDefenseBuff:
                     return "*This will be great for when I try escaping from monsters.*";
@@ -437,6 +474,8 @@ namespace giantsummon.Creatures
                 case MessageIDs.RepelledInvasion:
                     return "*They're gone, whew.*";
                 case MessageIDs.EventBegins:
+                    if (Main.bloodMoon)
+                        return "*WE'RE ALL GONNA DIE!*";
                     return "*What is going on? Why things suddenly look grim?*";
                 case MessageIDs.EventEnds:
                     return "*Is it over? Can I stop panicking now?*";

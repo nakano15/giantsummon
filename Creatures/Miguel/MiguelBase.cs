@@ -284,7 +284,11 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Wrath))
             {
-                Mes.Add("*[gn:"+Wrath+"] is very hostile, I'm neglecting to ask them to train.*");
+                Mes.Add("*[gn:" + Wrath + "] is very hostile, I'm neglecting to ask them to train.*");
+            }
+            if (NpcMod.HasGuardianNPC(Fear))
+            {
+                Mes.Add("*I don't get why [gn:" + Fear + "] fears me so much? Is it my exercises or my appearance? Probably my exercises. I should try explaining them to them and see if they get less scared.*");
             }
             if (NpcMod.HasGuardianNPC(CaptainStench))
             {

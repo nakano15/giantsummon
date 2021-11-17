@@ -50,6 +50,18 @@ namespace giantsummon.Creatures
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.RedPhaseblade, 1));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.LesserHealingPotion, 10));
 
+            RightArmFrontFrameSwap.Add(0, 0);
+            RightArmFrontFrameSwap.Add(1, 0);
+            RightArmFrontFrameSwap.Add(2, 1);
+            RightArmFrontFrameSwap.Add(3, 2);
+            RightArmFrontFrameSwap.Add(4, 2);
+            RightArmFrontFrameSwap.Add(5, 1);
+            RightArmFrontFrameSwap.Add(6, 0);
+            RightArmFrontFrameSwap.Add(7, 0);
+            RightArmFrontFrameSwap.Add(8, 0);
+            //RightArmFrontFrameSwap.Add(9, 0);
+            //RightArmFrontFrameSwap.Add(10, 0);
+
             //Animation Frames
 
             //Left Arm
@@ -120,7 +132,7 @@ namespace giantsummon.Creatures
 
         public void GetRequests()
         {
-            AddNewRequest("Sublimation", 350, 
+            /*AddNewRequest("Sublimation", 350, 
                 "*This form is revolting, I'm boiling out of rage due to this. There must be a way of making me solid again, maybe that nerdy guy can help me in this, let's talk to him.*",
                 "*Great, or else I would give you a beating.*",
                 "*Oh you...! (Insert several different insults here)*",
@@ -129,7 +141,7 @@ namespace giantsummon.Creatures
             {
                 return PlayerMod.PlayerHasGuardian(player, Leopold) && !player.GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs;
             });
-            AddTalkToGuardianRequest("*Hm... Actually, I do know about his condition. It seems like his body has vaporized at the moment his personality was split. I can try doing something to make his personality solid, but I can only merge his personalities if you find them.*", Leopold);
+            AddTalkToGuardianRequest("*Hm... Actually, I do know about his condition. It seems like his body has vaporized at the moment his personality was split. I can try doing something to make his personality solid, but I can only merge his personalities if you find them.*", Leopold);*/
         }
 
         public override void Attributes(TerraGuardian g)
@@ -247,8 +259,12 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
             {
-                if(CloudForm)
-                    Mes.Add("*I already said that I'm not a ghost. Don't compare me to [gn:"+Fluffles+"].*");
+                if (CloudForm)
+                    Mes.Add("*I already said that I'm not a ghost. Don't compare me to [gn:" + Fluffles + "].*");
+            }
+            if (NpcMod.HasGuardianNPC(Fear))
+            {
+                Mes.Add("*At least [gn:" + Fear + "] knows what to do when I'm around, to just get out of my away. But I really hate when he screams.*");
             }
             if (guardian.IsPlayerRoomMate(player))
             {

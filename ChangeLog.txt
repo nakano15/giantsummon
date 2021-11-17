@@ -1,1 +1,1 @@
-﻿
+﻿Made dialogues less annoying to be handled by modders.

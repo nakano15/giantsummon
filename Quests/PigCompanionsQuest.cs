@@ -99,8 +99,8 @@ namespace giantsummon.Quests
                 Writer.Add(QuestKey + "_Version", Version);
                 for(int i = 0; i < 4; i++)
                 {
-                    Writer.Add(QuestKey + "_SolReq", SolidificationRequestGiven[i]);
-                    Writer.Add(QuestKey + "_SolUnlock", SolidificationUnlocked[i]);
+                    Writer.Add(QuestKey + "_SolReq_" + i, SolidificationRequestGiven[i]);
+                    Writer.Add(QuestKey + "_SolUnlock_"+i, SolidificationUnlocked[i]);
                 }
                 Writer.Add(QuestKey + "_LeopoldKnows", SpokeToLeopoldAboutTheEmotionalPigs);
                 Writer.Add(QuestKey + "_BlandUnlocked", UnlockedBland);
@@ -111,8 +111,8 @@ namespace giantsummon.Quests
                 byte Version = Reader.GetByte(QuestKey + "_Version");
                 for (int i = 0; i < 4; i++)
                 {
-                    SolidificationRequestGiven[i] = Reader.GetBool(QuestKey + "_SolReq");
-                    SolidificationUnlocked[i] = Reader.GetBool(QuestKey + "_SolUnlock");
+                    SolidificationRequestGiven[i] = Reader.GetBool(QuestKey + "_SolReq_"+i);
+                    SolidificationUnlocked[i] = Reader.GetBool(QuestKey + "_SolUnlock_"+1);
                 }
                 SpokeToLeopoldAboutTheEmotionalPigs = Reader.GetBool(QuestKey + "_LeopoldKnows");
                 UnlockedBland = Reader.GetBool(QuestKey + "_BlandUnlocked");
@@ -135,6 +135,10 @@ namespace giantsummon.Quests
         {
             PigQuestData data = (PigQuestData)rawdata;
             byte PigsFound = data.MetPigCount;
+            if (data.UnlockedBland)
+            {
+                return "I managed to be able to fuse all pigs guardians.";
+            }
             if(PigsFound == 0)
             {
                 return "I didn't found any of the emotional Pig TerraGuardian pieces.";
@@ -149,7 +153,7 @@ namespace giantsummon.Quests
             }
             else
             {
-                return "I need to find a way of fusing the pigs together.";
+                return "I need to find a way of fusing the pig guardians together.";
             }
         }
 
@@ -277,7 +281,7 @@ namespace giantsummon.Quests
                             List<GuardianMouseOverAndDialogueInterface.DialogueOption> dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
                             if (data.MetAnyPig)
                             {
-                                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("About the emotional pigs...", WhenTalkingToLeopoldAboutThePigs));
+                                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("About the emotional pigs...", WhenTalkingToLeopoldAboutThePigs, true));
                             }
                             return dialogues;
                         }
@@ -368,7 +372,8 @@ namespace giantsummon.Quests
             PigQuestData data = (PigQuestData)Data;
             if (!data.SpokeToLeopoldAboutTheEmotionalPigs)
             {
-                bool HasAnyOfThePigs = PlayerMod.HasGuardianSummoned(Main.LocalPlayer, GuardianBase.Leopold);
+                bool HasAnyOfThePigs = PlayerMod.HasGuardianSummoned(Main.LocalPlayer, GuardianBase.Wrath) || PlayerMod.HasGuardianSummoned(Main.LocalPlayer, GuardianBase.Fear) 
+                    || PlayerMod.HasGuardianSummoned(Main.LocalPlayer, GuardianBase.Joy) || PlayerMod.HasGuardianSummoned(Main.LocalPlayer, GuardianBase.Sadness);
                 Dialogue.ShowDialogueWithContinue("*Huh? Emotional pigs? What are you talking about?*");
                 if (HasAnyOfThePigs)
                 {
@@ -395,8 +400,13 @@ namespace giantsummon.Quests
             }
             if (data.AnyPigCanBeSolidified)
             {
-                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Can you alter the body state of a pig?", LeopoldsTalkAboutUnlockingSolidification));
+                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Can you alter the body state of a pig?", LeopoldTalkAboutChangingPigForm));
             }
+            dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Enough talking about that.", delegate ()
+            {
+                Dialogue.ShowEndDialogueMessage("*I'm still trying to understand too, but I can still try figuring out what is going on with the pigs.\n" +
+                    "Feel free to speak to me again in case you have any other question.*", false);
+            }));
             Dialogue.ShowDialogueWithOptions("*About them? What do you want to talk about them?*", dialogues.ToArray());
         }
 

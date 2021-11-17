@@ -47,18 +47,6 @@ namespace giantsummon.Creatures
 
             SittingPoint2x = new Microsoft.Xna.Framework.Point(15, 24);
 
-            RightArmFrontFrameSwap.Add(0, 0);
-            RightArmFrontFrameSwap.Add(1, 0);
-            RightArmFrontFrameSwap.Add(2, 1);
-            RightArmFrontFrameSwap.Add(3, 2);
-            RightArmFrontFrameSwap.Add(4, 2);
-            RightArmFrontFrameSwap.Add(5, 1);
-            RightArmFrontFrameSwap.Add(6, 0);
-            RightArmFrontFrameSwap.Add(7, 0);
-            RightArmFrontFrameSwap.Add(8, 0);
-            //RightArmFrontFrameSwap.Add(9, 0);
-            //RightArmFrontFrameSwap.Add(10, 0);
-
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(14, 0);
             BodyFrontFrameSwap.Add(16, 1);

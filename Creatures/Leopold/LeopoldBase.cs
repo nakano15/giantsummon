@@ -271,36 +271,36 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Blue))
             {
-                Mes.Add("*I keep avoiding crossing [gn:" + GuardianBase.Blue + "]'s path, because everytime she sees me, I pass the next 1~2 hours trying to get off her arms.*");
-                Mes.Add("*What is [gn:" + GuardianBase.Blue + "]'s problem? Whenever she sees a bunny she wants to hug it.*");
-                Mes.Add("*You wont believe me, but [gn:" + GuardianBase.Blue + "] has really strong arms. I have to struggle for hours to be free from them.*");
+                Mes.Add("*I keep avoiding crossing [gn:" + Blue + "]'s path, because everytime she sees me, I pass the next 1~2 hours trying to get off her arms.*");
+                Mes.Add("*What is [gn:" + Blue + "]'s problem? Whenever she sees a bunny she wants to hug it.*");
+                Mes.Add("*You wont believe me, but [gn:" + Blue + "] has really strong arms. I have to struggle for hours to be free from them.*");
             }
-            if (NpcMod.HasGuardianNPC(GuardianBase.Zacks))
+            if (NpcMod.HasGuardianNPC(Zacks))
             {
-                Mes.Add("*I try my best to avoid crossing [gn:" + GuardianBase.Zacks + "]'s path, for my own safety.*");
-                Mes.Add("*Creepy! [gn:" + GuardianBase.Zacks + "]'s mouth starts salivating when he sees me!*");
-                if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Brutus))
+                Mes.Add("*I try my best to avoid crossing [gn:" + Zacks + "]'s path, for my own safety.*");
+                Mes.Add("*Creepy! [gn:" + Zacks + "]'s mouth starts salivating when he sees me!*");
+                if (PlayerMod.PlayerHasGuardianSummoned(player, Brutus))
                 {
-                    Mes.Add("*Would you mind If I borrow [gn:"+GuardianBase.Brutus+"] for a while? I'm still not sure If I'm safe with [gn:"+GuardianBase.Zacks+"] around.*");
+                    Mes.Add("*Would you mind If I borrow [gn:"+Brutus+"] for a while? I'm still not sure If I'm safe with [gn:"+Zacks+"] around.*");
                 }
             }
-            if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Blue))
+            if (PlayerMod.PlayerHasGuardianSummoned(player, Blue))
             {
                 Mes.Add("*Uh!? No way! Don't hug me again!*");
                 Mes.Add("*You again?! Keep your arms off me!*");
             }
-            if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Zacks))
+            if (PlayerMod.PlayerHasGuardianSummoned(player, Zacks))
             {
                 Mes.Add("Great, you came, I wanted to talk to you about some reseaAAAAAAAAHHHHH Zombie!! \n....\nUh... Do you have some more leaves..?");
             }
-            if (PlayerMod.PlayerHasGuardianSummoned(player, GuardianBase.Mabel))
+            if (PlayerMod.PlayerHasGuardianSummoned(player, Mabel))
             {
                 Mes.Add("*A...Aa.... Uh.... Could... You please... Go away... With.. Her...*");
                 Mes.Add("*Ah... Uh... I.... Have to... Go... To the toilet... Yes. The Toilet...*");
             }
-            else if (NpcMod.HasGuardianNPC(GuardianBase.Mabel))
+            else if (NpcMod.HasGuardianNPC(Mabel))
             {
-                Mes.Add("*I get reactionless when [gn:" + GuardianBase.Mabel + "] is nearby.*");
+                Mes.Add("*I get reactionless when [gn:" + Mabel + "] is nearby.*");
             }
             if (NpcMod.HasGuardianNPC(Fluffles))
             {
@@ -332,7 +332,7 @@ namespace giantsummon.Creatures
                 Mes.Add("*My greatest misfortunes in life begins when [gn:"+Malisha+"] says that has a new experiement to test.*");
                 if (NpcMod.HasGuardianNPC(Zacks))
                 {
-                    Mes.Add("*I wouldn't be surprised if what happeend to [gn:"+Zacks+"] wasn't [gn:"+Malisha+"]s doing.*");
+                    Mes.Add("*I wouldn't be surprised if what happened to [gn:"+Zacks+"] wasn't [gn:"+Malisha+"]s doing.*");
                 }
             }
             if (NpcMod.HasGuardianNPC(Miguel))
@@ -473,7 +473,7 @@ namespace giantsummon.Creatures
         {
             List<GuardianMouseOverAndDialogueInterface.DialogueOption> Actions = base.GetGuardianExtraDialogueActions(guardian);
             Actions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("I have questions.", Creatures.Leopold.LoreDialogues.StartDialogue, true));
-            if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
+            /*if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
             {
                 if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Wrath))
                 {
@@ -501,7 +501,7 @@ namespace giantsummon.Creatures
                     });
                     Actions.Add(action);
                 }
-            }
+            }*/
             if(MainMod.ShowDebugInfo)
                 Actions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Test Subworld", SubworldTestScript));
             return Actions;

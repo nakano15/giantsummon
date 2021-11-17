@@ -128,6 +128,10 @@ namespace giantsummon
             {
                 Messages.Add("*A person told me that they heard someone crying, when exploring the dungeon. Whoever that is, they definitelly seems to need help.*");
             }
+            if (!HasMetGuardian(GuardianBase.Fear) && NPC.downedBoss3)
+            {
+                Messages.Add("*It is said that screams can be heard inside the dungeon. I don't actually screams of ghosts, wraiths or anything like that, but actually someone screaming out of terror. I think there's someone in trouble there.*");
+            }
             if (Messages.Count == 0)
                 return "*I didn't heard about anything latelly.*";
             return Messages[Main.rand.Next(Messages.Count)];

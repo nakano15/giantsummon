@@ -537,7 +537,12 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Wrath))
             {
-                Mes.Add("You're saying that [gn:"+Wrath +"]'s punches hurts? Funny, I didn't felt pain whenever he punched me.");
+                Mes.Add("*You're saying that [gn:" + Wrath + "]'s punches hurts? Funny, I didn't felt anything whenever he punched me.*");
+            }
+            if (NpcMod.HasGuardianNPC(Fear))
+            {
+                Mes.Add("*I would like [gn:" + Fear + "] to stop coming seek me everytime he gets scared at anything.*");
+                Mes.Add("*With [gn:" + Fear + "] screaming around, it's really hard to be ready for a true emergency.*");
             }
             if (NpcMod.HasGuardianNPC(Fluffles))
             {

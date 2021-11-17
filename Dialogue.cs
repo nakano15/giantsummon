@@ -401,7 +401,8 @@ namespace giantsummon
         /// <param name="Speaker">The companion who speakes this. Leaving as null picks the last speaker.</param>
         public static void ShowDialogueWithContinue(string Text, TerraGuardian Speaker = null, string ContinueText = "Continue")
         {
-            if (Speaker == null)
+            ShowDialogueWithOptions(Text, new string[] { ContinueText }, Speaker);
+            /*if (Speaker == null)
                 Speaker = LastSpeaker;
             Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().IsTalkingToAGuardian = true;
             Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkingGuardianPosition = Speaker.WhoAmID;
@@ -415,7 +416,7 @@ namespace giantsummon
                 GuardianMouseOverAndDialogueInterface.Options.Clear();
             });
             while (!ProceedButtonPressed)
-                Thread.Sleep(100);
+                Thread.Sleep(100);*/
         }
 
         /// <summary>
@@ -468,13 +469,23 @@ namespace giantsummon
             ProceedButtonPressed = false;
             GuardianMouseOverAndDialogueInterface.SetDialogue(Text, Speaker);
             GuardianMouseOverAndDialogueInterface.Options.Clear();
+            int Selected = 0;
             for (int o = 0; o < Options.Length; o++)
             {
-                GuardianMouseOverAndDialogueInterface.AddOption(Options[o].Text, Options[o].Action);
+                int ThisOption = o;
+                GuardianMouseOverAndDialogueInterface.AddOption(Options[o].Text, delegate ()
+                {
+                    Selected = ThisOption;
+                    ProceedButtonPressed = true;
+                });
             }
-            while (!ProceedButtonPressed)
+            if (Thread.CurrentThread == DialogueThread)
             {
-                Thread.Sleep(100);
+                while (!ProceedButtonPressed)
+                {
+                    Thread.Sleep(100);
+                }
+                Options[Selected].Action();
             }
         }
 
@@ -488,6 +499,7 @@ namespace giantsummon
             ProceedButtonPressed = false;
             GuardianMouseOverAndDialogueInterface.SetDialogue(Text, Speaker);
             GuardianMouseOverAndDialogueInterface.Options.Clear();
+            int SelectedOption = 0;
             for(int o = 0; o < Options.Length; o++)
             {
                 string OptionText = Options[o];
@@ -498,7 +510,7 @@ namespace giantsummon
                 {
                     SelectedOption = ThisOption;
                     ProceedButtonPressed = true;
-                });
+                }, Thread.CurrentThread == DialogueThread);
             }
             while (!ProceedButtonPressed)
             {

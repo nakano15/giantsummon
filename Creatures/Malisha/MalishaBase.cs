@@ -419,7 +419,11 @@ namespace giantsummon.Creatures
             }
             if (NpcMod.HasGuardianNPC(Wrath))
             {
-                Mes.Add("*Hmph, [gn:"+Wrath+"] thinks he's safe from me, but my experimenting hunger will eventually reach him. Just he wait.*");
+                Mes.Add("*Hmph, [gn:" + Wrath + "] thinks he's safe from me, but my experimenting hunger will eventually reach him. Just he wait.*");
+            }
+            if (NpcMod.HasGuardianNPC(Fear))
+            {
+                Mes.Add("*Whaaaaaaaaaat? I was just having a friendly chat with [gn:" + Fear + "], how menacing can that be? Hehe.*");
             }
             if (NpcMod.HasGuardianNPC(Fluffles))
             {
