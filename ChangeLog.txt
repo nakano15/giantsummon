@@ -1,1 +1,3 @@
 ﻿Made dialogues less annoying to be handled by modders.
+Shattered quest added.
+	This quest is not completeable right now.
