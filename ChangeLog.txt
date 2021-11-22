@@ -1,3 +1,5 @@
 ﻿Made dialogues less annoying to be handled by modders.
 Shattered quest added.
 	This quest is not completeable right now.
+You can now change the damage reduction applied for having companions with you.
+	You can change that on the server settings.

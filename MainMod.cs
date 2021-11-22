@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -49,6 +50,7 @@ namespace giantsummon
         public static bool PlayableOnMultiplayer = false, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
             SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false,
             DoNotUseRescue = false, CompanionsCanVisitWorld = true, DisableDamageReductionByNumberOfCompanions = false;
+        public static float DamageNerfPerExtraCompanion = 0.1f;
         public static List<Terraria.ModLoader.Config.ItemDefinition> DualwieldWhitelist = new List<Terraria.ModLoader.Config.ItemDefinition>();
         public static Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> ItemAttackRange = new Dictionary<Terraria.ModLoader.Config.ItemDefinition, int>();
         public static bool ForceUpdateGuardiansStatus = false;
@@ -1067,6 +1069,11 @@ namespace giantsummon
             Npcs.BrutusNPC.TrySpawningBrutus();
             Npcs.MabelNPC.TrySpawningMabel();
             GuardianSpawningScripts.TrySpawningMichelle();
+        }
+
+        public override void HandlePacket(BinaryReader reader, int whoAmI)
+        {
+
         }
 
         public override void PostUpdateEverything()

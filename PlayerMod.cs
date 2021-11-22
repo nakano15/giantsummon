@@ -227,8 +227,9 @@ namespace giantsummon
         {
             get
             {
-                return
-                    (HasGuardian(GuardianBase.Wrath) && GetGuardian(GuardianBase.Wrath).request.RequestsCompletedIDs.Contains(0)); //Add here the checking if requests giving ideas on how to solidify the pigs are complete.
+                Quests.PigCompanionsQuest.PigQuestData QuestData = (Quests.PigCompanionsQuest.PigQuestData)GetQuestData(player, Quests.TgQuestContainer.ShatteredQuest);
+                return QuestData.SpokeToLeopoldAboutTheEmotionalPigs;
+                    //(HasGuardian(GuardianBase.Wrath) && GetGuardian(GuardianBase.Wrath).request.RequestsCompletedIDs.Contains(0)); //Add here the checking if requests giving ideas on how to solidify the pigs are complete.
             }
         }
         public int TalkingGuardianPosition = 0;
@@ -1936,15 +1937,16 @@ namespace giantsummon
                 {
                     if (c == 0)
                     {
-                        DamageMod = 0.1f;
+                        DamageMod = MainMod.DamageNerfPerExtraCompanion;
                     }
                     else
                     {
-                        DamageMod += DamageMod * 0.1f;
+                        DamageMod += DamageMod * MainMod.DamageNerfPerExtraCompanion;
                     }
                 }
                 DamageMod = 1f - DamageMod;
-                BuddiesModeEffective = 1f / GuardianSlot;
+                if(BuddiesMode)
+                    BuddiesModeEffective = 1f / GuardianSlot;
             }
             MountedOffset = Vector2.Zero;
             if (!FoundFirstTitanGuardian)
