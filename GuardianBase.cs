@@ -159,7 +159,8 @@ namespace giantsummon
             Luna = 26,
             Fear = 27,
             Sadness = 28,
-            Joy = 29;
+            Joy = 29,
+            SnakeGuardian = 30;
 
         public void RefreshBaseLifeTime()
         {
@@ -1205,6 +1206,9 @@ namespace giantsummon
                         break;
                     case Joy:
                         gb = new JoyBase();
+                        break;
+                    case SnakeGuardian:
+                        gb = new SnakeGuardianBase();
                         break;
                 }
             }

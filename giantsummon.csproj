@@ -148,6 +148,7 @@
     <Compile Include="Creatures\Quentin\QuentinBase.cs" />
     <Compile Include="Creatures\Luna\LunaBase.cs" />
     <Compile Include="Creatures\Sadness\SadnessBase.cs" />
+    <Compile Include="Creatures\SnakeGuardian\SnakeGuardianBase.cs" />
     <Compile Include="Creatures\Vladimir\HugAction.cs" />
     <Compile Include="Creatures\Vladimir\VladimirBase.cs" />
     <Compile Include="Creatures\Blue\BlueBase.cs" />
@@ -259,6 +260,7 @@
     <Compile Include="QuestBase.cs" />
     <Compile Include="QuestContainer.cs" />
     <Compile Include="QuestData.cs" />
+    <Compile Include="Quests\BlueSeekingZacksQuest.cs" />
     <Compile Include="Quests\PigCompanionsQuest.cs" />
     <Compile Include="Quests\TgQuestContainer.cs" />
     <Compile Include="Quests\ZacksMeatBagOutfit.cs" />
@@ -495,6 +497,12 @@
     <Content Include="Creatures\Sadness\left_arm.png" />
     <Content Include="Creatures\Sadness\right_arm.png" />
     <Content Include="Creatures\Sardine\caitsith_outfit.png" />
+    <Content Include="Creatures\SnakeGuardian\body.png" />
+    <Content Include="Creatures\SnakeGuardian\body_front.png" />
+    <Content Include="Creatures\SnakeGuardian\head.png" />
+    <Content Include="Creatures\SnakeGuardian\left_arm.png" />
+    <Content Include="Creatures\SnakeGuardian\right_arm.png" />
+    <Content Include="Creatures\SnakeGuardian\right_arm_front.png" />
     <Content Include="Creatures\Vladimir\body.png" />
     <Content Include="Creatures\Vladimir\body_front.png" />
     <Content Include="Creatures\Vladimir\head.png" />

@@ -162,6 +162,28 @@ namespace giantsummon.Npcs
                                 else if (Math.Abs(Main.player[i].Center.X - npc.Center.X) <= NPC.sWidth && Math.Abs(Main.player[i].Center.Y - npc.Center.Y) <= NPC.sHeight)
                                 {
                                     npc.playerInteraction[i] = true;
+                                    if (i == Main.myPlayer && Main.netMode < 2)
+                                    {
+                                        Quests.BlueSeekingZacksQuest.BlueQuestData data =
+                                            (Quests.BlueSeekingZacksQuest.BlueQuestData)PlayerMod.GetQuestData(Main.player[i], Quests.TgQuestContainer.MissingQuest);
+                                        bool HasBlue = PlayerMod.HasGuardianSummoned(Main.player[i], GuardianBase.Blue);
+                                        switch (data.SpottedZacksOnce)
+                                        {
+                                            case 0:
+                                                data.SpottedZacksOnce = (byte)(!HasBlue ? 1 : 2);
+                                                if (!HasBlue && data.BlueDialogueStep == 2)
+                                                {
+                                                    Main.NewText("That zombie strangelly meets Blue's description.", Color.Orange);
+                                                }
+                                                break;
+                                            case 1:
+                                                if (HasBlue)
+                                                {
+                                                    data.SpottedZacksOnce = 2;
+                                                }
+                                                break;
+                                        }
+                                    }
                                 }
                             }
                             TerraGuardian Guardian = Main.player[i].GetModPlayer<PlayerMod>().Guardian;
@@ -754,6 +776,9 @@ namespace giantsummon.Npcs
                             if (AiValue == 30)
                             {
                                 string Text = "";
+                                Quests.BlueSeekingZacksQuest.BlueQuestData data =
+                                    (Quests.BlueSeekingZacksQuest.BlueQuestData)PlayerMod.GetQuestData(Target.Character, Quests.TgQuestContainer.MissingQuest);
+                                data.BlueWasPresent = PlayerHasBlue;
                                 if (PlayerHasBlueHairpin && !PlayerHasBlue)
                                 {
                                     Text = "*When the zombie tried biting you, It suddenly stopped after smelling some kind of scent.*";

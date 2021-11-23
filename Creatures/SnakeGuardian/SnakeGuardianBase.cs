@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace giantsummon.Creatures.SnakeGuardian
+namespace giantsummon.Creatures
 {
     public class SnakeGuardianBase : GuardianBase
     {
@@ -65,7 +65,45 @@ namespace giantsummon.Creatures.SnakeGuardian
             BackwardRevive = 21;
 
             SpecificBodyFrontFramePositions = true;
-            BodyFrontFrameSwap.Add(23, 0);
+            BodyFrontFrameSwap.Add(14, 0);
+            BodyFrontFrameSwap.Add(15, 1);
+
+            RightArmFrontFrameSwap.Add(14, 0);
+            RightArmFrontFrameSwap.Add(15, 1);
+
+            SittingPoint2x = new Microsoft.Xna.Framework.Point(19, 40);
+
+            //Mount
+            MountShoulderPoints.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(18, 15);
+            MountShoulderPoints.AddFramePoint2x(14, 17, 20);
+            MountShoulderPoints.AddFramePoint2x(17, 17, 15);
+            MountShoulderPoints.AddFramePoint2x(18, 29, 21);
+            MountShoulderPoints.AddFramePoint2x(21, 29, 21);
+
+            //Left Arm
+            LeftHandPoints.AddFramePoint2x(10, 12, 3);
+            LeftHandPoints.AddFramePoint2x(11, 33, 11);
+            LeftHandPoints.AddFramePoint2x(12, 37, 21);
+            LeftHandPoints.AddFramePoint2x(13, 30, 29);
+
+            LeftHandPoints.AddFramePoint2x(15, 29, 31);
+
+            LeftHandPoints.AddFramePoint2x(18, 37, 41);
+
+            LeftHandPoints.AddFramePoint2x(18, 41, 41);
+
+            //Right Arm
+            RightHandPoints.AddFramePoint2x(10, 25, 3);
+            RightHandPoints.AddFramePoint2x(11, 37, 11);
+            RightHandPoints.AddFramePoint2x(12, 39, 21);
+            RightHandPoints.AddFramePoint2x(13, 33, 29);
+
+            RightHandPoints.AddFramePoint2x(18, 41, 41);
+
+            RightHandPoints.AddFramePoint2x(18, 37, 41);
+
+            //Head Vanity Position
+            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(24, 11);
         }
     }
 }
