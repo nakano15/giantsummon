@@ -40,5 +40,10 @@ namespace giantsummon
             GuardianList.Add(ID, gd);
             gd.SetupShop(ID, modid);
         }
+
+        public void ClearContainer()
+        {
+            GuardianList.Clear();
+        }
     }
 }

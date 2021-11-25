@@ -3157,6 +3157,12 @@ namespace giantsummon
             FargoMutantMod = ModLoader.GetMod("Fargowiltas");
         }
 
+        public override void Unload()
+        {
+            GuardianBase.ClearGuardianContainers();
+            ModGuardianLoader.Clear();
+        }
+
         public static void AddQuestContainer(Mod mod, QuestContainer container)
         {
             QuestContainer.AddQuestContainer(mod, container);

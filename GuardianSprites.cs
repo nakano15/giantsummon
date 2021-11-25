@@ -16,6 +16,8 @@ namespace giantsummon
             {
                 if (!IsTextureLoaded || _HeadSprite.IsDisposed)
                     LoadTextures();
+                if (ErrorLoading)
+                    return MainMod.LosangleOfUnnown;
                 return _HeadSprite;
             }
             set
@@ -29,6 +31,8 @@ namespace giantsummon
             {
                 if (!IsTextureLoaded || _BodySprite.IsDisposed)
                     LoadTextures();
+                if (ErrorLoading)
+                    return MainMod.LosangleOfUnnown;
                 return _BodySprite;
             }
             set
@@ -42,6 +46,8 @@ namespace giantsummon
             {
                 if (!IsTextureLoaded || _LeftArmSprite.IsDisposed)
                     LoadTextures();
+                if (ErrorLoading)
+                    return MainMod.LosangleOfUnnown;
                 return _LeftArmSprite;
             }
             set
@@ -55,6 +61,8 @@ namespace giantsummon
             {
                 if (!IsTextureLoaded || _RightArmSprite.IsDisposed)
                     LoadTextures();
+                if (ErrorLoading)
+                    return MainMod.LosangleOfUnnown;
                 return _RightArmSprite;
             }
             set
@@ -137,7 +145,7 @@ namespace giantsummon
             {
                 TexturesLoaded = false;
                 ErrorLoading = true;
-                Terraria.Main.NewText("Error loading " + ReferedBase.Name+ "'s texture.");
+                Terraria.Main.NewText("Error loading " + ReferedBase.Name+ "'s texture from "+mod.Name+" mod.");
             }
         }
 

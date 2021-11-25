@@ -1480,6 +1480,15 @@ namespace giantsummon
             }
         }
 
+        public static void ClearGuardianContainers()
+        {
+            foreach(string s in GuardianList.Keys)
+            {
+                GuardianList[s].ClearContainer();
+            }
+            GuardianList.Clear();
+        }
+
         public class MessageIDs
         {
             public const string LeopoldMessage1 = "Mes.LeopoldAnswer1";
