@@ -5,12 +5,12 @@ using System.Text;
 
 namespace giantsummon.Creatures
 {
-    public class SnakeGuardianBase : GuardianBase
+    public class GreenBase : GuardianBase
     {
-        public SnakeGuardianBase()
+        public GreenBase()
         {
-            Name = "SnakeGuardian";
-            Description = "Treated many TerraGuardians in the\nEther Realm, his new challenge now is on the Terra Realm.";
+            Name = "Green";
+            Description = "Treated many TerraGuardians in the Ether Realm,\nhis newest challenge now is on the Terra Realm.";
             Size = GuardianSize.Large;
             Width = 24;
             Height = 86;

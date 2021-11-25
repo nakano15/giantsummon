@@ -5,7 +5,7 @@ using Terraria;
 
 namespace giantsummon
 {
-    public class GuardianCommonStatus : IDisposable
+    public class GuardianCommonStatus
     {
         private static Dictionary<string, CommonStatusContainer> CommonStatusContainerList = new Dictionary<string, CommonStatusContainer>();
 
@@ -133,26 +133,7 @@ namespace giantsummon
             return status;
         }
 
-        public void Dispose()
-        {
-            SkillList.Clear();
-            SkillList = null;
-            LifeTime = null;
-        }
-
-        public static void UnloadCommonStatus()
-        {
-            if (CommonStatusContainerList != null)
-            {
-                foreach (string s in CommonStatusContainerList.Keys)
-                {
-                    CommonStatusContainerList[s].Dispose();
-                }
-                CommonStatusContainerList.Clear();
-            }
-        }
-
-        private class CommonStatusContainer : IDisposable
+        private class CommonStatusContainer
         {
             private Dictionary<int, GuardianCommonStatus> CompanionStatus = new Dictionary<int, GuardianCommonStatus>();
 
@@ -168,22 +149,6 @@ namespace giantsummon
                     AddCommonStatus(ID, ModID);
                 }
                 return CompanionStatus[ID];
-            }
-
-            public void UnloadAllStatus()
-            {
-                foreach (int i in CompanionStatus.Keys)
-                    CompanionStatus[i].Dispose();
-                CompanionStatus.Clear();
-                CompanionStatus = null;
-            }
-
-            public void Dispose()
-            {
-                foreach (GuardianCommonStatus gcs in CompanionStatus.Values)
-                    gcs.Dispose();
-                CompanionStatus.Clear();
-                CompanionStatus = null;
             }
         }
     }

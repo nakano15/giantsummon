@@ -16,7 +16,6 @@ namespace giantsummon
             {
                 if (_Base == null)
                     _Base = GuardianBase.GetGuardianBase(ID, ModID);
-                _Base.RefreshBaseLifeTime();
                 return _Base;
             }
         }

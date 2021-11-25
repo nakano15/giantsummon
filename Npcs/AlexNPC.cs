@@ -20,7 +20,6 @@ namespace giantsummon.Npcs
             {
                 if (_Base == null)
                     _Base = GuardianBase.GetGuardianBase(AlexID);
-                _Base.RefreshBaseLifeTime();
                 return _Base;
             }
         }

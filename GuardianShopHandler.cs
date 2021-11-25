@@ -10,15 +10,6 @@ namespace giantsummon
     {
         private static List<GuardianShop> Shops = new List<GuardianShop>();
 
-        public static void UnloadShops()
-        {
-            foreach (GuardianShop shop in Shops)
-            {
-                shop.Dispose();
-            }
-            Shops.Clear();
-        }
-
         public static GuardianShop CreateShop(int OwnerID, string OwnerModID)
         {
             GuardianShop shop = new GuardianShop
@@ -238,7 +229,7 @@ namespace giantsummon
             }
         }
 
-        public class GuardianShop : IDisposable
+        public class GuardianShop
         {
             public int OwnerID = 0;
             public string OwnerModID = "";
@@ -253,18 +244,9 @@ namespace giantsummon
                     Items.Add(item);
                 return item;
             }
-
-            public void Dispose()
-            {
-                foreach (GuardianShopItem gsi in Items)
-                    gsi.Dispose();
-                Items.Clear();
-                Items = null;
-                OwnerModID = null;
-            }
         }
 
-        public class GuardianShopItem : IDisposable
+        public class GuardianShopItem
         {
             public string ItemName = "";
             public int ItemID = 0;
@@ -346,11 +328,6 @@ namespace giantsummon
                 else
                     ItemName = SoldItem.Name;
                 SellStack = SellFixedStack;
-            }
-
-            public void Dispose()
-            {
-                ItemName = null;
             }
 
             public enum DisponibilityTime : byte

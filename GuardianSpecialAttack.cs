@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace giantsummon
 {
-    public class GuardianSpecialAttack : IDisposable
+    public class GuardianSpecialAttack
     {
         public string Name = "", Description = "";
         public SubAttackCombatType AttackType = SubAttackCombatType.Melee;
@@ -184,11 +184,6 @@ namespace giantsummon
                 }
             }
             return Targets.ToArray();
-        }
-
-        public void Dispose()
-        {
-
         }
 
         public enum SubAttackCombatType

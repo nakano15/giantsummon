@@ -9,9 +9,8 @@ using giantsummon.Creatures;
 
 namespace giantsummon
 {
-    public class GuardianBase : IDisposable
+    public class GuardianBase
     {
-        private byte BaseLifetime = 10;
         private static Dictionary<string, GuardianBaseContainer> GuardianList = new Dictionary<string, GuardianBaseContainer>();
         public delegate void ModGuardianDB(int ID, out GuardianBase guardian);
         public InvalidGuardianPoints invalidGuardianPoints = new InvalidGuardianPoints(true);
@@ -162,18 +161,7 @@ namespace giantsummon
             Joy = 29,
             SnakeGuardian = 30;
 
-        public void RefreshBaseLifeTime()
-        {
-            BaseLifetime = 10;
-        }
-
-        public bool UpdateLifeTimeCounter()
-        {
-            BaseLifetime--;
-            return BaseLifetime == 0;
-        }
-
-        public struct DialogueTopic : IDisposable
+        public struct DialogueTopic
         {
             public string TopicText;
             public Action TopicMethod;
@@ -187,11 +175,6 @@ namespace giantsummon
                     this.Requirement = delegate (TerraGuardian tg, PlayerMod pl) { return true; };
                 else
                     this.Requirement = Requirement;
-            }
-
-            public void Dispose()
-            {
-                Requirement = null;
             }
         }
 
@@ -1043,7 +1026,6 @@ namespace giantsummon
                 GuardianList.Add(modid, gbc);
             }
             GuardianBase gb = GuardianList[modid].GetGuardian(ID);
-            gb.RefreshBaseLifeTime();
             return gb;
         }
 
@@ -1208,7 +1190,7 @@ namespace giantsummon
                         gb = new JoyBase();
                         break;
                     case SnakeGuardian:
-                        gb = new SnakeGuardianBase();
+                        gb = new GreenBase();
                         break;
                 }
             }
@@ -1264,49 +1246,6 @@ namespace giantsummon
             HeadVanityPosition = invalidGuardianPoints.HeadVanityPosition;
             LeftHandPoints = invalidGuardianPoints.HandPoints;
             RightHandPoints = invalidGuardianPoints.HandPoints;
-        }
-
-        public static void UnloadGuardians()
-        {
-            string[] Keys = GuardianList.Keys.ToArray();
-            foreach (string k in Keys)
-            {
-                GuardianList[k].Dispose();
-                GuardianList.Remove(k);
-            }
-            GuardianList = new Dictionary<string, GuardianBaseContainer>();
-        }
-
-        private static byte LastContainerUpdateTimer = 0;
-        public static void UpdateContainers()
-        {
-            string[] keys = GuardianList.Keys.ToArray();
-            foreach (string key in keys)
-            {
-                GuardianList[key].UpdateContainers(LastContainerUpdateTimer == 60);
-            }
-            LastContainerUpdateTimer++;
-            if (LastContainerUpdateTimer > 60)
-                LastContainerUpdateTimer = 1;
-        }
-
-        public static void UnloadContainer(Mod mod)
-        {
-            UnloadContainer(mod.Name);
-        }
-
-        public static void UnloadContainer(string mod)
-        {
-            string[] keys = GuardianList.Keys.ToArray();
-            foreach (string key in keys)
-            {
-                if (key == mod)
-                {
-                    GuardianList[key].Dispose();
-                    GuardianList.Remove(key);
-                    break;
-                }
-            }
         }
 
         public virtual bool RoomNeeds()
@@ -1539,81 +1478,6 @@ namespace giantsummon
                         gddList[i] = gdd;
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            sprites.Dispose();
-            foreach (GuardianSpecialAttack gsa in SpecialAttackList)
-                gsa.Dispose();
-            SpecialAttackList.Clear();
-            SpecialAttackList = null;
-            foreach (RequestBase rb in RequestDB)
-            {
-                rb.Dispose();
-            }
-            RequestDB.Clear();
-            RequestDB = null;
-            RewardsList.Clear();
-            RewardsList = null;
-            foreach (SkinReqStruct sk in SkinList)
-                sk.Dispose();
-            foreach (SkinReqStruct sk in OutfitList)
-                sk.Dispose();
-            SkinList = null;
-            OutfitList = null;
-            if (HurtSound != null)
-            {
-                HurtSound.Dispose();
-                HurtSound = null;
-            }
-            if (DeadSound != null)
-            {
-                DeadSound.Dispose();
-                DeadSound = null;
-            }
-            LeftHandPoints.Dispose();
-            LeftHandPoints = null;
-            //
-            RightHandPoints.Dispose();
-            RightHandPoints = null;
-            //
-            MountShoulderPoints.Dispose();
-            MountShoulderPoints = null;
-            //
-            LeftArmOffSet.Dispose();
-            LeftArmOffSet = null;
-            //
-            RightArmOffSet.Dispose();
-            RightArmOffSet = null;
-            //
-            HeadVanityPosition.Dispose();
-            HeadVanityPosition = null;
-            //
-            WingPosition.Dispose();
-            WingPosition = null;
-
-            InitialItems.Clear();
-            InitialItems = null;
-
-            WalkingFrames = null;
-            HeavySwingFrames = null;
-            ItemUseFrames = null;
-            DuckingSwingFrames = null;
-            SittingItemUseFrames = null;
-
-            BodyFrontFrameSwap.Clear();
-            BodyFrontFrameSwap = null;
-            DrawLeftArmInFrontOfHead.Clear();
-            DrawLeftArmInFrontOfHead = null;
-
-            foreach (DialogueTopic topic in Topics)
-                topic.Dispose();
-            Topics.Clear();
-            Topics = null;
-
-            Name = null;
-            Description = null;
         }
 
         public class MessageIDs

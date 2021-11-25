@@ -8,15 +8,14 @@ using Terraria.ModLoader;
 
 namespace giantsummon
 {
-    public class GuardianSprites : IDisposable
+    public class GuardianSprites
     {
         public Texture2D HeadSprite
         {
             get
             {
-                if (!IsTextureLoaded)
+                if (!IsTextureLoaded || _HeadSprite.IsDisposed)
                     LoadTextures();
-                ResetCooldown();
                 return _HeadSprite;
             }
             set
@@ -28,9 +27,8 @@ namespace giantsummon
         {
             get
             {
-                if (!IsTextureLoaded)
+                if (!IsTextureLoaded || _BodySprite.IsDisposed)
                     LoadTextures();
-                ResetCooldown();
                 return _BodySprite;
             }
             set
@@ -42,9 +40,8 @@ namespace giantsummon
         {
             get
             {
-                if (!IsTextureLoaded)
+                if (!IsTextureLoaded || _LeftArmSprite.IsDisposed)
                     LoadTextures();
-                ResetCooldown();
                 return _LeftArmSprite;
             }
             set
@@ -56,9 +53,8 @@ namespace giantsummon
         {
             get
             {
-                if (!IsTextureLoaded)
+                if (!IsTextureLoaded || _RightArmSprite.IsDisposed)
                     LoadTextures();
-                ResetCooldown();
                 return _RightArmSprite;
             }
             set
@@ -73,7 +69,6 @@ namespace giantsummon
         public bool HasErrorLoadingOccurred { get { return ErrorLoading; } }
         private string SpriteDir { get { return "Creatures/" + ReferedBase.Name; } }
         private Mod mod = null;
-        private byte DisposeCooldown = 0;
         private Dictionary<string, ExtraTextureHolder> ExtraTextures = new Dictionary<string, ExtraTextureHolder>();
         public GuardianBase ReferedBase;
 
@@ -119,7 +114,6 @@ namespace giantsummon
         {
             if (ErrorLoading)
                 return;
-            DisposeCooldown = 0;
             try
             {
                 if (ReferedBase.IsCustomSpriteCharacter)
@@ -145,67 +139,6 @@ namespace giantsummon
                 ErrorLoading = true;
                 Terraria.Main.NewText("Error loading " + ReferedBase.Name+ "'s texture.");
             }
-        }
-
-        public void ResetCooldown()
-        {
-            DisposeCooldown = 0;
-        }
-
-        public void UpdateActivity() //Broken
-        {
-            /*if (TexturesLoaded)
-            {
-                DisposeCooldown++;
-                if (DisposeCooldown == 255)
-                {
-                    DisposeCooldown = 0;
-                    Terraria.Main.NewText(ReferedBase.Name + "'s textures unloaded.");
-                    Dispose();
-                }
-            }*/
-        }
-
-        public void Dispose()
-        {
-            if (!TexturesLoaded)
-            {
-                ErrorLoading = false;
-                return;
-            }
-            TexturesLoaded = false;
-            ErrorLoading = false;
-            if (!ReferedBase.InvalidGuardian && ReferedBase.IsCustomSpriteCharacter)
-            {
-                HeadSprite.Dispose();
-                BodySprite.Dispose();
-                LeftArmSprite.Dispose();
-                RightArmSprite.Dispose();
-                if (BodyFrontSprite != null)
-                {
-                    BodyFrontSprite.Dispose();
-                    BodyFrontSprite = null;
-                }
-                if (RightArmFrontSprite != null)
-                {
-                    RightArmFrontSprite.Dispose();
-                    RightArmFrontSprite = null;
-                }
-            }
-            HeadSprite = null;
-            BodySprite = null;
-            LeftArmSprite = null;
-            RightArmSprite = null;
-            foreach (ExtraTextureHolder eth in ExtraTextures.Values)
-            {
-                if (eth.TextureLoaded)
-                {
-                    eth.Texture.Dispose();
-                    eth.Texture = null;
-                }
-            }
-            //ExtraTextures.Clear();
-            //ExtraTextures = null;
         }
 
         protected class ExtraTextureHolder

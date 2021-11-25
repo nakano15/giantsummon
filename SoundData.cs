@@ -8,7 +8,7 @@ using Terraria;
 
 namespace giantsummon
 {
-    public class SoundData : IDisposable
+    public class SoundData
     {
         public Terraria.Audio.LegacySoundStyle SoundStyle = null;
         public int? SoundID = null;
@@ -21,11 +21,6 @@ namespace giantsummon
         public SoundData(int SoundID)
         {
             this.SoundID = SoundID;
-        }
-
-        public void Dispose()
-        {
-            SoundStyle = null;
         }
 
         public void PlaySound(Vector2 Position)

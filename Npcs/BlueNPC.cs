@@ -13,18 +13,6 @@ namespace giantsummon.Npcs
         public float BonfireX = 0, BonfireY = 0;
         public int AiStage { get { return (int)npc.ai[0]; } set { npc.ai[0] = value; } }
         public int AiValue { get { return (int)npc.ai[1]; } set { npc.ai[1] = value; } }
-        public const int RefusalStep = 200;
-        private static readonly KeyValuePair<string, string>[] DialoguesAndAnswers = new KeyValuePair<string, string>[]{ //This should be turned into a method, instead.
-            new KeyValuePair<string, string>("*She asks if you're here for camping, too.*","Deny"),
-            new KeyValuePair<string, string>("*After you denied, she asked if you're an adventurer.*","Yes"),
-            new KeyValuePair<string, string>("*After you told her that, she looked very interessed.*","Continue"),
-            new KeyValuePair<string, string>("*She tells you that on truth, didn't came to your world for camping.*","Continue"),
-            new KeyValuePair<string, string>("*Said that she's looking for someone that looks like her. And asks If you saw someone like that.*","No, I didn't"),
-            new KeyValuePair<string, string>("*After you said that you didn't, she looked a bit sad.*","Continue"),
-            new KeyValuePair<string, string>("*She asked If you wouldn't mind if she followed you on your adventures.*","Follow me?"),
-            new KeyValuePair<string, string>("*Says that while helping you on your adventure, she may find who she's looking for.*","Hm.."),
-            new KeyValuePair<string, string>("*She asks you what you think.*","You can give me a hand:No way.")
-        };
         private bool Rejected = false;
 
         public BlueNPC() //TODO - Change how the recruitment works, instead of a lengthy monologue from Blue, why not let the player speak with her instead? Do the same to Mabel aswell.
@@ -81,7 +69,7 @@ namespace giantsummon.Npcs
                 {
                     ChangeAIStage(100);
                 }
-                return "*You startled her.*";
+                return "*Aaaahhh!!*";
             }
             /*else if (AiStage == 10)
             {
@@ -120,7 +108,7 @@ namespace giantsummon.Npcs
                     Main.npcChatText = "*She looks disappointed, and said that she will pack up her things and leave soon.*";
                 }
             }*/
-            if (!firstButton && AiStage == 9)
+            if (!firstButton && AiStage == 5)
                 Rejected = true;
             AiStage++;
             Main.npcChatText = GetDialogueMessage(AiStage);
@@ -376,106 +364,90 @@ namespace giantsummon.Npcs
             switch (DialogueID)
             {
                 case 1:
-                    Message = "*She asks if you're here for camping, too.*";
+                    Message = "*Hi, I never expected finding anyone like you around. Are you camping, too?*";
                     Button1 = "Deny";
                     break;
                 case 2:
-                    Message = ("*After you denied, she asked if you're an adventurer.*");
+                    Message = "*Then I think you are an adventurer, am I right?*";
                     Button1 = "Yes";
                     break;
                 case 3:
-                    Message = ("*After you told her that, she looked very interessed.*");
+                    Message = "*I knew it! You're probably trying to explore the most as possible of this world.*";
                     Button1 = "(Continue)";
                     break;
                 case 4:
-                    Message = ("*She tells you that on truth, didn't came to your world for camping.*");
-                    Button1 = "Why didn't you came for, then?";
-                    break;
-                case 5:
-                    Message = ("*She tells you that she's looking for someone that looks like her. And asks If you saw someone like that.*");
-                    Button1 = "No, I didn't";
-                    break;
-                case 6:
-                    Message = ("*After you said that you didn't, she looked saddened.*");
+                    Message = "*Hm... I wonder...*";
                     Button1 = "(Continue)";
                     break;
-                case 7:
-                    Message = ("*She asked If you wouldn't mind if she followed you on your adventures.*");
-                    Button1 = "Why do you want to follow me?";
+                case 5:
+                    Message = "*Say, Terrarian. Would you mind if I stayed on your world a while? I want to enjoy the scenery.*";
+                    Button1 = "Yes, you can stay.";
+                    Button2 = "No way.";
                     break;
-                case 8:
-                    Message = ("*Says that while helping you on your adventure, she may find who she's looking for.*");
-                    Button1 = "Maybe";
-                    break;
-                case 9:
-                    Message = ("*She asks you what you think.*");
-                    Button1 = "Yes, I accept";
-                    Button2 = "No, sorry.";
-                    break;
-                case 10:
+                case 6:
                     if (!Rejected)
                     {
-                        Message = "*She got very happy. She told you that her name is Blue, and that she's good at almost anything you may need in your adventure.*";
+                        Message = "*Yay! In case you need company on your adventures, you can call me.*";
                     }
                     else
                     {
-                        Message = "*She looks disappointed, but tells you that will give you her contact, in case you change your mind.*";
+                        Message = "*Aww... I'll be leaving then... Anyways, you seems like a good person, so feel free to call me whenever you change your mind, or have an adventure. Alright?*";
                     }
-                    Message += " She then told you that her name is " + Base.Name + ".";
+                    Message += "\nYou can call me " + Base.Name + ".";
                     Main.npcChatText = Message;
                     RecruitmentScripts();
                     break;
                 //
                 case 100:
-                    Message = ("*She tells you not to sneak upon other people from behind.*");
+                    Message = "*Don't sneak behind me again!*";
                     Button1 = "I'm sorry.";
                     break;
                 case 101:
-                    Message = ("*Tells you that nearly sliced you in half with her sword.*");
+                    Message = "*I nearly sliced in you in half with my sword due to that.*";
                     Button1 = "I said that I'm sorry.";
                     break;
                 case 102:
-                    Message = ("*Trying to calm down.*");
-                    Button1 = "(Continue)";
+                    Message = "*Okay... I'll try calming down...*";
+                    Button1 = "Continue";
                     break;
                 case 103:
-                    Message = ("*She tells you that you really scared her. And apologized for earlier.*");
+                    Message = "*I'm sorry... It's just... You gave me a really big scare.*";
                     Button1 = "O.. Okay.";
                     break;
                 case 104:
-                    Message = ("*She asks what are you doing here, If you're here for camping too.*");
+                    Message = "*Say, what are you doing here? Are you camping too?*";
                     Button1 = "No, I'm exploring the world";
                     break;
                 case 105:
-                    Message = ("*She got interessed after you said that.*");
-                    Button1 = "(Continue)";
+                    Message = ("*Oh.. you're an adventurer? Interesting...*");
+                    Button1 = "Continue";
                     ChangeAIStage(3); //I hope nobody complains about me recicling part of the dialogue.
                     break;
                 //
                 case 150:
-                    Message = "*She seems happy for seeing you again.*";
+                    Message = "*Terrarian?! I am so glad to see you again.*";
                     Button1 = "Equally";
                     break;
                 case 151:
-                    Message = "*She told you that If you need her, she will be here.*";
+                    Message = "*You know, if you need my aid, I will be here, alright?*";
                     Button1 = "Okay";
                     Main.npcChatText = Message;
                     RecruitmentScripts();
                     break;
                 case 155:
-                    Message = ("*She told you to stop doing that to her.*");
+                    Message = "*Stop doing that to me!*";
                     Button1 = "I'm sorry.";
                     break;
                 case 156:
-                    Message = ("*She says that you nearly made her heart jump out of her mouth.*");
+                    Message = "*You nearly made my heart jump out of my mouth.*";
                     Button1 = "Again, I said I'm sorry.";
                     break;
                 case 157:
-                    Message = ("*She tells you that If you need her help, she will be here.*");
+                    Message = "*Anyways, you know that if you need my help, I will be around.*";
                     Button1 = "Okay";
                     break;
                 case 158:
-                    Message = ("*And asks you not to scare her again.*");
+                    Message = "*And please don't scare me again.*";
                     RecruitmentScripts();
                     break;
             }

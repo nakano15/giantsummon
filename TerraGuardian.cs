@@ -17460,7 +17460,6 @@ namespace giantsummon
                 return;
             if (WofFood)
                 return;
-            Base.RefreshBaseLifeTime();
             DrawLeftBodyPartsInFrontOfPlayer = (PlayerMounted && ReverseMount) || PlayerControl || GrabbingPlayer || SittingOnPlayerMount || (AssistSlot == 0 && LeftArmAnimationFrame == Base.ReviveFrame) || UsingFurniture;
             DrawRightBodyPartsInFrontOfPlayer = false;
             Base.ForceDrawInFrontOfPlayer(this, ref DrawLeftBodyPartsInFrontOfPlayer, ref DrawRightBodyPartsInFrontOfPlayer);
@@ -17907,10 +17906,16 @@ namespace giantsummon
                 return;
             }
             Vector2 Origin = Vector2.Zero;
-            Position.X -= Base.sprites.HeadSprite.Width * XOffset;
-            Position.Y -= Base.sprites.HeadSprite.Height * YOffset;
+            Texture2D HeadTexture = Base.sprites.HeadSprite;
+            if (HeadTexture == null)
+            {
+                HeadTexture = MainMod.LosangleOfUnnown;
+                Scale *= 32f / HeadTexture.Height;
+            }
+            Position.X -= HeadTexture.Width * XOffset;
+            Position.Y -= HeadTexture.Height * YOffset;
             List<GuardianDrawData> gddlist = new List<GuardianDrawData>();
-            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, Base.sprites.HeadSprite, Position,
+            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, HeadTexture, Position,
                 null, Color.White, 0f, Origin, Scale, SpriteEffects.None);
             gddlist.Add(gdd);
             Base.GuardianModifyDrawHeadScript(this, Position, Color.White, Scale, SpriteEffects.None, Origin, ref gddlist);

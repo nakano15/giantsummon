@@ -6,7 +6,7 @@ using Terraria;
 
 namespace giantsummon
 {
-    public struct SkinReqStruct : IDisposable
+    public struct SkinReqStruct
     {
         public delegate bool SkinRequirementDel(GuardianData gd, Player player);
         public byte SkinID;
@@ -28,11 +28,6 @@ namespace giantsummon
             this.Name = Name;
             this.Requirement = ReqScript;
             this.SkinUsesHead = SkinUsesHead;
-        }
-
-        public void Dispose()
-        {
-            Requirement = null;
         }
     }
 }

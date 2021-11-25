@@ -6,7 +6,7 @@ using Terraria;
 
 namespace giantsummon
 {
-    public class RequestBase : IDisposable
+    public class RequestBase
     {
         public static RequestBase[] CommonRequests = new RequestBase[0];
         public string Name = "";
@@ -173,24 +173,6 @@ namespace giantsummon
             Objectives.Add(req);
         }
 
-        public void Dispose()
-        {
-            foreach(RequestObjective ro in Objectives)
-            {
-                ro.Dispose();
-            }
-            Objectives.Clear();
-            Objectives = null;
-            Requirement = null;
-            Name = null;
-            BriefText = null;
-            AcceptText = null;
-            DenyText = null;
-            CompleteText = null;
-            RequestInfoText = null;
-            FailureText = null;
-        }
-
         public class KillBossRequest : RequestObjective
         {
             public int BossID = 0, DifficultyBonus = 0;
@@ -225,12 +207,6 @@ namespace giantsummon
                 : base(ObjectiveTypes.ObjectCollection)
             {
 
-            }
-
-            public override void OnDispose()
-            {
-                DropFromMobs.Clear();
-                DropFromMobs = null;
             }
 
             public struct DropRateFromMonsters
@@ -350,23 +326,13 @@ namespace giantsummon
             }
         }
 
-        public class RequestObjective : IDisposable
+        public class RequestObjective
         {
             public ObjectiveTypes objectiveType = ObjectiveTypes.None;
 
             public RequestObjective(ObjectiveTypes otype)
             {
                 objectiveType = otype;
-            }
-
-            public void Dispose()
-            {
-                OnDispose();
-            }
-
-            public virtual void OnDispose()
-            {
-
             }
 
             public enum ObjectiveTypes

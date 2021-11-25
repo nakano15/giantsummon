@@ -352,11 +352,6 @@ namespace giantsummon
             }
         }
 
-        public static void UnloadModGuardians(Mod mod)
-        {
-            GuardianBase.UnloadContainer(mod);
-        }
-
         public static void GetInitialCompanionsList()
         {
             InitialGuardians.Clear();
@@ -752,13 +747,6 @@ namespace giantsummon
             return dt.Year == 2021 && dt.Month == 10;
         }
 
-        public override void Unload()
-        {
-            //GuardianBase.UnloadGuardians();
-            //GuardianShopHandler.UnloadShops();
-            //GuardianCommonStatus.UnloadCommonStatus(); //Crashes the mod loader
-        }
-
         public static bool IsGuardianInTheWorld(int ID, string ModId = "")
         {
             if (ModId == "")
@@ -1140,7 +1128,6 @@ namespace giantsummon
                     TriggerAnyPlayerCompanionJS();
                 }
             }
-            GuardianBase.UpdateContainers();
         }
 
         private static void UpdateJumpscare()
