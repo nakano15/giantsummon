@@ -270,7 +270,7 @@ namespace giantsummon.Creatures
             if (guardian.IsSleeping)
             {
                 Mes.Add("(You noticed him sniffing a while, and then he slept with a smile on the face.\nI think he knows I'm near him.)");
-                Mes.Add("*Snif.. Snif... Known one... "+player.name+"... Zzzz...*");
+                Mes.Add("*Snif.. Snif... "+player.name+" close... Zzzz...*");
                 Mes.Add("(As he sleeps, he says the name of anyone who comes close to him, includding yours.)");
             }
             else if (guardian.IsUsingToilet)
@@ -371,6 +371,10 @@ namespace giantsummon.Creatures
                     {
                         Mes.Add("*I will get to know [gn:"+Luna+"] more some time...*");
                     }
+                }
+                if (NpcMod.HasGuardianNPC(Green))
+                {
+                    Mes.Add("*It's really great having a medic around. Or at least one that knows how TerraGuardian bodies works.*");
                 }
                 if (guardian.IsPlayerRoomMate(player))
                 {

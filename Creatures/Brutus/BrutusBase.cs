@@ -588,6 +588,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*It's very reckless of [gn:" + Cinnamon + "] to go gather ingredients alone outside of the town. From now on, she need to tell me so I can ensure her safety when doing so.*");
                 Mes.Add("*I don't think [gn:" + Cinnamon + "] has what It takes to survive outside city walls. If she gets in danger or hurt, I wont feel good.*");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("*[gn:"+Green+"] keeps saying everytime I visit him that my wounds are light. Maybe I'm exagerating a bit on the visits.*");
+            }
             if (NpcMod.HasGuardianNPC(Miguel))
             {
                 Mes.Add("*[gn:" + Miguel + "] is a good addition to your world. I can strain my muscles and get even stronger for my job.*");

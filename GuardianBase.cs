@@ -159,7 +159,7 @@ namespace giantsummon
             Fear = 27,
             Sadness = 28,
             Joy = 29,
-            SnakeGuardian = 30;
+            Green = 30;
 
         public struct DialogueTopic
         {
@@ -1189,7 +1189,7 @@ namespace giantsummon
                     case Joy:
                         gb = new JoyBase();
                         break;
-                    case SnakeGuardian:
+                    case Green:
                         gb = new GreenBase();
                         break;
                 }

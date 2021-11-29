@@ -299,6 +299,10 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*Hey [nickname], what have you been eating latelly? Because you seems to have released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\", hahaha. Got It? Released a \"" + PlayerMod.GetPlayerGuardian(player, Wrath).Name + "\"?*");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("*I supply [gn:"+Green+"] with things he uses to heal people. Keep that in mind if you wonder why he charges you.*");
+            }
             if (NPC.AnyNPCs(Terraria.ID.NPCID.TravellingMerchant))
             {
                 Mes.Add("*[nn:" + Terraria.ID.NPCID.TravellingMerchant + "] has a variety of low quality goods to offer.*");

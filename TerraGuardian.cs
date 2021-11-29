@@ -4105,7 +4105,7 @@ namespace giantsummon
             HitBox.Height = Height;
             MoveSpeed = 1f;
             MaxSpeed = Base.MaxSpeed;
-            Mass = 0.3f;//Base.Mass;
+            Mass = 0.4f;//Base.Mass;
             Acceleration = Base.Acceleration;
             SlowDown = Base.SlowDown;
             MaxJumpHeight = Base.MaxJumpHeight;
@@ -7453,7 +7453,6 @@ namespace giantsummon
                     return;
                 }
                 float TileCenterX = furniturex * 16 + 8;
-                    //TileCenterY = furniturey * 16 + 16;
                 Tile tile = MainMod.GetTile(furniturex, furniturey);
                 if (tile == null || !tile.active())
                 {
@@ -11176,7 +11175,7 @@ namespace giantsummon
                         }
                     }
                 }
-                if (Math.Abs(BottomDistanceY) >= 48 && !IsOnSameGroundAsPlayer && LeaderSpeedY == 0)
+                if (!IsOnSameGroundAsPlayer && LeaderSpeedY == 0)
                 {
                     if (Math.Abs(PositionDifference.X) >= 8)
                     {
@@ -11185,7 +11184,7 @@ namespace giantsummon
                         else
                             MoveRight = true;
                     }
-                    else
+                    //else
                     {
                         if (BottomDistanceY > 0)
                         {
@@ -11197,7 +11196,7 @@ namespace giantsummon
                         }
                         else
                         {
-                            if (BottomDistanceY < 0 && BottomDistanceY > -8 * 16 && ((!Jump && Velocity.Y == 0) || JumpHeight > 0))
+                            if (BottomDistanceY < 0 && BottomDistanceY > -2 * 16 && ((!Jump && Velocity.Y == 0) || JumpHeight > 0))
                             {
                                 int XStart = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), 
                                     XEnd = (int)((Position.X + CollisionWidth * 0.5f) * DivisionBy16);

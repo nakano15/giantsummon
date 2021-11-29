@@ -313,6 +313,10 @@ namespace giantsummon.Creatures
                     Mes.Add("Everyone keeps telling me to stay away from [gn:" + Malisha + "]'s place, but she doesn't seems like that bad of a person.");
                     Mes.Add("I saw [gn:" + Malisha + "] the other day by her house, she was offering me candies. I didn't accepted them, because I just lunched.");
                 }
+                if (NpcMod.HasGuardianNPC(Green))
+                {
+                    Mes.Add("*I don't mind visiting [gn:"+Green+"] when I'm sick. Even though he looks scary, he always give me a lolipop at the end of the visit.*");
+                }
 
                 if (guardian.IsPlayerRoomMate(player))
                 {

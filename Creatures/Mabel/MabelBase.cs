@@ -356,6 +356,11 @@ namespace giantsummon.Creatures
                 Mes.Add("*Whaaaaaaaaaaat? [gn:" + Luna + "] won a edition of Miss North Pole? Like... Whaaaaaaaaaaaaat?*");
                 Mes.Add("*[gn:" + Luna + "] thinks I'm exagerating a bit about the practice of the contest, but I don't think like that.*");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("*I really don't like [gn:"+Green+"]. Everytime I visit him he gives me some diet. Do I look fat, to you?*");
+                Mes.Add("*I was expecting to get vitamins from [gn:"+Green+"], not a diet! Hmph...*");
+            }
             if (guardian.KnockedOut)
             {
                 Mes.Clear();

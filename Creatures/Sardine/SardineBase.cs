@@ -498,6 +498,10 @@ namespace giantsummon.Creatures
                 Mes.Add("Could [gn:"+Miguel+"] stop making jokes about my belly? They hurt!");
                 Mes.Add("I'm really getting some exercise tips from [gn:"+Miguel+"] to turn my fat into muscles, but he keeps making jokes about my belly.");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("You may think ghosts and stuff are scary, but you wont know what is scary, until you wake up and see [gn:"+Green+"] staring directly at your face.");
+            }
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("Do you humans always visits bathrooms when others are using it?");

@@ -132,6 +132,10 @@ namespace giantsummon
             {
                 Messages.Add("*It is said that screams can be heard inside the dungeon. I don't actually screams of ghosts, wraiths or anything like that, but actually someone screaming out of terror. I think there's someone in trouble there.*");
             }
+            if (!HasMetGuardian(GuardianBase.Green) && Npcs.GreenNPC.CanSpawnGreen())
+            {
+                Messages.Add("*I heard people saying that a intimidating giant snake is roaming this world. I really can't believe that, but it doesn't hurt to look that.*");
+            }
             if (Messages.Count == 0)
                 return "*I didn't heard about anything latelly.*";
             return Messages[Main.rand.Next(Messages.Count)];

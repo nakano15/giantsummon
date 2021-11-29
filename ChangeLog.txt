@@ -4,3 +4,9 @@ Shattered quest added.
 You can now change the damage reduction applied for having companions with you.
 	You can change that on the server settings.
 Updated Blue's recruitment dialogues.
+Being rescued will now remove debuffs from your character.
+	You will no longer be knocked out for long time due to drinking a vile red potion.
+Mentions of player death will now log the world they died.
+	In case you want to mourn them.
+Fixed TerraGuardians mass.
+	Instead of 0.3 of gravity strength, It's not 0.4, like normal terrarians have.

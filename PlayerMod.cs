@@ -1238,8 +1238,13 @@ namespace giantsummon
                                 {
                                     player.Spawn();
                                 }
-                                if(player.HasBuff(Terraria.ID.BuffID.Bleeding))
-                                    player.DelBuff(player.FindBuffIndex(Terraria.ID.BuffID.Bleeding));
+                                for(int b = 0; b < player.buffType.Length; b++)
+                                {
+                                    if(player.buffType[b] > -1 && Main.debuff[player.buffType[b]] && player.buffType[b] != Terraria.ID.BuffID.PotionSickness)
+                                    {
+                                        player.DelBuff(b);
+                                    }
+                                }
                                 const float DistanceToTeleportNearbyGuardians = 336f;
                                 foreach (TerraGuardian tg in WorldMod.GuardianTownNPC)
                                 {
@@ -1747,7 +1752,7 @@ namespace giantsummon
             {
                 GuardianGlobalInfos.EraseFeatsFromPlayer(player.name);
                 GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.PlayerDied,
-                    player.name, "", 12, 15,
+                    player.name, Main.worldName, 12, 15,
                     GuardianGlobalInfos.GetGuardiansInTheWorld());
                 GuardianGlobalInfos.SaveFeats();
             }

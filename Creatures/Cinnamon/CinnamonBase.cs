@@ -314,6 +314,11 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*[gn:"+Miguel+"] gave me some tips of things I could use as alternative on my meals.*");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("*[gn:"+Green+"] is really scary! He always look at us with a menacing face, and looks like he can swallow me whole.*");
+                Mes.Add("*I don't like getting sick or injured, because that means I'll have to visit [gn:"+Green+"].*");
+            }
             //
             if (guardian.IsSleeping)
             {

@@ -444,8 +444,12 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*Beef guy is really useful for me and my body, so I will not try anything on him.*");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("*Having [gn:"+Green+"] around is really useful for me. At least I have infinite supply of a something...*");
+            }
 
-                if (guardian.IsUsingToilet)
+            if (guardian.IsUsingToilet)
             {
                 Mes.Add("*Are you curious If I can use the toilet like anyone else? If your curiosity is now gone, please could go away with It?*");
                 Mes.Add("*Why are you bothering me on my reflection moment?*");

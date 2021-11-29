@@ -346,6 +346,10 @@ namespace giantsummon.Creatures
                         Mes.Add("*Oh my, [gn:" + Cinnamon + "] is so cute, that everytime I see her I want to hug.*");
                         Mes.Add("*I really wouldn't mind carrying [gn:" + Cinnamon + "] around. She's so cute that would look like I'm carrying a teddy.*");
                     }
+                    if (NpcMod.HasGuardianNPC(Green))
+                    {
+                        Mes.Add("*Beside [gn:"+Green+"] has a menacing face, he's actually a good doctor. Visit him whenever you feel sick or hurt.*");
+                    }
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];

@@ -298,6 +298,10 @@ namespace giantsummon.Creatures
             {
                 Mes.Add("*I really would love seeing fit [gn:" + Luna + "]... I mean... I... I mean... Err... Forget it.*");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("*Hey [nickname]. With the help of [gn:"+Green+"], I can give exercise to people, while he helps with the diet and nutrients. Doesn't that seem good?*");
+            }
             if (guardian.IsPlayerRoomMate(player))
             {
                 Mes.Add("*I'm okay with sharing my room with you. I hope my morning exercises don't end up waking you.*");

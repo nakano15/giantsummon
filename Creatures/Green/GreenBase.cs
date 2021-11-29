@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Terraria;
 
 namespace giantsummon.Creatures
 {
@@ -104,6 +105,417 @@ namespace giantsummon.Creatures
 
             //Head Vanity Position
             HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(23, 12);
+            HeadVanityPosition.AddFramePoint2x(14, 23, 17);
+            HeadVanityPosition.AddFramePoint2x(15, 23, 17);
+            HeadVanityPosition.AddFramePoint2x(18, 36, 30);
+            HeadVanityPosition.AddFramePoint2x(21, 36, 30);
+        }
+
+        public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            switch (Main.rand.Next(3))
+            {
+                default:
+                    return "*Need a doctor? You found one.*";
+                case 1:
+                    return "*It's always good to meet someone new.*";
+                case 2:
+                    return "*Are you injured? I can take care of that.*";
+            }
+        }
+
+        public override string NormalMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            if (guardian.IsSleeping)
+            {
+                Mes.Add("(He's sleeping? I think he's sleeping. His eyes... Doesn't seems like his regular eyes.)");
+                Mes.Add("(You try waving your hand in front of his eye, but see no reaction. He must be sleeping.)");
+                Mes.Add("(You shiver while watching him sleeping.)");
+            }
+            else
+            {
+                Mes.Add("*I have treated many people in the Ether Realm. Let's see if I can do the same here.*");
+                Mes.Add("*Why people seems scared of me? Is it because of my profession?*");
+                Mes.Add("*Whatever wound you show me, probably isn't the gruesomest thing I've ever seen.*");
+                Mes.Add("*Are you in need of a check up?*");
+                Mes.Add("*In case your back is aching, I can solve that with ease.*");
+                Mes.Add("*Do I look angry, or scary? Sorry, my face is just like that.*");
+
+                if (Main.dayTime)
+                {
+                    if (Main.eclipse)
+                    {
+                        Mes.Add("*Please direct the injured to my room.*");
+                        Mes.Add("*I wont rest this eclipse, right?*");
+                        Mes.Add("*Are you hurt? Those monsters look tough.*");
+                    }
+                    else
+                    {
+                        Mes.Add("*Enjoying the time, [nickname]?*");
+                        Mes.Add("*You visited me, that means either you are injured, sick, or wanted to check me out.*");
+                        Mes.Add("*I'm not treating anyone right now, so I can spend some time talking.*");
+                    }
+                }
+                else
+                {
+                    if (Main.bloodMoon)
+                    {
+                        Mes.Add("*What is wrong with the women here? They all look furious this night.*");
+                        Mes.Add("*I don't know what's scarier this night: The monsters or the women.*");
+                        Mes.Add("*I wont have a good night of sleep today, right?*");
+                    }
+                    else
+                    {
+                        Mes.Add("*I was about to get some sleep. Need something before I do so?*");
+                        Mes.Add("*Feeling tired? Me too.*");
+                        Mes.Add("*You would not believe your eyes, if ten million fireflies, lit up the world as I fall asleep.*");
+                    }
+                }
+
+                if (guardian.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("*There is enough space on my house for both of us, so I can share it with you.*");
+                    Mes.Add("*I really hope I don't make you sick whenever I change my skin.*");
+                }
+                if (guardian.IsPlayerBuddy(player))
+                {
+                    Mes.Add("*Feeling fine, [nickname]? Just checking you up.*");
+                }
+                if (NpcMod.HasGuardianNPC(Sardine))
+                {
+                    Mes.Add("*It has been many times I've had [gn:" + Sardine + "] be brought by someone to my house, unconscious.*");
+                    Mes.Add("*Everytime is the same: [gn:" + Sardine + "] is brought to me unconscious to me, I treat him, the he gets jump scared when he wakes up. He should have been used to my face.*");
+                }
+                if (NpcMod.HasGuardianNPC(Bree))
+                {
+                    Mes.Add("*Why [gn:" + Bree + "] takes so many vitamins?*");
+                }
+                if (NpcMod.HasGuardianNPC(Brutus))
+                {
+                    Mes.Add("*For someone who charges into fights, [gn:" + Brutus + "] only visits me with light wounds.*");
+                    Mes.Add("*I can't help but notice that [gn:" + Brutus + "] has his left arm stronger than the right. Is it because he practices swinging his sword?*");
+                }
+                if (NpcMod.HasGuardianNPC(Mabel))
+                {
+                    Mes.Add("*Ever since [gn:" + Mabel + "] moved in, I had to get a new batch of tissues.*");
+                    Mes.Add("*I tried recommending some diet for [gn:" + Mabel + "]. She didn't took that well.*");
+                }
+                if (NpcMod.HasGuardianNPC(Malisha))
+                {
+                    Mes.Add("*I'm glad that my old skins are being useful for [gn:" + Malisha + "]. I only wonder what she uses it for.*");
+                }
+                if (NpcMod.HasGuardianNPC(Cinnamon))
+                {
+                    Mes.Add("*Why does [gn:" + Cinnamon + "] thinks I will eat her?*");
+                    Mes.Add("*In some extreme cases, I have to make [gn:" + Cinnamon + "] sleep in order to treat her disease or wounds.*");
+                }
+                if (NpcMod.HasGuardianNPC(Miguel))
+                {
+                    Mes.Add("*It seems like I managed to get into some synergy with [gn:" + Miguel + "]'s work. He gives exercises to people, while I help with their nutrition.*");
+                }
+                if(FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+                {
+                    Mes.Clear();
+                    Mes.Add("*Uh, [nickname]... There is a ghost on your shoulder.*");
+                }
+            }
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string TalkMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Initially, I didn't moved to this world to treat people, but was more for curiosity. I wanted to know how the Terra Realm look like.*");
+            Mes.Add("*I would be grateful if people were less scared of me.*");
+            Mes.Add("*I don't recommend you to make treatment harder to a medic. It can actually end up making the treatment worser and painful.*");
+            Mes.Add("*Don't underestimate diseases. Even little coughs could be something serious if you don't be careful, so watch yourself.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string NoRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I have no necessities right now.*");
+            Mes.Add("*There isn't much I need help with right now. Maybe another time.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HasRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Perfect timing! I need you to do something for me.*");
+            Mes.Add("*Yes... As a matter of fact, I have something that I need your help with. Can you help me out?*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Perfect job. You're reliable, [nickname].*");
+            Mes.Add("*I shouldn't expect less of you, [nickname].*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string BirthdayMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I'm really getting older.. I barelly can believe.*");
+            Mes.Add("*I think I can take the day off and just enjoy my birthday.*");
+            if (!PlayerMod.HasGuardianBeenGifted(player, guardian))
+                Mes.Add("*People says that snakes hypnotizes people, so... Tell me, [nickname]. What have you brought to me?*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*I need a safe place to stay. I can't simply stay on the wilderness like this.*");
+            Mes.Add("*If you want me to be able to treat people, I need a place to keep my equipments, and the patients safe.*");
+            Mes.Add("*This isn't a ideal place for me to stay. I'd like to have a roof above my head.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string ReviveMessage(TerraGuardian Guardian, bool IsPlayer, Player RevivePlayer, TerraGuardian ReviveGuardian)
+        {
+            List<string> Mes = new List<string>();
+            Mes.Add("*Don't worry, you'll be fixed in a moment.*");
+            Mes.Add("*Stitching some wounds.*");
+            Mes.Add("*Bleeding stopped.*");
+            return Mes[Main.rand.Next(Mes.Count)];
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            switch (MessageID)
+            {
+                case MessageIDs.BuddySelected:
+                    return "*I'm really happy that you picked me as your buddy, but that doesn't mean I wont charge for my services.*";
+                case MessageIDs.RescueMessage:
+                    return "*Don't worry, you'll be waking up soon.*";
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    if(Main.rand.NextDouble() < 0.5)
+                        return "*[nickname], many things I wont mind, but waking me up in the middle of my slumber isn't one of them.*";
+                    return "*You woke me up. I hope it is important.*";
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    if(Main.rand.NextDouble() < 0.5)
+                        return "*I really hope you woke me up because you completed my request.*";
+                    return "*You got me off my bed. You must have done my request, right?*";
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*Alright. I can be your field medic, then.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*There is too many people.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*Right now, I don't think it's good to join your travels.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*This place is somewhat dangerous. Do you want to leave me here?*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*Visit me whenever you're wounded.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*Well, I guess I'll have to fight my way home, then. And probably gather some snacks on the way.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*If you want to remove me from your group, find a safe place with someone close.*";
+                case MessageIDs.RequestAccepted:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*I'll await your return.*";
+                    return "*Don't disappoint me, [nickname].*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*If I gave you my request, I would only help stressing you out. Only try doing what you can manage to do at a time.*";
+                case MessageIDs.RequestRejected:
+                    return "*Hm... Disappointing.*";
+                case MessageIDs.RequestPostpone:
+                    return "*It can wait, sure.*";
+                case MessageIDs.RequestFailed:
+                    if (Main.rand.NextDouble() < 0.5)
+                        return "*I shouldn't have entrusted that to you.*";
+                    return "*You disappointed me, [nickname]. Don't do that again.*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*Getting drowzy? We can rest then. How long until we return to your adventures?*";
+                case MessageIDs.RestNotPossible:
+                    return "*This isn't the best moment for that.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*If you want, use my body as pillow. If you don't mind a cold skin.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*What [npc] is offering looks interesting. Let's check it out.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*Just a minute...*";
+                case MessageIDs.GenericYes:
+                    return "*Yes.*";
+                case MessageIDs.GenericNo:
+                    return "*No.*";
+                case MessageIDs.GenericThankYou:
+                    return "*Thank you.*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*Do you want to know about something?*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*I hope I answered all your questions.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*Are you sure you want to cancel my request?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*Why did you accept it in first place...?*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*You nearly disappointed me, [nickname].*";
+                //Alexander
+                case MessageIDs.AlexanderSleuthingStart:
+                    return "*Tell me more about yourself, doctor.*";
+                case MessageIDs.AlexanderSleuthingProgress:
+                    return "*Hm... Seems like you've been treating many people...*";
+                case MessageIDs.AlexanderSleuthingProgressNearlyDone:
+                    return "*...What have you been eating? It sounds like...*";
+                case MessageIDs.AlexanderSleuthingProgressFinished:
+                    return "*This... This guy is scary... I can now see why there's less critters around here.*";
+                case MessageIDs.AlexanderSleuthingFail:
+                    return "*Y-you don't plan on squeezing me, right?*";
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return "*I'm really glad to see you people managed to heal my wounds.*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*I can fight again, Thanks.*";
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return "*Argh... I could use an antidote now...*";
+                case MessageIDs.AcquiredBurningDebuff:
+                    return "*Ahh!! AHH!! This doesn't go well on my skin!!*";
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return "*My eyes!!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*My head is spinning...*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*Why my arms wont obey me?!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I'm feeling... Sluggish...*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*I don't feel well...*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*Argh... My skin...*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*What a gruesome creature is that?!*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Why are you all looking at me like that?*";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*I-I'm f-f-freezing...*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*I'm stuck here!*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*I'll break your bones!!*";
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return "*Try to hurt me now.*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*More.*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*Time to open up something.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*Faster!*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*I feel vigorous now.*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*I shall hit where it hurts.*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*Better I be careful of how I use this blade.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "*Down it goes.*";
+                case MessageIDs.AcquiredHoneyBuff:
+                    return "*I could drink this all day.*";
+                //
+                case MessageIDs.FoundLifeCrystalTile:
+                    return "*I think you may want to see that.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*Watch your step!*";
+                case MessageIDs.FoundMineTile:
+                    return "*A mine!*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*Detonator ahead. Try not to fall on it.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*That plant smells like trouble.*";
+                case MessageIDs.WhenOldOneArmyStarts:
+                    return "*I wonder how etherians tastes.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*Something good must be in that chest.*";
+                case MessageIDs.FoundGemTile:
+                    return "*Shiny gems.*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*You may want to see this.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*That ore looks rare.*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*I hope I don't feel sick.*";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "*Feeling home sick? Let's go, then.*";
+                case MessageIDs.SomeoneJoinsTeamMessage:
+                    return "*I'm glad to see you join us.*";
+                case MessageIDs.PlayerMeetsSomeoneNewMessage:
+                    return "*One more person.*";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "*I wonder if I can train them to help me on surgeries.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Healing his loneliness, [nickname]?*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*Our leader needs medical attention!*";
+                case MessageIDs.LeaderDiesMessage:
+                    if(Main.rand.NextDouble() < 0.5)
+                        return "*[nickname]...*";
+                    return "*Time of death: "+(int)WorldMod.LastTime + ":" + (int)((WorldMod.LastTime - (int)WorldMod.LastTime) * 60) +"*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*Someone needs medical attention!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*That must be good.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*Try not to get yourself killed while I'm away.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*[nickname], watch your health, you don't look good.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*I need to take it easy...*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*Trouble. I'm running out of potions.*";
+                case MessageIDs.UsesLastPotion:
+                    return "*My potions! They're gone!*";
+                case MessageIDs.SpottedABoss:
+                    return "*I spot trouble.*";
+                case MessageIDs.DefeatedABoss:
+                    return "*Trouble down.*";
+                case MessageIDs.InvasionBegins:
+                    return "*I think we will have a long fight.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*Their attack ceased. Let's tend the wounded.*";
+                case MessageIDs.EventBegins:
+                    return "*What a horrible "+(Main.dayTime ? "day" : "night")+" for this to happen.*";
+                case MessageIDs.EventEnds:
+                    return "*Anyone injured?*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*Due to my profession, I keep in contact with many people. One of them is a terrarian named [player]. They've been helping me latelly.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*I've been hearing about [player] latelly. Seems like they defeated [subject] recently.*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*Looks like [player] found a [subject]. What is it? I don't know.*";
+                case MessageIDs.FeatEventFinished:
+                    return "*[player] managed to take care of a [subject] in their world.*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*Looks like [player] met [subject] on their travels.*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*If you know [player], I'm sorry to inform you that they died recently. You can find their tombstone in [subject].*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[player] managed to open a temple door at [subject]. If you're interessed, go visit that world.*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*A coin portal surprised [player] on their travels.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I have met another Terrarian recently, their name was [player], if I remember well.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*[player] has been catching many weird fish recently. None of them look tasty for me.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*It seems like [player] made their world safe to live. They killed some creature called [subject] and now people are saying that.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*I don't recommend you to visit [subject], things have... Changed... There.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*I'm really happy with [subject] and [player]. They seem like the perfect buddies.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*I'm actually also [player]'s buddy, but I may still join your travels when they're not around.*";
+            }
+            return base.GetSpecialMessage(MessageID);
         }
     }
 }

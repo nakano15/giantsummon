@@ -538,6 +538,10 @@ namespace giantsummon.Creatures
                 Mes.Add("*[gn:"+Luna+"]... She makes me droll... Not good...*");
                 Mes.Add("*I try keeping my distance from [gn:"+Luna+"], for her safety.*");
             }
+            if (NpcMod.HasGuardianNPC(Green))
+            {
+                Mes.Add("*It seems like I wont have much need of a doctor...*");
+            }
 
             if (guardian.IsPlayerRoomMate(player))
             {
