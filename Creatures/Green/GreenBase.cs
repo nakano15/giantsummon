@@ -9,7 +9,7 @@ namespace giantsummon.Creatures
     {
         public GreenBase()
         {
-            Name = "Green";
+            Name = "Green"; //Jochen Green
             Description = "Treated many TerraGuardians in the Ether Realm,\nhis newest challenge now is on the Terra Realm.";
             Size = GuardianSize.Large;
             Width = 24;
@@ -66,12 +66,12 @@ namespace giantsummon.Creatures
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(14, 0);
-            BodyFrontFrameSwap.Add(15, 1);
+            BodyFrontFrameSwap.Add(15, 0);
 
             RightArmFrontFrameSwap.Add(14, 0);
             RightArmFrontFrameSwap.Add(15, 1);
 
-            SittingPoint2x = new Microsoft.Xna.Framework.Point(19, 40);
+            SittingPoint2x = new Microsoft.Xna.Framework.Point(21, 40); //19
 
             //Mount
             MountShoulderPoints.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(18, 15);
@@ -103,7 +103,7 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(18, 37, 41);
 
             //Head Vanity Position
-            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(24, 11);
+            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(23, 12);
         }
     }
 }

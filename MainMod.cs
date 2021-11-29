@@ -42,7 +42,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 98, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
