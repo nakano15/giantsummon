@@ -8,7 +8,7 @@ namespace giantsummon.Quests
 {
     public class GreenHealingUnlockQuest : QuestBase
     {
-        public override string Name => "Knowing You Inside.";
+        public override string Name => "Knowing You Inside";
 
         public override string Description(QuestData data)
         {
@@ -75,6 +75,19 @@ namespace giantsummon.Quests
                 }
             }
             return base.ImportantDialogueMessage(rawdata, tg, GuardianID, GuardianModID);
+        }
+
+        public override void UpdatePlayer(Player player, QuestData rawdata)
+        {
+            if (IsQuestComplete(rawdata))
+                return;
+            GreenQuestData data = (GreenQuestData)rawdata;
+            if(data.QuestStep == 4 && data.TimePassed > 0)
+            {
+                data.TimePassed -= Main.dayRate;
+                if (data.TimePassed < 0)
+                    data.TimePassed = 0;
+            }
         }
 
         public override List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
