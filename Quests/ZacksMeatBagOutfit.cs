@@ -135,22 +135,22 @@ namespace giantsummon.Quests
                 {
                     if (data.QuestStep == 1)
                     {
-                        dialogues.Add(new DialogueOption("What do you need help with?", BlueWhenListeningToHerRequest));
+                        dialogues.Add(new DialogueOption("What do you need help with?", BlueWhenListeningToHerRequest, true));
                     }
                     else if (data.QuestStep > 1 && data.QuestStep < 8)
                     {
-                        dialogues.Add(new DialogueOption("What should we be doing now?", UponAskingAboutRequest));
+                        dialogues.Add(new DialogueOption("What should we be doing now?", UponAskingAboutRequest, true));
                     }
                 }
                 else //If is Zacks
                 {
                     if (data.QuestStep == 6 || data.QuestStep == 7)
                     {
-                        dialogues.Add(new DialogueOption("We have something to give you.", UponDeliveringToZacksDialogue));
+                        dialogues.Add(new DialogueOption("We have something to give you.", UponDeliveringToZacksDialogue, true));
                     }
                     else if (data.QuestStep >= 2 && data.QuestStep < 6)
                     {
-                        dialogues.Add(new DialogueOption("About Blue's request related to you.", UponAskingAboutRequest));
+                        dialogues.Add(new DialogueOption("About Blue's request related to you.", UponAskingAboutRequest, true));
                     }
                 }
                 return dialogues;
@@ -250,6 +250,7 @@ namespace giantsummon.Quests
             }
             Dialogue.GatherAroundGuardian(Dialogue.GetParticipant(BlueSlot));
             Dialogue.ShowDialogueWithContinue("*I'm glad for Zacks back into my life, but I think we should do something about his wounds.*");
+            //After this point, Dialogue.GetParticipant breaks.
             if (ZacksInTheTeam)
             {
                 Dialogue.ShowDialogueWithContinue("*I'm fine, those wounds doesn't hurt or anything.*", Dialogue.GetParticipant(ZacksSlot));
