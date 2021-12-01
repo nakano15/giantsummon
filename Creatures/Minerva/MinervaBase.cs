@@ -156,10 +156,10 @@ namespace giantsummon.Creatures
             AddReward(Terraria.ID.ItemID.BowlofSoup, 1, 200, 0.5f, 2);
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Can you cook something for me?", delegate ()
+            List<DialogueOption> Options = new List<DialogueOption>();
+            Options.Add(new DialogueOption("Can you cook something for me?", delegate ()
             {
                 Dialogue.StartNewDialogue(CookDialogue, Dialogue.GetSpeaker);
             }));

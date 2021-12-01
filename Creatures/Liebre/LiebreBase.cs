@@ -136,10 +136,10 @@ namespace giantsummon.Creatures
 
         #region Dialogues
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> dialogues = base.GetGuardianExtraDialogueActions(guardian);
-            dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("You can go unload the souls now.", UnloadActionButtonPressed));
+            List<DialogueOption> dialogues = base.GetGuardianExtraDialogueActions(guardian);
+            dialogues.Add(new DialogueOption("You can go unload the souls now.", UnloadActionButtonPressed));
             return dialogues;
         }
 

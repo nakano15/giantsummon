@@ -174,11 +174,11 @@ namespace giantsummon.Creatures
             }
         }
         
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian Guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian Guardian)
         {
             VladimirData data = (VladimirData)Guardian.Data;
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            GuardianMouseOverAndDialogueInterface.DialogueOption Option = new GuardianMouseOverAndDialogueInterface.DialogueOption((Guardian.DoAction.InUse && Guardian.DoAction.ID == HugActionID && Guardian.DoAction.IsGuardianSpecificAction ? "Enough" : "Be Hugged"), HugOptionAction);
+            List<DialogueOption> Options = new List<DialogueOption>();
+            DialogueOption Option = new DialogueOption((Guardian.DoAction.InUse && Guardian.DoAction.ID == HugActionID && Guardian.DoAction.IsGuardianSpecificAction ? "Enough" : "Be Hugged"), HugOptionAction);
             Options.Add(Option);
             //Change the method, this one blocks actions.
             if(data.CarrySomeone)
@@ -186,7 +186,7 @@ namespace giantsummon.Creatures
                 //Action to speak to someone.
                 if (data.CarriedPersonType != TerraGuardian.TargetTypes.Player)
                 {
-                    Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("I want to speak with " + GetCarriedOneName(Guardian) + ".",
+                    Option = new DialogueOption("I want to speak with " + GetCarriedOneName(Guardian) + ".",
                         delegate ()
                         {
                             Guardian.SaySomething("*I will wait until you two end speaking.*");
@@ -213,13 +213,13 @@ namespace giantsummon.Creatures
                     {
                         Text = GetCarriedOneName(Guardian);
                     }
-                    Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Place " + Text + " on the Floor.", PlaceCarriedPersonOnTheFloorButtonAction);
+                    Option = new DialogueOption("Place " + Text + " on the Floor.", PlaceCarriedPersonOnTheFloorButtonAction);
                     Options.Add(Option);
                 }
             }
             else if (Guardian.OwnerPos > -1 && HasCarryableCompanions(Main.player[Main.myPlayer]))
             {
-                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Carry Someone", CarrySomeoneButtonAction);
+                Option = new DialogueOption("Carry Someone", CarrySomeoneButtonAction);
                 Options.Add(Option);
             }
             return Options;
@@ -247,13 +247,13 @@ namespace giantsummon.Creatures
         {
             TerraGuardian Vladimir = Dialogue.GetSpeaker;
             TerraGuardian[] Guardians = GetCarryableCompanions(Main.player[Main.myPlayer]);
-            GuardianMouseOverAndDialogueInterface.DialogueOption Option;
+            DialogueOption Option;
             GuardianMouseOverAndDialogueInterface.Options.Clear();
             GuardianMouseOverAndDialogueInterface.SetDialogue("*I like this idea. Who should I carry with me?*");
             for (int i = 0; i < Guardians.Length; i++)
             {
                 TerraGuardian guardian = Guardians[i];
-                Option = new GuardianMouseOverAndDialogueInterface.DialogueOption(guardian.Name, delegate ()
+                Option = new DialogueOption(guardian.Name, delegate ()
                 {
                     CarrySomeoneAction(Vladimir, guardian);
                     GuardianMouseOverAndDialogueInterface.SetDialogue("*Alright, I will pick them up after we finish talking.*");
@@ -261,7 +261,7 @@ namespace giantsummon.Creatures
                 });
                 GuardianMouseOverAndDialogueInterface.Options.Add(Option);
             }
-            Option = new GuardianMouseOverAndDialogueInterface.DialogueOption("Nevermind.", delegate ()
+            Option = new DialogueOption("Nevermind.", delegate ()
             {
                 GuardianMouseOverAndDialogueInterface.SetDialogue("*Changed your mind, [nickname]? It's fine.*");
                 GuardianMouseOverAndDialogueInterface.GetDefaultOptions();

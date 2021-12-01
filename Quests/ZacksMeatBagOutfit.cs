@@ -125,32 +125,32 @@ namespace giantsummon.Quests
             return PlayerMod.GetQuestData(Main.LocalPlayer, Quests.TgQuestContainer.ZacksMeatbagOutfitQuest).IsQuestCompleted;
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> AddDialogueOptions(bool IsChatDialogue, int GuardianID, string GuardianModID)
+        public override List<DialogueOption> AddDialogueOptions(bool IsChatDialogue, int GuardianID, string GuardianModID)
         {
             if (!IsChatDialogue && GuardianModID == MainMod.mod.Name && (GuardianID == GuardianBase.Blue || GuardianID == GuardianBase.Zacks))
             {
                 ZacksOutfitQuestData data = (ZacksOutfitQuestData)Data;
-                List<GuardianMouseOverAndDialogueInterface.DialogueOption> dialogues = base.AddDialogueOptions(IsChatDialogue, GuardianID, GuardianModID);
+                List<DialogueOption> dialogues = base.AddDialogueOptions(IsChatDialogue, GuardianID, GuardianModID);
                 if(GuardianID == GuardianBase.Blue) //If is Blue
                 {
                     if (data.QuestStep == 1)
                     {
-                        dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("What do you need help with?", BlueWhenListeningToHerRequest));
+                        dialogues.Add(new DialogueOption("What do you need help with?", BlueWhenListeningToHerRequest));
                     }
                     else if (data.QuestStep > 1 && data.QuestStep < 8)
                     {
-                        dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("What should we be doing now?", UponAskingAboutRequest));
+                        dialogues.Add(new DialogueOption("What should we be doing now?", UponAskingAboutRequest));
                     }
                 }
                 else //If is Zacks
                 {
                     if (data.QuestStep == 6 || data.QuestStep == 7)
                     {
-                        dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("We have something to give you.", UponDeliveringToZacksDialogue));
+                        dialogues.Add(new DialogueOption("We have something to give you.", UponDeliveringToZacksDialogue));
                     }
                     else if (data.QuestStep >= 2 && data.QuestStep < 6)
                     {
-                        dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("About Blue's request related to you.", UponAskingAboutRequest));
+                        dialogues.Add(new DialogueOption("About Blue's request related to you.", UponAskingAboutRequest));
                     }
                 }
                 return dialogues;

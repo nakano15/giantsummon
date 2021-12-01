@@ -146,11 +146,11 @@ namespace giantsummon.Creatures
             }
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> ExtraDialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
-            ExtraDialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("I have some questions.", TutoringDialogues.StartTutoringDialogue, true));
-            ExtraDialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Anything new recently?", GetRandomTip, true));
+            List<DialogueOption> ExtraDialogues = new List<DialogueOption>();
+            ExtraDialogues.Add(new DialogueOption("I have some questions.", TutoringDialogues.StartTutoringDialogue, true));
+            ExtraDialogues.Add(new DialogueOption("Anything new recently?", GetRandomTip, true));
             return ExtraDialogues;
         }
 

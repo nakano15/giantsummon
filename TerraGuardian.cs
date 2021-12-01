@@ -5728,7 +5728,7 @@ namespace giantsummon
                         {
                             case CombatTactic.Charge:
                                 {
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X + SlowDown * Direction); //Testing the addition of Slowdown
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X - SlowDown * Direction); //Testing the addition of Slowdown
                                     float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
                                         RetreatDistance = HalfWidth + 8;
                                     /*if (MaxAttackRange > -1)
@@ -5777,8 +5777,8 @@ namespace giantsummon
                                     else
                                     {
                                         const float AssistDistance = 120f;
-                                        float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
-                                        float ApproachDistance = (TargetWidth + Width) * 0.5f + AssistDistance + 75 + DistanceDiscount,
+                                        float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X - SlowDown * Direction);
+                                        float ApproachDistance = (TargetWidth + Width) * 0.5f + AssistDistance + 80 + DistanceDiscount,
                                             RetreatDistance = (TargetWidth + Width) * 0.5f + AssistDistance + DistanceDiscount;
                                         if (HasHurtPanic)
                                         {
@@ -5808,7 +5808,7 @@ namespace giantsummon
                                     {
                                         GoMelee = true;
                                     }
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X);
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X - SlowDown * Direction);
                                     const float SnipeDistance = 220f;
                                     float ApproachDistance = (TargetWidth + Width) * 0.5f + SnipeDistance + 150 + DistanceDiscount,
                                         RetreatDistance = (TargetWidth + Width) * 0.5f + SnipeDistance;

@@ -38,7 +38,8 @@ namespace giantsummon.Creatures
             DrinksBeverage = true;
             DontUseHeavyWeapons = true;
             SetTerraGuardian();
-            CallUnlockLevel = 0;
+            CallUnlockLevel = 3;
+            MountUnlockLevel = 6;
 
             PopularityContestsWon = 2;
             ContestSecondPlace = 3;
@@ -111,6 +112,12 @@ namespace giantsummon.Creatures
             HeadVanityPosition.AddFramePoint2x(21, 36, 30);
         }
 
+        public override string CallUnlockMessage => "*I think I had enough of studying terrarian anatomy day and night. I would like to know more about your world too, if you're willing to take me with you.*";
+
+        public override string MountUnlockMessage => "*If you want, I can carry you on my shoulder. That is, if you don't mind touching cold scale.*";
+
+        public override string ControlUnlockMessage => "*I think I know you enough to entrust you with myself. I can take on whatever adventures you can't go, if you want.*";
+
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             switch (Main.rand.Next(3))
@@ -132,6 +139,12 @@ namespace giantsummon.Creatures
                 Mes.Add("(He's sleeping? I think he's sleeping. His eyes... Doesn't seems like his regular eyes.)");
                 Mes.Add("(You try waving your hand in front of his eye, but see no reaction. He must be sleeping.)");
                 Mes.Add("(You shiver while watching him sleeping.)");
+            }
+            else if(player.statLife < player.statLifeMax2 * 0.33f)
+            {
+                Mes.Add("*[nickname]! Hang on! You need medical help, right now.*");
+                Mes.Add("*What happened to you? Hang on, sit down a bit.*");
+                Mes.Add("*You're bleeding too much. Let's see if I can help you with those wounds.*");
             }
             else
             {
@@ -516,6 +529,218 @@ namespace giantsummon.Creatures
                     return "*I'm actually also [player]'s buddy, but I may still join your travels when they're not around.*";
             }
             return base.GetSpecialMessage(MessageID);
+        }
+
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<DialogueOption> Options = base.GetGuardianExtraDialogueActions(guardian);
+            if (GuardianGlobalInfos.UnlockedGreensHealing)
+            {
+                Options.Add(new DialogueOption("I'm hurt.", HealDialogue, true));
+            }
+            return Options;
+        }
+
+        private void HealDialogue()
+        {
+            int HealValue = 0;
+            PlayerMod pl = Main.LocalPlayer.GetModPlayer<PlayerMod>();
+            HealValue = pl.player.statLifeMax2 - pl.player.statLife;
+            for(int b = 0; b < pl.player.buffType.Length; b++)
+            {
+                int buffid = pl.player.buffType[b];
+                if(Main.debuff[buffid] && pl.player.buffType[b] > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(buffid))
+                {
+                    HealValue += 800;
+                }
+            }
+            bool NearDeath = false;
+            if(pl.player.statLife < pl.player.statLifeMax2 * 0.33f)
+            {
+                HealValue = (int)(Math.Max(HealValue * 0.35f, 1f));
+                NearDeath = true;
+            }
+            foreach(TerraGuardian tg in pl.GetAllGuardianFollowers)
+            {
+                if (tg.Active && !tg.KnockedOut)
+                {
+                    HealValue += tg.MHP - tg.HP;
+                    foreach(BuffData b in tg.Buffs)
+                    {
+                        if(Main.debuff[b.ID] && b.Time > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(b.ID))
+                        {
+                            HealValue += 800;
+                        }
+                    }
+                }
+            }
+            if (HealValue <= 0)
+            {
+                Dialogue.ShowEndDialogueMessage("*Nobody seems to need medication or wounds treated.\nDon't spend my time.*");
+            }
+            else
+            {
+                HealValue = (int)(Math.Max(HealValue * 0.35f, 1f)); //Nurse charges 75%
+                int c = HealValue, s = 0, g = 0, p = 0;
+                if (c >= 100)
+                {
+                    s += c / 100;
+                    c -= s * 100;
+                }
+                if (s >= 100)
+                {
+                    g += s / 100;
+                    s -= g * 100;
+                }
+                if (g >= 100)
+                {
+                    p += g / 100;
+                    g -= p * 100;
+                }
+                string PriceText = "";
+                if (c > 0)
+                    PriceText = " " + c + " Coppers";
+                if (s > 0)
+                {
+                    if (PriceText != "")
+                        PriceText = "," + PriceText;
+                    PriceText = " " + s + " Silvers";
+                }
+                if (g > 0)
+                {
+                    if (PriceText != "")
+                        PriceText = "," + PriceText;
+                    PriceText = " " + g + " Golds";
+                }
+                if (p > 0)
+                {
+                    if (PriceText != "")
+                        PriceText = "," + PriceText;
+                    PriceText = " " + p + " Platinum";
+                }
+                if (Dialogue.ShowDialogueWithOptions(NearDeath ? "Due to the state you encounter yourself into, I'll only charge you\n"+PriceText+" for the treatment.*" :
+                    "*I see that you're in need of treatment.\nI can take care of your wounds and ailments if you give me\n" + PriceText + ". Want me to begin treatment?*", new string[] { "Fix me", "Nevermind" }) == 0)
+                {
+                    if (pl.player.SellItem(HealValue, 1))
+                    {
+                        string Message = "";
+                        if (pl.player.statLife < pl.player.statLifeMax2 * 0.33f)
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    Message = "*I recommend you to lay down for a while and let your wounds heal, before returning to action.*";
+                                    break;
+                                case 1:
+                                    Message = "*I doubt you can jump of happiness, but at least you will live.*";
+                                    break;
+                                case 2:
+                                    Message = "*I think I can give you clearance to go. You will still need some time to recover your wounds.*";
+                                    break;
+                            }
+                        }
+                        else if (pl.player.statLife < pl.player.statLifeMax2 * 0.67f)
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    Message = "*Your wounds have been treated, and all your ailments were cured. You may feel a bit of pain when exercising the areas that were wounded, but they will go away soon.*";
+                                    break;
+                                case 1:
+                                    Message = "*It's all done. Just be careful not to open the wounds again during your travels.*";
+                                    break;
+                                case 2:
+                                    Message = "*Next time you get injured, don't hexitate to visit me.*";
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            switch (Main.rand.Next(3))
+                            {
+                                case 0:
+                                    Message = "*That was a minor wound. You'll be fine.*";
+                                    break;
+                                case 1:
+                                    Message = "*It wasn't hard to take care of that issue. You can go now.*";
+                                    break;
+                                case 2:
+                                    Message = "*All patched up.*";
+                                    break;
+                            }
+                        }
+                        pl.player.statLife = pl.player.statLifeMax2;
+                        for (int b = 0; b < pl.player.buffType.Length; b++)
+                        {
+                            int buffid = pl.player.buffType[b];
+                            if (Main.debuff[buffid] && pl.player.buffType[b] > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(buffid))
+                            {
+                                pl.player.DelBuff(b);
+                                b -= 1;
+                            }
+                        }
+                        foreach (TerraGuardian tg in pl.GetAllGuardianFollowers)
+                        {
+                            if (tg.Active)
+                            {
+                                if (tg.KnockedOut)
+                                {
+                                    tg.TeleportToPlayer();
+                                    tg.KnockedOut = tg.KnockedOutCold = false;
+                                }
+                                tg.HP = tg.MHP;
+                                foreach (BuffData b in tg.Buffs)
+                                {
+                                    if (Main.debuff[b.ID] && b.Time > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(b.ID))
+                                    {
+                                        tg.Buffs.Remove(b);
+                                    }
+                                }
+                            }
+                        }
+                        Dialogue.ShowEndDialogueMessage(Message, false);
+                    }
+                    else
+                    {
+                        pl.player.statLife = pl.player.statLifeMax2;
+                        foreach (TerraGuardian tg in pl.GetAllGuardianFollowers)
+                        {
+                            if (tg.Active)
+                            {
+                                if (tg.KnockedOut)
+                                {
+                                    tg.TeleportToPlayer();
+                                    tg.KnockedOut = tg.KnockedOutCold = false;
+                                }
+                                tg.HP = tg.MHP;
+                            }
+                        }
+                        Dialogue.ShowEndDialogueMessage("*If you cannot pay, at least I can treat your wounds, but I wont be able to take care of your health issues.*", false);
+                    }
+                }
+                else
+                {
+                    if (NearDeath)
+                    {
+                        pl.player.statLife = pl.player.statLifeMax2;
+                        foreach (TerraGuardian tg in pl.GetAllGuardianFollowers)
+                        {
+                            if (tg.Active)
+                            {
+                                if (tg.KnockedOut)
+                                {
+                                    tg.TeleportToPlayer();
+                                    tg.KnockedOut = tg.KnockedOutCold = false;
+                                }
+                                tg.HP = tg.MHP;
+                            }
+                        }
+                        Dialogue.ShowEndDialogueMessage("*No way, I can't simply let you leave like that.\nLet me at least take care of your wounds.*", false);
+                        return;
+                    }
+                    Dialogue.ShowEndDialogueMessage("*Changed your mind? It's fine.*", false);
+                }
+            }
         }
     }
 }

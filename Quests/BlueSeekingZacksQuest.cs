@@ -269,31 +269,31 @@ namespace giantsummon.Quests
             }
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
+        public override List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
         {
             if (IsTalkDialogue && IsQuestStarted(Data))
             {
                 BlueQuestData data = (BlueQuestData)Data;
-                List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+                List<DialogueOption> Options = new List<DialogueOption>();
                 if (GuardianID == GuardianBase.Blue)
                 {
                     if (IsQuestComplete(data))
                     {
-                        Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("How's Zacks?", BluePosQuestDialogue, true));
+                        Options.Add(new DialogueOption("How's Zacks?", BluePosQuestDialogue, true));
                     }
                     else if (data.SpottedZacksOnce > 0)
                     {
-                        Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("About the zombie TerraGuadian.", BluesDialogueAfterFindingZombifiedGuardian, true));
+                        Options.Add(new DialogueOption("About the zombie TerraGuadian.", BluesDialogueAfterFindingZombifiedGuardian, true));
                     }
                     else if (data.BlueDialogueStep >= 2)
                     {
-                        Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Give me more information about the TerraGuardian.", BluesDialogueAboutTheQuest, true));
+                        Options.Add(new DialogueOption("Give me more information about the TerraGuardian.", BluesDialogueAboutTheQuest, true));
                     }
                 }
                 if(GuardianID == GuardianBase.Zacks)
                 {
-                    Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("How are you feeling?", ZacksPostQuestDialogue, true));
-                    Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("How are Blue?", ZacksDialogueAboutBlue, true));
+                    Options.Add(new DialogueOption("How are you feeling?", ZacksPostQuestDialogue, true));
+                    Options.Add(new DialogueOption("How are Blue?", ZacksDialogueAboutBlue, true));
                 }
                 return Options;
             }

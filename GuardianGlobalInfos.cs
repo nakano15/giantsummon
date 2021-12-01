@@ -21,6 +21,9 @@ namespace giantsummon
         private static Season LoggedSeason = Season.Summer;
         private static DayOfWeek LoggedWeekday = DayOfWeek.Sunday;
         private static bool GlobalInfosLoaded = false, FeatsLoaded = false;
+        private static BitsByte GlobalFlags1 = new BitsByte();
+
+        public static bool UnlockedGreensHealing { get { return GlobalFlags1[0]; } set { GlobalFlags1[0] = true; } }
 
         public static Season GetSeason
         {
@@ -110,6 +113,7 @@ namespace giantsummon
                 {
                     writer.Write(MainMod.ModVersion);
                     writer.Write(LifeTime.TotalSeconds);
+                    writer.Write(GlobalFlags1);
                 }
             }
         }
@@ -129,6 +133,8 @@ namespace giantsummon
                 {
                     int Version = reader.ReadInt32();
                     LifeTime = TimeSpan.FromSeconds(reader.ReadDouble());
+                    if (Version >= 99)
+                        GlobalFlags1 = reader.ReadByte();
                 }
             }
         }

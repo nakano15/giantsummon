@@ -10,3 +10,6 @@ Mentions of player death will now log the world they died.
 	In case you want to mourn them.
 Fixed TerraGuardians mass.
 	Instead of 0.3 of gravity strength, It's not 0.4, like normal terrarians have.
+Splitted DialogueOption from GuardianMouseOverAndDialogueInterface class.
+	If a modder even wanted to add a companions with extra dialogues, they would need to use GuardianMouseOverAndDialogueInterface.DialogueOption to add a new dialogue option to the game.
+	Yes, that's awful.

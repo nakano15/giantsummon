@@ -82,7 +82,7 @@ namespace giantsummon
         public static void StartDialogue(TerraGuardian tg)
         {
             Speaker = StarterSpeaker = tg;
-            
+
             HideCallDismissButton = false;
             GuardianShopInterface.ShopOpen = false;
             Main.CancelHairWindow();
@@ -144,7 +144,7 @@ namespace giantsummon
             //GetCompanionDialogue
             GetDefaultOptions();
             string Message = "";
-            if(tg.ComfortPoints >= tg.MaxComfortExp)
+            if (tg.ComfortPoints >= tg.MaxComfortExp)
             {
                 tg.ComfortPoints = 0;
                 tg.IncreaseFriendshipProgress(1);
@@ -153,7 +153,7 @@ namespace giantsummon
             }
             if (tg.Base.InvalidGuardian)
             {
-                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to speak with you.)\nGuardian ID: "+tg.ID+", Guardian Mod ID: "+tg.ModID+".\nIf this isn't related to a mod you uninstalled, send It's to the mod developer.";
+                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to speak with you.)\nGuardian ID: " + tg.ID + ", Guardian Mod ID: " + tg.ModID + ".\nIf this isn't related to a mod you uninstalled, send It's to the mod developer.";
             }
             else if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
             {
@@ -184,7 +184,7 @@ namespace giantsummon
                             Message = GuardianGlobalInfos.GetFeatMessage(feat, tg);
                             SayNormalMessage = Message == "";
                         }
-                        if(SayNormalMessage)
+                        if (SayNormalMessage)
                         {
                             Message = tg.Base.NormalMessage(MainPlayer, tg);
                         }
@@ -246,7 +246,7 @@ namespace giantsummon
             }
             SetDialogue(Message);
             Options.Clear();
-            AddOption("Okay", delegate() { ShowImportantMessages(); });
+            AddOption("Okay", delegate () { ShowImportantMessages(); });
             return true;
         }
 
@@ -292,7 +292,7 @@ namespace giantsummon
                         if (Main.mouseRight && Main.mouseRightRelease)
                         {
                             TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
-                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg) && ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1) && 
+                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg) && ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1) &&
                                 (!tg.DoAction.InUse || (!tg.DoAction.Invisibility && !tg.DoAction.Inactivity)))
                             {
                                 StartDialogue(tg);
@@ -314,7 +314,7 @@ namespace giantsummon
                     return;
                 }
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut || 
+                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut ||
                     (tg.DoAction.InUse && (tg.DoAction.Invisibility || tg.DoAction.Inactivity)))
                 {
                     CloseDialogue();
@@ -469,7 +469,7 @@ namespace giantsummon
                     {
                         py += Height - ph;
                         dy = Main.chatBackTexture.Height - DrawDimension;
-                        if(ph > HalfHeight)
+                        if (ph > HalfHeight)
                         {
                             dy += DrawDimension - HalfHeight;
                             py += (int)(DrawDimension - HalfHeight);
@@ -484,7 +484,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        if(ph > HalfHeight)
+                        if (ph > HalfHeight)
                         {
                             ph = dh = HalfHeight;
                         }
@@ -522,7 +522,7 @@ namespace giantsummon
                 WindowStartPosition.X += 4;
                 Utils.DrawBorderStringBig(Main.spriteBatch, tg.Name, WindowStartPosition, Color.White);
                 WindowStartPosition.X -= 52;
-                tg.DrawFriendshipHeart(WindowStartPosition + new Vector2(0,24));
+                tg.DrawFriendshipHeart(WindowStartPosition + new Vector2(0, 24));
                 WindowStartPosition.Y += 48;
                 {
                     Vector2 TrustIconPosition = new Vector2(WindowStartPosition.X + WindowSizeX, WindowStartPosition.Y - 52);
@@ -626,7 +626,7 @@ namespace giantsummon
                             OptionText = "Let's talk about your request?";
                         }
                     }
-                    if(OptionText != "")
+                    if (OptionText != "")
                         AddOption(OptionText, CheckRequestButtonAction);
                     if (GuardianShopHandler.HasShop(Speaker.MyID))
                     {
@@ -636,17 +636,18 @@ namespace giantsummon
                     {
                         AddOption("I have a gift for you", GiveGiftButtonAction);
                     }
-                    if(true || Speaker.Base.Topics.Count > 0)
+                    if (true || Speaker.Base.Topics.Count > 0)
                     {
                         AddOption("Let's talk about other things.", LetsChatButtonPressed);
                     }
                     AddOption("Let's review some things.", SomethingElseButtonPressed);
-                    foreach(QuestData qd in PlayerMod.GetPlayerQuestDatas(MainPlayer))
+                    foreach (QuestData qd in PlayerMod.GetPlayerQuestDatas(MainPlayer))
                     {
                         if (!qd.IsInvalid)
                         {
                             QuestBase.Data = qd;
-                            foreach(DialogueOption Do in qd.GetBase.AddDialogueOptions(false, Speaker.ID, Speaker.ModID)){
+                            foreach (DialogueOption Do in qd.GetBase.AddDialogueOptions(false, Speaker.ID, Speaker.ModID))
+                            {
                                 Do.SetAsThreadedDialogue();
                                 Options.Add(Do);
                             }
@@ -657,7 +658,7 @@ namespace giantsummon
                         AddOption("Let's get some rest.", RestButtonAction);
                     }
                 }
-                if(Speaker.OwnerPos == -1 && Speaker.FriendshipLevel >= Speaker.Base.FriendsLevel)
+                if (Speaker.OwnerPos == -1 && Speaker.FriendshipLevel >= Speaker.Base.FriendsLevel)
                     AddOption("Let me see your inventory.", OpenInventoryManagementButtonAction);
                 Options.AddRange(Speaker.Base.GetGuardianExtraDialogueActions(Speaker));
             }
@@ -668,7 +669,7 @@ namespace giantsummon
         {
             Options.Clear();
             string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.ChatAboutSomething);
-            if(Mes != "")
+            if (Mes != "")
             {
                 SetDialogue(Mes, Speaker);
             }
@@ -695,7 +696,7 @@ namespace giantsummon
                     }
                 }
             }
-            AddOption("Nevermind", delegate()
+            AddOption("Nevermind", delegate ()
             {
                 GetDefaultOptions();
                 string Mes2 = Speaker.GetMessage(GuardianBase.MessageIDs.NevermindTheChatting);
@@ -994,7 +995,7 @@ namespace giantsummon
                     });
                 }
             }
-            AddOption("Nevermind", delegate()
+            AddOption("Nevermind", delegate ()
             {
                 GetDefaultOptions();
             });
@@ -1213,24 +1214,24 @@ namespace giantsummon
             }
             return FinalMessage;
         }
+    }
 
-        public struct DialogueOption
+    public struct DialogueOption
+    {
+        public string Text;
+        public Action Action;
+        public bool ThreadedDialogue;
+
+        public DialogueOption(string OptionText, Action Result, bool ThreadedDialogue = false)
         {
-            public string Text;
-            public Action Action;
-            public bool ThreadedDialogue;
+            Text = OptionText;
+            Action = Result;
+            this.ThreadedDialogue = ThreadedDialogue;
+        }
 
-            public DialogueOption(string OptionText, Action Result, bool ThreadedDialogue = false)
-            {
-                Text = OptionText;
-                Action = Result;
-                this.ThreadedDialogue = ThreadedDialogue;
-            }
-
-            public void SetAsThreadedDialogue()
-            {
-                ThreadedDialogue = true;
-            }
+        public void SetAsThreadedDialogue()
+        {
+            ThreadedDialogue = true;
         }
     }
 }

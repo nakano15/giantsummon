@@ -134,6 +134,9 @@ namespace giantsummon.Actions
                             SafeToPlaceAllyDown = false;
                             break;
                         }
+                        Tile tile = MainMod.GetTile(x, CheckY);
+                        if (tile.liquid >= 20)
+                            SafeToPlaceAllyDown = false;
                     }
                 }
                 else
@@ -156,6 +159,7 @@ namespace giantsummon.Actions
             }
             if (SafeToPlaceAllyDown)
             {
+                guardian.MoveLeft = guardian.MoveRight = false;
                 if (DelayBeforePlacingOnGround <= 0)
                 {
                     if (CarriedPlayer != null)

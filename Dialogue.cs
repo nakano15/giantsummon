@@ -459,7 +459,7 @@ namespace giantsummon
             }
         }
 
-        public static void ShowDialogueWithOptions(string Text, GuardianMouseOverAndDialogueInterface.DialogueOption[] Options, TerraGuardian Speaker = null)
+        public static void ShowDialogueWithOptions(string Text, DialogueOption[] Options, TerraGuardian Speaker = null)
         {
             if (Speaker == null)
                 Speaker = LastSpeaker;

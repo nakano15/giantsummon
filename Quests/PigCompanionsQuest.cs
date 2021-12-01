@@ -269,7 +269,7 @@ namespace giantsummon.Quests
             }
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
+        public override List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
         {
             if(GuardianModID == MainMod.mod.Name)
             {
@@ -278,10 +278,10 @@ namespace giantsummon.Quests
                     case GuardianBase.Leopold:
                         {
                             PigQuestData data = (PigQuestData)Data;
-                            List<GuardianMouseOverAndDialogueInterface.DialogueOption> dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+                            List<DialogueOption> dialogues = new List<DialogueOption>();
                             if (data.MetAnyPig)
                             {
-                                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("About the emotional pigs...", WhenTalkingToLeopoldAboutThePigs, true));
+                                dialogues.Add(new DialogueOption("About the emotional pigs...", WhenTalkingToLeopoldAboutThePigs, true));
                             }
                             return dialogues;
                         }
@@ -389,20 +389,20 @@ namespace giantsummon.Quests
                     return;
                 }
             }
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> dialogues = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            List<DialogueOption> dialogues = new List<DialogueOption>();
             if (data.MetAnyPig)
             {
-                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("What can you tell me about the emotional pigs?", LeopoldsCommentAboutThePigs));
+                dialogues.Add(new DialogueOption("What can you tell me about the emotional pigs?", LeopoldsCommentAboutThePigs));
             }
             if (data.AnyPigNeedingSolidification)
             {
-                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("One of the pigs wants to have their body solidified.", LeopoldsTalkAboutUnlockingSolidification));
+                dialogues.Add(new DialogueOption("One of the pigs wants to have their body solidified.", LeopoldsTalkAboutUnlockingSolidification));
             }
             if (data.AnyPigCanBeSolidified)
             {
-                dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Can you alter the body state of a pig?", LeopoldTalkAboutChangingPigForm));
+                dialogues.Add(new DialogueOption("Can you alter the body state of a pig?", LeopoldTalkAboutChangingPigForm));
             }
-            dialogues.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Enough talking about that.", delegate ()
+            dialogues.Add(new DialogueOption("Enough talking about that.", delegate ()
             {
                 Dialogue.ShowEndDialogueMessage("*I'm still trying to understand too, but I can still try figuring out what is going on with the pigs.\n" +
                     "Feel free to speak to me again in case you have any other question.*", false);

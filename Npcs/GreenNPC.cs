@@ -53,7 +53,7 @@ namespace giantsummon.Npcs
                             TileY += 3;
                             if (SizeCount >= 9 && Main.tile[TileX, TileY].active() && Main.tile[TileX, TileY].type == Terraria.ID.TileID.Trees)
                             {
-                                npc.position.X = TileX * 16 + 8 - npc.width * 0.5f;
+                                npc.position.X = TileX * 16 + 8 - npc.width * 0.25f;
                                 npc.position.Y = TileY * 16 - npc.height * 0.5f;
                                 return;
                             }
@@ -65,7 +65,7 @@ namespace giantsummon.Npcs
             {
                 npc.velocity = Vector2.Zero;
                 npc.noGravity = true;
-                int TileCenterX = (int)(npc.Center.X * (1f / 16));
+                int TileCenterX = (int)((npc.position.X + npc.width * 0.25f) * (1f / 16));
                 int TileCenterY = (int)(npc.Center.Y * (1f / 16));
                 bool SuspendedByTree = false;
                     Tile tile = Framing.GetTileSafely(TileCenterX, TileCenterY);
@@ -393,7 +393,7 @@ namespace giantsummon.Npcs
                 }
                 if (HasTree)
                 {
-                    return 1f / 250;
+                    return 1f / 100;
                 }
             }
             return 0;

@@ -203,7 +203,7 @@ namespace giantsummon.Creatures
         {
             List<string> Mes = new List<string>();
             Mes.Add("*Huh? Ah!! Oh... You're friendly. Sorry, I came here because I noticed several TerraGuardians were coming here.*");
-            Mes.Add("*Are you... A Terrarian...? I read about your kind on the books in my old Workshop. "+(player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active) ? "Hey, those are TerraGuardians! What are you doing here?" : "Say, have you seen any TerraGuardians around?") +"*");
+            Mes.Add("*Are you... A Terrarian...? I read about your kind on the books in my house. "+(player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active) ? "Hey, those are TerraGuardians! What are you doing here?" : "Say, have you seen any TerraGuardians around?") +"*");
             Mes.Add("*Yikes!! You scared me! I've never seen a Terrarian before. Wait, you can hear me? Then It's true... Oh... I'm thinking loud again. Do you have some place I can stay?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -473,10 +473,10 @@ namespace giantsummon.Creatures
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Actions = base.GetGuardianExtraDialogueActions(guardian);
-            Actions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("I have questions.", Creatures.Leopold.LoreDialogues.StartDialogue, true));
+            List<DialogueOption> Actions = base.GetGuardianExtraDialogueActions(guardian);
+            Actions.Add(new DialogueOption("I have questions.", Creatures.Leopold.LoreDialogues.StartDialogue, true));
             /*if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
             {
                 if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Wrath))
@@ -486,7 +486,7 @@ namespace giantsummon.Creatures
                         Text = "Solidify " + PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Wrath).Name + "'s Body";
                     else
                         Text = "Cloudify " + PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianBase.Wrath).Name + "'s Body";
-                    GuardianMouseOverAndDialogueInterface.DialogueOption action = new GuardianMouseOverAndDialogueInterface.DialogueOption(Text, delegate()
+                    DialogueOption action = new DialogueOption(Text, delegate()
                     {
                         TerraGuardian tg = Dialogue.GetSpeaker;
                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID] =
@@ -507,7 +507,7 @@ namespace giantsummon.Creatures
                 }
             }*/
             if(MainMod.ShowDebugInfo)
-                Actions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Test Subworld", SubworldTestScript));
+                Actions.Add(new DialogueOption("Test Subworld", SubworldTestScript));
             return Actions;
         }
 

@@ -22,9 +22,9 @@ namespace giantsummon
 
         public virtual QuestData GetQuestData { get { return new QuestData(); } }
 
-        public virtual List<GuardianMouseOverAndDialogueInterface.DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
+        public virtual List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
         {
-            return new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            return new List<DialogueOption>();
         }
 
         public virtual Action ImportantDialogueMessage(QuestData data, TerraGuardian tg, int GuardianID, string GuardianModID) //Shows up once you talk to the companion. If return an action, will make the dialogue on the action to show up.

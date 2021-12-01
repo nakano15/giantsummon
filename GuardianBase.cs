@@ -938,9 +938,9 @@ namespace giantsummon
         /// </summary>
         /// <param name="guardian">The guardian whose dialogue belongs.</param>
         /// <returns>Returns the list of dialogue options your companion will get.</returns>
-        public virtual List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public virtual List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
-            return new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            return new List<DialogueOption>();
         }
 
         /// <summary>

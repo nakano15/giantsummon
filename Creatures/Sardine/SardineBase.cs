@@ -249,10 +249,10 @@ namespace giantsummon.Creatures
 
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Options = base.GetGuardianExtraDialogueActions(guardian); //It's empty, anyways.
-            Options.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption(!GuardianBountyQuest.SardineTalkedToAboutBountyQuests ? "About Bounties" : "Report Bounty", BountyQuestProgressCheckButtonAction));
+            List<DialogueOption> Options = base.GetGuardianExtraDialogueActions(guardian); //It's empty, anyways.
+            Options.Add(new DialogueOption(!GuardianBountyQuest.SardineTalkedToAboutBountyQuests ? "About Bounties" : "Report Bounty", BountyQuestProgressCheckButtonAction));
             return Options;
         }
 

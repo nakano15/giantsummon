@@ -223,14 +223,14 @@ namespace giantsummon.Creatures
             return false;
         }
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> NewOptions = new List<GuardianMouseOverAndDialogueInterface.DialogueOption>();
+            List<DialogueOption> NewOptions = new List<DialogueOption>();
             {
                 if (data.PhantomDeviceMiniquestProgress == -1)
                 {
-                    GuardianMouseOverAndDialogueInterface.DialogueOption option = new GuardianMouseOverAndDialogueInterface.DialogueOption("What is that thing you're carrying.",
+                    DialogueOption option = new DialogueOption("What is that thing you're carrying.",
                         delegate ()
                         {
                             data.PhantomDeviceMiniquestProgress = 0;
@@ -242,7 +242,7 @@ namespace giantsummon.Creatures
             {
                 if (data.PhantomDeviceMiniquestProgress >= 0)
                 {
-                    NewOptions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Phantom Device Quest", delegate ()
+                    NewOptions.Add(new DialogueOption("Phantom Device Quest", delegate ()
                     {
                         Dialogue.StartNewDialogue(delegate ()
                         {
@@ -578,7 +578,7 @@ namespace giantsummon.Creatures
                     }));
                 }
             }
-            NewOptions.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Weapon Infusion", delegate ()
+            NewOptions.Add(new DialogueOption("Weapon Infusion", delegate ()
             {
                 GuardianMouseOverAndDialogueInterface.Options.Clear();
                 {

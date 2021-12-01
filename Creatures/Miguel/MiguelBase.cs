@@ -629,12 +629,12 @@ namespace giantsummon.Creatures
 
         #endregion
 
-        public override List<GuardianMouseOverAndDialogueInterface.DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
-            List<GuardianMouseOverAndDialogueInterface.DialogueOption> Dialogue = base.GetGuardianExtraDialogueActions(guardian);
+            List<DialogueOption> Dialogue = base.GetGuardianExtraDialogueActions(guardian);
             if (!PlayerHasExercise())
             {
-                Dialogue.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption("Do you have any exercise I can do?", GiveExerciseButtonAction));
+                Dialogue.Add(new DialogueOption("Do you have any exercise I can do?", GiveExerciseButtonAction));
             }
             else
             {
@@ -644,7 +644,7 @@ namespace giantsummon.Creatures
                     DialogueText = "Do you have any other exercise for me?";
                 else if (pm.ExerciseCounter <= 0)
                     DialogueText = "I have completed the exercise.";
-                Dialogue.Add(new GuardianMouseOverAndDialogueInterface.DialogueOption(DialogueText, CheckExerciseButtonAction));
+                Dialogue.Add(new DialogueOption(DialogueText, CheckExerciseButtonAction));
             }
             return Dialogue;
         }
