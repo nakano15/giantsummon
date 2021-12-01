@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria;
+using Terraria.ModLoader.IO;
 
 namespace giantsummon.Quests
 {
@@ -24,6 +25,8 @@ namespace giantsummon.Quests
                 {
                     if (data.BlueDialogueStep == 2)
                         return "Bring Zacks to Blue.";
+                    else if(data.BlueDialogueStep == 1)
+                        return "Speak to Blue about the Zombie Guardian";
                 }
                 else if (data.SpottedZacksOnce > 0)
                 {
@@ -177,7 +180,7 @@ namespace giantsummon.Quests
                     {
                         return BlueQuestEpilogueDialogue;
                     }
-                    else if (tg.FriendshipLevel >= 5 && Main.LocalPlayer.statLifeMax > 100)
+                    else if (tg.FriendshipLevel >= 5 && Main.LocalPlayer.statLifeMax > 100 && data.BlueDialogueStep < 2)
                     {
                         return BluesDialogueMentioningHerSearchForZacks;
                     }
@@ -248,23 +251,34 @@ namespace giantsummon.Quests
             }
             else
             {
-                Dialogue.ShowDialogueWithContinue("*Zacks!*");
-                Dialogue.ShowDialogueWithContinue("*Hello, Blue...*", Zacks);
-                Dialogue.ShowDialogueWithContinue("*Zacks, what happened to you? How did you ended up like that?*", Blue);
-                Dialogue.ShowDialogueWithContinue("*I think... I was betrayed... If it wasn't for that Terrarian and you, I would still be a brainless zombie.*", Zacks);
-                Dialogue.ShowDialogueWithContinue("*Me? How did I managed to help?*", Blue);
-                Dialogue.ShowDialogueWithContinue("*I caught your scent, on the hairpin you gave to the Terrarian.*", Zacks);
-                Dialogue.ShowDialogueWithContinue("*I'm glad that I managed to help you, somehow...*", Blue);
-                Dialogue.ShowDialogueWithContinue("*[nickname], Thank You for bringing him back to my life.*", Blue);
-                if (data.BlueDialogueStep < 2)
+                if (Zacks == null)
                 {
-                    Dialogue.ShowEndDialogueMessage("*I really wish I told you that I was looking for him sooner but... I really though... No.. It's not important...\n" +
-                        "Thank you.*", false);
+                    Dialogue.ShowDialogueWithContinue("*Zacks!*");
+                    Dialogue.ShowDialogueWithContinue("*Hello, Blue...*", Zacks);
+                    Dialogue.ShowDialogueWithContinue("*Zacks, what happened to you? How did you ended up like that?*", Blue);
+                    Dialogue.ShowDialogueWithContinue("*I think... I was betrayed... If it wasn't for that Terrarian and you, I would still be a brainless zombie.*", Zacks);
+                    Dialogue.ShowDialogueWithContinue("*Me? How did I managed to help?*", Blue);
+                    Dialogue.ShowDialogueWithContinue("*I caught your scent, on the hairpin you gave to the Terrarian.*", Zacks);
+                    Dialogue.ShowDialogueWithContinue("*I'm glad that I managed to help you, somehow...*", Blue);
+                    Dialogue.ShowDialogueWithContinue("*[nickname], Thank You for bringing him back to my life.*", Blue);
+                    if (data.BlueDialogueStep < 2)
+                    {
+                        Dialogue.ShowEndDialogueMessage("*I really wish I told you that I was looking for him sooner but... I really though... No.. It's not important...\n" +
+                            "Thank you.*", false);
+                    }
+                    else
+                    {
+                        Dialogue.ShowEndDialogueMessage("*I'm really happy for trusting you with looking for him...\n" +
+                            "Thank you, [nickname].*", false);
+                    }
                 }
                 else
                 {
-                    Dialogue.ShowEndDialogueMessage("*I'm really happy for trusting you with looking for him...\n" +
-                        "Thank you, [nickname].*", false);
+                    Dialogue.ShowDialogueWithContinue("*You managed to find him!*");
+                    Dialogue.ShowDialogueWithContinue("*I... Sorry... I shouldn't straight up say that even though you don't know what I'm talking about...*");
+                    Dialogue.ShowDialogueWithContinue("*I should have told you earlier, that I was looking for that TerraGuardian who now is a zombie.*");
+                    Dialogue.ShowDialogueWithContinue("*I don't know how you managed to save him, but I thank you for that.*");
+                    Dialogue.ShowEndDialogueMessage("*Now, is there something else you need?*", false);
                 }
             }
         }
@@ -400,11 +414,11 @@ namespace giantsummon.Quests
             Dialogue.ShowDialogueWithContinue("*Don't worry, I'll take care of him.*");
             if (data.BlueDialogueStep < 2)
             {
-                Dialogue.ShowEndDialogueMessage("*I'm so grateful for you managing to bring Zacks back to my life... I only wished I could have told you about looking for him...*");
+                Dialogue.ShowEndDialogueMessage("*I'm so grateful for you managing to bring Zacks back to my life... I only wished I could have told you about looking for him...*", false);
             }
             else
             {
-                Dialogue.ShowEndDialogueMessage("*Thank You, [nickname]... I'm really happy of having your help with this.*");
+                Dialogue.ShowEndDialogueMessage("*Thank You, [nickname]... I'm really happy of having your help with this.*", false);
             }
         }
 
@@ -488,6 +502,28 @@ namespace giantsummon.Quests
             public byte BlueDialogueStep = 0;
             public bool BlueWasPresent = false, SpokeToBluePosQuest = false;
             public byte SpottedZacksOnce = 0; //1 = Blue wasn't present, 2 = Wasn't present but asked the player to take her with them, 3 = Blue was present
+            private const int QuestVersion = 1;
+
+            public override void CustomSaveQuest(string QuestKey, TagCompound Writer)
+            {
+                Writer.Add("Version", QuestVersion);
+                Writer.Add("BlueDialogueStep", BlueDialogueStep);
+                Writer.Add("BlueWasPresent", BlueWasPresent);
+                Writer.Add("SpokeToBluePosQuest", SpokeToBluePosQuest);
+                Writer.Add("SpottedZacksonce", SpottedZacksOnce);
+            }
+
+            public override void CustomLoadQuest(string QuestKey, TagCompound Reader, int ModVersion)
+            {
+                int Version = Reader.GetInt("Version");
+                if(Version > 0)
+                {
+                    BlueDialogueStep = Reader.GetByte("BlueDialogueStep");
+                    BlueWasPresent = Reader.GetBool("BlueWasPresent");
+                    SpokeToBluePosQuest = Reader.GetBool("SpokeToBluePosQuest");
+                    SpottedZacksOnce = Reader.GetByte("SpottedZacksonce");
+                }
+            }
         }
     }
 }

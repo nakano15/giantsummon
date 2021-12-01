@@ -13,3 +13,11 @@ Fixed TerraGuardians mass.
 Splitted DialogueOption from GuardianMouseOverAndDialogueInterface class.
 	If a modder even wanted to add a companions with extra dialogues, they would need to use GuardianMouseOverAndDialogueInterface.DialogueOption to add a new dialogue option to the game.
 	Yes, that's awful.
+Fear and Green arrives.
+Due to Green's side quest, books can now drop from some monsters in the dungeon.
+Alexander's recruit npc sleuthing times are now more irregular.
+Also fixed a redundance with Alexander's recruit npc dialogue.
+	When you first are able to speak with him, he reffers to you as Terrarian and Human, which are the same thing.
+Fixed an issue where quests could use incorrect data for getting it's information.
+Fixed Zacks action of pulling injured allies to him.
+	It will also make him carry the downed ally, once they're successfully pulled to his position.

@@ -1399,6 +1399,14 @@ namespace giantsummon
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Outfit.Wrath.UnholyAmulet>());
             }
+            if (npc.type == NPCID.DarkCaster && Main.rand.Next(5) == 0)
+            {
+                Item.NewItem(npc.getRect(), ItemID.Book);
+            }
+            if (npc.type == NPCID.CursedSkull && Main.rand.Next(3) == 0)
+            {
+                Item.NewItem(npc.getRect(), ItemID.Book);
+            }
             if (npc.type == Terraria.ID.NPCID.WallofFlesh)
                 MainMod.LastWof = false;
             bool SomeGuardianHurt = false, SomeGuardianNeedMana = false;

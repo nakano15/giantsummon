@@ -173,7 +173,8 @@ namespace giantsummon
                 int ListHeight = (int)Height - 48;
                 Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle((int)InterfacePos.X, (int)InterfacePos.Y, ListWidth, ListHeight), null, Color.LightGreen);
                 int MaxElements = ListHeight / 30;
-                for(int i = 0; i < MaxElements; i++)
+                QuestData[] quests = PlayerMod.GetPlayerQuestDatas(Main.player[Main.myPlayer]);
+                for (int i = 0; i < MaxElements; i++)
                 {
                     int index = i + ListScrollY;
                     if (index >= QuestList.Count)
@@ -193,7 +194,7 @@ namespace giantsummon
                     {
                         color = Color.Yellow;
                     }
-                    Utils.DrawBorderString(Main.spriteBatch, SelectedQuestInfo.QuestName, OptionPosition, color);
+                    Utils.DrawBorderString(Main.spriteBatch, quests[QuestList[index]].QuestName, OptionPosition, color);
                 }
             }
             bool HasQuestSelected = SelectedQuestInfo != null;

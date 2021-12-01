@@ -328,9 +328,9 @@ namespace giantsummon
         {
             if (DialogueThread != null && DialogueThread.ThreadState == ThreadState.Running)
                 return;
+            DialogueParticipants = Participants;
             ImportantDialogue = false;
             IsDialogue = true;
-            DialogueParticipants = Participants;
             GuardianMouseOverAndDialogueInterface.Speaker = LastSpeaker = GuardianMouseOverAndDialogueInterface.StarterSpeaker = Participants[0];
             ThreadStart ts = new ThreadStart(delegate () {
                 if (Main.rand == null)

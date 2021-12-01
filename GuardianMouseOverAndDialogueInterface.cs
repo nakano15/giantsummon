@@ -348,6 +348,8 @@ namespace giantsummon
                         }
                         if (DoAction && MouseOverOptionNumber > -1)
                         {
+                            if (Options[MouseOverOptionNumber].qd != null)
+                                QuestBase.Data = Options[MouseOverOptionNumber].qd;
                             if (Options[MouseOverOptionNumber].ThreadedDialogue)
                             {
                                 giantsummon.Dialogue.StartNewDialogue(Options[MouseOverOptionNumber].Action, Speaker);
@@ -649,6 +651,7 @@ namespace giantsummon
                             foreach (DialogueOption Do in qd.GetBase.AddDialogueOptions(false, Speaker.ID, Speaker.ModID))
                             {
                                 Do.SetAsThreadedDialogue();
+                                Do.SetQuestData(qd);
                                 Options.Add(Do);
                             }
                         }
@@ -691,6 +694,7 @@ namespace giantsummon
                     QuestBase.Data = qd;
                     foreach (DialogueOption Do in qd.GetBase.AddDialogueOptions(true, Speaker.ID, Speaker.ModID))
                     {
+                        Do.SetQuestData(qd);
                         Do.SetAsThreadedDialogue();
                         Options.Add(Do);
                     }
@@ -1221,12 +1225,19 @@ namespace giantsummon
         public string Text;
         public Action Action;
         public bool ThreadedDialogue;
+        public QuestData qd;
 
         public DialogueOption(string OptionText, Action Result, bool ThreadedDialogue = false)
         {
             Text = OptionText;
             Action = Result;
             this.ThreadedDialogue = ThreadedDialogue;
+            qd = null;
+        }
+
+        public void SetQuestData(QuestData qd)
+        {
+            this.qd = qd;
         }
 
         public void SetAsThreadedDialogue()

@@ -48,13 +48,13 @@ namespace giantsummon.Npcs
                         }
                         else
                         {
-                            int AnimationDuration = DialogueDuration % 180;
-                            if (AnimationDuration >= 70)
+                            int AnimationDuration = DialogueDuration % 210;
+                            if (AnimationDuration >= 70 && AnimationDuration < 180)
                             {
-                                if ((AnimationDuration >= 70 && AnimationDuration < 80) ||
-                                    (AnimationDuration >= 90 && AnimationDuration < 100) ||
-                                    (AnimationDuration >= 110 && AnimationDuration < 120) ||
-                                    (AnimationDuration >= 130 && AnimationDuration < 140))
+                                if ((AnimationDuration >= 70 && AnimationDuration < 90) ||
+                                    (AnimationDuration >= 90 && AnimationDuration < 110) ||
+                                    (AnimationDuration >= 110 && AnimationDuration < 130) ||
+                                    (AnimationDuration >= 130 && AnimationDuration < 150))
                                 {
                                     BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = 29;
                                 }
@@ -144,7 +144,7 @@ namespace giantsummon.Npcs
                                     SayMessage("*Hey! You! Don't move!*");
                             }
                         }
-                        if(DialogueDuration >= 150)
+                        if(DialogueDuration >= 120)
                         {
                             NextStep = ChasingPlayerStep;
                         }
@@ -262,9 +262,9 @@ namespace giantsummon.Npcs
                         }
                         else
                         {
-                            if (DialogueDuration % 180 == 0)
+                            if (DialogueDuration % 210 == 0)
                             {
-                                switch(DialogueDuration / 180)
+                                switch(DialogueDuration / 210)
                                 {
                                     case 0:
                                         SayMessage("*Got you! Now don't move.*");
@@ -398,7 +398,7 @@ namespace giantsummon.Npcs
                                 break;
                             }
                         }
-                        return "*Terrarian, Human, " + (Main.player[npc.target].Male ? "Male" : "Female") + ", " + (HasMetTerraGuardians ? "and you seems to have met some TerraGuardians.*" : "and It must be a shock for you to see me.*");
+                        return "*Terrarian, " + (Main.player[npc.target].Male ? "Male" : "Female") + ", " + (HasMetTerraGuardians ? "and you seems to have met some TerraGuardians.*" : "and It must be a shock for you to see me.*");
                     }
                 case DialogueQuestionJump:
                     return "*I had to make sure if you were the person I am looking for, and you could simply have tried to run away.*";

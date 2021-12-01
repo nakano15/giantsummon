@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria;
+using Terraria.ModLoader.IO;
 
 namespace giantsummon.Quests
 {
@@ -12,7 +13,7 @@ namespace giantsummon.Quests
 
         public override string Description(QuestData data)
         {
-            return "Green needs your help to acquire knowledge about Terrarians body.";
+            return "Green needs your help to acquire knowledge about \nTerrarians body.";
         }
 
         public override string QuestStory(QuestData rawdata)
@@ -151,7 +152,7 @@ namespace giantsummon.Quests
                                     i.SetDefaults(0);
                             }
                         }
-                        if (Main.rand.NextDouble() < 1f / 50)
+                        if (Main.rand.NextDouble() < 1f / 20)
                         {
                             GreenQuestData data = (GreenQuestData)Data;
                             switch (data.QuestStep)
@@ -234,6 +235,24 @@ namespace giantsummon.Quests
         {
             public byte QuestStep = 0;
             public float TimePassed = 0;
+            private const int QuestVersion = 1;
+
+            public override void CustomSaveQuest(string QuestKey, TagCompound Writer)
+            {
+                Writer.Add("Version", QuestVersion);
+                Writer.Add("Step", QuestStep);
+                Writer.Add("Time", TimePassed);
+            }
+
+            public override void CustomLoadQuest(string QuestKey, TagCompound Reader, int ModVersion)
+            {
+                int Version = Reader.GetInt("Version");
+                if(Version > 0)
+                {
+                    QuestStep = Reader.GetByte("Step");
+                    TimePassed = Reader.GetFloat("Time");
+                }
+            }
         }
     }
 }

@@ -31,6 +31,8 @@ namespace giantsummon.Creatures.Zacks
 
         public override void Update(TerraGuardian Me)
         {
+            if (Me.UsingFurniture)
+                Me.LeaveFurniture(true);
             if (Time >= PullMaxTime)
             {
                 if (Time == PullMaxTime)
@@ -38,10 +40,20 @@ namespace giantsummon.Creatures.Zacks
                     if (TargetIsPlayer)
                     {
                         PullStartPosition = TargetPlayer.Center;
+                        if (TargetPlayer.GetModPlayer<PlayerMod>().BeingCarriedByGuardian)
+                        {
+                            InUse = false;
+                            return;
+                        }
                     }
                     else
                     {
                         PullStartPosition = TargetGuardian.CenterPosition;
+                        if(TargetGuardian.BeingCarriedByGuardian)
+                        {
+                            InUse = false;
+                            return;
+                        }
                     }
                 }
                 if (TargetIsPlayer)
@@ -50,12 +62,17 @@ namespace giantsummon.Creatures.Zacks
                     Vector2 MoveDirection = Me.CenterPosition - player.Center;
                     MoveDirection.Normalize();
                     Me.LookingLeft = player.Center.X < Me.Position.X;
+                    player.velocity = Vector2.Zero;
                     player.position += MoveDirection * 8f;
                     player.fallStart = (int)player.position.Y / 16;
+                    player.immuneTime = 5;
+                    player.immuneNoBlink = true;
                     if (player.getRect().Intersects(Me.HitBox))
                     {
                         player.velocity = Vector2.Zero;
                         InUse = false;
+                        Me.StartNewGuardianAction(new Actions.CarryDownedAlly(player));
+                        return;
                     }
                 }
                 else
@@ -64,12 +81,41 @@ namespace giantsummon.Creatures.Zacks
                     Vector2 MoveDirection = Me.CenterPosition - guardian.CenterPosition;
                     MoveDirection.Normalize();
                     Me.LookingLeft = guardian.Position.X < Me.Position.X;
+                    guardian.Velocity = Vector2.Zero;
                     guardian.Position += MoveDirection * 8f;
                     guardian.SetFallStart();
+                    guardian.ImmuneTime = 5;
+                    guardian.ImmuneNoBlink = true;
                     if (guardian.HitBox.Intersects(Me.HitBox))
                     {
                         guardian.Velocity = Vector2.Zero;
                         InUse = false;
+                        Me.StartNewGuardianAction(new Actions.CarryDownedAlly(guardian));
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                if(Time == 30)
+                {
+                    switch (Main.rand.Next(5))
+                    {
+                        case 0:
+                            Me.SaySomething("*Better you stay close to me.*");
+                            break;
+                        case 1:
+                            Me.SaySomething("*Let's avoid another death.*");
+                            break;
+                        case 2:
+                            Me.SaySomething("*Come here.*");
+                            break;
+                        case 3:
+                            Me.SaySomething("*Get over here.*");
+                            break;
+                        case 4:
+                            Me.SaySomething("*No, you wont.*");
+                            break;
                     }
                 }
             }
