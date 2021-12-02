@@ -210,7 +210,20 @@ namespace giantsummon.Quests
 
         private void ReadingStageDialogue()
         {
-            Dialogue.ShowEndDialogueMessage("*Not yet. I still have more reading to do. But I seems to be getting a clearer understanding of how Terrarian bodies works, and where the organs are in the system.*", false);
+            GreenQuestData data = (GreenQuestData)Data;
+            int ReadingProgress = (int)(data.TimePassed / (24 * 3600));
+            if (ReadingProgress < 2)
+            {
+                Dialogue.ShowEndDialogueMessage("*I've finished the anathomy and diseases and threatment book. Now I'm reading the medicine book you've found. I think I should have read it first, but I already know medicine, so... I hope I'm not wrong, even more since beside Terrarians body being quite similar, there's a few things I need to be careful about.*", false);
+            }
+            else if(ReadingProgress < 5)
+            {
+                Dialogue.ShowEndDialogueMessage("*I've finished reading the book about Terrarian anathomy, and now I'm reading one about diseases and threatments. It seems like you Terrarians have quite a number of ailments I'll have to take care of, right? Maybe TerraGuardians can end up being affected by them too, so better I get a better understanding about those.*", false);
+            }
+            else
+            {
+                Dialogue.ShowEndDialogueMessage("*Not yet. I still have more reading to do. But I seems to be getting a clearer understanding of how Terrarian bodies works, and where the organs are in the system.*", false);
+            }
         }
 
         private void PostReadingStageDialogue()

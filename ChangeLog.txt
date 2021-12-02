@@ -21,3 +21,4 @@ Also fixed a redundance with Alexander's recruit npc dialogue.
 Fixed an issue where quests could use incorrect data for getting it's information.
 Fixed Zacks action of pulling injured allies to him.
 	It will also make him carry the downed ally, once they're successfully pulled to his position.
+Fixed companions quest dialogue issues.

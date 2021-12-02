@@ -325,7 +325,7 @@ namespace giantsummon.Quests
                     {
                         Dialogue.ShowDialogueWithContinue("*Is she worried that I may be in pain or something? I already said that I can't feel anything in this state.*");
                         Dialogue.ShowDialogueWithContinue("*Maybe I'm worrying her again...?*");
-                        Dialogue.ShowDialogueWithContinue("*I don't know... Maybe I should wait to see what is it about.*");
+                        Dialogue.ShowEndDialogueMessage("*I don't know... Maybe I should wait to see what is it about.*", false);
                     }
                 }
                 else

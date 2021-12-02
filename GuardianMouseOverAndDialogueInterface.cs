@@ -83,6 +83,11 @@ namespace giantsummon
         {
             Speaker = StarterSpeaker = tg;
 
+            giantsummon.Dialogue.DialogueParticipants = new TerraGuardian[0];
+            if (giantsummon.Dialogue.DialogueThread != null && giantsummon.Dialogue.DialogueThread.IsAlive)
+            {
+                giantsummon.Dialogue.DialogueThread.Abort();
+            }
             HideCallDismissButton = false;
             GuardianShopInterface.ShopOpen = false;
             Main.CancelHairWindow();

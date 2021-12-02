@@ -335,7 +335,7 @@ namespace giantsummon
             ThreadStart ts = new ThreadStart(delegate () {
                 if (Main.rand == null)
                 {
-                    Main.rand = new Terraria.Utilities.UnifiedRandom(); //This avoids the random variable being null when using a dialogue.
+                    Main.rand = new Terraria.Utilities.UnifiedRandom(); //This avoids the random object being null when using a dialogue.
                 }
                 try
                 {
@@ -354,7 +354,7 @@ namespace giantsummon
         {
             ImportantDialogue = false;
             IsDialogue = false;
-            DialogueParticipants = new TerraGuardian[0];
+            //DialogueParticipants = new TerraGuardian[0];
             SelectedOption = 0;
         }
 
