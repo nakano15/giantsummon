@@ -149,7 +149,7 @@ namespace giantsummon.Quests
                 {
                     return "I've found a fragmented piece of a TerraGuardian. I should seek someone who could help with this.";
                 }
-                return "I've found " + PigsFound + " pieces of a TerraGuardian, but didn't find all of them yet.";
+                return "I've found " + PigsFound + " pieces of a TerraGuardian, but I didn't find all of them yet.";
             }
             else
             {
@@ -266,6 +266,9 @@ namespace giantsummon.Quests
             {
                 //Add here the scripts to get the companions player have already met
                 data.MetPigs[WrathID] = PlayerMod.PlayerHasGuardian(player, GuardianBase.Wrath);
+                data.MetPigs[FearID] = PlayerMod.PlayerHasGuardian(player, GuardianBase.Fear);
+                data.MetPigs[SadnessID] = PlayerMod.PlayerHasGuardian(player, GuardianBase.Sadness);
+                data.MetPigs[HappinessID] = PlayerMod.PlayerHasGuardian(player, GuardianBase.Joy);
             }
         }
 

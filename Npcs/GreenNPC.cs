@@ -373,7 +373,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!NPC.AnyNPCs(npc.type) && (Main.dayTime && !Main.eclipse && Main.time < 9 * 3600 && CanSpawnGreen()))
+            if (!NpcMod.HasMetGuardian(GuardianID, GuardianModID) && !NpcMod.HasGuardianNPC(GuardianID, GuardianModID) && !NPC.AnyNPCs(npc.type) && (Main.dayTime && !Main.eclipse && Main.time < 9 * 3600 && CanSpawnGreen()))
             {
                 bool HasTree = false;
                 for (int y = 0; y >= -4; y--)
