@@ -366,6 +366,8 @@ namespace giantsummon.Creatures
                     Frame = 25;
                 else if (guardian.Ducking)
                     Frame = 12;
+                else if (guardian.BodyAnimationFrame == BackwardStanding)
+                    Frame = BackwardStanding + 1;
                 if (guardian.BodyAnimationFrame == StandingFrame || guardian.BodyAnimationFrame == DuckingFrame)
                     guardian.BodyAnimationFrame = Frame;
                 if (guardian.BodyAnimationFrame == ThroneSittingFrame)

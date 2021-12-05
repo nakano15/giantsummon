@@ -35,10 +35,11 @@ namespace giantsummon
         public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true, UseCompanionsDefinedScaleChange = true;
         public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
-        public const string VoteLink = ""; //There is no contest
+        public const string VoteLink = "https://forms.gle/2KNqNcabh3rqn5Mu8"; //There is no contest
         public static bool HasPlayerAwareOfContestMonthChange = false;
-        public const int LastContestModVersion = 62;
-        public const string ContestResultLink = "https://forums.terraria.org/index.php?threads/terraguardians-terrarian-companions.81757/post-2028563";
+        public const int LastContestModVersion = 99;
+        public const string ContestResultLink = "";
+        public static readonly DateTime ContestEndDate = new DateTime(2021, 12, 19);
         //End contest related
         public const int ModVersion = 99, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;

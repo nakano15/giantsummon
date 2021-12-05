@@ -233,7 +233,7 @@ namespace giantsummon.Quests
             GuardianGlobalInfos.UnlockedGreensHealing = true;
             Dialogue.ShowDialogueWithContinue("*[nickname], I have finished reading all those books.*", ContinueText: "And?");
             Dialogue.ShowDialogueWithContinue("*Beside not everything I should know about Terrarians is contained in them, I think it's enough knowledge for me to try medicating Terrarians.*", ContinueText: "That means you can medicate us?");
-            Dialogue.ShowDialogueWithContinue("*Exactly. Before you arrived, I contacted some travelling merchant to get the supplies I need. Gladly the first batch arrived and I can begin right away. Of course, I will charge some fee out of this, but I'll try making it fair.*", ContinueText: "Alright.");
+            Dialogue.ShowDialogueWithContinue("*Exactly. Before you arrived, I contacted some travelling merchants to get the supplies I need. Gladly the first batch arrived and I can begin right away. Of course, I will charge some fee out of this, but I'll try making it fair.*", ContinueText: "Alright.");
             Dialogue.ShowEndDialogueMessage("*That's all I had to say, do you want to speak about something else?*", false);
         }
 
