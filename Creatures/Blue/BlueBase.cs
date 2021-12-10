@@ -1343,6 +1343,12 @@ namespace giantsummon.Creatures
                     return "*Have a nice voting.*";
                 case MessageIDs.PopContestOnReturnToOtherTopics:
                     return "*Alright. Be sure to vote on us some other time.*";
+                case MessageIDs.PopContestResultMessage:
+                    return "*Are you interessed in checing the Popularity Contest results? I can take you there.*";
+                case MessageIDs.PopContestResultLinkClickMessage:
+                    return "*Enjoy.*";
+                case MessageIDs.PopContestResultNevermindMessage:
+                    return "*I'll still be able to take you to the results until 14 days after the results announcement.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

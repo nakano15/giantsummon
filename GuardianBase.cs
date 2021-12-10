@@ -1611,14 +1611,16 @@ namespace giantsummon
             public const string PopContestMessage = "Mes.Contest",
                 PopContestIntroduction = "Mes.Contest.Intro",
                 PopContestLinkOpen = "Mes.Contest.LinkOpen",
-                PopContestOnReturnToOtherTopics = "Mes.Contest.Return";
+                PopContestOnReturnToOtherTopics = "Mes.Contest.Return",
+                PopContestResultMessage = "Mes.Contest.ResultMes",
+                PopContestResultLinkClickMessage = "Mes.Contest.ResultLinkClick",
+                PopContestResultNevermindMessage = "Mes.Contest.ResultNevermind";
         }
         
         public enum GuardianEffect
         {
             None,
-            Wraith,
-            Ghost
+            Wraith
         }
 
         public enum GuardianSize

@@ -186,7 +186,7 @@ namespace giantsummon.Creatures
             }
             if (MainMod.IsPopularityContestRunning && !Main.bloodMoon)
             {
-                Main.NewText("*The TerraGuardians Popularity Contest is running right now. Sorry, but I wont be hosting the event. Seek someone who is.*");
+                Mes.Add("*The TerraGuardians Popularity Contest is running right now. Sorry, but I wont be hosting the event. Seek someone who is.*");
                 string Hosts = "";
                 if (NpcMod.HasGuardianNPC(Rococo))
                 {
@@ -204,11 +204,11 @@ namespace giantsummon.Creatures
                 }
                 if(Hosts == "")
                 {
-                    Main.NewText("*If you're interessed in participating of the popularity contest, I'm saddened to inform you that no known hosts is present in this world.*\n(Check the mod thread or discord server for the voting link.)");
+                    Mes.Add("*If you're interessed in participating of the popularity contest, I'm saddened to inform you that no known hosts is present in this world.*\n(Check the mod thread or discord server for the voting link.)");
                 }
                 else
                 {
-                    Main.NewText("*If you're interessed in participating of the popularity contest, you can speak with those companions to access the voting: "+Hosts+"*");
+                    Mes.Add("*If you're interessed in participating of the popularity contest, you can speak with those companions to access the voting: "+Hosts+"*");
                 }
             }
             if (Main.dayTime)

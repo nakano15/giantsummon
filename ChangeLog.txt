@@ -1,1 +1,9 @@
-﻿
+﻿The mod now tells you when a Popularity Contest is running, and also offers you access to it.
+	The game will tell you when you enter a world.
+	There are some companions who will be the hosts of the event, they have a dialogue for that and also aid you with introduction, and accessing the link.
+		Rococo, Blue and Mabel are the hosts right now.
+		Before accessing the button that leads to the voting, the mod will tell you that it will open a google form link, and that you'll need a google account to do the voting.
+	Luna has dialogues mentioning the event, and telling who are the hosts, if they're in the world.
+	They will also allow you to see the result of the latest popularity contest, 14 days after the end of one.
+Mabel now can spawn during popularity contest season.
+	She'll no longer spawn at night or during eclipses.

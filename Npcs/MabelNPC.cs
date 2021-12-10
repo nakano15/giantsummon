@@ -69,7 +69,7 @@ namespace giantsummon.Npcs
         {
             get
             {
-                return !WorldMod.IsGuardianNpcInWorld(GuardianBase.Mabel) && (NPC.AnyNPCs(Terraria.ID.NPCID.PartyGirl) || Terraria.GameContent.Events.BirthdayParty.PartyIsUp);
+                return !WorldMod.IsGuardianNpcInWorld(GuardianBase.Mabel) && (NPC.AnyNPCs(Terraria.ID.NPCID.PartyGirl) || Terraria.GameContent.Events.BirthdayParty.PartyIsUp || MainMod.IsPopularityContestRunning);
             }
         }
 
@@ -81,7 +81,7 @@ namespace giantsummon.Npcs
                 return;
             }
             Cooldown = Main.rand.Next(180, 601) * 30;
-            if (NpcMod.HasMetGuardian(8) || !CanSpawnMabel)
+            if (NpcMod.HasMetGuardian(8) || Main.eclipse || !Main.dayTime || !CanSpawnMabel)
             {
                 return;
             }

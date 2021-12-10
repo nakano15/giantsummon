@@ -913,6 +913,12 @@ namespace giantsummon.Creatures
                     return "*[name] tells you to pick everyone you like in it, and tells you to enjoy.*";
                 case MessageIDs.PopContestOnReturnToOtherTopics:
                     return "*[name] asks what else you want to speak about.*";
+                case MessageIDs.PopContestResultMessage:
+                    return "*[name] seems happy about the Popularity Contest results being out. He asks you if you want to check it.*";
+                case MessageIDs.PopContestResultLinkClickMessage:
+                    return "*[name] seems really curious to see who won too.*";
+                case MessageIDs.PopContestResultNevermindMessage:
+                    return "*[name] tells you to check him back if you want to check the results.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

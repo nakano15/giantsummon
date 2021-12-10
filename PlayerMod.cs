@@ -2318,13 +2318,6 @@ namespace giantsummon
 
         public override void Initialize()
         {
-            if (!MainMod.HasPlayerAwareOfContestMonthChange)
-            {
-                Main.NewText("The Popularity Contest Result is out.");
-                Main.NewText(MainMod.ContestResultLink);
-                Main.NewText("New month voting is now up, pick your favorite TerraGuardians.");
-                MainMod.HasPlayerAwareOfContestMonthChange = true;
-            }
             if (BuddiesMode)
             {
                 if (!HasGuardianSummoned(player, BuddiesModeBuddyID.ID, BuddiesModeBuddyID.ModID, true))
@@ -2391,10 +2384,6 @@ namespace giantsummon
         public override void Load(Terraria.ModLoader.IO.TagCompound tag)
         {
             int ModVersion = tag.GetInt("ModVersion");
-            if (ModVersion > MainMod.LastContestModVersion)
-            {
-                MainMod.HasPlayerAwareOfContestMonthChange = true;
-            }
             if (ModVersion >= 34)
             {
                 if (ModVersion <= 42)

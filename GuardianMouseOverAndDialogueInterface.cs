@@ -649,7 +649,15 @@ namespace giantsummon
                     }
                     if (Speaker.Base.Roles.HasFlag(GuardianBase.GuardianRoles.PopularityContestHost))
                     {
-                        AddOption("About TerraGuardians Popularity Contest.", AskAboutTerraGuardiansPopularityContestButtonPress);
+                        switch (MainMod.PopContestState)
+                        {
+                            case 1:
+                                AddOption("About TerraGuardians Popularity Contest.", AskAboutTerraGuardiansPopularityContestButtonPress);
+                                break;
+                            case 2:
+                                AddOption("Check TerraGuardians Popularity Contest Result.", OnPopContestResultButtonPress);
+                                break;
+                        }
                     }
                     AddOption("Let's review some things.", SomethingElseButtonPressed);
                     foreach (QuestData qd in PlayerMod.GetPlayerQuestDatas(MainPlayer))
@@ -787,8 +795,13 @@ namespace giantsummon
             GetDefaultOptions();
         }
 
+        //End Call/Dismiss Related
+
+        //Popularity Contest Vote
+
         public static void AskAboutTerraGuardiansPopularityContestButtonPress()
         {
+            Options.Clear();
             SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestMessage, "(They're talking to me about the Popularity Contest up and running.\nThey say that I can vote on it now.)") + "\n(Contest will be running until "+MainMod.ContestEndDate.ToShortDateString()+".)");
             AddOption("Vote", OnPopContestVoteButtonPress);
             AddOption("Introduction", OnPopContestIntroductionButtonPress);
@@ -803,6 +816,7 @@ namespace giantsummon
 
         public static void OnPopContestVoteButtonPress()
         {
+            Options.Clear();
             SetDialogue("(Clicking the Vote link will open a link on your computer browser, which will lead to a Google Form so you can input your vote.\n" +
                 "You will need a Google account in order to vote.)");
             AddOption("Vote (Open Browser Link to Votting)", OnPopContestOpenVoteLinkButtonPress);
@@ -818,13 +832,45 @@ namespace giantsummon
 
         public static void OnPopContestIntroductionButtonPress()
         {
+            Options.Clear();
             SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestIntroduction, "(They explain to me that the TerraGuardians Popularity Contest is an event where Terrarians can vote on their favorite companions, and in the nominations we find out who are the most voted ones.\n" +
                 "Beside the name being TerraGuardians Popularity Contest, other companions can also participate.)"));
             AddOption("I want to vote.", OnPopContestVoteButtonPress);
             AddOption("I will think about that.", OnPopContestReturnToLobby);
         }
 
-        //End Call/Dismiss Related
+        //Popularity Contest Result Messages
+
+        public static void OnPopContestResultButtonPress()
+        {
+            Options.Clear();
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestResultMessage, "(The results of the Popularity Contest were announced. You can check the results here.)"));
+            AddOption("Check the Results.", OnPopContestResultCheckPress);
+            AddOption("Nevermind", OnPopContestResultNevermindPress);
+        }
+
+        public static void OnPopContestResultCheckPress()
+        {
+            Options.Clear();
+            SetDialogue("(Clicking to check the results, will open a Steam Group Chat page with the result on your browser.)");
+            AddOption("Open Results Page.", OnPopContestResultPostWarningPress);
+            AddOption("I've changed my mind.", OnPopContestResultNevermindPress);
+        }
+
+        public static void OnPopContestResultPostWarningPress()
+        {
+            System.Diagnostics.Process.Start(MainMod.ContestResultLink);
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestResultLinkClickMessage, "(They look curious about what are the results.)"));
+            GetDefaultOptions();
+        }
+
+        public static void OnPopContestResultNevermindPress()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestResultNevermindMessage, "(They tell you that you can check that other time.)"));
+            GetDefaultOptions();
+        }
+
+        //Popularity Contest End
 
         public static void SomethingElseButtonPressed()
         {

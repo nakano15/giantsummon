@@ -36,11 +36,23 @@ namespace giantsummon
         public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
         public const string VoteLink = "https://forms.gle/2KNqNcabh3rqn5Mu8";
-        public static bool HasPlayerAwareOfContestMonthChange = false;
-        public const int LastContestModVersion = 99;
-        public const string ContestResultLink = "";
+        public const string ContestResultLink = "https://steamcommunity.com/groups/Nakano15-Modding/discussions/1/3201493834345301732/";
         public static readonly DateTime ContestEndDate = new DateTime(2021, 12, 19);
         public static bool IsPopularityContestRunning { get { return DateTime.Now <= ContestEndDate; } }
+        public static bool IsPopularityContestResultShowing { get { return DateTime.Now + TimeSpan.FromDays(14) <= ContestEndDate; } }
+        /// <summary>
+        /// Returns 1 if popularity contest is running.
+        /// Returns 2 if it's result showing time.
+        /// </summary>
+        public static byte PopContestState
+        {
+            get
+            {
+                if (IsPopularityContestRunning) return 1;
+                if (IsPopularityContestResultShowing) return 2;
+                return 0;
+            }
+        }
         //End contest related
         public const int ModVersion = 99, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;
