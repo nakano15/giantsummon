@@ -62,6 +62,7 @@ namespace giantsummon.Creatures
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.NPCHit6);
             DeadSound = new SoundData(Terraria.ID.SoundID.NPCDeath1);
+            Roles = GuardianRoles.PopularityContestHost;
             CallUnlockLevel = 0;
 
             PopularityContestsWon = 3;
@@ -632,6 +633,11 @@ namespace giantsummon.Creatures
                 if (player.head == 17)
                 {
                     Mes.Add("*That's one cute little hood you got. Makes me want to hug you.*");//"*[name] says that you look cute with that hood.*");
+                }
+                if (MainMod.IsPopularityContestRunning)
+                {
+                    Mes.Add("*Hey [nickname]. Did you knew that the TerraGuardians Popularity Contest is running right now? Be sure to vote some time.*");
+                    Mes.Add("*The TerraGuardians Popularity Contest is currently running. You can access the voting by speaking to me about it.*");
                 }
             }
             else
@@ -1328,6 +1334,15 @@ namespace giantsummon.Creatures
                     return "*I heard that [subject] got picked by [player] as their buddy. I hope their adventures go well.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*I was not expecting you to pick me as your buddy, but now I guess I'll have to work not to make you regret the choice, hahaha.*";
+                //Popularity Contest Messages
+                case MessageIDs.PopContestMessage:
+                    return "*Hey, [nickname]! The TerraGuardians Popularity Contest is up and running. Will you vote on it now?*";
+                case MessageIDs.PopContestIntroduction:
+                    return "*You don't know about it? That's an amazing event where Terrarians can vote on their favorite companions, and in the end their nominations will be announced, showing who are the most popular companions. Any companion can participate, so don't miss this out.*";
+                case MessageIDs.PopContestLinkOpen:
+                    return "*Have a nice voting.*";
+                case MessageIDs.PopContestOnReturnToOtherTopics:
+                    return "*Alright. Be sure to vote on us some other time.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

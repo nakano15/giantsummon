@@ -89,7 +89,7 @@ namespace giantsummon.Creatures
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("Waaah!!! Who are you?! Are you friendly or not?!");
+            Mes.Add("*Waaah!!! Who are you?! Are you friendly or not?!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

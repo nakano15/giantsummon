@@ -64,6 +64,7 @@ namespace giantsummon
         public bool SpecialAttackBasedCombat = false;
         public List<GuardianSpecialAttack> SpecialAttackList = new List<GuardianSpecialAttack>();
         public int CharacterPositionYDiscount = 0;
+        public GuardianRoles Roles = GuardianRoles.None;
         
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;
@@ -1607,12 +1608,17 @@ namespace giantsummon
                 FeatStartedHardMode = "Mes.Feat.StartedHardMode",
                 FeatMentionSomeonePickedAsBuddy = "Mes.Feat.PickedAsBuddy",
                 FeatSpeakerPlayerPickedMeAsBuddy = "Mes.Feat.SpeakerPickedMeAsBuddy";
+            public const string PopContestMessage = "Mes.Contest",
+                PopContestIntroduction = "Mes.Contest.Intro",
+                PopContestLinkOpen = "Mes.Contest.LinkOpen",
+                PopContestOnReturnToOtherTopics = "Mes.Contest.Return";
         }
         
         public enum GuardianEffect
         {
             None,
-            Wraith
+            Wraith,
+            Ghost
         }
 
         public enum GuardianSize
@@ -1621,6 +1627,13 @@ namespace giantsummon
             Medium,
             Large,
             ExtraLarge
+        }
+
+        [Flags]
+        public enum GuardianRoles
+        {
+            None,
+            PopularityContestHost
         }
     }
 }

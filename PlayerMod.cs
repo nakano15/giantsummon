@@ -2556,6 +2556,10 @@ namespace giantsummon
                 AddNewGuardian(GuardianBase.Liebre, Starter:true);
                 Main.NewText("Liebre has joined your companion rooster. You feel a chill going down on your spine.");
             }
+            if(MainMod.IsPopularityContestRunning)
+            {
+                Main.NewText("TerraGuardians Popularity Contest is now running! Vote before "+MainMod.ContestEndDate.Month+"/"+MainMod.ContestEndDate.Day+"!");
+            }
             RecalculateFriendshipLevel();
         }
 

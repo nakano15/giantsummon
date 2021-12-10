@@ -48,6 +48,7 @@ namespace giantsummon.Creatures
             DrinksBeverage = false;
             SetTerraGuardian();
             CallUnlockLevel = 3;
+            Roles = GuardianRoles.PopularityContestHost;
             DodgeRate = 10;
 
             PopularityContestsWon = 0;
@@ -221,6 +222,11 @@ namespace giantsummon.Creatures
             }
             else
             {
+                if (MainMod.IsPopularityContestRunning)
+                {
+                    Mes.Add("*Hi! The TerraGuardians Popularity Contest is currently on going. Will you be voting?*");
+                    Mes.Add("*If you are interessed in participating of the TerraGuardians Popularity Contest, I can take you to the votings.*");
+                }
                 if (!Main.dayTime)
                 {
                     Mes.Add("*Zzzzz... I'm the prettiest in the contest... Zzzz.... I will win... Zzzz....*");
@@ -730,6 +736,15 @@ namespace giantsummon.Creatures
                     return "*Wow! Did you hear? [player] has picked [subject] as their buddy! That's so amazing!*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*Hi? Do you want something? Came to check on me? Sorry, I'm just anxious. I never thought I'd get my own buddy!*";
+                //Popularity Contest Messages
+                case MessageIDs.PopContestMessage:
+                    return "*I'm so glad to see that you're interessed in the contest. Do you want to vote now, or want to know more about it?*";
+                case MessageIDs.PopContestIntroduction:
+                    return "*This event allows Terrarians to vote on their favorite companions. Any companion can participate, regardless of the name, which is awesome! Will you give us your vote?*";
+                case MessageIDs.PopContestLinkOpen:
+                    return "*Have a nice voting. I hope I see you at the nominations.*";
+                case MessageIDs.PopContestOnReturnToOtherTopics:
+                    return "*Be sure to vote on someone before the event ends.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

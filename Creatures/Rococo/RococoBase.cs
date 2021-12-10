@@ -51,6 +51,7 @@ namespace giantsummon.Creatures
             SetTerraGuardian();
             HurtSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldHurt);
             DeadSound = new SoundData(Terraria.ID.SoundID.DD2_KoboldDeath);
+            Roles = GuardianRoles.PopularityContestHost;
             CallUnlockLevel = 0;
 
             PopularityContestsWon = 2;
@@ -467,6 +468,11 @@ namespace giantsummon.Creatures
                     Mes.Add("*You can hear [name]'s stomach growl.*");
                     Mes.Add("*[name] seems to be a bit hungry.*");
                 }
+            }
+            if (MainMod.IsPopularityContestRunning)
+            {
+                Mes.Add("*[name] is telling you that the TerraGuardians Popularity Contest is running right now, and asks if you're going to vote.*");
+                Mes.Add("*[name] says that he can take you to the voting of the popularity contest, and that all you need to do is speak to him about it.*");
             }
             if (Main.dayTime)
             {
@@ -898,6 +904,15 @@ namespace giantsummon.Creatures
                     return "*[name] is really happy about knowing [player] found their own buddy, and picked [subject] to be it.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*[name] is saying that is really glad you picked him as his buddy.*";
+                //Popularity Contest Messages
+                case MessageIDs.PopContestMessage:
+                    return "*[name] is asking if you're interessed in voting on the TerraGuardians Popularity Contest.*";
+                case MessageIDs.PopContestIntroduction:
+                    return "*[name] tells you that the contest allows you to vote on your favorite companions. The event is so big that you can vote on TerraGuardians and Non-TerraGuardians companions on it, which he likes. He told you to vote before the event ends.*";
+                case MessageIDs.PopContestLinkOpen:
+                    return "*[name] tells you to pick everyone you like in it, and tells you to enjoy.*";
+                case MessageIDs.PopContestOnReturnToOtherTopics:
+                    return "*[name] asks what else you want to speak about.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

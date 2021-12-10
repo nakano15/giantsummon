@@ -35,11 +35,12 @@ namespace giantsummon
         public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true, UseCompanionsDefinedScaleChange = true;
         public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
-        public const string VoteLink = "https://forms.gle/2KNqNcabh3rqn5Mu8"; //There is no contest
+        public const string VoteLink = "https://forms.gle/2KNqNcabh3rqn5Mu8";
         public static bool HasPlayerAwareOfContestMonthChange = false;
         public const int LastContestModVersion = 99;
         public const string ContestResultLink = "";
         public static readonly DateTime ContestEndDate = new DateTime(2021, 12, 19);
+        public static bool IsPopularityContestRunning { get { return DateTime.Now <= ContestEndDate; } }
         //End contest related
         public const int ModVersion = 99, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;

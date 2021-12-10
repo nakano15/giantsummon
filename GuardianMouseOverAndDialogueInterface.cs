@@ -647,6 +647,10 @@ namespace giantsummon
                     {
                         AddOption("Let's talk about other things.", LetsChatButtonPressed);
                     }
+                    if (Speaker.Base.Roles.HasFlag(GuardianBase.GuardianRoles.PopularityContestHost))
+                    {
+                        AddOption("About TerraGuardians Popularity Contest.", AskAboutTerraGuardiansPopularityContestButtonPress);
+                    }
                     AddOption("Let's review some things.", SomethingElseButtonPressed);
                     foreach (QuestData qd in PlayerMod.GetPlayerQuestDatas(MainPlayer))
                     {
@@ -781,6 +785,43 @@ namespace giantsummon
         {
             SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer, "(They say that didn't wanted to leave the group, anyway.)"), Speaker);
             GetDefaultOptions();
+        }
+
+        public static void AskAboutTerraGuardiansPopularityContestButtonPress()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestMessage, "(They're talking to me about the Popularity Contest up and running.\nThey say that I can vote on it now.)") + "\n(Contest will be running until "+MainMod.ContestEndDate.ToShortDateString()+".)");
+            AddOption("Vote", OnPopContestVoteButtonPress);
+            AddOption("Introduction", OnPopContestIntroductionButtonPress);
+            AddOption("Return", OnPopContestReturnToLobby);
+        }
+
+        public static void OnPopContestReturnToLobby()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestOnReturnToOtherTopics, "(They tell you to vote on the contest before end date arrives.)"));
+            GetDefaultOptions();
+        }
+
+        public static void OnPopContestVoteButtonPress()
+        {
+            SetDialogue("(Clicking the Vote link will open a link on your computer browser, which will lead to a Google Form so you can input your vote.\n" +
+                "You will need a Google account in order to vote.)");
+            AddOption("Vote (Open Browser Link to Votting)", OnPopContestOpenVoteLinkButtonPress);
+            AddOption("I've changed my mind...", OnPopContestReturnToLobby);
+        }
+
+        public static void OnPopContestOpenVoteLinkButtonPress()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestLinkOpen, "(They wish you a happy voting, and hopes to see you at the nominations.)"));
+            System.Diagnostics.Process.Start(MainMod.VoteLink);
+            GetDefaultOptions();
+        }
+
+        public static void OnPopContestIntroductionButtonPress()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.PopContestIntroduction, "(They explain to me that the TerraGuardians Popularity Contest is an event where Terrarians can vote on their favorite companions, and in the nominations we find out who are the most voted ones.\n" +
+                "Beside the name being TerraGuardians Popularity Contest, other companions can also participate.)"));
+            AddOption("I want to vote.", OnPopContestVoteButtonPress);
+            AddOption("I will think about that.", OnPopContestReturnToLobby);
         }
 
         //End Call/Dismiss Related
