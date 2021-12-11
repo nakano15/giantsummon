@@ -471,7 +471,10 @@ namespace giantsummon.Creatures
                 case MessageIDs.LeaderDiesMessage:
                     if(Main.rand.NextDouble() < 0.5)
                         return "*[nickname]...*";
-                    return "*Time of death: "+(int)WorldMod.LastTime + ":" + (int)((WorldMod.LastTime - (int)WorldMod.LastTime) * 60) +"*";
+                    {
+                        float Time = (float)WorldMod.LastTime / 3600;
+                        return "*Time of death: " + (int)Time + ":" + (int)((Time - (int)Time) * 60) + "*";
+                    }
                 case MessageIDs.AllyFallsMessage:
                     return "*Someone needs medical attention!*";
                 case MessageIDs.SpotsRareTreasure:
