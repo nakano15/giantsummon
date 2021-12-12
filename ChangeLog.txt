@@ -1,1 +1,2 @@
 ﻿Fixed a bug where Green's message for when the player dies shows broken time values.
+Fixed Daphne not having description.

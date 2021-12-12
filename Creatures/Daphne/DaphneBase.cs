@@ -15,7 +15,7 @@ namespace giantsummon.Creatures
         public DaphneBase()
         {
             Name = "Daphne";
-            Description = "";
+            Description = "A Terrarians' guardian angel.\nShe can help you meanwhile.";
             Size = GuardianSize.Large;
             Width = 35 * 2;
             Height = 33 * 2;
