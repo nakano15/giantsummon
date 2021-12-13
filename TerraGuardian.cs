@@ -1940,7 +1940,6 @@ namespace giantsummon
             int TilePositionX = (int)(Position.X * DivisionBy16) + TileCheckStartPositionX, TilePositionY = (int)(CenterY * DivisionBy16) + TileCheckStartPositionY;
             TilePositionX += TileRangeX * (TileCheckValue % AFourthTileCount);
             TilePositionY += TileRangeY * (TileCheckValue / AFourthTileCount);
-            List<int> TileMemories = new List<int>();
             for (int y = TilePositionY; y < TilePositionY + TileRangeY; y++)
             {
                 for (int x = TilePositionX; x < TilePositionX + TileRangeX; x++)
@@ -1950,9 +1949,8 @@ namespace giantsummon
                         if (Main.tile[x, y] != null && Main.tile[x, y].active())
                         {
                             AddTileCount(Main.tile[x, y].type);
-                            if(OwnerPos != -1 && TownNpcs == 0 && Lighting.Brightness(x, y) > 0.5f && !TileMemories.Contains(Main.tile[x, y].type))
+                            //if(OwnerPos != -1 && TownNpcs == 0 && Lighting.Brightness(x, y) > 0.5f && !TileMemories.Contains(Main.tile[x, y].type))
                             {
-                                TileMemories.Add(Main.tile[x, y].type);
                                 if (Main.tile[x, y].type == 42) //Lantern
                                 {
                                     if (Main.tile[x, y].frameY >= 324 && Main.tile[x, y].frameY <= 358)
@@ -1967,33 +1965,36 @@ namespace giantsummon
                                         LastFireplaceNearby = true;
                                     }
                                 }
-                                if (!HasTileMemory(Main.tile[x, y].type))
+                                //if (OwnerPos > -1)
                                 {
-                                    //Comment tile
-                                    Vector2 VisionPosition = Vector2.Zero;
-                                    VisionPosition.X = Position.X;
-                                    VisionPosition.Y = Position.Y - Height * 0.75f;
-                                    bool Found = false;
-                                    for (int x2 = -1; x2 < 2; x2++)
+                                    if (!HasTileMemory(Main.tile[x, y].type) && Lighting.Brightness(x, y) > 0.5f)
                                     {
-                                        for(int y2 = -1; y2 < 2; y2++)
+                                        //Comment tile
+                                        Vector2 VisionPosition = Vector2.Zero;
+                                        VisionPosition.X = Position.X;
+                                        VisionPosition.Y = Position.Y - Height * 0.75f;
+                                        bool Found = false;
+                                        for (int x2 = -1; x2 < 2; x2++)
                                         {
-                                            if(!Main.tileSolid[Main.tile[x, y].type] || (x2 != 0 && y2 != 0))
+                                            for (int y2 = -1; y2 < 2; y2++)
                                             {
-                                                if(Collision.CanHitLine(VisionPosition, 1,1, new Vector2((x + x2) * 16, (y + y2) * 16), 16, 16))
+                                                if (!Main.tileSolid[Main.tile[x, y].type] || (x2 != 0 && y2 != 0))
                                                 {
-                                                    Found = true;
-                                                    break;
+                                                    if (Collision.CanHitLine(VisionPosition, 1, 1, new Vector2((x + x2) * 16, (y + y2) * 16), 16, 16))
+                                                    {
+                                                        Found = true;
+                                                        break;
+                                                    }
                                                 }
                                             }
+                                            if (Found)
+                                                break;
                                         }
                                         if (Found)
-                                            break;
+                                            OnTileSpotted(Main.tile[x, y].type, x, y);
                                     }
-                                    if(Found)
-                                        OnTileSpotted(Main.tile[x, y].type, x, y);
+                                    RefreshTileMemory(Main.tile[x, y].type);
                                 }
-                                RefreshTileMemory(Main.tile[x, y].type);
                             }
                         }
                     }
