@@ -454,10 +454,15 @@ namespace giantsummon
                 ModID = MainMod.mod.Name;
             for (int i = 0; i < WorldMod.GuardianTownNPC.Count; i++ )
             {
-                if (WorldMod.GuardianTownNPC[i].ID == GuardianID && WorldMod.GuardianTownNPC[i].ModID == ModID)
+                if (WorldMod.GuardianTownNPC[i].MyID.IsSameID(GuardianID, ModID))
                     return i;
             }
             return -1;
+        }
+
+        public static TerraGuardian GetGuardianNPCCharacter(int GuardianID, string ModID = "")
+        {
+            return WorldMod.GuardianTownNPC[GetGuardianNPC(GuardianID, ModID)];
         }
 
         public static bool IsGuardianPlayerRoomMate(Player player, int GuardianID, string ModID = "")

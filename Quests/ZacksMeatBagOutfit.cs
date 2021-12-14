@@ -637,85 +637,88 @@ namespace giantsummon.Quests
             }
             Dialogue.IsImportantDialogue();
             ZacksOutfitQuestData data = (ZacksOutfitQuestData)Data;
-            int BlueSlot = -1, ZacksSlot = -1;
+            TerraGuardian Blue = null, Zacks = null;
             for (int i = 0; i < Dialogue.DialogueParticipants.Length; i++)
             {
-                if (Dialogue.DialogueParticipants[i].ID == GuardianBase.Blue)
+                if (Dialogue.DialogueParticipants[i].ModID == MainMod.mod.Name)
                 {
-                    BlueSlot = i;
-                }
-                if (Dialogue.DialogueParticipants[i].ID == GuardianBase.Zacks)
-                {
-                    ZacksSlot = i;
+                    if (Dialogue.DialogueParticipants[i].ID == GuardianBase.Blue)
+                    {
+                        Blue = Dialogue.DialogueParticipants[i];
+                    }
+                    if (Dialogue.DialogueParticipants[i].ID == GuardianBase.Zacks)
+                    {
+                        Zacks = Dialogue.DialogueParticipants[i];
+                    }
                 }
             }
             bool ZacksIsInTheTeam = PlayerMod.HasGuardianSummoned(Main.LocalPlayer, GuardianBase.Zacks);
-            Dialogue.CenterType = Dialogue.GatherCenterType.GatherAroundGuardian;
-            Dialogue.GatherGuardian = Dialogue.GetParticipant(ZacksSlot);
-            if (!Dialogue.HasParticipant(GuardianBase.Blue))
+            if (Blue == null)
             {
-                BlueSlot = Dialogue.DialogueParticipants.Length;
-                Dialogue.AddParticipant(PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue));
+                Blue = NpcMod.GetGuardianNPCCharacter(GuardianBase.Blue);
             }
-            if (!Dialogue.HasParticipant(GuardianBase.Zacks))
+            if (Zacks == null)
             {
-                ZacksSlot = Dialogue.DialogueParticipants.Length;
-                Dialogue.AddParticipant(PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks));
+                Zacks = NpcMod.GetGuardianNPCCharacter(GuardianBase.Zacks);
             }
-            Dialogue.GatherAroundGuardian(Dialogue.GetParticipant(ZacksSlot));
-            if (Dialogue.GetParticipant(ZacksSlot).UsingFurniture)
-                Dialogue.GetParticipant(ZacksSlot).LeaveFurniture(false);
+            if (!Dialogue.HasParticipant(Blue.ID, Blue.ModID))
+                Dialogue.AddParticipant(Blue);
+            if (!Dialogue.HasParticipant(Zacks.ID, Zacks.ModID))
+                Dialogue.AddParticipant(Zacks);
+            Dialogue.GatherAroundGuardian(Zacks);
+            if (Zacks.UsingFurniture)
+                Zacks.LeaveFurniture(false);
             bool ZacksKnow = data.QuestStep % 2 == 1;
-            Dialogue.ShowDialogueWithContinue("*Zacks, we brought something for you.*", Dialogue.GetParticipant(BlueSlot));
+            Dialogue.ShowDialogueWithContinue("*Zacks, we brought something for you.*", Blue);
             if (!ZacksKnow)
             {
                 if (ZacksIsInTheTeam)
                 {
-                    Dialogue.ShowDialogueWithContinue("*What is it that you two brought me?*", Dialogue.GetParticipant(ZacksSlot));
+                    Dialogue.ShowDialogueWithContinue("*What is it that you two brought me?*", Zacks);
                 }
                 else
                 {
-                    Dialogue.ShowDialogueWithContinue("*Something for me? What is It?*", Dialogue.GetParticipant(ZacksSlot));
+                    Dialogue.ShowDialogueWithContinue("*Something for me? What is It?*", Zacks);
                 }
-                Dialogue.ShowDialogueWithContinue("*We brought you bandages and a shirt.*", Dialogue.GetParticipant(BlueSlot));
-                Dialogue.ShowDialogueWithContinue("*Bandages and a shirt? Why?*", Dialogue.GetParticipant(ZacksSlot));
-                Dialogue.ShowDialogueWithContinue("*It's so we can cover those wounds of yours.*", Dialogue.GetParticipant(BlueSlot));
-                Dialogue.ShowDialogueWithContinue("*Oh, that is actually... nice of you two.*", Dialogue.GetParticipant(ZacksSlot));
+                Dialogue.ShowDialogueWithContinue("*We brought you bandages and a shirt.*", Blue);
+                Dialogue.ShowDialogueWithContinue("*Bandages and a shirt? Why?*", Zacks);
+                Dialogue.ShowDialogueWithContinue("*It's so we can cover those wounds of yours.*", Blue);
+                Dialogue.ShowDialogueWithContinue("*Oh, that is actually... nice of you two.*", Zacks);
             }
             else
             {
                 if (ZacksIsInTheTeam)
                 {
-                    Dialogue.ShowDialogueWithContinue("*Finally managed to get everything, right?*", Dialogue.GetParticipant(ZacksSlot));
+                    Dialogue.ShowDialogueWithContinue("*Finally managed to get everything, right?*", Zacks);
                 }
                 else
                 {
-                    Dialogue.ShowDialogueWithContinue("*Finally managed to get everything you two were trying to get?*", Dialogue.GetParticipant(ZacksSlot));
+                    Dialogue.ShowDialogueWithContinue("*Finally managed to get everything you two were trying to get?*", Zacks);
                 }
-                Dialogue.ShowDialogueWithContinue("*Yes, everything is here.*", Dialogue.GetParticipant(BlueSlot));
+                Dialogue.ShowDialogueWithContinue("*Yes, everything is here.*", Blue);
             }
-            Dialogue.ShowDialogueWithContinue("*Now let's patch up those wounds...*", Dialogue.GetParticipant(BlueSlot));
-            Dialogue.ShowDialogueWithContinue("*Those bandages will surelly help covering the wounds.*", Dialogue.GetParticipant(ZacksSlot));
-            Dialogue.ShowDialogueWithContinue("*...Blue... Why it's written \"Meat Bag\" in this shirt?*", Dialogue.GetParticipant(ZacksSlot));
-            Dialogue.ShowDialogueWithContinue("*I don't know, it looked fitting.*", Dialogue.GetParticipant(BlueSlot));
-            Dialogue.ShowDialogueWithContinue("*How fitting? Do I look like a meat bag?*", Dialogue.GetParticipant(ZacksSlot));
-            Dialogue.ShowDialogueWithContinue("*A rotten one (giggles).*", Dialogue.GetParticipant(BlueSlot));
-            Dialogue.ShowDialogueWithContinue("*I wont wear this.*", Dialogue.GetParticipant(ZacksSlot));
-            Dialogue.ShowDialogueWithContinue("*Come on, don't be a child. I got all those things for you, just wear it, please.*", Dialogue.GetParticipant(BlueSlot));
-            Dialogue.ShowDialogueWithContinue("*... Okay...*", Dialogue.GetParticipant(ZacksSlot));
+            Dialogue.ShowDialogueWithContinue("*Now let's patch up those wounds...*", Blue);
+            Dialogue.ShowDialogueWithContinue("*Those bandages will surelly help covering the wounds.*", Zacks);
+            Dialogue.ShowDialogueWithContinue("*...Blue... Why it's written \"Meat Bag\" in this shirt?*", Zacks);
+            Dialogue.ShowDialogueWithContinue("*I don't know, it looked fitting.*", Blue);
+            Dialogue.ShowDialogueWithContinue("*How fitting? Do I look like a meat bag?*", Zacks);
+            Dialogue.ShowDialogueWithContinue("*A rotten one (giggles).*", Blue);
+            Dialogue.ShowDialogueWithContinue("*I wont wear this.*", Zacks);
+            Dialogue.ShowDialogueWithContinue("*Come on, don't be a child. I got all those things for you, just wear it, please.*", Blue);
+            Dialogue.ShowDialogueWithContinue("*... Okay...*", Zacks);
             /*MainMod.ScreenColor = Microsoft.Xna.Framework.Color.Black;
             MainMod.ScreenColorAlpha = 1;
             Dialogue.ShowDialogueTimed("(Some washing, patching and cuff wearing later...)",null, 2500);
             //System.Threading.Thread.Sleep(2500);*/
-            Dialogue.GetParticipant(ZacksSlot).OutfitID = Creatures.ZacksBase.MeatBagOutfitID;
+            Zacks.OutfitID = Creatures.ZacksBase.MeatBagOutfitID;
             //MainMod.ScreenColorAlpha = 0;
             data.QuestStep = (byte)(ZacksKnow ? 9 : 8);
-            Dialogue.ShowDialogueWithContinue("*... How do I look?*", Dialogue.GetParticipant(ZacksSlot));
-            Dialogue.ShowDialogueWithContinue("*Perfect! Now you look less half eaten and gross.*", Dialogue.GetParticipant(BlueSlot));
-            Dialogue.ShowEndDialogueMessage("*... I really hope you didn't helped her pick this shirt, [nickname].*", true, Dialogue.GetParticipant(ZacksSlot));
-            Dialogue.GetParticipant(BlueSlot).IncreaseFriendshipProgress(2);
-            Dialogue.GetParticipant(ZacksSlot).IncreaseFriendshipProgress(2);
+            Dialogue.ShowDialogueWithContinue("*... How do I look?*", Zacks);
+            Dialogue.ShowDialogueWithContinue("*Perfect! Now you look less half eaten and gross.*", Blue);
+            Blue.IncreaseFriendshipProgress(2);
+            Zacks.IncreaseFriendshipProgress(2);
             Main.NewText("Zacks [Meat Bag] Outfit unlocked.");
+            Dialogue.ShowEndDialogueMessage("*... I really hope you didn't helped her pick this shirt, [nickname].*", true, Zacks);
         }
     }
 }

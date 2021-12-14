@@ -22,7 +22,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (PlayerMod.GetTerraGuardianCompanionsFound(spawnInfo.player) > 0 && Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY].wall == 0 && spawnInfo.playerInTown && Main.dayTime && !spawnInfo.water && !NpcMod.HasMetGuardian(GuardianBase.Luna) && !NpcMod.HasGuardianNPC(GuardianBase.Luna) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Luna))
+            if (Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY].wall == 0 && PlayerMod.GetTerraGuardianCompanionsFound(spawnInfo.player) > 0 && Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY].wall == 0 && spawnInfo.playerInTown && Main.dayTime && !spawnInfo.water && !NpcMod.HasMetGuardian(GuardianBase.Luna) && !NpcMod.HasGuardianNPC(GuardianBase.Luna) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Luna))
             {
                 return 1f;
             }

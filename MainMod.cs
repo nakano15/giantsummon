@@ -2538,7 +2538,7 @@ namespace giantsummon
                                             bool Active = Guardian.Data.OutfitID == skin.SkinID;
                                             bool LastActive = Active;
                                             bool RequirementBeaten = ShowDebugInfo || skin.Requirement(Guardian.Data, player.player);
-                                            AddOnOffButton(SlotStartPosition.X, SlotStartPosition.Y, skin.Name, ref Active, RequirementBeaten, !RequirementBeaten);
+                                            AddOnOffButton(SlotStartPosition.X, SlotStartPosition.Y, skin.Name, ref Active, Active || RequirementBeaten, Active || !RequirementBeaten);
                                             if (Active != LastActive)
                                             {
                                                 if (Active)

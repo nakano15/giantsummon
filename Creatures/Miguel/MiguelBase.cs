@@ -28,7 +28,7 @@ namespace giantsummon.Creatures
             LifeFruitHPBonus = 15;
             Accuracy = 0.36f;
             Mass = 0.45f;
-            MaxSpeed += 1.8f;
+            MaxSpeed += 2.2f;
             Acceleration = 0.26f;
             SlowDown = 0.38f;
             MaxJumpHeight = 12;

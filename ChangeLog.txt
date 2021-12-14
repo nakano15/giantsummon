@@ -1,2 +1,12 @@
 ﻿Fixed a bug where Green's message for when the player dies shows broken time values.
 Fixed Daphne not having description.
+You can now disable companion outfit, if you somehow manage to activate it when you didn't unlocked it.
+Fixed a bug with the Meat Bag outfit quest:
+	You no longer miss the +2 friendship points with Blue and Zacks.
+	The mod now tells you that you unlocked the outfit, before the closing dialogue from Zacks.
+Added the Contributed Companion tag to the pig guardians.
+Luna will no longer spawn on places with background walls.
+	That way, she will avoid spawning inside caves.
+Fixed an issue with quest dialogues and their participant lists having issues.
+	That was causing blue to do monologue with herself on "Let's Patch it Up!" quest.
+Miguel now runs faster.

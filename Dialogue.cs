@@ -267,8 +267,8 @@ namespace giantsummon
 
         public static TerraGuardian GetParticipant(int ParticipantID)
         {
-            if (ParticipantID < 0 || ParticipantID >= DialogueParticipants.Length)
-                return DialogueParticipants[0];
+            //if (ParticipantID < 0 || ParticipantID >= DialogueParticipants.Length)
+            //    return DialogueParticipants[0];
             return DialogueParticipants[ParticipantID];
         }
 
@@ -332,6 +332,31 @@ namespace giantsummon
             ImportantDialogue = false;
             IsDialogue = true;
             GuardianMouseOverAndDialogueInterface.Speaker = LastSpeaker = GuardianMouseOverAndDialogueInterface.StarterSpeaker = Participants[0];
+            ThreadStart ts = new ThreadStart(delegate () {
+                if (Main.rand == null)
+                {
+                    Main.rand = new Terraria.Utilities.UnifiedRandom(); //This avoids the random object being null when using a dialogue.
+                }
+                try
+                {
+                    Dialogue();
+                }
+                catch (Exception ex)
+                {
+                }
+                EndDialogues();
+            });
+            DialogueThread = new Thread(ts);
+            DialogueThread.Start();
+        }
+
+
+        public static void FollowUpDilogue(Action Dialogue)
+        {
+            if (DialogueThread != null && DialogueThread.ThreadState == ThreadState.Running)
+                return;
+            ImportantDialogue = false;
+            IsDialogue = true;
             ThreadStart ts = new ThreadStart(delegate () {
                 if (Main.rand == null)
                 {

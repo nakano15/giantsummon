@@ -16,7 +16,7 @@ namespace giantsummon
         public const float DivisionBy16 = 1f / 16;
         public static bool UpdateAge = false;
         public const int MinimumAgeToDrink = 18;
-        public const int TimeUntilCompanionForgetsTarget = 7 * 60;
+        public const int TimeUntilCompanionForgetsTarget = 5 * 60;
 
         public DrawMoment drawMoment = DrawMoment.DontDraw;
         public List<PathFinder.Breadcrumbs> Paths = new List<PathFinder.Breadcrumbs>();
@@ -1095,6 +1095,14 @@ namespace giantsummon
             set
             {
                 this.Zone2[0] = value;
+            }
+        }
+
+        public bool AnyTower
+        {
+            get
+            {
+                return ZoneTowerNebula || ZoneTowerSolar || ZoneTowerStardust || ZoneTowerVortex;
             }
         }
 
@@ -5326,6 +5334,7 @@ namespace giantsummon
             int TargetWidth = 0, TargetHeight = 0;
             bool TargetIsBoss = false;
             bool ThroughWall = false;
+            bool Aggressive = (Main.bloodMoon || AnyTower || ((Main.eclipse || Main.invasionType >= Terraria.ID.InvasionID.GoblinArmy) && Position.Y < Main.worldSurface * 16));
             switch (TargetType)
             {
                 case TargetTypes.Npc:
@@ -5435,7 +5444,7 @@ namespace giantsummon
                         else if (Position.X < PlayerCenter)
                             RCX = PlayerCenter;
                     }
-                    if (((Math.Abs(RCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance || Math.Abs(LCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance) &&
+                    if (Aggressive || ((Math.Abs(RCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance || Math.Abs(LCX - TargetPosition.X + TargetWidth / 2) <= XCheckDistance) &&
                     Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Position.Y - Height * 0.5f) <= YCheckDistance))
                     {
                         if (!CheckIfCanUsePoisonOnWeapons())
@@ -10701,7 +10710,7 @@ namespace giantsummon
             {
                 return; //Ignore attempt to look for targets
             }
-            float ThreatDetectionDistance = 260f;
+            float ThreatDetectionDistance = 460f;
             float ViewDistance = 380f;// + AssistSlot * 32f;
             List<Vector4> PartyMembersPosition = new List<Vector4>();
             Vector2 AwarenessCenter = CenterPosition, MyCenter = AwarenessCenter;
@@ -10768,7 +10777,7 @@ namespace giantsummon
                         }
                     }
                 }
-                else if (false) //Try helping the ones in their view range. - Disabled because seems to be causing lags
+                /*else if (false) //Try helping the ones in their view range. - Disabled because seems to be causing lags
                 {
                     for (int i = 0; i < 255; i++)
                     {
@@ -10804,9 +10813,9 @@ namespace giantsummon
                             }
                         }
                     }
-                }
+                }*/
             }
-            float NearestTargetDistance = float.MaxValue;
+            float NearestTargetDistance = ThreatDetectionDistance;
             int TargetPosition = -1;
             TargetTypes TargetType = TargetTypes.Npc;
             if (IsAttackingSomething)
@@ -12175,6 +12184,8 @@ namespace giantsummon
             UsingLeftArmAnimation = true;
             Base.GuardianAnimationOverride(this, 1, ref Frame);
             Base.LeftHandPoints.GetPositionFromFrame(Frame, out X, out Y);
+            if (X < -100 || Y < -100)
+                return;
             if (!IgnoreDirection && LookingLeft)
                 X = SpriteWidth - X;
             X -= (int)(SpriteWidth * 0.5f);
@@ -12209,6 +12220,8 @@ namespace giantsummon
             UsingRightArmAnimation = true;
             Base.GuardianAnimationOverride(this, 2, ref Frame);
             Base.RightHandPoints.GetPositionFromFrame(Frame, out X, out Y);
+            if (X < -100 || Y < -100)
+                return;
             if (!IgnoreDirection && LookingLeft)
                 X = SpriteWidth - X;
             X -= (int)(SpriteWidth * 0.5f);
@@ -12292,6 +12305,8 @@ namespace giantsummon
         public void GetBetweenHandsPosition(int Frame, bool IgnoreDirection, out int ItemPositionX, out int ItemPositionY)
         {
             Base.GetBetweenHandsPosition(Frame, out ItemPositionX, out ItemPositionY);
+            if (ItemPositionX < -100 || ItemPositionY < -100)
+                return;
             if (!IgnoreDirection && LookingLeft)
                 ItemPositionX = SpriteWidth - ItemPositionX;
             ItemPositionX -= (int)(SpriteWidth * 0.5f);
@@ -17819,7 +17834,7 @@ namespace giantsummon
                     if (Frame == Base.BackwardRevive)
                         Frame = Base.ReviveFrame;
                     Vector2 HelmetPosition = Base.HeadVanityPosition.GetPositionFromFrameVector(Frame);
-                    bool Hide = HelmetPosition.X == HelmetPosition.Y && HelmetPosition.X <= -1000;
+                    bool Hide = HelmetPosition.X == HelmetPosition.Y && HelmetPosition.X <= -100;
                     if (!Hide)
                     {
                         HelmetPosition.X -= SpriteWidth * 0.5f;
@@ -18644,11 +18659,15 @@ namespace giantsummon
                 DualWield = true;
                 ItemPosition.X += OffHandPositionX;
                 ItemPosition.Y += OffHandPositionY;
+                if (OffHandPositionX < -100 || OffHandPositionY < -100)
+                    return;
             }
             else
             {
                 ItemPosition.X += ItemPositionX;
                 ItemPosition.Y += ItemPositionY;
+                if (ItemPositionX < -100 || ItemPositionY < -100)
+                    return;
             }
             bool CorrectHand = ((HeldItemHand == HeldHand.Both || HeldItemHand == HeldHand.Left) && !RightArm) || (HeldItemHand == HeldHand.Right && RightArm) || DualWield;
             if (CorrectHand)

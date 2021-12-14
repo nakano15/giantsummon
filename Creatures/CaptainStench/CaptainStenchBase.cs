@@ -1522,6 +1522,7 @@ namespace giantsummon.Creatures
             }
             else
             {
+
             }
         }
 

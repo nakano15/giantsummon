@@ -28,6 +28,7 @@ namespace giantsummon.Creatures
             Age = 15;
             CompanionSlotWeight = 0.6f;
             SetBirthday(SEASON_AUTUMN, 14);
+            IsContributedCompanion = true;
 
             //Same animations and settings for all!
             StandingFrame = 0;

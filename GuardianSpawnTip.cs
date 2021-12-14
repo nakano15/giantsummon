@@ -134,7 +134,7 @@ namespace giantsummon
             }
             if (!HasMetGuardian(GuardianBase.Green) && Npcs.GreenNPC.CanSpawnGreen())
             {
-                Messages.Add("*I heard people saying that a intimidating giant snake is roaming this world. I really can't believe that, but it doesn't hurt to look that.*");
+                Messages.Add("*I heard people saying that a intimidating giant snake is roaming this world. The person said that It climbed some tree to sleep. I really can't believe that, but it doesn't hurt to look that.*");
             }
             if (Messages.Count == 0)
                 return "*I didn't heard about anything latelly.*";
