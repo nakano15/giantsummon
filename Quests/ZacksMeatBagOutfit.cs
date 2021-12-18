@@ -152,6 +152,10 @@ namespace giantsummon.Quests
                     {
                         dialogues.Add(new DialogueOption("About Blue's request related to you.", UponAskingAboutRequest, true));
                     }
+                    else if(data.QuestStep >= 8)
+                    {
+                        dialogues.Add(new DialogueOption("About the gift you got.", AfterQuestZacks, true));
+                    }
                 }
                 return dialogues;
             }
@@ -573,59 +577,91 @@ namespace giantsummon.Quests
                         case 0:
                             if (Blue == null)
                             {
-                                Dialogue.ShowDialogueWithContinue("*I should have wondered. Looks like I was pranked by her.*");
+                                Dialogue.ShowDialogueWithContinue("*Ah, so it was a prank from her?*");
                                 data.ZacksKnowsWhoPickedShirt += 2;
-                                Dialogue.ShowEndDialogueMessage("*I guess I'll have to think of some way of retributing this gift she gave me.*");
+                                Dialogue.ShowEndDialogueMessage("*That means I'll need to think of a reply for that.*");
                             }
                             else
                             {
-                                Dialogue.ShowDialogueWithContinue("*I should have wondered. Looks like you pranked on me.*");
-                                Dialogue.ShowDialogueWithContinue("*You really know how much I like you, so I gave you a nice gift.*", Blue);
+                                Dialogue.ShowDialogueWithContinue("*Ah, so you picked that shirt for me?*");
+                                Dialogue.ShowDialogueWithContinue("*Looked like fitting *giggles*.*", Blue);
                                 data.ZacksKnowsWhoPickedShirt += 2;
-                                Dialogue.ShowEndDialogueMessage("*Then better I get into preparing my reply. Hehe.*", true, Zacks);
+                                Dialogue.ShowDialogueWithContinue("*I guess I'll need to give a reply to this gift, right?*", Zacks);
+                                Dialogue.ShowEndDialogueMessage("*I'll be waiting anxiously.*", true, Blue);
                             }
                             return;
                         case 1:
                             if (Blue == null)
                             {
-                                Dialogue.ShowDialogueWithContinue("*Then It was [gn:" + GuardianBase.Blue + "].*");
+                                Dialogue.ShowDialogueWithContinue("*Then It was [gn:" + GuardianBase.Blue + "] who picked the shirt?*");
+                                Dialogue.ShowDialogueWithContinue("*Tell me, [nickname], were you going to give me something nice? I'm curious.*");
                                 data.ZacksKnowsWhoPickedShirt += 2;
-                                Dialogue.ShowEndDialogueMessage("*Better I start thinking of something I could give her in reply for this shirt, then.*");
+                                Dialogue.ShowEndDialogueMessage("*Hey, don't leave me curious. Oh well.. Better I plan out the reply to [gn:"+GuardianBase.Blue+"] then.*");
                             }
                             else
                             {
                                 Dialogue.ShowDialogueWithContinue("*Then It was you.*");
                                 Dialogue.ShowDialogueWithContinue("*Disappointed?*", Blue);
                                 data.ZacksKnowsWhoPickedShirt += 2;
-                                Dialogue.ShowEndDialogueMessage("*Well, no. It's really unusual of you to prank on someone. Better I get into preparing a reply to this, then.*", Speaker: Zacks);
+                                Dialogue.ShowDialogueWithContinue("*It's really unusual of you to prank on me, but I'll think of some reply to that.*", Zacks);
+                                Dialogue.ShowEndDialogueMessage("*Surprise me, teehee.*", Speaker: Blue);
                             }
                             break;
                         case 2:
-                            Dialogue.ShowDialogueWithContinue("*That doesn't sounds likelly, but I guess I should believe what you say.*");
+                            Dialogue.ShowDialogueWithContinue("*You did picked me that shirt, right? Hehe..*");
                             if (Blue != null)
                             {
                                 Dialogue.ShowDialogueWithContinue("*([nickname], you shouldn't have said that.)*", Blue);
                             }
-                            Dialogue.ShowDialogueWithContinue("*Even more since you don't know who you pranked with.*");
+                            Dialogue.ShowDialogueWithContinue("*You don't really have any idea of who you pranked with, right?*");
                             data.ZacksKnowsWhoPickedShirt = 4;
                             if (Blue != null)
                             {
                                 Dialogue.ShowDialogueWithContinue("*(Uh oh... It was nice knowing you, [nickname].)*", Blue);
                             }
-                            Dialogue.ShowEndDialogueMessage("*Better you watch for my reply, [nickname]. Hehehe.*");
+                            Dialogue.ShowEndDialogueMessage("*Better you wait for my reply, [nickname]. It will be coming soon. I guarantee.*");
                             break;
                     }
                     break;
                 case 1:
                     Dialogue.ShowDialogueWithContinue("*I really appreciate that [gn:" + GuardianBase.Blue + "] and you managed to get things to cover my wounds.*");
                     switch(Dialogue.ShowDialogueWithOptions("*But this shirt... I hate it.*", new string[] {
-                        "But It was a gift.", "It actually seems fitting.", "Think of it as a gift from [gn:"+GuardianBase.Blue+"]." }))
+                        "But It was a gift.",
+                        "It actually seems fitting.",
+                        "Think of it as a gift from [gn:" +GuardianBase.Blue+"]." }))
                     {
                         case 0:
                             Dialogue.ShowDialogueWithContinue("*Yes, but the label really doesn't help.*");
-                            Dialogue.ShowDialogueWithContinue("*At least the patch up was really nice.*");
+                            if (Blue != null)
+                            {
+                                Dialogue.ShowDialogueWithContinue("*Rejecting my gift, are you?*", Blue);
+                                Dialogue.ShowDialogueWithContinue("*No no no, that's not what I mea...*", Zacks);
+                                Dialogue.ShowDialogueWithContinue("*Wait, you're joking, right?*", Zacks);
+                                Dialogue.ShowDialogueWithContinue("(giggles)", Blue);
+                            }
+                            Dialogue.ShowDialogueWithContinue("*At least the patch up was really nice.*", Zacks);
                             data.ZacksKnowsWhoPickedShirt += 2;
-                            Dialogue.ShowEndDialogueMessage("*But now I need to think of ways of showing her my affection for this gift.*");
+                            Dialogue.ShowEndDialogueMessage("*But now I need to think of ways of showing my affection for this gift.*");
+                            break;
+                        case 1:
+                            if (Blue != null)
+                            {
+                                Dialogue.ShowDialogueWithContinue("*Hahaha, I liked that reply, [nickname].*", Blue);
+                            }
+                            Dialogue.ShowDialogueWithContinue("*Very funny, [nickname].*", Zacks);
+                            Dialogue.ShowDialogueWithContinue("*Beside the patch up really went well.*");
+                            data.ZacksKnowsWhoPickedShirt += 2;
+                            Dialogue.ShowEndDialogueMessage("*I need to think of my reply to this...*");
+                            break;
+                        case 2:
+                            Dialogue.ShowDialogueWithContinue("*Yes, yes, I will.*");
+                            Dialogue.ShowDialogueWithContinue("*A very heartfelt gift.*");
+                            if (Blue != null)
+                            {
+                                Dialogue.ShowDialogueWithContinue("*I'm really glad that you think that way.*", Blue);
+                            }
+                            data.ZacksKnowsWhoPickedShirt += 2;
+                            Dialogue.ShowEndDialogueMessage("*I'm grateful for this, but now I need to think of my reply for it.*", Speaker:Zacks);
                             break;
                     }
                     break;

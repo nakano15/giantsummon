@@ -767,7 +767,7 @@ namespace giantsummon
         public bool FriendlyDuelDefeat = false;
         public byte ReviveBoost = 0;
         public float ReviveStack = 0f;
-        public const int MaxReviveStack = 150, MinReviveStack = -150;
+        public const int MaxReviveStack = 90, MinReviveStack = -90; //Was 150
         public bool NegativeReviveBoost = false;
         public int WakeupTime = 0;
         public float KnockdownRotation = 0f;

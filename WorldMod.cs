@@ -251,7 +251,7 @@ namespace giantsummon
                 if (tg.GetTownNpcInfo == null)
                     VisitRate *= 0.85f;
             }
-            if ((ScheduledVisits.Count > 0 && Main.rand.NextDouble() < 0.5f) || Main.rand.NextDouble() < VisitRate * 0.01665f) //0.00333f
+            if ((ScheduledVisits.Count > 0 && Main.rand.NextDouble() < 0.5f) || Main.rand.NextDouble() < VisitRate * 0.025f) //0.01665f <- 0.00333f
             {
                 List<GuardianID> PossibleIDs = new List<GuardianID>();
                 List<GuardianID> GuardianListToCheck = GuardiansMet;
@@ -311,7 +311,7 @@ namespace giantsummon
                     List<Vector2> PossibleSpawnPosition = new List<Vector2>();
                     for (int n = 0; n < 200; n++)
                     {
-                        if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless && Main.npc[n].type != Terraria.ID.NPCID.OldMan)
+                        if (Main.npc[n].active && Main.npc[n].townNPC && !Main.npc[n].homeless && Main.npc[n].type != NPCID.OldMan)
                         {
                             Vector2 npcPos = Main.npc[n].Center;
                             bool PlayerNearby = false;

@@ -225,7 +225,7 @@ namespace giantsummon
         }
         public byte ReviveBoost = 0;
         public float ReviveStack = 0;
-        public const int MaxReviveStack = 150, MinReviveStack = -90;
+        public const int MaxReviveStack = 90, MinReviveStack = -90; //Was 150
         public bool NegativeReviveBoost = false;
         public BitsByte TutorialFlags = new BitsByte();
         public bool TutorialCompanionIntroduction { get { return TutorialFlags[0]; } set { TutorialFlags[0] = value; } }
