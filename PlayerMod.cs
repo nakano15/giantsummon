@@ -1716,6 +1716,8 @@ namespace giantsummon
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref Terraria.DataStructures.PlayerDeathReason damageSource)
         {
+            if (damage == 9999)
+                return true;
             if (ForceKill)
             {
                 ForceKill = false;

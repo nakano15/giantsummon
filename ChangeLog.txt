@@ -1,1 +1,4 @@
-﻿
+﻿The player will instantly die if they are killed by a damage of 9999.
+	This is done for some cases where the player must be killed by something.
+The mod will no longer try checking for blue's speech from zacks side quest on speaking to npc, when you don't have her summoned.
+Fixed Alexander's hat positioning.

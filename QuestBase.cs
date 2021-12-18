@@ -8,7 +8,7 @@ namespace giantsummon
 {
     public class QuestBase
     {
-        public static QuestData Data;
+        public static QuestData Data = new QuestData();
 
         public virtual string Name { get; }
         public virtual string Description(QuestData data) { return ""; }

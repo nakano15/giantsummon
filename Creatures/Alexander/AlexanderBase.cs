@@ -134,18 +134,18 @@ namespace giantsummon.Creatures
             RightHandPoints.AddFramePoint2x(26, 37, 40);
             
             //Hat Position
-            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(23, 8 + 2);
-            HeadVanityPosition.AddFramePoint2x(15, 29, 15 + 2);
-            HeadVanityPosition.AddFramePoint2x(16, 36, 25 + 2);
+            HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(23 + 1, 8 + 2);
+            HeadVanityPosition.AddFramePoint2x(15, 29+ 1, 15 + 2);
+            HeadVanityPosition.AddFramePoint2x(16, 36+ 1, 25 + 2);
 
-            HeadVanityPosition.AddFramePoint2x(17, 21, 8 + 2);
-            HeadVanityPosition.AddFramePoint2x(18, 21, 8 + 2);
+            HeadVanityPosition.AddFramePoint2x(17, 21+ 1, 8 + 2);
+            HeadVanityPosition.AddFramePoint2x(18, 21+ 1, 8 + 2);
 
-            HeadVanityPosition.AddFramePoint2x(22, 31, 21 + 2);
-            HeadVanityPosition.AddFramePoint2x(23, 31, 21 + 2);
-            HeadVanityPosition.AddFramePoint2x(24, 31, 21 + 2);
-            HeadVanityPosition.AddFramePoint2x(25, 31, 21 + 2);
-            HeadVanityPosition.AddFramePoint2x(26, 31, 21 + 2);
+            HeadVanityPosition.AddFramePoint2x(22, 31+ 1, 21 + 2);
+            HeadVanityPosition.AddFramePoint2x(23, 31+ 1, 21 + 2);
+            HeadVanityPosition.AddFramePoint2x(24, 31+ 1, 21 + 2);
+            HeadVanityPosition.AddFramePoint2x(25, 31+ 1, 21 + 2);
+            HeadVanityPosition.AddFramePoint2x(26, 31+ 1, 21 + 2);
         }
 
         public override GuardianData GetGuardianData(int ID = -1, string ModID = "")

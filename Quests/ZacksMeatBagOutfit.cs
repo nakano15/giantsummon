@@ -199,26 +199,30 @@ namespace giantsummon.Quests
         public override string QuestNpcDialogue(NPC npc)
         {
             ZacksOutfitQuestData data = (ZacksOutfitQuestData)Data;
-            if (PlayerMod.PlayerHasGuardian(Terraria.Main.LocalPlayer, GuardianBase.Blue))
+            if (PlayerMod.PlayerHasGuardianSummoned(Terraria.Main.LocalPlayer, GuardianBase.Blue))
             {
                 if ((data.QuestStep == 4 || data.QuestStep == 5) && npc.type == Terraria.ID.NPCID.Clothier)
                 {
                     data.QuestStep += 2;
-                    PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).SaySomethingCanSchedule("*This one! This one is perfect. I'll take It. Thank you. Let's give It to Zacks.*", true, 90);
+                    PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).
+					SaySomethingCanSchedule("*This one! This one is perfect. I'll take It. Thank you. Let's give It to Zacks.*", true, 90);
                     if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Zacks))
                     {
                         data.ZacksKnowsWhoPickedShirt = 1;
-                        PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks).SaySomethingCanSchedule("*I hope you picked something cool for me.*", true, 90 + 150);
+                        PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks).
+						SaySomethingCanSchedule("*I hope you picked something cool for me.*", true, 90 + 150);
                     }
                     return "So, you want a shirt for " + NpcMod.GetGuardianNPCName(GuardianBase.Zacks) + "? I have quite a selection, feel free to browse.";
                 }
                 if ((data.QuestStep == 2 || data.QuestStep == 3) && npc.type == Terraria.ID.NPCID.Nurse)
                 {
                     data.QuestStep += 2;
-                    PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).SaySomethingCanSchedule("*That's perfect! Thanks " + npc.GivenOrTypeName + ". Now we should visit the Clothier.*", true, 90);
+                    PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Blue).
+					SaySomethingCanSchedule("*That's perfect! Thanks " + npc.GivenOrTypeName + ". Now we should visit the Clothier.*", true, 90);
                     if (PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Zacks))
                     {
-                        PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks).SaySomethingCanSchedule("*That's a lot of bandages! Just how wounded am I? I could even use some to wipe myself.*", true, 90 + 150);
+                        PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks).
+						SaySomethingCanSchedule("*That's a lot of bandages! Just how wounded am I? I could even use some to wipe myself.*", true, 90 + 150);
                     }
                     return "You want some bandages for " + NpcMod.GetGuardianNPCName(GuardianBase.Zacks) + "? Gladly I have an extra number of them. Feel free to take them.";
                 }

@@ -236,6 +236,7 @@
     <Compile Include="Npcs\GreenNPC.cs" />
     <Compile Include="Npcs\GuardianActorNPC.cs" />
     <Compile Include="Npcs\LeopoldNPC.cs" />
+    <Compile Include="Npcs\LiebreNPC.cs" />
     <Compile Include="Npcs\LunaSpawnerNPC.cs" />
     <Compile Include="Npcs\MabelNPC.cs" />
     <Compile Include="Npcs\MalishaNPC.cs" />
