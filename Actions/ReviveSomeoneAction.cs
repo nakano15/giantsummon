@@ -63,12 +63,15 @@ namespace giantsummon.Actions
             int TargetWidth = 0, TargetHeight = 0;
             bool TryReaching = false;
             bool IsMountedPlayer = false;
+            bool AffectedByNegativeHealing = false;
             if (TargetIsPlayer)
             {
+                PlayerMod pm = RevivePlayer.GetModPlayer<PlayerMod>();
+                AffectedByNegativeHealing = pm.NegativeReviveBoost;
                 TargetPosition = RevivePlayer.position;
                 TargetWidth = RevivePlayer.width;
                 TargetHeight = RevivePlayer.height;
-                if (RevivePlayer.dead || !RevivePlayer.active || !RevivePlayer.GetModPlayer<PlayerMod>().KnockedOut)
+                if (RevivePlayer.dead || !RevivePlayer.active || !pm.KnockedOut)
                 {
                     InUse = false;
                     return;
@@ -95,7 +98,7 @@ namespace giantsummon.Actions
             }
             bool RepelingEnemies = false;
             guardian.MoveLeft = guardian.MoveRight = false;
-            if (guardian.TargetID > -1)
+            if (guardian.TargetID > -1 && !AffectedByNegativeHealing)
             {
                 Vector2 EnemyPosition;
                 int EnemyWidth, EnemyHeight;
@@ -259,7 +262,7 @@ namespace giantsummon.Actions
                 return;
             Vector2 TargetPosition = Vector2.Zero;
             int TargetWidth = 0, TargetHeight = 0;
-            bool IsMounted = false;
+            bool IsMounted = false, TargetIsBeingCarried = false;
             int TargetLayer = 0;
             if (TargetIsPlayer)
             {
@@ -267,6 +270,7 @@ namespace giantsummon.Actions
                 TargetPosition = RevivePlayer.position;
                 TargetWidth = RevivePlayer.width;
                 TargetHeight = RevivePlayer.height;
+                TargetIsBeingCarried = RevivePlayer.GetModPlayer<PlayerMod>().BeingCarriedByGuardian;
                 if ((guardian.OwnerPos != RevivePlayer.whoAmI || (guardian.OwnerPos == RevivePlayer.whoAmI && !guardian.PlayerMounted)) && RevivePlayer.GetModPlayer<PlayerMod>().MountedOnGuardian)
                     IsMounted = true;
             }
@@ -276,6 +280,7 @@ namespace giantsummon.Actions
                 TargetPosition = ReviveGuardian.TopLeftPosition;
                 TargetWidth = ReviveGuardian.Width;
                 TargetHeight = ReviveGuardian.Height;
+                TargetIsBeingCarried = ReviveGuardian.BeingCarriedByGuardian;
                 if (ReviveGuardian.OwnerPos > -1 && ReviveGuardian.PlayerControl && Main.player[ReviveGuardian.OwnerPos].GetModPlayer<PlayerMod>().MountedOnGuardian)
                     IsMounted = true;
             }
@@ -290,7 +295,7 @@ namespace giantsummon.Actions
                     {
                         int Animation = guardian.Base.StandingFrame;
                         int ArmAnimation = -1;
-                        if (IsMounted)
+                        if (IsMounted || TargetIsBeingCarried)
                         {
                             ArmAnimation = guardian.Base.ItemUseFrames[2];
                         }

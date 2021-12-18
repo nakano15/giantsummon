@@ -763,10 +763,11 @@ namespace giantsummon
         public bool Downed = false;
         public bool KnockedOut { get { return Data.KnockedOut; } set { Data.KnockedOut = value; } }
         public bool KnockedOutCold { get { return Data.KnockedOutCold; } set { Data.KnockedOutCold = value; } }
-        public byte KnockoutBleedingTime = 0;
         public bool WofFood { get { return Data.WofFood; } set { Data.WofFood = value; } }
         public bool FriendlyDuelDefeat = false;
         public byte ReviveBoost = 0;
+        public float ReviveStack = 0f;
+        public const int MaxReviveStack = 150, MinReviveStack = -150;
         public bool NegativeReviveBoost = false;
         public int WakeupTime = 0;
         public float KnockdownRotation = 0f;
@@ -2281,20 +2282,35 @@ namespace giantsummon
         {
             if (Downed)
                 return;
-            if(ReviveBoost == 0 && HasBuff(Terraria.ID.BuffID.Bleeding))
             {
-                KnockoutBleedingTime++;
-                if(KnockoutBleedingTime >= MainMod.BleedingHealthDamageTime)
+                float ReviveValue = 0;
+                if (NegativeReviveBoost)
                 {
-                    int Damage = (int)(Math.Max(1, MHP * MainMod.BleedingHealthDamage));
-                    this.HP -= Damage;
-                    CombatText.NewText(HitBox, CombatText.LifeRegenNegative, Damage, false, true);
-                    KnockoutBleedingTime = 0;
+                    ReviveValue -= 1f + 0.1f * ReviveBoost;
                 }
-            }
-            else
-            {
-                KnockoutBleedingTime = 0;
+                else if (HasBuff(Terraria.ID.BuffID.Bleeding))
+                {
+                    ReviveValue = -1f - (1f / (ReviveBoost + 1));
+                }
+                else
+                {
+                    ReviveValue += 1f + 0.15f * ReviveBoost;
+                }
+                ReviveStack += ReviveValue;
+                if (ReviveStack >= MaxReviveStack)
+                {
+                    int HealValue = (int)(Math.Max(1, MHP * 0.05f));
+                    CombatText.NewText(HitBox, CombatText.HealLife, HealValue, false, true);
+                    HP += HealValue;
+                    ReviveStack -= MaxReviveStack;
+                }
+                else if (ReviveStack <= MinReviveStack)
+                {
+                    int DamageValue = (int)(Math.Max(1, MHP * 0.05f));
+                    CombatText.NewText(HitBox, CombatText.DamagedHostile, DamageValue, false, true);
+                    HP -= DamageValue;
+                    ReviveStack -= MinReviveStack;
+                }
             }
             if (HP >= MHP)
             {
@@ -2342,7 +2358,7 @@ namespace giantsummon
             {
                 if (Breath < BreathMax - 1)
                 {
-                    BreathCooldown += 1 + ReviveBoost / 2;
+                    BreathCooldown += 1 + (int)(ReviveBoost * 0.5f);
                     if(BreathCooldown > 5)
                     {
                         BreathCooldown -= 5;
@@ -2380,6 +2396,8 @@ namespace giantsummon
                     DoForceKill(" turned into ash.");
                 }
             }
+            NegativeReviveBoost = false;
+            ReviveBoost = 0;
         }
 
         public void AddDrawMomentToPlayer(Player player)
@@ -9164,9 +9182,8 @@ namespace giantsummon
 
         public void UpdateHealthRegen()
         {
-            if (KnockedOutCold && ReviveBoost == 0 || NegativeReviveBoost)
+            if (KnockedOut)
             {
-                NegativeReviveBoost = false;
                 HealthRegenPower = HealthRegenTime = 0;
                 return;
             }
@@ -9260,9 +9277,6 @@ namespace giantsummon
             {
                 HealthRegenTime = 0;
             }
-            HealthRegenPower += ReviveBoost * 5;
-            ReviveBoost = 0;
-            NegativeReviveBoost = false;
             float HealthRegenValue = 0;
             if (HealthRegenTime >= 3000)
             {
@@ -9934,7 +9948,7 @@ namespace giantsummon
 
         public void EnterDownedState()
         {
-            KnockoutBleedingTime = 0;
+            NegativeReviveBoost = false;
             bool LastWasKOd = KnockedOut;
             if (!KnockedOut)
             {

@@ -45,7 +45,6 @@ namespace giantsummon
             }
         }
         public bool KnockedOut = false, KnockedOutCold = false, FriendlyDuelDefeat = false;
-        public byte KnockoutBleedingTime = 0;
         public short RescueTime = 0;
         public const int MaxRescueTime = 10;
         public bool RescueWakingUp = false;
@@ -138,6 +137,10 @@ namespace giantsummon
                 Allowance = MainMod.MaxExtraGuardianFollowers;
             return Allowance;
         }
+        public float GetMaxGuardianFollowersWeight()
+        {
+            return GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel) + FriendshipLevel * 0.1f;
+        }
         public int MyDrawOrderID = 0;
         public Vector2 MountedOffset = Vector2.Zero;
         public int CarriedByGuardianID
@@ -221,6 +224,8 @@ namespace giantsummon
             }
         }
         public byte ReviveBoost = 0;
+        public float ReviveStack = 0;
+        public const int MaxReviveStack = 150, MinReviveStack = -90;
         public bool NegativeReviveBoost = false;
         public BitsByte TutorialFlags = new BitsByte();
         public bool TutorialCompanionIntroduction { get { return TutorialFlags[0]; } set { TutorialFlags[0] = value; } }
@@ -485,7 +490,7 @@ namespace giantsummon
         public override void ResetEffects()
         {
             //player.height = Player.defaultHeight;
-            MaxGuardianFollowersWeight = GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel);
+            MaxGuardianFollowersWeight = GetMaxGuardianFollowersWeight();
             HasFirstSymbol = false;
             if (MainMod.SharedCrystalValues)
             {
@@ -526,16 +531,13 @@ namespace giantsummon
             if (KnockedOut)
             {
                 player.noKnockback = true;
-                if (!NegativeReviveBoost)
+                /*if (!NegativeReviveBoost)
                 {
                     player.lifeRegen += ReviveBoost * 5;
-                }
-                if ((ReviveBoost == 0 || NegativeReviveBoost) && KnockedOutCold)
-                {
-                    player.lifeRegenTime = 0;
-                    player.lifeRegenCount = 0;
-                    player.bleed = true;
-                }
+                }*/
+                player.lifeRegenTime = 0;
+                player.lifeRegenCount = 0;
+                //player.bleed = true;
                 for (int b = 0; b < player.buffType.Length; b++)
                 {
                     if (player.buffType[b] > 0 && player.buffTime[b] > 0)
@@ -560,9 +562,6 @@ namespace giantsummon
                 //player.height = player.width;
                 //player.position.Y += Player.defaultHeight - player.width;
             }
-            if(!NegativeReviveBoost)
-                ReviveBoost = 0;
-            NegativeReviveBoost = false;
             if (BuddiesMode && Guardian.Active)
             {
                 float HealthMod, DamageMod;
@@ -582,10 +581,11 @@ namespace giantsummon
         {
             if (KnockedOutCold)
             {
-                if (ReviveBoost == 0 || NegativeReviveBoost)
+                regen = 0;
+                /*if (ReviveBoost == 0 || NegativeReviveBoost)
                     player.bleed = true;
                 else
-                    regen *= 2;
+                    regen *= 2;*/
             }
         }
 
@@ -1102,24 +1102,40 @@ namespace giantsummon
                     player.headRotation = 1.570796326794897f * player.direction;
                 }*/
             }
-            if (ReviveBoost == 0 && player.HasBuff(Terraria.ID.BuffID.Bleeding))
             {
-                KnockoutBleedingTime++;
-                if (KnockoutBleedingTime >= MainMod.BleedingHealthDamageTime)
+                float ReviveValue = 0;
+                if (NegativeReviveBoost)
                 {
-                    int HealthToDeduct = (int)(Math.Max(1, player.statLifeMax2 * MainMod.BleedingHealthDamage));
-                    player.statLife -= HealthToDeduct;
-                    CombatText.NewText(player.getRect(), CombatText.LifeRegenNegative, HealthToDeduct, false, true);
-                    KnockoutBleedingTime = 0;
+                    ReviveValue -= 1f + 0.1f * ReviveBoost;
                 }
-            }
-            else
-            {
-                KnockoutBleedingTime = 0;
+                else if (player.HasBuff(Terraria.ID.BuffID.Bleeding))
+                {
+                    ReviveValue = -1f - (1f / (ReviveBoost + 1));
+                }
+                else
+                {
+                    ReviveValue += 1f + 0.15f * ReviveBoost;
+                }
+                ReviveStack += ReviveValue;
+                if (ReviveStack >= MaxReviveStack)
+                {
+                    int RecoverValue = (int)(Math.Max(1, player.statLifeMax2 * 0.05f));
+                    player.HealEffect(RecoverValue, false);
+                    player.statLife += RecoverValue;
+                    ReviveStack -= MaxReviveStack;
+                }
+                else if (ReviveStack <= MinReviveStack)
+                {
+                    int DamageValue = (int)(Math.Max(1, player.statLifeMax2 * 0.05f));
+                    CombatText.NewText(player.getRect(), CombatText.DamagedHostile, DamageValue, false, true);
+                    player.statLife -= DamageValue;
+                    ReviveStack -= MinReviveStack;
+                }
             }
             if (player.statLife >= player.statLifeMax2)
             {
                 LeaveDownedState();
+                return;
             }
             else if (player.statLife <= 0 && !KnockedOutCold)
             {
@@ -1147,11 +1163,11 @@ namespace giantsummon
                     {
                         if (tg.Active && tg.WofFood)
                         {
-                            tg.DoForceKill(" died with " + player.name + ".");
+                            tg.DoForceKill(" was devoured by the Wall of Flesh.");
                         }
                     }
                     player.Center = WofCenter;
-                    DoForceKill(player.name + " was eaten by the Wall of Flesh.");
+                    DoForceKill(player.name + " was devoured by the Wall of Flesh.");
                     player.immuneAlpha = 255;
                     return;
                 }
@@ -1434,6 +1450,8 @@ namespace giantsummon
                         RescueTime = 0;
                 }
             }
+            NegativeReviveBoost = false;
+            ReviveBoost = 0;
         }
 
         public override void FrameEffects()
@@ -1605,15 +1623,18 @@ namespace giantsummon
             //    return false;
             if (Guardian.PlayerControl)
                 return false;
-            foreach (TerraGuardian guardian in GetAllGuardianFollowers)
+            if (damageSource.SourceNPCIndex > -1 || damageSource.SourcePlayerIndex > -1 || damageSource.SourceProjectileIndex > -1)
             {
-                if (player.immuneTime <= 0 && guardian.Active && damage < player.statLifeMax2 && guardian.TriggerCover((int)damage, hitDirection))
+                foreach (TerraGuardian guardian in GetAllGuardianFollowers)
                 {
-                    player.immuneTime = 60;
-                    //player.immune = true;
-                    playSound = false;
-                    genGore = false;
-                    return false;
+                    if (player.immuneTime <= 0 && guardian.Active && damage < player.statLifeMax2 && guardian.TriggerCover((int)damage, hitDirection))
+                    {
+                        player.immuneTime = 60;
+                        //player.immune = true;
+                        playSound = false;
+                        genGore = false;
+                        return false;
+                    }
                 }
             }
             if (damage > 1 && Guardian.Active && Guardian.HasFlag(GuardianFlags.MountDamageReceivedReduction))
@@ -1631,7 +1652,6 @@ namespace giantsummon
 
         public void EnterDownedState(bool Friendly = false)
         {
-            KnockoutBleedingTime = 0;
             KnockedOut = true;
             CompanionReaction(GuardianBase.MessageIDs.LeaderFallsMessage);
             if (player.HasBuff(ModContent.BuffType<Buffs.HeavyInjury>()))

@@ -2,3 +2,12 @@
 	This is done for some cases where the player must be killed by something.
 The mod will no longer try checking for blue's speech from zacks side quest on speaking to npc, when you don't have her summoned.
 Fixed Alexander's hat positioning.
+Companions will show up as standing when reviving someone who's being carried by another companion.
+	That's one weird way of reviving someone, but it makes quite some more sense too.
+Revive system has changed:
+	Now there is a specific counter for health recovery/damage.
+	Everytime the counter reaches the maximum value, It will recover 5% health. The inverse also happens to the minimum value, which reduces 5% health.
+	That counter will be affected by the revive boost the fallen one gains from reviving allies.
+	The revive boost will reduce the rate which bleeding will reduce character health.
+Friendship rank increases your companions followers max weight by 100 per level.
+Hug buff no longer shows time.

@@ -249,7 +249,7 @@ namespace giantsummon
             foreach (TerraGuardian tg in GuardianTownNPC)
             {
                 if (tg.GetTownNpcInfo == null)
-                    VisitRate *= 0.5f;
+                    VisitRate *= 0.85f;
             }
             if ((ScheduledVisits.Count > 0 && Main.rand.NextDouble() < 0.5f) || Main.rand.NextDouble() < VisitRate * 0.01665f) //0.00333f
             {
@@ -297,7 +297,7 @@ namespace giantsummon
                                 }
                             }
                         }
-                        if (SomeoneHasTheTrust && Main.dayTime && !gb.IsNocturnal)
+                        if (SomeoneHasTheTrust && Main.dayTime != gb.IsNocturnal)
                         {
                             PossibleIDs.Add(ids);
                         }

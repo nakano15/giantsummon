@@ -76,7 +76,7 @@ namespace giantsummon.Creatures
             MountShoulderPoints.DefaultCoordinate2x = new Point(16, 14);
 
             MountShoulderPoints.AddFramePoint2x(14, 28, 20);
-            SittingPoint = new Point(25 * 2, 36 * 2);
+            SittingPoint = new Point(25 * 2, (36 - 2) * 2);
 
             //Left Arm
             LeftHandPoints.AddFramePoint2x(10, 14, 5);
