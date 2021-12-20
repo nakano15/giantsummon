@@ -55,7 +55,7 @@ namespace giantsummon.Creatures
             CallUnlockLevel = 0;
 
             PopularityContestsWon = 2;
-            ContestSecondPlace = 3;
+            ContestSecondPlace = 4;
             ContestThirdPlace = 0;
 
             AddInitialItem(Terraria.ID.ItemID.WoodenSword, 1);
@@ -157,6 +157,8 @@ namespace giantsummon.Creatures
             RequestList();
             RewardList();
             GetTopics();
+			
+            AddSkin(AlphapigShadedBodySkinID, "Pigman Delta Shaded Skin", delegate(GuardianData gd, Player player) { return true; });
         }
 
         public void GetTopics()
@@ -333,8 +335,6 @@ namespace giantsummon.Creatures
                 "*[name] says that liked the adventure, and that doesn't mind to continue exploring the world with you.*", 
                 "*[name] is asking when you'll take him on your adventures.*");
             AddExploreObjective();
-            //
-            AddSkin(AlphapigShadedBodySkinID, "Pigman Delta Shaded Skin", delegate(GuardianData gd, Player player) { return true; });
         }
 
         public void RewardList()

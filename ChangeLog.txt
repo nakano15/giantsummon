@@ -1,1 +1,2 @@
-﻿
+﻿Updated the victory scores of the companions based on latest popularity contest result.
+Fixed an issue where Green and Miguel previously had victories, even though they only participated once.

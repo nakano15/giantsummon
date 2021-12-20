@@ -34,6 +34,10 @@ namespace giantsummon.Creatures
             ReverseMount = false;
             SetTerraGuardian();
             CallUnlockLevel = 0;
+			
+            PopularityContestsWon = 0;
+            ContestSecondPlace = 0;
+            ContestThirdPlace = 1;
 
             AddInitialItem(Terraria.ID.ItemID.CopperBroadsword);
             AddInitialItem(Terraria.ID.ItemID.RichMahoganyBow);

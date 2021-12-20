@@ -39,8 +39,8 @@ namespace giantsummon.Creatures
             SetTerraGuardian();
             CallUnlockLevel = 0;
 
-            PopularityContestsWon = 2;
-            ContestSecondPlace = 3;
+            PopularityContestsWon = 0;
+            ContestSecondPlace = 0;
             ContestThirdPlace = 0;
 
             AddInitialItem(Terraria.ID.ItemID.BladeofGrass, 1);

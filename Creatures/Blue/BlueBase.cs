@@ -65,7 +65,7 @@ namespace giantsummon.Creatures
             Roles = GuardianRoles.PopularityContestHost;
             CallUnlockLevel = 0;
 
-            PopularityContestsWon = 3;
+            PopularityContestsWon = 4;
             ContestSecondPlace = 2;
             ContestThirdPlace = 1;
 

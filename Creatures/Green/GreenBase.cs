@@ -41,9 +41,9 @@ namespace giantsummon.Creatures
             CallUnlockLevel = 3;
             MountUnlockLevel = 6;
 
-            PopularityContestsWon = 2;
-            ContestSecondPlace = 3;
-            ContestThirdPlace = 0;
+            PopularityContestsWon = 0;
+            ContestSecondPlace = 0;
+            ContestThirdPlace = 1;
 
             AddInitialItem(Terraria.ID.ItemID.FlintlockPistol, 1);
             AddInitialItem(Terraria.ID.ItemID.Mushroom, 3);
