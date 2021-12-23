@@ -2723,7 +2723,7 @@ namespace giantsummon
             }
             if (Guardian.Active)
             {
-                if (BuddiesMode && Guardian.IsSameAs(BuddiesModeBuddyID)) //Never remove the buddy. NEVER.
+                if ((Main.netMode == 0 || player.whoAmI == Main.myPlayer) && BuddiesMode && Guardian.IsSameAs(BuddiesModeBuddyID)) //Never remove the buddy. NEVER.
                 {
                     return;
                 }
@@ -2823,10 +2823,13 @@ namespace giantsummon
                         TutorialCompanionIntroduction = true;
                     }
                 }
-                CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MetSomeoneNew,
-                    player.name, MyGuardians[SpawnID].Name, 6, MyGuardians.Count,
-                    GuardianGlobalInfos.GetGuardiansInTheWorld());
+                if (player.whoAmI == Main.myPlayer)
+                {
+                    CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MetSomeoneNew,
+                        player.name, MyGuardians[SpawnID].Name, 6, MyGuardians.Count,
+                        GuardianGlobalInfos.GetGuardiansInTheWorld());
+                }
             }
             return AlreadySpawned;
         }

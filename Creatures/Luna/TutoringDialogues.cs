@@ -28,10 +28,20 @@ namespace giantsummon.Creatures.Luna
             Dialogue.AddOption("About The Orders.", AboutTheOrders, true);
             Dialogue.AddOption("About Friendship Rank.", AboutFriendshipRank, true);
             Dialogue.AddOption("About Buddy TerraGuardian.", AboutBuddyGuardian, true);
+            Dialogue.AddOption("About Skills.", AboutTerraGuardiansSkills, true);
+            Dialogue.AddOption("About Companions Living in my World.", AboutCompanionLivingInTheWorld);
             Dialogue.AddOption("About Other kinds of TerraGuardians.", AboutDemiTerraGuardians, true);
 
             //After picking what you want.
             Dialogue.AddOption("I don't have any other question.", EndTutoring, true);
+        }
+
+        private static void AboutTerraGuardiansSkills()
+        {
+            Dialogue.ShowDialogueWithContinue("*Companions have different skills that grows stronger as they do activities related to them.*");
+            Dialogue.ShowDialogueWithContinue("*As their skills gets stronger, they gain benefits on their status based on their skills levels.*");
+            Dialogue.ShowDialogueWithContinue("*Having a companion follow you on your travels, will make them get stronger at what they do during it.*");
+            ReturnToDialogueLobby();
         }
 
         private static void AboutTerraGuardians()
@@ -134,6 +144,17 @@ namespace giantsummon.Creatures.Luna
             Dialogue.ShowDialogueWithContinue("*In a number of occasions, a bond may be created accidentally, so a TerraGuardian may not even know you're listening to them.*");
             Dialogue.ShowDialogueWithContinue("*It is said that we can speak with each other through the bond from far distances too, but It seems to only happen on a number of occasions.*");
             Dialogue.ShowDialogueWithContinue("*A bond can be strengthened too. Maybe if you be more friends of the TerraGuardian you want to strengthen bonds of? Some benefit may be offered if you do that.*");
+            ReturnToDialogueLobby();
+        }
+
+        private static void AboutCompanionLivingInTheWorld()
+        {
+            Dialogue.ShowDialogueWithContinue("*Depending on the companion, they may move to your world if you ask them to.*");
+            Dialogue.ShowDialogueWithContinue("*Having a companion live in the world with you, will allow you to keep contact with it, and make use of it's services, if they have any.*");
+            Dialogue.ShowDialogueWithContinue("*It's always good to furnish their houses, since they can make use of the furnitures.*");
+            Dialogue.ShowDialogueWithContinue("*If there's chairs in their houses, or around them, they will use it whenever they need to rest. And when it's their sleep time, they will use beds.*");
+            Dialogue.ShowDialogueWithContinue("*Their friendship towards you grows passivelly more as they use furnitures, since you cared about about them to build them such houses.*");
+            Dialogue.ShowDialogueWithContinue("*The amount of companions that can live in the world is limited, so you can try to alternate who will spend a time on your world.*");
             ReturnToDialogueLobby();
         }
 

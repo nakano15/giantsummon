@@ -9,3 +9,9 @@ Changed the way Brutus warning appears. This way might fix a possible incidence 
 Fixed a bug where starter guardians would leave the world at their first oportunity.
 Green can now fix wounds out of your character and companions.
 Changed the method used for drawing the texts on companions dialogues.
+Luna now can talk about Skills and Companions living in the world.
+Added Tutorial Quest to the mod.
+	Quest is named "Know More".
+	Luna will assist you during that quest.
+	That quest is entirelly used to explain about some mod features without reading the help dialogues she offers.
+	This quest is impossible to complete. You can't stop learning, right?

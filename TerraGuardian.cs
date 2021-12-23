@@ -2520,13 +2520,6 @@ namespace giantsummon
                 return;
             if (Position.X < 0 || Position.Y < 0)
                 Spawn();
-            /*for (int dm = 0; dm < MainMod.DrawMoment.Count; dm++)
-            {
-                if (MainMod.DrawMoment[dm].GuardianWhoAmID == WhoAmID)
-                {
-                    MainMod.DrawMoment.RemoveAt(dm);
-                }
-            }*/
             CollisionHeightDiscount = 0;
             FinalScale = ScaleMult;
             if (TurnLock > 0)

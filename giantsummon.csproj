@@ -222,6 +222,7 @@
     <Compile Include="ModGuardianData.cs" />
     <Compile Include="ModTargetting.cs" />
     <Compile Include="NameIDHelper.cs" />
+    <Compile Include="Netplay.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Npcs\AlexanderNPC.cs" />
     <Compile Include="Npcs\AlexNPC.cs" />
@@ -266,6 +267,7 @@
     <Compile Include="Quests\GreenHealingUnlockQuest.cs" />
     <Compile Include="Quests\PigCompanionsQuest.cs" />
     <Compile Include="Quests\TgQuestContainer.cs" />
+    <Compile Include="Quests\TutorialQuest.cs" />
     <Compile Include="Quests\ZacksMeatBagOutfit.cs" />
     <Compile Include="RenameGuardianCommand.cs" />
     <Compile Include="MainMod.cs" />

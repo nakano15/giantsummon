@@ -25,7 +25,7 @@ namespace giantsummon
         public static Texture2D LosangleOfUnnown;
         public static Texture2D ContributorIconTexture;
         public static Mod mod;
-        public static ModPacket GetPatcket { get { return mod.GetPacket(); } }
+        public static ModPacket GetPacket { get { return mod.GetPacket(); } }
         public static GuardianItemSlotButtons SelectedGuardianInventorySlot = GuardianItemSlotButtons.Nothing;
         public static byte SkillListRow = 0;
         public static SoundData FemaleHitSound = new SoundData(Terraria.ID.SoundID.FemaleHit);
@@ -1075,7 +1075,7 @@ namespace giantsummon
 
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
-
+            Netplay.GetMessage(reader, whoAmI);
         }
 
         public override void PostUpdateEverything()

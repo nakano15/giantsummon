@@ -8,7 +8,7 @@ Add a way of marking a world as adventure map.
 	Disable mounting and other functions.
 Cpt Stench doesn't shows correctly her arm when running.
 It would be nice if Cille was completed before February 10th.
-*A Female Cheetah companion. (Cille)
+-> A Female Cheetah companion. (Cille)
 	Recruitable by racing against her and winning.
 	Boom on Discord can aid on this, their idea anyways.
 //Companions that spawn with the world still leaves after some time.
