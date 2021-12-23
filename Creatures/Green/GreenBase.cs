@@ -549,13 +549,19 @@ namespace giantsummon.Creatures
             int HealValue = 0;
             PlayerMod pl = Main.LocalPlayer.GetModPlayer<PlayerMod>();
             HealValue = pl.player.statLifeMax2 - pl.player.statLife;
-            for(int b = 0; b < pl.player.buffType.Length; b++)
+            int WoundDebuffID = Terraria.ModLoader.ModContent.BuffType<Buffs.LightWound>(),
+                HeavyWoundDebuffID = Terraria.ModLoader.ModContent.BuffType<Buffs.VeryWounded>();
+            for (int b = 0; b < pl.player.buffType.Length; b++)
             {
                 int buffid = pl.player.buffType[b];
                 if(Main.debuff[buffid] && pl.player.buffType[b] > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(buffid))
                 {
                     HealValue += 800;
                 }
+                if (buffid == WoundDebuffID)
+                    HealValue += 200;
+                if (buffid == HeavyWoundDebuffID)
+                    HealValue += 8000;
             }
             bool NearDeath = false;
             if(pl.player.statLife < pl.player.statLifeMax2 * 0.33f)
@@ -574,6 +580,10 @@ namespace giantsummon.Creatures
                         {
                             HealValue += 800;
                         }
+                        if (b.ID == WoundDebuffID)
+                            HealValue += 200;
+                        if (b.ID == HeavyWoundDebuffID)
+                            HealValue += 8000;
                     }
                 }
             }
@@ -676,7 +686,7 @@ namespace giantsummon.Creatures
                         for (int b = 0; b < pl.player.buffType.Length; b++)
                         {
                             int buffid = pl.player.buffType[b];
-                            if (Main.debuff[buffid] && pl.player.buffType[b] > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(buffid))
+                            if ((Main.debuff[buffid] || buffid == WoundDebuffID || buffid == HeavyWoundDebuffID) && pl.player.buffType[b] > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(buffid))
                             {
                                 pl.player.DelBuff(b);
                                 b -= 1;
@@ -694,7 +704,7 @@ namespace giantsummon.Creatures
                                 tg.HP = tg.MHP;
                                 foreach (BuffData b in tg.Buffs)
                                 {
-                                    if (Main.debuff[b.ID] && b.Time > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(b.ID))
+                                    if ((Main.debuff[b.ID] || b.ID == WoundDebuffID || b.ID == HeavyWoundDebuffID) && b.Time > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(b.ID))
                                     {
                                         tg.Buffs.Remove(b);
                                     }

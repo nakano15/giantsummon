@@ -483,9 +483,9 @@ namespace giantsummon
                     else
                         InfoIcons.Add(-8);
                     if (DisplayGuardian.Base.ReverseMount)
-                        InfoIcons.Add(9);
-                    else
                         InfoIcons.Add(-9);
+                    else
+                        InfoIcons.Add(9);
                     if (DisplayGuardian.Base.DrinksBeverage)
                         InfoIcons.Add(10);
                     else
@@ -570,7 +570,7 @@ namespace giantsummon
                                     }
                                     break;
                                 case 9:
-                                    if (Negation)
+                                    if (!Negation)
                                     {
                                         MouseText = "Player Mounts on the Guadian";
                                     }

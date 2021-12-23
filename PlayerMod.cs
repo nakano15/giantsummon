@@ -2147,13 +2147,12 @@ namespace giantsummon
                 int ItemType = player.inventory[player.selectedItem].type;
                 if ((ItemType == Terraria.ID.ItemID.MagicMirror ||
                     ItemType == Terraria.ID.ItemID.IceMirror ||
-                    ItemType == Terraria.ID.ItemID.CellPhone) && 
+                    ItemType == Terraria.ID.ItemID.CellPhone) &&
                     player.itemAnimation == (int)(player.itemAnimationMax * 0.8f))
                 {
                     CompanionReaction(GuardianBase.MessageIDs.TeleportHomeMessage);
                 }
             }
-
         }
 
         public override void SetControls()

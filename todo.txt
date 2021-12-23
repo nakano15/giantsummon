@@ -1,0 +1,47 @@
+Recall Potion doesn't work when mounted.
+Companions with lava waders seems to be broken underwater.
+Add a tutorial quest to introduce the mod mechanics to players.
+Add a way of marking a world as adventure map.
+	Marking a world as adventure map, makes so you can increase the limits of companions you can have summoned.
+	There is no requirement to call the companions in this mode, and all companions unlocked can be picked as gameplay partners.
+	The trust system doesn't affects this game mode.
+	Disable mounting and other functions.
+Cpt Stench doesn't shows correctly her arm when running.
+It would be nice if Cille was completed before February 10th.
+*A Female Cheetah companion. (Cille)
+	Recruitable by racing against her and winning.
+	Boom on Discord can aid on this, their idea anyways.
+//Companions that spawn with the world still leaves after some time.
+The mod still has issues with unloaded sprites being used by the game.
+	That happens when reloading any other mod than TerraGuardians.
+Enhance companions AI, to detect wether the player is above them or not, while checking for platforms.
+	Must be careful for the case of stairways.
+There's a error on GuardianUpdateScript on Liebre, It's trying to read a null object.
+When in 2p mode, companions following the player should be divided into some following the player, and some the leader guardian.
+To do on 2P Mode
+	Try finding a way of making the keybinding set for player, be the same for the companions.
+	Allow the companion make use of their actions, like as if was a order given by the player.
+	Allow the companion to manage their inventory slot, while the character is set into automatic mode meanwhile.
+	Allow the second player to change the companion they want to play as?
+Make dyes equipped by companions work when they're drawn after the tiles or behind npcs.
+The problem with the companion summon projectiles giving crashes on collision with solid tile isn't fixed yet.
+Add a exclusion list.
+	That exclusion list would function like a black list. Once the companion is blacklisted, It wont spawn in any way.
+Fix issue where dresses aren't drawn entirelly on the companions.
+	Only the upper part of the dress is drawn.
+Add a job system for the companions.
+	When a companion goes execute a job, a internal minigame could be playing on their AI, to simulate their progress.
+	Mining minigame, for example, could have the companions travel through a imaginary 2d array, where they 
+	wander around, and when bump into ores, they gather it until it depletes.
+A system where the companions could be sent to buy some things for you.
+	There should be a window or something, where you could setup which npc from the world to buy the items, and also pick how many of them to buy.
+	Upon dispatching the companion, It should take the amount of gold from the player inventory, and store in a internal variable.
+		If the buying is successfull, you get the items you bought.
+		If it isn't, the coins are refunded to you.
+
+*About Captain Stench*
+-Mario head jumping STILL happens(may need to give give natural knockback resist or have full KB immunity for Hswing)
+-sapphire needs more base knockback, and its gem projectiles needs more damage
+-tg doesnt like to jump to attack airborne opponents
+-Gemstones shouldnt be consumed while infusing
+-for some reason she still doesnt like to normal attack when out of mana and when getting shot by bullets and cannon balls

@@ -1,2 +1,11 @@
 ﻿Updated the victory scores of the companions based on latest popularity contest result.
 Fixed an issue where Green and Miguel previously had victories, even though they only participated once.
+Rummors companions destines to those who picked them as their buddies will now be shown correctly by them.
+	They will never mention that they were picked as buddy by someone.
+Fixed an issue where Minerva was showing as male.
+Companions can no longer be pulled when they're lifting the player.
+Inverted the negation state of the mount icon on the companion profile page. (Is this a good name?)
+Changed the way Brutus warning appears. This way might fix a possible incidence of ignored crash causing message telling he showed up not to appear.
+Fixed a bug where starter guardians would leave the world at their first oportunity.
+Green can now fix wounds out of your character and companions.
+Changed the method used for drawing the texts on companions dialogues.

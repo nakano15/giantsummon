@@ -32,7 +32,7 @@ namespace giantsummon.Creatures
             Scale = 108f / 90f;
             Age = 19;
             SetBirthday(SEASON_WINTER, 9);
-            Male = true;
+            Male = false;
             InitialMHP = 300; //1000
             LifeCrystalHPBonus = 40;
             LifeFruitHPBonus = 20;

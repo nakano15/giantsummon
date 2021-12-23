@@ -552,7 +552,7 @@ namespace giantsummon
                     Vector2 TextPosition = WindowStartPosition;
                     TextPosition.X += 8;
                     TextPosition.Y += 6 + 30 * i;
-                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, Dialogue[i], TextPosition.X, TextPosition.Y, Color.White, Color.Black, Vector2.Zero, 1f);
+                    Utils.DrawBorderString(Main.spriteBatch, Dialogue[i], TextPosition, Color.White);
                 }
             }
             WindowStartPosition.Y += WindowSizeY;
@@ -571,7 +571,7 @@ namespace giantsummon
                     OptionPosition.Y += 30 * o + 8;
                     OptionPosition.X += 8f;
                     color = (MouseOverOptionNumber == o ? Color.Yellow : Color.White);
-                    Utils.DrawBorderStringFourWay(Main.spriteBatch, Main.fontMouseText, Options[o].Text, OptionPosition.X, OptionPosition.Y, color, Color.Black, Vector2.Zero);
+                    Utils.DrawBorderString(Main.spriteBatch, Options[o].Text, OptionPosition, color);
                 }
             }
         }

@@ -390,7 +390,7 @@ namespace giantsummon
             }
             else
             {
-                if (GuardianTownNPC[Pos].IsStarter)
+                if (GuardianTownNPC[Pos].IsStarter || IsStarter(GuardianTownNPC[Pos]))
                     return false;
             }
             bool HasPlayerNearby = false;
@@ -421,6 +421,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            Npcs.BrutusNPC.WarnedAboutBrutus = false;
             MainMod.LastBossSpotted = MainMod.LastInvasionSpotted = MainMod.LastEventStarted = false;
             MainMod.LastEvent = 0;
             MainMod.LastInvasion = -1;

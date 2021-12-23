@@ -218,13 +218,13 @@ namespace giantsummon
                     break;
                 case FeatMentioning.FeatType.MetSomeoneNew:
                     {
-                        if (!(tg.Base.Name == feat.FeatSubject || tg.Base.PossibleNames.Contains(feat.FeatSubject)))
+                        if (tg.Base.Name == feat.FeatSubject || tg.Base.PossibleNames.Contains(feat.FeatSubject))
                         {
-                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMetSomeoneNew);
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatPlayerMetMe);
                         }
                         else
                         {
-                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatPlayerMetMe);
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMetSomeoneNew);
                         }
                     }
                     break;
@@ -236,13 +236,15 @@ namespace giantsummon
                     break;
                 case FeatMentioning.FeatType.SomeonePickedABuddy:
                     {
-                        if (!(tg.Base.Name == feat.FeatSubject || tg.Base.PossibleNames.Contains(feat.FeatSubject)))
+                        bool IsMe = (tg.Base.Name == feat.FeatSubject || tg.Base.PossibleNames.Contains(feat.FeatSubject));
+                        if (IsMe && feat.PlayerName == Main.player[Main.myPlayer].name)
                         {
-                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionSomeonePickedAsBuddy);
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy);
                         }
                         else
                         {
-                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy);
+                            if(!IsMe)
+                                Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionSomeonePickedAsBuddy);
                         }
                     }
                     break;

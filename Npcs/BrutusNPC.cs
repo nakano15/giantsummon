@@ -154,15 +154,15 @@ namespace giantsummon.Npcs
             int SpawnPosX = (int)Main.npc[PickedNPC].Center.X,
                 SpawnPosY = (int)(Main.npc[PickedNPC].position.Y + Main.npc[PickedNPC].height);
             int npcPos = NPC.NewNPC(SpawnPosX, SpawnPosY, ModContent.NPCType<BrutusNPC>());
-            ((BrutusNPC)Main.npc[npcPos].modNPC).WarnedAboutBrutus = true;
             string Text = "A Lion TerraGuardian has came from the Ether Realm looking for someone to hire him as bodyguard.";
-            if(Main.netMode == 0)
+            if (Main.netMode == 0)
                 Main.NewText(Text);
             else
                 NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Text), 255, 255, 255, 255);
+            WarnedAboutBrutus = true;
         }
 
-        private bool WarnedAboutBrutus = false;
+        public static bool WarnedAboutBrutus = false;
 
         public override void AI()
         {

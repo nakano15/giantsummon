@@ -22,6 +22,8 @@ namespace giantsummon.Actions
                 guardian.DoSitOnPlayerMount(false);
             if (guardian.PlayerMounted)
                 guardian.ToggleMount(true);
+            if (guardian.BeingPulledByPlayer)
+                guardian.BeingPulledByPlayer = false;
             guardian.MoveLeft = guardian.MoveRight = false;
             switch (Step)
             {
