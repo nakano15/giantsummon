@@ -17,6 +17,7 @@ The mod still has issues with unloaded sprites being used by the game.
 Enhance companions AI, to detect wether the player is above them or not, while checking for platforms.
 	Must be careful for the case of stairways.
 There's a error on GuardianUpdateScript on Liebre, It's trying to read a null object.
+If multiplayer ends up working, the game should be able to share occasionally feats companions know between each player.
 When in 2p mode, companions following the player should be divided into some following the player, and some the leader guardian.
 To do on 2P Mode
 	Try finding a way of making the keybinding set for player, be the same for the companions.
