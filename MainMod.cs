@@ -1510,13 +1510,16 @@ namespace giantsummon
                 {
                     if (!g.Active) continue;
                     New.Add(g.Name + " ID: " + g.WhoAmID);
-                    New.Add(" Sub attack in use? " + g.SubAttackInUse);
+                    New.Add("Is Active? " + g.Active);
+                    New.Add("Position: " + g.Position);
+                    New.Add("Is on the world? " + MainMod.ActiveGuardians.ContainsValue(g));
+                    /*New.Add(" Sub attack in use? " + g.SubAttackInUse);
                     if (g.SubAttackInUse)
                     {
                         New.Add(" ID: " + g.SpecialAttack.Name + "{" + g.SpecialAttack.ID + "}");
                         New.Add(" Time: " + g.SpecialAttack.Time);
                         New.Add(" Cooldown: " + g.SpecialAttack.Cooldown);
-                    }
+                    }*/
                 }
                 /*New.Clear();
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();

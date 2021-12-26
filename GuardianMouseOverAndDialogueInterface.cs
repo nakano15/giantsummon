@@ -201,6 +201,10 @@ namespace giantsummon
                 NpcMod.AddGuardianMet(tg.ID, tg.ModID);
                 if (WorldMod.HasEmptyGuardianNPCSlot() && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
                     WorldMod.AllowGuardianNPCToSpawn(tg.ID, tg.ModID);
+                if(Main.netMode == 0)
+                {
+                    tg.Data = PlayerMod.GetPlayerGuardian(MainPlayer, tg.ID, tg.ModID);
+                }
             }
             if (!tg.Base.InvalidGuardian && tg.HasBuff(ModContent.BuffType<Buffs.Sleeping>()))
             {

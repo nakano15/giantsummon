@@ -11,12 +11,11 @@ namespace giantsummon
 {
     public class Netplay
     {
-        private static ModPacket StartNewMessage
+        private static ModPacket StartNewMessage(MessageIDs mID)
         {
-            get
-            {
-                return MainMod.GetPacket;
-            }
+            ModPacket packet = MainMod.GetPacket;
+            packet.Write((byte)mID);
+            return packet;
         }
 
         public static void GetMessage(BinaryReader reader, int whoAmI)
@@ -39,17 +38,17 @@ namespace giantsummon
             }
         }
 
-        public static void SendSpawnCompanionOnPlayer(PlayerMod pm, int CompanionPosID, byte AssistSlot)
+        public static void SendSpawnCompanionOnPlayer(PlayerMod pm, int CompanionPosID, byte AssistSlot, int ToWho = -1, int FromWho = -1)
         {
             if (Main.netMode == 0 || !pm.GetGuardianFromSlot(AssistSlot).Active)
                 return;
-            ModPacket packet = StartNewMessage;
+            ModPacket packet = StartNewMessage(MessageIDs.SpawnCompanionOnPlayer);
             packet.Write((byte)pm.player.whoAmI);
             packet.Write(CompanionPosID);
             packet.Write(AssistSlot);
             packet.Write(pm.MyGuardians[CompanionPosID].ID);
             packet.Write(pm.MyGuardians[CompanionPosID].ModID);
-            packet.Send(-1, pm.player.whoAmI);
+            packet.Send(ToWho, (FromWho == -1 ? pm.player.whoAmI : FromWho));
         }
 
         public static void GetSpawnCompanionOnPlayer(BinaryReader reader, int WhoAmI)
@@ -82,14 +81,14 @@ namespace giantsummon
             pm.CallGuardian(MyGuardianPosID, AssistSlot);
         }
 
-        public static void SendDespawnCompanionOnPlayer(PlayerMod pm, byte AssistSlot)
+        public static void SendDespawnCompanionOnPlayer(PlayerMod pm, byte AssistSlot, int ToWho = -1, int FromWho = -1)
         {
             if (Main.netMode == 0)
                 return;
-            ModPacket packet = StartNewMessage;
+            ModPacket packet = StartNewMessage(MessageIDs.DespawnCompanionOnPlayer);
             packet.Write((byte)pm.player.whoAmI);
             packet.Write(AssistSlot);
-            packet.Send(-1, pm.player.whoAmI);
+            packet.Send(ToWho, (FromWho == -1 ? pm.player.whoAmI : FromWho));
         }
 
         public static void GetDespawnCompanionOnPlayer(BinaryReader reader, int WhoAmI)
@@ -104,11 +103,11 @@ namespace giantsummon
                 pm.DismissGuardian(AssistSlot);
         }
 
-        public static void SendGuardianInventoryItem(PlayerMod pm, int MyGuardianPosID, int Slot)
+        public static void SendGuardianInventoryItem(PlayerMod pm, int MyGuardianPosID, int Slot, int ToWho = -1, int FromWho = -1)
         {
             if (Main.netMode == 0 || !pm.MyGuardians.ContainsKey(MyGuardianPosID))
                 return;
-            ModPacket packet = StartNewMessage;
+            ModPacket packet = StartNewMessage(MessageIDs.GuardianInventoryItem);
             packet.Write((byte)pm.player.whoAmI);
             packet.Write(MyGuardianPosID);
             packet.Write(Slot);
@@ -120,7 +119,7 @@ namespace giantsummon
                 packet.Write(i.stack);
             }
             ItemIO.SendModData(i, packet);
-            packet.Send(-1, pm.player.whoAmI);
+            packet.Send(ToWho, (FromWho == -1 ? pm.player.whoAmI : FromWho));
         }
 
         public static void GetGuardianInventoryItem(BinaryReader reader, int WhoAmI)
@@ -146,11 +145,11 @@ namespace giantsummon
             tg.Inventory[Slot] = i;
         }
 
-        public static void SendGuardianEquippedItem(PlayerMod pm, int MyGuardianPosID, int Slot)
+        public static void SendGuardianEquippedItem(PlayerMod pm, int MyGuardianPosID, int Slot, int ToWho = -1, int FromWho = -1)
         {
             if (Main.netMode == 0 || !pm.MyGuardians.ContainsKey(MyGuardianPosID))
                 return;
-            ModPacket packet = StartNewMessage;
+            ModPacket packet = StartNewMessage(MessageIDs.GuardianEquippedItem);
             packet.Write((byte)pm.player.whoAmI);
             packet.Write(MyGuardianPosID);
             packet.Write(Slot);
@@ -162,7 +161,7 @@ namespace giantsummon
                 packet.Write(i.stack);
             }
             ItemIO.SendModData(i, packet);
-            packet.Send(-1, pm.player.whoAmI);
+            packet.Send(ToWho, (FromWho == -1 ? pm.player.whoAmI : FromWho));
         }
 
         public static void GetGuardianEquippedItem(BinaryReader reader, int WhoAmI)

@@ -15,3 +15,7 @@ Added Tutorial Quest to the mod.
 	Luna will assist you during that quest.
 	That quest is entirelly used to explain about some mod features without reading the help dialogues she offers.
 	This quest is impossible to complete. You can't stop learning, right?
+Fixed Rococo's head equipment positioning.
+Changed how the mod gets companion datas for their npcs.
+	That also possibly fixes a crash with the companion selection interface on multiplayer.
+Fixed a problem where the companion couldn't be pulled to you on multiplayer, without respawning them..

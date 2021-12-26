@@ -68,6 +68,7 @@ namespace giantsummon
         public int Age = 18, YearlyAge = 18;
         public string PersonalNicknameToPlayer = null;
         public GuardianID MyID = new GuardianID(0);
+        public int MyGuardianID = 0;
         public bool IsStarter = false;
         public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;
         public bool OverrideQuickMountToMountGuardianInstead = false, UseHeavyMeleeAttackWhenMounted = true, HideWereForm = false;

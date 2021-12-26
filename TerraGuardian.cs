@@ -37,7 +37,7 @@ namespace giantsummon
         {
             get
             {
-                try
+                /*try
                 {
                     if (OwnerPos > -1)
                     {
@@ -66,7 +66,7 @@ namespace giantsummon
                         }
                     }
                 }
-                catch { }
+                catch { }*/
                 if (_Data == null)
                 {
                     _Data = new GuardianData();
@@ -78,7 +78,7 @@ namespace giantsummon
                 _Data = value;
             }
         }
-        private GuardianData _Data;
+        private GuardianData _Data = null;
         public Group GetGroup { get { return Base.GetGroup; } }
         public int GetSomeoneToSpawnProjectileFor
         {
@@ -115,6 +115,7 @@ namespace giantsummon
         public int ID { get { return Data.MyID.ID; } set { Data.MyID.ID = value; } }
         public string ModID { get { return Data.MyID.ModID; } set { Data.MyID.ModID = value; } }
         public GuardianID MyID { get { return Data.MyID; } set { Data.MyID = value; } }
+        public int MyGuardianID { get { return Data.MyGuardianID; } set { Data.MyGuardianID = value; } }
         public string PersonalNicknameToPlayer { get { return Data.PersonalNicknameToPlayer; } set { Data.PersonalNicknameToPlayer = value; } }
         public GuardianMood Mood { get { return Data.Mood; } }
         public bool HasRequestActive { get { return Data.request.Active; } }
@@ -1347,15 +1348,35 @@ namespace giantsummon
 
         public TerraGuardian(int CreateByType = -1, string ModID = "")
         {
+            //Main.NewText("Created ID: " + CreateByType + " Mod: " + ModID);
             AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, 60);
             if (CreateByType != -1)
             {
                 if (ModID == "")
                     ModID = MainMod.mod.Name;
-                _Data = GuardianBase.GetGuardianBase(CreateByType, ModID).GetGuardianData(CreateByType, ModID);
+                if(Main.netMode == 0 && PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], CreateByType, ModID))
+                {
+                    _Data = PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], CreateByType, ModID);
+                }
+                else//if(_Data == null)
+                    _Data = GuardianBase.GetGuardianBase(CreateByType, ModID).GetGuardianData(CreateByType, ModID);
                 TryFindingTownNpcInfo();
                 Data.UpdateAge();
             }
+            else
+            {
+                _Data = new GuardianData();
+            }
+            if(CreateByType > -1)
+                WhoAmID = IDStack++;
+        }
+
+        public TerraGuardian(GuardianData gd)
+        {
+            Data = gd;
+            AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, 60);
+            TryFindingTownNpcInfo();
+            Data.UpdateAge();
             WhoAmID = IDStack++;
         }
 
@@ -2582,6 +2603,13 @@ namespace giantsummon
                 Spawn();
             if(LoadedWorldRegion)
                 BehaviorHandler();
+            else
+            {
+                if(OwnerPos > -1)
+                {
+                    TeleportToPlayer();
+                }
+            }
             if (SubAttackInUse && !SpecialAttack.CanMove)
             {
                 MoveLeft = MoveRight = MoveUp = MoveDown = Jump = Action = Ducking = OffHandAction = false;
@@ -2702,7 +2730,7 @@ namespace giantsummon
             {
                 UpdateMountedPosition();
                 bool WofPassing = CheckForPassingWof();
-                if (LoadedWorldRegion && !WofPassing && !IsBeingPulledByPlayer())
+                if (!IsBeingPulledByPlayer() && LoadedWorldRegion && !WofPassing)
                 {
                     CheckForObstacles();
                     UpdateCollision();
@@ -3840,7 +3868,7 @@ namespace giantsummon
                 bool PlayerIsFlying = p.velocity.Y != 0 || p.pulley,
                     PlayerInAMount = p.mount.Active || p.GetModPlayer<PlayerMod>().MountedOnGuardian,
                     PlayerInMinecart = p.mount.Active && p.mount.Cart;
-                bool CollidingWithSolidTile = Collision.SolidCollision(TopLeftPosition, Width, Height);
+                bool CollidingWithSolidTile = (LoadedWorldRegion && Collision.SolidCollision(TopLeftPosition, Width, Height));
                 if (CollidingWithSolidTile || (PlayerInAMount && (Data.SitOnTheMount || PlayerInMinecart)) ||!PlayerIsFlying || Distance >= 144f)
                 {
                     DashCooldown = 30;
@@ -9857,27 +9885,27 @@ namespace giantsummon
             if (PlayerControl && OwnerPos > -1 && !Main.player[OwnerPos].dead && Main.player[OwnerPos].SpawnX > -1 && Main.player[OwnerPos].SpawnY > -1)
             {
                 Player Owner = Main.player[OwnerPos];
-                this.Position.X = Owner.SpawnX * 16;
-                this.Position.Y = Owner.SpawnY * 16 - Height;
+                Position.X = Owner.SpawnX * 16;
+                Position.Y = Owner.SpawnY * 16 - Height;
             }
             else if (!PlayerControl && OwnerPos > -1 && !Main.player[OwnerPos].dead)
             {
                 Player Owner = Main.player[OwnerPos];
-                this.Position.X = Owner.Center.X;
-                this.Position.Y = Owner.position.Y + Owner.height;
+                Position.X = Owner.Center.X;
+                Position.Y = Owner.position.Y + Owner.height;
             }
             else
             {
                 WorldMod.GuardianTownNpcState townstate = GetTownNpcInfo;
                 if (townstate != null && !townstate.Homeless)
                 {
-                    this.Position.X = townstate.HomeX * 16;
-                    this.Position.Y = townstate.HomeY * 16;
+                    Position.X = townstate.HomeX * 16;
+                    Position.Y = townstate.HomeY * 16;
                 }
                 else
                 {
-                    this.Position.X = Main.spawnTileX * 16;
-                    this.Position.Y = Main.spawnTileY * 16;
+                    Position.X = Main.spawnTileX * 16;
+                    Position.Y = Main.spawnTileY * 16;
                 }
             }
             TargetID = -1;
@@ -9892,6 +9920,7 @@ namespace giantsummon
                     RemoveCooldown(GuardianCooldownManager.CooldownType.HealingPotionCooldown);
                 KnockedOut = KnockedOutCold = false;
             }
+            Active = true;
             Wet = LavaWet = HoneyWet = false;
             Downed = false;
             WakeupTime = 0;

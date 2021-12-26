@@ -1888,7 +1888,7 @@ namespace giantsummon
                 if (player.whoAmI == Main.myPlayer && guardian.Base.InvalidGuardian)
                 {
                     this.DismissGuardian();
-                    Main.NewText("Your guardian has been dismissed because the mod using it doesn't exists.");
+                    Main.NewText("Your guardian has been dismissed because the mod that created it isn't loaded.");
                 }
                 if (guardian.GrabbingPlayer)
                 {
@@ -2455,6 +2455,7 @@ namespace giantsummon
                     {
                         d = new GuardianData();
                     }
+                    d.MyGuardianID = g;
                     d.Load(tag, ModVersion, g);
                     MyGuardians.Add(g, d);
                 }
@@ -2516,7 +2517,7 @@ namespace giantsummon
 
         public override void OnEnterWorld(Player player)
         {
-            if(player.whoAmI == Main.myPlayer)
+            if (player.whoAmI == Main.myPlayer)
             {
                 GuardianGlobalInfos.UpdateSeason();
             }
@@ -2525,31 +2526,38 @@ namespace giantsummon
             {
                 CallGuardian(SelectedGuardian, 0);
             }
-            if (Main.netMode == 0)
+            byte AssistSlot = 1;
+            for (int slot = 0; slot < MainMod.MaxExtraGuardianFollowers; slot++)
             {
-                byte AssistSlot = 1;
-                for (int slot = 0; slot < MainMod.MaxExtraGuardianFollowers; slot++)
+                int Assist = SelectedAssistGuardians[slot];
+                //Main.NewText("Slot " + slot + ": " + (Assist == -1 ? "No Guardian" : MyGuardians[Assist].Name));
+                if (Assist > -1)
                 {
-                    int Assist = SelectedAssistGuardians[slot];
-                    //Main.NewText("Slot " + slot + ": " + (Assist == -1 ? "No Guardian" : MyGuardians[Assist].Name));
-                    if (Assist > -1)
-                    {
-                        CallGuardian(Assist, AssistSlot);
-                    }
-                    else
-                    {
-                        SelectedAssistGuardians[slot] = -1;
-                    }
-                    AssistSlot++;
+                    CallGuardian(Assist, AssistSlot);
                 }
+                else
+                {
+                    SelectedAssistGuardians[slot] = -1;
+                }
+                AssistSlot++;
             }
-            foreach(TerraGuardian guardian in GetAllGuardianFollowers)
+            foreach (TerraGuardian guardian in GetAllGuardianFollowers)
             {
                 if (guardian.Active)
                 {
                     guardian.TeleportToPlayer(true);
                 }
             }
+            FreebiesGiving();
+            if (MainMod.IsPopularityContestRunning)
+            {
+                Main.NewText("TerraGuardians Popularity Contest is now running! Vote before " + MainMod.ContestEndDate.Month + "/" + MainMod.ContestEndDate.Day + "!");
+            }
+            RecalculateFriendshipLevel();
+        }
+
+        public void FreebiesGiving()
+        {
             if (!HasGuardian(4) && MainMod.CanGiveFreeNemesis())
             {
                 AddNewGuardian(4, Starter: true);
@@ -2563,14 +2571,9 @@ namespace giantsummon
             }
             if (!HasGuardian(GuardianBase.Liebre) && MainMod.CanGiveFreeLiebre())
             {
-                AddNewGuardian(GuardianBase.Liebre, Starter:true);
+                AddNewGuardian(GuardianBase.Liebre, Starter: true);
                 Main.NewText("Liebre has joined your companion rooster. You feel a chill going down on your spine.");
             }
-            if(MainMod.IsPopularityContestRunning)
-            {
-                Main.NewText("TerraGuardians Popularity Contest is now running! Vote before "+MainMod.ContestEndDate.Month+"/"+MainMod.ContestEndDate.Day+"!");
-            }
-            RecalculateFriendshipLevel();
         }
 
         public bool CallGuardian(int GuardianID, string GuardianModID = "")
@@ -2642,10 +2645,11 @@ namespace giantsummon
                 }
                 else
                 {
-                    guardian = new TerraGuardian(MyGuardians[Id].ID, MyGuardians[Id].ModID);
+                    guardian = new TerraGuardian(MyGuardians[Id]);
                 }
                 if(player.immuneTime <= 0) //Work around to avoid message when player enters world.
                     CompanionReaction(GuardianBase.MessageIDs.SomeoneJoinsTeamMessage);
+                guardian.MyGuardianID = Id;
                 guardian.OwnerPos = player.whoAmI;
                 guardian.Active = true;
                 guardian.AssistSlot = AssistSlot;
@@ -2662,6 +2666,7 @@ namespace giantsummon
                     Guardian = guardian;
                 else
                     AssistGuardians[AssistSlot - 1] = guardian;
+                MainMod.AddActiveGuardian(guardian);
                 if (guardian.Distance(player.Center) >= 512f)
                 {
                     guardian.TeleportToPlayer();
@@ -2671,18 +2676,28 @@ namespace giantsummon
                 {
                     guardian.SetAimPositionToCenter();
                 }
-                MainMod.AddActiveGuardian(guardian);
-                if (player.whoAmI == Main.myPlayer && !TutorialOrderIntroduction)
+                if (player.whoAmI == Main.myPlayer)
                 {
-                    TutorialOrderIntroduction = true;
-                    string OrderKeys = "";
-                    foreach (string key in MainMod.orderCallButton.GetAssignedKeys())
+                    if(Main.netMode == 1)
                     {
-                        if (OrderKeys != "")
-                            OrderKeys += "+";
-                        OrderKeys += key;
+                        Netplay.SendSpawnCompanionOnPlayer(this, Id, AssistSlot);
+                        for (int i = 0; i < 50; i++)
+                            Netplay.SendGuardianInventoryItem(this, Id, i);
+                        for (int i = 0; i < 9; i++)
+                            Netplay.SendGuardianEquippedItem(this, Id, i);
                     }
-                    Main.NewText("You can give it orders by pressing '" + OrderKeys + "' key, and navigating with the number buttons. You can undo an order step by pressing '" + OrderKeys + "' again. You can also change order call key on the input settings.");
+                    if (!TutorialOrderIntroduction)
+                    {
+                        TutorialOrderIntroduction = true;
+                        string OrderKeys = "";
+                        foreach (string key in MainMod.orderCallButton.GetAssignedKeys())
+                        {
+                            if (OrderKeys != "")
+                                OrderKeys += "+";
+                            OrderKeys += key;
+                        }
+                        Main.NewText("You can give it orders by pressing '" + OrderKeys + "' key, and navigating with the number buttons. You can undo an order step by pressing '" + OrderKeys + "' again. You can also change order call key on the input settings.");
+                    }
                 }
             }
             else
@@ -2758,10 +2773,31 @@ namespace giantsummon
                     }
                     //Guardian.Spawn();
                 }
+                if(player.whoAmI == Main.myPlayer && Main.netMode == 1)
+                {
+                    Netplay.SendDespawnCompanionOnPlayer(this, AssistSlot);
+                }
                 if (AssistSlot == 0)
                     SelectedGuardian = -1;
                 else
                     SelectedAssistGuardians[AssistSlot - 1] = -1;
+            }
+        }
+
+        public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+        {
+            for(byte b = 0; b < MainMod.MaxExtraGuardianFollowers + 1; b++)
+            {
+                TerraGuardian tg;
+                if((tg = GetGuardianFromSlot(b)).Active)
+                {
+                    int MyID = tg.MyGuardianID;
+                    Netplay.SendSpawnCompanionOnPlayer(this, MyID, b, toWho, fromWho);
+                    for (int i = 0; i < 50; i++)
+                        Netplay.SendGuardianInventoryItem(this, MyID, i, toWho, fromWho);
+                    for (int i = 0; i < 9; i++)
+                        Netplay.SendGuardianEquippedItem(this, MyID, i, toWho, fromWho);
+                }
             }
         }
 
