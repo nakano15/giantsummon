@@ -2818,7 +2818,7 @@ namespace giantsummon
             if (Channeling && !Action)
                 Channeling = false;
             ShowOffHand = OffHandAction;
-            if (!MainMod.NetplaySync || (Main.netMode != 1 || (Main.netMode == 1 && OwnerPos == Main.myPlayer)))
+            if (Main.netMode != 1 || (Main.netMode == 1 && OwnerPos == Main.myPlayer))
             {
                 LastMoveRight = MoveRight;
                 LastMoveLeft = MoveLeft;
@@ -6085,7 +6085,7 @@ namespace giantsummon
 
         public void BehaviorHandler()
         {
-            if (MainMod.NetplaySync && Main.netMode == 1 && this.OwnerPos != Main.myPlayer)
+            if (Main.netMode == 1 && OwnerPos != Main.myPlayer)
                 return;
             if (KnockedOut)
             {

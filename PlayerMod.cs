@@ -2610,8 +2610,8 @@ namespace giantsummon
 
         public void CallGuardian(int Id, byte AssistSlot)
         {
-            if (AssistSlot > 0 && Main.netMode > 0)
-                return;
+            //if (AssistSlot > 0 && Main.netMode > 0)
+            //    return;
             if (MyGuardians.ContainsKey(Id))
             {
                 if (AssistSlot == 0)
@@ -2680,7 +2680,7 @@ namespace giantsummon
                 {
                     if(Main.netMode == 1)
                     {
-                        Netplay.SendSpawnCompanionOnPlayer(this, Id, AssistSlot);
+                        Netplay.SendSpawnCompanionOnPlayer(this, Id, AssistSlot, guardian.WhoAmID);
                         for (int i = 0; i < 50; i++)
                             Netplay.SendGuardianInventoryItem(this, Id, i);
                         for (int i = 0; i < 9; i++)
@@ -2786,17 +2786,20 @@ namespace giantsummon
 
         public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
         {
-            for(byte b = 0; b < MainMod.MaxExtraGuardianFollowers + 1; b++)
+            if (newPlayer)
             {
-                TerraGuardian tg;
-                if((tg = GetGuardianFromSlot(b)).Active)
+                for (byte b = 0; b < MainMod.MaxExtraGuardianFollowers + 1; b++)
                 {
-                    int MyID = tg.MyGuardianID;
-                    Netplay.SendSpawnCompanionOnPlayer(this, MyID, b, toWho, fromWho);
-                    for (int i = 0; i < 50; i++)
-                        Netplay.SendGuardianInventoryItem(this, MyID, i, toWho, fromWho);
-                    for (int i = 0; i < 9; i++)
-                        Netplay.SendGuardianEquippedItem(this, MyID, i, toWho, fromWho);
+                    TerraGuardian tg;
+                    if ((tg = GetGuardianFromSlot(b)).Active)
+                    {
+                        int MyID = tg.MyGuardianID;
+                        Netplay.SendSpawnCompanionOnPlayer(this, MyID, b, tg.WhoAmID, toWho, fromWho);
+                        for (int i = 0; i < 50; i++)
+                            Netplay.SendGuardianInventoryItem(this, MyID, i, toWho, fromWho);
+                        for (int i = 0; i < 9; i++)
+                            Netplay.SendGuardianEquippedItem(this, MyID, i, toWho, fromWho);
+                    }
                 }
             }
         }
@@ -2832,18 +2835,18 @@ namespace giantsummon
         {
             if (ModId == "")
                 ModId = MainMod.mod.Name;
-            int SpawnID = 0;
-            bool AlreadySpawned = false;
+            int SpawnID = (FixedPosition > -1 ? FixedPosition : 0);
+            bool Success = true;
             int[] Keys = MyGuardians.Keys.ToArray();
             foreach (int g in Keys)
             {
                 //if (SpawnID == g)
                 //    SpawnID++;
                 if (MyGuardians[g].ID == Id && MyGuardians[g].ModID == ModId)
-                    AlreadySpawned = true;
+                    Success = false;
             }
             bool FirstGuardian = Keys.Length == 0;
-            if (!AlreadySpawned)
+            if (Success)
             {
                 while (MyGuardians.ContainsKey(SpawnID))
                     SpawnID++;
@@ -2867,7 +2870,7 @@ namespace giantsummon
                         GuardianGlobalInfos.GetGuardiansInTheWorld());
                 }
             }
-            return AlreadySpawned;
+            return Success;
         }
 
         public void DoRetroCompatibilityLoad(Terraria.ModLoader.IO.TagCompound tag, int ModVersion)

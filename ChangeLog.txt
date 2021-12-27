@@ -19,3 +19,4 @@ Fixed Rococo's head equipment positioning.
 Changed how the mod gets companion datas for their npcs.
 	That also possibly fixes a crash with the companion selection interface on multiplayer.
 Fixed a problem where the companion couldn't be pulled to you on multiplayer, without respawning them..
+Removed useless test multiplayer sync config option.

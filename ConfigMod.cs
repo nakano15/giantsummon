@@ -58,10 +58,6 @@ namespace giantsummon
             get { return ConfigScope.ServerSide; }
         }
 
-        [Label("Test multiplayer sync?")]
-        [Tooltip("There is no guarantee that it will work, but at least can debug it.")]
-        public bool TestMpSync { get { return MainMod.NetplaySync; } set { MainMod.NetplaySync = value; } }
-
         [Label("Disable Ether Items?")]
         [Tooltip("Requests no longer give Ether Heart and Ether Fruit when turned on.")]
         public bool ClassicMode { get { return MainMod.NoEtherItems; } set { MainMod.NoEtherItems = value; } }
