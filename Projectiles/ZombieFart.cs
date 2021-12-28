@@ -80,12 +80,12 @@ namespace giantsummon.Projectiles
                     if (NosePosition.X >= ScaledPosition.X && NosePosition.X < ScaledPosition.X + projectile.width * projectile.scale &&
                         NosePosition.Y >= ScaledPosition.Y && NosePosition.Y < ScaledPosition.Y + projectile.height * projectile.scale)
                     {
-                        Guardian.AddBuff(Terraria.ID.BuffID.Suffocation, 5);
-                        Guardian.AddBuff(Terraria.ID.BuffID.Weak, (Main.expertMode ? 75 : 15) * 60);
-                        Guardian.AddBuff(Terraria.ID.BuffID.Slow, 5);
-                        Guardian.AddBuff(Terraria.ID.BuffID.Stinky, 60 * 10);
+                        Guardian.AddBuff(BuffID.Suffocation, 5, true);
+                        Guardian.AddBuff(BuffID.Weak, (Main.expertMode ? 75 : 15) * 60, true);
+                        Guardian.AddBuff(BuffID.Slow, 5, true);
+                        Guardian.AddBuff(BuffID.Stinky, 60 * 10, true);
                         if (Main.expertMode)
-                            Guardian.AddBuff(Terraria.ID.BuffID.Poisoned, 60);
+                            Guardian.AddBuff(BuffID.Poisoned, 60, true);
                     }
                 }
             }

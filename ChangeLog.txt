@@ -20,3 +20,11 @@ Changed how the mod gets companion datas for their npcs.
 	That also possibly fixes a crash with the companion selection interface on multiplayer.
 Fixed a problem where the companion couldn't be pulled to you on multiplayer, without respawning them..
 Removed useless test multiplayer sync config option.
+Fixed a bug where the Broken Armor debuff given by the Zombie Guardian sword slash on expert mode only lasted half a second.
+	Now it lasts 30 seconds, instead.
+Minerva can now end up spawning during your travels, if not only her requirements are met, but also your friendship level with her is under 3 (which is the friendship level for you to be able to let her move in).
+Cinnamon will still have the chance of appearing after the Travelling Merchant, even if you've met her before.
+The changes on Minerva and Cinnamon spawning are useful for those who disabled companions visit.
+Vladimir's free recruitment has been reworked:
+	Before, you would gain Vladimir for free for starting a new character before the launch of Terraria 1.4.
+	Now, you can get Vladimir if you enter a world with a character that you didn't recruited him yet, 14 days before Terraria's birthday, or on the day of Terraria's birthday.

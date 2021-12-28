@@ -29,7 +29,7 @@ namespace giantsummon.Creatures.Bapha
                 if (data.Step == 5) //= frame 15
                 {
                     Vector2 ProjectileSpawnPosition = tg.GetGuardianLeftHandPosition;
-                    Vector2 ShotDirection = new Vector2(tg.AimDirection.X, tg.AimDirection.Y) - ProjectileSpawnPosition;
+                    Vector2 ShotDirection = tg.AimDirection - ProjectileSpawnPosition;
                     ShotDirection.Normalize();
                     ShotDirection *= 8f;
                     int Damage = GetAttackDamage(tg);
@@ -59,7 +59,7 @@ namespace giantsummon.Creatures.Bapha
             }
             else
             {
-                Vector2 PosDif = tg.AimDirection.ToVector2() - tg.CenterPosition;
+                Vector2 PosDif = tg.AimDirection - tg.CenterPosition;
                 float RotationValue = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(PosDif.Y, PosDif.X)));
                 if (RotationValue < 0.0174533f * 25f)
                 {

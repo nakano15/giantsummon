@@ -919,7 +919,7 @@ namespace giantsummon
         public bool UpdateStatus = true, UpdateWeapons = true;
         public int HealthRegenPower = 0, HealthRegenTime = 0, ManaRegenTime = 0, ManaRegenBonus = 0;
         public int MaxRegenDelay { get { return (int)(((1f - (float)MP / MMP) * 60 * 4 + 45) * 0.7f); } }
-        public Point AimDirection = Point.Zero;
+        public Vector2 AimDirection = Vector2.Zero;
         public int StuckTimer = 0;
         public CombatTactic tactic { get { return Data.tactic; } set { Data.tactic = value; } }
         private const byte Melee = 0, Ranged = 1, Magic = 2, Summon = 3;
@@ -978,12 +978,12 @@ namespace giantsummon
         public bool WofFacing
         {
             get { return HasBuff(Terraria.ID.BuffID.Horrified); }
-            set { if (value) { AddBuff(Terraria.ID.BuffID.Horrified, 5); } else { RemoveBuff(Terraria.ID.BuffID.Horrified); } }
+            set { if (value) { AddBuff(Terraria.ID.BuffID.Horrified, 5, true); } else { RemoveBuff(Terraria.ID.BuffID.Horrified); } }
         }
         public bool WofTongued
         {
             get { return HasBuff(Terraria.ID.BuffID.TheTongue); }
-            set { if (value) { AddBuff(Terraria.ID.BuffID.TheTongue, 5); } else { RemoveBuff(Terraria.ID.BuffID.TheTongue); } }
+            set { if (value) { AddBuff(Terraria.ID.BuffID.TheTongue, 5, true); } else { RemoveBuff(Terraria.ID.BuffID.TheTongue); } }
         }
         public GuardianActions DoAction = new GuardianActions();
         public bool BehindWall = false;
@@ -1681,7 +1681,7 @@ namespace giantsummon
             }
         }
 
-        public void AddBuff(int ID, int Time)
+        public void AddBuff(int ID, int Time, bool NoSync = false)
         {
             if (ID < 1)
                 return;
@@ -1707,6 +1707,8 @@ namespace giantsummon
             TriggerHandler.FireGuardianBuffAcquiredTrigger(CenterPosition, this, ID);
             BuffCommentary(ID);
             UpdateStatus = true;
+            if (!NoSync && (OwnerPos == Main.myPlayer || (OwnerPos == -1 && Main.netMode == 2)))
+                Netplay.SendGuardianBuffUpdate(WhoAmID, ID, Time);
         }
 
         public bool HasBuff(int ID)
@@ -1918,7 +1920,7 @@ namespace giantsummon
 
         public void AddSkillProgress(float Value, GuardianSkills.SkillTypes Type)
         {
-            if (OwnerPos == -1 || !MainMod.UseSkillsSystem) return;
+            if (OwnerPos == -1 || !MainMod.UseSkillsSystem || (Main.netMode == 1 && OwnerPos != Main.myPlayer)) return;
             Data.AddSkillProgress(Value, Type);
         }
 
@@ -2588,7 +2590,7 @@ namespace giantsummon
             }
             if (Main.dayTime == false && HasFlag(GuardianFlags.WerewolfAcc))
             {
-                AddBuff(28, 2);
+                AddBuff(28, 2, true);
             }
             if (Compatibility.NExperienceCompatibility.IsModActive)
             {
@@ -2766,14 +2768,15 @@ namespace giantsummon
             {
                 UpdateAnimation();
             }
-            CheckFriendshipProgression();
+            if(Main.netMode == 0 || (Main.netMode == 1 && OwnerPos == Main.myPlayer))
+                CheckFriendshipProgression();
             if (ImmuneTime > 0)
             {
                 ImmuneTime--;
                 if (ImmuneTime == 0)
                     ImmuneNoBlink = false;
             }
-            if (StuckTimerChanged)
+            if (StuckTimerChanged && OwnerPos == Main.myPlayer)
             {
                 if (StuckTimer >= 60)
                 {
@@ -2818,17 +2821,28 @@ namespace giantsummon
             if (Channeling && !Action)
                 Channeling = false;
             ShowOffHand = OffHandAction;
-            if (Main.netMode != 1 || (Main.netMode == 1 && OwnerPos == Main.myPlayer))
+            if (CanSyncMe)
             {
-                LastMoveRight = MoveRight;
-                LastMoveLeft = MoveLeft;
-                LastMoveUp = MoveUp;
-                LastMoveDown = MoveDown;
-                LastAction = Action;
-                LastJump = Jump;
-                LastOffHandAction = OffHandAction;
+                if(MoveRight != LastMoveRight || MoveUp != LastMoveUp || MoveLeft != LastMoveLeft || MoveDown != LastMoveDown || Jump != LastJump)
+                {
+                    Netplay.SendGuardianMovementUpdate(WhoAmID, -1, OwnerPos);
+                }
+                if(LastAction != Action || LastOffHandAction != OffHandAction)
+                {
+                    Netplay.SendGuardianItemUseUpdate(WhoAmID, -1, OwnerPos);
+                }
+            }
+            if (Main.netMode == 0 || OwnerPos == Main.myPlayer)
+            {
                 MoveRight = MoveLeft = MoveUp = MoveDown = Action = Jump = OffHandAction = false;
             }
+            LastMoveRight = MoveRight;
+            LastMoveLeft = MoveLeft;
+            LastMoveUp = MoveUp;
+            LastMoveDown = MoveDown;
+            LastAction = Action;
+            LastJump = Jump;
+            LastOffHandAction = OffHandAction;
             for (int c = 0; c < Cooldowns.Count; c++)
             {
                 if (!Cooldowns[c].DontDepleteOvertime && !CooldownException.Contains(Cooldowns[c].type))
@@ -2891,6 +2905,8 @@ namespace giantsummon
             anchor.pos = Position;
             anchor.pos.Y -= Height;
         }
+
+        public bool CanSyncMe { get { return (Main.netMode == 1 && OwnerPos == Main.myPlayer) || (Main.netMode == 2 && OwnerPos == -1); } }
 
         public void FloorVisual(bool Falling)
         {
@@ -3432,17 +3448,17 @@ namespace giantsummon
                 byte BuffID = 0;
                 if (cdValue >= T1 + T2 + T3)
                 {
-                    AddBuff(100, 5);
+                    AddBuff(100, 5, true);
                     BuffID = 3;
                 }
                 else if (cdValue >= T1 + T2)
                 {
-                    AddBuff(99, 5);
+                    AddBuff(99, 5, true);
                     BuffID = 2;
                 }
                 else if (cdValue >= T1)
                 {
-                    AddBuff(98, 5);
+                    AddBuff(98, 5, true);
                     BuffID = 1;
                 }
                 if (BuffID > BeetleOrb)
@@ -3481,7 +3497,7 @@ namespace giantsummon
                     {
                         if (BeetleOrb <= 3)
                         {
-                            AddBuff(94 + BeetleOrb, 5);
+                            AddBuff(94 + BeetleOrb, 5, true);
                             //RemoveCooldown(GuardianCooldownManager.CooldownType.BeetleCounter);
                         }
                         else
@@ -3551,7 +3567,7 @@ namespace giantsummon
                 int CenterX = (int)(Position.X * DivisionBy16), CenterY = (int)(this.CenterY * DivisionBy16);
                 if (Main.tile[CenterX, CenterY].wall == 0)
                 {
-                    AddBuff(194, 2);
+                    AddBuff(194, 2, true);
                 }
             }
             /*if (LoadedWorldRegion && HasCarpet())
@@ -3576,11 +3592,11 @@ namespace giantsummon
                 }
             }*/
             if (SunflowerNearby)
-                AddBuff(Terraria.ID.BuffID.Sunflower, 5);
+                AddBuff(Terraria.ID.BuffID.Sunflower, 5, true);
             if (ZoneWaterCandle)
-                AddBuff(Terraria.ID.BuffID.WaterCandle, 5);
+                AddBuff(Terraria.ID.BuffID.WaterCandle, 5, true);
             if (ZonePeaceCandle)
-                AddBuff(Terraria.ID.BuffID.PeaceCandle, 5);
+                AddBuff(Terraria.ID.BuffID.PeaceCandle, 5, true);
             int DamageStackLevelValue = (100 + 10 * (FriendshipLevel - 1));
             if (DamageStacker >= DamageStackLevelValue)
             {
@@ -3610,13 +3626,13 @@ namespace giantsummon
         public void UpdateTileBuff()
         {
             if (FireplaceNearby || GetTileCount(Terraria.ID.TileID.Campfire) > 0)
-                AddBuff(Terraria.ID.BuffID.Campfire, 5);
+                AddBuff(Terraria.ID.BuffID.Campfire, 5, true);
             if (GetTileCount(Terraria.ID.TileID.Sunflower) > 0)
-                AddBuff(Terraria.ID.BuffID.Sunflower, 5);
+                AddBuff(Terraria.ID.BuffID.Sunflower, 5, true);
             if (HeartLanternNearby)
-                AddBuff(Terraria.ID.BuffID.HeartLamp, 5);
+                AddBuff(Terraria.ID.BuffID.HeartLamp, 5, true);
             if (StarLanternNearby)
-                AddBuff(Terraria.ID.BuffID.StarInBottle, 5);
+                AddBuff(Terraria.ID.BuffID.StarInBottle, 5, true);
         }
 
         private void SporeSacScript()
@@ -3684,27 +3700,27 @@ namespace giantsummon
         {
             if (Data.Injury >= GuardianData.HeavyWoundCount)
             {
-                AddBuff(ModContent.BuffType<giantsummon.Buffs.VeryWounded>(), 5);
+                AddBuff(ModContent.BuffType<Buffs.VeryWounded>(), 5, true);
             }
             else if (Data.Injury >= GuardianData.LightWoundCount)
             {
-                AddBuff(ModContent.BuffType<giantsummon.Buffs.LightWound>(), 5);
+                AddBuff(ModContent.BuffType<Buffs.LightWound>(), 5, true);
             }
             if (Data.Fatigue >= GuardianData.HeavyFatigueCount)
             {
-                AddBuff(ModContent.BuffType<giantsummon.Buffs.VeryFatigued>(), 5);
+                AddBuff(ModContent.BuffType<Buffs.VeryFatigued>(), 5, true);
             }
             else if (Data.Fatigue >= GuardianData.LightFatigueCount)
             {
-                AddBuff(ModContent.BuffType<giantsummon.Buffs.LightFatigue>(), 5);
+                AddBuff(ModContent.BuffType<Buffs.LightFatigue>(), 5, true);
             }
-            if (OwnerPos > -1)
+            if (OwnerPos == Main.myPlayer || (OwnerPos == -1 && Main.netMode != 1))
             {
-                if (WorldMod.HourChange && HasBuff(ModContent.BuffType<giantsummon.Buffs.VeryFatigued>()) && !HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()) && Main.rand.Next(3) == 0)
+                if (WorldMod.HourChange && HasBuff(ModContent.BuffType<giantsummon.Buffs.VeryFatigued>()) && !HasBuff(ModContent.BuffType<Buffs.Sleeping>()) && Main.rand.Next(3) == 0)
                 {
-                    AddBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>(), 600 + Main.rand.Next(2400));
+                    AddBuff(ModContent.BuffType<Buffs.Sleeping>(), 600 + Main.rand.Next(2400));
                 }
-                if (HasBuff(ModContent.BuffType<giantsummon.Buffs.VeryWounded>()) && Main.rand.Next(16) == 0 && Math.Abs(Velocity.X) >= 2f)
+                if (HasBuff(ModContent.BuffType<Buffs.VeryWounded>()) && Main.rand.Next(16) == 0 && Math.Abs(Velocity.X) >= 2f)
                 {
                     int Pain = (int)Math.Abs(Velocity.X) - 1;
                     Hurt(Pain, 0, false, true, " couldn't endure more the pain.");
@@ -4005,7 +4021,6 @@ namespace giantsummon
                                 {
                                     Main.PlaySound(Terraria.ID.SoundID.NPCDeath13, ResultingPosition);
                                     Main.NewText(Name + " was swallowed by the Wall of Flesh.", Color.Red);
-                                    //DoForceKill(" was eaten by the Wall of Flesh.");
                                     WofFood = true;
                                     ChangeTrustValue(TrustLevels.TrustLossWhenEatenByWof);
                                 }
@@ -4059,8 +4074,8 @@ namespace giantsummon
             {
                 MoveDir *= 0.7f * Agility;
             }
-            AimDirection.X += (int)MoveDir.X;
-            AimDirection.Y += (int)MoveDir.Y;
+            AimDirection.X += MoveDir.X;
+            AimDirection.Y += MoveDir.Y;
             if (!ReachedLocation && AimDirection.X >= Position.X && AimDirection.X < Position.X + Width2 && AimDirection.Y >= Position.Y && AimDirection.Y < Position.Y + Height2)
                 ReachedLocation = true;
             return ReachedLocation;
@@ -9029,7 +9044,7 @@ namespace giantsummon
 
         public void SetAimPositionToCenter()
         {
-            AimDirection = CenterPosition.ToPoint();
+            AimDirection = CenterPosition;
         }
 
         public bool CheckForPlayerAFK()
@@ -9909,7 +9924,7 @@ namespace giantsummon
                 }
             }
             TargetID = -1;
-            AimDirection = CenterPosition.ToPoint();
+            SetAimPositionToCenter();
             Breath = BreathMax;
             BreathCooldown = 0;
             if (Downed)
@@ -11426,6 +11441,8 @@ namespace giantsummon
         public void CheckForNpcContact()
         {
             if (BeingPulledByPlayer && !SuspendedByChains) return;
+            if ((Main.netMode == 1 && OwnerPos != Main.myPlayer) || (Main.netMode == 2 && OwnerPos > -1))
+                return;
             int DamageStack = -1, AttackDirection = 0; // *evil face*
             float CounteredDamage = 0;
             if (HasFlag(GuardianFlags.ThornsEffectPotion))
@@ -11464,7 +11481,7 @@ namespace giantsummon
                         NpcsPos.Add(n);
                         if (Main.npc[n].type == Terraria.ID.NPCID.NebulaHeadcrab)
                         {
-                            AddBuff(163, 59);
+                            AddBuff(163, 59, true);
                         }
                     }
                     if (Main.netMode < 2)
@@ -11472,11 +11489,11 @@ namespace giantsummon
                         if ((Main.npc[n].type == Terraria.ID.NPCID.DD2WitherBeastT2 || Main.npc[n].type == Terraria.ID.NPCID.DD2WitherBeastT3) && Main.npc[n].ai[0] == 1 && 
                             (CenterPosition - Main.npc[n].Center).Length() < 400)
                         {
-                            AddBuff(195, 3);
+                            AddBuff(195, 3, true);
                         }
                         if ((Main.npc[n].type == Terraria.ID.NPCID.DD2WitherBeastT2 || Main.npc[n].type == Terraria.ID.NPCID.DD2WitherBeastT3) && (CenterPosition - Main.npc[n].Center).Length() < 400)
                         {
-                            AddBuff(195, 3);
+                            AddBuff(195, 3, true);
                         }
                         if (!HasBuff(156) && Main.npc[n].type == Terraria.ID.NPCID.Medusa)
                         {
@@ -11636,7 +11653,7 @@ namespace giantsummon
                         if (HasBuff(95 + b)) RemoveBuff(95 + b);
                     }
                     if (BeetleOrb > 0)
-                        AddBuff(94 + BeetleOrb, 5);
+                        AddBuff(94 + BeetleOrb, 5, true);
                 }
                 FinalDamage = (int)(Damage * (1f - CurrentDefenseRate)) - Defense / 2;
                 if (PlayerMounted && HasFlag(GuardianFlags.MountDamageReceivedReduction))
@@ -11788,9 +11805,16 @@ namespace giantsummon
 
             if (HP <= 0)
             {
-                Knockout(DeathMessage);
-                if (OwnerPos > -1 && Downed && MainMod.UsingGuardianNecessitiesSystem)
-                    AddInjury((byte)(4 * ((float)(MHP - HP) / MHP)));
+                if (Main.netMode == 0 || OwnerPos == Main.myPlayer || (Main.netMode == 2 && OwnerPos == -1))
+                {
+                    Knockout(DeathMessage);
+                    if (OwnerPos > -1 && Downed && MainMod.UsingGuardianNecessitiesSystem)
+                        AddInjury((byte)(4 * ((float)(MHP - HP) / MHP)));
+                    if(OwnerPos == Main.myPlayer || (Main.netMode == 2 && OwnerPos == -1))
+                    {
+                        Netplay.SendGuardianHurt(WhoAmID, Damage, HitDirection, Critical, DeathMessage, -1, OwnerPos);
+                    }
+                }
             }
             else
             {
@@ -12691,7 +12715,7 @@ namespace giantsummon
                 }
                 if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.PeaceCandle)
                 {
-                    AddBuff(Terraria.ID.BuffID.PeaceCandle, 3);
+                    AddBuff(Terraria.ID.BuffID.PeaceCandle, 3, true);
                     if (!this.Wet)
                     {
                         Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0.9f, 0.1f, 0.75f);
@@ -12699,7 +12723,7 @@ namespace giantsummon
                 }
                 if (Inventory[SelectedOffhand].type == Terraria.ID.ItemID.WaterCandle)
                 {
-                    AddBuff(Terraria.ID.BuffID.WaterCandle, 3);
+                    AddBuff(Terraria.ID.BuffID.WaterCandle, 3, true);
                     if (!this.Wet)
                     {
                         Lighting.AddLight(PositionWithOffset + new Vector2(OffHandPositionX, OffHandPositionY), 0, 0.5f, 1f);
@@ -12995,8 +13019,8 @@ namespace giantsummon
                     {
                         //HeldItemHand = Hand;
                         float ShotDirection = (float)Main.rand.NextDouble() * 6.283185307179586f;
-                        float DistanceAccuracy = 5 * ((CenterPosition - AimDirection.ToVector2()).Length() * 0.0625f);
-                        Vector2 AimDirectionChange = AimDirection.ToVector2() + ShotDirection.ToRotationVector2() * (DistanceAccuracy - Accuracy * DistanceAccuracy);
+                        float DistanceAccuracy = 5 * ((CenterPosition - AimDirection).Length() * 0.0625f);
+                        Vector2 AimDirectionChange = AimDirection + ShotDirection.ToRotationVector2() * (DistanceAccuracy - Accuracy * DistanceAccuracy);
                         LookingLeft = Position.X - AimDirection.X >= 0;
                         float AngleChecker = MathHelper.WrapAngle((float)Math.Atan2((CenterY - AimDirectionChange.Y) * GravityDirection, Position.X - AimDirectionChange.X));
                         float ArmAngle = CalculateAimingUseAnimation(AngleChecker);
@@ -13683,7 +13707,7 @@ namespace giantsummon
             GetAmmoInfo(i, true, out ProjID, out ProjSpeed, out Damage, out ProjKnockback);
             Damage = (int)(GetDamageMultipliersFromItem(i) * i.damage);
             //
-            Vector2 AimDirection = this.AimDirection.ToVector2();
+            Vector2 AimDirection = this.AimDirection;
             Vector2 ShotSpawnPosition = Vector2.Zero;
             if (MainMod.IsGuardianItem(Inventory[SelectedItem]))
                 ShotSpawnPosition = (Inventory[SelectedItem].modItem as Items.GuardianItemPrefab).ShotSpawnPosition.ToVector2() * ItemScale;
@@ -13746,7 +13770,7 @@ namespace giantsummon
                 DistanceAccuracy = 0;
             else
                 DistanceAccuracy -= Accuracy * DistanceAccuracy;
-            Vector2 AimDirectionChange = AimDirection + ShotDirection.ToRotationVector2() * DistanceAccuracy; //(ItemUseType == ItemUseTypes.AimingUse ? ShotSpawnPosition - ItemRotation.ToRotationVector2() * 6 : AimDirection.ToVector2() + ShotDirection.ToRotationVector2() * (DistanceAccuracy - Accuracy * DistanceAccuracy));
+            Vector2 AimDirectionChange = AimDirection + ShotDirection.ToRotationVector2() * DistanceAccuracy; //(ItemUseType == ItemUseTypes.AimingUse ? ShotSpawnPosition - ItemRotation.ToRotationVector2() * 6 : AimDirection + ShotDirection.ToRotationVector2() * (DistanceAccuracy - Accuracy * DistanceAccuracy));
             //ItemRotation = AimDirection.ToRotation();
             Vector2 MovementDirection = AimDirectionChange - ShotSpawnPosition;
             //float AngleChecker = MathHelper.WrapAngle((float)Math.Atan2((CenterPosition.Y - AimDirectionChange.Y) * GravityDirection, CenterPosition.X - AimDirectionChange.X));
@@ -16050,6 +16074,7 @@ namespace giantsummon
             int PositionX = (int)(this.Position.X * DivisionBy16);
             bool Fall = DropFromPlatform;
             Point[] TouchingTile = UpdateTouchingTiles();
+            bool CanHurt = Main.netMode == 0 || OwnerPos == Main.myPlayer || (OwnerPos == -1 && Main.netMode == 2);
             Collision_Water(Collision_Lava());
             Collision_WalkDownSlopes();
             TryBouncingOnTiles(TouchingTile);
@@ -16124,7 +16149,7 @@ namespace giantsummon
             Falling = false;
             if (!Jump && Velocity.Y != 0)
                 Falling = true;
-            if (OwnerPos > -1 && !PlayerControl && !GrabbingPlayer && FriendshipLevel > 0 && AfkCounter < 60 * 60)
+            if (OwnerPos == Main.myPlayer && !PlayerControl && !GrabbingPlayer && FriendshipLevel > 0 && AfkCounter < 60 * 60)
             {
                 float Value = Velocity.X;
                 if (MountedOnPlayer || SittingOnPlayerMount)
@@ -16141,7 +16166,7 @@ namespace giantsummon
             {
                 AddSkillProgress(Math.Abs(Velocity.X * 0.25f), GuardianSkills.SkillTypes.Athletic);
                 int FallValue = (int)((Position.Y * DivisionBy16) - FallStart) * GravityDirection;
-                if (!FallProtection && FallValue >= FallHeightTolerance && !HasFlag(GuardianFlags.FallDamageImmunity))
+                if (!FallProtection && FallValue >= FallHeightTolerance && !HasFlag(GuardianFlags.FallDamageImmunity) && CanHurt)
                 {
                     FallValue -= FallHeightTolerance;
                     bool ReduceFallDamage = HasFlag(GuardianFlags.FallDamageImpactReduction);
@@ -16172,10 +16197,10 @@ namespace giantsummon
             }
             if (!DoAction.InUse || !DoAction.Immune)
             {
-                UpdateLavaScript();
-                UpdateDrowningScript();
+                UpdateLavaScript(CanHurt);
+                UpdateDrowningScript(CanHurt);
                 if(!MountedOnPlayer)
-                    CheckForHurtTileCollision();
+                    CheckForHurtTileCollision(CanHurt);
             }
             WallSlideStyle = 0;
             if (CollisionX && !CollisionY && !SittingOnPlayerMount && !WalkMode && Velocity.Y >= 0)
@@ -16201,7 +16226,7 @@ namespace giantsummon
                 }
             }
             DoorHandler();
-            if (OwnerPos > -1 && (MoveLeft || MoveRight) && !MoveDown)
+            if (OwnerPos == Main.myPlayer && (MoveLeft || MoveRight) && !MoveDown)
             {
                 if (MoveRight != LastMoveRight || MoveLeft != LastMoveLeft)
                 {
@@ -16534,7 +16559,7 @@ namespace giantsummon
             }
         }
 
-        public void CheckForHurtTileCollision()
+        public void CheckForHurtTileCollision(bool CanHurt)
         {
             bool AppliedDamage = false;
             bool FireImmune = HasFlag(GuardianFlags.FireblocksImmunity);
@@ -16545,16 +16570,16 @@ namespace giantsummon
             }
             if (TileInfo.Y == 20 && !FireImmune)
             {
-                AddBuff(67, 20);
+                AddBuff(67, 20, true);
             }
             else if (TileInfo.Y == 15)
             {
                 if (GetCooldownValue(GuardianCooldownManager.CooldownType.SuffocationDelay) < 5)
                     IncreaseCooldownValue(GuardianCooldownManager.CooldownType.SuffocationDelay);
                 else
-                   AddBuff(68, 10);
+                   AddBuff(68, 10, true);
             }
-            else if (TileInfo.Y != 0)
+            else if (CanHurt && TileInfo.Y != 0)
             {
                 string DeathMessage = " got tired of dancing on the spikes.";
                 if (PlayerMounted)
@@ -16570,7 +16595,7 @@ namespace giantsummon
             }
         }
 
-        public void UpdateLavaScript()
+        public void UpdateLavaScript(bool CanHurt)
         {
             if (WofFood)
                 return;
@@ -16590,7 +16615,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (LavaWet && !Tolerance && !HasFlag(GuardianFlags.LavaImmunity) && !HasCooldown(GuardianCooldownManager.CooldownType.LavaHurt))
+            if (CanHurt && LavaWet && !Tolerance && !HasFlag(GuardianFlags.LavaImmunity) && !HasCooldown(GuardianCooldownManager.CooldownType.LavaHurt))
             {
                 if (HasFlag(GuardianFlags.LavaTolerance))
                 {
@@ -16603,12 +16628,12 @@ namespace giantsummon
                 int Damage = 80;
                 if (HasFlag(GuardianFlags.LavaDamageReduction))
                     Damage = 50;
-                this.Hurt((int)(Damage * HealthHealMult), 0, false, true, " melted, giving a thumbs-up while sinking.");
+                this.Hurt((int)(Damage * HealthHealMult), 0, false, true, " melted, giving a thumbs up while sinking.");
                 AddCooldown(GuardianCooldownManager.CooldownType.LavaHurt, GetImmuneTime);
             }
         }
 
-        public void UpdateDrowningScript()
+        public void UpdateDrowningScript(bool CanHurt)
         {
             bool UnderLiquid = Collision.DrownCollision(TopLeftPosition, Width, Height, GravityDirection);
             bool RestoreBreath = true;
@@ -16635,7 +16660,7 @@ namespace giantsummon
                             this.ResetHealthRegen();
                             this.Breath = 0;
                             this.HP -= 6;
-                            if (this.HP <= 0)
+                            if (CanHurt && this.HP <= 0)
                             {
                                 this.Knockout(" couldn't hold more the breath.");
                             }
@@ -16782,7 +16807,7 @@ namespace giantsummon
             ImmuneTime = GetImmuneTime;
             FallProtection = true;
             SetFallStart();
-            AimDirection = CenterPosition.ToPoint();
+            AimDirection = CenterPosition;
             SetStuckCheckPositionToMe();
             TargetID = -1;
             AttackingTarget = false;
@@ -16893,7 +16918,7 @@ namespace giantsummon
             }
             if (HoneyWet)
             {
-                AddBuff(48, 1800);
+                AddBuff(48, 1800, true);
             }
             if (Wet && !LavaWet && HasFlag(GuardianFlags.OnFire))
             {
@@ -16901,7 +16926,7 @@ namespace giantsummon
             }
             if (Wet && !LavaWet && HasFlag(GuardianFlags.MerfolkAcc))
             {
-                AddBuff(34, 2);
+                AddBuff(34, 2, true);
             }
             if (!Wet && !LastHoneyWet && WasLastWet && !LavaWet)
                 AddBuff(Terraria.ID.BuffID.Wet, 300);

@@ -6,6 +6,7 @@ using System.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria;
+using Microsoft.Xna.Framework;
 
 namespace giantsummon
 {
@@ -41,6 +42,18 @@ namespace giantsummon
                     return;
                 case MessageIDs.GuardianWhoAmIDUpdate:
                     GetGuardianWhoAmIDUpdate(reader, whoAmI);
+                    return;
+                case MessageIDs.GuardianMovementUpdate:
+                    GetGuardianMovementUpdate(reader, whoAmI);
+                    return;
+                case MessageIDs.GuardianItemUseUpdate:
+                    GetGuardianItemUseUpdate(reader, whoAmI);
+                    return;
+                case MessageIDs.GuardianHurt:
+                    GetGuardianHurt(reader, whoAmI);
+                    return;
+                case MessageIDs.GuardianBuffUpdate:
+                    GetGuardianBuffUpdate(reader, whoAmI);
                     return;
             }
         }
@@ -257,13 +270,183 @@ namespace giantsummon
             }
         }
 
+        public static void SendGuardianMovementUpdate(int GuardianWhoAmID, int ToWho = -1, int FromWho = -1)
+        {
+            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(GuardianWhoAmID))
+                return;
+            ModPacket packet = StartNewMessage(MessageIDs.GuardianMovementUpdate);
+            TerraGuardian tg = MainMod.ActiveGuardians[GuardianWhoAmID];
+            BitsByte firstControls = new BitsByte(tg.MoveUp, tg.MoveDown, tg.MoveLeft, tg.MoveRight, tg.Jump);
+            packet.Write(GuardianWhoAmID);
+            packet.WriteVector2(tg.Position);
+            packet.WriteVector2(tg.Velocity);
+            packet.Write(firstControls);
+            packet.Send(ToWho, FromWho);
+        }
+
+        public static void GetGuardianMovementUpdate(BinaryReader reader, int SenderWhoAmI)
+        {
+            int WhoAmID = reader.ReadInt32();
+            Vector2 Position = reader.ReadVector2();
+            Vector2 Velocity = reader.ReadVector2();
+            BitsByte controls = reader.ReadByte();
+            if (!MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+                return;
+            TerraGuardian tg = MainMod.ActiveGuardians[WhoAmID];
+            tg.Position = Position;
+            tg.Velocity = Velocity;
+            tg.MoveUp = controls[0];
+            tg.MoveDown = controls[1];
+            tg.MoveLeft = controls[2];
+            tg.MoveRight = controls[3];
+            tg.Jump = controls[4];
+            if (Main.netMode == 2)
+            {
+                SendGuardianMovementUpdate(WhoAmID, -1, SenderWhoAmI);
+            }
+        }
+
+        public static void SendGuardianItemUseUpdate(int GuardianWhoAmID, int ToWho = -1, int FromWho = -1)
+        {
+            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(GuardianWhoAmID))
+                return;
+            ModPacket packet = StartNewMessage(MessageIDs.GuardianItemUseUpdate);
+            TerraGuardian tg = MainMod.ActiveGuardians[GuardianWhoAmID];
+            BitsByte ActionPress = new BitsByte(tg.Action, tg.OffHandAction);
+            BitsByte LastActionPress = new BitsByte(tg.LastAction, tg.LastOffHandAction);
+            Vector2 MousePosition = tg.AimDirection;
+            packet.Write(GuardianWhoAmID);
+            packet.Write(ActionPress);
+            packet.Write(LastActionPress);
+            packet.WriteVector2(MousePosition);
+            packet.Write(tg.SelectedItem);
+            packet.Write(tg.SelectedOffhand);
+            packet.Send(ToWho, FromWho);
+        }
+
+        public static void GetGuardianItemUseUpdate(BinaryReader reader, int SenderWhoAmI)
+        {
+            int WhoAmID = reader.ReadInt32();
+            BitsByte ActionPress = reader.ReadByte();
+            BitsByte LastActionPress = reader.ReadByte();
+            Vector2 AimPosition = reader.ReadVector2();
+            int SelectedItem = reader.ReadInt32();
+            int SelectedOffhandItem = reader.ReadInt32();
+            if (!MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+                return;
+            TerraGuardian tg = MainMod.ActiveGuardians[WhoAmID];
+            tg.Action = ActionPress[0];
+            tg.OffHandAction = ActionPress[1];
+            tg.LastAction = LastActionPress[0];
+            tg.LastOffHandAction = LastActionPress[1];
+            tg.AimDirection = AimPosition;
+            tg.SelectedItem = SelectedItem;
+            tg.SelectedOffhand = SelectedOffhandItem;
+            if(Main.netMode == 2)
+            {
+                SendGuardianItemUseUpdate(WhoAmID, -1, SenderWhoAmI);
+            }
+        }
+
+        public static void SendGuardianHurt(int WhoAmID, int Damage, int Direction, bool Critical, string DeathMessage, int ToWho = -1, int FromWho = -1)
+        {
+            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+                return;
+            ModPacket packet = StartNewMessage(MessageIDs.GuardianHurt);
+            TerraGuardian tg = MainMod.ActiveGuardians[WhoAmID];
+            packet.Write(WhoAmID);
+            packet.WriteVector2(tg.Position);
+            packet.Write(Damage);
+            packet.Write((sbyte)Direction);
+            packet.Write(Critical);
+            packet.Write(DeathMessage);
+            byte DownState = 0;
+            if (tg.Downed)
+                DownState = 3;
+            else if (tg.KnockedOutCold)
+                DownState = 2;
+            else if (tg.KnockedOut)
+                DownState = 1;
+            packet.Write(DownState);
+            packet.Write(tg.HP);
+            packet.Send(ToWho, FromWho);
+        }
+
+        public static void GetGuardianHurt(BinaryReader reader, int SenderWhoAmI)
+        {
+            int WhoAmID = reader.ReadInt32();
+            Vector2 Position = reader.ReadVector2();
+            int Damage = reader.ReadInt32();
+            sbyte Direction = reader.ReadSByte();
+            bool Critical = reader.ReadBoolean();
+            string DeathMessage = reader.ReadString();
+            byte DownState = reader.ReadByte();
+            int HP = reader.ReadInt32();
+            if (!MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+                return;
+            TerraGuardian tg = MainMod.ActiveGuardians[WhoAmID];
+            tg.Position = Position;
+            tg.Hurt(Damage, (int)Direction, Critical, true);
+            switch (DownState)
+            {
+                case 3:
+                    tg.Knockout(DeathMessage);
+                    break;
+                case 2:
+                    if(!tg.KnockedOut)
+                        tg.EnterDownedState();
+                    tg.KnockedOutCold = true;
+                    break;
+                case 1:
+                    if (!tg.KnockedOut)
+                        tg.EnterDownedState();
+                    tg.KnockedOutCold = false;
+                    break;
+            }
+            tg.HP = HP;
+            if(Main.netMode == 2)
+            {
+                SendGuardianHurt(WhoAmID, Damage, (int)Direction, Critical, DeathMessage, -1, SenderWhoAmI);
+            }
+        }
+
+        public static void SendGuardianBuffUpdate(int WhoAmID, int BuffID, int BuffTime, int ToWho = -1, int FromWho = -1)
+        {
+            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+                return;
+            ModPacket packet = StartNewMessage(MessageIDs.GuardianBuffUpdate);
+            packet.Write(WhoAmID);
+            packet.Write(BuffID);
+            packet.Write(BuffTime);
+            packet.Send(ToWho, FromWho);
+        }
+
+        public static void GetGuardianBuffUpdate(BinaryReader reader, int SenderWhoAmI)
+        {
+            int WhoAmID = reader.ReadInt32();
+            int BuffID = reader.ReadInt32();
+            int BuffTime = reader.ReadInt32();
+            if (!MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+                return;
+            TerraGuardian tg = MainMod.ActiveGuardians[WhoAmID];
+            tg.AddBuff(BuffID, BuffTime, true);
+            if(Main.netMode == 2)
+            {
+                SendGuardianBuffUpdate(WhoAmID, BuffID, BuffTime, -1, SenderWhoAmI);
+            }
+        }
+
         public enum MessageIDs
         {
             SpawnCompanionOnPlayer,
             DespawnCompanionOnPlayer,
             GuardianInventoryItem,
             GuardianEquippedItem,
-            GuardianWhoAmIDUpdate
+            GuardianWhoAmIDUpdate,
+            GuardianMovementUpdate,
+            GuardianItemUseUpdate,
+            GuardianHurt,
+            GuardianBuffUpdate
         }
     }
 }

@@ -89,8 +89,8 @@ namespace giantsummon
             player.wet = guardian.Wet;
             player.active = guardian.Active;
             player.dead = guardian.Downed;
-            Main.mouseX += guardian.AimDirection.X - (Main.mouseX + (int)Main.screenPosition.X);
-            Main.mouseY += guardian.AimDirection.Y - (Main.mouseY + (int)Main.screenPosition.Y);
+            Main.mouseX += (int)guardian.AimDirection.X - (Main.mouseX + (int)Main.screenPosition.X);
+            Main.mouseY += (int)guardian.AimDirection.Y - (Main.mouseY + (int)Main.screenPosition.Y);
             if (guardian.GravityDirection < 0)
                 Main.mouseY += (int)(guardian.AimDirection.Y - guardian.CenterY) * 2;
             player.frostArmor = guardian.HasFlag(GuardianFlags.FrostSetEffect);
@@ -185,7 +185,7 @@ namespace giantsummon
             {
                 if (player.buffType[b] != BuffTypes[b] && player.buffTime[b] > 0)
                 {
-                    guardian.AddBuff(player.buffType[b], player.buffTime[b]);
+                    guardian.AddBuff(player.buffType[b], player.buffTime[b], true);
                 }
             }
             guardian.Position.X = player.position.X + player.width * 0.5f;

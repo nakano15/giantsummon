@@ -26,7 +26,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (Main.dayTime && Main.time < 3600 * 6.5f && !spawnInfo.water && !NpcMod.HasMetGuardian(GuardianBase.Minerva) && !NpcMod.HasGuardianNPC(GuardianBase.Minerva) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Minerva))
+            if (Main.dayTime && Main.time < 3600 * 6.5f && !spawnInfo.playerInTown && !spawnInfo.water && (!NpcMod.HasMetGuardian(GuardianBase.Minerva) || PlayerMod.GetPlayerGuardianFriendshipLevel(spawnInfo.player, GuardianBase.Minerva) < 3) && !NpcMod.HasGuardianNPC(GuardianBase.Minerva) && !MainMod.IsGuardianInTheWorld(GuardianBase.Minerva))
             {
                 return 1f / 250; //250
             }

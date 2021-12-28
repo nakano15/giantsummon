@@ -1258,7 +1258,7 @@ namespace giantsummon.Creatures
             {
                 //Shoot something
                 Vector2 ProjectilePosition = Vector2.Zero;
-                Vector2 AimPosition = tg.AimDirection.ToVector2() - tg.CenterPosition;
+                Vector2 AimPosition = tg.AimDirection - tg.CenterPosition;
                 float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
                 if (AimPosition.X < 0)
                     Angle = (float)Math.PI - Angle;
@@ -1323,7 +1323,7 @@ namespace giantsummon.Creatures
             };
             special.AnimationReplacer = delegate (TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame)
             {
-                Vector2 AimPosition = tg.AimDirection.ToVector2() - tg.CenterPosition;
+                Vector2 AimPosition = tg.AimDirection - tg.CenterPosition;
                 float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
                 if (AimPosition.X < 0)
                     Angle = (float)Math.PI - Angle;

@@ -71,7 +71,7 @@ namespace giantsummon.Creatures.Vladimir
                     pm.Guardian.FallStart = (int)pm.Guardian.Position.Y / 16;
                     if (pm.Guardian.ItemAnimationTime == 0 && !pm.Guardian.MoveLeft && !pm.Guardian.MoveRight)
                         pm.Guardian.FaceDirection((guardian.Direction * (FaceBear ? -1 : 1)) == -1);
-                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5, true);
                     if (pm.Guardian.KnockedOut)
                     {
                         pm.Guardian.ReviveBoost += 3;

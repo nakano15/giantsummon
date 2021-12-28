@@ -346,7 +346,7 @@ namespace giantsummon
             {
                 if (dummy.buffType[b] > 0)
                 {
-                    g.AddBuff(dummy.buffType[b], dummy.buffTime[b]);
+                    g.AddBuff(dummy.buffType[b], dummy.buffTime[b], true);
                 }
                 dummy.buffType[b] = 0;
                 dummy.buffTime[b] = 0;

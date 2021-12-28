@@ -752,7 +752,7 @@ namespace giantsummon
         public static bool CanGiveFreeVladimir()
         {
             DateTime dt = DateTime.Now;
-            return dt.Year == 2020 && (dt.Month < 5 || (dt.Month == 5 && dt.Day < 19));
+            return dt.Month == 5 && dt.Day >= 4 && dt.Day <= 19;//dt.Year == 2020 && (dt.Month < 5 || (dt.Month == 5 && dt.Day < 19));
         }
 
         public static bool CanGiveFreeLiebre()
@@ -1468,7 +1468,7 @@ namespace giantsummon
             TerraGuardian guardian = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian;
             if (guardian.Active && !guardian.PlayerControl && (ShowDebugInfo || Gameplay2PMode))
             {
-                Main.spriteBatch.Draw(GuardianMouseTexture, new Vector2(guardian.AimDirection.X, guardian.AimDirection.Y) - Main.screenPosition, Main.mouseColor);
+                Main.spriteBatch.Draw(GuardianMouseTexture, guardian.AimDirection - Main.screenPosition, Main.mouseColor);
             }
             return true;
         }
@@ -3066,7 +3066,7 @@ namespace giantsummon
                     RightThumbstick.X = Guardian.Direction * Guardian.Width * 0.5f;
                 }
                 Vector2 AimDirection = Guardian.CenterPosition + new Vector2(RightThumbstick.X, RightThumbstick.Y);
-                Guardian.AimDirection = AimDirection.ToPoint();
+                Guardian.AimDirection = AimDirection;
             }
             oldGamePadState = gamePadState;
         }

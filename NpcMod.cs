@@ -145,7 +145,7 @@ namespace giantsummon
                         {
                             if (guardian.Active && !guardian.Downed)
                             {
-                                guardian.AddBuff(Terraria.ID.BuffID.SoulDrain, 5);
+                                guardian.AddBuff(BuffID.SoulDrain, 5, true);
                             }
                         }
                         if (Main.rand.Next(3) != 0)

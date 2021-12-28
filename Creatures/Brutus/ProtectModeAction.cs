@@ -103,7 +103,7 @@ namespace giantsummon.Creatures.Brutus
                 PlayerMod pm = defended.GetModPlayer<PlayerMod>();
                 if (pm.ControllingGuardian)
                 {
-                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3, true);
                     if (pm.Guardian.KnockedOut)
                         pm.Guardian.ReviveBoost++;
                     else

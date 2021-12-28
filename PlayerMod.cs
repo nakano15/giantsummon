@@ -706,6 +706,14 @@ namespace giantsummon
             return player.GetModPlayer<PlayerMod>().GetGuardian(ID, ModID);
         }
 
+        public static int GetPlayerGuardianFriendshipLevel(Player player, int ID, string ModID = "")
+        {
+            if (!PlayerHasGuardian(player, ID, ModID))
+                return 0;
+            GuardianData tg = GetPlayerGuardian(player, ID, ModID);
+            return tg.FriendshipLevel;
+        }
+
         public static bool HasGuardianSummoned(Player player, int ID, Mod mod)
         {
             return HasGuardianSummoned(player, ID, mod.Name);
@@ -1877,7 +1885,7 @@ namespace giantsummon
                 }
                 if (player.HasBuff(Terraria.ID.BuffID.SoulDrain))
                 {
-                    guardian.AddBuff(Terraria.ID.BuffID.SoulDrain, 5);
+                    guardian.AddBuff(Terraria.ID.BuffID.SoulDrain, 5, true);
                 }
                 guardian.AssistSlot = AssistSlot;
                 if (BuddiesMode && guardian.IsSameAs(BuddiesModeBuddyID) && AssistSlot > 0)
@@ -2251,7 +2259,7 @@ namespace giantsummon
                 {
                     GuardianActions.UseBuffPotions(Guardian);
                 }
-                Guardian.AimDirection = Main.screenPosition.ToPoint();
+                Guardian.AimDirection = Main.screenPosition;
                 Guardian.AimDirection.X += Main.mouseX;
                 Guardian.AimDirection.Y += Main.mouseY;
                 if (Guardian.PlayerControl)
@@ -2566,8 +2574,15 @@ namespace giantsummon
             if (!HasGuardian(GuardianBase.Vladimir) && MainMod.CanGiveFreeVladimir())
             {
                 AddNewGuardian(GuardianBase.Vladimir, Starter: true);
-                int DaysCounter = (int)(new DateTime(2020, 05, 19) - DateTime.Now).TotalDays;
-                Main.NewText("With Terraria 1.4 just " + DaysCounter + " days away, Vladimir is being given away until then.");
+                int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
+                if (DaysCounter == 0)
+                {
+                    Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3");
+                }
+                else
+                {
+                    Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.");
+                }
             }
             if (!HasGuardian(GuardianBase.Liebre) && MainMod.CanGiveFreeLiebre())
             {

@@ -408,12 +408,12 @@ namespace giantsummon.Creatures
                 {
                     //Main.player[guardian.OwnerPos].AddBuff(ModContent.BuffType<Buffs.Obstruction>(), 5);
                     Main.player[guardian.OwnerPos].AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
-                    guardian.AddBuff(ModContent.BuffType<Buffs.Protecting>(), 5);
+                    guardian.AddBuff(ModContent.BuffType<Buffs.Protecting>(), 5, true);
                 }
                 else if (guardian.PlayerMounted)
                 {
                     Main.player[guardian.OwnerPos].AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
-                    guardian.AddBuff(ModContent.BuffType<Buffs.Protecting>(), 5);
+                    guardian.AddBuff(ModContent.BuffType<Buffs.Protecting>(), 5, true);
                 }
             }
         }
@@ -662,7 +662,7 @@ namespace giantsummon.Creatures
                         if (HeldGuardian.UsingFurniture)
                             HeldGuardian.LeaveFurniture(false);
                         HeldGuardian.AddFlag(GuardianFlags.DisableMovement);
-                        HeldGuardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5);
+                        HeldGuardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5, true);
                         HeldGuardian.Position = guardian.GetGuardianShoulderPosition;
                         HeldGuardian.Position.Y += (HeldGuardian.SpriteHeight - HeldGuardian.Base.SittingPoint.Y) * HeldGuardian.Scale + 4 * guardian.Scale;
                         HeldGuardian.Velocity = Vector2.Zero;

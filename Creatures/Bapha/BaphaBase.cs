@@ -141,7 +141,7 @@ namespace giantsummon.Creatures
             {
                 if (FrameID == 5)
                 {
-                    Vector2 PosDif = tg.AimDirection.ToVector2() - tg.CenterPosition;
+                    Vector2 PosDif = tg.AimDirection - tg.CenterPosition;
                     float RotationValue = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(PosDif.Y, PosDif.X)));
                     if (RotationValue < 0.0174533f * 25f)
                     {

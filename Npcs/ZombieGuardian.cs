@@ -552,7 +552,7 @@ namespace giantsummon.Npcs
                                         Guardian.Hurt(SlashDamage, npc.direction, false, false, " was cutdown in half by a Zombie Guardian.");
                                         if (Main.expertMode)
                                         {
-                                            Guardian.AddBuff(Terraria.ID.BuffID.BrokenArmor, 30);
+                                            Guardian.AddBuff(Terraria.ID.BuffID.BrokenArmor, 30 * 60);
                                         }
                                     }
                                 }
