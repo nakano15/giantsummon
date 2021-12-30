@@ -83,7 +83,7 @@ namespace giantsummon
             string CompanionModID = reader.ReadString();
             bool Starter = reader.ReadBoolean();
             Player player = Main.player[PlayerID];
-            if (!player.active || PlayerID == Main.myPlayer)
+            if (PlayerID == Main.myPlayer)
                 return;
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             if (!pm.MyGuardians.ContainsKey(MyGuardianPosID))
@@ -140,7 +140,7 @@ namespace giantsummon
             byte PlayerID = reader.ReadByte();
             byte AssistSlot = reader.ReadByte();
             Player player = Main.player[PlayerID];
-            if (!player.active || PlayerID == Main.myPlayer)
+            if (PlayerID == Main.myPlayer)
                 return;
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             if (pm.GetGuardianFromSlot(AssistSlot).Active)
@@ -184,7 +184,7 @@ namespace giantsummon
             i.stack = Stack;
             ItemIO.ReceiveModData(i, reader);
             Player player = Main.player[PlayerID];
-            if (!player.active || PlayerID == Main.myPlayer)
+            if (PlayerID == Main.myPlayer)
                 return;
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             if (!pm.MyGuardians.ContainsKey(MyGuardianPos))
@@ -230,7 +230,7 @@ namespace giantsummon
             i.stack = Stack;
             ItemIO.ReceiveModData(i, reader);
             Player player = Main.player[PlayerID];
-            if (!player.active || PlayerID == Main.myPlayer)
+            if (PlayerID == Main.myPlayer)
                 return;
             PlayerMod pm = player.GetModPlayer<PlayerMod>();
             if (!pm.MyGuardians.ContainsKey(MyGuardianPosID))

@@ -2541,6 +2541,7 @@ namespace giantsummon
         {
             if (!Active)
                 return;
+            SaySomething("WhoAmID: " + WhoAmID + " Owner: " + OwnerPos);
             if (Position.X < 0 || Position.Y < 0)
                 Spawn();
             CollisionHeightDiscount = 0;
@@ -2821,9 +2822,9 @@ namespace giantsummon
             if (Channeling && !Action)
                 Channeling = false;
             ShowOffHand = OffHandAction;
-            if (CanSyncMe)
+            if (CanSyncMe || OwnerPos == Main.myPlayer) //TODO - A spamfest of netmessage will happen here if a companion is following the player. Find a way of fixing that.
             {
-                if(MoveRight != LastMoveRight || MoveUp != LastMoveUp || MoveLeft != LastMoveLeft || MoveDown != LastMoveDown || Jump != LastJump)
+                if (MoveUp != LastMoveUp || MoveRight != LastMoveRight  || MoveDown != LastMoveDown || MoveLeft != LastMoveLeft || Jump != LastJump)
                 {
                     Netplay.SendGuardianMovementUpdate(WhoAmID, -1, OwnerPos);
                 }
@@ -2832,10 +2833,6 @@ namespace giantsummon
                     Netplay.SendGuardianItemUseUpdate(WhoAmID, -1, OwnerPos);
                 }
             }
-            if (Main.netMode == 0 || OwnerPos == Main.myPlayer)
-            {
-                MoveRight = MoveLeft = MoveUp = MoveDown = Action = Jump = OffHandAction = false;
-            }
             LastMoveRight = MoveRight;
             LastMoveLeft = MoveLeft;
             LastMoveUp = MoveUp;
@@ -2843,6 +2840,10 @@ namespace giantsummon
             LastAction = Action;
             LastJump = Jump;
             LastOffHandAction = OffHandAction;
+            if (Main.netMode == 0 || OwnerPos == Main.myPlayer)
+            {
+                MoveRight = MoveLeft = MoveUp = MoveDown = Action = Jump = OffHandAction = false;
+            }
             for (int c = 0; c < Cooldowns.Count; c++)
             {
                 if (!Cooldowns[c].DontDepleteOvertime && !CooldownException.Contains(Cooldowns[c].type))

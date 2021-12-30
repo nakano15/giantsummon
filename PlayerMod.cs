@@ -381,6 +381,7 @@ namespace giantsummon
 
         public PlayerMod()
         {
+            Guardian = new TerraGuardian();
             QuestContainer.CreateQuestListToPlayer(this);
             for (int g = 0; g < MainMod.MaxExtraGuardianFollowers; g++)
             {
@@ -457,13 +458,7 @@ namespace giantsummon
             return player.GetModPlayer<PlayerMod>().BuddiesModeBuddyID;
         }
 
-        public override bool CloneNewInstances
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public override bool CloneNewInstances => false;
 
         public void ShareHealthReplenishWithGuardians(int Value)
         {
