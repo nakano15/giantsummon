@@ -117,7 +117,6 @@ namespace giantsummon
         public const int MaxGuardianNpcHousingCheckCooldown = 60 * 60 * 3;
         public static bool CheckIfGuardianNpcsCanStayAtHomeCheck { get { return GuardianNpcHousingCheckCooldown == MaxGuardianNpcHousingCheckCooldown; } }
         public static List<GuardianID> InitialGuardians = new List<GuardianID>();
-        public static List<KeyValuePair<byte, int>> PlayerGuardianSync = new List<KeyValuePair<byte, int>>();
         public static bool NetplaySync = true;
         public static ModHotKey orderCallButton;
         public static bool OrderCallButtonPressed = false;//, MakeUseOfOrderHotkey = false;
@@ -693,19 +692,6 @@ namespace giantsummon
                     return true;
                 }
             }
-            return false;
-        }
-
-        public static bool HasSyncFlag(int Player, int Guardian)
-        {
-            for (int s = 0; s < PlayerGuardianSync.Count; s++)
-            {
-                if (PlayerGuardianSync[s].Key == Player && PlayerGuardianSync[s].Value == Guardian)
-                {
-                    return true;
-                }
-            }
-            PlayerGuardianSync.Add(new KeyValuePair<byte, int>((byte)Player, Guardian));
             return false;
         }
 

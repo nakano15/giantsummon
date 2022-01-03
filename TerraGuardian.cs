@@ -143,8 +143,8 @@ namespace giantsummon
                 return tg.Active && tg.WhoAmID == WhoAmID;
             }
         }
-        public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
-        public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false;
+        public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false, FollowingPlayer = false;
+        public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false, LastFollowingPlayer = false;
         public bool DropFromPlatform { get { return MoveDown && Jump; } set { MoveDown = Jump = value; } }
         public bool LastDroppedFromPlatform { get { return LastMoveDown && LastJump; } }
         public bool Action = false, Jump = false, OffHandAction = false;
@@ -2824,7 +2824,14 @@ namespace giantsummon
             ShowOffHand = OffHandAction;
             if (CanSyncMe || OwnerPos == Main.myPlayer) //TODO - A spamfest of netmessage will happen here if a companion is following the player. Find a way of fixing that.
             {
-                if (MoveUp != LastMoveUp || MoveRight != LastMoveRight  || MoveDown != LastMoveDown || MoveLeft != LastMoveLeft || Jump != LastJump)
+                if (OwnerPos == Main.myPlayer && FollowingPlayer)
+                {
+                    if (!LastFollowingPlayer)
+                    {
+                        Netplay.SendGuardianMovementUpdate(WhoAmID, -1, OwnerPos);
+                    }
+                }
+                else if (MoveUp != LastMoveUp || MoveRight != LastMoveRight || MoveDown != LastMoveDown || MoveLeft != LastMoveLeft || Jump != LastJump)
                 {
                     Netplay.SendGuardianMovementUpdate(WhoAmID, -1, OwnerPos);
                 }
@@ -2840,9 +2847,14 @@ namespace giantsummon
             LastAction = Action;
             LastJump = Jump;
             LastOffHandAction = OffHandAction;
+            LastFollowingPlayer = FollowingPlayer;
             if (Main.netMode == 0 || OwnerPos == Main.myPlayer)
             {
-                MoveRight = MoveLeft = MoveUp = MoveDown = Action = Jump = OffHandAction = false;
+                MoveRight = MoveLeft = MoveUp = MoveDown = Action = Jump = OffHandAction = FollowingPlayer = false;
+            }
+            else if (FollowingPlayer)
+            {
+                MoveRight = MoveLeft = MoveUp = MoveDown = Jump = false;
             }
             for (int c = 0; c < Cooldowns.Count; c++)
             {
@@ -6026,6 +6038,8 @@ namespace giantsummon
                     this.Action = true;
                 }
             }
+            if (AttackingTarget && OwnerPos == Main.myPlayer)
+                FollowingPlayer = false;
         }
 
         public void CheckIfSomeoneNeedsRevive(bool MountedEdition = false)
@@ -6102,7 +6116,11 @@ namespace giantsummon
         public void BehaviorHandler()
         {
             if (Main.netMode == 1 && OwnerPos != Main.myPlayer)
+            {
+                if (!Downed && !KnockedOut && !KnockedOutCold && FollowingPlayer)
+                    FollowPlayerAI();
                 return;
+            }
             if (KnockedOut)
             {
                 if (OwnerPos == -1 && IsTownNpc && !GetTownNpcInfo.Homeless && ((Base.IsNocturnal && Main.dayTime) || (!Base.IsNocturnal && !Main.dayTime) || Breath <= 0))
@@ -11119,6 +11137,7 @@ namespace giantsummon
         public void FollowPlayerAI()
         {
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
+            if (OwnerPos == Main.myPlayer) FollowingPlayer = true;
             Player Owner = Main.player[OwnerPos];
             TerraGuardian LeaderGuardian = PlayerMod.GetPlayerMainGuardian(Owner);
             {

@@ -2524,7 +2524,6 @@ namespace giantsummon
             {
                 GuardianGlobalInfos.UpdateSeason();
             }
-            MainMod.PlayerGuardianSync.Clear();
             if (SelectedGuardian > -1)
             {
                 CallGuardian(SelectedGuardian, 0);
