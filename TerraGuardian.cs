@@ -2541,7 +2541,7 @@ namespace giantsummon
         {
             if (!Active)
                 return;
-            SaySomething("WhoAmID: " + WhoAmID + " Owner: " + OwnerPos);
+            //SaySomething("WhoAmID: " + WhoAmID + " Owner: " + OwnerPos);
             if (Position.X < 0 || Position.Y < 0)
                 Spawn();
             CollisionHeightDiscount = 0;

@@ -1,4 +1,8 @@
 Recall Potion doesn't work when mounted.
+Add a option to disable the companions from spawning in the game.
+	It should clear the initial companion list of starter companions.
+	Companion recruit npcs and spawn scripts should not work with this enabled.
+	Something should be done about companions visitting the player. Maybe ignore if they originate from this mod?
 Companions with lava waders seems to be broken underwater.
 Add a tutorial quest to introduce the mod mechanics to players.
 Add a way of marking a world as adventure map.
