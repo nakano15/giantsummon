@@ -42,11 +42,11 @@ namespace giantsummon.Npcs
                     {
                         if(!PlayerLeft)
                         {
-                            SayMessage("*Huh? Is that a Terrarian?*");
+                            SayMessage("*A Terrarian..*");
                         }
                         else
                         {
-                            SayMessage("*Is that Terrarian again?*");
+                            SayMessage("*Is that Terrarian again..*");
                         }
                         TalkTime = 180;
                         SpottedPlayer = true;
@@ -69,7 +69,7 @@ namespace giantsummon.Npcs
                             if(!PlayerLeft)
                                 SayMessage("*Terrarian, can we talk?*");
                             else
-                                SayMessage("*Please don't run away again, I want to talk to you.*");
+                                SayMessage("*Please don't run away again, I must speak to you.*");
                         }
                         else
                         {
