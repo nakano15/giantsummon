@@ -1042,7 +1042,7 @@ namespace giantsummon
 
         public void GetBetweenHandsPosition(int Frame, out int X, out int Y)
         {
-            Microsoft.Xna.Framework.Point p = GetBetweenHandsPosition(Frame);
+            Point p = GetBetweenHandsPosition(Frame);
             X = p.X;
             Y = p.Y;
         }

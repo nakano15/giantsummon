@@ -50,7 +50,6 @@ namespace giantsummon.Creatures
             SleepsAtBed = false;
             DontUseHeavyWeapons = false;
             SetTerraGuardian();
-            VladimirBase.AddCarryBlacklist(Liebre);
 
             AddInitialItem(Terraria.ID.ItemID.SilverBroadsword);
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);

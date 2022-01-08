@@ -136,6 +136,24 @@ namespace giantsummon
             {
                 Messages.Add("*I heard people saying that a intimidating giant snake is roaming this world. The person said that It climbed some tree to sleep. I really can't believe that, but it doesn't hurt to look that.*");
             }
+            if(!HasMetGuardian(GuardianBase.Liebre) && Npcs.LiebreNPC.CanSpawn)
+            {
+                switch (Npcs.LiebreNPC.EncounterTimes)
+                {
+                    case 0:
+                        Messages.Add("*Someone told me that found a grim reaper when they were exploring the forest. The person said that ran away very fast when It said that wanted to talk to them.*");
+                        break;
+                    case 1:
+                        Messages.Add("*You know that grim reaper you've found? People says they found it exploring the " + (WorldGen.crimson ? "Crimson" : "Corruption") + ".*");
+                        break;
+                    case 2:
+                        Messages.Add("*I heard that the grim reaper you met some time ago has entered the dungeon. What could it be doing there?*");
+                        break;
+                    case 3:
+                        Messages.Add("*I haven't heard about the grim reaper since you last found them in the dungeon. I wonder what could have happened.*");
+                        break;
+                }
+            }
             if (Messages.Count == 0)
                 return "*I didn't heard about anything latelly.*";
             return Messages[Main.rand.Next(Messages.Count)];

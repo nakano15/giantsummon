@@ -157,7 +157,7 @@ namespace giantsummon
             }
             if (tg.Base.InvalidGuardian)
             {
-                Message = "(Your memories of It are fragmented, so you can't see It's true form, neither allow It to speak with you.)\nGuardian ID: " + tg.ID + ", Guardian Mod ID: " + tg.ModID + ".\nIf this isn't related to a mod you uninstalled, send It's to the mod developer.";
+                Message = "(Your memories of it are fragmented, so you can't see its true form, neither allow it to speak with you.)\nGuardian ID: " + tg.ID + ", Guardian Mod ID: " + tg.ModID + ".\nIf this isn't related to a mod you uninstalled, send a screenshot of this to the mod developer.";
             }
             else if (!modPlayer.HasGuardian(tg.ID, tg.ModID))
             {
@@ -742,10 +742,10 @@ namespace giantsummon
 
         public static void AskGuardianToFollowYouButtonPressed()
         {
+            HideCallDismissButton = true;
             if ((!Speaker.Data.IsStarter && Speaker.FriendshipLevel < Speaker.Base.CallUnlockLevel && (!Speaker.request.Active || !Speaker.request.RequiresGuardianActive(Speaker.Data))) || (!MainMod.ShowDebugInfo && Speaker.TrustLevel < TrustLevels.FollowTrust))
             {
                 SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), Speaker);
-                HideCallDismissButton = true;
                 GetDefaultOptions();
             }
             else
@@ -760,7 +760,6 @@ namespace giantsummon
                     SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess, "(It seems happy to follow you.)"), Speaker);
                     pm.CallGuardian(Speaker.ID, Speaker.ModID);
                 }
-                HideCallDismissButton = true;
                 GetDefaultOptions();
             }
         }

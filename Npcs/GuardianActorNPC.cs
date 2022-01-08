@@ -368,7 +368,7 @@ namespace giantsummon.Npcs
 
         }
 
-        public List<GuardianDrawData> GetDrawDatas(Microsoft.Xna.Framework.Color drawColor, bool FrontPart = false)
+        public List<GuardianDrawData> GetDrawDatas(Color drawColor, bool FrontPart = false)
         {
             try
             {

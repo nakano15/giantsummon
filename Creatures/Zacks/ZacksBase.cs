@@ -730,7 +730,7 @@ namespace giantsummon.Creatures
                                 break;
                             case TriggerTarget.TargetTypes.TerraGuardian:
                                 TerraGuardian tg = MainMod.ActiveGuardians[Sender.TargetID];
-                                if (!guardian.DoAction.InUse && !guardian.IsGuardianHostile(tg))
+                                if (!tg.Downed && !guardian.DoAction.InUse && !guardian.IsGuardianHostile(tg))
                                 {
                                     guardian.StartNewGuardianAction(new Zacks.ZacksPullSomeoneAction(tg), PullSomeoneID);
                                 }

@@ -28,3 +28,14 @@ The changes on Minerva and Cinnamon spawning are useful for those who disabled c
 Vladimir's free recruitment has been reworked:
 	Before, you would gain Vladimir for free for starting a new character before the launch of Terraria 1.4.
 	Now, you can get Vladimir if you enter a world with a character that you didn't recruited him yet, 14 days before Terraria's birthday, or on the day of Terraria's birthday.
+Vladimir will now try carrying the companions that aren't blacklisted, instead of carrying blacklisted ones only.
+	He will also only try carrying companions that have at least up to 95% of his size.
+Demons can now drop the Unholy Amulet.
+Killing the King Slime while Sardine is inside it will now make him be instantly unlocked for all players in the range of the combat.
+Companions will now try following you through platforms, when you drop from them.
+	They may not be able to follow you correctly on 2 platforms that have solid blocks around them.
+Liebre's recruit npc has been implemented.
+	His recruitment is multi stage. I'm pretty sure Luna will be able to help you know where to go next.
+Companions gains lava and dangerous tile immunity while being pulled by players.
+Only following companions will hold their offhand items.
+Companions will stop being pulled to a dead player.

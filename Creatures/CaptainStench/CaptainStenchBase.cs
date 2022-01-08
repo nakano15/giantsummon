@@ -733,7 +733,7 @@ namespace giantsummon.Creatures
 
         public override void ModifyVelocity(TerraGuardian tg, ref Vector2 Velocity)
         {
-            if(!tg.BeingPulledByPlayer && Velocity.Y > 4)
+            if(!tg.IsBeingPulledByPlayer && Velocity.Y > 4)
             {
                 Velocity.Y = 4;
                 tg.SetFallStart();

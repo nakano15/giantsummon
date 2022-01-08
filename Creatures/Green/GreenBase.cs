@@ -702,11 +702,12 @@ namespace giantsummon.Creatures
                                     tg.KnockedOut = tg.KnockedOutCold = false;
                                 }
                                 tg.HP = tg.MHP;
-                                foreach (BuffData b in tg.Buffs)
+                                for (int buff = tg.Buffs.Count - 1; buff >= 0; buff--)
                                 {
+                                    BuffData b = tg.Buffs[buff];
                                     if ((Main.debuff[b.ID] || b.ID == WoundDebuffID || b.ID == HeavyWoundDebuffID) && b.Time > 5 && Terraria.ModLoader.BuffLoader.CanBeCleared(b.ID))
                                     {
-                                        tg.Buffs.Remove(b);
+                                        tg.Buffs.RemoveAt(buff);
                                     }
                                 }
                             }

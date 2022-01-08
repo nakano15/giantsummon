@@ -421,6 +421,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            Npcs.LiebreNPC.EncounterTimes = 0;
             Npcs.BrutusNPC.WarnedAboutBrutus = false;
             MainMod.LastBossSpotted = MainMod.LastInvasionSpotted = MainMod.LastEventStarted = false;
             MainMod.LastEvent = 0;
@@ -540,6 +541,7 @@ namespace giantsummon
             AlexRecruitScripts.Save(tag);
             tag.Add("DominoDismissed", Npcs.DominoNPC.DominoDismissed);
             tag.Add("GhostFoxHauntLifted", Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted);
+            tag.Add("LiebreEncounterTimes", Npcs.LiebreNPC.EncounterTimes);
             GuardianShopHandler.SaveShops(tag);
             GuardianGlobalInfos.SaveGlobalInfos();
             GuardianGlobalInfos.SaveFeats();
@@ -675,6 +677,8 @@ namespace giantsummon
                 Npcs.DominoNPC.DominoDismissed = tag.GetBool("DominoDismissed");
             if (Version >= 77)
                 Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = tag.GetBool("GhostFoxHauntLifted");
+            if (Version >= 100)
+                Npcs.LiebreNPC.EncounterTimes = tag.GetByte("LiebreEncounterTimes");
             if (Version >= 74)
                 GuardianShopHandler.LoadShops(tag, Version);
             foreach (GuardianTownNpcState tns in GuardianNPCsInWorld)

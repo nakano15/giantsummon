@@ -24,7 +24,7 @@ namespace giantsummon.Actions
                     return;
                 }
                 IgnoreCombat = true;
-                if (!guardian.BeingPulledByPlayer)
+                if (!guardian.IsBeingPulledByPlayer)
                 {
                     if (TryReachingPlayer(guardian, PlayerToPickup))
                     {

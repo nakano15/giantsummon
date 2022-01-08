@@ -44,7 +44,7 @@ namespace giantsummon.Actions
         {
             if (guardian.furniturex > -1)
                 guardian.LeaveFurniture(false);
-            if (guardian.BeingPulledByPlayer)
+            if (guardian.IsBeingPulledByPlayer)
             {
                 InUse = false;
                 return;

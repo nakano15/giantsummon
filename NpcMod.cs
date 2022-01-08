@@ -1388,19 +1388,19 @@ namespace giantsummon
                 Main.NewText("There's something over there.");
                 NpcMod.AddGuardianMet(4);
             }
-            if (npc.type == Terraria.ID.NPCID.Bunny && Main.rand.Next(50) == 0)
+            if (npc.type == NPCID.Bunny && Main.rand.Next(50) == 0)
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Accessories.BunnyFoot>());
             }
-            if (npc.type == Terraria.ID.NPCID.GoblinWarrior && Main.rand.Next(100) == 0)
+            if (npc.type == NPCID.GoblinWarrior && Main.rand.Next(100) == 0)
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Accessories.ProvocationBadge>());
             }
-            if (npc.type == Terraria.ID.NPCID.Plantera && Main.rand.Next(50) == 0)
+            if (npc.type == NPCID.Plantera && Main.rand.Next(50) == 0)
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Weapons.UprootedTree>());
             }
-            if (!Main.halloween && npc.type == Terraria.ID.NPCID.RedDevil && NpcMod.HasGuardianNPC(GuardianBase.Wrath) && Main.rand.Next(100) == 0)
+            if (!Main.halloween && (npc.type == NPCID.RedDevil || npc.type == NPCID.Demon) && HasGuardianNPC(GuardianBase.Wrath) && Main.rand.Next(100) == 0)
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Outfit.Wrath.UnholyAmulet>());
             }
@@ -1412,7 +1412,7 @@ namespace giantsummon
             {
                 Item.NewItem(npc.getRect(), ItemID.Book);
             }
-            if (npc.type == Terraria.ID.NPCID.WallofFlesh)
+            if (npc.type == NPCID.WallofFlesh)
                 MainMod.LastWof = false;
             bool SomeGuardianHurt = false, SomeGuardianNeedMana = false;
             for (int p = 0; p < 255; p++)
@@ -1483,7 +1483,7 @@ namespace giantsummon
             if (TrappedCatKingSlime == npc.whoAmI)
             {
                 TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Center.Y, GuardianBase.Sardine);
-                tg.AddBuff(Terraria.ID.BuffID.Slimed, 300);
+                tg.AddBuff(BuffID.Slimed, 300);
                 switch (Main.rand.Next(5)) {
                     default:
                         tg.SaySomething("*Heavily breathing* Soo good to be able to breath again.");
@@ -1503,6 +1503,14 @@ namespace giantsummon
                 }
                 AddGuardianMet(GuardianBase.Sardine);
                 TrappedCatKingSlime = -1;
+                const int Distance = 1000;
+                for(int p = 0; p < 255; p++)
+                {
+                    if(Main.player[p].active && Math.Abs(Main.player[p].position.X - npc.Center.X) < Distance && Math.Abs(Main.player[p].position.Y - npc.Center.Y) < Distance)
+                    {
+                        PlayerMod.AddPlayerGuardian(Main.player[p], GuardianBase.Sardine);
+                    }
+                }
             }
             if(NPC.downedGoblins && npc.type == NPCID.DarkCaster)
             {

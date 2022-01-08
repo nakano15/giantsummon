@@ -20,7 +20,7 @@ namespace giantsummon.Creatures.Alexander
             if (guardian.UsingFurniture)
                 guardian.LeaveFurniture(true);
             guardian.StuckTimer = 0;
-            if (guardian.BeingPulledByPlayer)
+            if (guardian.IsBeingPulledByPlayer)
             {
                 guardian.SaySomething("*Alright, I'm coming, I'm coming.*");
                 InUse = false;

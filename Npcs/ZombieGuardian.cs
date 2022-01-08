@@ -611,9 +611,9 @@ namespace giantsummon.Npcs
                                 if (Main.expertMode)
                                     npc.defense *= 2;
                                 npc.knockBackResist = 0;
-                                if(!Target.TargettingPlayer && Target.Guardian.BeingPulledByPlayer)
+                                if(!Target.TargettingPlayer && Target.Guardian.IsBeingPulledByPlayer)
                                 {
-                                    Target.Guardian.BeingPulledByPlayer = false;
+                                    Target.Guardian.IsBeingPulledByPlayer = false;
                                     Target.SetTargetToPlayer(Main.player[Target.Guardian.OwnerPos]);
                                     AiState = 4;
                                     AiValue = 0;

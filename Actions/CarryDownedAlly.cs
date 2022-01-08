@@ -211,7 +211,7 @@ namespace giantsummon.Actions
                 }
                 else
                 {
-                    CarriedGuardian.BeingPulledByPlayer = false;
+                    CarriedGuardian.IsBeingPulledByPlayer = false;
                     CarriedGuardian.Position.X = CarryPosition.X - (CarriedGuardian.Width * (Origin.X - 0.5f)) + guardian.OffsetX;
                     CarriedGuardian.Position.Y = CarryPosition.Y + (CarriedGuardian.Height * (1.1f - Origin.Y)) + guardian.OffsetY;
                     CarriedGuardian.SetFallStart();

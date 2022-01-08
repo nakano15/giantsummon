@@ -235,7 +235,7 @@ namespace giantsummon
         {
             if (guardian.OwnerPos == player.whoAmI && guardian.PlayerMounted)
                 return true;
-            if (guardian.HitBox.Intersects(player.getRect()) && !guardian.BeingPulledByPlayer && guardian.ItemAnimationTime == 0)
+            if (guardian.HitBox.Intersects(player.getRect()) && !guardian.IsBeingPulledByPlayer && guardian.ItemAnimationTime == 0)
             {
                 return true;
             }

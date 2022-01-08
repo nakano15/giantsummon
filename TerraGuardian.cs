@@ -184,7 +184,7 @@ namespace giantsummon
         private byte TriggerStack = 0;
         public bool FallProtection = false;
         public bool LockDirection = false;
-        public bool BeingPulledByPlayer = false, SuspendedByChains = false;
+        public bool IsBeingPulledByPlayer = false, SuspendedByChains = false;
         public float TownNpcs = 0f, ActiveNpcs = 0f;
         public int WingType = 0, WingFrame = 0, WingCounter = 0;
         public int HeldProj = -1;
@@ -2640,8 +2640,8 @@ namespace giantsummon
             {
                 UpdateKnockoutState();
             }
-            if (BeingPulledByPlayer && (PlayerMounted || PlayerControl || Downed))
-                BeingPulledByPlayer = false;
+            if (IsBeingPulledByPlayer && (PlayerMounted || PlayerControl || Downed))
+                IsBeingPulledByPlayer = false;
             if (ItemAnimationTime > 0 && Velocity.Y == 0 && ItemUseType != ItemUseTypes.AimingUse && ItemUseType != ItemUseTypes.CursedAttackAttempt && ItemUseType != ItemUseTypes.ItemDrink2h && ItemUseType != ItemUseTypes.OverHeadItemUse && ItemUseType != ItemUseTypes.LightVerticalSwing) //avoiding movement when attacking
             {
                 MoveLeft = false;
@@ -2715,8 +2715,8 @@ namespace giantsummon
             {
                 PlayerControl = PlayerMounted = false;
             }
-            if (BeingPulledByPlayer && SittingOnPlayerMount)
-                BeingPulledByPlayer = false;
+            if (IsBeingPulledByPlayer && SittingOnPlayerMount)
+                IsBeingPulledByPlayer = false;
             if (SittingOnPlayerMount && Owner != null && (Owner.dead || !Owner.mount.Active || GrabbingPlayer))
                 DoSitOnPlayerMount(false);
             Base.ModifyVelocity(this, ref Velocity);
@@ -2733,7 +2733,7 @@ namespace giantsummon
             {
                 UpdateMountedPosition();
                 bool WofPassing = CheckForPassingWof();
-                if (!IsBeingPulledByPlayer() && LoadedWorldRegion && !WofPassing)
+                if (!UpdatePullByPlayer() && LoadedWorldRegion && !WofPassing)
                 {
                     CheckForObstacles();
                     UpdateCollision();
@@ -3811,9 +3811,9 @@ namespace giantsummon
         {
             if (OwnerPos > -1 && !PlayerMounted && !SittingOnPlayerMount)
             {
-                if (!BeingPulledByPlayer && (!KnockedOut || !HasFlag(GuardianFlags.NotPulledWhenKOd)))
+                if (!IsBeingPulledByPlayer && (!KnockedOut || !HasFlag(GuardianFlags.NotPulledWhenKOd)))
                 {
-                    BeingPulledByPlayer = true;
+                    IsBeingPulledByPlayer = true;
                     SuspendedByChains = false;
                 }
             }
@@ -3860,17 +3860,22 @@ namespace giantsummon
             }
         }
 
-        public bool IsBeingPulledByPlayer()
+        public bool UpdatePullByPlayer()
         {
             bool IgnoreCollisions = false;
-            if (Downed)
-                BeingPulledByPlayer = false;
-            if (BeingPulledByPlayer && OwnerPos > -1)
+            if (Downed || OwnerPos == -1)
+                IsBeingPulledByPlayer = false;
+            if (IsBeingPulledByPlayer && OwnerPos > -1)
             {
                 Player p = Main.player[OwnerPos];
+                if (p.dead)
+                {
+                    IsBeingPulledByPlayer = false;
+                    return false;
+                }
                 if (!p.gross && WofFacing)
                 {
-                    BeingPulledByPlayer = false;
+                    IsBeingPulledByPlayer = false;
                     return false;
                 }
                 Vector2 ResultingPosition = p.Center;
@@ -3915,7 +3920,7 @@ namespace giantsummon
                         if (PlayerInAMount && (PlayerInMinecart || Data.SitOnTheMount) && (CenterPosition - p.Center).Length() <= Width)
                         {
                             DoSitOnPlayerMount(true);
-                            BeingPulledByPlayer = false;
+                            IsBeingPulledByPlayer = false;
                             SetStuckCheckPositionToMe();
                         }
                         Velocity += MovementDirection;
@@ -3940,7 +3945,7 @@ namespace giantsummon
                 SetFallStart();
                 if (Distance < Speed * 2 && !PlayerIsFlying && !PlayerInMinecart)
                 {
-                    BeingPulledByPlayer = false;
+                    IsBeingPulledByPlayer = false;
                     FallProtection = true;
                     TeleportToPlayer();
                     Velocity = Main.player[OwnerPos].velocity;
@@ -6188,7 +6193,7 @@ namespace giantsummon
                     MoveCursorToPosition(CenterPosition + new Vector2(SpriteWidth * 0.5f * Direction, -(SpriteHeight - Base.CharacterPositionYDiscount) * 0.25f));
                 if (!PlayerControl)
                 {
-                    if (!CanDualWield)
+                    if (!CanDualWield && OwnerPos > -1)
                         OffHandAction = true;
                     if (TargetID > -1 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3 && 
                         (!DoAction.InUse || (!DoAction.IsGuardianSpecificAction && DoAction.ID != (int)GuardianActions.ActionIDs.CarryDownedAlly)))//!LastHadTargetClose && TargetID > -1)
@@ -6431,6 +6436,7 @@ namespace giantsummon
                 {
                     byte Dangerous = 0;
                     bool SolidTile = false;
+                    int LastFallCheckDistY = 0;
                     for (int CheckX = 0; CheckX < 2; CheckX++)
                     {
                         for (int y = -1; y < FallCheckDistY; y++)
@@ -6443,11 +6449,15 @@ namespace giantsummon
                                 if (tile.lava() || MainMod.IsDangerousTile(TileX, TileY, FireBlockProtection))
                                 {
                                     Dangerous++;
+                                    LastFallCheckDistY = y;
                                     break;
                                 }
                                 else if (tile.active() && Main.tileSolid[tile.type])
                                 {
                                     SolidTile = true;
+                                    if (Dangerous == 1 && LastFallCheckDistY > y)
+                                        Dangerous = 0;
+                                    LastFallCheckDistY = y;
                                     break;
                                 }
                                 else if (tile.liquid > 20 && !tile.lava() && CanSwim)
@@ -6529,7 +6539,7 @@ namespace giantsummon
                     IncreaseStuckTimer();
                 }
                 return false;
-                if (Distance <= 1)
+                /*if (Distance <= 1)
                 {
                     if(Velocity.X == 0)
                     {
@@ -6562,7 +6572,7 @@ namespace giantsummon
                 }
                 //if (Math.Abs(PredictedMoveSpeed * DivisionBy16 - Distance) < 1 && OwnerY - 32 < Position.Y)
                 //    Jump = true;
-                return false;
+                return false;*/
             }
             return true;
         }
@@ -6998,14 +7008,14 @@ namespace giantsummon
         {
             get
             {
-                int FeetX = (int)(Position.X * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
-                FeetX -= (int)((CollisionWidth * 0.5f) * DivisionBy16) + 1;
+                int FeetLeftX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), FeetRightX = (int)((Position.X + CollisionWidth * 0.5f) * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
+                //FeetLeftX -= (int)((CollisionWidth * 0.5f) * DivisionBy16) + 1;
                 bool StandingOnPlatform = false;
-                for (int x = 0; x < CollisionWidth * DivisionBy16 + 2; x++)
+                for (int x = FeetLeftX; x <= FeetRightX; x++)
                 {
                     for (int y = 0; y < 2; y++)
                     {
-                        int TileX = FeetX + x, TileY = FeetY + y;
+                        int TileX = x, TileY = FeetY + y;
                         if (TileY >= 0)
                         {
                             Tile tile = MainMod.GetTile(TileX, TileY);
@@ -9141,7 +9151,7 @@ namespace giantsummon
 
         public bool AttemptToGrabPlayer()
         {
-            if (!Main.player[OwnerPos].dead && !BeingPulledByPlayer)
+            if (!Main.player[OwnerPos].dead && !IsBeingPulledByPlayer)
             {
                 if (PlayerMounted)
                 {
@@ -9896,7 +9906,7 @@ namespace giantsummon
                         case giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian:
                             {
                                 TerraGuardian guardian = MainMod.ActiveGuardians[Target.TargetID];
-                                if (!DoAction.InUse && !PlayerMounted && !SittingOnPlayerMount && !guardian.Downed && guardian.KnockedOut && !IsGuardianHostile(guardian) && !guardian.IsBeingCarriedBySomeone() &&
+                                if (!guardian.Downed && !DoAction.InUse && !PlayerMounted && !SittingOnPlayerMount && !guardian.Downed && guardian.KnockedOut && !IsGuardianHostile(guardian) && !guardian.IsBeingCarriedBySomeone() &&
                                     Actions.CarryDownedAlly.CanCarryAlly(this, guardian))
                                 {
                                     StartNewGuardianAction(new Actions.CarryDownedAlly(guardian));
@@ -10153,7 +10163,7 @@ namespace giantsummon
             ChangeTrustValue((sbyte)(IsPlayerFaultCompanionKO() ? -20 : -10));
             UsingFurniture = false;
             furniturex = furniturey = -1;
-            BeingPulledByPlayer = false;
+            IsBeingPulledByPlayer = false;
             SittingOnPlayerMount = false;
             if (GrabbingPlayer || PlayerMounted)
             {
@@ -11213,7 +11223,10 @@ namespace giantsummon
             if (ProtectMode && IsAttackingSomething)
                 DistanceMult *= 0.2f;
             bool PlayerIsHooked = Owner.grapCount > 0;
-            if (!Downed && !PlayerIsHooked && (((!IsAttackingSomething && Math.Abs(PositionDifference.Y) >= 320f * DistanceMult) || Math.Abs(PositionDifference.Y) >= 640f * DistanceMult) || Math.Abs(PositionDifference.X) >= 640f * DistanceMult))
+            if (!Downed && !PlayerIsHooked && 
+                (((!IsAttackingSomething && Math.Abs(PositionDifference.Y) >= 320f * DistanceMult) || 
+                Math.Abs(PositionDifference.Y) >= 640f * DistanceMult) ||
+                Math.Abs(PositionDifference.X) >= 640f * DistanceMult))
             {
                 IncreaseStuckTimer();
             }
@@ -11258,7 +11271,9 @@ namespace giantsummon
                 }
                 if (!IsOnSameGroundAsPlayer && LeaderSpeedY == 0)
                 {
-                    if (Math.Abs(PositionDifference.X) >= 8)
+                    //if (Math.Abs(PositionDifference.X) >= 8)
+                    int LeaderPosX = (int)(LeaderCenterX * DivisionBy16);
+                    if((int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16) < LeaderPosX - 1 || (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16) > LeaderPosX)
                     {
                         if (PositionDifference.X < 0)
                             MoveLeft = true;
@@ -11363,8 +11378,7 @@ namespace giantsummon
                             MoveRight = true;
                         }
                     }
-                    if (StuckTimer > 0)
-                        StuckTimer = 0;
+                    //StuckTimer = 0;
                 }
                 else if (LeaderSpeedX != 0)
                 {
@@ -11452,7 +11466,9 @@ namespace giantsummon
                 if (IsBlockedAhead() && ((MoveLeft && LookingLeft) || (MoveRight && !LookingLeft)))
                 {
                     MoveLeft = MoveRight = Jump = false;
-                    if(!ChargeAhead || (Direction > 0 && Position.X < LeaderCenterX) || (Direction < 0 && Position.X > LeaderCenterX))
+                    if(!ChargeAhead || 
+                        (Direction > 0 && Position.X < LeaderCenterX) || 
+                        (Direction < 0 && Position.X > LeaderCenterX))
                         IncreaseStuckTimer();
                 }
             }
@@ -11460,7 +11476,7 @@ namespace giantsummon
 
         public void CheckForNpcContact()
         {
-            if (BeingPulledByPlayer && !SuspendedByChains) return;
+            if (IsBeingPulledByPlayer && !SuspendedByChains) return;
             if ((Main.netMode == 1 && OwnerPos != Main.myPlayer) || (Main.netMode == 2 && OwnerPos > -1))
                 return;
             int DamageStack = -1, AttackDirection = 0; // *evil face*
@@ -14975,7 +14991,7 @@ namespace giantsummon
                 ApplyFrameAnimationChangeScripts();
                 return;
             }
-            if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()) && Velocity.X == 0 && Velocity.Y == 0 && !BeingPulledByPlayer)
+            if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Sleeping>()) && Velocity.X == 0 && Velocity.Y == 0 && !IsBeingPulledByPlayer)
             {
                 if (Base.DownedFrame > -1)
                 {
@@ -16219,7 +16235,7 @@ namespace giantsummon
             {
                 UpdateLavaScript(CanHurt);
                 UpdateDrowningScript(CanHurt);
-                if(!MountedOnPlayer)
+                if(!MountedOnPlayer && !IsBeingPulledByPlayer)
                     CheckForHurtTileCollision(CanHurt);
             }
             WallSlideStyle = 0;
@@ -16254,7 +16270,7 @@ namespace giantsummon
                 }
                 else if ((MoveRight && StuckCheckX < Position.X) || (MoveLeft && StuckCheckX > Position.X))
                 {
-                    StuckCheckX = Position.X;
+                    SetStuckCheckPositionToMe();
                 }
                 else
                 {
@@ -16635,7 +16651,7 @@ namespace giantsummon
                     }
                 }
             }
-            if (CanHurt && LavaWet && !Tolerance && !HasFlag(GuardianFlags.LavaImmunity) && !HasCooldown(GuardianCooldownManager.CooldownType.LavaHurt))
+            if (CanHurt && LavaWet && !Tolerance && !HasFlag(GuardianFlags.LavaImmunity) && !HasCooldown(GuardianCooldownManager.CooldownType.LavaHurt) && !IsBeingPulledByPlayer)
             {
                 if (HasFlag(GuardianFlags.LavaTolerance))
                 {
@@ -16819,7 +16835,7 @@ namespace giantsummon
             {
                 return;
             }
-            BeingPulledByPlayer = false;
+            IsBeingPulledByPlayer = false;
             if (Data.SitOnTheMount && player.mount.Active && !PlayerMounted && !PlayerControl)
                 DoSitOnPlayerMount(true);
             Position = new Vector2(player.Center.X, player.position.Y + player.height);
@@ -18656,7 +18672,7 @@ namespace giantsummon
 
         public void DrawChains()
         {
-            if (BeingPulledByPlayer && OwnerPos > -1)
+            if (IsBeingPulledByPlayer && OwnerPos > -1)
             {
                 Vector2 PlayerCenter = Main.player[OwnerPos].Center;
                 Vector2 MyCenter = CenterPosition;

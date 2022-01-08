@@ -501,7 +501,7 @@ namespace giantsummon.Creatures
             foreach (int k in MainMod.ActiveGuardians.Keys)
             {
                 if (k != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[k]) && MainMod.ActiveGuardians[k].OwnerPos == -1 &&
-                    CarryBlacklist.Any(x => x.IsSameID(MainMod.ActiveGuardians[k])) && 
+                    !CarryBlacklist.Any(x => x.IsSameID(MainMod.ActiveGuardians[k])) && MainMod.ActiveGuardians[k].Height < guardian.Height * 0.95f &&
                     (guardian.CenterPosition - MainMod.ActiveGuardians[k].CenterPosition).Length() < 80 + MainMod.ActiveGuardians[k].Width * 0.5f)
                 {
                     PotentialTgs.Add(k);
@@ -668,7 +668,7 @@ namespace giantsummon.Creatures
                         HeldGuardian.Velocity = Vector2.Zero;
                         HeldGuardian.Velocity.Y -= HeldGuardian.Mass;
                         HeldGuardian.gfxOffY = 0;
-                        HeldGuardian.BeingPulledByPlayer = false;
+                        HeldGuardian.IsBeingPulledByPlayer = false;
                         HeldGuardian.SetFallStart();
                         if (guardian.PlayerMounted || (guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction))
                             HeldGuardian.Position.X += 4 * guardian.Direction * guardian.Scale;

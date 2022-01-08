@@ -54,7 +54,7 @@ namespace giantsummon
             }
         }
         //End contest related
-        public const int ModVersion = 99, LastModVersion = 97;
+        public const int ModVersion = 100, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -1495,10 +1495,9 @@ namespace giantsummon
                 foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
-                    New.Add(g.Name + " ID: " + g.WhoAmID);
-                    New.Add("Is Active? " + g.Active);
-                    New.Add("Position: " + g.Position);
-                    New.Add("Is on the world? " + MainMod.ActiveGuardians.ContainsValue(g));
+                    New.Add(g.Name);
+                    New.Add("Moving Down: " + g.MoveDown);
+                    New.Add("Jump? " + g.Jump);
                     /*New.Add(" Sub attack in use? " + g.SubAttackInUse);
                     if (g.SubAttackInUse)
                     {

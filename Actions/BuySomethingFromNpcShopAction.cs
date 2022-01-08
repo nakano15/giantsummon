@@ -23,7 +23,7 @@ namespace giantsummon.Actions
             {
                 Cancellable = true;
             }
-            if (guardian.TargetID > -1 || guardian.TalkPlayerID > -1 || guardian.BeingPulledByPlayer)
+            if (guardian.TargetID > -1 || guardian.TalkPlayerID > -1 || guardian.IsBeingPulledByPlayer)
             {
                 InUse = false;
                 return;
