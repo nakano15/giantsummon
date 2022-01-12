@@ -12,6 +12,8 @@ namespace giantsummon
 {
     public class Netplay
     {
+        private static bool MultiplayerActive = false;
+
         private static ModPacket StartNewMessage(MessageIDs mID)
         {
             ModPacket packet = MainMod.GetPacket;
@@ -60,7 +62,7 @@ namespace giantsummon
 
         public static void SendSpawnCompanionOnPlayer(PlayerMod pm, int CompanionPosID, byte AssistSlot, int WhoAmID, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0 || !pm.GetGuardianFromSlot(AssistSlot).Active)
+            if (!MultiplayerActive || Main.netMode == 0 || !pm.GetGuardianFromSlot(AssistSlot).Active)
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.SpawnCompanionOnPlayer);
             packet.Write((byte)pm.player.whoAmI);
@@ -127,7 +129,7 @@ namespace giantsummon
 
         public static void SendDespawnCompanionOnPlayer(PlayerMod pm, byte AssistSlot, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0)
+            if (!MultiplayerActive || Main.netMode == 0)
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.DespawnCompanionOnPlayer);
             packet.Write((byte)pm.player.whoAmI);
@@ -153,7 +155,7 @@ namespace giantsummon
 
         public static void SendGuardianInventoryItem(PlayerMod pm, int MyGuardianPosID, int Slot, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0 || !pm.MyGuardians.ContainsKey(MyGuardianPosID))
+            if (!MultiplayerActive || Main.netMode == 0 || !pm.MyGuardians.ContainsKey(MyGuardianPosID))
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianInventoryItem);
             packet.Write((byte)pm.player.whoAmI);
@@ -199,7 +201,7 @@ namespace giantsummon
 
         public static void SendGuardianEquippedItem(PlayerMod pm, int MyGuardianPosID, int Slot, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0 || !pm.MyGuardians.ContainsKey(MyGuardianPosID))
+            if (!MultiplayerActive || Main.netMode == 0 || !pm.MyGuardians.ContainsKey(MyGuardianPosID))
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianEquippedItem);
             packet.Write((byte)pm.player.whoAmI);
@@ -244,7 +246,7 @@ namespace giantsummon
 
         public static void SendGuardianWhoAmIDUpdate(int OldWhoAmID, int NewWhoAmID, int ToWho =-1, int FromWho = -1)
         {
-            if (Main.netMode == 0)
+            if (!MultiplayerActive || Main.netMode == 0)
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianWhoAmIDUpdate);
             packet.Write(OldWhoAmID);
@@ -272,7 +274,7 @@ namespace giantsummon
 
         public static void SendGuardianMovementUpdate(int GuardianWhoAmID, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(GuardianWhoAmID))
+            if (!MultiplayerActive || Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(GuardianWhoAmID))
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianMovementUpdate);
             TerraGuardian tg = MainMod.ActiveGuardians[GuardianWhoAmID];
@@ -309,7 +311,7 @@ namespace giantsummon
 
         public static void SendGuardianItemUseUpdate(int GuardianWhoAmID, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(GuardianWhoAmID))
+            if (!MultiplayerActive || Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(GuardianWhoAmID))
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianItemUseUpdate);
             TerraGuardian tg = MainMod.ActiveGuardians[GuardianWhoAmID];
@@ -351,7 +353,7 @@ namespace giantsummon
 
         public static void SendGuardianHurt(int WhoAmID, int Damage, int Direction, bool Critical, string DeathMessage, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+            if (!MultiplayerActive || Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(WhoAmID))
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianHurt);
             TerraGuardian tg = MainMod.ActiveGuardians[WhoAmID];
@@ -413,7 +415,7 @@ namespace giantsummon
 
         public static void SendGuardianBuffUpdate(int WhoAmID, int BuffID, int BuffTime, int ToWho = -1, int FromWho = -1)
         {
-            if (Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(WhoAmID))
+            if (!MultiplayerActive || Main.netMode == 0 || !MainMod.ActiveGuardians.ContainsKey(WhoAmID))
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianBuffUpdate);
             packet.Write(WhoAmID);

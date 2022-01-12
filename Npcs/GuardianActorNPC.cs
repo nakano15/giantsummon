@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace giantsummon.Npcs
 {
@@ -374,121 +375,234 @@ namespace giantsummon.Npcs
             {
                 if (Base.sprites == null || Base.sprites.HasErrorLoadingOccurred)
                     return new List<GuardianDrawData>();
-                else if (!Base.sprites.IsTextureLoaded)
+                if (!Base.sprites.IsTextureLoaded)
                 {
                     Base.sprites.LoadTextures();
                 }
-                List<GuardianDrawData> dds = new List<GuardianDrawData>();
                 Vector2 DrawPos = npc.position - Main.screenPosition;
                 DrawPos.X += XOffSet;
                 DrawPos.Y += YOffset;
                 DrawPos.X += npc.width * 0.5f;
                 DrawPos.Y += npc.height + Base.CharacterPositionYDiscount;
                 DrawPos.Y += 2;
-                Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = (npc.direction < 0 ? Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally : Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
+                SpriteEffects seffects = (npc.direction < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
                 if (FlipVertically)
                 {
-                    if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.None)
-                        seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically;
+                    if (seffects == SpriteEffects.None)
+                        seffects = SpriteEffects.FlipVertically;
                     else
-                        seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipVertically | Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+                        seffects = SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally;
                     //DrawPos.Y -= Base.SpriteHeight;
                 }
-                Rectangle bodyrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
+                if (Base.IsTerrarian)
+                    return GetTerrarianDrawData(DrawPos, seffects, drawColor, FrontPart);
+                return GetTerraGuardianDrawData(DrawPos, seffects, drawColor, FrontPart);
+            }
+            catch
+            {
+                return new List<GuardianDrawData>();
+            }
+        }
+
+        private List<GuardianDrawData> GetTerrarianDrawData(Vector2 DrawPos, SpriteEffects seffects, Color drawColor, bool FrontPart)
+        {
+            List<GuardianDrawData> dds = new List<GuardianDrawData>();
+            Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56),
+                bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56),
+                hairrect = new Rectangle(0, 56 * LeftArmAnimationFrame - 336, 40, 56),
+                eyerect = new Rectangle(0, 0, hairrect.Width, hairrect.Height);
+            if (hairrect.Y < 0)
+                hairrect.Y = 0;
+            int SkinVariant = Base.TerrarianInfo.GetSkinVariant(Base.Male);
+            Vector2 Origin = new Vector2(20, 56);
+            Color HairColor = Base.TerrarianInfo.HairColor,
+                EyesColor = Base.TerrarianInfo.EyeColor,
+                EyesWhiteColor = Color.White,
+                SkinColor = Base.TerrarianInfo.SkinColor,
+                UndershirtColor = Base.TerrarianInfo.UnderShirtColor,
+                ShirtColor = Base.TerrarianInfo.ShirtColor,
+                PantsColor = Base.TerrarianInfo.PantsColor,
+                ShoesColor = Base.TerrarianInfo.ShoeColor,
+                ArmorColoring = Color.White;
+            //Lighting Change
+            int TileX = (int)((npc.position.X + npc.width * 0.5f) * (1f / 16)),
+                TileY = (int)((npc.position.Y + npc.height * 0.5f) * (1f / 16));
+            HairColor = Lighting.GetColor(TileX, TileY, HairColor);
+            EyesColor = Lighting.GetColor(TileX, TileY, EyesColor);
+            EyesWhiteColor = Lighting.GetColor(TileX, TileY, EyesWhiteColor);
+            SkinColor = Lighting.GetColor(TileX, TileY, SkinColor);
+            UndershirtColor = Lighting.GetColor(TileX, TileY, UndershirtColor);
+            ShirtColor = Lighting.GetColor(TileX, TileY, ShirtColor);
+            PantsColor = Lighting.GetColor(TileX, TileY, PantsColor);
+            ShoesColor = Lighting.GetColor(TileX, TileY, ShoesColor);
+            ArmorColoring = Lighting.GetColor(TileX, TileY, ArmorColoring);
+            bool HideLegs = false;
+            int LegSlot = 0, BodySlot = 0, HeadSlot = 0;
+            GuardianDrawData dd;
+            if (!HideLegs)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlLegSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.LegSkin], DrawPos, legrect, SkinColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodySkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.TorsoSkin], DrawPos, bodyrect, SkinColor, npc.rotation, Origin, npc.scale, seffects);
+            dds.Add(dd);
+            if (LegSlot > 0)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorLegs, Main.armorLegTexture[LegSlot], DrawPos, legrect, ArmorColoring, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            else
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultPants, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Pants], DrawPos, legrect, PantsColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShoes, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], DrawPos, legrect, ShoesColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            if (BodySlot > 0)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorBody, Main.armorBodyTexture[BodySlot], DrawPos, bodyrect, ArmorColoring, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            else
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultUndershirt, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Undershirt], DrawPos, bodyrect, UndershirtColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShirt, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shirt], DrawPos, bodyrect, ShirtColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], DrawPos, bodyrect, SkinColor, npc.rotation, Origin, npc.scale, seffects);
+            dds.Add(dd);
+            float EyePositionBonus = 0;
+            if ((hairrect.Y + 336 >= 7 * hairrect.Height && hairrect.Y + 336 < 10 * hairrect.Height) ||
+                hairrect.Y + 336 >= 14 * hairrect.Height && hairrect.Y + 336 < 17 * hairrect.Height)
+            {
+                EyePositionBonus -= 2;
+            }
+            DrawPos.Y += EyePositionBonus;
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEye, MainMod.EyeTexture, DrawPos, new Rectangle(40 * 0, 56, 40, 56), EyesColor, npc.rotation, Origin, npc.scale, seffects);
+            dds.Add(dd);
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, MainMod.EyeTexture, DrawPos, new Rectangle(40 * 0, 0, 40, 56), EyesWhiteColor, npc.rotation, Origin, npc.scale, seffects);
+            dds.Add(dd);
+            DrawPos.Y -= EyePositionBonus;
+            //hair
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], DrawPos, hairrect, HairColor, npc.rotation, Origin, npc.scale, seffects);
+            dds.Add(dd);
+            if(HeadSlot > 0)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], DrawPos, bodyrect, ArmorColoring, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            if(BodySlot > 0)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorArm, Main.armorArmTexture[BodySlot], DrawPos, bodyrect, ArmorColoring, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            else
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodyArmSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmSkin], DrawPos, bodyrect, SkinColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultUndershirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmUndershirt], DrawPos, bodyrect, UndershirtColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmShirt], DrawPos, bodyrect, ShirtColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHand, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmHand], DrawPos, bodyrect, SkinColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            return dds;
+        }
+
+        private List<GuardianDrawData> GetTerraGuardianDrawData(Vector2 DrawPos, SpriteEffects seffects, Color drawColor, bool FrontPart)
+        {
+            List<GuardianDrawData> dds = new List<GuardianDrawData>();
+            Rectangle bodyrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
                     bodyfrontrect = new Rectangle(BodyAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
                     leftarmrect = new Rectangle(LeftArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
                     rightarmrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight),
                     rightarmfrontrect = new Rectangle(RightArmAnimationFrame, 0, Base.SpriteWidth, Base.SpriteHeight);
-                if (Base.SpecificBodyFrontFramePositions)
-                {
-                    bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X);
-                }
-                else
-                {
-                    bodyfrontrect.X = -1;
-                }
-                if (Base.RightArmFrontFrameSwap.ContainsKey(RightArmAnimationFrame))
-                {
-                    rightarmfrontrect.X = Base.RightArmFrontFrameSwap[RightArmAnimationFrame];
-                }
-                else
-                {
-                    rightarmfrontrect.X = -1;
-                }
-                if (bodyfrontrect.X >= Base.FramesInRows)
-                {
-                    bodyfrontrect.Y += bodyfrontrect.X / Base.FramesInRows;
-                    bodyfrontrect.X -= bodyfrontrect.Y * Base.FramesInRows;
-                }
-                if (bodyrect.X >= Base.FramesInRows)
-                {
-                    bodyrect.Y += bodyrect.X / Base.FramesInRows;
-                    bodyrect.X -= bodyrect.Y * Base.FramesInRows;
-                }
-                if (leftarmrect.X >= Base.FramesInRows)
-                {
-                    leftarmrect.Y += leftarmrect.X / Base.FramesInRows;
-                    leftarmrect.X -= leftarmrect.Y * Base.FramesInRows;
-                }
-                if (rightarmrect.X >= Base.FramesInRows)
-                {
-                    rightarmrect.Y += rightarmrect.X / Base.FramesInRows;
-                    rightarmrect.X -= rightarmrect.Y * Base.FramesInRows;
-                }
-                if (rightarmfrontrect.X >= Base.FramesInRows)
-                {
-                    rightarmfrontrect.Y += rightarmfrontrect.X / Base.FramesInRows;
-                    rightarmfrontrect.X -= rightarmfrontrect.Y * Base.FramesInRows;
-                }
-                bodyrect.X *= bodyrect.Width;
-                bodyrect.Y *= bodyrect.Height;
-
-                leftarmrect.X *= leftarmrect.Width;
-                leftarmrect.Y *= leftarmrect.Height;
-
-                rightarmrect.X *= rightarmrect.Width;
-                rightarmrect.Y *= rightarmrect.Height;
-
-                bodyfrontrect.X *= bodyfrontrect.Width;
-                bodyfrontrect.Y *= bodyfrontrect.Height;
-
-                rightarmfrontrect.X *= rightarmfrontrect.Width;
-                rightarmfrontrect.Y *= rightarmfrontrect.Height;
-                GuardianDrawData dd;
-                Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, Base.SpriteHeight);
-                if (!FrontPart)
-                {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
-                    dds.Add(dd);
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
-                    dds.Add(dd);
-                }
-                {
-                    GuardianDrawData dd2 = DrawItem(drawColor);
-                    if (dd2 != null)
-                        dds.Add(dd2);
-                }
-                if (bodyfrontrect.X > -1 && Base.sprites.BodyFrontSprite != null)
-                {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
-                    dds.Add(dd);
-                }
-                if (rightarmfrontrect.X > -1 && Base.sprites.RightArmFrontSprite != null)
-                {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArmFront, Base.sprites.RightArmFrontSprite, DrawPos, rightarmfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
-                    dds.Add(dd);
-                }
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
-                dds.Add(dd);
-                ModifyDrawDatas(dds, DrawPos, bodyrect, leftarmrect, rightarmrect, Origin, drawColor, seffects);
-                XOffSet = YOffset = 0f;
-                return dds;
-            }
-            catch
+            if (Base.SpecificBodyFrontFramePositions)
             {
-                Main.NewText("The error happened with " + npc.GivenOrTypeName + ".", Color.Purple);
-                return new List<GuardianDrawData>();
+                bodyfrontrect.X = Base.GetBodyFrontSprite(bodyfrontrect.X);
             }
+            else
+            {
+                bodyfrontrect.X = -1;
+            }
+            if (Base.RightArmFrontFrameSwap.ContainsKey(RightArmAnimationFrame))
+            {
+                rightarmfrontrect.X = Base.RightArmFrontFrameSwap[RightArmAnimationFrame];
+            }
+            else
+            {
+                rightarmfrontrect.X = -1;
+            }
+            if (bodyfrontrect.X >= Base.FramesInRows)
+            {
+                bodyfrontrect.Y += bodyfrontrect.X / Base.FramesInRows;
+                bodyfrontrect.X -= bodyfrontrect.Y * Base.FramesInRows;
+            }
+            if (bodyrect.X >= Base.FramesInRows)
+            {
+                bodyrect.Y += bodyrect.X / Base.FramesInRows;
+                bodyrect.X -= bodyrect.Y * Base.FramesInRows;
+            }
+            if (leftarmrect.X >= Base.FramesInRows)
+            {
+                leftarmrect.Y += leftarmrect.X / Base.FramesInRows;
+                leftarmrect.X -= leftarmrect.Y * Base.FramesInRows;
+            }
+            if (rightarmrect.X >= Base.FramesInRows)
+            {
+                rightarmrect.Y += rightarmrect.X / Base.FramesInRows;
+                rightarmrect.X -= rightarmrect.Y * Base.FramesInRows;
+            }
+            if (rightarmfrontrect.X >= Base.FramesInRows)
+            {
+                rightarmfrontrect.Y += rightarmfrontrect.X / Base.FramesInRows;
+                rightarmfrontrect.X -= rightarmfrontrect.Y * Base.FramesInRows;
+            }
+            bodyrect.X *= bodyrect.Width;
+            bodyrect.Y *= bodyrect.Height;
+
+            leftarmrect.X *= leftarmrect.Width;
+            leftarmrect.Y *= leftarmrect.Height;
+
+            rightarmrect.X *= rightarmrect.Width;
+            rightarmrect.Y *= rightarmrect.Height;
+
+            bodyfrontrect.X *= bodyfrontrect.Width;
+            bodyfrontrect.Y *= bodyfrontrect.Height;
+
+            rightarmfrontrect.X *= rightarmfrontrect.Width;
+            rightarmfrontrect.Y *= rightarmfrontrect.Height;
+            GuardianDrawData dd;
+            Vector2 Origin = new Vector2(Base.SpriteWidth * 0.5f, Base.SpriteHeight);
+            if (!FrontPart)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArm, Base.sprites.RightArmSprite, DrawPos, rightarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBody, Base.sprites.BodySprite, DrawPos, bodyrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            {
+                GuardianDrawData dd2 = DrawItem(drawColor);
+                if (dd2 != null)
+                    dds.Add(dd2);
+            }
+            if (bodyfrontrect.X > -1 && Base.sprites.BodyFrontSprite != null)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGBodyFront, Base.sprites.BodyFrontSprite, DrawPos, bodyfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            if (rightarmfrontrect.X > -1 && Base.sprites.RightArmFrontSprite != null)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.TGRightArmFront, Base.sprites.RightArmFrontSprite, DrawPos, rightarmfrontrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
+                dds.Add(dd);
+            }
+            dd = new GuardianDrawData(GuardianDrawData.TextureType.TGLeftArm, Base.sprites.LeftArmSprite, DrawPos, leftarmrect, drawColor, npc.rotation, Origin, npc.scale, seffects);
+            dds.Add(dd);
+            ModifyDrawDatas(dds, DrawPos, bodyrect, leftarmrect, rightarmrect, Origin, drawColor, seffects);
+            XOffSet = YOffset = 0f;
+            return dds;
         }
     }
 }

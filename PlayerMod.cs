@@ -2862,7 +2862,10 @@ namespace giantsummon
                 MyGuardians.Add(SpawnID, GuardianBase.GetGuardianBase(Id, ModId).GetGuardianData(Id, ModId));
                 if (MyGuardians[SpawnID].Base.CanChangeGender)
                     MyGuardians[SpawnID].Male = Main.rand.Next(2) == 0;
-                MyGuardians[SpawnID].IsStarter = Starter;
+                if (Starter)
+                {
+                    MyGuardians[SpawnID].SetStarterGuardian();
+                }
                 if (FirstGuardian)
                 {
                     if (player.whoAmI == Main.myPlayer && !TutorialCompanionIntroduction)

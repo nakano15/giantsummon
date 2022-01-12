@@ -17005,7 +17005,7 @@ namespace giantsummon
         public void GetEquipmentSlots()
         {
             HeadSlot = Equipments[0].headSlot;
-            ArmorSlot = Equipments[1].bodySlot;
+            BodySlot = Equipments[1].bodySlot;
             LegSlot = Equipments[2].legSlot;
             if (Base.IsTerrarian)
             {
@@ -17014,9 +17014,9 @@ namespace giantsummon
                 {
                     HeadSlot = tci.DefaultHelmet;
                 }
-                if (ArmorSlot == -1 && tci.DefaultArmor > 0)
+                if (BodySlot == -1 && tci.DefaultArmor > 0)
                 {
-                    ArmorSlot = tci.DefaultArmor;
+                    BodySlot = tci.DefaultArmor;
                 }
                 if (LegSlot == -1 && tci.DefaultLeggings > 0)
                 {
@@ -17031,7 +17031,7 @@ namespace giantsummon
                     if (this.Inventory[i].headSlot >= 0)
                         HeadSlot = this.Inventory[i].headSlot;
                     if (this.Inventory[i].bodySlot >= 0)
-                        ArmorSlot = this.Inventory[i].bodySlot;
+                        BodySlot = this.Inventory[i].bodySlot;
                     if (this.Inventory[i].legSlot >= 0)
                         LegSlot = this.Inventory[i].legSlot;
                     if (this.Inventory[i].type == Terraria.ID.ItemID.MoonCharm)
@@ -17051,13 +17051,13 @@ namespace giantsummon
                 if (werewolf)
                 {
                     HeadSlot = 38;
-                    ArmorSlot = 21;
+                    BodySlot = 21;
                     LegSlot = 20;
                 }
                 if (merfolk)
                 {
                     HeadSlot = 39;
-                    ArmorSlot = 22;
+                    BodySlot = 22;
                     LegSlot = 21;
                 }
             }
@@ -17331,7 +17331,7 @@ namespace giantsummon
         public static bool DrawLeftBodyPartsInFrontOfPlayer = false, DrawRightBodyPartsInFrontOfPlayer = false;
         public static List<GuardianDrawData> DrawBehind = new List<GuardianDrawData>(),
             DrawFront = new List<GuardianDrawData>();
-        public static int HeadSlot, ArmorSlot, LegSlot, FaceSlot = 0, FrontSlot = 0, BackSlot = 0;
+        public static int HeadSlot, BodySlot, LegSlot, FaceSlot = 0, FrontSlot = 0, BackSlot = 0;
         public static bool HeadVanityIsAcc = false;
 
         public static List<Terraria.DataStructures.DrawData> GetDrawFrontData
@@ -17616,7 +17616,7 @@ namespace giantsummon
             HeadVanityIsAcc = false;
             if (Base.IsCustomSpriteCharacter)
             {
-                ArmorSlot = LegSlot = HeadSlot = 0;
+                BodySlot = LegSlot = HeadSlot = 0;
                 int id = ReturnEquippableHeadVanityEquip(out HeadVanityIsAcc);
                 if (HeadVanityIsAcc)
                 {
@@ -17646,7 +17646,7 @@ namespace giantsummon
                 HeadSlot = 0;
                 FaceSlot = 0;
             }
-            TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
+            TryToLoadGuardianEquipments(ref HeadSlot, ref BodySlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             Vector2 NewPosition = PositionWithOffset - Main.screenPosition; //Position - Main.screenPosition;
             NewPosition.Y += (gfxOffY) * Scale * GravityDirection + 2;
             if (!Base.IsCustomSpriteCharacter)
@@ -18010,7 +18010,7 @@ namespace giantsummon
             }
             if (!Base.sprites.IsTextureLoaded)
                 Base.sprites.LoadTextures();
-            TryToLoadGuardianEquipments(ref HeadSlot, ref ArmorSlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
+            TryToLoadGuardianEquipments(ref HeadSlot, ref BodySlot, ref LegSlot, ref FaceSlot, ref FrontSlot, ref BackSlot);
             if (Base.IsTerrarian)
             {
                 Position.Y -= 16f;
@@ -18195,9 +18195,9 @@ namespace giantsummon
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShoes, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], Position, legrect, ShoesColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, SittingOnPlayerMount);
             }
-            if (ArmorSlot > 0)
+            if (BodySlot > 0)
             {
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorBody, (Male ? Main.armorBodyTexture[ArmorSlot] : Main.femaleBodyTexture[ArmorSlot]), Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorBody, (Male ? Main.armorBodyTexture[BodySlot] : Main.femaleBodyTexture[BodySlot]), Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
                 dd.Shader = Shader;
                 AddDrawData(dd, false);
             }
@@ -18252,9 +18252,9 @@ namespace giantsummon
             }
             DrawItem(Position, seffect, true);
             DrawItem(Position, seffect, false);
-            if (ArmorSlot > 0)
+            if (BodySlot > 0)
             {
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorArm, Main.armorArmTexture[ArmorSlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorArm, Main.armorArmTexture[BodySlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
                 dd.Shader = Shader;
                 AddDrawData(dd, true);
             }
