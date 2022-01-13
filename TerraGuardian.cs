@@ -9541,7 +9541,7 @@ namespace giantsummon
                 MP = MMP;
         }
 
-        public static void DoTriggerGroup(IEnumerable<TerraGuardian> terraguardians, TriggerTypes trigger, Trigger.TriggerTarget Target, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0f)
+        public static void DoTriggerGroup(List<TerraGuardian> terraguardians, TriggerTypes trigger, Trigger.TriggerTarget Target, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0f)
         {
             //Add here actions that can only be triggered by one of those.
             switch (trigger)
@@ -9558,6 +9558,18 @@ namespace giantsummon
                                     float ClosestDistance = 600;
                                     Player DownedPlayer = IsPlayer ? Main.player[Target.TargetID] : null;
                                     TerraGuardian DownedGuardian = !IsPlayer ? MainMod.ActiveGuardians[Target.TargetID] : null;
+                                    if(terraguardians.Count > 0)
+                                    {
+                                        TerraGuardian WhoMentionsThis = terraguardians[Main.rand.Next(terraguardians.Count)];
+                                        if((IsPlayer && Target.TargetID == WhoMentionsThis.OwnerPos))
+                                        {
+                                            WhoMentionsThis.SaySomething(WhoMentionsThis.GetMessage(GuardianBase.MessageIDs.LeaderFallsMessage, "*They tell you the leader fell.*"));
+                                        }
+                                        else
+                                        {
+                                            WhoMentionsThis.SaySomething(WhoMentionsThis.GetMessage(GuardianBase.MessageIDs.AllyFallsMessage, "*They tell you an ally fell.*"));
+                                        }
+                                    }
                                     foreach(TerraGuardian tg in terraguardians)
                                     {
                                         if (!tg.DoAction.InUse && !tg.PlayerMounted && !tg.SittingOnPlayerMount)
@@ -18127,7 +18139,7 @@ namespace giantsummon
                 PantsColor = Base.TerrarianInfo.PantsColor,
                 ShoesColor = Base.TerrarianInfo.ShoeColor,
                 ArmorColoring = Color.White;
-            bool IsTransformed = !Base.IsCustomSpriteCharacter && HeadSlot >= 38 && HeadSlot <= 39;
+            bool IsTransformed = HeadSlot >= 38 && HeadSlot <= 39;
             if (Base.Effect == GuardianBase.GuardianEffect.Wraith)
             {
                 DoWraithColoring(out SkinColor, out EyesColor, out EyesWhiteColor);

@@ -935,7 +935,7 @@ namespace giantsummon.Npcs
 
         public override void ModifyDrawDatas(List<GuardianDrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, Microsoft.Xna.Framework.Graphics.SpriteEffects seffects)
         {
-            Microsoft.Xna.Framework.Graphics.Texture2D BagTexture = Base.sprites.GetExtraTexture(Creatures.BreeBase.BagTextureID);
+            Microsoft.Xna.Framework.Graphics.Texture2D BagTexture = Base.sprites.GetExtraTexture(Companions.BreeBase.BagTextureID);
             Rectangle backrect = BodyRect,
                 frontrect = BodyRect;
             backrect.Y += backrect.Height;

@@ -750,7 +750,7 @@ namespace giantsummon.Quests
             MainMod.ScreenColorAlpha = 1;
             Dialogue.ShowDialogueTimed("(Some washing, patching and cuff wearing later...)",null, 2500);
             //System.Threading.Thread.Sleep(2500);*/
-            Zacks.OutfitID = Creatures.ZacksBase.MeatBagOutfitID;
+            Zacks.OutfitID = Companions.ZacksBase.MeatBagOutfitID;
             //MainMod.ScreenColorAlpha = 0;
             data.QuestStep = (byte)(ZacksKnow ? 9 : 8);
             Dialogue.ShowDialogueWithContinue("*... How do I look?*", Zacks);

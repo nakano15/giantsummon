@@ -154,7 +154,7 @@ namespace giantsummon.Npcs
                         {
                             dds[i].color *= PlasmaOpacity;
                             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra,
-                                Base.sprites.GetExtraTexture(Creatures.LiebreBase.SkeletonRightArmID), Position,
+                                Base.sprites.GetExtraTexture(Companions.LiebreBase.SkeletonRightArmID), Position,
                                 RArmRect, color, npc.rotation, Origin, npc.scale, seffects);
                             dds.Insert(i, gdd);
                             RightArmPlaced = true;
@@ -168,7 +168,7 @@ namespace giantsummon.Npcs
                         {
                             dds[i].color *= PlasmaOpacity;
                             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, 
-                                Base.sprites.GetExtraTexture(Creatures.LiebreBase.SkeletonBodyID), Position,
+                                Base.sprites.GetExtraTexture(Companions.LiebreBase.SkeletonBodyID), Position,
                                 BodyRect, color, npc.rotation, Origin, npc.scale, seffects);
                             dds.Insert(i, gdd);
                             BodyPlaced = true;
@@ -179,7 +179,7 @@ namespace giantsummon.Npcs
                         {
                             dds[i].color *= PlasmaOpacity;
                             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra,
-                                Base.sprites.GetExtraTexture(Creatures.LiebreBase.SkeletonLeftArmID), Position,
+                                Base.sprites.GetExtraTexture(Companions.LiebreBase.SkeletonLeftArmID), Position,
                                 LArmRect, color, npc.rotation, Origin, npc.scale, seffects);
                             dds.Insert(i, gdd);
                             LeftArmPlaced = true;
@@ -228,7 +228,7 @@ namespace giantsummon.Npcs
                         break;
                 }
             }
-            Texture2D ScytheTexture = Base.sprites.GetExtraTexture(Creatures.LiebreBase.ScytheID);
+            Texture2D ScytheTexture = Base.sprites.GetExtraTexture(Companions.LiebreBase.ScytheID);
             return new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, ScytheTexture, ScythePosition, new Rectangle(ScytheType * 66, 0, 66, 66), color, ScytheRotation, ScytheOrigin, Scale, ScytheEffect);
         }
 

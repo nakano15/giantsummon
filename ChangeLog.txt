@@ -1,43 +1,4 @@
-﻿Updated the victory scores of the companions based on latest popularity contest result.
-Fixed an issue where Green and Miguel previously had victories, even though they only participated once.
-Rummors companions destines to those who picked them as their buddies will now be shown correctly by them.
-	They will never mention that they were picked as buddy by someone.
-Fixed an issue where Minerva was showing as male.
-Companions can no longer be pulled when they're lifting the player.
-Inverted the negation state of the mount icon on the companion profile page. (Is this a good name?)
-Changed the way Brutus warning appears. This way might fix a possible incidence of ignored crash causing message telling he showed up not to appear.
-Fixed a bug where starter guardians would leave the world at their first oportunity.
-Green can now fix wounds out of your character and companions.
-Changed the method used for drawing the texts on companions dialogues.
-Luna now can talk about Skills and Companions living in the world.
-Added Tutorial Quest to the mod.
-	Quest is named "Know More".
-	Luna will assist you during that quest.
-	That quest is entirelly used to explain about some mod features without reading the help dialogues she offers.
-	This quest is impossible to complete. You can't stop learning, right?
-Fixed Rococo's head equipment positioning.
-Changed how the mod gets companion datas for their npcs.
-	That also possibly fixes a crash with the companion selection interface on multiplayer.
-Fixed a problem where the companion couldn't be pulled to you on multiplayer, without respawning them..
-Removed useless test multiplayer sync config option.
-Fixed a bug where the Broken Armor debuff given by the Zombie Guardian sword slash on expert mode only lasted half a second.
-	Now it lasts 30 seconds, instead.
-Minerva can now end up spawning during your travels, if not only her requirements are met, but also your friendship level with her is under 3 (which is the friendship level for you to be able to let her move in).
-Cinnamon will still have the chance of appearing after the Travelling Merchant, even if you've met her before.
-The changes on Minerva and Cinnamon spawning are useful for those who disabled companions visit.
-Vladimir's free recruitment has been reworked:
-	Before, you would gain Vladimir for free for starting a new character before the launch of Terraria 1.4.
-	Now, you can get Vladimir if you enter a world with a character that you didn't recruited him yet, 14 days before Terraria's birthday, or on the day of Terraria's birthday.
-Vladimir will now try carrying the companions that aren't blacklisted, instead of carrying blacklisted ones only.
-	He will also only try carrying companions that have at least up to 95% of his size.
-	Removed Liebre from Blacklist. Vlad isn't that scared of a reaper anyways.
-Demons can now drop the Unholy Amulet.
-Killing the King Slime while Sardine is inside it will now make him be instantly unlocked for all players in the range of the combat.
-Companions will now try following you through platforms, when you drop from them.
-	They may not be able to follow you correctly on 2 platforms that have solid blocks around them.
-Liebre's recruit npc has been implemented.
-	His recruitment is multi stage. I'm pretty sure Luna will be able to help you know where to go next.
-Companions gains lava and dangerous tile immunity while being pulled by players.
-Only companions following players will hold their offhand items.
-Companions will stop being pulled to a dead player.
-Fixed a bug where starter guardians came with a very generous inventory.
+﻿Companion folders were organized.
+	Now TerraGuardians will be located inside Companions/Creatures, while Terrarians will be located inside Companions/Terrarians.
+	A modder adding companions to this mod can setup a custom directory to their companion files by using SpriteDirectory variable, on GuardianBase. The folder name is still the companion name.
+Companions now have messages they will say when rescuing someone.

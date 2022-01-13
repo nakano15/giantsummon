@@ -54,10 +54,13 @@ namespace giantsummon.Actions
                         guardian.CheckIfSomeoneNeedsPickup();
                     return;
                 }
-                if (!PlayerMod.IsBeingCarriedBySomeone(CarriedPlayer) || PlayerMod.IsBeingCarriedByThisGuardian(CarriedPlayer, guardian))
+                bool BeingCarriedByMe = false;
+                if (!PlayerMod.IsBeingCarriedBySomeone(CarriedPlayer) || (BeingCarriedByMe = PlayerMod.IsBeingCarriedByThisGuardian(CarriedPlayer, guardian)))
                 {
                     pm.CarriedByGuardianID = guardian.WhoAmID;
                     pm.BeingCarriedByGuardian = false;
+                    if (!BeingCarriedByMe)
+                        guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.RescueComingMessage));
                 }
                 else
                 {
@@ -77,10 +80,13 @@ namespace giantsummon.Actions
                     InUse = false;
                     return;
                 }
-                if(!CarriedGuardian.IsBeingCarriedBySomeone() || CarriedGuardian.IsBeingCarriedByThisGuardian(guardian))
+                bool BeingCarriedByMe = false;
+                if(!CarriedGuardian.IsBeingCarriedBySomeone() || (BeingCarriedByMe = CarriedGuardian.IsBeingCarriedByThisGuardian(guardian)))
                 {
                     CarriedGuardian.CarriedByGuardianID = guardian.WhoAmID;
                     CarriedGuardian.BeingCarriedByGuardian = false;
+                    if (!BeingCarriedByMe)
+                        guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.RescueComingMessage));
                 }
                 else
                 {
@@ -95,6 +101,7 @@ namespace giantsummon.Actions
                 if (Math.Abs(guardian.Position.X - TargetX) < 16 && Math.Abs(guardian.Position.Y - TargetY) < guardian.Height * 0.5f)
                 {
                     Carrying = true;
+                    guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.RescueGotMessage));
                     ChangeStep();
                 }
                 else

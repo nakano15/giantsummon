@@ -368,7 +368,7 @@ namespace giantsummon.Npcs
 
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Microsoft.Xna.Framework.Color drawColor)
         {
-            drawColor = Creatures.FlufflesBase.GhostfyColor(drawColor, 0.5f * Opacity, Creatures.FlufflesBase.GetColorMod);
+            drawColor = Companions.FlufflesBase.GhostfyColor(drawColor, 0.5f * Opacity, Companions.FlufflesBase.GetColorMod);
             return base.PreDraw(spriteBatch, drawColor);
         }
     }

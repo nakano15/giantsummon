@@ -5,7 +5,7 @@ using System.Text;
 using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
-using giantsummon.Creatures;
+using giantsummon.Companions;
 
 namespace giantsummon
 {
@@ -20,6 +20,8 @@ namespace giantsummon
             TerrarianGroupID = "terrarian", 
             TerraGuardianCaitSithGroupID = "caitsithguardian", 
             GiantDogGuardianGroupID = "giantdogguardian";
+        public const string DefaultCreaturesDirectory = "Companions/Creatures/",
+            DefaultTerrariansDirectory = "Companions/Terrarians/";
 
         public virtual GuardianData GetGuardianData(int ID = -1, string ModID = "") { return new GuardianData(ID, ModID);}
 
@@ -27,6 +29,7 @@ namespace giantsummon
         public Group GetGroup { get { return MainMod.GetGroup(GroupID); } }
         public bool InvalidGuardian = false;
         public string Name = "", Description = "";
+        public string SpritesDirectory = "";
         public string WikiPageLink = null;
         public string[] PossibleNames = new string[0];
         public string GroupID = TerraGuardianGroupID;
@@ -1201,6 +1204,21 @@ namespace giantsummon
                 InvalidGuardian = true;
             }
             gb.InvalidGuardian = InvalidGuardian;
+            if(gb.SpritesDirectory == "")
+            {
+                if (!gb.InvalidGuardian)
+                {
+                    gb.SpritesDirectory = "Companions/";
+                    if (!gb.IsTerrarian)
+                    {
+                        gb.SpritesDirectory = DefaultCreaturesDirectory;
+                    }
+                    else
+                    {
+                        gb.SpritesDirectory = DefaultTerrariansDirectory;
+                    }
+                }
+            }
             if (gb.SittingPoint.X == 0 && gb.SittingPoint.Y == 0)
             {
                 gb.SittingPoint.X = gb.SpriteWidth / 2;
@@ -1615,6 +1633,8 @@ namespace giantsummon
                 PopContestResultMessage = "Mes.Contest.ResultMes",
                 PopContestResultLinkClickMessage = "Mes.Contest.ResultLinkClick",
                 PopContestResultNevermindMessage = "Mes.Contest.ResultNevermind";
+            public const string RescueComingMessage = "Mes.Rescue.TellTheyreComing",
+                RescueGotMessage = "Mes.Rescue.TargetAcquired";
         }
         
         public enum GuardianEffect

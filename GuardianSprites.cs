@@ -75,18 +75,17 @@ namespace giantsummon
         private bool TexturesLoaded = false, ErrorLoading = false;
         public bool IsTextureLoaded { get { return TexturesLoaded; } }
         public bool HasErrorLoadingOccurred { get { return ErrorLoading; } }
-        private string SpriteDir { get { return "Creatures/" + ReferedBase.Name; } }
+        private string SpriteDir { get { return ReferedBase.SpritesDirectory + ReferedBase.Name; } }
         private Mod mod = null;
         private Dictionary<string, ExtraTextureHolder> ExtraTextures = new Dictionary<string, ExtraTextureHolder>();
         public GuardianBase ReferedBase;
 
-        public GuardianSprites(GuardianBase companionBase, Mod mod = null)
+        public GuardianSprites(GuardianBase companionBase, Mod mod)
         {
             ReferedBase = companionBase;
             if (mod == null)
                 mod = MainMod.mod;
             this.mod = mod;
-            //this.SpriteDir = "Creatures/" + ReferedBase.Name;
         }
 
         /// <summary>

@@ -9,8 +9,8 @@ namespace giantsummon.Quests
 {
     public class PigCompanionsQuest : QuestBase
     {
-        public const int WrathID = Creatures.PigGuardianFragmentBase.AngerPigGuardianID, FearID = Creatures.PigGuardianFragmentBase.FearPigGuardianID,
-            SadnessID = Creatures.PigGuardianFragmentBase.SadnessPigGuardianID, HappinessID = Creatures.PigGuardianFragmentBase.HappinessPigGuardianID;
+        public const int WrathID = Companions.PigGuardianFragmentBase.AngerPigGuardianID, FearID = Companions.PigGuardianFragmentBase.FearPigGuardianID,
+            SadnessID = Companions.PigGuardianFragmentBase.SadnessPigGuardianID, HappinessID = Companions.PigGuardianFragmentBase.HappinessPigGuardianID;
 
         public const int FriendshipLevelForSolidification = 5;
 

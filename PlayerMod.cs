@@ -155,7 +155,7 @@ namespace giantsummon
         public bool BeingCarriedByGuardian = false;
         private int _CarriedByGuardianID = -1;
         private byte _InternalCarryTimer = 0;
-        public Creatures.MiguelBase.ExerciseTypes CurrentExercise = Creatures.MiguelBase.ExerciseTypes.None;
+        public Companions.MiguelBase.ExerciseTypes CurrentExercise = Companions.MiguelBase.ExerciseTypes.None;
         public float ExerciseCounter = 0;
         public byte ExercisesDone = 0;
         public List<QuestData> QuestDatas = new List<QuestData>();
@@ -819,7 +819,7 @@ namespace giantsummon
             {
                 switch (CurrentExercise)
                 {
-                    case Creatures.MiguelBase.ExerciseTypes.TravelDistance:
+                    case Companions.MiguelBase.ExerciseTypes.TravelDistance:
                         if (ExerciseCounter > 0)
                         {
                             ExerciseCounter -= Math.Abs(player.velocity.X * 0.5f);
@@ -833,7 +833,7 @@ namespace giantsummon
                             }
                         }
                         break;
-                    case Creatures.MiguelBase.ExerciseTypes.JumpTimes:
+                    case Companions.MiguelBase.ExerciseTypes.JumpTimes:
                         if (ExerciseCounter > 0 && player.justJumped)
                         {
                             ExerciseCounter--;
@@ -2034,7 +2034,7 @@ namespace giantsummon
 
         public void CountForAttackExercise()
         {
-            if(CurrentExercise == Creatures.MiguelBase.ExerciseTypes.AttackTimes && ExerciseCounter > 0)
+            if(CurrentExercise == Companions.MiguelBase.ExerciseTypes.AttackTimes && ExerciseCounter > 0)
             {
                 ExerciseCounter--;
                 if (ExerciseCounter <= 0)
@@ -2496,7 +2496,7 @@ namespace giantsummon
             }
             if(ModVersion >= 92)
             {
-                CurrentExercise = (Creatures.MiguelBase.ExerciseTypes)tag.GetByte("MiguelExerciseType");
+                CurrentExercise = (Companions.MiguelBase.ExerciseTypes)tag.GetByte("MiguelExerciseType");
                 ExerciseCounter = tag.GetFloat("MiguelExerciseProgress");
                 ExercisesDone = tag.GetByte("MiguelExercisesDone");
             }
@@ -3191,7 +3191,7 @@ namespace giantsummon
                     float Opacity = MainMod.FlufflesHauntOpacity;
                     if (Opacity < 0)
                         Opacity = 0;
-                    Color color = Creatures.FlufflesBase.GhostfyColor(Color.White, Opacity, Creatures.FlufflesBase.GetColorMod);
+                    Color color = Companions.FlufflesBase.GhostfyColor(Color.White, Opacity, Companions.FlufflesBase.GetColorMod);
                     bool IgnoreRotation = PlayerKOd;
                     Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(gb.sprites.BodySprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
                     dd.ignorePlayerRotation = IgnoreRotation;

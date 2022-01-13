@@ -159,7 +159,7 @@ namespace giantsummon.Npcs
         public override void FindFrame(int frameHeight)
         {
             base.FindFrame(frameHeight);
-            bool CloudForm = Main.LocalPlayer.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.FearPigGuardianID];
+            bool CloudForm = Main.LocalPlayer.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.FearPigGuardianID];
             if (CloudForm)
             {
                 switch (BodyAnimationFrame)

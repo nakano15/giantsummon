@@ -713,7 +713,7 @@ namespace giantsummon.Npcs
         public override void FindFrame(int frameHeight)
         {
             base.FindFrame(frameHeight);
-            bool CloudForm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID];
+            bool CloudForm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID];
             if (!ForceLeave && Defeated)
             {
                 BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = (CloudForm ? 24 : 15);
@@ -889,7 +889,7 @@ namespace giantsummon.Npcs
 
         public override bool PreDraw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch, Color drawColor)
         {
-            bool CloudForm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID];
+            bool CloudForm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID];
             if (CloudForm) drawColor *= 0.8f;
             if (!PlayerLost && !Defeated && behavior == Behaviors.ReachPlayer)
             {

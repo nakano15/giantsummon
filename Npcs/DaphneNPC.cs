@@ -119,7 +119,7 @@ namespace giantsummon.Npcs
             HaloDrawPosition *= npc.scale;
             HaloDrawPosition.Y += npc.height;
             HaloDrawPosition += npc.position - Main.screenPosition;
-            spriteBatch.Draw(Base.sprites.GetExtraTexture(Creatures.DaphneBase.HaloTextureID), HaloDrawPosition, new Rectangle(0, 0, 26, 12), Color.White, 0f, new Vector2(13, 6), 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Base.sprites.GetExtraTexture(Companions.DaphneBase.HaloTextureID), HaloDrawPosition, new Rectangle(0, 0, 26, 12), Color.White, 0f, new Vector2(13, 6), 1f, SpriteEffects.None, 0f);
         }*/
     }
 }

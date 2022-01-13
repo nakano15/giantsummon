@@ -188,8 +188,8 @@ namespace giantsummon
             if (Main.time == 0)
             {
                 AlexRecruitScripts.CheckIfAlexIsInTheWorld();
-                Creatures.MinervaBase.AllowGettingMoreFoodFromMinerva();
-                Creatures.MiguelBase.RefreshExercisesOfAllPlayers();
+                Companions.MinervaBase.AllowGettingMoreFoodFromMinerva();
+                Companions.MiguelBase.RefreshExercisesOfAllPlayers();
                 if (Math.Abs(TimeParser - LastTime) < 30f)
                 {
                     HasTimeOfDayChanged = true;

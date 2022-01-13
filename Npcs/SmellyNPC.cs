@@ -206,7 +206,7 @@ namespace giantsummon.Npcs
         {
             if (npc.direction > -1)
             {
-                GuardianDrawData Scouter = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Base.sprites.GetExtraTexture(Creatures.CaptainStenchBase.ScouterTextureID), Position, BodyRect, color, npc.rotation, Origin, npc.scale, seffects);
+                GuardianDrawData Scouter = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Base.sprites.GetExtraTexture(Companions.CaptainStenchBase.ScouterTextureID), Position, BodyRect, color, npc.rotation, Origin, npc.scale, seffects);
                 for(int i = 0; i < dds.Count; i++)
                 {
                     if(dds[i].textureType == GuardianDrawData.TextureType.TGBody)

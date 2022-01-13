@@ -100,7 +100,7 @@ namespace giantsummon
             if (!HasMetGuardian(GuardianBase.Wrath) && Npcs.WrathNPC.WrathCanSpawn)
             {
                 Messages.Add("*A person was attacked last night in the forest. They were brought unconscious to the town, and when woke up, said that a \"" +
-                    (player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Creatures.PigGuardianFragmentBase.AngerPigGuardianID] ? 
+                    (player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID] ? 
                     "kind of cloud in form of a red pig" :
                     "angry red pig") + "\" attacked them. You need to check that out.*");
             }

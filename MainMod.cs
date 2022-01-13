@@ -3115,7 +3115,7 @@ namespace giantsummon
             {
                 NinjaTextureBackup = Main.ninjaTexture;
 
-                LosangleOfUnnown = GetTexture("Creatures/LosangleOfUnnown");
+                LosangleOfUnnown = GetTexture("Companions/LosangleOfUnnown");
                 GuardianButtonSlots = GetTexture("Interface/GuardianEquipButtons");
                 GuardianHealthBar = GetTexture("Interface/GuardianHealthBar");
                 FriendshipHeartTexture = GetTexture("Interface/FriendshipHeart");

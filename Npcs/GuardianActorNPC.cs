@@ -406,6 +406,7 @@ namespace giantsummon.Npcs
 
         private List<GuardianDrawData> GetTerrarianDrawData(Vector2 DrawPos, SpriteEffects seffects, Color drawColor, bool FrontPart)
         {
+            GuardianBase.TerrarianCompanionInfos ci = Base.TerrarianInfo;
             List<GuardianDrawData> dds = new List<GuardianDrawData>();
             Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56),
                 bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56),
@@ -413,16 +414,16 @@ namespace giantsummon.Npcs
                 eyerect = new Rectangle(0, 0, hairrect.Width, hairrect.Height);
             if (hairrect.Y < 0)
                 hairrect.Y = 0;
-            int SkinVariant = Base.TerrarianInfo.GetSkinVariant(Base.Male);
+            int SkinVariant = ci.GetSkinVariant(Base.Male);
             Vector2 Origin = new Vector2(20, 56);
-            Color HairColor = Base.TerrarianInfo.HairColor,
-                EyesColor = Base.TerrarianInfo.EyeColor,
+            Color HairColor = ci.HairColor,
+                EyesColor = ci.EyeColor,
                 EyesWhiteColor = Color.White,
-                SkinColor = Base.TerrarianInfo.SkinColor,
-                UndershirtColor = Base.TerrarianInfo.UnderShirtColor,
-                ShirtColor = Base.TerrarianInfo.ShirtColor,
-                PantsColor = Base.TerrarianInfo.PantsColor,
-                ShoesColor = Base.TerrarianInfo.ShoeColor,
+                SkinColor = ci.SkinColor,
+                UndershirtColor = ci.UnderShirtColor,
+                ShirtColor = ci.ShirtColor,
+                PantsColor = ci.PantsColor,
+                ShoesColor = ci.ShoeColor,
                 ArmorColoring = Color.White;
             //Lighting Change
             int TileX = (int)((npc.position.X + npc.width * 0.5f) * (1f / 16)),
@@ -436,8 +437,16 @@ namespace giantsummon.Npcs
             PantsColor = Lighting.GetColor(TileX, TileY, PantsColor);
             ShoesColor = Lighting.GetColor(TileX, TileY, ShoesColor);
             ArmorColoring = Lighting.GetColor(TileX, TileY, ArmorColoring);
-            bool HideLegs = false;
-            int LegSlot = 0, BodySlot = 0, HeadSlot = 0;
+            int LegSlot = ci.DefaultLeggings, BodySlot = ci.DefaultArmor, HeadSlot = ci.DefaultHelmet;
+            bool IsTransformed = HeadSlot >= 38 && HeadSlot <= 39;
+            bool DrawNormalHair = HeadSlot == 0 || HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198,
+                DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
+            bool HideLegs = LegSlot == 143 || LegSlot == 106 || LegSlot == 140;
+            bool ShowHair = HeadSlot != 202 && HeadSlot != 201;
+            if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28 && HeadSlot != 201)
+                DrawNormalHair = true;
+            if (IsTransformed)
+                ArmorColoring = SkinColor;
             GuardianDrawData dd;
             if (!HideLegs)
             {
@@ -485,8 +494,19 @@ namespace giantsummon.Npcs
             dds.Add(dd);
             DrawPos.Y -= EyePositionBonus;
             //hair
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], DrawPos, hairrect, HairColor, npc.rotation, Origin, npc.scale, seffects);
-            dds.Add(dd);
+            if (ShowHair && ci.HairStyle >= 0)
+            {
+                if (DrawNormalHair)
+                {
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[ci.HairStyle], DrawPos, hairrect, HairColor, npc.rotation, Origin, npc.scale, seffects);
+                    dds.Add(dd);
+                }
+                else if (DrawAltHair)
+                {
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairAltTexture[ci.HairStyle], DrawPos, hairrect, HairColor, npc.rotation, Origin, npc.scale, seffects);
+                    dds.Add(dd);
+                }
+            }
             if(HeadSlot > 0)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorHead, Main.armorHeadTexture[HeadSlot], DrawPos, bodyrect, ArmorColoring, npc.rotation, Origin, npc.scale, seffects);
