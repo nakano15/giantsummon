@@ -2,3 +2,4 @@
 	Now TerraGuardians will be located inside Companions/Creatures, while Terrarians will be located inside Companions/Terrarians.
 	A modder adding companions to this mod can setup a custom directory to their companion files by using SpriteDirectory variable, on GuardianBase. The folder name is still the companion name.
 Companions now have messages they will say when rescuing someone.
+Terrarian companions will now have their hair hidden if a mod item they're using has setup so.

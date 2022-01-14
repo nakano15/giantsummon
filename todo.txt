@@ -1,4 +1,7 @@
 Recall Potion doesn't work when mounted.
+Companions have their hair shown when using certain mod equipments.
+	Maybe tModLoader has something to help solve that issue.
+The lamia set seems to use shirtless terrarian arm?
 Add a option to disable the companions from spawning in the game.
 	It should clear the initial companion list of starter companions.
 	Companion recruit npcs and spawn scripts should not work with this enabled.

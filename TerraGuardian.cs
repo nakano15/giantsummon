@@ -17036,12 +17036,20 @@ namespace giantsummon
                 }
             }
             bool werewolf = HasFlag(GuardianFlags.Werewolf), merfolk = HasFlag(GuardianFlags.Merfolk);
+            DrawHair = true;
+            DrawAltHair = false;
             for (int i = 0; i < 10; i++)
             {
                 if (this.Inventory[i].type != 0)
                 {
                     if (this.Inventory[i].headSlot >= 0)
+                    {
                         HeadSlot = this.Inventory[i].headSlot;
+                        if (this.Inventory[i].modItem != null)
+                        {
+                            this.Inventory[i].modItem.DrawHair(ref DrawHair, ref DrawAltHair);
+                        }
+                    }
                     if (this.Inventory[i].bodySlot >= 0)
                         BodySlot = this.Inventory[i].bodySlot;
                     if (this.Inventory[i].legSlot >= 0)
@@ -17058,6 +17066,13 @@ namespace giantsummon
                     }
                 }
             }
+            DrawHair = HeadSlot == 0 || HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198;
+            DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
+            if (!DrawHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28 && HeadSlot != 201)
+            {
+                DrawHair = true;
+                DrawAltHair = false;
+            }
             if (!HideWereForm)
             {
                 if (werewolf)
@@ -17065,13 +17080,19 @@ namespace giantsummon
                     HeadSlot = 38;
                     BodySlot = 21;
                     LegSlot = 20;
+                    DrawHair = DrawAltHair = false;
                 }
                 if (merfolk)
                 {
                     HeadSlot = 39;
                     BodySlot = 22;
                     LegSlot = 21;
+                    DrawHair = DrawAltHair = false;
                 }
+            }
+            if(HeadSlot == Terraria.ID.ArmorIDs.Head.LamiaFemale || HeadSlot == Terraria.ID.ArmorIDs.Head.LamiaMale)
+            {
+                DrawHair = DrawAltHair = false;
             }
         }
 
@@ -17574,6 +17595,8 @@ namespace giantsummon
                 TileY = Main.maxTilesY - 1;
             c = Lighting.GetColor(TileX, TileY, c);
         }
+
+        private static bool DrawHair = false, DrawAltHair = false;
 
         public void DrawDataCreation(bool IgnoreLighting = false)
         {
@@ -18178,11 +18201,7 @@ namespace giantsummon
             DrawBuffEffects(false, ref PantsColor);
             DrawBuffEffects(false, ref ShoesColor);
             DrawBuffEffects(false, ref ArmorColoring);
-            bool DrawNormalHair = HeadSlot == 0 || HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198,
-                DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
             bool HideLegs = LegSlot == 143 || LegSlot == 106 || LegSlot == 140;
-            if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28 && HeadSlot != 201)
-                DrawNormalHair = true;
             DrawWings(seffect, ArmorColoring);
             DrawChains();
             DrawWofExtras();
@@ -18238,9 +18257,9 @@ namespace giantsummon
             AddDrawData(dd, false);
             dd = new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, bodyrect, EyesWhiteColor, Rotation, Origin, Scale, seffect);
             AddDrawData(dd, false);*/
-            if (ShowHair && Base.TerrarianInfo.HairStyle >= 0)
+            if (Base.TerrarianInfo.HairStyle >= 0)
             {
-                if (DrawNormalHair)
+                if (DrawHair)
                 {
                     dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, hairrect, HairColor, Rotation, Origin, Scale, seffect);
                     AddDrawData(dd, false);
