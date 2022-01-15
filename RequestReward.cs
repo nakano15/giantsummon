@@ -14,7 +14,7 @@ namespace giantsummon
 
         public int itemID = 0, Stack = 1;
         public float AcquisitionChance = 1;
-        public Func<Terraria.Player, GuardianData, bool> CanGetReward = delegate (Terraria.Player player, GuardianData gd)
+        public Func<Player, GuardianData, bool> CanGetReward = delegate (Player player, GuardianData gd)
         {
             return true;
         };
@@ -146,6 +146,11 @@ namespace giantsummon
                     MaxChance += r.AcquisitionChance;
                     rewards.Add(r);
                 }
+            }
+            foreach(Reward rw in gd.Base.RewardsList)
+            {
+                RequestReward newreward = new RequestReward() { itemID = rw.ItemID, Stack = rw.InitialStack, AcquisitionChance = rw.RewardChance };
+                rewards.Add(newreward);
             }
             return rewards;
         }

@@ -52,6 +52,27 @@ namespace giantsummon
             }
         }
 
+        public void CompleteRequest(Player player, TerraGuardian gd, byte RewardToGet)
+        {
+            if (ObjectiveCount < MaxObjectiveCount)
+                return;
+            if (RewardToGet > 2)
+                RewardToGet = 2;
+            Base.OnCompleteRequest(player, this);
+            ThisRequestReward reward = Rewards[RewardToGet];
+            player.SellItem(reward.value, 1);
+            Item.NewItem(player.getRect(), reward.item.type, reward.item.stack, true, reward.item.prefix, true);
+            gd.IncreaseFriendshipProgress(1);
+            gd.ChangeTrustValue(TrustLevels.TrustGainFromComplettingRequest);
+            SetRequestOnCooldown();
+        }
+
+        public void OnCancelRequest(Player player, TerraGuardian gd)
+        {
+            gd.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
+            SetRequestOnCooldown(true);
+        }
+
         public void SpawnRequest(string ModID, int ID, Player player)
         {
             RequestModID = ModID;
@@ -130,6 +151,42 @@ namespace giantsummon
             RequestTimeLeft = Main.rand.Next(8 * 3600, 24 * 3600);
             if (Shorter)
                 RequestTimeLeft /= 2;
+        }
+
+        public void Save(Terraria.ModLoader.IO.TagCompound writer, string UniqueID)
+        {
+            writer.Add(UniqueID + "_ID", RequestID);
+            writer.Add(UniqueID + "_ModID", RequestModID);
+            writer.Add(UniqueID + "_State", (byte)state);
+            writer.Add(UniqueID + "_ObjectiveCount", ObjectiveCount);
+            writer.Add(UniqueID + "_MaxObjectiveCount", MaxObjectiveCount);
+            writer.Add(UniqueID + "_TimeLeft", RequestTimeLeft);
+            for(byte i = 0; i < 3; i++)
+            {
+                string RewardID = UniqueID + "_rwi";
+                ThisRequestReward reward = Rewards[i];
+                writer.Add(RewardID + "_item", reward.item);
+                writer.Add(RewardID + "_value", reward.value);
+            }
+        }
+
+        public void Load(Terraria.ModLoader.IO.TagCompound writer, string UniqueID, int ModVersion)
+        {
+            RequestID = writer.GetInt(UniqueID + "_ID");
+            RequestModID = writer.GetString(UniqueID + "_ModID");
+            state = (RequestState)writer.GetByte(UniqueID + "_State");
+            ObjectiveCount = writer.GetInt(UniqueID + "_ObjectiveCount");
+            MaxObjectiveCount =  writer.GetInt(UniqueID + "_MaxObjectiveCount");
+            RequestTimeLeft = writer.GetInt(UniqueID + "_TimeLeft");
+            for (byte i = 0; i < 3; i++)
+            {
+                string RewardID = UniqueID + "_rwi";
+                ThisRequestReward reward = Rewards[i];
+                reward.item = writer.Get<Item>(RewardID + "_item");
+                reward.value = writer.GetInt(RewardID + "_value");
+            }
+            if (state != RequestState.Cooldown)
+                Base = RequestContainer.GetRequest(RequestID, RequestModID);
         }
 
         public class ThisRequestReward
