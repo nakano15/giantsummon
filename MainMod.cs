@@ -3150,6 +3150,8 @@ namespace giantsummon
             GetInitialCompanionsList();
             CommonRequestsDB.PopulateCommonRequestsDB();
             AddQuestContainer(this, new Quests.TgQuestContainer());
+            new Requests.RequestDB(); //This automatically adds the RequestDB to the request database, so... Nothing else needed to do.
+            RequestReward.InitializeRequestRewards();
             //
             NExperienceMod = ModLoader.GetMod("NExperience");
             KalciphozMod = ModLoader.GetMod("kRPG");
@@ -3163,6 +3165,7 @@ namespace giantsummon
         {
             GuardianBase.ClearGuardianContainers();
             ModGuardianLoader.Clear();
+            RequestContainer.DisposeRequests();
         }
 
         public static void AddQuestContainer(Mod mod, QuestContainer container)
@@ -3292,6 +3295,21 @@ namespace giantsummon
                 PriceText += c + "C";
             Text.Add(PriceText);
             return Text.ToArray();
+        }
+
+        public static string PluralifyWord(string Word)
+        {
+            if (Word.Length > 1 && Word[Word.Length - 1] == 'f')
+            {
+                return Word.Substring(0, Word.Length - 1) + "ves";
+            }
+            if (Word.Length > 2 && Word.Substring(Word.Length - 2) == "fe")
+            {
+                return Word.Substring(0, Word.Length - 2) + "ves";
+            }
+            if (Word.Length > 1 && Word[Word.Length - 1] == 's')
+                return Word;
+            return Word + 's';
         }
 
         public enum GuardianItemSlotButtons

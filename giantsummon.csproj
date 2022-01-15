@@ -331,7 +331,12 @@
     <Compile Include="ProjMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestBase.cs" />
+    <Compile Include="RequestBaseNew.cs" />
     <Compile Include="RequestData.cs" />
+    <Compile Include="RequestDataNew.cs" />
+    <Compile Include="RequestContainer.cs" />
+    <Compile Include="RequestReward.cs" />
+    <Compile Include="Requests\RequestDB.cs" />
     <Compile Include="Reward.cs" />
     <Compile Include="SavePlayerDefsCommand.cs" />
     <Compile Include="Season.cs" />
