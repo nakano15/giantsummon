@@ -1,3 +1,7 @@
+Make the Talk message appear when the player gains friendship point from talking to a companion.
+Need to update and add some dialogues to the companions, to fit the changes on the system:
+	The dialogue where the companion asks for player help, should show the short version of the objective for the player to see.
+	Need to add messages for when the player is about to complete the request, and another one that is close to it on the messageids.
 Recall Potion doesn't work when mounted.
 Companions have their hair shown when using certain mod equipments.
 	Maybe tModLoader has something to help solve that issue.
