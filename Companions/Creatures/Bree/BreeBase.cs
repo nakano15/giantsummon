@@ -130,15 +130,14 @@ namespace giantsummon.Companions
 
             HeadVanityPosition.AddFramePoint2x(18, 17, 22);
 
-            RequestList();
             LoadSkinList();
         }
 
         public void LoadSkinList()
         {
-            AddSkin(BaglessSkinID, "Bagless", delegate (GuardianData gd, Player player)
+            AddSkin(BaglessSkinID, "Bagless", delegate (GuardianData gd, Player player) //TODO - Need alternative way of getting this skin.
             {
-                return gd.HasPersonalRequestBeenCompleted(0);
+                return false;
             });
             AddSkin(WitchSkinID, "Witch Body", delegate (GuardianData gd, Player player)
             {
@@ -152,17 +151,6 @@ namespace giantsummon.Companions
             {
                 return gd.HasItem(Terraria.ModLoader.ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
             });
-        }
-
-        public void RequestList()
-        {
-            AddNewRequest("Stay", 400, "You people really nag me to stay for longer here. I'll make a deal, catch me quite a number of fish, and I'll stay.",
-                "Before you go, keep in mind that must not be just any fish. It must be the most delicious fish in my taste. Yes, I'm talking about the Double Cod. Now go, before I change my mind.",
-                "You don't really want me to stay, right? I didn't wanted to stay, anyway.",
-                "You managed to do that? Alright, I can put down my things in my house and stay for longer. My back was beggining to ache, anyway.",
-                "You don't know where to find a Double Cod? The Jungle is where you should go!");
-            AddItemCollectionObjective(Terraria.ID.ItemID.DoubleCod, 5, 0);
-            AddRequestRequirement(RequestBase.GetFishingRodRequirement);
         }
 
         public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)

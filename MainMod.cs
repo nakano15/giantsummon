@@ -54,9 +54,9 @@ namespace giantsummon
             }
         }
         //End contest related
-        public const int ModVersion = 100, LastModVersion = 97;
+        public const int ModVersion = 101, LastModVersion = 97;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1496,8 +1496,9 @@ namespace giantsummon
                 {
                     if (!g.Active) continue;
                     New.Add(g.Name);
-                    New.Add("Moving Down: " + g.MoveDown);
-                    New.Add("Jump? " + g.Jump);
+                    New.Add("Request State: " + g.request.state.ToString());
+                    New.Add("Request Time Left: " + g.request.RequestTimeLeft);
+                    //New.Add("Jump? " + g.Jump);
                     /*New.Add(" Sub attack in use? " + g.SubAttackInUse);
                     if (g.SubAttackInUse)
                     {
@@ -2712,14 +2713,14 @@ namespace giantsummon
                         List<GuardianData> RequestCount = new List<GuardianData>();
                         foreach (GuardianData d in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().MyGuardians.Values)
                         {
-                            if (d.request.requestState == RequestData.RequestState.RequestActive)
+                            if (d.request.state == RequestData.RequestState.Active)
                             {
                                 if (d.ID == Guardian.ID && d.ModID == Guardian.ModID)
                                     RequestCount.Insert(0, d);
                                 else
                                     RequestCount.Add(d);
                             }
-                            else if (d.request.requestState == RequestData.RequestState.HasExistingRequestReady)
+                            else if (d.request.state == RequestData.RequestState.WaitingAccept)
                             {
                                 if (d.ID == Guardian.ID && d.ModID == Guardian.ModID)
                                 {
@@ -2732,7 +2733,6 @@ namespace giantsummon
                             }
                         }
                         bool HasRequest = false;
-                        bool HasUnsummonedGuardianRequest = false;
                         foreach (GuardianData d in RequestCount)
                         {
                             if (d.Base.InvalidGuardian)
@@ -2744,95 +2744,9 @@ namespace giantsummon
                                 //SlotStartPosition.X -= 24;
                                 HasRequest = true;
                             }
-                            if (Guardian.Active == false || d.ID != Guardian.ID) HasUnsummonedGuardianRequest = true;
-                            string[] RequestDesc = d.request.GetRequestText(Main.player[Main.myPlayer], d);
-                            foreach (string s in RequestDesc)
-                            {
-                                SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, s, SlotStartPosition, (d.request.Failed ? Color.Red : Color.White)).Y;
-                            }
-                            Vector2 ButtonPosition = SlotStartPosition;
-                            if (Guardian.Active && Guardian.ID == d.ID && Guardian.ModID == d.ModID)
-                            {
-                                if (false && d.request.IsTalkQuest && d.request.requestState >= RequestData.RequestState.HasExistingRequestReady)
-                                {
-                                    ButtonPosition.X += 48f;
-                                    Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, "Talk", ButtonPosition, Color.White, 1f, 0.5f);
-                                    if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
-                                        Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                    {
-                                        player.player.mouseInterface = true;
-                                        Utils.DrawBorderString(Main.spriteBatch, "Talk", ButtonPosition, Color.Yellow, 1f, 0.5f);
-                                        if (Main.mouseLeft && Main.mouseLeftRelease)
-                                        {
-                                            d.request.CompleteRequest(Guardian, d, player);
-                                        }
-                                    }
-                                    SlotStartPosition.Y += 28f;
-                                }
-                                else if (d.request.requestState == RequestData.RequestState.HasExistingRequestReady)
-                                {
-
-                                }
-                                else if (d.request.requestState == RequestData.RequestState.RequestActive)
-                                {
-                                    if (d.request.RequestCompleted || d.request.Failed)
-                                    {
-
-                                    }
-                                    else
-                                    {
-                                        ButtonPosition.X += 48f;
-                                        string ButtonText = "Ask for Clues";
-                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f, 0.5f);
-                                        if (Main.mouseX >= ButtonPosition.X - ButtonDimension.X * 0.5f && Main.mouseX < ButtonPosition.X + ButtonDimension.X * 0.5f &&
-                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                        {
-                                            player.player.mouseInterface = true;
-                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f, 0.5f);
-                                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                            {
-                                                CheckingQuestBrief = false;
-                                                Guardian.SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(d.request.GetRequestInfo(d), Guardian), true);
-                                            }
-                                        }
-                                        ButtonPosition.X -= 48;
-                                    }
-                                    SlotStartPosition.Y += 28f;
-                                }
-                            }
-                            if (d.request.requestState == RequestData.RequestState.RequestActive)
-                            {
-                                for (int o = 0; o < d.request.GetRequestBase(d).Objectives.Count; o++)
-                                {
-                                    if (d.request.GetRequestBase(d).Objectives[o].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.KillBoss && d.request.GetIntegerValue(o) > 0)
-                                    {
-                                        RequestBase.KillBossRequest req = (RequestBase.KillBossRequest)d.request.GetRequestBase(d).Objectives[o];
-                                        string ButtonText = "Spawn " + Lang.GetNPCName(req.BossID);
-                                        Vector2 ButtonDimension = Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.White, 1f);
-                                        if (Main.mouseX >= ButtonPosition.X && Main.mouseX < ButtonPosition.X + ButtonDimension.X &&
-                                            Main.mouseY >= ButtonPosition.Y && Main.mouseY < ButtonPosition.Y + ButtonDimension.Y)
-                                        {
-                                            player.player.mouseInterface = true;
-                                            Utils.DrawBorderString(Main.spriteBatch, ButtonText, ButtonPosition, Color.Yellow, 1f);
-                                            if (Main.mouseLeft && Main.mouseLeftRelease)
-                                            {
-                                                CheckingQuestBrief = false;
-                                                if (!d.request.TrySpawningBoss(player.player.whoAmI, req.BossID, req.DifficultyBonus))
-                                                {
-                                                    Main.NewText("Failed. Did you tried calling It when It can appear?");
-                                                }
-                                            }
-                                        }
-                                        SlotStartPosition.Y += 26f;
-                                    }
-                                }
-                            }
+                            string RequestDesc = d.request.Base.RequestObjective(d.request);
+                            SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, RequestDesc, SlotStartPosition, Color.White).Y - 4;
                             SlotStartPosition.Y += 8f;
-                        }
-                        if (HasUnsummonedGuardianRequest)
-                        {
-                            Utils.DrawBorderString(Main.spriteBatch, "Report to the Quest Giver when done.", SlotStartPosition, Color.White);
-                            SlotStartPosition.Y += 28f;
                         }
                         if (!HasRequest)
                         {
@@ -3148,7 +3062,6 @@ namespace giantsummon
             Group g = AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "Giant Dog Guardian", 4.6667f, true, true);
             g.ReverseMountWhenUnderaged = false;
             GetInitialCompanionsList();
-            CommonRequestsDB.PopulateCommonRequestsDB();
             AddQuestContainer(this, new Quests.TgQuestContainer());
             new Requests.RequestDB(); //This automatically adds the RequestDB to the request database, so... Nothing else needed to do.
             RequestReward.InitializeRequestRewards();

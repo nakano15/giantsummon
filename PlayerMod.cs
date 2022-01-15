@@ -238,7 +238,7 @@ namespace giantsummon
         public byte FriendshipLevel = 0, FriendshipExp = 0;
         public byte FriendshipMaxExp { get { return FriendshipLevel == 0 ? (byte)2 : (byte)(3 + FriendshipLevel / 5); } }
         public int LastFriendshipCount = -1;
-        public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => !x.Base.InvalidGuardian && x.request.requestState == RequestData.RequestState.RequestActive).Count(); } }
+        public int GetAcceptedRequestCount { get { return GetGuardians().Where(x => !x.Base.InvalidGuardian && x.request.state == RequestData.RequestState.Active).Count(); } }
         public bool[] PigGuardianCloudForm = new bool[5]; //Must be saved with the player. Last one is for the big form.
         public bool TalkedToLeopoldAboutThePigs
         {
@@ -1817,7 +1817,7 @@ namespace giantsummon
                 int NewFriendshipCount = 0;
                 foreach (GuardianData g in MyGuardians.Values)
                 {
-                    g.request.UpdateRequest(g, this);
+                    g.request.Update(player, g);
                     g.UpdateData(this.player);
                     if (BuddiesMode && g.IsSameAs(BuddiesModeBuddyID))
                     {

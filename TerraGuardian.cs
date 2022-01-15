@@ -118,7 +118,7 @@ namespace giantsummon
         public int MyGuardianID { get { return Data.MyGuardianID; } set { Data.MyGuardianID = value; } }
         public string PersonalNicknameToPlayer { get { return Data.PersonalNicknameToPlayer; } set { Data.PersonalNicknameToPlayer = value; } }
         public GuardianMood Mood { get { return Data.Mood; } }
-        public bool HasRequestActive { get { return Data.request.Active; } }
+        public bool HasRequestActive { get { return Data.request.state == RequestData.RequestState.Active; } }
         public int Age { get { return Data.Age; } }
         private float AgeScale = 0;
         //Trail Handler

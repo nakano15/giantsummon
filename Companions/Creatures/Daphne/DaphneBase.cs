@@ -101,29 +101,6 @@ namespace giantsummon.Companions
 
             HeadVanityPosition.AddFramePoint2x(19, 40, 39);
             HeadVanityPosition.AddFramePoint2x(20, 40, 39);
-            GetRequests();
-        }
-
-        public void GetRequests()
-        {
-            //0
-            AddNewRequest("A Little Treat", 200,
-                "(You think you should give her a little treat to eat, you wonder if some cooked fish would be good.)",
-                "(Once you said what you were going to give her, she got all happy, and waits for you to bring It.)",
-                "(At the last moment, you changed your mind, and didn't told her about what you planned.)",
-                "(She seems to have really enjoyed the food you gave to her.)",
-                "(I need a fishing rod for this... And a lake in the forest...)",
-                "(How did I managed to fail this?)");
-            AddItemCollectionObjective(Terraria.ID.ItemID.CookedFish, 1, 0);
-            //1
-            AddNewRequest("Going for a Walk", 200,
-                "(She seems to be wanting to go out for a walk. Doesn't matter where I take her, I just have to make sure she's safe and sound)",
-                "(I told her that we were going out for a walk, and she loved the idea.)",
-                "(You really doesn't feel like going anywhere right now...)",
-                "(She have enjoyed the walk, but seems a bit exausted. Or not, she's already jumping again.)",
-                "(I just need to take her for a walk, how hard can this be?)",
-                "(How did I managed to fail this?)");
-            AddExploreObjective(2000);
         }
 
         public override bool AlterRequestGiven(GuardianData Guardian, out int ForcedMissionID, out bool IsTalkRequest)

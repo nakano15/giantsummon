@@ -184,7 +184,6 @@ namespace giantsummon.Companions
             HeadVanityPosition.AddFramePoint2x(26, 41, 30);
 
             SkinsAndOutfits();
-            RequestList();
 			TopicList();
         }
 		
@@ -192,66 +191,6 @@ namespace giantsummon.Companions
 		{
 			
 		}
-
-        public void RequestList()
-        {
-            //0
-            AddNewRequest("A Little Warm Up", 250,
-                "*[nickname], I need your help to test my power. There is a creature you call Skeletron in this world, I want to face It alongside you, to see if I can try protecting you. Can you give me a help on this?*",
-                "*Thank you. Maybe there is some way of calling It again, I have no idea how you could do that.*",
-                "*Oh, you're not ready to face It again? Don't worry about that, I'm okay.*",
-                "*I think we did good on this fight, but I feel bad about the Clothier's death. I can't really feel any sense of victory in this fight.*",
-                "*You want to know how to call the Skeletron? I have no idea either. It's related to the Clother, right? Maybe there is a way.*",
-                "*I can't protect anyone If I let the ones I'm supposed to protect die... I still need to practice more.*");
-            AddRequestRequirement(delegate(Player player)
-            {
-                return NPC.downedBoss3;
-            });
-            AddKillBossRequest(Terraria.ID.NPCID.SkeletronHead, 2);
-            AddRequesterSummonedRequirement();
-            AddNobodyKodRequirement();
-            //1
-            AddNewRequest("Jaws Hunter", 270,
-                "*I need to get stronger, which means I need to eat more meat. No, I'm nothinking about you or your citizens. There isn't much variety of edible things in this world, but I think Sharks will help me with this matter. What do you think? Ready for some fishing?*",
-                "*[nickname], allow me to assist you in this request. I want to get stronger, but I can't risk endangering my client with It.*",
-                "*Yes, their jaws are really big, maybe I should try something smaller, like bats.*",
-                "*Wow! Look at all that Shark meat. I think I can turn all that in muscles in a few weeks.*");
-            AddRequestRequirement(RequestBase.GetNightRequestRequirement);
-            AddObjectCollectionRequest("Shark Meat", 1, 0.2f);
-            AddObjectDroppingMonster(Terraria.ID.NPCID.Shark, 0.8f);
-            //2
-            AddNewRequest("Green Menace", 285,
-                "*The goblins may attempt to launch a full attack to your town any time in the future. We should make them to try attacking us now, so we can weaken them, and make them spend more time trying to resuply. What do you think, [nickname]?*",
-                "*I knew you would agree with my plan. We should create a Goblin Battle Standard to force them to show up. The Goblin Spies who appear in the Far Lands of the World can help us make that.*",
-                "*But [nickname], the safety of the town is at stake here! Okay... We'll not try making them attack us then.*",
-                "*Haha! That was a good fight! This should make them spend a long time trying to gather supplies for another attack. We should be safe, for now.*",
-                "*We need to make a Goblin Battle Standard to lure them. Wood you know where to find, the clothings used for It can be acquired from Goblin Spies. They appear on the far lands of the world.*");
-            AddRequestRequirement(delegate(Player player){
-                return NPC.downedGoblins;
-            });
-            AddEventParticipationObjective(Terraria.ID.InvasionID.GoblinArmy);
-            //3
-            AddNewRequest("A drink with a friend", 330,
-                "*[nickname], would you like sharing a drink with me?*",
-                "*Great, let's meet at the pub, then.*",
-                "*Busy? Okay, let's try again another time.*",
-                "*[nickname], ever since you gave me that package, I've been looking at It's content day and night, and I think It's time for me to put that outfit again. I want you to be the first person to see me use It, and tell me how I look. [Unlocked Royal Guard Outfit]*",
-                "*Let's go to a pub, I have something to talk about with you. The Bartender could give us some drinks.*");
-            AddRequestRequirement(delegate(Player player)
-            {
-                if (PlayerMod.PlayerHasGuardian(player, GuardianBase.Domino) && NPC.AnyNPCs(Terraria.ID.NPCID.DD2Bartender))
-                {
-                    GuardianData BrutusData = PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus),
-                        DominoData = PlayerMod.GetPlayerGuardian(player, GuardianBase.Domino);
-                    if (BrutusData.request.RequestsCompletedIDs.Contains(0) && BrutusData.request.RequestsCompletedIDs.Contains(1) && BrutusData.request.RequestsCompletedIDs.Contains(2) &&
-                        !BrutusData.request.RequestsCompletedIDs.Contains(3) && DominoData.request.RequestsCompletedIDs.Contains(1))
-                        return true;
-                }
-                return false;
-            });
-            AddItemCollectionObjective(Terraria.ID.ItemID.Ale, 1, 0);
-            AddRequesterSummonedRequirement();
-        }
 
         public override bool WhenTriggerActivates(TerraGuardian guardian, TriggerTypes trigger, TriggerTarget Sender, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0)
         {
@@ -368,7 +307,7 @@ namespace giantsummon.Companions
 
         public void SkinsAndOutfits()
         {
-            AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return PlayerMod.GetPlayerGuardian(player, GuardianBase.Brutus).request.RequestsCompletedIDs.Contains(3); });
+            AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return false; }); //TODO - Need to add alternative way of getting this outfit.
         }
 
         public override string MountUnlockMessage

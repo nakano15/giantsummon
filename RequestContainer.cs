@@ -11,7 +11,7 @@ namespace giantsummon
     {
         private static Dictionary<string, RequestContainer> RequestContainers = new Dictionary<string, RequestContainer>();
 
-        private Dictionary<int, RequestBaseNew> Requests = new Dictionary<int, RequestBaseNew>();
+        private Dictionary<int, RequestBase> Requests = new Dictionary<int, RequestBase>();
 
         public static void DisposeRequests()
         {
@@ -22,7 +22,7 @@ namespace giantsummon
             RequestContainers.Clear();
         }
 
-        public static RequestBaseNew GetRequest(int ID, string ModID)
+        public static RequestBase GetRequest(int ID, string ModID)
         {
             if (!RequestContainers.ContainsKey(ModID) || !RequestContainers[ModID].Requests.ContainsKey(ID))
                 return null;

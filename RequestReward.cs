@@ -65,7 +65,7 @@ namespace giantsummon
                 AddRequestReward(366, Main.rand.Next(40, 56), 0.25f).CanGetReward = delegate (Player player, GuardianData gd)
                 {
                     return WorldGen.oreTier1 == 111;
-                });
+                };
                 AddRequestReward(1104, Main.rand.Next(65, 86), 0.45f).CanGetReward = delegate (Player player, GuardianData gd)
                 {
                     return WorldGen.oreTier1 != 107;
@@ -77,7 +77,7 @@ namespace giantsummon
                 AddRequestReward(1106, Main.rand.Next(40, 56), 0.25f).CanGetReward = delegate (Player player, GuardianData gd)
                 {
                     return WorldGen.oreTier1 != 111;
-                });
+                };
                 AddRequestReward(ItemID.ChlorophyteOre, Main.rand.Next(35, 86), 0.35f).CanGetReward = delegate (Player player, GuardianData gd)
                 {
                     return NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;

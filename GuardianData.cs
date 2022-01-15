@@ -84,7 +84,7 @@ namespace giantsummon
         public byte FriendshipLevel = 0, FriendshipProgression = 0;
         public sbyte TrustLevel = 30;
         public int LastTotalSkillLevel = 0;
-        public RequestData request = new RequestData();
+        public RequestData request;
         public int HP = 800, MHP = 800;
         public int MP = 20, MMP = 20;
         public bool KnockedOut = false, KnockedOutCold = false;
@@ -257,11 +257,6 @@ namespace giantsummon
         public void UpdateMood()
         {
             Mood.UpdateMood();
-        }
-
-        public bool HasPersonalRequestBeenCompleted(int ID)
-        {
-            return request.RequestsCompletedIDs.Contains(ID);
         }
 
         public void SetStarterGuardian()
@@ -687,6 +682,8 @@ namespace giantsummon
 
         public GuardianData(int ID = -1, string ModID = "")
         {
+            request = new RequestData(this);
+            request.SetRequestOnCooldown(true);
             if (Main.rand == null)
                 Main.rand = new Terraria.Utilities.UnifiedRandom();
             if (ID != -1)
@@ -700,7 +697,6 @@ namespace giantsummon
                 MyID = new GuardianID(ID, ModID);
                 PickedName = (byte)Main.rand.Next(Base.PossibleNames.Length);
             }
-            request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime) / 4;
             for (int e = 0; e < Equipments.Length; e++)
                 Equipments[e] = new Item();
             for (int i = 0; i < Inventory.Length; i++)
@@ -852,7 +848,7 @@ namespace giantsummon
                     Fatigue = -32;
             }
             UpdateMood();
-            if (request.Active && WorldMod.DayChange && !WorldMod.IsGuardianNpcInWorld(MyID) && !WorldMod.ScheduledVisits.Contains(MyID))
+            if (request.state == RequestData.RequestState.Active && WorldMod.DayChange && !WorldMod.IsGuardianNpcInWorld(MyID) && !WorldMod.ScheduledVisits.Contains(MyID))
             {
                 WorldMod.ScheduledVisits.Add(MyID);
             }
@@ -1117,8 +1113,8 @@ namespace giantsummon
             tag.Add("BodyDye_" + UniqueID, BodyDye.type);
             tag.Add("FatigueCount_" + UniqueID, (byte)Fatigue);
             tag.Add("InjuryCount_" + UniqueID, (byte)Injury);
-            request.Save(tag, UniqueID);
             //request.Save(tag, UniqueID);
+            request.Save(tag, "Request_"+UniqueID);
             /*tag.Add("HasExistenceTime_" + UniqueID, LifeTime.HasValue);
             if(LifeTime.HasValue)
                 tag.Add("ExistenceTime_" + UniqueID, LifeTime.Value.TotalSeconds);*/
@@ -1347,10 +1343,12 @@ namespace giantsummon
                 Fatigue = (sbyte)tag.GetByte("FatigueCount_" + UniqueID);
                 Injury = (sbyte)tag.GetByte("InjuryCount_" + UniqueID);
             }
-            if (ModVersion >= 61)
+            /*if (ModVersion >= 61)
             {
                 request.Load(tag, ModVersion, UniqueID, this);
-            }
+            }*/
+            if(ModVersion >= 101)
+                request.Load(tag, "Request_" + UniqueID, ModVersion);
             //if (ModVersion >= 8)
             //    request.Load(tag, ModVersion, UniqueID);
             /*if (ModVersion < 95)

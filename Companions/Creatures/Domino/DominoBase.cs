@@ -105,8 +105,6 @@ namespace giantsummon.Companions
             HeadVanityPosition.AddFramePoint2x(14, 35, 17);
 
             HeadVanityPosition.AddFramePoint2x(21, 35, 17);
-
-            RequestList();
         }
 
         public override void SetupShop(int GuardianID, string GuardianModID)
@@ -145,30 +143,6 @@ namespace giantsummon.Companions
         public override void Attributes(TerraGuardian g)
         {
             g.AddFlag(GuardianFlags.CanDualWield);
-        }
-
-        public void RequestList()
-        {
-            AddNewRequest("Pincer Bane", 220, 
-                "*Hey [nickname], I have a client looking for Snatcher Jaws for some reason, would you like to help me with this? I can share the profit with you.*",
-                "*Perfect. Snatchers can be found in the Jungle. Don't get too close to them, in other words, use guns. Also, try not to damage the jaws too much, I get more profit if they are intact.*",
-                "*Psh. Go away.*",
-                "*Good job, here is your share. If someone asks, we didn't see each other.*",
-                "*Lost? Snatchers appears on the Jungle Surface. Try not to go to the Underground Jungle, since Man Eaters are not in wrapped the package.*");
-            AddObjectCollectionRequest("Snatcher Jaw", 5);
-            AddObjectDroppingMonster(Terraria.ID.NPCID.Snatcher, 0.75f);
-            //
-            AddNewRequest("Mysterious Package", 260, 
-                "*[nickname], I have a delivery for you to make. I have to warn you, don't tell the target who sent It.*",
-                "*Good, send this to my personal annoyance, let's hope this makes him stop bothering me for some time.*",
-                "*I wont be doing this myself, so I guess I'll leave this on hold.*",
-                "*You did? Good. Now forget that this happened.*",
-                "*You don't know who's my personal annoyance? Is that guard-wanna-be who keeps trying to arrest me all the time. Now go, before I change my mind!*");
-            AddRequestRequirement(delegate(Player player)
-            {
-                return PlayerMod.PlayerHasGuardian(player, GuardianBase.Brutus);
-            });
-            AddTalkToGuardianRequest("*You say that you have a delivery for me? Weird, nobody I care about knows that I'm here. Well, let's see It....! [nickname], where did you get this? Tell me! I mean, who gave you this? You can't tell me? ... Thanks... Anyway..*", GuardianBase.Brutus);
         }
 
         public override void GuardianAnimationScript(TerraGuardian guardian, ref bool UsingLeftArm, ref bool UsingRightArm)

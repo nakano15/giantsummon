@@ -162,14 +162,13 @@ namespace giantsummon.Companions
             WingPosition.DefaultCoordinate2x = new Point(22, 21);
 
             SetupOutfits();
-            GetQuests();
             GetRewards();
         }
 
         public void SetupOutfits()
         {
-            AddOutfit(RedHoodOutfitID, "Red Hood Traveller", delegate (GuardianData gd, Player player) { return player.GetModPlayer<PlayerMod>().GetGuardian(Blue).HasPersonalRequestBeenCompleted(10); });
-            AddOutfit(CloaklessOutfitID, "Cloakless Traveller Outfit", delegate (GuardianData gd, Player player) { return player.GetModPlayer<PlayerMod>().GetGuardian(Blue).HasPersonalRequestBeenCompleted(10); });
+            AddOutfit(RedHoodOutfitID, "Red Hood Traveller", delegate (GuardianData gd, Player player) { return false; }); //TODO - Need to add alternative way of getting those outfits.
+            AddOutfit(CloaklessOutfitID, "Cloakless Traveller Outfit", delegate (GuardianData gd, Player player) { return false; });
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -438,129 +437,6 @@ namespace giantsummon.Companions
             }
         }
 
-        public void GetQuests()
-        {
-            //0
-            AddNewRequest("Revenge", 280,
-                "*Every time I think of zombies, I get very angry because of what happened to [gn:" + GuardianBase.Zacks + "]. Would you mind coming with me to get some sweet revenge on them for me?*",
-                "*The hunt begins, [nickname].*",
-                "*What? Oh you....*",
-                "*I don't think that helped avenge [gn:" + GuardianBase.Zacks + "], but at least now I feel better. Thank you.*",
-                "*Zombies will not appear until the night rises, so you may want to spend some time if it's not night yet. And don't forget to bring me with you too, I want to be part of that too.*");
-            AddRequestRequirement(delegate (Player player)
-            {
-                return PlayerMod.PlayerHasGuardian(player, GuardianBase.Zacks);
-            });
-            AddHuntObjective(Terraria.ID.NPCID.Zombie, 10, 0.333f);
-            //1
-            AddNewRequest("Slime Bane", 185,
-                "*Slimes are gross creatures, beside their gels are really tasty. Would you mind eliminating a number of them?*",
-                "*Thank you. Don't let them touch you.*",
-                "*So... You hate them too?*",
-                "*Whew... Nice job taking care of them. Take this as a token of my gratitude.*",
-                "*You can find slimes almost everywhere, but they appear most frequently at Forest during the day.*");
-            AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 5, 0.2f);
-            //2
-            AddNewRequest("Privacy, please.", 210,
-                "*I really don't like hunting during the night, because there are Demon Eyes peeking me from everywhere. It's quite disturbing having several eyes looking at you, and that's why I want you to black out a number of them. What do you say?*",
-                "*Don't let their stare intimidate you, while you hunt them.*",
-                "*Are you also bothered by their stare too? Then I suggest you to spend the rest of the night locked at home to avoid them.*",
-                "*Thank you for taking care of the Demon Eyes, I even feel less spied now, and looks even safer to use the bathroom.*",
-                "*If you're looking for Demon Eyes, they appear during the night. Becareful when hunting them, because they swarm their target, but they also can be easily repelled with a hard hitting weapon.*");
-            AddHuntObjective(Terraria.ID.NPCID.DemonEye, 5, 0.3f);
-            //3
-            AddNewRequest("Bunny", 110,
-                "*Say, [nickname]... I have something I must ask you... Could you get me a Bunny. It's not really for any particular reason, just could you bring one to me?*",
-                "*I will wait until you bring one to me.*",
-                "*It's okay, I don't mind. It was a stupid request anyway.*",
-                "(After you brought the Bunny, she seems to be trying to hide that she's happy, gave you the reward, then left. The way she walks... Is she happy?)",
-                "*Bunnies can be found in the forest, when you're in a place with friendly people around. They are said to also appear on the underground, if there's friendly people around too.*");
-            AddRequestRequirement(RequestBase.GetBugNetRequirement);
-            AddItemCollectionObjective(Terraria.ID.ItemID.Bunny, 1, 0);
-            //4
-            AddNewRequest("Loot the Snipers.", 295,
-                "*I'm running out of Stingers for my potions, and I want you to bring some to me. Would you mind going get some?*",
-                "*Thank you. Stingers you can get from Hornets, at the Underground Jungle. Be careful, since they can shot from far away.*",
-                "(She looks at you with a disappointment look) Well... I really needed to do some exercises anyway... And possibly some acrobatics too.*",
-                "*You got 'em!! Thank you! Thank you thank you thank you!!!*");
-            AddRequestRequirement(delegate (Player player)
-            {
-                return NPC.downedBoss2 || NPC.downedBoss3;
-            });
-            AddItemCollectionObjective(Terraria.ID.ItemID.Stinger, 8, 0.2f);
-            //5
-            AddNewRequest("Price of Immunity", 650,
-                "*There is a story I heard about an accessory that gives immunity to poisoning. I want it, would you be able to get it and bring to me?*",
-                "*You will? That's great! I heard that creatures that causes poisoning usually drop them, meaning you should look for It in the Underground Jungle.*",
-                "*I don't actually blame you for rejecting, since the item is extremelly rare.*",
-                "*I can't believe it! Let me touch it. Yes... It's real! I can't believe! Here, take this. And Thank you.*",
-                "*If you're looking for the accessory I'm talking about, you should look at the Underground Jungle. Creatures that causes poisoning seems to give it.*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.Bezoar, 1, 0);
-            AddRequestRequirement(delegate (Player player)
-            {
-                return NPC.downedBoss2 || NPC.downedBoss3;
-            });
-            //6
-            AddNewRequest("Under the Moonlight", 340,
-                "*The Full Moon is coming, and that's my favorite time to hunt. There's a special reason for that, I really enjoy hunting down Werewolves that appears during the night. Do you want to join the hunt?*",
-                "*Great! By having me by your side, the Werewolves will not even be able to touch you.*",
-                "*Well, that's disappointing... Then I will try to hunt alone.*",
-                "(She liked the result of the hunt, but you start to freak out a bit after watching her having Werewolf blood all over her fur.)",
-                "*Werewolves appears during Full Moon nights, beware not to miss it, since It's a really long time until the next full moon. And don't forget about me when the time comes.*");
-            AddRequestRequirement(delegate (Player player)
-            {
-                return Main.hardMode && (Main.moonPhase == 7 || (Main.moonPhase == 0 && Main.dayTime));
-            });
-            AddHuntObjective(Terraria.ID.NPCID.Werewolf, 9, 0.15f);
-            AddRequesterSummonedRequirement();
-            //7
-            AddNewRequest("An attempt of cheering up.", 300,
-                "*Ever since we found [gn:" + GuardianBase.Zacks + "], he has been very depressed about his state. I think that if we call him on an adventure we can cheer him up. What do you say?*",
-                "*Thank you. Take care of him during the travels you two will do.*",
-                "*Oh [nickname]... You're still angry about that night you were attacked by him?*",
-                "*Thanks for taking [gn:"+Zacks+"] on your travels. If you don't mind, I will be busy listening to the story of your adventure for a few hours.*",
-                "*I recommend you to give some equipment to [gn:" + GuardianBase.Zacks + "], since he will certainly take part in combat too.*");
-            AddRequestRequirement(delegate (Player player)
-            {
-                return PlayerMod.PlayerHasGuardian(player, GuardianBase.Zacks);
-            });
-            AddCompanionRequirement(GuardianBase.Zacks);
-            AddExploreObjective(1200, 50, false);
-            //8
-            AddNewRequest("Hornet Hunt", 270,
-                "*Ack! It's horrible! A Moss Hornet has stung me in the a.... I mean... The back. I want revenge... Take a number of them off the sky, please.*",
-                "*Do not leave any of them alive. Ouch...*",
-                "*Since you're not going to help with the revenge, at least you could get some pliers to remove those stings from my behind.*",
-                "*I'm glad you managed to avenge me. I should take some rest to recover from the poisoning the stings did to me...*",
-                "*Moss Hornets appears on the Underground Jungle. If you are going to hunt them, look for them there.*");
-            AddRequestRequirement(delegate (Player p)
-            {
-                return Main.hardMode;
-            });
-            //9
-            AddNewRequest("The couple and the candle holder.", 320,
-                "*I wanted to spend some time with [gn:" + GuardianBase.Zacks + "], but I have no idea of what we could do together, then I thought: What If they accompany [nickname] on their adventure? What do you say?*",
-                "*Yes! Be sure to call [gn:" + GuardianBase.Zacks + "], and try not to make things awkward during the adventure.*",
-                "*So... Did you rejected because the plan sounds weird?*",
-                "*I enjoyed the time [gn:" + GuardianBase.Zacks + "] and I had together. Thank you for putting into practice my weird idea.*",
-                "*It would be perfect to do something really dangerous, and with things to hunt in the way. Don't forget that [gn:" + GuardianBase.Zacks + "] is also a important part of the plan.*");
-            AddExploreObjective(1500, 100, true);
-            AddCompanionRequirement(GuardianBase.Zacks);
-            //10
-            AddNewRequest("Memories from the Past", 400, 
-                "*I really want to spend some time travelling, but I don't want to do that alone. Would you mind if I tagged along.*",
-                "*Yay! Adventure!*",
-                "*It's fine....*", 
-                "*Thank you for the wonderful time. While travelling, I had memories of when I met [gn:"+Zacks+"]. I was even using a certain outfit when we met, but I don't know why I don't use it anymore, since I really loved it. I should begin trying to use it again.*", 
-                "*It doesn't matters where the adventure leads, I just need to meet new places, while I think about some things.*");
-            AddExploreObjective(4000, 100);
-            AddRequestRequirement(delegate (Player p)
-            {
-                GuardianData gd = p.GetModPlayer<PlayerMod>().GetGuardian(Blue, "");
-                return PlayerMod.PlayerHasGuardian(p, Zacks) && !gd.HasPersonalRequestBeenCompleted(10);
-            });
-        }
-        
         public void GetRewards()
         {
             AddReward(Terraria.ID.ItemID.FlaskofPoison, 3, 100, 0.66f, 2);

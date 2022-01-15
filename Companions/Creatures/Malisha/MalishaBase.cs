@@ -161,8 +161,6 @@ namespace giantsummon.Companions
             WingPosition.AddFramePoint2x(23, 28, 33);
             WingPosition.AddFramePoint2x(24, 28, 33);
             WingPosition.AddFramePoint2x(25, 28, 33);
-
-            CreateRequests();
         }
 
         public override void Attributes(TerraGuardian g)
@@ -1003,33 +1001,6 @@ namespace giantsummon.Companions
                 }
             }
             return base.AlterRequestGiven(Guardian, out ForcedMissionID, out IsTalkRequest);
-        }
-
-        private void CreateRequests()
-        {
-            AddNewRequest("Helper Number 1", 300, 
-                "*I heard from the other people that you really love helping others. Say... Would you mind catching some Squirrels?*",
-                "*That's my "+(Main.player[Main.myPlayer].Male ? "boy" : "girl")+". Now go and make me happy.*",
-                "*Hmph. I shouldn't have listened them, then.*",
-                "*Great! Now I can do experiements with some kind of acid I've discovered. Thank you.*",
-                "*Still didn't got the Squirrels I want? You can find them in the Forest, right? Now go.*",
-                "*[nickname]... I will use you for my experiement tonight... If you don't go away now...*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.Squirrel, 3);
-            AddNewRequest("Ornithophobia", 325,
-                "*I'm pretty sure that you'll be interessed in doing my current request. The Harpies you can find in the sky, they have feathers that will be useful for my experiement. Would you mind getting a number of them?*",
-                "*You wouldn't disappoint me, right, [nickname]? If you find trouble finding the Harpies, try building a skybridge when nearly leaving the atmosphere. They wont resist, for sure.*",
-                "*Are you alergic to feathers? I would like to examine your body constitution if you do.*",
-                "*Great! This new invention I'll call... A fan! Will help me in this infernal lab.*",
-                "*You lost the way to the sky? Use some Ropes or build a stairway to It. If you find a Sky Island will even be better.*",
-                "*How could you fail at getting me feathers, [nickname]? You're already making me angry.*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.Feather, 30);
-            AddNewRequest("Counter Strike of the Panther", 350, 
-                "*[nickname], I'm so furious right now, and I have a important mission for you. Kill as many of those depraved slimes as you can. Will you do It?!*",
-                "*Don't leave any of them alive!*",
-                "*Grrr... I should do It then! Thanks for nothing.*",
-                "*You did? Good! You just avenged by backside, that will teach them to not pop up behind me when I'm about to sit.*",
-                "*Having troubles finding Slimes, [nickname]? They are literally everywhere! How could you be lost?*");
-            AddHuntObjective(Terraria.ID.NPCID.BlueSlime, 30, 0);
         }
     }
 }

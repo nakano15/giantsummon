@@ -1427,17 +1427,7 @@ namespace giantsummon
                         {
                             if (!d.request.Active)
                                 continue;
-                            if (d.request.CountObjective(d, Main.player[p]))
-                            {
-                                if (npc.realLife > -1)
-                                {
-                                    d.request.OnMobKill(d, Main.npc[npc.realLife]);
-                                }
-                                else
-                                {
-                                    d.request.OnMobKill(d, npc);
-                                }
-                            }
+                            d.request.Base.OnKillMob(npc, d.request);
                         }
                         if (npc.value > 0)
                         {

@@ -210,35 +210,6 @@ namespace giantsummon
             {
                 Message = "(Seems to be under a heavy sleep.)";
             }
-            else
-            {
-                PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
-                foreach (int gid in pm.MyGuardians.Keys)
-                {
-                    GuardianData gd = pm.MyGuardians[gid];
-                    if (gd.request.requestState == RequestData.RequestState.RequestActive && gd.request.GetRequestBase(gd).Objectives.Any(x => x.objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian))
-                    {
-                        RequestBase rb = gd.request.GetRequestBase(gd);
-                        bool HasObjective = false;
-                        for (int obj = 0; obj < rb.Objectives.Count; obj++)
-                        {
-                            if (rb.Objectives[obj].objectiveType == RequestBase.RequestObjective.ObjectiveTypes.TalkToGuardian && gd.request.GetIntegerValue(obj) == 0)
-                            {
-                                RequestBase.TalkToGuardianRequestObjective to = (RequestBase.TalkToGuardianRequestObjective)rb.Objectives[obj];
-                                if (to.GuardianID == tg.ID && to.ModID == tg.ModID)
-                                {
-                                    HasObjective = true;
-                                    Message = to.MessageText;
-                                    gd.request.SetIntegerValue(obj, 1);
-                                    break;
-                                }
-                            }
-                        }
-                        if (HasObjective)
-                            break;
-                    }
-                }
-            }
             SetDialogue(Message, tg);
         }
 
@@ -616,28 +587,17 @@ namespace giantsummon
                         }
                     }
                     string OptionText = "Check Request";
-                    if (Speaker.request.Failed)
-                    {
-                        OptionText = "Report Failing the Request";
-                    }
-                    else if (Speaker.request.RequestCompleted)
+                    if (Speaker.request.IsComplete)
                     {
                         OptionText = "Report Request";
                     }
-                    else if (Speaker.request.requestState == RequestData.RequestState.NewRequestReady)
+                    else if (Speaker.request.state == RequestData.RequestState.Ready)
                     {
                         OptionText = "Need Something?";
                     }
-                    else if (Speaker.request.requestState == RequestData.RequestState.HasExistingRequestReady)
+                    else if (Speaker.request.state >= RequestData.RequestState.WaitingAccept)
                     {
-                        if (Speaker.request.IsTalkQuest)
-                        {
-                            OptionText = "You wanted to talk to me?";
-                        }
-                        else
-                        {
-                            OptionText = "Let's talk about your request?";
-                        }
+                        OptionText = "Let's talk about your request?";
                     }
                     if (OptionText != "")
                         AddOption(OptionText, CheckRequestButtonAction);
@@ -743,7 +703,7 @@ namespace giantsummon
         public static void AskGuardianToFollowYouButtonPressed()
         {
             HideCallDismissButton = true;
-            if ((!Speaker.Data.IsStarter && Speaker.FriendshipLevel < Speaker.Base.CallUnlockLevel && (!Speaker.request.Active || !Speaker.request.RequiresGuardianActive(Speaker.Data))) || (!MainMod.ShowDebugInfo && Speaker.TrustLevel < TrustLevels.FollowTrust))
+            if ((!Speaker.Data.IsStarter && Speaker.FriendshipLevel < Speaker.Base.CallUnlockLevel && (Speaker.request.state != RequestData.RequestState.Active || !Speaker.request.Base.RequiresRequesterSummoned)) || (!MainMod.ShowDebugInfo && Speaker.TrustLevel < TrustLevels.FollowTrust))
             {
                 SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), Speaker);
                 GetDefaultOptions();
@@ -913,33 +873,15 @@ namespace giantsummon
         public static void CheckRequestButtonAction()
         {
             GuardianData data = Speaker.Data;
-            if (data.request.requestState == RequestData.RequestState.NewRequestReady)
-                data.request.SpawnNewRequest(data, MainPlayer.GetModPlayer<PlayerMod>());
-            switch (data.request.requestState)
+            data.request.TryGettingNewRequest(MainPlayer, data);
+            switch (data.request.state)
             {
                 case RequestData.RequestState.Cooldown:
                     SetDialogue(data.Base.NoRequestMessage(MainPlayer, Speaker), Speaker);
                     break;
-                case RequestData.RequestState.HasExistingRequestReady:
-                    if (data.request.IsTalkQuest)
+                case RequestData.RequestState.WaitingAccept:
                     {
-                        data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>());
-                        GetDefaultOptions();
-                    }
-                    else
-                    {
-                        string Mes = data.request.GetRequestBrief(data, Speaker);
-                        if (Mes == "")
-                        {
-                            Mes = data.Base.HasRequestMessage(MainPlayer, Speaker);
-                        }
-                        if (data.request.IsCommonRequest)
-                        {
-                            foreach (string s in data.request.GetRequestText(MainPlayer, data, true))
-                            {
-                                Mes += "\n" + s;
-                            }
-                        }
+                        string Mes = data.request.GetRequestBrief(MainPlayer, Speaker);
                         SetDialogue(Mes, Speaker);
                         Options.Clear();
                         AddOption("Accept", AcceptRequestButtonAction);
@@ -947,50 +889,30 @@ namespace giantsummon
                         AddOption("Maybe later", PostponeRequestButtonAction);
                     }
                     break;
-                case RequestData.RequestState.RequestActive:
+                case RequestData.RequestState.Active:
                     {
-                        bool GiveOptionToCancelRequest = false;
-                        if (data.request.IsTalkQuest && data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>()))
-                        {
-                            //GiveOptionToCancelRequest = true;
-                            GetDefaultOptions();
-                        }
-                        else if (data.request.Failed)
+                        /*if (data.request.Failed)
                         {
                             data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>());
                             SetDialogue(data.request.GetRequestFailed(data, Speaker), Speaker);
                             //GiveOptionToCancelRequest = true;
                             GetDefaultOptions();
                         }
-                        else if (data.request.RequestCompleted && data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>()))
+                        else */
+                        if (data.request.IsComplete)
                         {
-                            string Mes = data.request.GetRequestComplete(data, Speaker);
-                            if (Mes == "")
-                                Mes = data.Base.CompletedRequestMessage(MainPlayer, Speaker);
+                            string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RequestAsksIfCompleted, "(They seems to be wondering if you completed the request.)");
                             SetDialogue(Mes, Speaker);
                             //GiveOptionToCancelRequest = true;
                             //GetDefaultOptions(Speaker);
                             Options.Clear();
-                            AddOption("No problem.", delegate ()
-                            {
-                                if (!ShowImportantMessages())
-                                {
-                                    GetDefaultOptions();
-                                }
-                            });
+                            AddOption(Speaker.request.GetRequestReward(0), GetFirstRewardButtonAction);
+                            AddOption(Speaker.request.GetRequestReward(1), GetSecondRewardButtonAction);
+                            AddOption(Speaker.request.GetRequestReward(2), GetThirdRewardButtonAction);
                         }
                         else
                         {
-                            string Mes = data.request.GetRequestInfo(data);
-                            if (Mes == "")
-                            {
-                                Mes = "(I were given a list of things you need to do.)";
-                            }
-                            Mes += "\n---------------------";
-                            foreach (string s in data.request.GetRequestText(MainPlayer, data))
-                            {
-                                Mes += "\n" + s;
-                            }
+                            string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RequestRemindObjective, "(They tell you that you need to [objective] for them.)").Replace("[objective]", Speaker.request.Base.RequestShortDescription(Speaker.request));
                             SetDialogue(Mes, Speaker);
                             Options.Clear();
                             AddOption("Cancel Request", CancelRequestButtonAction);
@@ -1002,6 +924,54 @@ namespace giantsummon
                     }
                     break;
             }
+        }
+
+        private static void GetFirstRewardButtonAction()
+        {
+            RequestData request = Speaker.request;
+            request.CompleteRequest(MainPlayer, Speaker, 0);
+            string Mes = Speaker.Base.CompletedRequestMessage(MainPlayer, Speaker);
+            SetDialogue(Mes, Speaker);
+            Options.Clear();
+            AddOption("Ok", delegate ()
+            {
+                if (!ShowImportantMessages())
+                {
+                    GetDefaultOptions();
+                }
+            });
+        }
+
+        private static void GetSecondRewardButtonAction()
+        {
+            RequestData request = Speaker.request;
+            request.CompleteRequest(MainPlayer, Speaker, 1);
+            string Mes = Speaker.Base.CompletedRequestMessage(MainPlayer, Speaker);
+            SetDialogue(Mes, Speaker);
+            Options.Clear();
+            AddOption("Ok", delegate ()
+            {
+                if (!ShowImportantMessages())
+                {
+                    GetDefaultOptions();
+                }
+            });
+        }
+
+        private static void GetThirdRewardButtonAction()
+        {
+            RequestData request = Speaker.request;
+            request.CompleteRequest(MainPlayer, Speaker, 2);
+            string Mes = Speaker.Base.CompletedRequestMessage(MainPlayer, Speaker);
+            SetDialogue(Mes, Speaker);
+            Options.Clear();
+            AddOption("Ok", delegate ()
+            {
+                if (!ShowImportantMessages())
+                {
+                    GetDefaultOptions();
+                }
+            });
         }
 
         public static void CancelRequestButtonAction()
@@ -1018,8 +988,7 @@ namespace giantsummon
                 SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CancelRequestYesAnswered, (Speaker.Male ? "He" : "She") + " seems a bit disappointed towards you.)"));
                 Speaker.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
                 GetDefaultOptions();
-                Speaker.request.Time = Main.rand.Next(RequestData.MinRequestSpawnTime, RequestData.MaxRequestSpawnTime);
-                Speaker.request.requestState = RequestData.RequestState.Cooldown;
+                Speaker.request.OnCancelRequest(MainPlayer, Speaker);
             });
         }
 
@@ -1104,16 +1073,14 @@ namespace giantsummon
 
         public static void AcceptRequestButtonAction()
         {
-            if (PlayerMod.GetPlayerAcceptedRequestCount(MainPlayer) >= RequestData.MaxRequestCount)
+            if (PlayerMod.GetPlayerAcceptedRequestCount(MainPlayer) >= RequestData.MaxRequests)
             {
                 SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RequestCantAcceptTooManyRequests, "(You have too many requests active.)"), Speaker);
             }
             else
             {
-                Speaker.request.UponAccepting();
-                Speaker.request.UpdateRequest(Speaker.Data, MainPlayer.GetModPlayer<PlayerMod>());
-                Speaker.request.Time++;
-                string Mes = Speaker.request.GetRequestAccept(Speaker.Data);
+                Speaker.request.OnAcceptingRequest();
+                string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RequestAccepted);
                 if (Mes == "")
                     Mes = "(You accepted the request.)";
                 SetDialogue(Mes, Speaker);
@@ -1123,8 +1090,8 @@ namespace giantsummon
 
         public static void RejectRequestButtonAction()
         {
-            Speaker.request.UponRejecting();
-            SetDialogue(Speaker.request.GetRequestDeny(Speaker.Data), Speaker);
+            Speaker.request.OnRejectingRequest();
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RequestRejected), Speaker);
             GetDefaultOptions();
         }
 

@@ -99,7 +99,6 @@
     <Compile Include="Buffs\WellBeing.cs" />
     <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
-    <Compile Include="CommonRequestsDB.cs" />
     <Compile Include="Compatibility\CompatibilityHooks.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
@@ -331,9 +330,7 @@
     <Compile Include="ProjMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestBase.cs" />
-    <Compile Include="RequestBaseNew.cs" />
     <Compile Include="RequestData.cs" />
-    <Compile Include="RequestDataNew.cs" />
     <Compile Include="RequestContainer.cs" />
     <Compile Include="RequestReward.cs" />
     <Compile Include="Requests\RequestDB.cs" />

@@ -114,8 +114,6 @@ namespace giantsummon.Companions
 
             //Wing Position
             //WingPosition.DefaultCoordinate2x = new Point(20, 23);
-
-            GetRequestList();
         }
 
         public override string CallUnlockMessage => "*I think you're a cool guy. You can call me anytime for your adventures.*";
@@ -125,51 +123,6 @@ namespace giantsummon.Companions
         public override string MoveInUnlockMessage => "*This place seems actually nice. May I live here with you?*";
 
         public override string ControlUnlockMessage => "*As long as you help me get more tasty food, I can let you control me.*";
-
-        public void GetRequestList()
-        {
-            //0
-            AddNewRequest("A Good Soup", 225, 
-                "*I need something warm and delicious to eat. I can think of a Soup as that thing. Would you try getting some for me?*",
-                "*I'll be waiting for the soup, then.*",
-                "*Awww... But I'm hungry...*",
-                "*Thank you! Be sure that I'll enjoy eating this.*", 
-                "*I don't know much about soups, but I think they involve Mushrooms or Goldfishs?*", 
-                "");
-            AddItemCollectionObjective(Terraria.ID.ItemID.BowlofSoup, 1, 0.2f);
-            //1
-            AddNewRequest("You Can Fish That", 220, 
-                "*I want to taste some food that involves fish. I need to check also how you cook it to make it edible and delicious. Can you do that?*",
-                "*Yay! I'll be waiting.*",
-                "*You don't know how to cook fish...?*",
-                "*I can't stop drooling, that looks DELICIOUS! Thank you!*",
-                "*You will need to fish up some fish from water before you can cook them. You will need a fishing rod and bait to do that, obviously.*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.CookedFish, 1, 0.2f);
-            //2
-            AddNewRequest("Shrips For Good!", 235,
-                "*I want to taste shrips! People says that shrips is tasty, and I want to know if It's true. Do you know how to cook them? Could you make some cooked shrips for me?*",
-                "*Okay, I'll be waiting here. I think you can find them on the ocean, but I may be wrong.*",
-                "*But I want to taste shrips....*",
-                "*That's the shrips?! (Snif, snif) Hm... It looks tasty... What? The name is shrimp? How can I say right that name?*",
-                "*I think Shrips are found in the ocean. You will need to try fishing them there, if you want to find them, if they're there.*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.CookedShrimp, 1, 0.2f);
-            //3
-            AddNewRequest("Who Takes the First Bite?", 260,
-                "*I also need to taste exotic kinds of food, so I wonder if you could make me a Grub Soup. Would you make one for me?*",
-                "*Thanks. I have to say that I'm not excited to try that food, but let's see how it looks...*",
-                "*I think you may be right, neither I am interessed in trying that...*",
-                "*That's... The grub soup...? I ... Really don't want to take a bite of that... Why don't you try It and tell me the taste? Uh... [nickname], are you feeling alright? Your face seems pale.*",
-                "*The insects for a Grub Soup can be found in the Jungle. You will need a Bug Net to catch them.*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.GrubSoup, 1, 0.2f);
-            //4
-            AddNewRequest("Probably Non Existing Place Culinary", 275,
-                "*I heard from a Travelling Merchant, that there is a food called \'Sashimi\' in one of the places he has been into. He said that It's good food, so I want to try It too. Do you know how to make It?*",
-                "*Wow [nickname], you really know many foods. I'll be waiting for you to bring me a \'Sashimi\'.*",
-                "*You never heard of It, either? Maybe I should ask the Travelling Merchant to see if could find the recipe if he visit that place.*",
-                "*The way It's cut... The smell... Hmm... You need to give me the recipe of this sometime.*",
-                "*The only thing I know from \'Sashimi\', is that It's made using fish, but you know that already, don't you?*");
-            AddItemCollectionObjective(Terraria.ID.ItemID.Sashimi, 1, 0.2f);
-        }
 
         public override bool AlterRequestGiven(GuardianData Guardian, out int ForcedMissionID, out bool IsTalkRequest)
         {
