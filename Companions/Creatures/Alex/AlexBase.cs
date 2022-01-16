@@ -420,8 +420,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "I really need something to be done. What? Thought I was into playing 24/7?";
-            return "There is a thing I need to be done, can you help me with it?";
+                return "I really need something to be done. What? You thought I was into playing 24/7? I also have my things too other than that. Can you do this for me? [objective]?";
+            return "There is a thing I need to be done, can you help me with it? I need to [objective], but I think I may need help with it...";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -534,6 +534,10 @@ namespace giantsummon.Companions
                     return "Not now? Try helping me with this later. Woof!";
                 case MessageIDs.RequestFailed:
                     return "You couldn't do it? Don't worry. *He seems to be trying to cheer you up now*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "Did you do it? Did you do it?";
+                case MessageIDs.RequestRemindObjective:
+                    return "You forgot? It's fine! I asked you to [objective].";
                 case MessageIDs.RestAskForHowLong:
                     return "Already? Aww. How long will we rest then?";
                 case MessageIDs.RestNotPossible:

@@ -18,6 +18,16 @@ namespace giantsummon
         public RequestBase Base;
         public const int MaxRequests = 3;
 
+        public bool IsTravelRequest { get { return Base is TravelRequestBase; } }
+
+        public bool IsItemCollectionRequest { get { return Base is ItemRequestBase; } }
+
+        public bool IsHuntRequest { get { return Base is HuntRequestBase; } }
+
+        public string GetObjective { get { return Base.RequestObjective(this); } }
+
+        public string GetShortDescription { get { return Base.RequestShortDescription(this); } }
+
         public bool Active { get { return state == RequestState.Active; } }
 
         public bool IsComplete { get { return state == RequestState.Active && ObjectiveCount >= MaxObjectiveCount; } }
@@ -117,7 +127,7 @@ namespace giantsummon
 
         public string GetRequestBrief(Player player, TerraGuardian gd)
         {
-            return gd.Base.HasRequestMessage(player, gd).Replace("[objective]", Base.RequestShortDescription(this));
+            return gd.Base.HasRequestMessage(player, gd).Replace("[objective]", GetShortDescription);
         }
 
         public string GetRequestReward(byte RewardPosition)

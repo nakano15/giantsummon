@@ -148,13 +148,6 @@ namespace giantsummon
             //GetCompanionDialogue
             GetDefaultOptions();
             string Message = "";
-            if (tg.ComfortPoints >= tg.MaxComfortExp)
-            {
-                tg.ComfortPoints = 0;
-                tg.IncreaseFriendshipProgress(1);
-                GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MentionPlayer, MainPlayer.name,
-                    tg.Name, 7, 5, new GuardianID[] { tg.MyID });
-            }
             if (tg.Base.InvalidGuardian)
             {
                 Message = "(Your memories of it are fragmented, so you can't see its true form, neither allow it to speak with you.)\nGuardian ID: " + tg.ID + ", Guardian Mod ID: " + tg.ModID + ".\nIf this isn't related to a mod you uninstalled, send a screenshot of this to the mod developer.";
@@ -171,7 +164,15 @@ namespace giantsummon
             {
                 if (ShowImportantMessages())
                     return;
-                if (PlayerMod.IsGuardianBirthday(MainPlayer, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
+                if (tg.ComfortPoints >= tg.MaxComfortExp)
+                {
+                    tg.ComfortPoints = 0;
+                    tg.IncreaseFriendshipProgress(1);
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MentionPlayer, MainPlayer.name,
+                        tg.Name, 7, 5, new GuardianID[] { tg.MyID });
+                    Message = tg.Base.TalkMessage(MainPlayer, tg);
+                }
+                else if (PlayerMod.IsGuardianBirthday(MainPlayer, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
                     Message = tg.Base.BirthdayMessage(MainPlayer, tg);
                 else
                 {
@@ -912,7 +913,7 @@ namespace giantsummon
                         }
                         else
                         {
-                            string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RequestRemindObjective, "(They tell you that you need to [objective] for them.)").Replace("[objective]", Speaker.request.Base.RequestShortDescription(Speaker.request));
+                            string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RequestRemindObjective, "(They tell you that you need to [objective] for them.)").Replace("[objective]", Speaker.request.GetShortDescription);
                             SetDialogue(Mes, Speaker);
                             Options.Clear();
                             AddOption("Cancel Request", CancelRequestButtonAction);

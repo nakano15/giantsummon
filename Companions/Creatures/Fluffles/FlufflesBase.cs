@@ -302,8 +302,13 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("(After you asked if she had a request, she pulled a list of things she wants you to do.)");
-            Mes.Add("(She seems to be happy after you asked that, then gave you a list of things she needs.)");
+            if (guardian.request.Base is TravelRequestBase)
+                Mes.Add("(She seems to be feeling lonelly, maybe she wants to [objective]?)");
+            else
+            {
+                Mes.Add("(After you asked if she had a request, she pulled a list of things she wants you to do. The list contains this: [objective])");
+                Mes.Add("(She seems to be happy after you asked that, then gave you a list of things she needs. She asks you to: [objective])");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -406,6 +411,10 @@ namespace giantsummon.Companions
                     return "(She's looking at you with a question mark face.)";
                 case MessageIDs.RequestFailed:
                     return "(Her face shows the disappointment your failure brought, but she seems to recognize that you did your best.)";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "(She looks a bit excited. I think she knows you completed her request.)";
+                case MessageIDs.RequestRemindObjective:
+                    return "(Just as precaution, she sketched on the ground what she asked you to do: [objective])";
                 case MessageIDs.RestAskForHowLong:
                     return "(She seems to like the idea. She seems to be asking for how long will rest.)";
                 case MessageIDs.RestNotPossible:

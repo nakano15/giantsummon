@@ -600,8 +600,16 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Hey, I need your help for one of my experiments. Don't worry, I wont harm you in the process.*");
-            Mes.Add("*My experiments stops me from doing this right now, If you could help me.*");
+            if (guardian.request.Base is TravelRequestBase)
+            {
+                Mes.Add("*I need to feel the air hit my fur, and also some blood too. Can you [objective]?*");
+            }
+            else
+            {
+                if (!(guardian.request.Base is HuntRequestBase))
+                    Mes.Add("*Hey, I need your help for one of my experiments. Don't worry, I wont harm you in the process. In fact, I need you to [objective]. What can you say?*");
+                Mes.Add("*My experiments stops me from doing this right now, If you could help me [objective], I would appreciate.*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -785,6 +793,10 @@ namespace giantsummon.Companions
                     return "*No no no, come back here.*";
                 case MessageIDs.RequestFailed:
                     return "*You what?! Now, try thinking of reasons as to why I shouldn't turn you into a squirrel.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*I like the look in your face. You completed my request, right?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*I really want to examine your brain right now, but I still need you to do my request, so here it is again: I need you to [objective]. Copied that?*";
                 case MessageIDs.RestAskForHowLong:
                     return "*I enjoy that idea, seems like the perfect moment to test some spells. How long to you plan to rest?*";
                 case MessageIDs.RestNotPossible:

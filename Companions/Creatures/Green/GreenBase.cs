@@ -257,8 +257,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Perfect timing! I need you to do something for me.*");
-            Mes.Add("*Yes... As a matter of fact, I have something that I need your help with. Can you help me out?*");
+            Mes.Add("*Perfect timing! I need you to do something for me. Can you [objective]?*");
+            Mes.Add("*Yes... As a matter of fact, I have something that I need your help with. Can you help me out with my problem, [objective]?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -343,6 +343,10 @@ namespace giantsummon.Companions
                     if (Main.rand.NextDouble() < 0.5)
                         return "*I shouldn't have entrusted that to you.*";
                     return "*You disappointed me, [nickname]. Don't do that again.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*Bring me good news, [nickname]. Did you do what I asked?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*You forgot my request? I asked you to [objective].*";
                 case MessageIDs.RestAskForHowLong:
                     return "*Getting drowzy? We can rest then. How long until we return to your adventures?*";
                 case MessageIDs.RestNotPossible:

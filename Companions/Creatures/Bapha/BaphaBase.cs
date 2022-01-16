@@ -257,7 +257,7 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*I need you to collect me some tributes, would you?*");
+            Mes.Add("*I need you to do me a favor, would you do it? No worry, I will reward you handsomelly for it. I need you to [objective], do I hear a yes coming from you?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

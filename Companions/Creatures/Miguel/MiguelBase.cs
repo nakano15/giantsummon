@@ -353,9 +353,13 @@ namespace giantsummon.Companions
 
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
-            if (Main.rand.NextDouble() < 0.5)
-                return "*This isn't an exercise, I really need this done. I'm busy with some other things, and can't do it myself right now. Can you do it?*";
-            return "*I can give you a break of training. There is a thing that I need done. Can you fulfill that?*";
+            if (guardian.request.IsTravelRequest && Main.rand.NextDouble() < 0.5)
+            {
+                return "*I need to exercise my legs, and I think you can help me with that. Can you [objective]?*";
+            }
+            if (!guardian.request.IsTravelRequest && Main.rand.NextDouble() < 0.5)
+                return "*This isn't an exercise, I really need this done. I'm busy with some other things, and can't [objective] right now. Can you do it for me, instead?*";
+            return "*I can give you a break of training. There is a thing that I need done, which is [objective]. Can you fulfill that?*";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -440,6 +444,10 @@ namespace giantsummon.Companions
                     return "*I guess it can wait.*";
                 case MessageIDs.RequestFailed:
                     return "*I'm disappointed, [nickname], but I wont punish you with exercises for that.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*Tell me, [nickname]. You did my request?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*Short fused memory? I asked you to [objective]. Maybe I can recommend you some vitamines for memory.*";
                 case MessageIDs.RestAskForHowLong:
                     return "*Battery running low? Alright, let's rest then. For how long?*";
                 case MessageIDs.RestNotPossible:

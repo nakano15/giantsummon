@@ -1255,8 +1255,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*I feel awkward for asking that but... Wait, don't laugh, I don't mind giving hugs, but asking things isn't my kind of thing.*");
-            Mes.Add("*Uh... Say... Could you do something for me?*");
+            Mes.Add("*I feel awkward for asking that but... Wait, don't laugh, I don't mind giving hugs, but asking things isn't my kind of thing. Would you please [objective] for me?*");
+            Mes.Add("*Uh... Say... Could you do something for me? I need help with this: [objective]. Can you do it for me?*");
             return Mes[Terraria.Main.rand.Next(Mes.Count)];
         }
 
@@ -1396,6 +1396,10 @@ namespace giantsummon.Companions
                     return "*Sure. My request can wait.*";
                 case MessageIDs.RequestFailed:
                     return "*Don't worry [nickname], you tried your best. If you want, I can give you a hug so you can feel better.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*You helped Teddy, didn't you [nickname]?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*My request is for you to [objective], in case you forgot.*";
                 case MessageIDs.RestAskForHowLong:
                     return "*That's a lovelly idea. How long are we going to rest?*";
                 case MessageIDs.RestNotPossible:

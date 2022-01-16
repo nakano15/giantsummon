@@ -651,7 +651,7 @@ namespace giantsummon
 
         public virtual string HasRequestMessage(Player player, TerraGuardian guardian)
         {
-            return "*[name] wants you to do something.*";
+            return "*[name] wants you to [objective].*";
         }
 
         public virtual string CompletedRequestMessage(Player player, TerraGuardian guardian)

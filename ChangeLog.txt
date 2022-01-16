@@ -3,3 +3,4 @@
 	A modder adding companions to this mod can setup a custom directory to their companion files by using SpriteDirectory variable, on GuardianBase. The folder name is still the companion name.
 Companions now have messages they will say when rescuing someone.
 Terrarian companions will now have their hair hidden if a mod item they're using has setup so.
+Companions talk messages will now be told when you start dialogue with a companion, that has maxed out comfort points, and gains friendship exp.

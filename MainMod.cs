@@ -2744,7 +2744,7 @@ namespace giantsummon
                                 //SlotStartPosition.X -= 24;
                                 HasRequest = true;
                             }
-                            string RequestDesc = d.request.Base.RequestObjective(d.request);
+                            string RequestDesc = d.request.GetObjective;
                             SlotStartPosition.Y += Utils.DrawBorderString(Main.spriteBatch, RequestDesc, SlotStartPosition, Color.White).Y - 4;
                             SlotStartPosition.Y += 8f;
                         }

@@ -487,8 +487,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "*I'm so glad you asked. I really need a thing done, but I'm already busy with something else, if you could help me...*"; //"*She seems to want something.*";
-            return "*I'm so happy you asked! Here, take this list, It covers everything. Will you do it?*"; //"*As soon as I asked if she wanted something, she gave me a list.*";
+                return "*I'm so glad you asked. I really need a thing done, but I'm already busy with something else, if you could help me... This is my problem, if you ask: [objective]*"; //"*She seems to want something.*";
+            return "*I'm so happy you asked! Here, check this: \"[objective]\". Will you do it?*"; //"*As soon as I asked if she wanted something, she gave me a list.*";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -1028,6 +1028,10 @@ namespace giantsummon.Companions
                     return "*Did you find the request impossible, or you can't do it right now?*"; //"*She asks if you found the request impossible, or if can't do It right now.*";
                 case MessageIDs.RequestFailed:
                     return "*I'm really disappointed that you managed to fail my request. Don't worry, by the way... It's fine.*"; //"*Her face is filled with the disappointment over you failing on her request. She then tried to console you.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*Did you do what I asked?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*I asked you to [objective].*";
                 case MessageIDs.RestAskForHowLong:
                     return "*I agree, my feet are sore right now. How long should we rest?*"; //"*She agrees with you, and says that her feet are sore. Then asked for how long will rest.*";
                 case MessageIDs.RestNotPossible:

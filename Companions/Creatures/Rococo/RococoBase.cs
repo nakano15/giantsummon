@@ -345,8 +345,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "*[name] is asking me to do something for him.*";
-            return "*[name] is looking at me with a funny face while telling me that he wants something to be done, like as If he didn't wanted to ask for help.*";
+                return "*[name] is asking me to [objective] for him.*";
+            return "*[name] is looking at me with a funny face while telling me that he wants you to [objective], like as If he didn't wanted to ask for help.*";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -640,6 +640,10 @@ namespace giantsummon.Companions
                     return "*[name] waves you goodbye.*";
                 case MessageIDs.RequestFailed:
                     return "*[name] looks at you with a sad face.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*[name] awaits anxiously for you to tell him the request is completed.*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*[name] reminds you that you have to [objective].*";
                 case MessageIDs.RestAskForHowLong:
                     return "*[name] tells you that he seems fine with taking a rest. He's asking how long will you rest.*";
                 case MessageIDs.RestNotPossible:

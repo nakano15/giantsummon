@@ -547,8 +547,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "I feel weird for asking this but... I need your help with a particular something...";
-            return "I'm not really a fan of asking for help, but I really need help for this.";
+                return "I feel weird for asking this but... I need your help with a particular something... It's about... [objective]. Hey, don't laugh.";
+            return "I'm not really a fan of asking for help, but I really need help for this. I need you to [objective]. Can you help me with that?";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -739,6 +739,10 @@ namespace giantsummon.Companions
                     return "Come see me if you decide to help me with this.";
                 case MessageIDs.RequestFailed:
                     return "Well, It's not everyday you can have success, right. I'm not angry. It's fine.";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "Hey [nickname], completed my request?";
+                case MessageIDs.RequestRemindObjective:
+                    return "Short memory, eh? I asked you to [objective].";
                 case MessageIDs.RestAskForHowLong:
                     return "We need energy to go adventuring, getting some rest will be good. How long are we going to rest?";
                 case MessageIDs.RestNotPossible:

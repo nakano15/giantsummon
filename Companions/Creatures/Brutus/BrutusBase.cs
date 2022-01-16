@@ -586,9 +586,11 @@ namespace giantsummon.Companions
 
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
+            if (guardian.request.Base is TravelRequestBase)
+                return "*I need to patrol the world for troubles. Can you [objective]?*";
             if (Main.rand.NextDouble() < 0.5)
-                return "*I have no time to look for this myself, so I ask you to do something for me.*";
-            return "*I can't leave the town unprotected, so I ask you to do something for me.*";
+                return "*I have no time to look for this myself, so I ask you to do something for me. I need you to [objective], can you do it?*";
+            return "*I can't leave the town unprotected, so I have a thing to ask you for. Can you [objective]?*";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -934,6 +936,10 @@ namespace giantsummon.Companions
                     return "*I guess I can put this on hold.*";
                 case MessageIDs.RequestFailed:
                     return "*You couldn't do what I asked, right? I should have thought before giving you such a request.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*Say, have you do what I asked?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*Hm... [objective] is what I asked you for.*";
                 case MessageIDs.RestAskForHowLong:
                     return "*Yes, you can rest here. How long do you plan on resting?*";
                 case MessageIDs.RestNotPossible:

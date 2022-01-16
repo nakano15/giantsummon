@@ -233,8 +233,15 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Yes... There is. It's too scary for me to do this, so I need your help with it.*");
-            Mes.Add("*It's so scary outside, so I can't get this done by myself. Could you help me do it?*");
+            if (guardian.request.Base is TravelRequestBase)
+            {
+                Mes.Add("*There is no way I will explore the world by myself, so can you take me with you?*");
+            }
+            else
+            {
+                Mes.Add("*Yes... There is. It's too scary for me to do this, so I need your help with it. Can you [objective]?*");
+                Mes.Add("*It's so scary outside, so I can't get this done by myself. Could you help me with [objective]?*");
+            }
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -329,6 +336,10 @@ namespace giantsummon.Companions
                     return "*Later? Later?! Oh my...*";
                 case MessageIDs.RequestFailed:
                     return "*What?! You couldn't do it?!*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*Ahh! Oh, it's you.. Did... Did you do my request?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*Y-you forgot it?! It was to ... Uh... [objective]... Remember?*";
                 case MessageIDs.RestAskForHowLong:
                     return "*Wait, you're proposing the idea of laying down somewhere, closing the eyes and not worrying about any threats or scary things?! How long we'll realize that beautiful idea for?*";
                 case MessageIDs.RestNotPossible:

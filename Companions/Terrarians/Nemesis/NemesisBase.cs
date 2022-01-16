@@ -85,8 +85,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextDouble() < 0.5)
-                return "I want you to bring this to me. Doesn't matter why.";
-            return "I have got a little task for you, If you don't mind, I can come with you to do it.";
+                return "I want you to [objective] for me. Doesn't matter why.";
+            return "I have got a little task for you, If you don't mind. I need you to [objective]. Do it and I'll give you something in exchange.";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -279,6 +279,10 @@ namespace giantsummon.Companions
                     return "It will be waiting here, then.";
                 case MessageIDs.RequestFailed:
                     return "Failure was not an option.";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "You completed my request?";
+                case MessageIDs.RequestRemindObjective:
+                    return "[objective]. There, now do it.";
                 case MessageIDs.RestAskForHowLong:
                     return "How long do you plan on resting?";
                 case MessageIDs.RestNotPossible:

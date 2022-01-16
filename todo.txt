@@ -1,3 +1,4 @@
+Miguel recruit npc can spawn multiple times.
 Make the Talk message appear when the player gains friendship point from talking to a companion.
 Need to update and add some dialogues to the companions, to fit the changes on the system:
 	The dialogue where the companion asks for player help, should show the short version of the objective for the player to see.

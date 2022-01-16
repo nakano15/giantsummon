@@ -314,9 +314,11 @@ namespace giantsummon.Companions
 
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
-            if (Main.rand.NextDouble() < 0.5)
-                return "*I need some things for my personal collection. Can you help me with this?*";
-            return "*Glad you ask, I really need something, but certainly isn't my final wish.*";
+            if (guardian.request.IsItemCollectionRequest && Main.rand.NextDouble() < 0.5)
+                return "*I need some things for my personal collection. Can you help me with [objective]?*";
+            if (guardian.request.IsTravelRequest && Main.rand.NextDouble() < 0.5)
+                return "*I'm not really used to stay too much at home, so can you [objective]? Just don't leave me behind, too.*";
+            return "*Glad you ask, I really need something, but certainly isn't my final wish. This is it: [objective]. What do you say?*";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -797,6 +799,10 @@ namespace giantsummon.Companions
                     return "*Well, It can wait, then.*";
                 case MessageIDs.RequestFailed:
                     return "*I'm thinking about trying eating a succulent Terrarian now. Just kidding. I'm not that mad about this, but I wanted that done.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*Did you finally do it, [nickname]?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*Maybe something is wrong with your brain, I could analyze it if you allow me. Haha, just kidding. Anyways, I asked you to [objective]. Don't forget that again.*";
                 case MessageIDs.RestAskForHowLong:
                     return "*I can't sleep, so doesn't makes a difference. How long do you plan on resting?*";
                 case MessageIDs.RestNotPossible:

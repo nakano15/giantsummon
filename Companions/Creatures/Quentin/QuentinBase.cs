@@ -149,8 +149,8 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             if (Main.rand.NextFloat() < 0.5f)
-                return "I want you to get this item for me. Its for research purposes .";
-            return "I have a mission for you, and I don't mind helping you with it..";
+                return "I want you to [objective] for me. Its for research purposes.";
+            return "I have a mission for you, and I don't mind helping you with it.. [objective].";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -341,6 +341,10 @@ namespace giantsummon.Companions
                     return "don't worry I'm not in a hurry.";
                 case MessageIDs.RequestFailed:
                     return "I never expected this result, well there will always be more chances to achieve it.";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "I sense that you did my request. Am I right?";
+                case MessageIDs.RequestRemindObjective:
+                    return "Don't worry! The great [name] will remind you of your objective. You have to [objective].";
                 case MessageIDs.RestAskForHowLong:
                     return "is really important to rest well so you should sleep for at least 8 hours to have energy for our next adventure";
                 case MessageIDs.RestNotPossible:

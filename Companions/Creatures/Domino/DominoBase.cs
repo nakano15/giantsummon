@@ -352,11 +352,14 @@ namespace giantsummon.Companions
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Not everything I can get by myself, so I need your help with this.*");
-            Mes.Add("*I have to go get some goods soon from one of my sources, so I can't do this meanwhile.*");
-            if (NpcMod.HasGuardianNPC(Brutus))
+            Mes.Add("*Not everything I can get done by myself, so I need your help with this. Can you [objective]?*");
+            if (!(guardian.request.Base is TravelRequestBase))
             {
-                Mes.Add("*I need to stay here, in case \"someone\" tries to confiscate my goods. So please do this for me?*");
+                Mes.Add("*I have to go get some goods soon from one of my sources, so I can't do this meanwhile: [objective]. Would you be able to do this for me?*");
+                if (NpcMod.HasGuardianNPC(Brutus))
+                {
+                    Mes.Add("*I need to stay here, in case \"someone\" tries to confiscate my goods. So please can you [objective] for me?*");
+                }
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -485,6 +488,10 @@ namespace giantsummon.Companions
                     return "*It's not like as if It's a one time deal, anyway.*";
                 case MessageIDs.RequestFailed:
                     return "*You failed? Well, I should ask you to pay me for that, but instead I'll give you nothing.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*You've returned, so.. Did you do my little request?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*Hmph.. It's for you to [objective] what I asked you to. Did you forget it already?*";
                 case MessageIDs.RestAskForHowLong:
                     return "*You can sleep any time you want, I'll open a shop meanwhile.\nHow long do you plan on sleeping?*";
                 case MessageIDs.RestNotPossible:

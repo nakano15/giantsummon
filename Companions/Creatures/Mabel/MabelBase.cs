@@ -188,7 +188,9 @@ namespace giantsummon.Companions
 
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
-            return (Main.rand.NextDouble() < 0.5 ? "*I've been so busy practicing to be a model, that I forgot that I have something to do.*" : "*I just don't have the time to deal with this, so can you do this for me?*");
+            return (Main.rand.NextDouble() < 0.5 || guardian.request.Base is TravelRequestBase ?
+                "*I've been so busy practicing to be a model, that I forgot that I have something to do. Can you [objective]?*" :
+                "*I just don't have the time to deal with this, so can you [objective] for me?*");
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
@@ -552,6 +554,10 @@ namespace giantsummon.Companions
                     return "*Alright. Come ask me again if you want to do my request. Bye!*";
                 case MessageIDs.RequestFailed:
                     return "*You failed? Don't worry, It's fine. You tried, right? There, don't feel sad.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*My request? You completed it?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*I asked you to [objective]. Is that what you wanted to know?*";
                 case MessageIDs.RestAskForHowLong:
                     return "*Yes, my legs are hurting a bit, resting will be nice. How long do you think we'll be fine?*";
                 case MessageIDs.RestNotPossible:

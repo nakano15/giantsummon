@@ -194,7 +194,7 @@ namespace giantsummon.Companions
 
         public override string HasRequestMessage(Player player, TerraGuardian guardian)
         {
-            return "(She's staring at you, attentiously.)";
+            return "(She's staring at you, attentiously. She seems to be wanting... [objective]..?)";
         }
 
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
