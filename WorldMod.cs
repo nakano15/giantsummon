@@ -222,10 +222,7 @@ namespace giantsummon
                         LeaveCooldown = 0;
                         if (!CheckIfSomeoneMustLeaveWorld())
                         {
-                            if (MainMod.CompanionsCanVisitWorld)
-                            {
-                                CheckIfSomeoneCanVisit();
-                            }
+                            CheckIfSomeoneCanVisit();
                         }
                     }
                 }
@@ -254,7 +251,7 @@ namespace giantsummon
             if ((ScheduledVisits.Count > 0 && Main.rand.NextDouble() < 0.5f) || Main.rand.NextDouble() < VisitRate * 0.025f) //0.01665f <- 0.00333f
             {
                 List<GuardianID> PossibleIDs = new List<GuardianID>();
-                List<GuardianID> GuardianListToCheck = GuardiansMet;
+                List<GuardianID> GuardianListToCheck = MainMod.CompanionsCanVisitWorld ? GuardiansMet : new List<GuardianID>();
                 bool IsFromSchedule = false;
                 if (ScheduledVisits.Count > 0)
                 {

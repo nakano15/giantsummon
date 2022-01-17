@@ -896,7 +896,6 @@ namespace giantsummon
                         {
                             data.request.FailedRequest(MainPlayer, Speaker);
                             SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RequestFailed), Speaker);
-                            //GiveOptionToCancelRequest = true;
                             GetDefaultOptions();
                         }
                         else if (data.request.IsComplete)
@@ -909,6 +908,7 @@ namespace giantsummon
                             AddOption(Speaker.request.GetRequestReward(0), GetFirstRewardButtonAction);
                             AddOption(Speaker.request.GetRequestReward(1), GetSecondRewardButtonAction);
                             AddOption(Speaker.request.GetRequestReward(2), GetThirdRewardButtonAction);
+                            data.request.TryGivingAtLeast30SecondsToCompleteRequest();
                         }
                         else
                         {
@@ -929,17 +929,24 @@ namespace giantsummon
         private static void GetFirstRewardButtonAction()
         {
             RequestData request = Speaker.request;
-            request.CompleteRequest(MainPlayer, Speaker, 0);
-            string Mes = Speaker.Base.CompletedRequestMessage(MainPlayer, Speaker);
-            SetDialogue(Mes, Speaker);
-            Options.Clear();
-            AddOption("Ok", delegate ()
+            if (request.CompleteRequest(MainPlayer, Speaker, 0))
             {
-                if (!ShowImportantMessages())
+                string Mes = Speaker.Base.CompletedRequestMessage(MainPlayer, Speaker);
+                SetDialogue(Mes, Speaker);
+                Options.Clear();
+                AddOption("Ok", delegate ()
                 {
-                    GetDefaultOptions();
-                }
-            });
+                    if (!ShowImportantMessages())
+                    {
+                        GetDefaultOptions();
+                    }
+                });
+            }
+            else
+            {
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RequestFailed), Speaker);
+                GetDefaultOptions();
+            }
         }
 
         private static void GetSecondRewardButtonAction()

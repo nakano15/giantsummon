@@ -1382,11 +1382,11 @@ namespace giantsummon
         public override void NPCLoot(NPC npc)
         {
             Npcs.GhostFoxGuardianNPC.OnMobKill(npc.type);
-            if (npc.type == Terraria.ID.NPCID.PossessedArmor && !NpcMod.HasMetGuardian(4) && Main.rand.Next(100) == 0)
+            if (npc.type == NPCID.PossessedArmor && !HasMetGuardian(4) && Main.rand.Next(100) == 0)
             {
                 SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Nemesis);
                 Main.NewText("There's something over there.");
-                NpcMod.AddGuardianMet(4);
+                AddGuardianMet(4);
             }
             if (npc.type == NPCID.Bunny && Main.rand.Next(50) == 0)
             {
@@ -1498,6 +1498,8 @@ namespace giantsummon
                 {
                     if(Main.player[p].active && Math.Abs(Main.player[p].position.X - npc.Center.X) < Distance && Math.Abs(Main.player[p].position.Y - npc.Center.Y) < Distance)
                     {
+                        if (p == Main.myPlayer && !PlayerMod.PlayerHasGuardian(Main.player[p], GuardianBase.Sardine))
+                            Main.NewText("You have met Sardine.");
                         PlayerMod.AddPlayerGuardian(Main.player[p], GuardianBase.Sardine);
                     }
                 }

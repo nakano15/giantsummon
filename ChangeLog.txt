@@ -10,3 +10,8 @@ Request system remade:
 	Completting the request now offers you 3 possible rewards. Each reward is generated once the request is created, by talking to the companion about it after the cooldown ends.
 	The HasRequestMessages has been updated to support "[objective]" tag, so you can display a short description of the objective, before you can accept or reject it.
 	Added 2 new messages, they are for when you complete the request, or talk to the companion about the request, and it isn't completed or failed.
+	If you have less than 30 seconds to complete the quest when you talk to the npc about it, the game will give you exactly 30 seconds to pick your reward and complete it.
+Wrath's npc hit counter variable now resets once it reaches the necessary amount of hits for him to take some measure.
+Wrath's npc will now try using Body Slam when he gets a certain number of hits and shots.
+Companions you have request active, will be able to visit you, regardless of if you enabled or not companion visit on your world.
+	Failing a request because the npc didn't appeared sucks.

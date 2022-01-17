@@ -62,10 +62,12 @@ namespace giantsummon
             }
         }
 
-        public void CompleteRequest(Player player, TerraGuardian gd, byte RewardToGet)
+        public bool CompleteRequest(Player player, TerraGuardian gd, byte RewardToGet)
         {
             if (ObjectiveCount < MaxObjectiveCount)
-                return;
+                return false;
+            if (state != RequestState.Active)
+                return false;
             if (RewardToGet > 2)
                 RewardToGet = 2;
             Base.OnCompleteRequest(player, this);
@@ -98,6 +100,7 @@ namespace giantsummon
             gd.IncreaseFriendshipProgress(1);
             gd.ChangeTrustValue(TrustLevels.TrustGainFromComplettingRequest);
             SetRequestOnCooldown();
+            return true;
         }
 
         public void FailedRequest(Player player, TerraGuardian tg)
@@ -158,6 +161,12 @@ namespace giantsummon
             RequestToPick.Clear();
         }
 
+        public void TryGivingAtLeast30SecondsToCompleteRequest()
+        {
+            if (RequestTimeLeft < 30 * 60)
+                RequestTimeLeft = 30 * 60;
+        }
+
         public string GetRequestBrief(Player player, TerraGuardian gd)
         {
             return gd.Base.HasRequestMessage(player, gd).Replace("[objective]", GetShortDescription);
@@ -213,6 +222,35 @@ namespace giantsummon
             state = RequestState.WaitingAccept;
             RequestTimeLeft = Main.rand.Next(48 * 3600, 72 * 3600);
             GenerateRewards(player);
+        }
+
+        public string GetRequestTime
+        {
+            get
+            {
+                int Minutes = (int)(RequestTimeLeft * (1f / 60)), Hours = 0, Days = 0;
+                if (Minutes >= 60)
+                {
+                    Hours += (int)(Minutes * (1f / 60));
+                    Minutes -= Hours * 60;
+                }
+                if(Hours >= 24)
+                {
+                    Days += (int)(Hours * (1f / 24));
+                    Hours -= Days * 24;
+                }
+                string Text = "";
+                if (Days > 0)
+                {
+                    Text = Days + " days, " + Hours + " hours and";
+                }
+                else if (Hours > 0)
+                {
+                    Text = Hours + " hours and";
+                }
+                Text += " " + Minutes + " minutes left.";
+                return Text;
+            }
         }
 
         private void GenerateRewards(Player player)

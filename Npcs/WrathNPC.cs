@@ -1078,7 +1078,14 @@ namespace giantsummon.Npcs
             HitsReceived++;
             if(HitsReceived >= 20)
             {
-                if (Main.rand.NextFloat() < 0.6f)
+                HitsReceived = 0;
+                if (Main.rand.NextFloat() < 0.3f)
+                {
+                    behavior = Behaviors.BodySlam;
+                    ActionTime = 0;
+                    SayMessage("*Time to flatten you!*");
+                }
+                else if (Main.rand.NextFloat() < 0.6f)
                 {
                     behavior = Behaviors.ReachPlayer;
                     ActionTime = 0;
@@ -1103,9 +1110,18 @@ namespace giantsummon.Npcs
             if(BulletsHit > 10)
             {
                 BulletsHit = 0;
-                behavior = Behaviors.BulletReflectingBelly;
-                ActionTime = 0;
-                SayMessage("*Alright! Shoot as much as possible!*");
+                if (Main.rand.NextFloat() < 0.4f)
+                {
+                    behavior = Behaviors.BodySlam;
+                    ActionTime = 0;
+                    SayMessage("*Can you hit what is in the air?!*");
+                }
+                else
+                {
+                    behavior = Behaviors.BulletReflectingBelly;
+                    ActionTime = 0;
+                    SayMessage("*Alright! Shoot as much as possible!*");
+                }
             }
         }
 
