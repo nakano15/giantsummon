@@ -152,8 +152,8 @@ namespace giantsummon.Companions
 
         public void SetRewards()
         {
-            AddReward(Terraria.ID.ItemID.CookedFish, 1, 150, 0.66f, 2);
-            AddReward(Terraria.ID.ItemID.BowlofSoup, 1, 200, 0.5f, 2);
+            AddReward(Terraria.ID.ItemID.CookedFish, 3, 0.66f);
+            AddReward(Terraria.ID.ItemID.BowlofSoup, 3, 0.5f);
         }
 
         public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)

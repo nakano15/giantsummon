@@ -439,11 +439,11 @@ namespace giantsummon.Companions
 
         public void GetRewards()
         {
-            AddReward(Terraria.ID.ItemID.FlaskofPoison, 3, 100, 0.66f, 2);
-            AddReward(Terraria.ID.ItemID.NaturesGift, 1, 1200, 0.05f);
-            AddReward(Terraria.ID.ItemID.CookedMarshmallow, 2, 60, 0.7f, 4);
-            AddReward(Terraria.ID.ItemID.NeonTetra, 3, 120, 0.2f, 2);
-            AddReward(Terraria.ModLoader.ModContent.ItemType<Items.Accessories.BlueHairclip>(), 1, 300, 0.1f, 0);
+            AddReward(Terraria.ID.ItemID.FlaskofPoison, 3, 0.66f);
+            AddReward(Terraria.ID.ItemID.NaturesGift, 1, 0.05f);
+            AddReward(Terraria.ID.ItemID.CookedMarshmallow, 2, 0.7f);
+            AddReward(Terraria.ID.ItemID.NeonTetra, 3, 0.2f);
+            AddReward(Terraria.ModLoader.ModContent.ItemType<Items.Accessories.BlueHairclip>(), 1, 0.1f);
         }
 
         public override string MountUnlockMessage

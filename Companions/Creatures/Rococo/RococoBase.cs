@@ -250,9 +250,9 @@ namespace giantsummon.Companions
 
         public void RewardList()
         {
-            AddReward(Terraria.ID.ItemID.SlimeStaff, 1, 1000, 0.001f);
-            AddReward(Terraria.ID.ItemID.Daybloom, 2, 35, 0.6f, 3);
-            AddReward(Terraria.ID.ItemID.BowlofSoup, 3, 40, 0.55f, 2);
+            AddReward(Terraria.ID.ItemID.SlimeStaff, 1, 0.01f);
+            AddReward(Terraria.ID.ItemID.Daybloom, 2, 0.6f);
+            AddReward(Terraria.ID.ItemID.BowlofSoup, 3, 0.55f);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)

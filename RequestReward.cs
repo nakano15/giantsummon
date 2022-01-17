@@ -14,10 +14,12 @@ namespace giantsummon
 
         public int itemID = 0, Stack = 1;
         public float AcquisitionChance = 1;
-        public Func<Player, GuardianData, bool> CanGetReward = delegate (Player player, GuardianData gd)
+        public Func<Player, GuardianData, bool> CanGetReward = DefaultTrue;
+
+        public static bool DefaultTrue(Player player, GuardianData gd)
         {
             return true;
-        };
+        }
 
         public static void InitializeRequestRewards()
         {
@@ -222,11 +224,7 @@ namespace giantsummon
                     rewards.Add(r);
                 }
             }
-            foreach(Reward rw in gd.Base.RewardsList)
-            {
-                RequestReward newreward = new RequestReward() { itemID = rw.ItemID, Stack = rw.InitialStack, AcquisitionChance = rw.RewardChance };
-                rewards.Add(newreward);
-            }
+            rewards.AddRange(gd.Base.RewardsList);
             return rewards;
         }
 

@@ -59,7 +59,7 @@ namespace giantsummon
         public bool IsWraith = false;
         public GuardianEffect Effect = GuardianEffect.None;
         public TerrarianCompanionInfos TerrarianInfo = null;
-        public List<Reward> RewardsList = new List<Reward>();
+        public List<RequestReward> RewardsList = new List<RequestReward>();
         public List<SkinReqStruct> SkinList = new List<SkinReqStruct>(), OutfitList = new List<SkinReqStruct>();
         public bool IsNocturnal = false;
         public bool SleepsAtBed = true;
@@ -351,14 +351,12 @@ namespace giantsummon
         /// <param name="ItemScore">Score value necessary for this item to be in the loot pool. If the score is higher or equal to this value, the item will have the chance of dropping.</param>
         /// <param name="Chance">From 0 to 1 in decimal values. Chance of the item being picked if the score is higher or equal to this item score.</param>
         /// <param name="MaxExtraStack">Becareful with this, the extra stack deduces from the score based on the rng of extra stack got.</param>
-        public void AddReward(int ItemID, int Stack, int ItemScore, float Chance = 1f, int MaxExtraStack = 0)
+        public void AddReward(int ItemID, int Stack, float Chance = 0.1f)
         {
-            Reward rwd = new Reward();
-            rwd.ItemID = ItemID;
-            rwd.InitialStack = Stack;
-            rwd.RewardScore = ItemScore;
-            rwd.RewardChance = Chance;
-            rwd.MaxExtraStack = MaxExtraStack;
+            RequestReward rwd = new RequestReward();
+            rwd.itemID = ItemID;
+            rwd.Stack = Stack;
+            rwd.AcquisitionChance = Chance;
             RewardsList.Add(rwd);
         }
 
