@@ -45,6 +45,11 @@ namespace giantsummon
         {
 
         }
+
+        public virtual void OnFailRequest(Player player, RequestData data)
+        {
+
+        }
     }
 
     public class HuntRequestBase : RequestBase

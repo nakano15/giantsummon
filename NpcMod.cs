@@ -1928,6 +1928,12 @@ namespace giantsummon
                         return m == NPCID.RustyArmoredBonesFlail || m == NPCID.RustyArmoredBonesSword || m == NPCID.RustyArmoredBonesSwordNoArmor;
                     case NPCID.HellArmoredBones:
                         return m == NPCID.HellArmoredBonesMace || m == NPCID.HellArmoredBonesSpikeShield || m == NPCID.HellArmoredBonesSword;
+                    case NPCID.Necromancer:
+                        return m == NPCID.NecromancerArmored;
+                    case NPCID.RaggedCaster:
+                        return m == NPCID.RaggedCasterOpenCoat;
+                    case NPCID.DiabolistRed:
+                        return m == NPCID.DiabolistWhite;
                     case NPCID.BlueSlime:
                         return m == NPCID.SlimeRibbonGreen || m == NPCID.SlimeRibbonRed || m == NPCID.SlimeRibbonWhite || m == NPCID.SlimeRibbonYellow || m == 302 ||
                             m == NPCID.SandSlime || m == NPCID.IceSlime || m == NPCID.SpikedIceSlime || m == NPCID.SlimedZombie || m == NPCID.ArmedZombieSlimed ||
@@ -1938,6 +1944,15 @@ namespace giantsummon
                         return m == NPCID.LihzahrdCrawler;
                     case NPCID.CaveBat:
                         return m == NPCID.GiantBat || m == NPCID.IceBat || m == NPCID.IlluminantBat || m == NPCID.JungleBat || m == NPCID.VampireBat;
+                    case NPCID.DesertScorpionWalk:
+                        return m == NPCID.DesertScorpionWall;
+                    case NPCID.DesertGhoul:
+                        return m == NPCID.DesertGhoulCorruption || m == NPCID.DesertGhoulCrimson || m == NPCID.DesertGhoulHallow;
+                    case NPCID.DesertLamiaDark:
+                    case NPCID.DesertLamiaLight:
+                        return m == NPCID.DesertLamiaLight || m == NPCID.DesertLamiaDark;
+                    case NPCID.Mummy:
+                        return m == NPCID.LightMummy || m == NPCID.DarkMummy;
                     default:
                         return false;
                 }

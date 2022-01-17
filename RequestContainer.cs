@@ -79,127 +79,137 @@ namespace giantsummon
             return req;
         }
 
-        public bool CorruptWorldRequirement(Player player, GuardianData tg)
+        public static bool LifeCrystalUsedRequirement(Player player, GuardianData tg)
+        {
+            return player.statLifeMax > 100;
+        }
+
+        public static bool CorruptWorldRequirement(Player player, GuardianData tg)
         {
             return !WorldGen.crimson;
         }
 
-        public bool CrimsonWorldRequirement(Player player, GuardianData tg)
+        public static bool CrimsonWorldRequirement(Player player, GuardianData tg)
         {
             return WorldGen.crimson;
         }
 
-        public bool CorruptWorldAndBossKilledRequirement(Player player, GuardianData tg)
+        public static bool CorruptWorldAndBossKilledRequirement(Player player, GuardianData tg)
         {
             return !WorldGen.crimson && NPC.downedBoss2;
         }
 
-        public bool CrimsonWorldAndBossKilledRequirement(Player player, GuardianData tg)
+        public static bool CrimsonWorldAndBossKilledRequirement(Player player, GuardianData tg)
         {
             return WorldGen.crimson && NPC.downedBoss2;
         }
 
-        public bool CorruptWorldHardmodeRequirement(Player player, GuardianData tg)
+        public static bool CorruptWorldHardmodeRequirement(Player player, GuardianData tg)
         {
             return Main.hardMode && !WorldGen.crimson;
         }
 
-        public bool CrimsonWorldHardmodeRequirement(Player player, GuardianData tg)
+        public static bool CrimsonWorldHardmodeRequirement(Player player, GuardianData tg)
         {
             return Main.hardMode && WorldGen.crimson;
         }
 
-        public bool HardmodeRequirement(Player player, GuardianData tg)
+        public static bool HardmodeRequirement(Player player, GuardianData tg)
         {
             return Main.hardMode;
         }
 
-        public bool AllMechBossKillRequirement(Player player, GuardianData tg)
+        public static bool AllMechBossKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;
         }
 
-        public bool AnyMechBossKillRequirement(Player player, GuardianData tg)
+        public static bool AnyMechBossKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedMechBossAny;
         }
 
-        public bool EoCKillRequirement(Player player, GuardianData tg)
+        public static bool EoCKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedBoss1;
         }
 
-        public bool EvilBossKillRequirement(Player player, GuardianData tg)
+        public static bool EvilBossKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedBoss2;
         }
 
-        public bool SkeletronKillRequirement(Player player, GuardianData tg)
+        public static bool SkeletronKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedBoss3;
         }
 
-        public bool AnyFirstBossKillRequirement(Player player, GuardianData tg)
+        public static bool AnyFirstBossKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3;
         }
 
-        public bool KingSlimeKillRequirement(Player player, GuardianData tg)
+        public static bool KingSlimeKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedSlimeKing;
         }
 
-        public bool QueenBeeKillRequirement(Player player, GuardianData tg)
+        public static bool QueenBeeKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedQueenBee;
         }
 
-        public bool PlanteraKillRequirement(Player player, GuardianData tg)
+        public static bool PlanteraKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedPlantBoss;
         }
 
-        public bool GolemKillRequirement(Player player, GuardianData tg)
+        public static bool GolemKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedGolemBoss;
         }
 
-        public bool MoonlordKillRequirement(Player player, GuardianData tg)
+        public static bool LunaticCultistKillRequirement(Player player, GuardianData tg)
+        {
+            return NPC.downedAncientCultist;
+        }
+
+        public static bool MoonlordKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedMoonlord;
         }
 
-        public bool HalloweenRequirement(Player player, GuardianData tg)
+        public static bool HalloweenRequirement(Player player, GuardianData tg)
         {
             return Main.halloween;
         }
 
-        public bool XmasRequirement(Player player, GuardianData tg)
+        public static bool XmasRequirement(Player player, GuardianData tg)
         {
             return Main.xMas;
         }
 
-        public bool DefeatedGoblinsRequirement(Player player, GuardianData tg)
+        public static bool DefeatedGoblinsRequirement(Player player, GuardianData tg)
         {
             return NPC.downedGoblins;
         }
 
-        public bool DefeatedPiratesRequirement(Player player, GuardianData tg)
+        public static bool DefeatedPiratesRequirement(Player player, GuardianData tg)
         {
             return NPC.downedPirates;
         }
 
-        public bool DefeatedMartiansRequirement(Player player, GuardianData tg)
+        public static bool DefeatedMartiansRequirement(Player player, GuardianData tg)
         {
             return NPC.downedMartians;
         }
 
-        public bool DefeatedFrostLegionRequirement(Player player, GuardianData tg)
+        public static bool DefeatedFrostLegionRequirement(Player player, GuardianData tg)
         {
             return Main.xMas && NPC.downedFrost;
         }
 
-        public bool BugnetRequirement(Player player, GuardianData tg)
+        public static bool BugnetRequirement(Player player, GuardianData tg)
         {
             return player.HasItem(Terraria.ID.ItemID.BugNet) || player.HasItem(Terraria.ID.ItemID.GoldenBugNet);
         }

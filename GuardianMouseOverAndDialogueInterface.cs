@@ -892,15 +892,14 @@ namespace giantsummon
                     break;
                 case RequestData.RequestState.Active:
                     {
-                        /*if (data.request.Failed)
+                        if (data.request.Failed)
                         {
-                            data.request.CompleteRequest(Speaker, data, MainPlayer.GetModPlayer<PlayerMod>());
-                            SetDialogue(data.request.GetRequestFailed(data, Speaker), Speaker);
+                            data.request.FailedRequest(MainPlayer, Speaker);
+                            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.RequestFailed), Speaker);
                             //GiveOptionToCancelRequest = true;
                             GetDefaultOptions();
                         }
-                        else */
-                        if (data.request.IsComplete)
+                        else if (data.request.IsComplete)
                         {
                             string Mes = Speaker.GetMessage(GuardianBase.MessageIDs.RequestAsksIfCompleted, "(They seems to be wondering if you completed the request.)");
                             SetDialogue(Mes, Speaker);

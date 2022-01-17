@@ -17,6 +17,7 @@ namespace giantsummon
         public GuardianData RequestGiver;
         public RequestBase Base;
         public const int MaxRequests = 3;
+        public bool Failed = false;
 
         public bool IsTravelRequest { get { return Base is TravelRequestBase; } }
 
@@ -99,6 +100,38 @@ namespace giantsummon
             SetRequestOnCooldown();
         }
 
+        public void FailedRequest(Player player, TerraGuardian tg)
+        {
+            byte RewardToGet = (byte)Main.rand.Next(Rewards.Length);
+            int p = 0, g = 0, s = 0, c = Rewards[RewardToGet].value / 5;
+            if (c >= 100)
+            {
+                s += c / 100;
+                c -= s * 100;
+            }
+            if (s >= 100)
+            {
+                g += s / 100;
+                s -= g * 100;
+            }
+            if (g >= 100)
+            {
+                p += g / 100;
+                g -= p * 100;
+            }
+            if (p > 0)
+                Item.NewItem(player.getRect(), Terraria.ID.ItemID.PlatinumCoin, p, true, 0, true);
+            if (g > 0)
+                Item.NewItem(player.getRect(), Terraria.ID.ItemID.GoldCoin, g, true, 0, true);
+            if (s > 0)
+                Item.NewItem(player.getRect(), Terraria.ID.ItemID.SilverCoin, s, true, 0, true);
+            if (c > 0)
+                Item.NewItem(player.getRect(), Terraria.ID.ItemID.CopperCoin, c, true, 0, true);
+            tg.ChangeTrustValue(TrustLevels.TrustLossOnFailRequest);
+            SetRequestOnCooldown();
+            Base.OnFailRequest(player, this);
+        }
+
         public void OnCancelRequest(Player player, TerraGuardian gd)
         {
             gd.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
@@ -176,8 +209,9 @@ namespace giantsummon
             }
             ObjectiveCount = 0;
             MaxObjectiveCount = Base.GetRequestObjectiveCount(RequestGiver.FriendshipLevel);
+            Failed = false;
             state = RequestState.WaitingAccept;
-            RequestTimeLeft = Main.rand.Next(36 * 3600, 48 * 3600);
+            RequestTimeLeft = Main.rand.Next(48 * 3600, 72 * 3600);
             GenerateRewards(player);
         }
 
@@ -239,7 +273,7 @@ namespace giantsummon
         public void SetRequestOnCooldown(bool Shorter = false)
         {
             state = RequestState.Cooldown;
-            RequestTimeLeft = Main.rand.Next(8 * 3600, 24 * 3600);
+            RequestTimeLeft = Main.rand.Next(16 * 3600, 24 * 3600);
             if (Shorter)
                 RequestTimeLeft /= 2;
         }

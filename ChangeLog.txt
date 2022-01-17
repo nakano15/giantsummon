@@ -4,3 +4,9 @@
 Companions now have messages they will say when rescuing someone.
 Terrarian companions will now have their hair hidden if a mod item they're using has setup so.
 Companions talk messages will now be told when you start dialogue with a companion, that has maxed out comfort points, and gains friendship exp.
+Request system remade:
+	The mod now has a database of possible requests, with their objectives and requirements.
+	The system is now easier and direct about making new requests, and also has less irrelevant infos loaded on the memory.
+	Completting the request now offers you 3 possible rewards. Each reward is generated once the request is created, by talking to the companion about it after the cooldown ends.
+	The HasRequestMessages has been updated to support "[objective]" tag, so you can display a short description of the objective, before you can accept or reject it.
+	Added 2 new messages, they are for when you complete the request, or talk to the companion about the request, and it isn't completed or failed.
