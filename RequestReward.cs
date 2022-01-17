@@ -224,7 +224,14 @@ namespace giantsummon
                     rewards.Add(r);
                 }
             }
-            rewards.AddRange(gd.Base.RewardsList);
+            foreach(RequestReward r in gd.Base.RewardsList)
+            {
+                if (r.CanGetReward(player, gd))
+                {
+                    MaxChance += r.AcquisitionChance;
+                    rewards.Add(r);
+                }
+            }
             return rewards;
         }
 
