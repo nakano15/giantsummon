@@ -149,6 +149,16 @@ namespace giantsummon
             return NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3;
         }
 
+        public static bool AnyFirstBossKillRequirementCorruption(Player player, GuardianData tg)
+        {
+            return !WorldGen.crimson && (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3);
+        }
+
+        public static bool AnyFirstBossKillRequirementCrimson(Player player, GuardianData tg)
+        {
+            return WorldGen.crimson && (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3);
+        }
+
         public static bool KingSlimeKillRequirement(Player player, GuardianData tg)
         {
             return NPC.downedSlimeKing;

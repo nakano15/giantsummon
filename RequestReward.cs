@@ -35,6 +35,9 @@ namespace giantsummon
                 return Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3;
             };
             AddRequestReward(ModContent.ItemType<Items.Consumable.SkillResetPotion>(), AcquisitionChance: 0.667f);
+            AddRequestReward(ModContent.ItemType<Items.Misc.Note>(), AcquisitionChance: 0.01f).CanGetReward = delegate(Player player, GuardianData gd){
+				return !NpcMod.HasMetGuardian(GuardianBase.Daphne);
+			};
             AddRequestReward(ItemID.WoodenCrate, AcquisitionChance: 0.625f);
             AddRequestReward(ItemID.IronCrate, AcquisitionChance: 0.390625f);
             AddRequestReward(ItemID.GoldenCrate, AcquisitionChance: 0.09765625f);

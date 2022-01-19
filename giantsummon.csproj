@@ -334,7 +334,6 @@
     <Compile Include="RequestContainer.cs" />
     <Compile Include="RequestReward.cs" />
     <Compile Include="Requests\RequestDB.cs" />
-    <Compile Include="Reward.cs" />
     <Compile Include="SavePlayerDefsCommand.cs" />
     <Compile Include="Season.cs" />
     <Compile Include="SkinReqStruct.cs" />

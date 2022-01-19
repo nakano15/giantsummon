@@ -19,12 +19,12 @@ namespace giantsummon.Requests
             AddHuntRequest(1001, NPCID.MotherSlime, InitialCount: 1, RewardValue: 350);
             AddHuntRequest(1002, NPCID.Skeleton);
             //Corruption Mobs
-            AddHuntRequest(1003, NPCID.EaterofSouls, InitialCount: 7).CanGetRequest = AnyFirstBossKillRequirement;
-            AddHuntRequest(1004, NPCID.DevourerHead, InitialCount: 3, ExtraFriendshipLevelCount: 0.2f).CanGetRequest = AnyFirstBossKillRequirement;
+            AddHuntRequest(1003, NPCID.EaterofSouls, InitialCount: 7).CanGetRequest = AnyFirstBossKillRequirementCorruption;
+            AddHuntRequest(1004, NPCID.DevourerHead, InitialCount: 3, ExtraFriendshipLevelCount: 0.2f).CanGetRequest = AnyFirstBossKillRequirementCorruption;
             //Crimson Mobs
-            AddHuntRequest(1005, NPCID.Crimera, InitialCount: 7).CanGetRequest = AnyFirstBossKillRequirement;
-            AddHuntRequest(1006, NPCID.FaceMonster, InitialCount: 3, ExtraFriendshipLevelCount: 0.2f).CanGetRequest = AnyFirstBossKillRequirement;
-            AddHuntRequest(1007, NPCID.BloodCrawler).CanGetRequest = AnyFirstBossKillRequirement;
+            AddHuntRequest(1005, NPCID.Crimera, InitialCount: 7).CanGetRequest = AnyFirstBossKillRequirementCrimson;
+            AddHuntRequest(1006, NPCID.FaceMonster, InitialCount: 3, ExtraFriendshipLevelCount: 0.2f).CanGetRequest = AnyFirstBossKillRequirementCrimson;
+            AddHuntRequest(1007, NPCID.BloodCrawler).CanGetRequest = AnyFirstBossKillRequirementCrimson;
             //Spider
             AddHuntRequest(1008, NPCID.WallCreeper).CanGetRequest = LifeCrystalUsedRequirement;
             //Night
