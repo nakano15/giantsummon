@@ -100,6 +100,10 @@ namespace giantsummon
             gd.IncreaseFriendshipProgress(1);
             gd.ChangeTrustValue(TrustLevels.TrustGainFromComplettingRequest);
             SetRequestOnCooldown();
+            if (Compatibility.NExperienceCompatibility.IsModActive)
+            {
+                Compatibility.NExperienceCompatibility.GiveExpRewardToPlayer(player, (Main.hardMode ? 15 : 3) + (float)reward.value / 10000, 0.05f, true, 5); //NExperience.ExpReceivedPopText.ExpSource.Quest
+            }
             return true;
         }
 

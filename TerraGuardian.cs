@@ -17017,8 +17017,41 @@ namespace giantsummon
         public void GetEquipmentSlots()
         {
             HeadSlot = Equipments[0].headSlot;
-            BodySlot = Equipments[1].bodySlot;
+            DrawHair = HeadSlot <= 0 || HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198;
+            DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
+            /*if (!DrawHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28 && HeadSlot != 201)
+            {
+                DrawHair = true;
+                DrawAltHair = false;
+            }*/
+            if (Equipments[0].type != 0 && Equipments[0].headSlot > 0)
+            {
+                if (this.Equipments[0].modItem != null)
+                {
+                    this.Equipments[0].modItem.DrawHair(ref DrawHair, ref DrawAltHair);
+                }
+            }
             LegSlot = Equipments[2].legSlot;
+            DrawLegs = true;
+            if (Equipments[2].type != 0 && Equipments[2].legSlot > 0)
+            {
+                if (this.Equipments[2].modItem != null)
+                {
+                    DrawLegs = this.Equipments[2].modItem.DrawLegs();
+                }
+            }
+            BodySlot = Equipments[1].bodySlot;
+            DrawBody = true;
+            DrawArms = DrawHands = BodySlot <= 0;
+            if (Equipments[1].type != 0 && Equipments[1].bodySlot > 0)
+            {
+                if (this.Equipments[1].modItem != null)
+                {
+                    DrawBody = this.Equipments[1].modItem.DrawBody();
+                    DrawLegs = this.Equipments[1].modItem.DrawLegs();
+                    this.Equipments[1].modItem.DrawHands(ref DrawHands, ref DrawArms);
+                }
+            }
             if (Base.IsTerrarian)
             {
                 GuardianBase.TerrarianCompanionInfos tci = Base.TerrarianInfo;
@@ -17036,24 +17069,38 @@ namespace giantsummon
                 }
             }
             bool werewolf = HasFlag(GuardianFlags.Werewolf), merfolk = HasFlag(GuardianFlags.Merfolk);
-            DrawHair = true;
-            DrawAltHair = false;
             for (int i = 0; i < 10; i++)
             {
                 if (this.Inventory[i].type != 0)
                 {
-                    if (this.Inventory[i].headSlot >= 0)
+                    if (this.Inventory[i].headSlot > 0)
                     {
                         HeadSlot = this.Inventory[i].headSlot;
+                        DrawHair = HeadSlot <= 0 || HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198;
+                        DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
                         if (this.Inventory[i].modItem != null)
                         {
                             this.Inventory[i].modItem.DrawHair(ref DrawHair, ref DrawAltHair);
                         }
                     }
-                    if (this.Inventory[i].bodySlot >= 0)
+                    if (this.Inventory[i].bodySlot > 0)
+                    {
                         BodySlot = this.Inventory[i].bodySlot;
-                    if (this.Inventory[i].legSlot >= 0)
+                        DrawArms = DrawHands = false;
+                        if (this.Inventory[i].modItem != null)
+                        {
+                            DrawBody = this.Inventory[i].modItem.DrawBody();
+                            this.Inventory[i].modItem.DrawHands(ref DrawHands, ref DrawArms);
+                        }
+                    }
+                    if (this.Inventory[i].legSlot > 0)
+                    {
+                        if (this.Inventory[i].modItem != null)
+                        {
+                            DrawLegs = this.Inventory[i].modItem.DrawLegs();
+                        }
                         LegSlot = this.Inventory[i].legSlot;
+                    }
                     if (this.Inventory[i].type == Terraria.ID.ItemID.MoonCharm)
                     {
                         werewolf = true;
@@ -17065,13 +17112,6 @@ namespace giantsummon
                         werewolf = false;
                     }
                 }
-            }
-            DrawHair = HeadSlot == 0 || HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198;
-            DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
-            if (!DrawHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28 && HeadSlot != 201)
-            {
-                DrawHair = true;
-                DrawAltHair = false;
             }
             if (!HideWereForm)
             {
@@ -17093,6 +17133,7 @@ namespace giantsummon
             if(HeadSlot == Terraria.ID.ArmorIDs.Head.LamiaFemale || HeadSlot == Terraria.ID.ArmorIDs.Head.LamiaMale)
             {
                 DrawHair = DrawAltHair = false;
+                DrawArms = DrawHands = true;
             }
         }
 
@@ -17596,7 +17637,7 @@ namespace giantsummon
             c = Lighting.GetColor(TileX, TileY, c);
         }
 
-        private static bool DrawHair = false, DrawAltHair = false;
+        private static bool DrawHair = false, DrawAltHair = false, DrawBody = false, DrawArms = false, DrawHands = false, DrawLegs = false;
 
         public void DrawDataCreation(bool IgnoreLighting = false)
         {
@@ -18206,25 +18247,31 @@ namespace giantsummon
             DrawChains();
             DrawWofExtras();
             GuardianDrawData dd;
-            if (!HideLegs)
+            if (!HideLegs && DrawLegs)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlLegSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.LegSkin], Position, legrect, SkinColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, SittingOnPlayerMount);
             }
-            dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodySkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.TorsoSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
-            AddDrawData(dd, false);
-            if (LegSlot > 0)
+            if (DrawBody)
             {
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorLegs, Main.armorLegTexture[LegSlot], Position, legrect, armorColor, Rotation, Origin, Scale, seffect);
-                dd.Shader = Shader;
-                AddDrawData(dd, SittingOnPlayerMount);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodySkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.TorsoSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
+                AddDrawData(dd, false);
             }
-            else
+            if (DrawLegs)
             {
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultPants, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Pants], Position, legrect, PantsColor, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, SittingOnPlayerMount);
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShoes, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], Position, legrect, ShoesColor, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, SittingOnPlayerMount);
+                if (LegSlot > 0)
+                {
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorLegs, Main.armorLegTexture[LegSlot], Position, legrect, armorColor, Rotation, Origin, Scale, seffect);
+                    dd.Shader = Shader;
+                    AddDrawData(dd, SittingOnPlayerMount);
+                }
+                else
+                {
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultPants, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Pants], Position, legrect, PantsColor, Rotation, Origin, Scale, seffect);
+                    AddDrawData(dd, SittingOnPlayerMount);
+                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShoes, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], Position, legrect, ShoesColor, Rotation, Origin, Scale, seffect);
+                    AddDrawData(dd, SittingOnPlayerMount);
+                }
             }
             if (BodySlot > 0)
             {
@@ -18283,6 +18330,11 @@ namespace giantsummon
             }
             DrawItem(Position, seffect, true);
             DrawItem(Position, seffect, false);
+            if (DrawArms)
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodyArmSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
+                AddDrawData(dd, true);
+            }
             if (BodySlot > 0)
             {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorArm, Main.armorArmTexture[BodySlot], Position, bodyrect, ArmorColoring, Rotation, Origin, Scale, seffect);
@@ -18291,12 +18343,13 @@ namespace giantsummon
             }
             else
             {
-                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodyArmSkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
-                AddDrawData(dd, true);
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultUndershirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmUndershirt], Position, bodyrect, UndershirtColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, true);
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShirtArm, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmShirt], Position, bodyrect, ShirtColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, true);
+            }
+            if (DrawHands)
+            {
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlHand, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.ArmHand], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, true);
             }

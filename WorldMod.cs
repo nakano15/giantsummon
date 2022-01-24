@@ -418,6 +418,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            GuardianBountyQuest.Initialize();
             Npcs.LiebreNPC.EncounterTimes = 0;
             Npcs.BrutusNPC.WarnedAboutBrutus = false;
             MainMod.LastBossSpotted = MainMod.LastInvasionSpotted = MainMod.LastEventStarted = false;

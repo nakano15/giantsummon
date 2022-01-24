@@ -95,12 +95,12 @@ namespace giantsummon
             {
                 return "Report back to " + data.RequestGiver.Name + ".";
             }
-            return "Slay "+(data.MaxObjectiveCount - data.ObjectiveCount)+" " + MainMod.PluralifyWord(NpcName) + ".";
+            return "Slay "+(data.MaxObjectiveCount - data.ObjectiveCount)+" " + MainMod.PluralifyWord(NpcName, data.MaxObjectiveCount - data.ObjectiveCount) + ".";
         }
 
         public override string RequestShortDescription(RequestData data)
         {
-            return "slay " + data.MaxObjectiveCount + " " + MainMod.PluralifyWord(NpcName);
+            return "slay " + (data.MaxObjectiveCount - data.ObjectiveCount) + " " + MainMod.PluralifyWord(NpcName, data.MaxObjectiveCount - data.ObjectiveCount);
         }
 
         public override void OnKillMob(NPC npc, RequestData data)
@@ -164,7 +164,7 @@ namespace giantsummon
 
         public override string RequestShortDescription(RequestData data)
         {
-            return "bring me " + data.MaxObjectiveCount + " " + MainMod.PluralifyWord(ItemName);
+            return "bring me " + data.MaxObjectiveCount + " " + MainMod.PluralifyWord(ItemName, data.MaxObjectiveCount);
         }
 
         public override void UpdateRequest(Player player, RequestData data)

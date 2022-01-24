@@ -209,74 +209,14 @@ namespace giantsummon.Companions
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
             ReaperGuardianData data = (ReaperGuardianData)guardian.Data;
-            bool CantHoldScythe = (guardian.SelectedOffhand > -1 || (guardian.ItemAnimationTime > 0 && (guardian.HeldItemHand == HeldHand.Right || guardian.HeldItemHand == HeldHand.Both)) || guardian.KnockedOut);
-            if (data.HoldingScythe && CantHoldScythe)
-            {
-                DetachScythe(guardian, data);
-            }
-            else
-            {
-                if (CantHoldScythe)
-                    data.ScythePickupDelay = 150;
-                if (!data.HoldingScythe)
-                {
-                    Vector2 MoveDirection = (guardian.CenterPosition - data.ScythePosition);
-                    const float MaxMoveSpeed = 8f, MoveSpeed = 0.15f;
-                    bool AtXPosition = false, AtYPosition = false;
-                    if (Math.Abs(MoveDirection.X) < guardian.Width * 0.5f)
-                    {
-                        if (Math.Abs(data.ScytheSpeed.X) > 1f)
-                            data.ScytheSpeed *= 0.8f;
-                        AtXPosition = true;
-                    }
-                    else
-                    {
-                        if (MoveDirection.X < 0)
-                        {
-                            data.ScytheSpeed.X -= MoveSpeed;
-                            if (data.ScytheSpeed.X < -MaxMoveSpeed)
-                                data.ScytheSpeed.X = -MaxMoveSpeed;
-                        }
-                        else
-                        {
-                            data.ScytheSpeed.X += MoveSpeed;
-                            if (data.ScytheSpeed.X > MaxMoveSpeed)
-                                data.ScytheSpeed.X = MaxMoveSpeed;
-                        }
-                    }
-                    if (Math.Abs(MoveDirection.Y) < guardian.Height * 0.5f)
-                    {
-                        if (Math.Abs(data.ScytheSpeed.Y) > 1f)
-                            data.ScytheSpeed *= 0.8f;
-                        AtYPosition = true;
-                    }
-                    else
-                    {
-                        if (MoveDirection.Y < 0)
-                        {
-                            data.ScytheSpeed.Y -= MoveSpeed;
-                            if (data.ScytheSpeed.Y < -MaxMoveSpeed)
-                                data.ScytheSpeed.Y = -MaxMoveSpeed;
-                        }
-                        else
-                        {
-                            data.ScytheSpeed.Y += MoveSpeed;
-                            if (data.ScytheSpeed.Y > MaxMoveSpeed)
-                                data.ScytheSpeed.Y = MaxMoveSpeed;
-                        }
-                    }
-                    data.ScythePosition += data.ScytheSpeed;
-                    if (data.ScythePickupDelay == 0 && AtXPosition && AtYPosition)
-                    {
-                        data.HoldingScythe = true;
-                    }
-                    data.ScytheRotation += data.ScytheSpeed.Length() * 0.025f * guardian.Direction;
-                }
-            }
+            UpdateScythe(guardian, data);
+            UpdateSouls(guardian, data);
+        }
+
+        private void UpdateSouls(TerraGuardian guardian, ReaperGuardianData data)
+        {
             if (data.MouthOpenTime > 0)
                 data.MouthOpenTime--;
-            if (data.ScythePickupDelay > 0)
-                data.ScythePickupDelay--;
             Vector2 SoulEndPos = GetMouthPosition(guardian.BodyAnimationFrame) * guardian.Scale;
             SoulEndPos.X -= guardian.SpriteWidth * 0.5f;
             if (guardian.LookingLeft)
@@ -359,7 +299,7 @@ namespace giantsummon.Companions
                 if (CanPullSouls)
                 {
                     float Distance = DirectionComparer.Length();
-                    if(Distance > 160)
+                    if (Distance > 160)
                     {
                         MaxSoulSpeed *= 2;
                     }
@@ -399,7 +339,7 @@ namespace giantsummon.Companions
                 DirectionComparer.Normalize();
                 {
                     int PixelDistanceCalc = (int)((soul.Position - (soul.Position + DirectionComparer * soul.Velocity)).Length());
-                    for(int i = 0; i < PixelDistanceCalc; i++)
+                    for (int i = 0; i < PixelDistanceCalc; i++)
                     {
                         Vector2 EffectPos = new Vector2(soul.Position.X, soul.Position.Y) + DirectionComparer * i;
                         int dustid = Dust.NewDust(soul.Position, 8, 8, 175, 0f, 0f, 100, default(Color), 2f);
@@ -452,7 +392,7 @@ namespace giantsummon.Companions
                 }
             }
             int[] Keys = data.PlayerDeathCounter.Keys.ToArray();
-            foreach(int k in Keys)
+            foreach (int k in Keys)
             {
                 if (!Main.player[k].active)
                     data.PlayerDeathCounter.Remove(k);
@@ -492,6 +432,76 @@ namespace giantsummon.Companions
                 }
             }
             data.LastDefeatedAllyCount = (byte)DefeatedAllyCount;
+        }
+
+        private void UpdateScythe(TerraGuardian guardian, ReaperGuardianData data)
+        {
+            bool CantHoldScythe = (guardian.SelectedOffhand > -1 || (guardian.ItemAnimationTime > 0 && (guardian.HeldItemHand == HeldHand.Right || guardian.HeldItemHand == HeldHand.Both)) || guardian.KnockedOut);
+            if (data.HoldingScythe && CantHoldScythe)
+            {
+                DetachScythe(guardian, data);
+            }
+            else
+            {
+                if (CantHoldScythe)
+                    data.ScythePickupDelay = 150;
+                if (!data.HoldingScythe)
+                {
+                    Vector2 MoveDirection = (guardian.CenterPosition - data.ScythePosition);
+                    const float MaxMoveSpeed = 8f, MoveSpeed = 0.15f;
+                    bool AtXPosition = false, AtYPosition = false;
+                    if (Math.Abs(MoveDirection.X) < guardian.Width * 0.5f)
+                    {
+                        if (Math.Abs(data.ScytheSpeed.X) > 1f)
+                            data.ScytheSpeed *= 0.8f;
+                        AtXPosition = true;
+                    }
+                    else
+                    {
+                        if (MoveDirection.X < 0)
+                        {
+                            data.ScytheSpeed.X -= MoveSpeed;
+                            if (data.ScytheSpeed.X < -MaxMoveSpeed)
+                                data.ScytheSpeed.X = -MaxMoveSpeed;
+                        }
+                        else
+                        {
+                            data.ScytheSpeed.X += MoveSpeed;
+                            if (data.ScytheSpeed.X > MaxMoveSpeed)
+                                data.ScytheSpeed.X = MaxMoveSpeed;
+                        }
+                    }
+                    if (Math.Abs(MoveDirection.Y) < guardian.Height * 0.5f)
+                    {
+                        if (Math.Abs(data.ScytheSpeed.Y) > 1f)
+                            data.ScytheSpeed *= 0.8f;
+                        AtYPosition = true;
+                    }
+                    else
+                    {
+                        if (MoveDirection.Y < 0)
+                        {
+                            data.ScytheSpeed.Y -= MoveSpeed;
+                            if (data.ScytheSpeed.Y < -MaxMoveSpeed)
+                                data.ScytheSpeed.Y = -MaxMoveSpeed;
+                        }
+                        else
+                        {
+                            data.ScytheSpeed.Y += MoveSpeed;
+                            if (data.ScytheSpeed.Y > MaxMoveSpeed)
+                                data.ScytheSpeed.Y = MaxMoveSpeed;
+                        }
+                    }
+                    data.ScythePosition += data.ScytheSpeed;
+                    if (data.ScythePickupDelay == 0 && AtXPosition && AtYPosition)
+                    {
+                        data.HoldingScythe = true;
+                    }
+                    data.ScytheRotation += data.ScytheSpeed.Length() * 0.025f * guardian.Direction;
+                }
+            }
+            if (data.ScythePickupDelay > 0)
+                data.ScythePickupDelay--;
         }
 
         public void SpawnSoul(Vector2 Position, TerraGuardian guardian, TerraGuardian.TargetTypes OwnerType, int OwnerID, bool HoverOnly = false)

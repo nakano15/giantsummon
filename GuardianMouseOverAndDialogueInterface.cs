@@ -184,7 +184,7 @@ namespace giantsummon
                     {
                         FeatMentioning feat = GuardianGlobalInfos.GetAFeatToMention(tg.MyID, MainPlayer.name);
                         bool SayNormalMessage = true;
-                        if (feat != null && Main.rand.NextDouble() < 0.3f)
+                        if (!tg.IsSleeping && feat != null && Main.rand.NextDouble() < 0.3f)
                         {
                             Message = GuardianGlobalInfos.GetFeatMessage(feat, tg);
                             SayNormalMessage = Message == "";

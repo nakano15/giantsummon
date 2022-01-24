@@ -33,6 +33,8 @@ namespace giantsummon
         public const byte BountyKilled = 1, BountyRewardRedeemed = 2;
         public static int[] BountyCounters = new int[7];
         public const int HealthRegenCounter = 0, SpecialSkillCounter = 1, LeaderSpawnFlagCounter = 2, FireRainCounter = 3, SappingCounter = 4, OsmoseCounter = 5, ImobilizeCounter = 6;
+        private static byte BountyBoardUpdateTime = 0;
+
 
         public static void Save(Terraria.ModLoader.IO.TagCompound writer)
         {
@@ -1018,6 +1020,7 @@ namespace giantsummon
 
         public static void TryFindingASign()
         {
+            bool LastHadSign = SignID >= 0;
             SignID = -1;
             if (!WorldMod.IsGuardianNpcInWorld(SardineID))
             {
@@ -1119,7 +1122,7 @@ namespace giantsummon
                     TileCount++;
                 }
             }
-            if (SignID > -1)
+            if (!LastHadSign && SignID > -1)
             {
                 //UpdateBountyBoardText();
                 Main.sign[SignID].text = "Request coming soon...";
@@ -1929,6 +1932,7 @@ namespace giantsummon
             ActionCooldown = RequestEndMinTime + Main.rand.Next(RequestEndMaxTime - RequestEndMinTime + 1);
 
             string AnnounceText = "New Bounty Quest available!";
+            BountyBoardUpdateTime = 255;
             if (IsAnnouncementBox)
             {
                 AnnounceText += "\nHunt " + TargetFullName + " in the " + spawnBiome.ToString() + ".";
@@ -2596,10 +2600,21 @@ namespace giantsummon
             return DifficultyString;
         }
 
+        public static void Initialize()
+        {
+            BountyBoardUpdateTime = 255;
+        }
+
         public static void UpdateBountyBoardText()
         {
             if (SignID > -1)
             {
+                if (BountyBoardUpdateTime < 200)
+                {
+                    BountyBoardUpdateTime++;
+                    return;
+                }
+                BountyBoardUpdateTime = 0;
                 string Text = NoRequestText;
                 if (!SardineTalkedToAboutBountyQuests)
                 {
@@ -2643,7 +2658,7 @@ namespace giantsummon
                         Text += h + " Hours";
                         First = false;
                     }
-                    if (m > 0)
+                    else if (m > 0)
                     {
                         if (!First)
                         {
@@ -2655,7 +2670,7 @@ namespace giantsummon
                         }
                         Text += m + " Minutes";
                     }
-                    if (h == 0 && m == 0)
+                    else if (h == 0 && m == 0)
                     {
                         Text += "Ending in a few seconds";
                     }

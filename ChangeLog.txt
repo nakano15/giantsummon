@@ -15,3 +15,10 @@ Wrath's npc hit counter variable now resets once it reaches the necessary amount
 Wrath's npc will now try using Body Slam when he gets a certain number of hits and shots.
 Companions you have request active, will be able to visit you, regardless of if you enabled or not companion visit on your world.
 	Failing a request because the npc didn't appeared sucks.
+Miguel recruit npc no longer has the power of multiplication.
+Since talk requests have been removed, their talk messages will show up when you speak to a companion that has full comfort point, about to rise friendship exp.
+Changed how body parts of the Terrarian companions are drawn depending on equipments. Now they should work more like intended.
+Companions will no longer sleeptalk feats they know people did.
+There is now a delay of time before the bounty board updates its status.
+	There is no need for the bounty board to have its text updated every frame.
+	The bounty board will no longer show the exact time left. If the bounty will last hours, it will show only the hours. If it lasts minutes, It will only show the minutes.
