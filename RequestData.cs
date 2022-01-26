@@ -224,7 +224,7 @@ namespace giantsummon
             MaxObjectiveCount = Base.GetRequestObjectiveCount(RequestGiver.FriendshipLevel);
             Failed = false;
             state = RequestState.WaitingAccept;
-            RequestTimeLeft = Main.rand.Next(48 * 3600, 72 * 3600);
+            RequestTimeLeft = Main.rand.Next(72 * 3600, 120 * 3600);
             GenerateRewards(player);
         }
 
@@ -232,13 +232,18 @@ namespace giantsummon
         {
             get
             {
-                int Minutes = (int)(RequestTimeLeft * (1f / 60)), Hours = 0, Days = 0;
+                int Seconds = (int)(RequestTimeLeft * (1f / 60)), Minutes = 0, Hours = 0, Days = 0;
+                if (Seconds >= 60)
+                {
+                    Minutes += (int)(Seconds * (1f / 60));
+                    Seconds -= Minutes * 60;
+                }
                 if (Minutes >= 60)
                 {
                     Hours += (int)(Minutes * (1f / 60));
                     Minutes -= Hours * 60;
                 }
-                if(Hours >= 24)
+                if (Hours >= 24)
                 {
                     Days += (int)(Hours * (1f / 24));
                     Hours -= Days * 24;

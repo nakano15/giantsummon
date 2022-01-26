@@ -246,7 +246,7 @@ namespace giantsummon
             foreach (TerraGuardian tg in GuardianTownNPC)
             {
                 if (tg.GetTownNpcInfo == null)
-                    VisitRate *= 0.85f;
+                    VisitRate *= 0.95f;
             }
             if ((ScheduledVisits.Count > 0 && Main.rand.NextDouble() < 0.5f) || Main.rand.NextDouble() < VisitRate * 0.025f) //0.01665f <- 0.00333f
             {
@@ -269,7 +269,7 @@ namespace giantsummon
                             GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], ids.ID, ids.ModID);
                             if (gd != null)
                             {
-                                if (gd.TrustLevel >= TrustLevels.VisitTrust)
+                                if (gd.TrustLevel >= TrustLevels.VisitTrust || gd.request.Active)
                                 {
                                     SomeoneHasTheTrust = true;
                                     break;
@@ -303,8 +303,6 @@ namespace giantsummon
                 if (PossibleIDs.Count > 0)
                 {
                     GuardianID WinnerID = PossibleIDs[Main.rand.Next(PossibleIDs.Count)];
-                    if (IsFromSchedule)
-                        ScheduledVisits.Remove(WinnerID);
                     List<Vector2> PossibleSpawnPosition = new List<Vector2>();
                     for (int n = 0; n < 200; n++)
                     {
@@ -358,6 +356,8 @@ namespace giantsummon
                     }
                     if (PossibleSpawnPosition.Count > 0)
                     {
+                        if (IsFromSchedule)
+                            ScheduledVisits.Remove(WinnerID);
                         Vector2 WinningPosition = PossibleSpawnPosition[Main.rand.Next(PossibleSpawnPosition.Count)];
                         PossibleIDs.Clear();
                         PossibleSpawnPosition.Clear();
@@ -418,6 +418,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            ScheduledVisits.Clear();
             GuardianBountyQuest.Initialize();
             Npcs.LiebreNPC.EncounterTimes = 0;
             Npcs.BrutusNPC.WarnedAboutBrutus = false;

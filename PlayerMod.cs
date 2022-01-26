@@ -2550,6 +2550,11 @@ namespace giantsummon
                     guardian.TeleportToPlayer(true);
                 }
             }
+            foreach(GuardianData gd in MyGuardians.Values)
+            {
+                if (gd.ShouldScheduleVisit())
+                    WorldMod.ScheduledVisits.Add(gd.MyID);
+            }
             FreebiesGiving();
             if (MainMod.IsPopularityContestRunning)
             {

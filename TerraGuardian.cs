@@ -7774,7 +7774,7 @@ namespace giantsummon
             int SummonerWeaponPosition = -1;
             for (int i = 0; i < 10; i++)
             {
-                if (this.Inventory[i].type != 0 && this.Inventory[i].summon && !this.Inventory[i].sentry)
+                if (Inventory[i].type != 0 && Inventory[i].summon && !Inventory[i].sentry)
                 {
                     SummonerWeaponPosition = i;
                     break;
@@ -7782,22 +7782,25 @@ namespace giantsummon
             }
             if (SummonerWeaponPosition > -1)
             {
-                if (MinionSlotCount >= MaxMinions)
-                    return;
-                SelectedItem = SummonerWeaponPosition;
-                Action = true;
-                if(Inventory[SelectedItem].type != LastUsedSummonItem)
+                if (LoadedWorldRegion && AimDirection.X >= Main.leftWorld && AimDirection.X < Main.rightWorld && AimDirection.Y >= Main.topWorld && AimDirection.Y < Main.bottomWorld)
                 {
-                    KillAllMySummons();
-                    LastUsedSummonItem = Inventory[SelectedItem].type;
-                }
-                if(NumMinions == 0 && MainMod.GeneralIdleCommentCooldown <= 0)
-                {
-                    string Mes = GetMessage(GuardianBase.MessageIDs.CompanionInvokesAMinion);
-                    if(Mes != "")
+                    if (MinionSlotCount >= MaxMinions)
+                        return;
+                    SelectedItem = SummonerWeaponPosition;
+                    Action = true;
+                    if (Inventory[SelectedItem].type != LastUsedSummonItem)
                     {
-                        SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
-                        MainMod.SetIdleCommentCooldown();
+                        KillAllMySummons();
+                        LastUsedSummonItem = Inventory[SelectedItem].type;
+                    }
+                    if (NumMinions == 0 && MainMod.GeneralIdleCommentCooldown <= 0)
+                    {
+                        string Mes = GetMessage(GuardianBase.MessageIDs.CompanionInvokesAMinion);
+                        if (Mes != "")
+                        {
+                            SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
+                            MainMod.SetIdleCommentCooldown();
+                        }
                     }
                 }
             }
@@ -18134,17 +18137,12 @@ namespace giantsummon
             }
             bool IsTransformed = !Base.IsCustomSpriteCharacter && HeadSlot >= 38 && HeadSlot <= 39;
             Vector2 Origin = new Vector2(20, 0);
-            bool DrawNormalHair = HeadSlot == 10 || HeadSlot == 12 || HeadSlot == 28 || HeadSlot == 62 || HeadSlot == 97 || HeadSlot == 106 || HeadSlot == 113 || HeadSlot == 116 || HeadSlot == 119 || HeadSlot == 133 || HeadSlot == 138 || HeadSlot == 139 || HeadSlot == 163 || HeadSlot == 178 || HeadSlot == 181 || HeadSlot == 191 || HeadSlot == 198,
-                DrawAltHair = HeadSlot == 161 || HeadSlot == 14 || HeadSlot == 15 || HeadSlot == 16 || HeadSlot == 18 || HeadSlot == 21 || HeadSlot == 24 || HeadSlot == 25 || HeadSlot == 26 || HeadSlot == 40 || HeadSlot == 44 || HeadSlot == 51 || HeadSlot == 56 || HeadSlot == 59 || HeadSlot == 60 || HeadSlot == 67 || HeadSlot == 68 || HeadSlot == 69 || HeadSlot == 114 || HeadSlot == 121 || HeadSlot == 126 || HeadSlot == 130 || HeadSlot == 136 || HeadSlot == 140 || HeadSlot == 145 || HeadSlot == 158 || HeadSlot == 159 || HeadSlot == 184 || HeadSlot == 190 || HeadSlot == 92 || HeadSlot == 195;
-            if (!DrawNormalHair && HeadSlot != 23 && HeadSlot != 14 && HeadSlot != 56 && HeadSlot != 158 && HeadSlot != 28)
-                DrawNormalHair = true; 
-            bool HideLegs = LegSlot == 143 || LegSlot == 106 || LegSlot == 140;
             gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlHead, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Head], Position, headrect, SkinColor, 0f, Origin, Scale, seffect));
             gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlEye, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Eyes], Position, headrect, EyesColor, 0f, Origin, Scale, seffect));
             gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlEyeWhite, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.EyeWhites], Position, headrect, EyesWhiteColor, 0f, Origin, Scale, seffect));
             if (Base.TerrarianInfo.HairStyle >= 0 && Main.hairLoaded[Base.TerrarianInfo.HairStyle])
             {
-                if (DrawNormalHair)
+                if (DrawHair)
                 {
                     gddlist.Add(new GuardianDrawData(GuardianDrawData.TextureType.PlHair, Main.playerHairTexture[Base.TerrarianInfo.HairStyle], Position, headrect, HairColor, 0f, Origin, Scale, seffect));
                 }
@@ -18168,8 +18166,8 @@ namespace giantsummon
 
         public void DrawTerrarianData(SpriteEffects seffect, float Rotation, Color color, Color armorColor, bool IgnoreLightingColor, int Shader, ref Vector2 Position, ref Vector2 Origin)
         {
-            Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56), 
-                bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56), 
+            Rectangle legrect = new Rectangle(0, 56 * BodyAnimationFrame, 40, 56),
+                bodyrect = new Rectangle(0, 56 * LeftArmAnimationFrame, 40, 56),
                 hairrect = new Rectangle(0, 56 * LeftArmAnimationFrame - 336, 40, 56),
                 eyerect = new Rectangle(0, 0, hairrect.Width, hairrect.Height);
             if (hairrect.Y < 0)
@@ -18257,21 +18255,18 @@ namespace giantsummon
                 dd = new GuardianDrawData(GuardianDrawData.TextureType.PlBodySkin, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.TorsoSkin], Position, bodyrect, SkinColor, Rotation, Origin, Scale, seffect);
                 AddDrawData(dd, false);
             }
-            if (DrawLegs)
+            if (LegSlot > 0)
             {
-                if (LegSlot > 0)
-                {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorLegs, Main.armorLegTexture[LegSlot], Position, legrect, armorColor, Rotation, Origin, Scale, seffect);
-                    dd.Shader = Shader;
-                    AddDrawData(dd, SittingOnPlayerMount);
-                }
-                else
-                {
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultPants, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Pants], Position, legrect, PantsColor, Rotation, Origin, Scale, seffect);
-                    AddDrawData(dd, SittingOnPlayerMount);
-                    dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShoes, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], Position, legrect, ShoesColor, Rotation, Origin, Scale, seffect);
-                    AddDrawData(dd, SittingOnPlayerMount);
-                }
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlArmorLegs, Main.armorLegTexture[LegSlot], Position, legrect, armorColor, Rotation, Origin, Scale, seffect);
+                dd.Shader = Shader;
+                AddDrawData(dd, SittingOnPlayerMount);
+            }
+            else
+            {
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultPants, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Pants], Position, legrect, PantsColor, Rotation, Origin, Scale, seffect);
+                AddDrawData(dd, SittingOnPlayerMount);
+                dd = new GuardianDrawData(GuardianDrawData.TextureType.PlDefaultShoes, Main.playerTextures[SkinVariant, Terraria.ID.PlayerTextureID.Shoes], Position, legrect, ShoesColor, Rotation, Origin, Scale, seffect);
+                AddDrawData(dd, SittingOnPlayerMount);
             }
             if (BodySlot > 0)
             {

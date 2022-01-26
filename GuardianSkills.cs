@@ -62,7 +62,7 @@ namespace giantsummon
                     break;
                 case SkillTypes.Endurance:
                     guardian.MHP += (int)(guardian.Base.InitialMHP * (LevelValue * 0.05f));
-                    guardian.DefenseRate += (int)Math.Floor(LevelValue * 0.05f);
+                    guardian.DefenseRate += (LevelValue * 0.05f);
                     guardian.Defense += (int)(LevelValue * 2f);
                     if (guardian.BlockRate > 0) guardian.BlockRate += LevelValue * 1.5f;
                     break;

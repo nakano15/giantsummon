@@ -1743,7 +1743,15 @@ namespace giantsummon
                             flag3 = true;
                         if (proj.type == 268 && proj.frameCounter < 10)
                             flag4 = false;
-                        Collision.StepUp(ref proj.position, ref proj.velocity, proj.width, proj.height, ref proj.stepSpeed, ref proj.gfxOffY, 1, false, 0);
+                        try
+                        {
+                            Collision.StepUp(ref proj.position, ref proj.velocity, proj.width, proj.height, ref proj.stepSpeed, ref proj.gfxOffY, 1, false, 0);
+                        }
+                        catch
+                        {
+                            proj.active = false;
+                            return;
+                        }
                         if ((double)proj.velocity.Y == 0.0 || proj.type == 200)
                         {
                             if (!flag3 && ((double)proj.velocity.X < 0.0 || (double)proj.velocity.X > 0.0))

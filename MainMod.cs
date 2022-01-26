@@ -54,7 +54,7 @@ namespace giantsummon
             }
         }
         //End contest related
-        public const int ModVersion = 101, LastModVersion = 97;
+        public const int ModVersion = 101, LastModVersion = 101;
         public const int MaxExtraGuardianFollowers = 7;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -1496,8 +1496,7 @@ namespace giantsummon
                 {
                     if (!g.Active) continue;
                     New.Add(g.Name);
-                    New.Add("Request State: " + g.request.state.ToString());
-                    New.Add("Request Time Left: " + g.request.RequestTimeLeft);
+                    New.Add("Minion Slots: " + g.MinionSlotCount + "/" + g.MaxMinions);
                     //New.Add("Jump? " + g.Jump);
                     /*New.Add(" Sub attack in use? " + g.SubAttackInUse);
                     if (g.SubAttackInUse)

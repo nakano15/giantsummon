@@ -1206,7 +1206,7 @@ namespace giantsummon
                         {
                             SetDefaultCooldown();
                             TargetMonsterID = 0;
-                            UpdateBountyBoardText();
+                            UpdateBountyBoardText(true);
                             Main.NewText("Bounty Hunting Ended", Color.MediumPurple);
                         }
                     }
@@ -1932,7 +1932,6 @@ namespace giantsummon
             ActionCooldown = RequestEndMinTime + Main.rand.Next(RequestEndMaxTime - RequestEndMinTime + 1);
 
             string AnnounceText = "New Bounty Quest available!";
-            BountyBoardUpdateTime = 255;
             if (IsAnnouncementBox)
             {
                 AnnounceText += "\nHunt " + TargetFullName + " in the " + spawnBiome.ToString() + ".";
@@ -1996,7 +1995,7 @@ namespace giantsummon
 
             ResetSpawnStress(true);
 
-            UpdateBountyBoardText();
+            UpdateBountyBoardText(true);
         }
 
         public static void ResetSpawnStress(bool OnGeneration)
@@ -2605,14 +2604,17 @@ namespace giantsummon
             BountyBoardUpdateTime = 255;
         }
 
-        public static void UpdateBountyBoardText()
+        public static void UpdateBountyBoardText(bool Forced = false)
         {
             if (SignID > -1)
             {
-                if (BountyBoardUpdateTime < 200)
+                if (!Forced)
                 {
-                    BountyBoardUpdateTime++;
-                    return;
+                    if (BountyBoardUpdateTime < 10)
+                    {
+                        BountyBoardUpdateTime++;
+                        return;
+                    }
                 }
                 BountyBoardUpdateTime = 0;
                 string Text = NoRequestText;

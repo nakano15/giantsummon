@@ -522,10 +522,15 @@ namespace giantsummon
                     Fatigue = -32;
             }
             UpdateMood();
-            if (request.state == RequestData.RequestState.Active && WorldMod.DayChange && !WorldMod.IsGuardianNpcInWorld(MyID) && !WorldMod.ScheduledVisits.Contains(MyID))
+            if (ShouldScheduleVisit())
             {
                 WorldMod.ScheduledVisits.Add(MyID);
             }
+        }
+
+        public bool ShouldScheduleVisit()
+        {
+            return request.state == RequestData.RequestState.Active && WorldMod.DayChange && !WorldMod.IsGuardianNpcInWorld(MyID) && !WorldMod.ScheduledVisits.Contains(MyID);
         }
 
         public void IncreaseFriendshipProgress(byte Value)
