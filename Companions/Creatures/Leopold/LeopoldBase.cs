@@ -153,7 +153,7 @@ namespace giantsummon.Companions
         {
             g.MagicDamageMultiplier += 0.15f;
             g.MagicCriticalRate += 10;
-            g.DefenseRate -= 0.03f;
+            g.DefenseRate -= 0.03f; //0.07f
             g.AddFlag(GuardianFlags.AllowHopping);
         }
 
