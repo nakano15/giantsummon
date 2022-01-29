@@ -208,13 +208,13 @@ namespace giantsummon
         {
             if(npc.soulDrain)
                 UpdateSoulDrain(npc);
-            if (npc.type == Terraria.ID.NPCID.KingSlime && TryPlacingCatGuardianOnSlime)
+            if (npc.type == NPCID.KingSlime && TryPlacingCatGuardianOnSlime)
             {
-                if (!NpcMod.HasMetGuardian(2))
+                if (!HasMetGuardian(2))
                     TrappedCatKingSlime = npc.whoAmI;
                 TryPlacingCatGuardianOnSlime = false;
             }
-            if (TrappedCatKingSlime == npc.whoAmI && npc.type != Terraria.ID.NPCID.KingSlime)
+            if (TrappedCatKingSlime == npc.whoAmI && npc.type != NPCID.KingSlime)
                 TrappedCatKingSlime = -1;
             MaskGuardianPositionToPlayers(npc);
             if(npc.whoAmI == GuardianBountyQuest.TargetMonsterSpawnPosition)
@@ -271,12 +271,12 @@ namespace giantsummon
                 npc.defDamage = npc.damage;
                 npc.defDefense = npc.defense;
             }
-            if (MainMod.MobHealthBoost && npc.lifeMax > 5 && Main.netMode == 0 && !Main.gameMenu)
+            if (MainMod.MobHealthBoostPercent > 0 && npc.lifeMax > 5 && npc.catchItem == 0 && Main.netMode == 0 && !Main.gameMenu)
             {
                 int MyGuardians = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetSummonedGuardianCount;
                 if(MyGuardians > 1)
                 {
-                    npc.lifeMax += (int)(npc.lifeMax * 0.05f * (MyGuardians - 1));
+                    npc.lifeMax += (int)(npc.lifeMax * MainMod.MobHealthBoostPercent * (MyGuardians - 1));
                 }
             }
             if (MainMod.UseNewMonsterModifiersSystem)
@@ -855,13 +855,22 @@ namespace giantsummon
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
             //base.EditSpawnRate(player, ref spawnRate, ref maxSpawns);
-            if (!MainMod.UseNewMonsterModifiersSystem)
+            if (MainMod.HavingMoreCompanionsIncreasesSpawnRate)
             {
                 TerraGuardian[] guardians = player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers;
+                int Count = 0;
                 foreach (TerraGuardian g in guardians)
                 {
                     if (g.Active)
+                    {
                         maxSpawns += 3;
+                        Count++;
+                    }
+                }
+                if(Count > 1)
+                {
+                    Count--;
+                    spawnRate -= (int)(Count / (Count + 5) * spawnRate);
                 }
             }
             if (player.GetModPlayer<PlayerMod>().KnockedOut)
@@ -1761,12 +1770,12 @@ namespace giantsummon
         public override void PostAI(NPC npc)
         {
             LatestMobType = MobTypes.Normal;
-            if (npc.type == Terraria.ID.NPCID.NebulaHeadcrab && npc.ai[0] == 5)
+            if (npc.type == NPCID.NebulaHeadcrab && npc.ai[0] == 5)
             {
                 if (PlayerPositionBackup[npc.target] != Vector2.Zero && Main.player[npc.target].HasBuff(163))
                     Main.player[npc.target].DelBuff(Main.player[npc.target].FindBuffIndex(163));
             }
-            if ((npc.type == Terraria.ID.NPCID.DD2WitherBeastT2 || npc.type == Terraria.ID.NPCID.DD2WitherBeastT3) && npc.ai[0] == 1)
+            if ((npc.type == NPCID.DD2WitherBeastT2 || npc.type == NPCID.DD2WitherBeastT3) && npc.ai[0] == 1)
             {
                 if ((Main.player[Main.myPlayer].Center - npc.Center).Length() > 400 && Main.player[npc.target].HasBuff(195))
                     Main.player[npc.target].DelBuff(Main.player[npc.target].FindBuffIndex(195));

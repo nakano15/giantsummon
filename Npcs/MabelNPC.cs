@@ -198,7 +198,7 @@ namespace giantsummon.Npcs
             {
                 case 0:
                     Mes = "*Thanks for helping me.*";
-                    Button1 = "Did you just fell from the sky?";
+                    Button1 = "Did you just fall from the sky?";
                     break;
                 case 1:
                     Mes = "*Yes, I tried to see If I could fly like a Reindeer. It didn't worked well...*";

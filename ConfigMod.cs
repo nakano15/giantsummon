@@ -76,9 +76,14 @@ namespace giantsummon
         [Tooltip("To make the mod still be fun to play, there is a minor damage reduction applied to everyone when having multiple companions. Disable this if the mod gets unbearable or way too harder for you to play.")]
         public bool DisableDamageReduction { get { return MainMod.DisableDamageReductionByNumberOfCompanions; } set { MainMod.DisableDamageReductionByNumberOfCompanions = value; } }
 
-        [Label("Increase all monsters health based on number of guardians following?")]
-        [Tooltip("Only available on singleplayer. Having more than 1 guardian following you, increases monsters health by 5% per guardian.")]
-        public bool MobHealthBoost { get { return MainMod.MobHealthBoost; } set { MainMod.MobHealthBoost = value; } }
+        [Label("How much health each extra companion will increase on the monsters?")]
+        [Tooltip("Only available on singleplayer. Having more than 1 guardian following you will increase the max health by an extra of this value for each extra companion. Set to 0 to disable.")]
+        [DefaultValue(0.1f)]
+        public float MobHealthBoost { get { return MainMod.MobHealthBoostPercent; } set { MainMod.MobHealthBoostPercent = value; } }
+
+        [Label("Increase spawn rate and max spawns based on number of companions?")]
+        [Tooltip("Having more companions following you will not only reduce the delay between spawns of monsters, but also increase the max number of them spawned.")]
+        public bool HavingMultipleCompanionsIncreaseSpawnRate { get { return MainMod.HavingMoreCompanionsIncreasesSpawnRate; } set { MainMod.HavingMoreCompanionsIncreasesSpawnRate = value; } }
 
         /*[Label("Test new guardians combat AI?")]
         [Tooltip("Changes the combat behavior AI to the new AI.")]

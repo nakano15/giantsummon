@@ -32,7 +32,8 @@ namespace giantsummon
         public static byte SelectedGuardian = 0;
         public static int GuardianInventoryMenuSubTab = 0;
         public static bool CheckingQuestBrief = false;
-        public static bool WarnAboutSaleableInventorySlotsLeft = false, MobHealthBoost = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true, UseCompanionsDefinedScaleChange = true;
+        public static bool WarnAboutSaleableInventorySlotsLeft = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true, UseCompanionsDefinedScaleChange = true;
+        public static float MobHealthBoostPercent = 0.1f;
         public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
         public const string VoteLink = "https://forms.gle/2KNqNcabh3rqn5Mu8";
@@ -63,7 +64,7 @@ namespace giantsummon
         //
         public static bool PlayableOnMultiplayer = false, UseNewMonsterModifiersSystem = true, UsingGuardianNecessitiesSystem = false, TestNewOrderHud = true, SharedCrystalValues = false,
             SetGuardiansHealthAndManaToPlayerStandards = false, UseSkillsSystem = true, CompanionsSpeaksWhileReviving = true, TileCollisionIsSameAsHitCollision = false, NoEtherItems = false, StartRescueCountdownWhenKnockedOutCold = false,
-            DoNotUseRescue = false, CompanionsCanVisitWorld = true, DisableDamageReductionByNumberOfCompanions = false;
+            DoNotUseRescue = false, CompanionsCanVisitWorld = true, DisableDamageReductionByNumberOfCompanions = false, HavingMoreCompanionsIncreasesSpawnRate = false;
         public static float DamageNerfPerExtraCompanion = 0.1f;
         public static List<Terraria.ModLoader.Config.ItemDefinition> DualwieldWhitelist = new List<Terraria.ModLoader.Config.ItemDefinition>();
         public static Dictionary<Terraria.ModLoader.Config.ItemDefinition, int> ItemAttackRange = new Dictionary<Terraria.ModLoader.Config.ItemDefinition, int>();

@@ -251,13 +251,13 @@ namespace giantsummon
                 string Text = "";
                 if (Days > 0)
                 {
-                    Text = Days + " days, " + Hours + " hours and";
+                    Text = Days + " days, " + Hours + " hours and ";
                 }
                 else if (Hours > 0)
                 {
-                    Text = Hours + " hours and";
+                    Text = Hours + " hours and ";
                 }
-                Text += " " + Minutes + " minutes left.";
+                Text += Minutes + " minutes left.";
                 return Text;
             }
         }
