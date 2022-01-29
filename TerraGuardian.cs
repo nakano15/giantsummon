@@ -11093,7 +11093,7 @@ namespace giantsummon
 
         public bool IsNpcHostile(NPC n)
         {
-            if (n.catchItem == 0 && n.CanBeChasedBy(null))
+            if ((n.catchItem == 0 || n.damage > 0) && n.CanBeChasedBy(null))
             {
                 return true;
             }
