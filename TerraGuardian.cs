@@ -9480,7 +9480,7 @@ namespace giantsummon
                     if (HP <= 0)
                     {
                         string DeathMessage = " got tired of dancing on hot tiles.";
-                        if (HasFlag(GuardianFlags.Suffocating)) DeathMessage = " couldn't hold the breath for longer...";
+                        if (HasFlag(GuardianFlags.Suffocating)) DeathMessage = " couldn't hold their breath for longer...";
                         Knockout(DeathMessage);
                     }
                 }
