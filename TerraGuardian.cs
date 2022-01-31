@@ -9563,14 +9563,21 @@ namespace giantsummon
                                     TerraGuardian DownedGuardian = !IsPlayer ? MainMod.ActiveGuardians[Target.TargetID] : null;
                                     if(terraguardians.Count > 0)
                                     {
-                                        TerraGuardian WhoMentionsThis = terraguardians[Main.rand.Next(terraguardians.Count)];
-                                        if((IsPlayer && Target.TargetID == WhoMentionsThis.OwnerPos))
+                                        TerraGuardian[] PossibleMentioners = terraguardians.Where(x => Target.TargetType != giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian || x.WhoAmID != Target.TargetID).ToArray();
+                                        if (PossibleMentioners.Length > 0)
                                         {
-                                            WhoMentionsThis.SaySomething(WhoMentionsThis.GetMessage(GuardianBase.MessageIDs.LeaderFallsMessage, "*They tell you the leader fell.*"));
-                                        }
-                                        else
-                                        {
-                                            WhoMentionsThis.SaySomething(WhoMentionsThis.GetMessage(GuardianBase.MessageIDs.AllyFallsMessage, "*They tell you an ally fell.*"));
+                                            TerraGuardian WhoMentionsThis = PossibleMentioners[Main.rand.Next(terraguardians.Count)];
+                                            if ((IsPlayer && Target.TargetID == WhoMentionsThis.OwnerPos))
+                                            {
+                                                WhoMentionsThis.SaySomething(WhoMentionsThis.GetMessage(GuardianBase.MessageIDs.LeaderFallsMessage, "*They tell you a terrarian fell.*"));
+                                            }
+                                            else
+                                            {
+                                                if (Target.TargetID != WhoMentionsThis.WhoAmID)
+                                                {
+                                                    WhoMentionsThis.SaySomething(WhoMentionsThis.GetMessage(GuardianBase.MessageIDs.AllyFallsMessage, "*They tell you an ally fell.*"));
+                                                }
+                                            }
                                         }
                                     }
                                     foreach(TerraGuardian tg in terraguardians)

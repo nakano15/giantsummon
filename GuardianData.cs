@@ -530,7 +530,7 @@ namespace giantsummon
 
         public bool ShouldScheduleVisit()
         {
-            return request.state == RequestData.RequestState.Active && WorldMod.DayChange && !WorldMod.IsGuardianNpcInWorld(MyID) && !WorldMod.ScheduledVisits.Contains(MyID);
+            return request.state == RequestData.RequestState.Active && WorldMod.HourChange && !WorldMod.IsGuardianNpcInWorld(MyID) && !WorldMod.ScheduledVisits.Contains(MyID);
         }
 
         public void IncreaseFriendshipProgress(byte Value)

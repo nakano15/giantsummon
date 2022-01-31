@@ -1493,20 +1493,17 @@ namespace giantsummon
             if(true)
             {
                 List<string> New = new List<string>();
-                foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                foreach(GuardianID id in WorldMod.ScheduledVisits)
+                {
+                    New.Add(id.ToString());
+                }
+                /*foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
                     New.Add(g.Name);
                     New.Add("Minion Slots: " + g.MinionSlotCount + "/" + g.MaxMinions);
                     //New.Add("Jump? " + g.Jump);
-                    /*New.Add(" Sub attack in use? " + g.SubAttackInUse);
-                    if (g.SubAttackInUse)
-                    {
-                        New.Add(" ID: " + g.SpecialAttack.Name + "{" + g.SpecialAttack.ID + "}");
-                        New.Add(" Time: " + g.SpecialAttack.Time);
-                        New.Add(" Cooldown: " + g.SpecialAttack.Cooldown);
-                    }*/
-                }
+                }*/
                 /*New.Clear();
                 PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
                 New.Add("Current exercise: " + pm.CurrentExercise.ToString());

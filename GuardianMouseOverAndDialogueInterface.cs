@@ -157,6 +157,7 @@ namespace giantsummon
                 modPlayer.AddNewGuardian(tg.ID, tg.ModID);
                 if (WorldMod.IsStarter(tg))
                     modPlayer.GetGuardian(tg.ID, tg.ModID).SetStarterGuardian();
+                tg.Data = modPlayer.GetGuardian(tg.ID, tg.ModID);
                 Message = tg.Base.GreetMessage(MainPlayer, tg);
                 modPlayer.GetGuardian(tg.ID, tg.ModID).IncreaseFriendshipProgress(1);
             }
@@ -856,7 +857,7 @@ namespace giantsummon
         {
             if (Speaker.IsSleeping)
             {
-                Speaker.LeaveFurniture(true);
+                //Speaker.LeaveFurniture(true);
                 Speaker.LookAt(MainPlayer.Center);
                 Speaker.SitOnBed();
                 string Message = "";

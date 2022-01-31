@@ -1,24 +1,17 @@
-﻿Companion folders were organized.
-	Now TerraGuardians will be located inside Companions/Creatures, while Terrarians will be located inside Companions/Terrarians.
-	A modder adding companions to this mod can setup a custom directory to their companion files by using SpriteDirectory variable, on GuardianBase. The folder name is still the companion name.
-Companions now have messages they will say when rescuing someone.
-Terrarian companions will now have their hair hidden if a mod item they're using has setup so.
-Companions talk messages will now be told when you start dialogue with a companion, that has maxed out comfort points, and gains friendship exp.
-Request system remade:
-	The mod now has a database of possible requests, with their objectives and requirements.
-	The system is now easier and direct about making new requests, and also has less irrelevant infos loaded on the memory.
-	Completting the request now offers you 3 possible rewards. Each reward is generated once the request is created, by talking to the companion about it after the cooldown ends.
-	The HasRequestMessages has been updated to support "[objective]" tag, so you can display a short description of the objective, before you can accept or reject it.
-	Added 2 new messages, they are for when you complete the request, or talk to the companion about the request, and it isn't completed or failed.
-	If you have less than 30 seconds to complete the quest when you talk to the npc about it, the game will give you exactly 30 seconds to pick your reward and complete it.
-Wrath's npc hit counter variable now resets once it reaches the necessary amount of hits for him to take some measure.
-Wrath's npc will now try using Body Slam when he gets a certain number of hits and shots.
-Companions you have request active, will be able to visit you, regardless of if you enabled or not companion visit on your world.
-	Failing a request because the npc didn't appeared sucks.
-Miguel recruit npc no longer has the power of multiplication.
-Since talk requests have been removed, their talk messages will show up when you speak to a companion that has full comfort point, about to rise friendship exp.
-Changed how body parts of the Terrarian companions are drawn depending on equipments. Now they should work more like intended.
-Companions will no longer sleeptalk feats they know people did.
-There is now a delay of time before the bounty board updates its status.
-	There is no need for the bounty board to have its text updated every frame.
-	The bounty board will no longer show the exact time left. If the bounty will last hours, it will show only the hours. If it lasts minutes, It will only show the minutes.
+﻿Companions should not try ignoring critters that somehow got more health than usual.
+The setting of monster health boost by companion number is now in decimal, so you can change how much health each monster get for each companion summoned.
+Added an option to allow you to make monsters spawn rate and max spawn be increased based on number of companions following you.
+Fixed concatenation issues with the request timer.
+Yes, you can now chat with the reaper.
+Companions you just met will now share the same companion data you have.
+	This fixes an issue where starter companions would refuse joining you, until you reentered the world, or called them through the guardian selection interface.
+Companions will no longer announce that they fell.
+Waking up a companion will make them sit on their bed when speaking to you.
+	They will go back to sleeping once the dialogue ends.
+Nerfed the damage of the following attacks from the bounty targets:
+	Reaper's Demon Scythe will deal 60% of the bounty damage, instead of 120%.
+	Haunted's Lost Soul will deal 85% of the bounty damage, instead of 125%.
+	Alchemist's Greek Fire will now deal 75% of the bounty damage, instead of 125%.
+	Sharknado's Sharknado will now deal 95% of the bounty damage, instead of 125%.
+	Cursed's I forgot what it is will now deal 85% of the bounty damage, instead of 125%.
+Fixed bug where companions that have request active couldn't visit you.

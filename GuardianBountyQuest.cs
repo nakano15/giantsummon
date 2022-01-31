@@ -529,7 +529,7 @@ namespace giantsummon
                             {
                                 Vector2 Dir = Main.player[npc.target].Center - npc.Center;
                                 Dir.Normalize();
-                                Projectile.NewProjectile(npc.Center, Dir * 8f, 44, (int)(npc.defDamage * 1.2f), 3f);
+                                Projectile.NewProjectile(npc.Center, Dir * 8f, 44, (int)(npc.defDamage * 0.6f), 3f);
                             }
                         }
                     }
@@ -580,7 +580,7 @@ namespace giantsummon
                             {
                                 Vector2 Dir = Main.player[npc.target].Center - npc.Center;
                                 Dir.Normalize();
-                                Projectile.NewProjectile(npc.Center, Dir * 10f, 293, (int)(npc.defDamage * 1.25f), 3f);
+                                Projectile.NewProjectile(npc.Center, Dir * 10f, 293, (int)(npc.defDamage * 0.85f), 3f);
                             }
                         }
                     }
@@ -593,7 +593,7 @@ namespace giantsummon
                             for (int x = -2; x <= 2; x++)
                             {
                                 Vector2 Dir = new Vector2(x * 3f, -8f);
-                                Projectile.NewProjectile(npc.Center, Dir, 328 - Math.Abs(x), (int)(npc.defDamage * 1.25f), 3f);
+                                Projectile.NewProjectile(npc.Center, Dir, 328 - Math.Abs(x), (int)(npc.defDamage * 0.75f), 3f);
                             }
                         }
                     }
@@ -607,7 +607,7 @@ namespace giantsummon
                             {
                                 Vector2 Dir = Main.player[npc.target].Center - npc.Center;
                                 Dir.Normalize();
-                                Projectile.NewProjectile(npc.Center, Dir * 10f, 385, (int)(npc.defDamage * 1.25f), 3f);
+                                Projectile.NewProjectile(npc.Center, Dir * 10f, 385, (int)(npc.defDamage * 0.95f), 3f);
                             }
                         }
                     }
@@ -631,7 +631,7 @@ namespace giantsummon
                             BountyCounters[SpecialSkillCounter] -= 60;
                             if (npc.target > -1)
                             {
-                                Projectile.NewProjectile(npc.Center, Vector2.Zero, 596, (int)(npc.defDamage * 1.25f), 3f);
+                                Projectile.NewProjectile(npc.Center, Vector2.Zero, 596, (int)(npc.defDamage * 0.85f), 3f);
                             }
                         }
                     }

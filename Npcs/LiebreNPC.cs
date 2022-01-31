@@ -141,6 +141,11 @@ namespace giantsummon.Npcs
             base.AI();
         }
 
+        public override bool CanChat()
+        {
+            return true;
+        }
+
         public override void ModifyDrawDatas(List<GuardianDrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, SpriteEffects seffects)
         {
             float PlasmaOpacity = 1f - (float)(color.R + color.G + color.B) / (255 * 3);

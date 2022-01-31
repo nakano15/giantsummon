@@ -49,5 +49,10 @@ namespace giantsummon
                 return IsSameID((GuardianID)obj);
             return false;
         }
+
+        public override string ToString()
+        {
+            return "ID: " + ID + " ModID: " + ModID;
+        }
     }
 }

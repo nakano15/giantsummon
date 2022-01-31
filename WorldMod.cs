@@ -272,7 +272,6 @@ namespace giantsummon
                                 if (gd.TrustLevel >= TrustLevels.VisitTrust || gd.request.Active)
                                 {
                                     SomeoneHasTheTrust = true;
-                                    break;
                                 }
                             }
                         }
@@ -349,7 +348,7 @@ namespace giantsummon
                             }
                             if (!PlayerNearby)
                             {
-                                guardianPos.Y += tg.Height * 0.5f - 2f;
+                                guardianPos.Y -= 2f;
                                 PossibleSpawnPosition.Add(guardianPos);
                             }
                         }
