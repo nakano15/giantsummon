@@ -1,17 +1,1 @@
-﻿Companions should not try ignoring critters that somehow got more health than usual.
-The setting of monster health boost by companion number is now in decimal, so you can change how much health each monster get for each companion summoned.
-Added an option to allow you to make monsters spawn rate and max spawn be increased based on number of companions following you.
-Fixed concatenation issues with the request timer.
-Yes, you can now chat with the reaper.
-Companions you just met will now share the same companion data you have.
-	This fixes an issue where starter companions would refuse joining you, until you reentered the world, or called them through the guardian selection interface.
-Companions will no longer announce that they fell.
-Waking up a companion will make them sit on their bed when speaking to you.
-	They will go back to sleeping once the dialogue ends.
-Nerfed the damage of the following attacks from the bounty targets:
-	Reaper's Demon Scythe will deal 60% of the bounty damage, instead of 120%.
-	Haunted's Lost Soul will deal 85% of the bounty damage, instead of 125%.
-	Alchemist's Greek Fire will now deal 75% of the bounty damage, instead of 125%.
-	Sharknado's Sharknado will now deal 95% of the bounty damage, instead of 125%.
-	Cursed's I forgot what it is will now deal 85% of the bounty damage, instead of 125%.
-Fixed bug where companions that have request active couldn't visit you.
+﻿
