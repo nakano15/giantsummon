@@ -211,7 +211,7 @@ namespace giantsummon
             this.ExtraDistance = ExtraDistance;
             if(RewardValue == 0)
             {
-                this.RewardValue = (1000 + ExtraDistance) / 3;
+                this.RewardValue = (10000 + ExtraDistance) / 3;
             }
             else
             {
@@ -226,7 +226,7 @@ namespace giantsummon
                 TerraGuardian g = PlayerMod.GetPlayerSummonedGuardian(player, data.RequestGiver.ID, data.RequestGiver.ModID);
                 if (!g.KnockedOut && !g.Downed)
                 {
-                    data.ObjectiveCount += (int)(g.Velocity.X * 100);
+                    data.ObjectiveCount += (int)(g.Velocity.X * 10);
                     if (data.IsComplete)
                     {
                         Main.NewText(data.RequestGiver.Name + " seems to have enjoyed the travel.", new Microsoft.Xna.Framework.Color(200, 200, 200));
