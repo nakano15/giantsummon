@@ -99,6 +99,7 @@
     <Compile Include="Buffs\WellBeing.cs" />
     <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
+    <Compile Include="Companions\Creatures\Cille\CilleBase.cs" />
     <Compile Include="Compatibility\CompatibilityHooks.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />
@@ -393,6 +394,10 @@
     <Content Include="Companions\Creatures\Bree\witch_leg.png" />
     <Content Include="Companions\Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Companions\Creatures\Brutus\royal_guard_outfit_f.png" />
+    <Content Include="Companions\Creatures\Cille\body.png" />
+    <Content Include="Companions\Creatures\Cille\body_front.png" />
+    <Content Include="Companions\Creatures\Cille\left_arm.png" />
+    <Content Include="Companions\Creatures\Cille\right_arm.png" />
     <Content Include="Companions\Creatures\Fear\body.png" />
     <Content Include="Companions\Creatures\Fear\body_front.png" />
     <Content Include="Companions\Creatures\Fear\head.png" />

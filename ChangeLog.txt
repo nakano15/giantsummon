@@ -1,1 +1,3 @@
 ﻿Travel requests should no longer be laughably fast to complete.
+Added some null safety to companion drawing scripts.
+Increased the range which companions will spot tiles.

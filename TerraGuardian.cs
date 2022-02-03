@@ -1967,7 +1967,7 @@ namespace giantsummon
             int TileCheckValue = GetCooldownValue(GuardianCooldownManager.CooldownType.BiomeCheckStacker);
             const int TileDimX = (int)(1920 * DivisionBy16), TileDimY = (int)(1080 * DivisionBy16), TotalDimRange = TileDimX * TileDimY,
                 TileCheckStartPositionX = (int)(-TileDimX * 0.5f), TileCheckStartPositionY = (int)(-TileDimY * 0.5f),
-                TileRangeX = (int)(TileDimX / (FramesSquaredTileCount * 0.25f)), TileRangeY = (int)(TileDimY / (FramesSquaredTileCount * 0.25f)), MaxRange = TileRangeX * TileRangeY,
+                TileRangeX = (int)(TileDimX / (FramesSquaredTileCount * 0.5f)), TileRangeY = (int)(TileDimY / (FramesSquaredTileCount * 0.5f)), //MaxRange = TileRangeX * TileRangeY,
                 AFourthTileCount = (int)(FramesSquaredTileCount * 0.25f);
             int TilePositionX = (int)(Position.X * DivisionBy16) + TileCheckStartPositionX, TilePositionY = (int)(CenterY * DivisionBy16) + TileCheckStartPositionY;
             TilePositionX += TileRangeX * (TileCheckValue % AFourthTileCount);

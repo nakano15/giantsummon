@@ -112,13 +112,13 @@ namespace giantsummon
             }
             if (Position.HasValue)
             {
-                if(!Texture.IsDisposed)
+                if(Texture != null && !Texture.IsDisposed)
                     sb.Draw(Texture, Position.Value, Source, color, Rotation, Origin, Scale, Seffects, 0f);
                 return;
             }
             if (Destination.HasValue)
             {
-                if (!Texture.IsDisposed)
+                if (Texture != null && !Texture.IsDisposed)
                     sb.Draw(Texture, Destination.Value, Source, color, Rotation, Origin, Seffects, 0f);
                 return;
             }
