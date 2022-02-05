@@ -52,12 +52,22 @@ Basics:
 
 
 Buffs/Debuffs/Passive:
->Demonic Presence(Passive)- Bapha attracts hostile hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form) / also -All underworld enemies are non-hostile to Bapha(if thats possible to code in)
->Awakened Form(Buff->1:00 duration/permanent if in underworld)-Automatically activates while in underworld or activates after killing 10 foes within 10 seconds anywhere else. Gains extra capabilites as described below.(Gains new aesthetic)
+>Demonic Presence(Passive)- Bapha attracts hostile hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form)
+
+>Awakened Form(Buff->1:00 duration/permanent if in underworld)-Automatically activates while in underworld or activates after killing 10 foes within 10 seconds anywhere else.Bapha gains extra capabilites and new aesthetic as described below.(Buff is affected by "Soul Sacrifice")
+
 >(New)Crimson ignite(Passive)- Bapha's attacks deal additional 5% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
+
 >(New)Crimson Conflagration(Debuff)(Awakened form only)- Flame that does 1% max health damage every second and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
+
 >Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
->Diablo numeral(debuff)- if both projectiles from "Scarlet shredder" manage to hit the same target the target receives additonal 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
+
+>Diablo numeral(debuff)- if both projectiles from "Crescent Moon Shredder" manage to hit the same target the target receives additonal 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
+
+>Soul Sacrifice (dialogue passive)- The player can sacrifice other terra guardians to Bapha for an icnrease in his Hp by 1.2x for each companion and it affects the "Awakened Form" buff by decreasing the amount of enemies needed to achieve the form by 1 for each companion sacrificed.
+-(If the player manages to sacrifice 10 terra guardians then Bapha will be permanently in Awakened Form any where in the world)
+-(The terragaurdians sacrificed can be ressurected through a dialogue with Bapha)
+
 >Negates Fall Damage(Passive)
 
 
@@ -66,41 +76,49 @@ Combat:
 Attacks-
 >Hell Splitter(Melee)(Default-Blazing Edge/ AF -Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AF) damage and applies "On Fire" debuff("Crimson Conflagration" debuff if in AF) 
 -HS scales with current weapon equiped dealing 1.2x(1.5x in AF) damage of what the weapon wouldve originally did.
--HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player
 -HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attack applies "Crimson Conflagration" debuff 
 -Has knockback value of 8(12 in AF)
--Shockwave(Awakened Form exclusive): After chopping down, hell splitter summons a projectile that hits and deals 25% of total damage.(0 Knockback)
+-Shockwave(Awakened Form exclusive): After chopping down, hell splitter summons a projectile that hits and deals 50% of total damage.(0 Knockback)
 
 
->Hell Flame/Dual Hell flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Damage scales with 50% of weapon damage)
+>Hell Flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Damage scales with 50% of weapon damage)
 -15 Mana cost
 -Medium Velocity
+-Applies on fire debuff
 -Has knockback value of 6
 
->Crimson Flame(Awakened Form/Ranged)-One or two fire balls that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when hit.(Damage scales with 50% of weapon damage)
+>Crimson Flame(Awakened Form Exclusive/Ranged)- One or two fire balls that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when hit.(Damage scales with 80% of weapon damage)
 -30 Mana Cost
 -can only be casted when AF is active
 -High Velocity
 -Has Knockback value of 12
 
 Ultimate techniques:
-
->Crescent Moon Shredder(Awakened Form)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
-Black Crescent Moon-Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
-White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity but slows down.
--333 damage per projectile equiling 666 if both hit(Damage is static and does not scale with anything.)
--White Crescent Moon applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
--Bypasses blocks and ignores 50% defense value of target
--has very limitied tracking ai
--150 mana cost
--Has knockback value of 10
--45 second cooldown
+>Scarlet Shredder(Normal Form Exclusive)- Bapha conjures one enhanced demon scythe projectile and throws it at nearby enemies.
+-125 mana cost
+-Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy for 333 damage. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
+-Clashes with blocks and ignores 25% defense value of target
+-Decent tracking AI
+-Knock value- 8
+-15 second cooldown
 -Light source
 
->Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 10 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
-- 100 Mana cost
+>Crescent Moon Shredder(Awakened Form)- Bapha conjures two Supreme demon scythe projectiles and throws them at nearby enemies.
+Black Crescent Moon-Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
+White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity but slows down. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
+-333 damage per projectile(Damage is static and does not scale with anything.)
+-White Crescent Moon applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
+-Bypasses blocks and ignores 50% defense value of target
+-has very limitied tracking ai and each projectile can target different enemies
+-250 mana cost
+-Knockback value- 10
+-30 second cooldown
+-Light source
+
+>Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 12 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
+- 150 Mana cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in Awakened form
-- In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
+- In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be detected or a boss must be present and hostile.
 - 1:30 cooldown upon use
 -Light Source
