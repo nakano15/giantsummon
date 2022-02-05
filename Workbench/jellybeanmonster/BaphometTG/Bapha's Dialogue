@@ -10,37 +10,38 @@ Before Boss Fight(Pentagram Orb NPC):
 After defeating Bapha:
 1- "I have been imprisoned for several millennia. Your combat ability is phenomenal. There are very few that can compete with my overwhelming power.
 2- "Although you have defeated me in battle you cannot kill me as I am immortal."
-3- "Your skills are remarkable you could make a great servant. How about we form a allaince for the time being? You would be unstoppable on the surface with me around"
-4- Yes answer- "Yes indeed!, with you at my side the surface will be at the mercy of my power!
-5- No Answer- "Although you refuse a great offer I respect your decision as a competent challenger. Whenever you wish to form a alliance I will be here ruling hell as its Overlord"
+3- "Your skills are remarkable you would make a great servant. How about we form a alliance for the time being? You would be unstoppable with me around."
+4- Yes answer(Recruit #1)- "Yes indeed!, with you at my side the surface will be at the mercy of my power!
+5- No Answer- "Although you refuse a great offer I respect your decision as a competent warrior. Whenever you wish to form a alliance I will be here ruling hell as its Overlord"
 6- Party Full- Huh whats this?! you wish for me to tag along with those weaklings you have with you? Get rid of them or sacrifice them to me for a hefty reward MWHAHAHAAHAHA!!!!
-7- Sacrifice- Yes serve them to me 
+7- Sacrifice(Recruit #2)- YEEEESSSS!!! YOUR SOUL IS MINE!!!
 8- Get Rid of them answer- Exits Dialogue
 
 After recruited(General Dialogue):
 RNG Dialogue-
-- "So when will the subjugation begin? I didn't align with you to lollygag!!!"
-- "I need souls to bring out my full potential, slaughtering mortals should suffice"
-- "The surface needs some fine tuning, adding a bit of fire should do the trick dont you think? HAHA!"
+- "So when will the subjugation begin? I didn't align with you to lollygag!"
+- "Bring me souls to unleash my full potential, slaughtering mortals should suffice"
+- "The surface needs some fine tuning, adding a death and destruction should do the trick dont you think? HAHAHA!"
 - "Ever had a lava bath?......... What?! you say it burns? Thats the best part Hahaha!"
 - "If your wondering how old I am you would be out of luck because I dont know my age either, I've been idle for so long I lost count.
-- "
+- "Hmm I wonder if my old apprentice is still alive? Her name was Ailora...I taught her pyromancy and gave her the ability to turn into a wicked beast *Sadistic Laughter*
 
 Re-recruiting:
--"Oh have you come back to align yourself with the Devil, good choice indeed.....haahahahaaa!
+-"So you have come back to align yourself with the Devil? good choice indeed.....haahahahaaa!
 
 Reviving Player:
 - "I didnt expect you to be such a weakling, stand up!"
 - "Rise again!"
 
 Respawned:
-- "If you think you can defeat me your more delusional than ever!"
 - "IM IMMORTAL!"
 
 Conditional Outloud comments:
 Detects Enemy:
--YOUR SOUL IS MINE!
--
+- "YOUR SOUL IS MINE!"
+- "I'll have fun dismembering you *Sadistic laughter*"
+- "If you think you can defeat me your more delusional than ever!"
+- "HAAAHAAAHAAA!"
 
 Quest Dialogue:
 - "If you were to kill 666 hell spawn, I would grant you access to a dozen of my minion through a portal."
