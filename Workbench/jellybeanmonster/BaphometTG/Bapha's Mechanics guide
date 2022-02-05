@@ -40,7 +40,7 @@ KB Resist- 100%
 Recruit Conditions-
 1.Player Must have defeated Wall of Flesh boss
 2. Player must interact with pentagram star orb,that spawns after wall of flesh is defeated, in order to have a dialogue which starts a boss fight
-3. Baphas health must reach 0 in order for him to be defeated and for the player to be able to interact wit him
+3. Baphas health must reach atleast 10% in order for him to be defeated and for the player to be able to interact with him
 4. Player must accept Bapha's condtions for recruitment in order to have him on team
 
 Basics:
@@ -53,7 +53,7 @@ Basics:
 
 Buffs/Debuffs/Passive:
 >Demonic Presence(Passive)- Bapha attracts hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form) / also -All underworld enemies are non-hostile to Bapha(if thats possible to code in)
->Awakened Form(Buff->1:30 duration)-Automatically activates while in underworld or activates after killing 10 foes anywhere else. Gains extra capabilites as described below.(Gains new aesthetic)
+>Awakened Form(Buff->1:30 duration/permanent if in underworld)-Automatically activates while in underworld or activates after killing 10 foes anywhere else. Gains extra capabilites as described below.(Gains new aesthetic)
 >(New)Crimson ignite(Debuff)(Awakened form only)- While in Awakened form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does additional 5% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
 >(New)Crimson Conflagration(Debuff)(Awakened form only)- Flame that does 1% max health true damage every second and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
 >Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
@@ -64,15 +64,15 @@ Buffs/Debuffs/Passive:
 Combat:
 
 Attacks-
->Hell Splitter(Melee)(Default-Blazing Edge/ AF -Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AF) base damage each and applies "On Fire" debuff("Crimson Conflagration" debuff if in AS) 
+>Hell Splitter(Melee)(Default-Blazing Edge/ AF -Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AF) base damage each and applies "On Fire" debuff("Crimson Conflagration" debuff if in AF) 
 -HS scales with current weapon equiped dealing 1.2x(1.5x in AF) damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player
 -HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attacks apply "Crimson Conflagration" debuff 
 -Has knockback value of 8(12 in AF)
--Crimson Eruption(Awakened State exclusive): After chopping down, hell splitter summons a shock wave that hits every 0.4 seconds dealing 25% of total damage and last for 3 seconds.
+-Crimson Eruption(Awakened State exclusive): After chopping down, hell splitter summons a shock wave that hits and deals 25% of total damage.
 
 
->Hell Flame/Dual Hell flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Base damage scales with 50% of weapon damage)
+>Hell Flame/Dual Hell flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Base damage scales with 80% of weapon damage)
 -15 Mana cost
 -Medium Velocity
 -Has knockback value of 6
