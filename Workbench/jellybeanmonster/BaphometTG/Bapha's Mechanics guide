@@ -53,8 +53,8 @@ Basics:
 
 Buffs/Debuffs/Passive:
 >Demonic Presence(Passive)- Bapha attracts hostile hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form) / also -All underworld enemies are non-hostile to Bapha(if thats possible to code in)
->Awakened Form(Buff->1:30 duration/permanent if in underworld)-Automatically activates while in underworld or activates after killing 10 foes anywhere else. Gains extra capabilites as described below.(Gains new aesthetic)
->(New)Crimson ignite(Awakened form only)- Bapha's attacks deal additional 5% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
+>Awakened Form(Buff->1:00 duration/permanent if in underworld)-Automatically activates while in underworld or activates after killing 10 foes within 10 seconds anywhere else. Gains extra capabilites as described below.(Gains new aesthetic)
+>(New)Crimson ignite(Passive)- Bapha's attacks deal additional 5% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
 >(New)Crimson Conflagration(Debuff)(Awakened form only)- Flame that does 1% max health damage every second and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
 >Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
 >Diablo numeral(debuff)- if both projectiles from "Scarlet shredder" manage to hit the same target the target receives additonal 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
