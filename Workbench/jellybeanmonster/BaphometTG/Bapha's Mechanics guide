@@ -64,20 +64,20 @@ Buffs/Debuffs/Passive:
 Combat:
 
 Attacks-
->Hell Splitter(Melee)(Default-Blazing Edge/ AF -Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AF) base damage each and applies "On Fire" debuff("Crimson Conflagration" debuff if in AF) 
+>Hell Splitter(Melee)(Default-Blazing Edge/ AF -Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AF) damage and applies "On Fire" debuff("Crimson Conflagration" debuff if in AF) 
 -HS scales with current weapon equiped dealing 1.2x(1.5x in AF) damage of what the weapon wouldve originally did.
 -HS does not scale with weapon speed, it is a static attack speed that cannot be changed in anyway by the player
--HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attacks apply "Crimson Conflagration" debuff 
+-HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attack applies "Crimson Conflagration" debuff 
 -Has knockback value of 8(12 in AF)
--Crimson Eruption(Awakened State exclusive): After chopping down, hell splitter summons a shock wave that hits and deals 25% of total damage.
+-Shockwave(Awakened Form exclusive): After chopping down, hell splitter summons a projectile that hits and deals 25% of total damage.(0 Knockback)
 
 
->Hell Flame/Dual Hell flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Base damage scales with 80% of weapon damage)
+>Hell Flame/Dual Hell flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Damage scales with 50% of weapon damage)
 -15 Mana cost
 -Medium Velocity
 -Has knockback value of 6
 
->Crimson Flame(Ranged)-Fire ball that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when getting hit.(Base damage scales with 80% of weapon damage)
+>Crimson Flame(Awakened Form/Ranged)-One or two fire balls that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when hit.(Damage scales with 50% of weapon damage)
 -30 Mana Cost
 -can only be casted when AF is active
 -High Velocity
