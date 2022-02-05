@@ -4,7 +4,7 @@ HS-Hell Splitter
 AF-Awakened Form
 CF- Crimson Flame
 HF-Hell Flame
-SS- Scarlet Shredder
+CMS- Crescent Moon Shredder
 HeP-Hell Portal
 HP- Hit Points
 MP- Mana Points
@@ -52,12 +52,12 @@ Basics:
 
 
 Buffs/Debuffs/Passive:
->Demonic Presence(Passive)- Bapha attracts hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form) / also -All underworld enemies are non-hostile to Bapha(if thats possible to code in)
+>Demonic Presence(Passive)- Bapha attracts hostile hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form) / also -All underworld enemies are non-hostile to Bapha(if thats possible to code in)
 >Awakened Form(Buff->1:30 duration/permanent if in underworld)-Automatically activates while in underworld or activates after killing 10 foes anywhere else. Gains extra capabilites as described below.(Gains new aesthetic)
->(New)Crimson ignite(Debuff)(Awakened form only)- While in Awakened form Bapha takes away any and all fire resistance a enemy has(Immunities to fire debuffs) and does additional 5% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
->(New)Crimson Conflagration(Debuff)(Awakened form only)- Flame that does 1% max health true damage every second and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
+>(New)Crimson ignite(Awakened form only)- Bapha's attacks deal additional 5% damage to enemies effected by any fire debuff, including "Crimson Conflagration"
+>(New)Crimson Conflagration(Debuff)(Awakened form only)- Flame that does 1% max health damage every second and last for 10 seconds + cannot be cured or put out at all + Lowers defense by 15 + Spreads to other enemies in 5 block radius
 >Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
->Diablo numeral(debuff)- if both projectiles from "Scarlet shredder" manage to hit the same target the target receives 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
+>Diablo numeral(debuff)- if both projectiles from "Scarlet shredder" manage to hit the same target the target receives additonal 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
 >Negates Fall Damage(Passive)
 
 
@@ -85,7 +85,7 @@ Attacks-
 
 Ultimate techniques:
 
->Crescent Moon Shredder(Awakened technique)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
+>Crescent Moon Shredder(Awakened Form)- Bapha conjures two enhanced demon scythe projectiles and throws them at nearby enemies.
 Black Crescent Moon-Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
 White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity but slows down.
 -333 damage per projectile equiling 666 if both hit(Damage is static and does not scale with anything.)
@@ -94,11 +94,13 @@ White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity bu
 -has very limitied tracking ai
 -150 mana cost
 -Has knockback value of 10
--30 second cooldown
+-45 second cooldown
+-Light source
 
->Hell Portal(Awakened technique)- Opens a portal to the underworld which produces 10 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
+>Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 10 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
 - 100 Mana cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in Awakened form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be present around the player or a boss must be present and hostile towards player.
-- 2:30 cooldown upon use
+- 1:30 cooldown upon use
+-Light Source
