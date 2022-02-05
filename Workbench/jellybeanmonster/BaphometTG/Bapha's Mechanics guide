@@ -82,20 +82,20 @@ Attacks-
 
 
 >Hell Flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Damage scales with 50% of weapon damage)
--15 Mana cost
+-15 Mp cost
 -Medium Velocity
 -Applies on fire debuff
 -Has knockback value of 6
 
 >Crimson Flame(Awakened Form Exclusive/Ranged)- One or two fire balls that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when hit.(Damage scales with 80% of weapon damage)
--30 Mana Cost
+-30 Mp cost
 -can only be casted when AF is active
 -High Velocity
 -Has Knockback value of 12
 
 Ultimate techniques:
 >Scarlet Shredder(Normal Form Exclusive)- Bapha conjures one enhanced demon scythe projectile and throws it at nearby enemies.
--125 mana cost
+-125 Mp cost
 -Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy for 333 damage. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
 -Clashes with blocks and ignores 25% defense value of target
 -Decent tracking AI
@@ -110,13 +110,13 @@ White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity bu
 -White Crescent Moon applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
 -Bypasses blocks and ignores 50% defense value of target
 -has very limitied tracking ai and each projectile can target different enemies
--250 mana cost
+-250 Mp cost
 -Knockback value- 10
 -30 second cooldown
 -Light source
 
 >Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 12 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
-- 150 Mana cost
+- 150 Mp cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in Awakened form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be detected or a boss must be present and hostile.
