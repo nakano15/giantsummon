@@ -38,7 +38,6 @@ Respawned:
 
 Conditional Outloud comments:
 Detects Enemy:
-- "YOUR SOUL IS MINE!"
 - "I'll have fun dismembering you *Sadistic laughter*"
 - "If you think you can defeat me your more delusional than ever!"
 - "HAAAHAAAHAAA!"
@@ -47,6 +46,12 @@ Quest Dialogue:
 - "If you were to kill 666 hell spawn, I would grant you access to a dozen of my minion through a portal."
 Quest completed:
 - "Well done, my minions shall serve you well."
+
+Special Dialogue:
+Sacrifice:
+- "Bring me mortal souls you may have befriended to increase my capabilites.(1.2x boost(per companion) to Bapha's hit points and lowers soul cost count by 1 for each companion sacrificed)
+sacrifice yes option- "YOUR SOUL IS MINE!"
+sacrifice no option- exits dialogue
 
 Terra guardian specific interactions:
 
@@ -64,7 +69,7 @@ Leopold-
 > Wonder if the leopold ever tried learning demonic magic? could serve useful for tearing enemies apart.
 
 Malisha-
-> Malisha would make a great discple for me. Her experiments show that she can be remorseless and sadistic, which is perfect for my kind of magic......hehehehe.
+> Malisha would make a great disciple for me. Her experiments show that she can be remorseless and sadistic, which is perfect for my kind of magic......hehehehe.
 
 
 
