@@ -1,3 +1,5 @@
 ﻿Travel requests should no longer be laughably fast to complete.
 Added some null safety to companion drawing scripts.
 Increased the range which companions will spot tiles.
+Fixed an issue where companions following and combat AI were clashing with each other.
+	They should now behave better on combat.

@@ -5460,7 +5460,10 @@ namespace giantsummon
                     Math.Abs(TargetPosition.Y + TargetWidth * 0.5f - CenterY) < 400 && 
                     CanHit(TargetPosition, TargetWidth, TargetHeight))
                 {
-                    SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
+                    if (OwnerPos == -1 || Math.Abs(Main.player[OwnerPos].Center.X - Position.X) < 300)
+                    {
+                        SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
+                    }
                 }
             }
             bool Approach = false, Retreat = false, Jump = false, Duck = false, Attack = false;
@@ -5810,7 +5813,7 @@ namespace giantsummon
                         {
                             case CombatTactic.Charge:
                                 {
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X - SlowDown * Direction); //Testing the addition of Slowdown
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X); //Testing the addition of Slowdown
                                     float ApproachDistance = GetMeleeWeaponRangeX(MeleePosition, false), // + TargetWidth * 0.5f,
                                         RetreatDistance = HalfWidth + 8;
                                     /*if (MaxAttackRange > -1)
@@ -5834,7 +5837,7 @@ namespace giantsummon
                                             RetreatDistance += 20;
                                         }
                                         //Main.NewText("Approach Distance: " + ApproachDistance + "  Current Distance: " + Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X));
-                                        if (DistanceX < 300 + HalfWidth)
+                                        //if (DistanceX < 300 + HalfWidth)
                                         {
                                             if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X) < RetreatDistance)
                                                 Retreat = true;
@@ -5859,24 +5862,19 @@ namespace giantsummon
                                     else
                                     {
                                         const float AssistDistance = 120f;
-                                        float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X - SlowDown * Direction);
-                                        float ApproachDistance = (TargetWidth + Width) * 0.5f + AssistDistance + 80 + DistanceDiscount,
+                                        float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X);
+                                        float ApproachDistance = (TargetWidth + Width) * 0.5f + AssistDistance + 80 + SlowDown + DistanceDiscount,
                                             RetreatDistance = (TargetWidth + Width) * 0.5f + AssistDistance + DistanceDiscount;
                                         if (HasHurtPanic)
                                         {
-                                            ApproachDistance += 42;
-                                            RetreatDistance += 30;
+                                            ApproachDistance += 42 + Math.Abs(TargetVelocity.X * 2);
+                                            RetreatDistance += 30 + Math.Abs(TargetVelocity.X * 2);
                                         }
-                                        if (HasHurtPanic)
-                                        {
-                                            ApproachDistance += Math.Abs(TargetVelocity.X * 2);
-                                            RetreatDistance += Math.Abs(TargetVelocity.X * 2);
-                                        }
-                                        if (DistanceX < 325 + HalfWidth)
+                                        //if (DistanceX < 325 + HalfWidth)
                                         {
                                             if (DistanceX >= ApproachDistance)
                                                 Approach = true;
-                                            else if (DistanceX <= RetreatDistance)
+                                            if (DistanceX <= RetreatDistance)
                                                 Retreat = true;
                                         }
                                         if (TargetInAim && SelectedItem > -1 && !Inventory[SelectedItem].melee && DistanceX < 250 + HalfWidth + DistanceDiscount)
@@ -5890,7 +5888,7 @@ namespace giantsummon
                                     {
                                         GoMelee = true;
                                     }
-                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X - SlowDown * Direction);
+                                    float DistanceX = Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Position.X + Velocity.X);
                                     const float SnipeDistance = 220f;
                                     float ApproachDistance = (TargetWidth + Width) * 0.5f + SnipeDistance + 150 + DistanceDiscount,
                                         RetreatDistance = (TargetWidth + Width) * 0.5f + SnipeDistance;
@@ -5906,7 +5904,7 @@ namespace giantsummon
                                         ApproachDistance += Math.Abs(TargetVelocity.X * 2);
                                         RetreatDistance += Math.Abs(TargetVelocity.X * 2);
                                     }
-                                    if (DistanceX < 475 + HalfWidth)
+                                    //if (DistanceX < 475 + HalfWidth)
                                     {
                                         if (DistanceX >= ApproachDistance)
                                             Approach = true;
@@ -11240,6 +11238,8 @@ namespace giantsummon
                 PositionDifference.X += (Distance + Math.Abs(Owner.velocity.X) + DistanceBonus) * Owner.direction * (Confused ? -1 : 1);
                 XDiscount = DistanceBonus + 20;
             }
+            if (IsAttackingSomething)
+                DistanceBonus += 300;
             PositionDifference -= Position;
             DistanceMult *= Scale;
             if (ProtectMode && IsAttackingSomething)
@@ -11291,7 +11291,7 @@ namespace giantsummon
                         }
                     }
                 }
-                if (!IsOnSameGroundAsPlayer && LeaderSpeedY == 0)
+                if (!IsOnSameGroundAsPlayer && !IsAttackingSomething && LeaderSpeedY == 0)
                 {
                     //if (Math.Abs(PositionDifference.X) >= 8)
                     int LeaderPosX = (int)(LeaderCenterX * DivisionBy16);
