@@ -16,9 +16,9 @@ Age- Unknown (Likely above 100,000 years)
 Recruited Stats:
 HP- 666
 MP- 200
-Life Crystal gain- 100
+Life Crystal- 100
 Life Fruit- 5
-Mana Crystal gain-30
+Mana Crystal-30
 
 Boss Fight Stats:
 Classic mode:
@@ -46,9 +46,9 @@ Recruit Conditions-
 Basics:
 -Bapha is unaffected by all fire debuffs and does not take damage from lava or fire blocks.
 -When "Awakened" Bapha's health regeneration rate increases by 2.0x as well as healing for knocked out players and other terra gaurdian entities.(Recruited version only does not apply to boss form)
--Bapha takes 5x increased damage when wet or submerged in water additionally can not activate Awakened State.(Rain included)
--When baphas health reaches 0 on surface or any other place besides hell, his body desintagrates and gets sent back to hell. He reforms back in 10 seconds.
--If Bapha is recruited and his health reaches 0 while in underworld, his respawn timer gets set to 5 seconds instead of 10.
+-Bapha takes 5x increased damage when wet or submerged in water additionally can not activate Awakened Form.(Rain included)
+-When Baphas health reaches 0 on surface or any other place besides hell, his body desintagrates and gets sent back to hell. He reforms back in 20 seconds.
+-If Bapha is recruited and his health reaches 0 while in underworld, his respawn timer gets set to 5 seconds instead of 20.
 
 
 Buffs/Debuffs/Passive:
@@ -62,9 +62,9 @@ Buffs/Debuffs/Passive:
 
 >Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
 
->Diablo numeral(debuff)- if both projectiles from "Crescent Moon Shredder" manage to hit the same target the target receives additonal 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
+>Diablo numeral(debuff)- if both projectiles from "CMS" manage to hit the same target the target receives additonal 666 true damage.(Symbol appears letting the player know if this debuff has been activated)
 
->Soul Sacrifice (dialogue passive)- The player can sacrifice other terra guardians to Bapha for an icnrease in his Hp by 1.2x for each companion and it affects the "Awakened Form" buff by decreasing the amount of enemies needed to achieve the form by 1 for each companion sacrificed.
+>Soul Sacrifice (dialogue passive)- The player can sacrifice other terra guardians to Bapha for an increase in his Hp/Mp by 1.2x for each companion and it affects the "Awakened Form" buff by decreasing the amount of enemies needed to achieve the form by 1 for each companion sacrificed.
 -(If the player manages to sacrifice 10 terra guardians then Bapha will be permanently in Awakened Form any where in the world)
 -(The terragaurdians sacrificed can be ressurected through a dialogue with Bapha)
 
@@ -82,20 +82,20 @@ Attacks-
 
 
 >Hell Flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Damage scales with 50% of weapon damage)
--15 Mana cost
+-15 Mp cost
 -Medium Velocity
 -Applies on fire debuff
 -Has knockback value of 6
 
 >Crimson Flame(Awakened Form Exclusive/Ranged)- One or two fire balls that does 40 base damage and causes enemies to gain the "Crimson Conflagration" Debuff when hit.(Damage scales with 80% of weapon damage)
--30 Mana Cost
+-30 Mp cost
 -can only be casted when AF is active
 -High Velocity
 -Has Knockback value of 12
 
 Ultimate techniques:
 >Scarlet Shredder(Normal Form Exclusive)- Bapha conjures one enhanced demon scythe projectile and throws it at nearby enemies.
--125 mana cost
+-125 Mp cost
 -Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy for 333 damage. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
 -Clashes with blocks and ignores 25% defense value of target
 -Decent tracking AI
@@ -110,13 +110,13 @@ White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity bu
 -White Crescent Moon applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
 -Bypasses blocks and ignores 50% defense value of target
 -has very limitied tracking ai and each projectile can target different enemies
--250 mana cost
+-250 Mp cost
 -Knockback value- 10
 -30 second cooldown
 -Light source
 
 >Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 12 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
-- 150 Mana cost
+- 150 Mp cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in Awakened form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be detected or a boss must be present and hostile.
