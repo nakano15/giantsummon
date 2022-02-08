@@ -34,17 +34,24 @@ RNG Dialogue-
 - "I didnt expect you to be such a weakling, stand up!"
 - "Rise again!"
 
->Respawned:
-- "IM IMMORTAL!"
-
 >Conditional Outloud comments:
 Detects Enemy:
 - "I'll have fun dismembering you Muhahahahaa!!!"
 - "If you think you can defeat me your more delusional than ever!"
-- "HAAAHAAAHAAA!"
+- "So you wish to die?!"
+- "Fighting me is a death sentence!"
+
+>Respawned:
+- "IM IMMORTAL!"
+
+Scarlet Shredder/Crescent Moon shredder Attack:
+- "AAAAHAAAHAAAHAAA!"
+- "TRY TO DODGE THIS!"
+- "YOU WONT SURVIVE THIS ONE!"
+- "BEGONE!"
 
 Blood Moon:
-- "Yes! let the beast of the night come forward hahaha!
+- "Yeeessss! let the beast of the night come forward hahaha!
 
 >Quest Dialogue:
 - "If you were to kill 666 hell spawn, I would grant you access to a dozen of my minions to bring devastation."
