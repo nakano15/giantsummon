@@ -17,7 +17,9 @@ namespace giantsummon
         public int ID { get { return _ID; } set { _ID = value; } }
         public bool IsGuardianSpecificAction = false;
         public int Time = 0, Step = 0;
-        public bool IgnoreCombat = false, Cancellable = false, AvoidItemUsage = false, FocusCameraOnGuardian = false, EffectOnlyMirror = false, Invisibility = false, Immune = false, NoAggro = false, Inactivity = false, CantUseInventory = false, NpcCanFacePlayer = true, ProceedIdleAIDuringDialogue = false, BlockTwoHandedAttack = false, BlockOffHandUsage = false;
+        public bool IgnoreCombat = false, Cancellable = false, AvoidItemUsage = false, FocusCameraOnGuardian = false, EffectOnlyMirror = false, 
+            Invisibility = false, Immune = false, NoAggro = false, Inactivity = false, CantUseInventory = false, NpcCanFacePlayer = true, 
+            ProceedIdleAIDuringDialogue = false, BlockTwoHandedAttack = false, BlockOffHandUsage = false;
         public bool StepStart { get { return Time == 0; } }
         private static bool StepChanged = false;
         public CombatTactic? ForcedTactic = null;
@@ -190,6 +192,21 @@ namespace giantsummon
         public virtual void OnActionEnd(TerraGuardian guardian)
         {
 
+        }
+
+        public virtual bool? ModifyPlayerHostile(TerraGuardian guardian, Player player)
+        {
+            return null;
+        }
+
+        public virtual bool? ModifyGuardianHostile(TerraGuardian guardian, TerraGuardian guardian2)
+        {
+            return null;
+        }
+
+        public virtual bool? ModifyNPCHostile(TerraGuardian guardian, NPC npc)
+        {
+            return null;
         }
 
         public Vector2 GetHandPosition(TerraGuardian guardian, int AnimationFrame, HeldHand hand)

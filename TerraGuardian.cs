@@ -5410,7 +5410,8 @@ namespace giantsummon
             switch (TargetType)
             {
                 case TargetTypes.Npc:
-                    if (!Main.npc[TargetID].active || Main.npc[TargetID].friendly || Main.npc[TargetID].dontTakeDamage || Main.npc[TargetID].reflectingProjectiles)
+                    if (!Main.npc[TargetID].active || !IsNpcHostile(Main.npc[TargetID]) || Main.npc[TargetID].dontTakeDamage || 
+                        Main.npc[TargetID].reflectingProjectiles)
                     {
                         TargetID = -1;
                         AttackingTarget = false;
@@ -8015,7 +8016,9 @@ namespace giantsummon
             }
             if (CurrentIdleAction == IdleActions.LookingAtTheBackground && Velocity.Length() > 0)
                 CurrentIdleAction = IdleActions.Wait;
-            if (OwnerPos > -1 && !Main.player[OwnerPos].ghost && (!IsPlayerIdle || DoAction.InUse || PlayerControl || (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
+            if (OwnerPos > -1 && !Main.player[OwnerPos].ghost && (!IsPlayerIdle || DoAction.InUse || PlayerControl || 
+                (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || 
+                (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
                 CurrentIdleAction = IdleActions.Wait;
                 IdleActionTime = 50;
@@ -10916,14 +10919,12 @@ namespace giantsummon
                 }*/
             }
             float NearestTargetDistance = ThreatDetectionDistance;
-            int TargetPosition = -1;
-            TargetTypes TargetType = TargetTypes.Npc;
             if (IsAttackingSomething)
             {
                 switch (TargetType)
                 {
                     case TargetTypes.Npc:
-                        if (Main.npc[TargetID].active)
+                        if (Main.npc[TargetID].active && IsNpcHostile(Main.npc[TargetID]))
                         {
                             NearestTargetDistance = Main.npc[TargetID].Distance(CenterPosition);
                         }
@@ -10934,7 +10935,7 @@ namespace giantsummon
                         }
                         break;
                     case TargetTypes.Player:
-                        if (Main.player[TargetID].active && !Main.player[TargetID].dead && !Main.player[TargetID].GetModPlayer<PlayerMod>().KnockedOutCold)
+                        if (Main.player[TargetID].active && IsPlayerHostile(Main.player[TargetID]) && !Main.player[TargetID].dead && !Main.player[TargetID].GetModPlayer<PlayerMod>().KnockedOutCold)
                         {
                             NearestTargetDistance = Main.player[TargetID].Distance(CenterPosition);
                         }
@@ -10945,7 +10946,7 @@ namespace giantsummon
                         }
                         break;
                     case TargetTypes.Guardian:
-                        if (MainMod.ActiveGuardians.ContainsKey(TargetID) && !MainMod.ActiveGuardians[TargetID].Downed && !MainMod.ActiveGuardians[TargetID].KnockedOutCold)
+                        if (MainMod.ActiveGuardians.ContainsKey(TargetID) && IsGuardianHostile(MainMod.ActiveGuardians[TargetID]) && !MainMod.ActiveGuardians[TargetID].Downed && !MainMod.ActiveGuardians[TargetID].KnockedOutCold)
                         {
                             NearestTargetDistance = MainMod.ActiveGuardians[TargetID].Distance(CenterPosition);
                         }
@@ -10957,9 +10958,6 @@ namespace giantsummon
                         break;
                 }
             }
-            List<byte> NpcsSpotted = new List<byte>(),
-                PlayersSpotted = new List<byte>();
-            List<int> GuardiansSpotted = new List<int>();
             Vector2 MyTopLeftPosition = TopLeftPosition;
             for (byte i = 0; i < 255; i++)
             {
@@ -10976,22 +10974,23 @@ namespace giantsummon
                             NearestMember = MemberPosition;
                         }
                     }
-                    if (NearestMember.Length() == 0)
-                        continue;
-                    Vector2 NpcCenter = Main.npc[i].Center;
-                    Vector2 MemberCenter = NearestMember.XY() + NearestMember.ZW() * 0.5f;
+                    if (NearestMember.Length() > 0)
                     {
-                        float Distance = Main.npc[i].Distance(MemberCenter);
-                        if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type] || Main.npc[i].boss)
-                            Distance *= 0.5f;
-                        if (Distance < NearestTargetDistance)
+                        Vector2 NpcCenter = Main.npc[i].Center;
+                        Vector2 MemberCenter = NearestMember.XY() + NearestMember.ZW() * 0.5f;
                         {
-                            if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
+                            float Distance = Main.npc[i].Distance(MemberCenter);
+                            if (Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[i].type] || Main.npc[i].boss)
+                                Distance *= 0.5f;
+                            if (Distance < NearestTargetDistance)
                             {
-                                NearestTargetDistance = Distance;
-                                TargetID = i;
-                                TargetType = TargetTypes.Npc;
-                                SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
+                                if (Collision.CanHitLine(MyTopLeftPosition, Width, Height, Main.npc[i].position, Main.npc[i].width, Main.npc[i].height))
+                                {
+                                    NearestTargetDistance = Distance;
+                                    TargetID = i;
+                                    TargetType = TargetTypes.Npc;
+                                    SetCooldownValue(GuardianCooldownManager.CooldownType.MemoryOfTarget, TimeUntilCompanionForgetsTarget);
+                                }
                             }
                         }
                     }
@@ -11069,13 +11068,23 @@ namespace giantsummon
             }
         }
 
-        public bool IsGuardianHostile(TerraGuardian g)
+        public bool IsGuardianHostile(TerraGuardian g, bool NoOtherCheck = false)
         {
             if (g.WhoAmID != WhoAmID)
             {
+                if (DoAction != null && DoAction.InUse)
+                {
+                    bool? Hostile = DoAction.ModifyGuardianHostile(this, g);
+                    if (Hostile.HasValue)
+                        return Hostile.Value;
+                }
                 if (g.OwnerPos > -1 && IsPlayerHostile(Main.player[g.OwnerPos]))
                 {
                     return true;
+                }
+                if (!NoOtherCheck)
+                {
+                    return g.IsGuardianHostile(this, true);
                 }
             }
             return false;
@@ -11083,6 +11092,12 @@ namespace giantsummon
 
         public bool IsPlayerHostile(Player p)
         {
+            if (DoAction != null && DoAction.InUse)
+            {
+                bool? Hostile = DoAction.ModifyPlayerHostile(this, p);
+                if (Hostile.HasValue)
+                    return Hostile.Value;
+            }
             if (p.whoAmI != OwnerPos)
             {
                 if (p.hostile)
@@ -11098,6 +11113,12 @@ namespace giantsummon
 
         public bool IsNpcHostile(NPC n)
         {
+            if (DoAction != null && DoAction.InUse)
+            {
+                bool? Hostile = DoAction.ModifyNPCHostile(this, n);
+                if (Hostile.HasValue)
+                    return Hostile.Value;
+            }
             if ((n.catchItem == 0 || n.damage > 0) && n.CanBeChasedBy(null))
             {
                 return true;
@@ -13305,7 +13326,7 @@ namespace giantsummon
                                         HitDirection *= -1;
                                     }
                                     bool Critical = (Main.rand.Next(100) < CriticalRate);
-                                    double resultingDamage = Main.player[t].Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" has been slain by " + Name + "."), Damage, HitDirection, (OwnerPos > -1 && Main.player[OwnerPos].hostile), false, Critical);
+                                    double resultingDamage = Main.player[t].Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Main.player[t].name + " has been slain by " + Name + "."), Damage, HitDirection, (OwnerPos > -1 && Main.player[OwnerPos].hostile), false, Critical);
                                     IncreaseDamageStacker((int)resultingDamage, Main.player[t].statLifeMax2);
                                     if (resultingDamage > 0 && SelectedItem > -1)
                                         TryApplyingWeaponDebuffsToPlayer(Inventory[SelectedItem], Main.player[t]);

@@ -99,6 +99,7 @@
     <Compile Include="Buffs\WellBeing.cs" />
     <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
+    <Compile Include="Companions\Creatures\Cille\BeastStateAction.cs" />
     <Compile Include="Companions\Creatures\Cille\CilleBase.cs" />
     <Compile Include="Compatibility\CompatibilityHooks.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
@@ -396,7 +397,13 @@
     <Content Include="Companions\Creatures\Brutus\royal_guard_outfit_f.png" />
     <Content Include="Companions\Creatures\Cille\body.png" />
     <Content Include="Companions\Creatures\Cille\body_front.png" />
+    <Content Include="Companions\Creatures\Cille\head.png" />
     <Content Include="Companions\Creatures\Cille\left_arm.png" />
+    <Content Include="Companions\Creatures\Cille\murder_face.png" />
+    <Content Include="Companions\Creatures\Cille\outfit_body.png" />
+    <Content Include="Companions\Creatures\Cille\outfit_bodyfront.png" />
+    <Content Include="Companions\Creatures\Cille\outfit_leftarm.png" />
+    <Content Include="Companions\Creatures\Cille\outfit_rightarm.png" />
     <Content Include="Companions\Creatures\Cille\right_arm.png" />
     <Content Include="Companions\Creatures\Fear\body.png" />
     <Content Include="Companions\Creatures\Fear\body_front.png" />

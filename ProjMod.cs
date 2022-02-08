@@ -218,9 +218,51 @@ namespace giantsummon
                 MyParent = -1;
             };
             TryRestoringPlayerStatus();
+            if (projectile.damage > 0)
+            {
+                foreach (TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                {
+                    if (tg.Active && !tg.Downed)
+                    {
+                        bool ProjIsHostile = projectile.hostile;
+                        if (IsGuardianProjectile(projectile.whoAmI) && tg.WhoAmID != GuardianProj[projectile.whoAmI].WhoAmID)
+                        {
+                            ProjIsHostile = GuardianProj[projectile.whoAmI].IsGuardianHostile(tg);
+                        }
+                        else if(!ProjIsHostile && tg.IsPlayerHostile(Main.player[projectile.owner]))
+                        {
+                            ProjIsHostile = true;
+                        }
+                        if (ProjIsHostile && projectile.getRect().Intersects(tg.HitBox))
+                        {
+                            if (tg.Active && !tg.Downed && projectile.getRect().Intersects(tg.HitBox))
+                            {
+                                if (tg.Base.GuardianWhenAttackedProjectile(tg, projectile.damage, false, projectile))
+                                {
+                                    int DamageDealt = tg.Hurt(projectile.damage, projectile.Center.X < tg.Position.X ? 1 : -1, false, false, " was slain by a " + projectile.Name + ".");
+                                    if (DamageDealt > 0)
+                                    {
+                                        TrySimulatingProjectileDamageOnGuardian(projectile, tg);
+                                        if (projectile.penetrate > 0)
+                                        {
+                                            projectile.penetrate--;
+                                            if (projectile.penetrate == 0)
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (IsGuardianProjectile(projectile.whoAmI))
+                {
+                    projectile.hostile = GuardianProj[projectile.whoAmI].IsPlayerHostile(Main.player[Main.myPlayer]);
+                }
+            }
             if (!projectile.hostile || projectile.damage == 0)
                 return;
-            for (int p = 0; p < 255; p++)
+            /*for (int p = 0; p < 255; p++)
             {
                 if (Main.player[p].active)
                 {
@@ -246,7 +288,7 @@ namespace giantsummon
                         }
                     }
                 }
-            }
+            }*/
             if (projectile.active)
             {
                 if (projectile.aiStyle == 111)

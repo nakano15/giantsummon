@@ -57,7 +57,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 101, LastModVersion = 101;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -2586,7 +2586,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        int[] TestGuardianIDs = new int[] { 19, 20, 22, 26, 27, 28, 29, 30 };
+                                        int[] TestGuardianIDs = new int[] { 19, 20, 22, 26, 27, 28, 29, 30, 31 };
                                         bool b = false;
                                         foreach (int TestGuardianID in TestGuardianIDs)
                                         {
@@ -2978,7 +2978,7 @@ namespace giantsummon
             get
             {
                 string s = "";
-                switch (Main.rand.Next(8))
+                switch (Main.rand.Next(10))
                 {
                     case 0: s = "With more friends for you to meet!"; break;
                     case 1: s = "Contains snouts, furs and tails."; break;
@@ -2988,6 +2988,8 @@ namespace giantsummon
                     case 5: s = "Town management simulator."; break;
                     case 6: s = "It's hard to pick the best."; break;
                     case 7: s = "Gotta meet 'em all!"; break;
+                    case 8: s = "Deadraccoo5 - A City in Nakano"; break;
+                    case 9: s = "Errand boy/girl simulator."; break;
                 }
                 return "Terraria: " + s;
             }

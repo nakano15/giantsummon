@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
 namespace giantsummon.Companions
 {
     public class CilleBase : GuardianBase
     {
+        public const string DefaultOutfitBodyID = "default_o_body", DefaultOutfitBodyFrontID = "default_o_bodyfront", DefaultOutfitLeftArmID = "default_o_left", DefaultOutfitRightArmID = "default_o_right";
+        public const string MurderFaceID = "murderface";
+        public const int DefaultOutfitID = 1;
+        public const int BeastStateID = 0;
+
         public CilleBase()
         {
             Name = "Cille";
@@ -35,7 +42,8 @@ namespace giantsummon.Companions
             ReverseMount = false;
             DrinksBeverage = true;
             SetTerraGuardian();
-            CallUnlockLevel = 6;
+            FriendsLevel = 3;
+            CallUnlockLevel = 3;
             MoveInLevel = 5;
 
             //Animation Frames
@@ -87,7 +95,115 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(18, 42, 33);
 
             //Mounted Placement
-            MountShoulderPoints.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 15);
+            MountShoulderPoints.DefaultCoordinate2x = new Point(16, 15);
+
+            //Headgear Placement
+            HeadVanityPosition.DefaultCoordinate2x = new Point(24, 11);
+            HeadVanityPosition.AddFramePoint2x(18, 30, 18);
+
+            AddOutfit(DefaultOutfitID, "Bad Outfit", delegate (GuardianData gd, Player player) { return true; });
+        }
+
+        public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
+        {
+            return new CilleData(ID, ModID);
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(DefaultOutfitBodyID, "outfit_body");
+            sprites.AddExtraTexture(DefaultOutfitBodyFrontID, "outfit_bodyfront");
+            sprites.AddExtraTexture(DefaultOutfitLeftArmID, "outfit_leftarm");
+            sprites.AddExtraTexture(DefaultOutfitRightArmID, "outfit_rightarm");
+            sprites.AddExtraTexture(MurderFaceID, "murder_face");
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
+        {
+            CilleData data = (CilleData)guardian.Data;
+            if (data.InBeastState)
+            {
+                GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(MurderFaceID), DrawPosition, guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame), Color.White, Rotation, Origin, Scale, seffect);
+                InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+            }
+            switch (guardian.OutfitID)
+            {
+                case DefaultOutfitID:
+                    {
+                        Texture2D OutfitTexture = sprites.GetExtraTexture(DefaultOutfitBodyID),
+                            LeftArmTexture = sprites.GetExtraTexture(DefaultOutfitLeftArmID),
+                            RightArmTexture = sprites.GetExtraTexture(DefaultOutfitRightArmID),
+                            BodyFrontTexture = sprites.GetExtraTexture(DefaultOutfitBodyFrontID);
+                        GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame), color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                        if (guardian.BodyAnimationFrame == SittingFrame)
+                        {
+                            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BodyFrontTexture, DrawPosition, guardian.GetAnimationFrameRectangle(BodyFrontFrameSwap[guardian.BodyAnimationFrame]), color, Rotation, Origin, Scale, seffect);
+                            InjectTextureAfter(GuardianDrawData.TextureType.TGBodyFront, gdd);
+                        }
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, LeftArmTexture, DrawPosition, guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame), color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
+                        gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, RightArmTexture, DrawPosition, guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame), color, Rotation, Origin, Scale, seffect);
+                        InjectTextureAfter(GuardianDrawData.TextureType.TGRightArm, gdd);
+                    }
+                    break;
+            }
+        }
+
+        public override void GuardianUpdateScript(TerraGuardian guardian)
+        {
+            CilleData data = (CilleData)guardian.Data;
+            if (data.InBeastState)
+            {
+                if (guardian.KnockedOut)
+                {
+                    data.InBeastState = false;
+                }
+                else if (!TriggerBeastState(guardian))
+                {
+                    data.InBeastState = false;
+                    if (!guardian.KnockedOut && !guardian.Downed)
+                    {
+                        string Message = "";
+                        switch (Main.rand.Next(3))
+                        {
+                            default:
+                                Message = "*Huh? It's over... I hope I didn't hurt anyone.*";
+                                break;
+                            case 1:
+                                Message = "*What happened? Did someone got hurt?*";
+                                break;
+                            case 2:
+                                Message = "*I'm so glad it's over. I didn't hurt anyone, right?*";
+                                break;
+                        }
+                        guardian.SaySomethingCanSchedule(Message, false, Main.rand.Next(30, 180));
+                    }
+                    /*if (!guardian.DoAction.InUse)
+                    {
+                        data.InBeastState = false;
+                    }*/
+                }
+                else
+                {
+                    if (guardian.OwnerPos > -1 && !guardian.IsPlayerBuddy(Main.player[guardian.OwnerPos]))
+                    {
+                        if (!NpcMod.HasGuardianNPC(guardian.ID, guardian.ModID))
+                            WorldMod.GuardianTownNPC.Add(guardian);
+                        Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian(guardian.ID, guardian.ModID);
+                    }
+                }
+            }
+            else
+            {
+                if (TriggerBeastState(guardian))
+                {
+                    if (!guardian.DoAction.InUse)
+                    {
+                        guardian.StartNewGuardianAction(new Companions.Creatures.Cille.BeastStateAction(), BeastStateID);
+                    }
+                }
+            }
         }
 
         public override void Attributes(TerraGuardian g)
@@ -103,7 +219,8 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
-        public override string CallUnlockMessage => "**";
+        public override string CallUnlockMessage => "*Do you... Need help on your adventures..? Can I accompany you..?*";
+        public override string MoveInUnlockMessage => "*..I'd like to have more contact with you, if you want...*";
 
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
@@ -121,7 +238,7 @@ namespace giantsummon.Companions
                     Mes.Add("*You returned...*");
                 Mes.Add("*Don't come closer..*");
                 Mes.Add("*Stay away..*");
-                Mes.Add("*I hurted someone in the past... I didn't wanted to.. Please... Leave me alone..*");
+                Mes.Add("*I hurt someone in the past... I didn't wanted to.. But I couldn't stop.. Please... Leave me alone..*");
                 Mes.Add("*I'm nobody.. Go away..*");
                 if (!Main.dayTime)
                 {
@@ -143,9 +260,12 @@ namespace giantsummon.Companions
                     Mes.Add("*...*");
                     if (Main.dayTime)
                     {
-                        Mes.Add("*Are you finding it weird that I only eat fruits and bugs? Sorry, I wont touch meat.*");
+                        Mes.Add("*Are you finding it weird that I only eat fruits and bugs? Sorry, I'm avoiding touching meat.*");
                         if (!Main.raining)
+                        {
                             Mes.Add("*It seems like a good day for running.*");
+                            Mes.Add("*Do you want to race against me, [nickname]?*");
+                        }
                         else
                             Mes.Add("*Aww... It's raining..*");
                         Mes.Add("*I think I can talk, while it's still daytime.*");
@@ -153,7 +273,7 @@ namespace giantsummon.Companions
                     else
                     {
                         Mes.Add("*Feeling tired..? Go home get some sleep.*");
-                        Mes.Add("*I can't forget that night... What night? Nevermind.*");
+                        Mes.Add("*I can't forget that night... What night? Forget that I said that.*");
                     }
                     if (guardian.IsPlayerRoomMate(player))
                     {
@@ -244,12 +364,24 @@ namespace giantsummon.Companions
             return "*...*";
         }
 
+        public override string HomelessMessage(Player player, TerraGuardian guardian)
+        {
+            if (Main.rand.Next(2) == 0)
+                return "*I don't like living the way I live. I'd like to have a place for myself, which also should be away from other people.*";
+            return "*I'd like to talk to you more, but not to stay too close. Do you have some place I could stay?*";
+        }
+
+        public static bool TriggerBeastState(TerraGuardian tg)
+        {
+            return !Main.dayTime && Main.moonPhase == 3 && tg.Position.X < Main.worldSurface * 16;
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
             {
                 case MessageIDs.BuddySelected:
-                    return "*..I don't know why you picked me.. But.. Thank you...*";
+                    return "*..I don't know why you picked me, but.. Thank you...*";
                 case MessageIDs.RescueMessage:
                     return "*I found you, let me help.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:
@@ -264,7 +396,7 @@ namespace giantsummon.Companions
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
                     return "*No... Leave me here.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
-                    return "*Couldn't you take me home, first?*";
+                    return "*Couldn't you take me close to my home, first?*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
                     return "*I'll be back home, then..*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
@@ -462,6 +594,16 @@ namespace giantsummon.Companions
                     return "*Why? Why did you picked me as your buddy? I feel like I'm endangering you.*";
             }
             return base.GetSpecialMessage(MessageID);
+        }
+
+        public class CilleData : GuardianData
+        {
+            public bool InBeastState = false;
+
+            public CilleData(int ID, string ModID) : base (ID, ModID)
+            {
+
+            }
         }
     }
 }
