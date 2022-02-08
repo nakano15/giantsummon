@@ -230,6 +230,7 @@
     <Compile Include="Npcs\BlueNPC.cs" />
     <Compile Include="Npcs\BreeNPC.cs" />
     <Compile Include="Npcs\BrutusNPC.cs" />
+    <Compile Include="Npcs\CilleNPC.cs" />
     <Compile Include="Npcs\DaphneNPC.cs" />
     <Compile Include="Npcs\DominoNPC.cs" />
     <Compile Include="Npcs\FearNPC.cs" />

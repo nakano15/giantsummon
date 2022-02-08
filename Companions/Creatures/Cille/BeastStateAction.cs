@@ -8,7 +8,7 @@ namespace giantsummon.Companions.Creatures.Cille
 {
     public class BeastStateAction : GuardianActions
     {
-        public int TimeUntilActivates = 7 * 60;
+        public const int TimeUntilActivates = 7 * 60;
 
         public override void Update(TerraGuardian guardian)
         {
@@ -25,7 +25,7 @@ namespace giantsummon.Companions.Creatures.Cille
                                 guardian.DoSitOnPlayerMount(false);
                             if (guardian.UsingFurniture)
                                 guardian.LeaveFurniture(false);
-                            string Message = "";
+                            string Message;
                             switch (Main.rand.Next(3))
                             {
                                 default:
@@ -114,7 +114,7 @@ namespace giantsummon.Companions.Creatures.Cille
                         else
                         {
                             data.InBeastState = false;
-                            string Message = "";
+                            string Message;
                             switch (Main.rand.Next(3))
                             {
                                 default:

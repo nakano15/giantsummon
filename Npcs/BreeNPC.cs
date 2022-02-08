@@ -42,9 +42,6 @@ namespace giantsummon.Npcs
             npc.rarity = 1;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
             npc.dontCountMe = true;
-            if (npc.GetGlobalNPC<NpcMod>().mobType > MobTypes.Normal)
-                npc.GetGlobalNPC<NpcMod>().mobType = MobTypes.Normal;
-            NpcMod.LatestMobType = MobTypes.Normal;
         }
 
         public override bool CheckActive()
