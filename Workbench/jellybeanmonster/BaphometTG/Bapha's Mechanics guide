@@ -67,8 +67,9 @@ Buffs/Debuffs/Passive:
 >Soul Sacrifice (dialogue passive)- The player can sacrifice other terra guardians to Bapha for an increase in his Hp/Mp by 1.2x for each companion and it affects the "Awakened Form" buff by decreasing the amount of enemies needed to achieve the form by 1 for each companion sacrificed.
 -(If the player manages to sacrifice 10 terra guardians then Bapha will be permanently in Awakened Form any where in the world)
 -(The terragaurdians sacrificed can be ressurected through a dialogue with Bapha)
+-(Terraguardians that are sacrificed are effected by the attitude system towards players, so if they are revived then they will immediately be negative towards player which makes a lot of sense in this case instead of them being mad at player because they get killed own their own in some reandom way like falling to death)
 
->Negates Fall Damage(Passive)
+>Negates fall damage(Passive)
 
 
 Combat:
@@ -81,7 +82,7 @@ Attacks-
 -Shockwave(Awakened Form exclusive): After chopping down, hell splitter summons a projectile that hits and deals 50% of total damage.(0 Knockback)
 
 
->Hell Flame(Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Damage scales with 50% of weapon damage)
+>Hell Flame(Normal Form Exclusive/Ranged)- One or two fire ball(s) that does 20 base damage by itself with no weapon equiped.(Damage scales with 50% of weapon damage)
 -15 Mp cost
 -Medium Velocity
 -Applies on fire debuff
