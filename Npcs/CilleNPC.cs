@@ -8,7 +8,7 @@ namespace giantsummon.Npcs
 {
     public class CilleNPC : GuardianActorNPC
     {
-        private byte TalkTimes = 0, DialogueStep = 0;
+        private byte TalkTimes = 255, DialogueStep = 0;
         private ushort RaceStartDelay = 0;
 
         public CilleNPC() : base(GuardianBase.Cille)
@@ -29,18 +29,18 @@ namespace giantsummon.Npcs
             npc.dontCountMe = true;
         }
 
-        public override bool CheckActive()
-        {
-            return false;
-        }
-
         public override bool CanChat()
         {
-            return true;
+            return TalkTimes != 3;
         }
 
         public override void AI()
         {
+            if(TalkTimes == 255)
+            {
+                TalkTimes = 0;
+                Main.NewText("A TerraGuardian was spotted " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + "'s position.");
+            }
             if(Main.netMode < 2 && Main.player[Main.myPlayer].talkNPC == -1)
             {
                 if(DialogueStep > 0)
@@ -68,26 +68,26 @@ namespace giantsummon.Npcs
                     }
                 }
             }
-            if(TalkTimes == 3 && RaceStartDelay == 0)
+            if (TalkTimes == 3 && RaceStartDelay == 0)
             {
                 int CheckX = (int)(npc.Center.X * (1f / 16)), CheckY = (int)((npc.position.Y + npc.height - 1) * (1f / 16));
                 byte OpenSpace = 0;
-                for(int x = 2; x < 4; x++)
+                for (int x = 2; x < 4; x++)
                 {
-                    for(int y = -5; y > 0; y++)
+                    for (int y = -5; y > 0; y++)
                     {
                         int TileX = CheckX + x * npc.direction, TileY = CheckY + y;
                         Tile tile = Main.tile[TileX, TileY];
                         if (tile != null)
                         {
-                            if(tile.active() && Main.tileSolid[tile.type])
+                            if (tile.active() && Main.tileSolid[tile.type])
                             {
                                 OpenSpace = 0;
                             }
                             else
                             {
                                 OpenSpace++;
-                                if(OpenSpace >= 3)
+                                if (OpenSpace >= 3)
                                 {
                                     break;
                                 }
@@ -95,11 +95,11 @@ namespace giantsummon.Npcs
                         }
                     }
                 }
-                if(OpenSpace < 3)
+                if (OpenSpace < 3)
                 {
                     npc.direction *= -1;
                 }
-                if(npc.direction < 0)
+                if (npc.direction < 0)
                 {
                     MoveLeft = true;
                 }
@@ -126,7 +126,25 @@ namespace giantsummon.Npcs
                 if (Main.netMode < 2)
                 {
                     float DistanceDiference = Math.Abs(npc.Center.X - Main.player[Main.myPlayer].Center.X);
+                    if(DistanceDiference > 500)
+                    {
+                        if(npc.direction < 0)
+                        {
+                            if((npc.direction < 0 && Main.player[Main.myPlayer].Center.X > npc.position.X) ||
+                                (npc.direction > 0 && Main.player[Main.myPlayer].Center.X < npc.position.X))
+                            {
+                                TalkTimes = 5;
+                                Main.NewText("Cheetah Guardian: *You lost. Now please leave me alone.*");
+                            }
+                            else
+                            {
+                                TalkTimes = 6;
+                                Main.NewText("Cheetah Guardian: *Alright, you won... Come talk to me..*");
+                            }
+                        }
+                    }
                 }
+            }
             base.AI();
         }
 
@@ -140,6 +158,14 @@ namespace giantsummon.Npcs
                     return "*You again...*";
                 case 2:
                     return "*You really want to talk to me... Right..?*";
+                case 4:
+                    return "*W-what? How did you... Please, go away.*";
+                case 5:
+                    return "*Please, leave me alone.*";
+                case 6:
+                    return "*I never expected someone to win a race against me...*";
+                case 7:
+                    return "*I want to be alone now..*";
             }
             return base.GetChat();
         }
@@ -186,6 +212,20 @@ namespace giantsummon.Npcs
                             button = "Yes";
                             button2 = "No";
                             break;
+                    }
+                    break;
+
+                case 6:
+                    if (DialogueStep == 0)
+                    {
+                        button = "Will we finally be able to talk?";
+                    }
+                    break;
+
+                case 7:
+                    if (DialogueStep == 0)
+                    {
+                        button = "At least give me your name.";
                     }
                     break;
             }
@@ -252,6 +292,35 @@ namespace giantsummon.Npcs
                                     DialogueStep = 0;
                                     RaceStartDelay = 3 * 60;
                                     NewDialogueMessage = "*Once you stop talking to me, I'll start the race in 3 seconds.*";
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                case 6:
+                    {
+                        switch (DialogueStep)
+                        {
+                            case 0:
+                                {
+                                    DialogueStep++;
+                                    NewDialogueMessage = "*No. Please, leave me be.*";
+                                    NpcMod.AddGuardianMet(GuardianID, GuardianModID);
+                                    TalkTimes = 7;
+                                    PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
+                                }
+                                break;
+                        }
+                    }
+                    break;
+                case 7:
+                    {
+                        switch (DialogueStep)
+                        {
+                            case 0:
+                                {
+                                    DialogueStep++;
+                                    NewDialogueMessage = "*Cille... Now go.*";
                                 }
                                 break;
                         }

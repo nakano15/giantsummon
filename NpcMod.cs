@@ -1388,15 +1388,91 @@ namespace giantsummon
             }
         }
 
-        public override void NPCLoot(NPC npc)
+        public override bool PreNPCLoot(NPC npc)
         {
-            Npcs.GhostFoxGuardianNPC.OnMobKill(npc.type);
             if (npc.type == NPCID.PossessedArmor && !HasMetGuardian(4) && Main.rand.Next(100) == 0)
             {
                 SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Nemesis);
                 Main.NewText("There's something over there.");
                 AddGuardianMet(4);
             }
+            Npcs.GhostFoxGuardianNPC.OnMobKill(npc.type);
+            for (int p = 0; p < 255; p++)
+            {
+                if (npc.playerInteraction[p] && Main.player[p].active)
+                {
+                    if (p == Main.myPlayer)
+                    {
+                        foreach (GuardianData d in Main.player[p].GetModPlayer<PlayerMod>().GetGuardians())
+                        {
+                            if (!d.request.Active)
+                                continue;
+                            d.request.Base.OnKillMob(npc, d.request);
+                        }
+                    }
+                }
+            }
+            if (TrappedCatKingSlime == npc.whoAmI)
+            {
+                TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Center.Y, GuardianBase.Sardine);
+                tg.AddBuff(BuffID.Slimed, 300);
+                switch (Main.rand.Next(5))
+                {
+                    default:
+                        tg.SaySomething("*Heavily breathing* Soo good to be able to breath normally again.");
+                        break;
+                    case 1:
+                        tg.SaySomething("Eww, It will take a long time for me to lick all that out. At least tastes good.");
+                        break;
+                    case 2:
+                        tg.SaySomething("Hey, I nearly killed it! Oh, well, whatever. You helped too..");
+                        break;
+                    case 3:
+                        tg.SaySomething("So glad to be out of that, my skin was itching.");
+                        break;
+                    case 4:
+                        tg.SaySomething("Please don't tell about this to other bounty hunters.");
+                        break;
+                }
+                AddGuardianMet(GuardianBase.Sardine);
+                TrappedCatKingSlime = -1;
+                const int Distance = 1000;
+                for (int p = 0; p < 255; p++)
+                {
+                    if (Main.player[p].active && Math.Abs(Main.player[p].position.X - npc.Center.X) < Distance && Math.Abs(Main.player[p].position.Y - npc.Center.Y) < Distance)
+                    {
+                        if (p == Main.myPlayer && !PlayerMod.PlayerHasGuardian(Main.player[p], GuardianBase.Sardine))
+                            Main.NewText("You have met Sardine.");
+                        PlayerMod.AddPlayerGuardian(Main.player[p], GuardianBase.Sardine);
+                    }
+                }
+            }
+            if (NPC.downedGoblins && npc.type == NPCID.DarkCaster)
+            {
+                if (!HasMetGuardian(GuardianBase.Quentin) && !HasGuardianNPC(GuardianBase.Quentin) && Main.rand.Next(80) == 0)
+                {
+                    TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Quentin, "");
+                    tg.SaySomethingCanSchedule("Thanks for rescue me from that dark sorcerer, he wanted to force me to become his familiar, by the way i am Quentin, the Mage's apprentice bunny.", true, Main.rand.Next(40, 60));
+                    AddGuardianMet(tg.ID, tg.ModID);
+                    PlayerMod.AddPlayerGuardian(Main.player[npc.target], tg.ID, tg.ModID);
+                }
+            }
+            if (GuardianBountyQuest.TargetMonsterID > 0)
+            {
+                if (npc.whoAmI == GuardianBountyQuest.TargetMonsterSpawnPosition)
+                {
+                    GuardianBountyQuest.OnBountyMonsterKilled(npc);
+                }
+                else
+                {
+                    GuardianBountyQuest.OnMobKilled(npc);
+                }
+            }
+            return base.PreNPCLoot(npc);
+        }
+
+        public override void NPCLoot(NPC npc)
+        {
             if (npc.type == NPCID.Bunny && Main.rand.Next(50) == 0)
             {
                 Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Accessories.BunnyFoot>());
@@ -1432,12 +1508,12 @@ namespace giantsummon
                     SomeGuardianNeedMana = Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && !x.Downed && x.MP < x.MMP);
                     if (p == Main.myPlayer)
                     {
-                        foreach (GuardianData d in Main.player[p].GetModPlayer<PlayerMod>().GetGuardians())
+                        /*foreach (GuardianData d in Main.player[p].GetModPlayer<PlayerMod>().GetGuardians())
                         {
                             if (!d.request.Active)
                                 continue;
                             d.request.Base.OnKillMob(npc, d.request);
-                        }
+                        }*/
                         if (npc.value > 0)
                         {
                             List<TerraGuardian> tgs = new List<TerraGuardian>();
@@ -1478,61 +1554,6 @@ namespace giantsummon
                 if (Main.xMas)
                     ItemID = Terraria.ID.ItemID.SugarPlum;
                 Item.NewItem(npc.getRect(), ItemID, 1);
-            }
-            if (TrappedCatKingSlime == npc.whoAmI)
-            {
-                TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Center.Y, GuardianBase.Sardine);
-                tg.AddBuff(BuffID.Slimed, 300);
-                switch (Main.rand.Next(5)) {
-                    default:
-                        tg.SaySomething("*Heavily breathing* Soo good to be able to breath again.");
-                        break;
-                    case 1:
-                        tg.SaySomething("Eww, It will take a long time for me to lick all that out. At least tastes good.");
-                        break;
-                    case 2:
-                        tg.SaySomething("Hey, I nearly killed it! Oh, well, whatever. You helped too..");
-                        break;
-                    case 3:
-                        tg.SaySomething("So glad to be out of that, my skin was itching.");
-                        break;
-                    case 4:
-                        tg.SaySomething("Please don't tell about this to other bounty hunters.");
-                        break;
-                }
-                AddGuardianMet(GuardianBase.Sardine);
-                TrappedCatKingSlime = -1;
-                const int Distance = 1000;
-                for(int p = 0; p < 255; p++)
-                {
-                    if(Main.player[p].active && Math.Abs(Main.player[p].position.X - npc.Center.X) < Distance && Math.Abs(Main.player[p].position.Y - npc.Center.Y) < Distance)
-                    {
-                        if (p == Main.myPlayer && !PlayerMod.PlayerHasGuardian(Main.player[p], GuardianBase.Sardine))
-                            Main.NewText("You have met Sardine.");
-                        PlayerMod.AddPlayerGuardian(Main.player[p], GuardianBase.Sardine);
-                    }
-                }
-            }
-            if(NPC.downedGoblins && npc.type == NPCID.DarkCaster)
-            {
-                if(!HasMetGuardian(GuardianBase.Quentin) && !HasGuardianNPC(GuardianBase.Quentin) && Main.rand.Next(80) == 0)
-                {
-                    TerraGuardian tg = SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Quentin, "");
-                    tg.SaySomethingCanSchedule("Thanks for rescue me from that dark sorcerer, he wanted to force me to become his familiar, by the way i am Quentin, the Mage's apprentice bunny.", true, Main.rand.Next(40, 60));
-                    AddGuardianMet(tg.ID, tg.ModID);
-                    PlayerMod.AddPlayerGuardian(Main.player[npc.target], tg.ID, tg.ModID);
-                }
-            }
-            if (GuardianBountyQuest.TargetMonsterID > 0)
-            {
-                if (npc.whoAmI == GuardianBountyQuest.TargetMonsterSpawnPosition)
-                {
-                    GuardianBountyQuest.OnBountyMonsterKilled(npc);
-                }
-                else
-                {
-                    GuardianBountyQuest.OnMobKilled(npc);
-                }
             }
             if (mobType > MobTypes.Normal)
                 StrongMonsterLoot(npc);
