@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace giantsummon.Npcs
 {
     public class CilleNPC : GuardianActorNPC
     {
+        public static bool MetAtLeastOnce = false;
         private byte TalkTimes = 255, DialogueStep = 0;
         private ushort RaceStartDelay = 0;
+        private bool PlayerMetCille = false;
 
         public CilleNPC() : base(GuardianBase.Cille)
         {
@@ -46,17 +51,19 @@ namespace giantsummon.Npcs
                 if(DialogueStep > 0)
                 {
                     DialogueStep = 0;
-                    if (TalkTimes < 3)
+                    if (TalkTimes < 2)
                     {
                         TalkTimes++;
                     }
                 }
-                if(TalkTimes == 3)
+                if(TalkTimes == 3 && RaceStartDelay > 0)
                 {
                     if(DialogueStep == 0)
                     {
                         DialogueStep = 1;
                         SayMessage("*Ready?*");
+                        Main.player[Main.myPlayer].AddBuff(Terraria.ID.BuffID.Frozen, RaceStartDelay);
+                        Main.player[Main.myPlayer].Bottom = npc.Bottom;
                     }
                     if(RaceStartDelay > 0)
                     {
@@ -74,9 +81,9 @@ namespace giantsummon.Npcs
                 byte OpenSpace = 0;
                 for (int x = 2; x < 4; x++)
                 {
-                    for (int y = -5; y > 0; y++)
+                    for (int y = 5; y > 0; y--)
                     {
-                        int TileX = CheckX + x * npc.direction, TileY = CheckY + y;
+                        int TileX = CheckX + x * npc.direction, TileY = CheckY - y;
                         Tile tile = Main.tile[TileX, TileY];
                         if (tile != null)
                         {
@@ -145,16 +152,29 @@ namespace giantsummon.Npcs
                     }
                 }
             }
+            Idle = Walk = TalkTimes != 3;
             base.AI();
         }
 
         public override string GetChat()
         {
+            PlayerMetCille = PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
             switch (TalkTimes)
             {
                 case 0:
-                    return "*...Go away..*";
+                    if (PlayerMetCille)
+                        return "*I remember you.. You're that Terrarian.*";
+                    if (MetAtLeastOnce)
+                    {
+                        return "*You again... Please, leave me alone.*";
+                    }
+                    return "*...Go away.. Please...*";
                 case 1:
+                    if (PlayerMetCille)
+                    {
+                        TalkTimes = 8;
+                        return "*You still persist into talking with me..*";
+                    }
                     return "*You again...*";
                 case 2:
                     return "*You really want to talk to me... Right..?*";
@@ -166,6 +186,10 @@ namespace giantsummon.Npcs
                     return "*I never expected someone to win a race against me...*";
                 case 7:
                     return "*I want to be alone now..*";
+                case 8:
+                    return "*Could you leave me alone?*";
+                case 9:
+                    return "*...*";
             }
             return base.GetChat();
         }
@@ -175,11 +199,18 @@ namespace giantsummon.Npcs
             switch (TalkTimes)
             {
                 case 0:
-                    switch (DialogueStep)
+                    if (PlayerMetCille)
                     {
-                        case 0:
-                            button = "Who are you?";
-                            break;
+                        button = "You're here too.";
+                    }
+                    else
+                    {
+                        switch (DialogueStep)
+                        {
+                            case 0:
+                                button = "Who are you?";
+                                break;
+                        }
                     }
                     break;
 
@@ -190,10 +221,10 @@ namespace giantsummon.Npcs
                             button = "Why you're avoiding talking to me?";
                             break;
                         case 1:
-                            button = "You're always this rude to people?";
+                            button = "That's actually really hostile";
                             break;
                         case 2:
-                            button = "Why go away?";
+                            button = "Hurting people? Why?";
                             break;
                     }
                     break;
@@ -228,7 +259,16 @@ namespace giantsummon.Npcs
                         button = "At least give me your name.";
                     }
                     break;
+
+                case 8:
+                    button = "You didn't changed at all..";
+                    break;
             }
+        }
+
+        public override bool CheckActive()
+        {
+            return TalkTimes < 3 || TalkTimes > 6;
         }
 
         public override void OnChatButtonClicked(bool firstButton, ref bool shop)
@@ -241,8 +281,18 @@ namespace giantsummon.Npcs
                         switch (DialogueStep)
                         {
                             case 0:
-                                NewDialogueMessage = "*Nobody. Go away.*";
-                                DialogueStep++;
+                                if (PlayerMetCille)
+                                {
+                                    NewDialogueMessage = "*Yes.. Still, please leave me be.*";
+                                    DialogueStep = 0;
+                                    TalkTimes = 8;
+                                }
+                                else
+                                {
+                                    NewDialogueMessage = "*Nobody. Please, go away..*";
+                                    DialogueStep++;
+                                }
+                                MetAtLeastOnce = true;
                                 break;
                         }
                     }
@@ -252,15 +302,15 @@ namespace giantsummon.Npcs
                         switch (DialogueStep)
                         {
                             case 0:
-                                NewDialogueMessage = "*Doesn't matter, go away.*";
+                                NewDialogueMessage = "*...Because I might hurt you..*";
                                 DialogueStep++;
                                 break;
                             case 1:
-                                NewDialogueMessage = "*Only when they ignore me when I tell them to go away.*";
+                                NewDialogueMessage = "*No... It's not that... I tend to end up hurting people I'm close to...*";
                                 DialogueStep++;
                                 break;
                             case 2:
-                                NewDialogueMessage = "*I really don't want to talk to you.*";
+                                NewDialogueMessage = "*I really don't want to talk to you.. Please, leave me alone.*";
                                 DialogueStep++;
                                 break;
                         }
@@ -271,17 +321,17 @@ namespace giantsummon.Npcs
                         switch (DialogueStep)
                         {
                             case 0:
-                                NewDialogueMessage = "*Sigh... Okay. What about this. I really miss racing against someone. Could you beat me on a race?*";
+                                NewDialogueMessage = "*Okay. What about this. I really miss racing against someone. Could you beat me on a race?*";
                                 DialogueStep++;
                                 break;
                             case 1:
                                 if (firstButton)
                                 {
-                                    NewDialogueMessage = "*It's really simple. If you run ahead of me enough time so I can't catch you up, you win. I win if I manage to do that too. What do you say?*";
+                                    NewDialogueMessage = "*It's really simple. If you run ahead of me enough time so I can't catch up, you win. I win if I manage to do that to you. What do you say?*";
                                 }
                                 else
                                 {
-                                    NewDialogueMessage = "*Back then, I used to love racing against other people.. It's just a simple race, if you manage to run ahead of me enough so I can't catch up, you win. The same is also valid if I do the same to you. Would you race against me?*";
+                                    NewDialogueMessage = "*Back then, I used to love racing against other people.. It's just a simple race, if you manage to run ahead of me enough so I can't catch up, you win. I win if I do the that to you. Would you race against me?*";
                                 }
                                 DialogueStep++;
                                 break;
@@ -292,6 +342,11 @@ namespace giantsummon.Npcs
                                     DialogueStep = 0;
                                     RaceStartDelay = 3 * 60;
                                     NewDialogueMessage = "*Once you stop talking to me, I'll start the race in 3 seconds.*";
+                                }
+                                else
+                                {
+                                    NewDialogueMessage = "*Then leave me alone.*";
+                                    DialogueStep++;
                                 }
                                 break;
                         }
@@ -304,7 +359,7 @@ namespace giantsummon.Npcs
                             case 0:
                                 {
                                     DialogueStep++;
-                                    NewDialogueMessage = "*No. Please, leave me be.*";
+                                    NewDialogueMessage = "*No. Please, leave me alone.*";
                                     NpcMod.AddGuardianMet(GuardianID, GuardianModID);
                                     TalkTimes = 7;
                                     PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
@@ -320,15 +375,58 @@ namespace giantsummon.Npcs
                             case 0:
                                 {
                                     DialogueStep++;
-                                    NewDialogueMessage = "*Cille... Now go.*";
+                                    NewDialogueMessage = "*Cille...*";
                                 }
                                 break;
                         }
                     }
                     break;
+                case 8:
+                    {
+                        NpcMod.AddGuardianMet(GuardianID, GuardianModID);
+                        TalkTimes = 9;
+                        Main.npcChatText = "*... Sorry... Bad things happens to people I'm close to..*";
+                        WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
+                    }
+                    break;
             }
             if (NewDialogueMessage != null)
                 Main.npcChatText = NewDialogueMessage;
+        }
+
+        public override void ModifyDrawDatas(List<GuardianDrawData> dds, Vector2 Position, Rectangle BodyRect, Rectangle LArmRect, Rectangle RArmRect, Vector2 Origin, Color color, SpriteEffects seffects)
+        {
+            GuardianDrawData outfitbody = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Base.sprites.GetExtraTexture(Companions.CilleBase.DefaultOutfitBodyID),
+                Position, BodyRect, color, npc.rotation, Origin, npc.scale, seffects);
+            GuardianDrawData outfitleftarm = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Base.sprites.GetExtraTexture(Companions.CilleBase.DefaultOutfitLeftArmID),
+                Position, LArmRect, color, npc.rotation, Origin, npc.scale, seffects);
+            GuardianDrawData outfitrightarm = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Base.sprites.GetExtraTexture(Companions.CilleBase.DefaultOutfitRightArmID),
+                Position, RArmRect, color, npc.rotation, Origin, npc.scale, seffects);
+            for(int i = dds.Count - 1; i >= 0; i--)
+            {
+                switch (dds[i].textureType)
+                {
+                    case GuardianDrawData.TextureType.TGLeftArm:
+                        dds.Insert(i + 1, outfitleftarm);
+                        break;
+                    case GuardianDrawData.TextureType.TGRightArm:
+                        dds.Insert(i + 1, outfitrightarm);
+                        break;
+                    case GuardianDrawData.TextureType.TGBody:
+                        dds.Insert(i + 1, outfitbody);
+                        break;
+                }
+            }
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if(!spawnInfo.playerInTown && Main.dayTime && !Main.eclipse && !NpcMod.HasMetGuardian(GuardianID,GuardianModID) && 
+                !NpcMod.HasGuardianNPC(GuardianID, GuardianModID) && !NPC.AnyNPCs(ModContent.NPCType<CilleNPC>()) && Main.moonPhase > 3)
+            {
+                return 1f / 200;
+            }
+            return 0;
         }
     }
 }

@@ -234,6 +234,7 @@ namespace giantsummon
                     tg.Update();
                 }
             }
+            GuardianSpawningScripts.CilleSpawningScripts();
         }
 
         public static void CheckIfSomeoneCanVisit()

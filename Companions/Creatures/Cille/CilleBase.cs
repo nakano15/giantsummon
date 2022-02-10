@@ -12,7 +12,7 @@ namespace giantsummon.Companions
     {
         public const string DefaultOutfitBodyID = "default_o_body", DefaultOutfitBodyFrontID = "default_o_bodyfront", DefaultOutfitLeftArmID = "default_o_left", DefaultOutfitRightArmID = "default_o_right";
         public const string MurderFaceID = "murderface";
-        public const int DefaultOutfitID = 1;
+        public const int DefaultOutfitID = 0, NoOutfitID  = 1;
         public const int BeastStateID = 0;
 
         public CilleBase()
@@ -101,7 +101,7 @@ namespace giantsummon.Companions
             HeadVanityPosition.DefaultCoordinate2x = new Point(24, 11);
             HeadVanityPosition.AddFramePoint2x(18, 30, 18);
 
-            AddOutfit(DefaultOutfitID, "Bad Outfit", delegate (GuardianData gd, Player player) { return true; });
+            AddOutfit(NoOutfitID, "No Outfit", delegate (GuardianData gd, Player player) { return true; });
         }
 
         public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
@@ -231,23 +231,24 @@ namespace giantsummon.Companions
                 Mes.Add("(She seems to be telling someone to stop. Did she say her own name?)");
                 Mes.Add("(You see tears falling from her eyes.)");
             }
-            else if (guardian.FriendshipLevel < FriendsLevel)
+            else if (!guardian.IsStarter && guardian.FriendshipLevel < FriendsLevel)
             {
                 Mes.Add("*Leave me alone...*");
                 if(guardian.FriendshipLevel > 0)
                     Mes.Add("*You returned...*");
-                Mes.Add("*Don't come closer..*");
-                Mes.Add("*Stay away..*");
+                Mes.Add("*Don't stay around me. It's for your own safety.*");
+                Mes.Add("*Please... Stay away..*");
                 Mes.Add("*I hurt someone in the past... I didn't wanted to.. But I couldn't stop.. Please... Leave me alone..*");
-                Mes.Add("*I'm nobody.. Go away..*");
+                Mes.Add("*I'm nobody.. Go away, please..*");
                 if (!Main.dayTime)
                 {
                     Mes.Add("*You... Avoid the dark around me..*");
+                    Mes.Add("*For your safety, please don't stay near me..*");
                 }
             }
             else
             {
-                if (Main.bloodMoon)
+                if (Main.bloodMoon || TriggerBeastState(guardian))
                 {
                     Mes.Add("*Grr!! Rawr!!*");
                     Mes.Add("*Arrgh!! Grrr!! Rrr!!*");

@@ -15232,8 +15232,7 @@ namespace giantsummon
                     }
                     else if (Velocity.X != 0 && (!HasFlag(GuardianFlags.WindPushed) || (MoveLeft == true || MoveRight == true)))
                     {
-                        float MaxAnimationTime = Base.MaxWalkSpeedTime;
-                        MaxAnimationTime *= Scale;
+                        float MaxAnimationTime = Base.MaxWalkSpeedTime * Scale;
                         float SpeedX = Math.Abs(Velocity.X);
                         if (WalkMode)
                             SpeedX *= 3;

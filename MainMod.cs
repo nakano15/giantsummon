@@ -1168,7 +1168,7 @@ namespace giantsummon
             {
                 if (!InterfacesSetup)
                 {
-                    gi = new LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, Terraria.UI.InterfaceScaleType.UI);
+                    gi = new LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, InterfaceScaleType.UI);
                     downedInterface = new LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
                     dgi = new LegacyGameInterfaceLayer("Terra Guardians: Inventory Interface", DrawGuardianInventoryInterface, InterfaceScaleType.UI);
                     hsi = new LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, InterfaceScaleType.UI);
@@ -1493,10 +1493,12 @@ namespace giantsummon
             if(true)
             {
                 List<string> New = new List<string>();
-                foreach(GuardianID id in WorldMod.ScheduledVisits)
+                /*foreach(GuardianID id in WorldMod.ScheduledVisits)
                 {
                     New.Add(id.ToString());
-                }
+                }*/
+                New.Add("Player Position X: " + (int)(Main.player[Main.myPlayer].Center.X * (1f / 16)) + "  Y: " + (int)(Main.player[Main.myPlayer].Center.Y * (1f / 16)));
+                New.Add("Cille House Position X: " + GuardianSpawningScripts.CilleShelterX + "  Y: " + GuardianSpawningScripts.CilleShelterY);
                 /*foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;

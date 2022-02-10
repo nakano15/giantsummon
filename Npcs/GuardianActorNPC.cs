@@ -28,6 +28,7 @@ namespace giantsummon.Npcs
         public int MessageTime = 0;
         public bool FlipVertically = false;
         public bool MoveLeft = false, MoveRight = false, DropFromPlatform = false, Action = false, Jump = false, Walk = false, Dash = false, Idle = false;
+        private bool IsWalking = false;
         public GuardianBase Base
         {
             get
@@ -263,6 +264,7 @@ namespace giantsummon.Npcs
                 if (JumpTime != 0)
                     JumpTime = 0;
             }
+            IsWalking = Walk;
             MoveLeft = MoveRight = DropFromPlatform = Jump = Action = Dash = Walk = Idle = false;
             Collision.StepUp(ref npc.position, ref npc.velocity, npc.width, npc.height, ref npc.stepSpeed, ref npc.gfxOffY);
             Vector4 SlopedCollision = Collision.SlopeCollision(npc.position, npc.velocity, npc.width, npc.height, 1f, false);
@@ -300,7 +302,7 @@ namespace giantsummon.Npcs
             {
                 float MaxTime = Base.MaxWalkSpeedTime * npc.scale;
                 float AnimationSpeed = Math.Abs(npc.velocity.X);
-                if (Walk)
+                if (IsWalking)
                     AnimationSpeed *= 3;
                 if ((npc.velocity.X > 0 && npc.direction < 0) || (npc.velocity.X < 0 && npc.direction > 0))
                 {

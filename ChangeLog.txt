@@ -5,3 +5,4 @@ Fixed an issue where companions following and combat AI were clashing with each 
 	They should now behave better on combat.
 Changed where some scripts run when they need to be run when dropping npc loot.
 	That might fix a issue where mods could impossibilitate progressing on quests.
+Fixed animation speed issue with walking companions recruit npcs.
