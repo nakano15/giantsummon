@@ -369,6 +369,11 @@ namespace giantsummon.Companions
                 Mes.Add("*I really don't like [gn:"+Green+"]. Everytime I visit him he gives me some diet. Do I look fat, to you?*");
                 Mes.Add("*I was expecting to get vitamins from [gn:"+Green+"], not a diet! Hmph...*");
             }
+            if (NpcMod.HasGuardianNPC(Cille))
+            {
+                Mes.Add("*I really don't like [gn:" + Cille + "]. I was all happy, gave her a 'hi', and she told me to 'go away'! Why she had to be so rude?*");
+                Mes.Add("*What kind of clothing [gn:" + Cille + "] uses? Is that the kind of thing you Terrarians use?*");
+            }
             if (guardian.KnockedOut)
             {
                 Mes.Clear();

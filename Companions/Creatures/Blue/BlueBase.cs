@@ -665,8 +665,13 @@ namespace giantsummon.Companions
             }
             if (NpcMod.HasGuardianNPC(Luna))
             {
-                Mes.Add("*I'm so happy to have [gn:"+Luna+"] around. She has so many good points.*");
-                Mes.Add("*Sometimes, [gn:"+Luna+"] and I compare whose fur has better texture.*");
+                Mes.Add("*I'm so happy to have [gn:" + Luna + "] around. She has so many good points.*");
+                Mes.Add("*Sometimes, [gn:" + Luna + "] and I compare whose fur has better texture.*");
+            }
+            if (NpcMod.HasGuardianNPC(Cille))
+            {
+                Mes.Add("*I greeted [gn:" + Cille + "] the other day, but she told me to go away.*");
+                Mes.Add("*There is something wrong with [gn:" + Cille + "], I visited her some night, and she attacked me! Then the other day, she was back to being the shy person we know. What is wrong with her?*");
             }
             if (guardian.IsUsingToilet)
             {

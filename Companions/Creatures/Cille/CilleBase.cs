@@ -136,7 +136,7 @@ namespace giantsummon.Companions
                             BodyFrontTexture = sprites.GetExtraTexture(DefaultOutfitBodyFrontID);
                         GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, OutfitTexture, DrawPosition, guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame), color, Rotation, Origin, Scale, seffect);
                         InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
-                        if (guardian.BodyAnimationFrame == SittingFrame)
+                        if (guardian.Base.BodyFrontFrameSwap.ContainsKey(guardian.BodyAnimationFrame))
                         {
                             gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, BodyFrontTexture, DrawPosition, guardian.GetAnimationFrameRectangle(BodyFrontFrameSwap[guardian.BodyAnimationFrame]), color, Rotation, Origin, Scale, seffect);
                             InjectTextureAfter(GuardianDrawData.TextureType.TGBodyFront, gdd);
@@ -231,14 +231,24 @@ namespace giantsummon.Companions
                 Mes.Add("(She seems to be telling someone to stop. Did she say her own name?)");
                 Mes.Add("(You see tears falling from her eyes.)");
             }
+            else if (Main.bloodMoon || TriggerBeastState(guardian))
+            {
+                if (guardian.IsPlayerBuddy(player))
+                {
+                    Mes.Add("*Grrr.... Rrrr....*");
+                    Mes.Add("*Rrrr.... Purrr... Rrr...*");
+                }
+                Mes.Add("*Grr!! Rawr!!*");
+                Mes.Add("*Arrgh!! Grrr!! Rrr!!*");
+            }
             else if (!guardian.IsStarter && guardian.FriendshipLevel < FriendsLevel)
             {
-                Mes.Add("*Leave me alone...*");
-                if(guardian.FriendshipLevel > 0)
-                    Mes.Add("*You returned...*");
+                Mes.Add("*Leave me alone... Please...*");
+                if (guardian.FriendshipLevel > 0)
+                    Mes.Add("*You returned..*");
                 Mes.Add("*Don't stay around me. It's for your own safety.*");
-                Mes.Add("*Please... Stay away..*");
-                Mes.Add("*I hurt someone in the past... I didn't wanted to.. But I couldn't stop.. Please... Leave me alone..*");
+                Mes.Add("*Please, stay away from me..*");
+                Mes.Add("*I hurt someone in the past... I don't know how.. I couldn't stop either.. Please... Leave me alone..*");
                 Mes.Add("*I'm nobody.. Go away, please..*");
                 if (!Main.dayTime)
                 {
@@ -248,45 +258,38 @@ namespace giantsummon.Companions
             }
             else
             {
-                if (Main.bloodMoon || TriggerBeastState(guardian))
+                Mes.Add("*I wonder how are things back home...*");
+                Mes.Add("*You always came back to see me... Thank you..*");
+                Mes.Add("*You came to see me?*");
+                Mes.Add("*It's not that I don't like people... It's just... Safer for us if we don't stay close.*");
+                Mes.Add("*...*");
+                if (Main.dayTime)
                 {
-                    Mes.Add("*Grr!! Rawr!!*");
-                    Mes.Add("*Arrgh!! Grrr!! Rrr!!*");
+                    Mes.Add("*Are you finding it weird that I only eat fruits and bugs? Sorry, I'm avoiding touching meat.*");
+                    if (!Main.raining)
+                    {
+                        Mes.Add("*It seems like a good day for running.*");
+                        Mes.Add("*Do you want to race against me, [nickname]?*");
+                    }
+                    else
+                        Mes.Add("*Aww... It's raining..*");
+                    Mes.Add("*I think I can talk, while it's still daytime.*");
                 }
                 else
                 {
-                    Mes.Add("*You always came back to see me... Thank you..*");
-                    Mes.Add("*You came to see me?*");
-                    Mes.Add("*It's not that I don't like people... It's just... Safer for us if we don't stay close.*");
-                    Mes.Add("*...*");
-                    if (Main.dayTime)
-                    {
-                        Mes.Add("*Are you finding it weird that I only eat fruits and bugs? Sorry, I'm avoiding touching meat.*");
-                        if (!Main.raining)
-                        {
-                            Mes.Add("*It seems like a good day for running.*");
-                            Mes.Add("*Do you want to race against me, [nickname]?*");
-                        }
-                        else
-                            Mes.Add("*Aww... It's raining..*");
-                        Mes.Add("*I think I can talk, while it's still daytime.*");
-                    }
-                    else
-                    {
-                        Mes.Add("*Feeling tired..? Go home get some sleep.*");
-                        Mes.Add("*I can't forget that night... What night? Forget that I said that.*");
-                    }
-                    if (guardian.IsPlayerRoomMate(player))
-                    {
-                        Mes.Add("*I don't like the idea of sharing a room with you. What if I...*");
-                    }
-                    if (guardian.IsUsingToilet)
-                    {
-                        Mes.Clear();
-                        Mes.Add("*Is it really necessary of you to speak with me right now?*");
-                        Mes.Add("*You're distracting me right now. Please, go away.*");
-                        Mes.Add("*I can talk to you any other time than this.*");
-                    }
+                    Mes.Add("*Feeling tired..? Go home get some sleep.*");
+                    Mes.Add("*I can't forget that night... What night? Forget that I said that.*");
+                }
+                if (guardian.IsPlayerRoomMate(player))
+                {
+                    Mes.Add("*I don't like the idea of sharing a room with you. What if I...*");
+                }
+                if (guardian.IsUsingToilet)
+                {
+                    Mes.Clear();
+                    Mes.Add("*Is it really necessary of you to speak with me right now?*");
+                    Mes.Add("*You're distracting me right now. Please, go away.*");
+                    Mes.Add("*I can talk to you any other time than this.*");
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];
@@ -374,7 +377,7 @@ namespace giantsummon.Companions
 
         public static bool TriggerBeastState(TerraGuardian tg)
         {
-            return !Main.dayTime && Main.moonPhase == 3 && tg.Position.X < Main.worldSurface * 16;
+            return !Main.dayTime && Main.moonPhase == 4 && tg.Position.X < Main.worldSurface * 16;
         }
 
         public override string GetSpecialMessage(string MessageID)
@@ -391,9 +394,9 @@ namespace giantsummon.Companions
                     return "*You woke me up. Is it about my request?*";
                 //
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
-                    return "*I can join you, just please run away if I act strange.*";
+                    return "*I can join you, just please run away if I begin acting strange.*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
-                    return "*There's too many people.*";
+                    return "*There's too many people...*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
                     return "*No... Leave me here.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:

@@ -227,7 +227,11 @@ namespace giantsummon.Companions
                 {
                     Mes.Add("*It seems like I managed to get into some synergy with [gn:" + Miguel + "]'s work. He gives exercises to people, while I help with their nutrition.*");
                 }
-                if(FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
+                if (NpcMod.HasGuardianNPC(Cille))
+                {
+                    Mes.Add("*Ah, good that you came. Your friend [gn:" + Cille + "] has visited me earlier. She said that had something wrong with her, but I did a checkup, and I didn't found anything wrong.*");
+                }
+                if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
                 {
                     Mes.Clear();
                     Mes.Add("*Uh, [nickname]... There is a ghost on your shoulder.*");

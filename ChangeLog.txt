@@ -6,3 +6,9 @@ Fixed an issue where companions following and combat AI were clashing with each 
 Changed where some scripts run when they need to be run when dropping npc loot.
 	That might fix a issue where mods could impossibilitate progressing on quests.
 Fixed animation speed issue with walking companions recruit npcs.
+Irene's tombstone will no longer spawn in evil biomes, or anywhere with dungeon blocks.
+	It will also not spawn where has a background wall. That should stop it from being placed in caves.
+Cille arrives!
+	Also the first companion to come with clothes.
+Irene's tombstone generation can still happen while in-game.
+	It's done that way in case the game fails at generating it during world creation.

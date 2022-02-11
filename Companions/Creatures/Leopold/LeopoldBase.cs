@@ -341,7 +341,12 @@ namespace giantsummon.Companions
             }
             if (NpcMod.HasGuardianNPC(Green))
             {
-                Mes.Add("*I had to help [gn:"+Green+"] by borrowing some terrarian anathomy books to him.*");
+                Mes.Add("*I had to help [gn:" + Green + "] by borrowing some terrarian anathomy books to him.*");
+            }
+            if (NpcMod.HasGuardianNPC(Cille))
+            {
+                Mes.Add("*[gn:" + Cille + "] seems to avoid contact with anyone. I wonder, why?*");
+                Mes.Add("*I think I saw [gn:" + Cille + "] around my house during a New Moon Night. Well, at least I think It was [gn:"+Cille+"], since I only saw a shadow like her.*");
             }
             if (guardian.IsUsingToilet)
             {

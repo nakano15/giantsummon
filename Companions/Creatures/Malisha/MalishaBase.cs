@@ -444,7 +444,7 @@ namespace giantsummon.Companions
             }
             if (NpcMod.HasGuardianNPC(Green))
             {
-                Mes.Add("*Having [gn:"+Green+"] around is really useful for me. At least I have infinite supply of a something...*");
+                Mes.Add("*Having [gn:"+Green+"] around is really useful for me. At least I have infinite supply of... Nevermind, you don't need to know.*");
             }
 
             if (guardian.IsUsingToilet)

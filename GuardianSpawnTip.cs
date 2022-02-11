@@ -154,6 +154,22 @@ namespace giantsummon
                         break;
                 }
             }
+            if (!HasMetGuardian(GuardianBase.Cille))
+            {
+                if(Npcs.CilleNPC.CanSpawn())
+                    Messages.Add("*There is a Cheetah TerraGuardian wandering around this world. She kind of have a horrible sense of fashion, and refuses to talk to anyone. Maybe you can check out what's with her. She's never seen during New Moon or Full Moon days.*");
+            }
+            else
+            {
+                if(GuardianSpawningScripts.CilleShelterX == -1)
+                {
+                    Messages.Add("*I didn't heard anymore about that Cheetah TerraGuardian you met some time ago.*");
+                }
+                else
+                {
+                    Messages.Add("*It seems like that Cheetah TerraGuardian is living "+(GuardianSpawningScripts.CilleShelterX * 16 - Main.player[Main.myPlayer].Center.X < 0 ? "west" : "east")+" of here.*");
+                }
+            }
             if (Messages.Count == 0)
                 return "*I didn't heard about anything latelly.*";
             return Messages[Main.rand.Next(Messages.Count)];

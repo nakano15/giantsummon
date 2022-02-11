@@ -536,7 +536,13 @@ namespace giantsummon.Companions
                 Mes.Add("*[gn:" + Miguel + "] is a good addition to your world. I can strain my muscles and get even stronger for my job.*");
                 Mes.Add("*[gn:" + Miguel + "] thought he could beat me on arm wrestling. Hahaha.*");
             }
-            if (guardian.IsUsingToilet)
+            if (NpcMod.HasGuardianNPC(Cille))
+            {
+                Mes.Add("*I'm really interessed in offering my bodyguard job to [gn:" + Cille + "], but she always tells me to leave her alone.*");
+                Mes.Add("*If you manage to make [gn:" + Cille + "] open up, please come tell me how you did that.*");
+                Mes.Add("*I've been hearing rummors of [gn:" + Cille + "] attacking people, but I can't believe she would do such a thing.*");
+            }
+                if (guardian.IsUsingToilet)
             {
                 Mes.Add("*I have to say, the way I'm sitting, is easier for me to do this. But... Do you really have to keep staring at me?*");
                 Mes.Add("*I wonder how many times I will have to flush this thing.*");

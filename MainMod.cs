@@ -55,9 +55,9 @@ namespace giantsummon
             }
         }
         //End contest related
-        public const int ModVersion = 101, LastModVersion = 101;
+        public const int ModVersion = 102, LastModVersion = 101;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1385,7 +1385,7 @@ namespace giantsummon
                 BarSize = 0f;
             //
             float MaxBarsize = Main.screenHeight * 0.25f;
-            int BarDimY = (int)((1f - BarSize) * MaxBarsize);
+            float BarDimY = (1f - BarSize) * MaxBarsize;
             if (playerMod.RescueWakingUp)
                 BarSize = 0;
             Color ClosingBarsColor = playerMod.KnockedOutCold || playerMod.RescueWakingUp ? new Color(0, 0, 0, (int)(255 * (1f - BarSize))) : new Color((byte)(128 * (1f - BarSize)), 0, 0, (int)(255 * (1f - BarSize)));
@@ -1394,10 +1394,10 @@ namespace giantsummon
                 ClosingBar2EffectPercentage = 1f;
             if (playerMod.RescueWakingUp)
                 ClosingBar2EffectPercentage = 1f;
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, BarDimY), ClosingBarsColor);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, BarDimY, Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY * 2), Main.screenWidth, BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
-            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY), Main.screenWidth, BarDimY), ClosingBarsColor);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, (int)BarDimY), ClosingBarsColor);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)BarDimY, Main.screenWidth, (int)BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY * 2), Main.screenWidth, (int)BarDimY), ClosingBarsColor * ClosingBar2EffectPercentage);
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, (int)(Main.screenHeight - BarDimY), Main.screenWidth, (int)BarDimY), ClosingBarsColor);
             //
             if (!Main.player[Main.myPlayer].dead && (!playerMod.KnockedOutCold || Main.player[Main.myPlayer].statLife > 1))
             {
@@ -1425,7 +1425,7 @@ namespace giantsummon
                 Utils.DrawBorderStringBig(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f), Color.OrangeRed, 1f, 0.5f, 0.5f);
                 if (playerMod.KnockedOutCold)
                 {
-                    Text = (MainMod.PlayersDontDiesAfterDownedDefeat && !DoNotUseRescue ? "Hold '" + Main.cHook + "' to call for help." : "Hold '" + Main.cHook + "' to give up.");
+                    Text = (PlayersDontDiesAfterDownedDefeat && !DoNotUseRescue ? "Hold '" + Main.cHook + "' to call for help." : "Hold '" + Main.cHook + "' to give up.");
                     Utils.DrawBorderString(Main.spriteBatch, Text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.75f + 28), Color.OrangeRed, 1f, 0.5f, 0.5f);
                     if (playerMod.RescueTime > 0)
                     {
@@ -1499,6 +1499,7 @@ namespace giantsummon
                 }*/
                 New.Add("Player Position X: " + (int)(Main.player[Main.myPlayer].Center.X * (1f / 16)) + "  Y: " + (int)(Main.player[Main.myPlayer].Center.Y * (1f / 16)));
                 New.Add("Cille House Position X: " + GuardianSpawningScripts.CilleShelterX + "  Y: " + GuardianSpawningScripts.CilleShelterY);
+                New.Add("Irene's Tombstone Position X: " + AlexRecruitScripts.TombstoneTileX + "  Y: " + AlexRecruitScripts.TombstoneTileY);
                 /*foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;

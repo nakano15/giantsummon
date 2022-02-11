@@ -187,7 +187,7 @@ namespace giantsummon
             }
             if (Main.time == 0)
             {
-                AlexRecruitScripts.CheckIfAlexIsInTheWorld();
+                AlexRecruitScripts.UpdateTombstoneScript();
                 Companions.MinervaBase.AllowGettingMoreFoodFromMinerva();
                 Companions.MiguelBase.RefreshExercisesOfAllPlayers();
                 if (Math.Abs(TimeParser - LastTime) < 30f)
@@ -418,6 +418,7 @@ namespace giantsummon
 
         public override void Initialize()
         {
+            GuardianSpawningScripts.CilleShelterX = GuardianSpawningScripts.CilleShelterY = -1;
             ScheduledVisits.Clear();
             GuardianBountyQuest.Initialize();
             Npcs.LiebreNPC.EncounterTimes = 0;
@@ -488,9 +489,9 @@ namespace giantsummon
                 }
                 SpawnGuardian = Starters.ToArray();
             }));
-            tasks.Add(new PassLegacy("Spawning Tombstone.", delegate (GenerationProgress progress)
+            tasks.Add(new PassLegacy("Trying to place Tombstone.", delegate (GenerationProgress progress)
             {
-                AlexRecruitScripts.TrySpawningTombstone(progress);
+                AlexRecruitScripts.TryGeneratingIreneTombstone();
             }));
         }
 
@@ -541,6 +542,8 @@ namespace giantsummon
             tag.Add("DominoDismissed", Npcs.DominoNPC.DominoDismissed);
             tag.Add("GhostFoxHauntLifted", Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted);
             tag.Add("LiebreEncounterTimes", Npcs.LiebreNPC.EncounterTimes);
+            tag.Add("CilleHouseX", GuardianSpawningScripts.CilleShelterX);
+            tag.Add("CilleHouseY", GuardianSpawningScripts.CilleShelterY);
             GuardianShopHandler.SaveShops(tag);
             GuardianGlobalInfos.SaveGlobalInfos();
             GuardianGlobalInfos.SaveFeats();
@@ -678,6 +681,11 @@ namespace giantsummon
                 Npcs.GhostFoxGuardianNPC.GhostFoxHauntLifted = tag.GetBool("GhostFoxHauntLifted");
             if (Version >= 100)
                 Npcs.LiebreNPC.EncounterTimes = tag.GetByte("LiebreEncounterTimes");
+            if(Version >= 102)
+            {
+                GuardianSpawningScripts.CilleShelterX = tag.GetInt("CilleHouseX");
+                GuardianSpawningScripts.CilleShelterY = tag.GetInt("CilleHouseY");
+            }
             if (Version >= 74)
                 GuardianShopHandler.LoadShops(tag, Version);
             foreach (GuardianTownNpcState tns in GuardianNPCsInWorld)
@@ -979,9 +987,9 @@ namespace giantsummon
             return false;
         }
 
-        public static void TrySpawningOrMovingGuardianNPC(int GuardianID, string ModID, int X, int Y)
+        public static void TrySpawningOrMovingGuardianNPC(int GuardianID, string ModID, int X, int Y, bool Force = false, bool Silent = false)
         {
-            if (!Main.wallHouse[Main.tile[X, Y].wall] || !WorldGen.StartRoomCheck(X, Y))
+            if (Main.tile[X, Y] == null || !Main.wallHouse[Main.tile[X, Y].wall] || !WorldGen.StartRoomCheck(X, Y))
                 return;
             GuardianBase gb = GuardianBase.GetGuardianBase(GuardianID, ModID);
             if (!Housing_IsRoomTallEnoughForGuardian(gb))
@@ -992,7 +1000,7 @@ namespace giantsummon
                 return;
             }
             if (Housing_IsRoomCrowded(gb)) return;
-            if (!HasCompanionMetSomeoneWithHighFriendshipLevel(GuardianID, ModID))
+            if (!Force && !HasCompanionMetSomeoneWithHighFriendshipLevel(GuardianID, ModID))
                 return;
             bool IsInTheWorld = false;
             for (int npc = 0; npc < GuardianTownNPC.Count; npc++)
@@ -1088,13 +1096,14 @@ namespace giantsummon
                 }
             }
             bool SpawnGuardian = guardian == null;
-            if (guardian == null)
+            if (SpawnGuardian)
             {
                 guardian = new TerraGuardian(GuardianID, ModID); //Probably is somewhere in the script, but I had a swarm of Rococos in my test town. Seems to happen when you have a companion following you, and It's trying to settle in.
                 guardian.Active = true;
                 guardian.Spawn();
                 guardian.Position.X = SpawnX * 16;
                 guardian.Position.Y = (SpawnY - 2) * 16;
+                guardian.SetFallStart();
             }
             if (!IsGuardianNpcInWorld(GuardianID, ModID))
             {
@@ -1102,19 +1111,25 @@ namespace giantsummon
             }
             guardian.TryFindingTownNpcInfo();
             GuardianTownNpcState npcstate = guardian.GetTownNpcInfo;
-            npcstate.HomeX = SpawnXBackup;
-            npcstate.HomeY = SpawnYBackup;
-            npcstate.Homeless = false;
-            npcstate.ValidateHouse();
-            string Message = guardian.Name + (SpawnGuardian ? " arrives." : " settles in your world.");
-            Color color = (guardian.Base.Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
-            if (Main.netMode == 0)
+            if (npcstate != null)
             {
-                Main.NewText(Message, color);
-            }
-            else if (Main.netMode == 2)
-            {
-                NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Message), color.R, color.G, color.B, color.A);
+                npcstate.HomeX = SpawnXBackup;
+                npcstate.HomeY = SpawnYBackup;
+                npcstate.Homeless = false;
+                npcstate.ValidateHouse();
+                if (!Silent)
+                {
+                    string Message = guardian.Name + (SpawnGuardian ? " arrives." : " settles in your world.");
+                    Color color = (guardian.Base.Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
+                    if (Main.netMode == 0)
+                    {
+                        Main.NewText(Message, color);
+                    }
+                    else if (Main.netMode == 2)
+                    {
+                        NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Message), color.R, color.G, color.B, color.A);
+                    }
+                }
             }
         }
 

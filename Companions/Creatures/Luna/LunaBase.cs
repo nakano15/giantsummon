@@ -381,6 +381,11 @@ namespace giantsummon.Companions
                     {
                         Mes.Add("*Beside [gn:"+Green+"] has a menacing face, he's actually a good doctor. Visit him whenever you feel sick or hurt.*");
                     }
+                    if (NpcMod.HasGuardianNPC(Cille))
+                    {
+                        Mes.Add("*I tried visitting [gn:"+Cille+"], but she always refuses my company. I even tried to make her cheer up. Beside she giggled a bit, she turned cold later, and told me to go away.*");
+                        Mes.Add("*The other day I was lunching, until I noticed [gn:" + Cille + "] watching. I offered some to her, and she quickly gobbled up my food. I think she must have been really hungry.*");
+                    }
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];

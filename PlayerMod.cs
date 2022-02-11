@@ -2652,6 +2652,7 @@ namespace giantsummon
                         if (WorldMod.GuardianTownNPC[gn].ID == MyGuardians[Id].ID && WorldMod.GuardianTownNPC[gn].ModID == MyGuardians[Id].ModID)
                         {
                             guardian = WorldMod.GuardianTownNPC[gn];
+                            guardian.Data = MyGuardians[Id];
                             HasTownNpc = true;
                             break;
                         }

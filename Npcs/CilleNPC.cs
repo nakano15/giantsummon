@@ -385,7 +385,7 @@ namespace giantsummon.Npcs
                     {
                         NpcMod.AddGuardianMet(GuardianID, GuardianModID);
                         TalkTimes = 9;
-                        Main.npcChatText = "*... Sorry... Bad things happens to people I'm close to..*";
+                        Main.npcChatText = "*... Sorry... You're not safe while close to me..*";
                         WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianID, GuardianModID);
                     }
                     break;
@@ -419,10 +419,25 @@ namespace giantsummon.Npcs
             }
         }
 
+        public static bool CanSpawn()
+        {
+            bool PlayerWithAtLeastOneLifeCrystal = false;
+            for(int i = 0; i < 255; i++)
+            {
+                if(Main.player[i].active && Main.player[i].statLifeMax > 100)
+                {
+                    PlayerWithAtLeastOneLifeCrystal = true;
+                    break;
+                }
+            }
+            return PlayerWithAtLeastOneLifeCrystal;
+        }
+
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             if(!spawnInfo.playerInTown && Main.dayTime && !Main.eclipse && !NpcMod.HasMetGuardian(GuardianID,GuardianModID) && 
-                !NpcMod.HasGuardianNPC(GuardianID, GuardianModID) && !NPC.AnyNPCs(ModContent.NPCType<CilleNPC>()) && Main.moonPhase > 3)
+                !NpcMod.HasGuardianNPC(GuardianID, GuardianModID) && !NPC.AnyNPCs(ModContent.NPCType<CilleNPC>()) && CanSpawn() &&
+                Main.moonPhase != 0 && Main.moonPhase != 4)
             {
                 return 1f / 200;
             }

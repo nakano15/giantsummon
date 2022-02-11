@@ -1007,7 +1007,12 @@ namespace giantsummon.Companions
             }
             if (NpcMod.HasGuardianNPC(Miguel))
             {
-                Mes.Add("*[gn:"+Miguel+"] keeps making jokes about me, saying that I keep exercising my arms by carrying weight everyday.*");
+                Mes.Add("*[gn:" + Miguel + "] keeps making jokes about me, saying that I keep exercising my arms by carrying weight everyday.*");
+            }
+            if (NpcMod.HasGuardianNPC(Cille))
+            {
+                Mes.Add("*I can see the saddness on [gn:" + Cille + "]'s face. I think she wants friends, but she avoids meeting people.*");
+                Mes.Add("*I want to be friends of [gn:" + Cille + "], but she always asks me to leave.*");
             }
             bool HasSardine = NpcMod.HasGuardianNPC(Sardine), HasBree = NpcMod.HasGuardianNPC(Bree);
             if (HasSardine)

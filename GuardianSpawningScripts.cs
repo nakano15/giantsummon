@@ -11,17 +11,18 @@ namespace giantsummon
     {
         private static readonly char[,] HouseBlueprint = new char[,]
         {
-            { ' ', ' ', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', ' ', ' ' },
-            { ' ', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', ' ' },
-            { 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x' },
-            { ' ', 'x', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'x', ' ' },
-            { ' ', 'x', 'l', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'l', 'x', ' ' },
-            { ' ', 'x', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'x', ' ' },
-            { ' ', 'x', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'x', ' ' },
-            { ' ', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', ' ' },
-            { ' ', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', ' ' },
-            { 'w', 'd', 'w', 'w', 'c', 'w', 'w', 't', 'w', 'w', 'w', 'w', 'w', 'w', 'd', 'w' },
-            { 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x' }
+            { ' ', ' ', ' ', ' ', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', ' ', ' ', ' ', ' ' },
+            { ' ', ' ', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', ' ', ' ' },
+            { 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x' },
+            { ' ', ' ', 'x', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'x', ' ', ' ' },
+            { ' ', ' ', 'x', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'x', ' ', ' ' },
+            { ' ', ' ', 'x', 'l', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'l', 'x', ' ', ' ' },
+            { ' ', ' ', 'x', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'x', ' ', ' ' },
+            { ' ', ' ', 'x', 'w', 'g', 'g', 'g', 'g', 'w', 'w', 'g', 'g', 'g', 'g', 'w', 'x', ' ', ' ' },
+            { ' ', ' ', ' ', 'w', 'g', 'g', 'g', 'g', 'w', 'w', 'v', 'g', 'g', 'g', 'w', ' ', ' ', ' ' },
+            { ' ', ' ', ' ', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', ' ', ' ', ' ' },
+            { ' ', 'w', 'd', 'w', 'w', 'b', 'w', 'w', 'w', 'w', 't', 'w', 'w', 'c', 'w', 'd', 'w', ' ' },
+            { 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x' }
         };
 
         public static int CilleShelterX = -1, CilleShelterY = -1;
@@ -64,13 +65,29 @@ namespace giantsummon
 
         public static void CilleSpawningScripts()
         {
+            const byte CheckDelayTime = 150;
             const int CilleID = GuardianBase.Cille;
             CilleSpawnCheckDelay++;
-            if (CilleSpawnCheckDelay < 60)
+            if (CilleSpawnCheckDelay < CheckDelayTime)
                 return;
-            CilleSpawnCheckDelay -= 60;
-            if (!NpcMod.HasMetGuardian(CilleID))
+            CilleSpawnCheckDelay -= CheckDelayTime;
+            if (Main.rand.Next(7) > 0)
                 return;
+            if (!NpcMod.HasMetGuardian(CilleID) || NPC.AnyNPCs(ModContent.NPCType<Npcs.CilleNPC>()))
+                return;
+            if (NpcMod.HasGuardianNPC(CilleID))
+            {
+                TerraGuardian tg = NpcMod.GetGuardianNPCCharacter(CilleID);
+                if (tg.FriendshipLevel >= tg.Base.MoveInLevel)
+                    return;
+                for(int i = 0; i < 255; i++)
+                {
+                    if(Main.player[i].active && Math.Abs(tg.Position.X - Main.player[i].Center.X) < 2000 && Math.Abs(tg.Position.Y - Main.player[i].Center.Y) < 1600)
+                    {
+                        return;
+                    }
+                }
+            }
             if(CilleShelterX == -1 && CilleShelterY == -1)
             {
                 int Left = (int)(Main.leftWorld * (1f / 16) + 130), Right = (int)(Main.rightWorld * (1f / 16) - 130);
@@ -96,7 +113,7 @@ namespace giantsummon
                 switch (tile.type)
                 {
                     case Terraria.ID.TileID.CorruptGrass:
-                    case Terraria.ID.TileID.EbonstoneBrick:
+                    case Terraria.ID.TileID.Ebonstone:
                     case Terraria.ID.TileID.Ebonsand:
                     case Terraria.ID.TileID.FleshGrass:
                     case Terraria.ID.TileID.Crimtane:
@@ -135,101 +152,31 @@ namespace giantsummon
                 }
                 CilleShelterX = PositionX;
                 CilleShelterY = HouseBottom;
-                Main.NewText("Cille's house spawned at X " + CilleShelterX + "  Y " + CilleShelterY); //Remove after debugging.
+                //Main.NewText("Cille's house spawned at X " + CilleShelterX + "  Y " + CilleShelterY); //Remove after debugging.
                 if (!NpcMod.HasGuardianNPC(CilleID))
                 {
                     NpcMod.SpawnGuardianNPC(PositionX * 16, PositionY * 16, CilleID);
                 }
-                WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY);
-                //TODO - Remove after debugging.
-                CilleShelterY = CilleShelterX = -1;
+                else
+                {
+                    TerraGuardian Cille = NpcMod.GetGuardianNPCCharacter(CilleID);
+                    Cille.Position.X = PositionX * 16;
+                    Cille.Position.Y = PositionY * 16;
+                    Cille.SetFallStart();
+                }
+                WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY, true, true);
             }
             else
             {
                 if (!NpcMod.HasGuardianNPC(CilleID) && !WorldMod.CanGuardianNPCSpawnInTheWorld(CilleID))
                 {
-                    if(Main.dayTime && Main.moonPhase > 3)
+                    if(Main.dayTime && Main.moonPhase != 4)
                     {
-                        WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY);
+                        WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY, true, true);
+                        NpcMod.SpawnGuardianNPC(CilleShelterX * 16, CilleShelterY * 16, CilleID);
                     }
                 }
             }
-            /*if (NpcMod.HasMetGuardian(CilleID) && !NPC.AnyNPCs(ModContent.NPCType<Npcs.CilleNPC>()))
-            {
-                if (!NpcMod.HasGuardianNPC(CilleID)) //Try finding a shelter for cille, and spawning her
-                {
-                    if (WorldMod.HasEmptyGuardianNPCSlot() && TryFindingHomeForCille())
-                    {
-                        NpcMod.SpawnGuardianNPC(CilleShelterX, CilleShelterY, CilleID);
-                        WorldMod.AllowGuardianNPCToSpawn(CilleID);
-                        Main.NewText("Cille has spawned at X: " + CilleShelterX + " Y: " + CilleShelterY);
-                        foreach(WorldMod.GuardianTownNpcState tns in WorldMod.GuardianNPCsInWorld)
-                        {
-                            if (tns != null && tns.CharID.IsSameID(CilleID))
-                            {
-                                CilleTownNpcState = tns;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else //Enforce where she lives
-                {
-                    if(CilleGuardian == null)
-                    {
-                        foreach(TerraGuardian tg in WorldMod.GuardianTownNPC)
-                        {
-                            if (tg.MyID.IsSameID(CilleID))
-                            {
-                                CilleGuardian = tg;
-                                break;
-                            }
-                        }
-                    }
-                    if(CilleTownNpcState != null)
-                    {
-                        if(CilleShelterX == -1 || CilleShelterY == -1)
-                        {
-                            if (!TryFindingHomeForCille())
-                            {
-                                return;
-                            }
-                        }
-                        if (CilleTownNpcState.Homeless)
-                        {
-                            CilleTownNpcState.Homeless = false;
-                            CilleTownNpcState.HomeX = CilleShelterX;
-                            CilleTownNpcState.HomeY = CilleShelterY;
-                        }
-                    }
-                    else
-                    {
-                        foreach (WorldMod.GuardianTownNpcState tns in WorldMod.GuardianNPCsInWorld)
-                        {
-                            if (tns != null && tns.CharID.IsSameID(CilleID))
-                            {
-                                CilleTownNpcState = tns;
-                                break;
-                            }
-                        }
-                        if (CilleTownNpcState == null && CilleGuardian != null && CilleGuardian.FriendshipLevel < CilleGuardian.Base.MoveInLevel && !WorldMod.CanGuardianNPCSpawnInTheWorld(CilleID))
-                        {
-                            if (WorldMod.HasEmptyGuardianNPCSlot() && TryFindingHomeForCille())
-                            {
-                                WorldMod.AllowGuardianNPCToSpawn(CilleID);
-                                foreach (WorldMod.GuardianTownNpcState tns in WorldMod.GuardianNPCsInWorld)
-                                {
-                                    if (tns.CharID.IsSameID(CilleID))
-                                    {
-                                        CilleTownNpcState = tns;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }*/
         }
 
         public static bool TryPlacingCilleHouse(int PositionX, int PositionY, out int HouseBottom)
@@ -254,7 +201,7 @@ namespace giantsummon
                 return false;
             int Width = HouseBlueprint.GetLength(1), 
                 Height = HouseBlueprint.GetLength(0);
-            HouseBottom = PositionY - 1;
+            HouseBottom = PositionY - 2;
             PositionX -= Width / 2;
             PositionY -= Height;
             bool Blocked = false;
@@ -263,6 +210,8 @@ namespace giantsummon
                 for (int x = 0; x < Width; x++)
                 {
                     tile = Framing.GetTileSafely(PositionX + x, PositionY + y);
+                    if (Main.wallHouse[tile.wall])
+                        return false;
                     if (tile.liquid > 0 && y < Height - 1)
                     {
                         Blocked = true;
@@ -284,59 +233,78 @@ namespace giantsummon
             }
             if (Blocked)
                 return false;
-            for (byte Try = 0; Try < 2; Try++)
             {
-                for (int y = Height - 1; y >= 0; y--)
+                bool BlockedLeft = false, BlockedRight = false;
+                int TileX = PositionX - 1, TileY = PositionY + Height - 2;
+                tile = Framing.GetTileSafely(TileX, TileY);
+                BlockedLeft = (tile != null && tile.active() && Main.tileSolid[tile.type]);
+                TileX = PositionX + Width;
+                tile = Framing.GetTileSafely(TileX, TileY);
+                BlockedRight = (tile != null && tile.active() && Main.tileSolid[tile.type]);
+                if (BlockedLeft || BlockedRight)
+                    return false;
+            }
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
                 {
-                    for (int x = 0; x < Width; x++)
+                    tile = Framing.GetTileSafely(PositionX + x, PositionY + y);
+                    WorldGen.KillTile(PositionX + x, PositionY + y, false, false, true);
+                    tile.active(false);
+                    tile.slope(0);
+                    tile.halfBrick(false);
+                    tile.liquid = 0;
+                    switch (HouseBlueprint[y, x])
                     {
-                        tile = Framing.GetTileSafely(PositionX + x, PositionY + y);
-                        if (Try == 0)
-                        {
-                            if (tile.type == Terraria.ID.TileID.Trees || tile.type == Terraria.ID.TileID.PalmTree || tile.type == Terraria.ID.TileID.PineTree ||
-                                tile.type == Terraria.ID.TileID.MushroomTrees)
-                            {
-                                WorldGen.KillTile(PositionX + x, PositionY + y, false, false, true);
-                            }
-                            tile.active(false);
-                            tile.slope(0);
-                            tile.liquid = 0;
-                            switch (HouseBlueprint[y, x])
-                            {
-                                case 'x':
-                                    tile.active(true);
-                                    tile.type = Terraria.ID.TileID.WoodBlock;
-                                    break;
-                                case 'w':
-                                    tile.wall = Terraria.ID.WallID.Wood;
-                                    break;
-                            }
-                        }
-                        else if (Try == 1)
-                        {
-                            switch (HouseBlueprint[y, x])
-                            {
-                                case 'c':
-                                    WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.Chairs);
-                                    tile.wall = Terraria.ID.WallID.Wood;
-                                    break;
-                                case 't':
-                                    WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.Tables);
-                                    tile.wall = Terraria.ID.WallID.Wood;
-                                    break;
-                                case 'l':
-                                    tile.type = Terraria.ID.TileID.Torches;
-                                    tile.wall = Terraria.ID.WallID.Wood;
-                                    break;
-                                case 'd':
-                                    WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.ClosedDoor);
-                                    //tile.type = Terraria.ID.TileID.ClosedDoor;
-                                    break;
-                            }
-                        }
+                        case 'x':
+                            tile.active(true);
+                            tile.type = Terraria.ID.TileID.WoodBlock;
+                            break;
+                        case 'w':
+                            tile.wall = Terraria.ID.WallID.Wood;
+                            break;
                     }
                 }
             }
+            for (int y = Height -1; y >= 0; y--)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    tile = Framing.GetTileSafely(PositionX + x, PositionY + y);
+                    switch (HouseBlueprint[y, x])
+                    {
+                        case 'c':
+                            WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.Chairs);
+                            tile.wall = Terraria.ID.WallID.Wood;
+                            break;
+                        case 't':
+                            WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.Tables);
+                            tile.wall = Terraria.ID.WallID.Wood;
+                            break;
+                        case 'b':
+                            WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.Beds);
+                            tile.wall = Terraria.ID.WallID.Wood;
+                            break;
+                        case 'v':
+                            WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.ClayPot);
+                            tile.wall = Terraria.ID.WallID.Glass;
+                            break;
+                        case 'g':
+                            tile.wall = Terraria.ID.WallID.Glass;
+                            break;
+                        case 'l':
+                            tile.type = Terraria.ID.TileID.Torches;
+                            tile.active(true);
+                            tile.wall = Terraria.ID.WallID.Wood;
+                            break;
+                        case 'd':
+                            WorldGen.PlaceTile(PositionX + x, PositionY + y, Terraria.ID.TileID.ClosedDoor);
+                            //tile.type = Terraria.ID.TileID.ClosedDoor;
+                            break;
+                    }
+                }
+            }
+            
             for (int x = 0; x < Width; x++)
             {
                 int TileX = PositionX + x;
@@ -345,11 +313,11 @@ namespace giantsummon
                 ushort TileID = 0;
                 tile = Framing.GetTileSafely(TileX, TileY);
                 bool AbortFilling = false;
-                while (!tile.active() || !Main.tileSolid[tile.type])
+                while (!(tile.active()  && Main.tileSolid[tile.type]))
                 {
-                    YToFill.Add(PositionY++);
+                    YToFill.Add(TileY++);
                     tile = Framing.GetTileSafely(TileX, TileY);
-                    if (YToFill.Count >= 5)
+                    if (YToFill.Count >= 6)
                     {
                         AbortFilling = true;
                         break;
@@ -357,11 +325,16 @@ namespace giantsummon
                 }
                 if (AbortFilling)
                     continue;
-                if (!tile.active() || !Main.tileSolid[tile.type])
-                    continue;
+                tile.slope(0);
+                tile.halfBrick(false);
                 TileID = tile.type;
-                foreach(int y in YToFill)
+                if (TileID == Terraria.ID.TileID.Grass)
+                    TileID = Terraria.ID.TileID.Dirt;
+                if (TileID == Terraria.ID.TileID.JungleGrass || TileID == Terraria.ID.TileID.MushroomGrass)
+                    TileID = Terraria.ID.TileID.Mud;
+                foreach (int y in YToFill)
                 {
+                    WorldGen.KillTile(TileX, y, false, false, true);
                     tile = Framing.GetTileSafely(TileX, y);
                     tile.type = TileID;
                     tile.active(true);
@@ -375,55 +348,52 @@ namespace giantsummon
                     }
                 }
             }
-            for(byte i =0; i < 2; i++) //This method should try making stairs to the house.
+            for (sbyte i = -1; i < 2; i += 2) //This method should try making stairs to the house.
             {
-                int StairX = PositionX - 1, StairY = PositionY + Height - 1;
-                if(i == 1)
+                int StairX = PositionX, StairY = PositionY + Height - 1;
+                if (i == 1)
                 {
-                    StairX += Width + 1;
-                    bool HitGround = false;
-                    for(int x = 0; x < 5; x++) //Should try in 5 runs hitting the ground. If it hits the ground, then create the stair.
+                    StairX += Width;
+                }
+                else
+                {
+                    StairX--;
+                }
+                bool HitGround = false;
+                List<Microsoft.Xna.Framework.Point> StepPlacementPosition = new List<Microsoft.Xna.Framework.Point>();
+                for (int x = 0; x < 8; x++) //Should try in 5 runs hitting the ground. If it hits the ground, then create the stair.
+                {
+                    int StepX = StairX + x * i, StepY = StairY + Math.Abs(x);
+                    tile = Framing.GetTileSafely(StepX, StepY);
+                    if(tile.active() && Main.tileSolid[tile.type])
                     {
-
+                        HitGround = true;
+                        break;
+                    }
+                    if (tile.liquid > 0)
+                        break;
+                    StepPlacementPosition.Add(new Microsoft.Xna.Framework.Point(StepX, StepY));
+                }
+                if (HitGround)
+                {
+                    foreach(Microsoft.Xna.Framework.Point step in StepPlacementPosition)
+                    {
+                        WorldGen.KillTile(step.X, step.Y, false, false, true);
+                        tile = Framing.GetTileSafely(step.X, step.Y);
+                        tile.active(true);
+                        tile.type = Terraria.ID.TileID.Platforms;
+                        WorldGen.TileFrame(step.X, step.Y);
                     }
                 }
-                List<Microsoft.Xna.Framework.Point> StairPlacementPosition = new List<Microsoft.Xna.Framework.Point>();
-                
             }
             for (int y = -1; y <= Height; y++)
             {
                 for (int x = -1; x <= Width; x++)
                 {
-                    WorldGen.TileFrame(PositionX + x, PositionY + y, false, true);
+                    WorldGen.TileFrame(PositionX + x, PositionY + y, true, true);
                 }
             }
             return true;
-        }
-
-        private static bool TryFindingHomeForCille() //Returns true if successfull
-        {
-            int Left = (int)(Main.leftWorld * (1f / 16) + 130), Right = (int)(Main.rightWorld * (1f / 16) - 130);
-            int Top = (int)(Main.worldSurface * 0.35f), Bottom = (int)(Main.worldSurface - 4);
-            int PositionX = Left + Main.rand.Next(Right - Left), PositionY = Top + Main.rand.Next(Bottom - Top);
-            Tile tile = Framing.GetTileSafely(PositionX, PositionY);
-            if (tile != null && !tile.active() && tile.liquid == 0 && (tile.wall == Terraria.ID.WallID.DirtUnsafe || tile.wall == Terraria.ID.WallID.DirtUnsafe1 ||
-                tile.wall == Terraria.ID.WallID.DirtUnsafe2 || tile.wall == Terraria.ID.WallID.DirtUnsafe3 || tile.wall == Terraria.ID.WallID.DirtUnsafe4))
-            {
-                while (!tile.active() && tile.liquid == 0 && Main.tileSolid[tile.type])
-                {
-                    PositionY++;
-                    tile = Framing.GetTileSafely(PositionX, PositionY);
-                }
-                if (PositionY >= Main.worldSurface)
-                    return false;
-                PositionY -= 3;
-                if (tile.liquid > 0)
-                    return false;
-                CilleShelterX = PositionX;
-                CilleShelterY = PositionY;
-                return true;
-            }
-            return false;
         }
     }
 }
