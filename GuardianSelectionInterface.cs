@@ -607,7 +607,7 @@ namespace giantsummon
                     }
                 }
                 //Contributor Icon Part
-                if (DisplayGuardian.Base.IsContributedCompanion)
+                if (DisplayGuardian.Base.CompanionContributorName != "")
                 {
                     Vector2 ContributionIconPosition = Vector2.Zero;
                     ContributionIconPosition.X = HudPosition.X + 434 - 17;
@@ -619,7 +619,7 @@ namespace giantsummon
                     if(Main.mouseX >= ContributionIconPosition.X && Main.mouseX < ContributionIconPosition.X + 17 && 
                         Main.mouseY >= ContributionIconPosition.Y && Main.mouseY < ContributionIconPosition.Y + 17)
                     {
-                        MouseText = "Contributed Companion";
+                        MouseText = "Contributed Companion \nby " + DisplayGuardian.Base.CompanionContributorName + ".";
                     }
                 }                
                 //Description

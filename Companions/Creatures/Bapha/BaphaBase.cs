@@ -47,7 +47,7 @@ namespace giantsummon.Companions
             SpecialAttackBasedCombat = true;
             UsesRightHandByDefault = true;
             ForceWeaponUseOnMainHand = true;
-            IsContributedCompanion = true;
+            CompanionContributorName = "Smokey";
             SetTerraGuardian();
             VladimirBase.AddCarryBlacklist(Bapha);
 

@@ -18,10 +18,11 @@ namespace giantsummon.Companions
         public CilleBase()
         {
             Name = "Cille";
-            Description = "";
+            Description = "A young person with a mysterious past, \nafraid of interacting with people.";
             Size = GuardianSize.Large;
             Width = 24;
             Height = 90;
+            CompanionContributorName = "Boom";
             //DuckingHeight = 52;
             SpriteWidth = 96;
             SpriteHeight = 96;
@@ -209,6 +210,7 @@ namespace giantsummon.Companions
         public override void Attributes(TerraGuardian g)
         {
             g.RangedDamageMultiplier += 0.03f;
+            g.AddFlag(GuardianFlags.NoWarnUponLeaving);
         }
 
         public override string GreetMessage(Player player, TerraGuardian guardian)

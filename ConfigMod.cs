@@ -85,10 +85,6 @@ namespace giantsummon
         [Tooltip("Having more companions following you will not only reduce the delay between spawns of monsters, but also increase the max number of them spawned.")]
         public bool HavingMultipleCompanionsIncreaseSpawnRate { get { return MainMod.HavingMoreCompanionsIncreasesSpawnRate; } set { MainMod.HavingMoreCompanionsIncreasesSpawnRate = value; } }
 
-        /*[Label("Test new guardians combat AI?")]
-        [Tooltip("Changes the combat behavior AI to the new AI.")]
-        public bool TestNewCombatAI { get { return MainMod.TestNewCombatAI; } set { MainMod.TestNewCombatAI = value; } }*/
-
         [Label("Add stronger version of monsters based on guardians and their health?")]
         [Tooltip("Makes so monsters can spawn with buffed status, depending on the number of guardians you have summoned, and also their max health.\nDisabling this makes so +3 max monster spawn is added for each guardian.")]
         [DefaultValue(true)]
@@ -97,6 +93,10 @@ namespace giantsummon
         [Label("Shared Maximum Life and Mana?")]
         [Tooltip("If turned on, your guardians will get the life and mana bonus value based on your characters. Nothing stops you from increasing their personal status cap.")]
         public bool SharedStatus { get { return MainMod.SharedCrystalValues; } set { MainMod.SharedCrystalValues = value; } }
+
+        [Label("Avoid using all ammo when run out?")]
+        [Tooltip("If there's at least one of that ammo item on the inventory, the companion will not use that ammo item, but will cause 70% of ranged damage for using it.")]
+        public bool SaveAtLeastOneAmmo { get { return MainMod.SaveAtLeastOneAmmo; } set { MainMod.SaveAtLeastOneAmmo = value; } }
 
         [Label("Use Skills System?")]
         [Tooltip("If turned on, guardians skills will increase during their travels with you, depending on what they do during that. Those skills gives boost to the guardian status based on the level.")]

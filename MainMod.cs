@@ -32,7 +32,7 @@ namespace giantsummon
         public static byte SelectedGuardian = 0;
         public static int GuardianInventoryMenuSubTab = 0;
         public static bool CheckingQuestBrief = false;
-        public static bool WarnAboutSaleableInventorySlotsLeft = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true, UseCompanionsDefinedScaleChange = true;
+        public static bool WarnAboutSaleableInventorySlotsLeft = false, GuardiansIdleEasierOnTowns = true, ShowBackwardAnimations = true, UseCompanionsDefinedScaleChange = true, SaveAtLeastOneAmmo = false;
         public static float MobHealthBoostPercent = 0.1f;
         public static Compatibility.SubworldLibraryCompatibility.SubworldInfo CurrentSubworld = null;
         //Contest related
@@ -2735,7 +2735,7 @@ namespace giantsummon
                         bool HasRequest = false;
                         foreach (GuardianData d in RequestCount)
                         {
-                            if (d.Base.InvalidGuardian)
+                            if (d.Base.InvalidGuardian || !d.request.Active)
                                 continue;
                             if (!HasRequest)
                             {

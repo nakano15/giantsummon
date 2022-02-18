@@ -402,13 +402,16 @@ namespace giantsummon
             }
             if (!HasPlayerNearby)
             {
-                if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianTownNPC[Pos].ID, GuardianTownNPC[Pos].ModID))
+                if (!GuardianTownNPC[Pos].HasFlag(GuardianFlags.NoWarnUponLeaving))
                 {
-                    Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessageGuardianSummoned);
-                }
-                else
-                {
-                    Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage);
+                    if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianTownNPC[Pos].ID, GuardianTownNPC[Pos].ModID))
+                    {
+                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessageGuardianSummoned);
+                    }
+                    else
+                    {
+                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage);
+                    }
                 }
                 GuardianTownNPC.RemoveAt(Pos);
                 return true;
@@ -987,21 +990,21 @@ namespace giantsummon
             return false;
         }
 
-        public static void TrySpawningOrMovingGuardianNPC(int GuardianID, string ModID, int X, int Y, bool Force = false, bool Silent = false)
+        public static bool TrySpawningOrMovingGuardianNPC(int GuardianID, string ModID, int X, int Y, bool Force = false, bool Silent = false)
         {
             if (Main.tile[X, Y] == null || !Main.wallHouse[Main.tile[X, Y].wall] || !WorldGen.StartRoomCheck(X, Y))
-                return;
+                return false;
             GuardianBase gb = GuardianBase.GetGuardianBase(GuardianID, ModID);
             if (!Housing_IsRoomTallEnoughForGuardian(gb))
-                return;
+                return false;
             GetRoomScoreForGuardian(gb, out RoomOccupied, out RoomEvil, out RoomScore);
             if (RoomScore <= 0 || !gb.RoomNeeds())
             {
-                return;
+                return false;
             }
-            if (Housing_IsRoomCrowded(gb)) return;
+            if (Housing_IsRoomCrowded(gb)) return false;
             if (!Force && !HasCompanionMetSomeoneWithHighFriendshipLevel(GuardianID, ModID))
-                return;
+                return false;
             bool IsInTheWorld = false;
             for (int npc = 0; npc < GuardianTownNPC.Count; npc++)
             {
@@ -1131,6 +1134,7 @@ namespace giantsummon
                     }
                 }
             }
+            return true;
         }
 
         public static bool Housing_IsRoomTallEnoughForGuardian(GuardianBase gb)

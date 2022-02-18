@@ -1944,6 +1944,8 @@ namespace giantsummon
                             m == NPCID.SmallPantlessSkeleton || m == NPCID.SmallSkeleton;
                     case NPCID.DemonEye:
                         return m == 190 || m == 191 || m == 192 || m == 193 || m == 194 || m == 317 || m == 318;
+                    case NPCID.WallCreeper:
+                        return m == NPCID.WallCreeperWall;
                     case NPCID.BloodCrawler:
                         return m == NPCID.BloodCrawlerWall;
                     case NPCID.Demon:

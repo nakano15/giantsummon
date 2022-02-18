@@ -1,1 +1,8 @@
-﻿
+﻿The mod will now recognize Wall Creepers in the wall as Wall Creeper.
+Changed the contributor badge on the guardian selection list to show the name of the players who contributed the companion.
+Added missing contribution tag to Cille and Quentin.
+Added Cille's description.
+Requests not accepted will no longer be shown on your request list.
+Cille leaving the world at night is no longer a bug, but now part of the mod.
+	She always returns during the day, as long as you keep her house intact.
+	The mod will no longer show messages telling you when she leaves.

@@ -2221,11 +2221,6 @@ namespace giantsummon
             ChangeGravity(GravityDirection * -1);
         }
 
-        public void CheckInventory()
-        {
-
-        }
-
         public bool StartNewGuardianAction(GuardianActions action)
         {
             return StartNewGuardianAction(action, action.ID);
@@ -6156,7 +6151,6 @@ namespace giantsummon
                 LookForThreatsV2();
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
-                //CheckIfSomeoneNeedsRevive();
                 FollowPlayerAI();
                 if (!Dialogue.InDialogue && !CheckForPlayerAFK() || Dialogue.UpdateDialogueParticipationGuardian(this))
                 {
@@ -6205,6 +6199,8 @@ namespace giantsummon
                     }
                     else
                     {
+                        if (TargetID == -1)
+                            CheckForVendors();
                         CheckIfCanSummon();
                         CheckIfCanDoAction();
                         CheckForSituationalPotionUsage();
@@ -6621,7 +6617,7 @@ namespace giantsummon
 
         public void CheckForVendors()
         {
-            if (DoAction.InUse)
+            if (DoAction.InUse || GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) != 5)
                 return;
             byte MerchantPosition = 255, ArmsDealerPosition = 255, CyborgPosition = 255;
             Vector2 MyCenter = CenterPosition;
@@ -6642,8 +6638,6 @@ namespace giantsummon
                     }
                 }
             }
-            //Add an action later, which makes the companion go to the npc buy stuff.
-            //The action should log the npc the companion should go to, the item to buy, the stack, and the price.
             if (MerchantPosition < 255 || ArmsDealerPosition < 255 || CyborgPosition < 255)
             {
                 int HealingPotionCount = 0, ManaPotionCount = 0;
@@ -6654,8 +6648,10 @@ namespace giantsummon
                 int MedKitID = (MainMod.UsingGuardianNecessitiesSystem ? ModContent.ItemType<Items.Consumable.FirstAidKit>() : 0);
                 for (int i = 0; i < 50; i++)
                 {
-                    if (MerchantPosition < 255 && Inventory[i].healLife > 0)
+                    if (Inventory[i].healLife > 0)
                         HealingPotionCount += Inventory[i].stack;
+                    if (Inventory[i].healMana > 0)
+                        ManaPotionCount += Inventory[i].stack;
                     if (i < 10 && Inventory[i].useAmmo > 0 && !AmmoAndTheirStack.ContainsKey(Inventory[i].useAmmo)) //Let's only get ammo for weapons the companion will use.
                     {
                         int AmmoStack = 0;
@@ -6663,8 +6659,8 @@ namespace giantsummon
                         {
                             if (a != i && Inventory[a].ammo == Inventory[i].useAmmo)
                             {
-                                if (AmmoStack >= 999)
-                                    break;
+                                //if (AmmoStack >= 999)
+                                //    break;
                                 AmmoStack += Inventory[a].stack;
                             }
                         }
@@ -6678,7 +6674,7 @@ namespace giantsummon
                     {
                         MedKits += Inventory[i].stack;
                     }
-                    if (Inventory[i].ammo > 0)
+                    /*if (Inventory[i].ammo > 0)
                     {
                         if (AmmoAndTheirStack.ContainsKey(Inventory[i].ammo))
                         {
@@ -6688,18 +6684,18 @@ namespace giantsummon
                         {
                             //AmmoAndTheirStack.Add(Inventory[i].ammo, Inventory[i].stack);
                         }
-                    }
+                    }*/
                     if (Inventory[i].type == 0)
                         EmptyInventorySlots++;
                 }
                 if (MerchantPosition < 255 && HealingPotionCount < 30)
                 {
-                    if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserHealingPotion, 300, 30 - HealingPotionCount))
+                    if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserHealingPotion, 300, 60 - HealingPotionCount))
                         return;
                 }
                 if (MerchantPosition < 255 && HasMagicWeapon && ManaPotionCount < 30)
                 {
-                    if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserManaPotion, 100, 30 - ManaPotionCount))
+                    if (TryBuyingItem(MerchantPosition, Terraria.ID.ItemID.LesserManaPotion, 100, 60 - ManaPotionCount))
                         return;
                 }
                 if (MerchantPosition < 255 && MedKitID > 0 && MedKits < 1)
@@ -6707,11 +6703,13 @@ namespace giantsummon
                     if (TryBuyingItem(MerchantPosition, MedKitID, 6000, 1 - MedKits))
                         return;
                 }
+                const int MaxAmmoRefull = 3996, RefillThreshould = 1998;
                 foreach (int key in AmmoAndTheirStack.Keys)
                 {
-                    int ToRefill = 999 - AmmoAndTheirStack[key];
+                    int ToRefill = RefillThreshould - AmmoAndTheirStack[key];
                     if (ToRefill <= 0)
                         continue;
+                    ToRefill += MaxAmmoRefull - RefillThreshould;
                     if (MerchantPosition < 255)
                     {
                         if (key == Terraria.ID.AmmoID.Arrow)
@@ -6762,6 +6760,15 @@ namespace giantsummon
 
         public bool TryBuyingItem(int NpcPos, int ID, int ItemPrice, int Stack)
         {
+            if(Coins < ItemPrice)
+            {
+                int BuyableStacks = (int)(Coins / (uint)ItemPrice);
+                if (BuyableStacks == 0)
+                    return false;
+                if (BuyableStacks < Stack)
+                    Stack = BuyableStacks;
+
+            }
             if (Coins >= ItemPrice)
             {
                 GuardianActions.BuyItemFromShopCommand(this, NpcPos, ID, Stack, ItemPrice);
@@ -6773,38 +6780,36 @@ namespace giantsummon
         public int BuyItem(int ID, int ItemPrice, int Stack)
         {
             int ItemsBought = 0;
-            for (int checktime = 0; checktime < 2; checktime++)
+            for (int i = 0; i < 50; i++)
             {
-                for (int i = 0; i < 50; i++)
+                if (Stack == 0)
+                    break;
+                if (Stack > 0 && Inventory[i].type == 0)
                 {
-                    if (Stack == 0)
-                        break;
-                    bool ForceSlotChecking = false;
-                    if (checktime == 1 && Stack > 0 && Inventory[i].type == 0)
+                    Inventory[i].SetDefaults(ID);
+                    Inventory[i].stack = Stack;
+                    if (Inventory[i].stack > Inventory[i].maxStack)
                     {
-                        Inventory[i].SetDefaults(ID);
-                        Inventory[i].stack = 0;
-                        ForceSlotChecking = true;
+                        Inventory[i].stack = Inventory[i].maxStack;
                     }
-                    if ((checktime == 0 || ForceSlotChecking) && Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
+                    Stack -= Inventory[i].stack;
+                    ItemsBought += Inventory[i].stack;
+                    continue;
+                }
+                if (Stack > 0 && Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
+                {
+                    int ToRefill = Inventory[i].maxStack - Inventory[i].stack;
+                    if (ToRefill > Stack)
+                        ToRefill = Stack;
                     {
-                        int ToRefill = Inventory[i].maxStack - Inventory[i].stack;
-                        if (ToRefill > Stack)
-                            ToRefill = Stack;
-                        {
-                            int MaxRefil = (int)(Coins / ItemPrice);
-                            if (MaxRefil < ToRefill)
-                                ToRefill = MaxRefil;
-                        }
-                        Inventory[i].stack += ToRefill;
-                        Stack -= ToRefill;
-                        Coins -= (uint)(ToRefill * ItemPrice);
-                        ItemsBought += ToRefill;
-                        if (Stack == 0)
-                        {
-                            break;
-                        }
+                        int MaxRefil = (int)(Coins / ItemPrice);
+                        if (MaxRefil < ToRefill)
+                            ToRefill = MaxRefil;
                     }
+                    Inventory[i].stack += ToRefill;
+                    Stack -= ToRefill;
+                    Coins -= (uint)(ToRefill * ItemPrice);
+                    ItemsBought += ToRefill;
                 }
             }
             return ItemsBought;
@@ -10588,15 +10593,15 @@ namespace giantsummon
             bool HasAmmo = false;
             for (int j = 0; j < 50; j++)
             {
-                if (this.Inventory[j].ammo == i.useAmmo)
+                if (Inventory[j].ammo == i.useAmmo)
                 {
-                    if (this.Inventory[j].type == Terraria.ID.ItemID.FallenStar)
+                    if (Inventory[j].type == Terraria.ID.ItemID.FallenStar)
                         ProjID = 12;
                     else
                         ProjID = i.shoot;
                     HasAmmo = true;
-                    ShotSpeed += this.Inventory[j].shootSpeed;
-                    Damage += this.Inventory[j].damage;
+                    ShotSpeed += Inventory[j].shootSpeed;
+                    Damage += Inventory[j].damage;
                     if (this.Inventory[j].ammo == Terraria.ID.AmmoID.Arrow && HasFlag(GuardianFlags.ArcheryPotion))
                     {
                         Damage += (int)(Damage * 0.2f);
@@ -10720,7 +10725,7 @@ namespace giantsummon
                                     break;
                                 }
                             }
-                            if (LastItem)
+                            if (MainMod.SaveAtLeastOneAmmo && LastItem)
                             {
                                 DepleteThisItemAmmo = false;
                                 Damage = (int)(Damage * 0.7f);

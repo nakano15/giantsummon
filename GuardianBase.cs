@@ -43,7 +43,10 @@ namespace giantsummon
         public int MaxJumpHeight = 15;
         public float Scale = 1f;
         public bool ForceScale = false;
-        public bool IsContributedCompanion = false;
+        /// <summary>
+        /// If the companion is contributed by a player, set their name to that variable, and a heart showing the name of the contributor upon passing the mouse over will appear.
+        /// </summary>
+        public string CompanionContributorName = "";
         public float GetScale { get { if (MainMod.UseCompanionsDefinedScaleChange || ForceScale) return Scale; else return 1f; } }
         public float Accuracy = 0.9f, Agility = 0.5f, Trigger = 0.5f;
         public float JumpSpeed = 7.08f;

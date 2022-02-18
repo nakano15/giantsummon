@@ -18,6 +18,7 @@ namespace giantsummon.Companions
             Description = "He is a young green bunny who dreams of becoming \na powerful wizard one day, his hobbies are reading \nfiction books and telling stories.";
             Age = 15;
             SetBirthday(SEASON_AUTUMN, 3);
+            CompanionContributorName = "totote97";
             Male = true;
             InitialMHP = 85; //500
             LifeCrystalHPBonus = 15;

@@ -15,14 +15,11 @@ namespace giantsummon.Actions
             this.ItemID = ItemID;
             this.BuyStack = BuyStack;
             this.BuyPrice = BuyPrice;
+            Cancellable = true;
         }
 
         public override void Update(TerraGuardian guardian)
         {
-            if (Step == 0 && StepStart)
-            {
-                Cancellable = true;
-            }
             if (guardian.TargetID > -1 || guardian.TalkPlayerID > -1 || guardian.IsBeingPulledByPlayer)
             {
                 InUse = false;
@@ -31,6 +28,11 @@ namespace giantsummon.Actions
             bool MakeNpcFocusOnGuardian = false;
             if (!guardian.PlayerMounted)
                 guardian.MoveLeft = guardian.MoveRight = false;
+            if (guardian.IsBeingPulledByPlayer)
+            {
+                InUse = false;
+                return;
+            }
             switch (Step)
             {
                 case 0: //Try reaching npc
@@ -48,7 +50,7 @@ namespace giantsummon.Actions
                             guardian.SaySomething(Message);
                         }
                         Vector2 NpcBottom = npc.Bottom;
-                        if (!guardian.PlayerMounted && Time == 10 * 60)
+                        if (!guardian.PlayerMounted && Time == 5 * 60)
                         {
                             guardian.Position = NpcBottom;
                             guardian.SetFallStart();
@@ -148,21 +150,24 @@ namespace giantsummon.Actions
                         {
                             guardian.LookingLeft = guardian.Position.X >= NpcCenter.X;
                         }
-                        if (Time >= 1.5f * 60)
+                        if (Time == 60)
                         {
-                            int Stack = guardian.BuyItem(ItemID, BuyPrice, BuyStack);
+                            guardian.BuyItem(ItemID, BuyPrice, BuyStack);
                         }
-                        if (Time >= 2 * 60)
+                        if (Time >= (int)(1.5f * 60))
                         {
                             InUse = false;
                             if (guardian.PlayerMounted)
                             {
-                                guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.GenericThankYou, "*It thanked you.*"));
+                                guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.GenericThankYou, "*They thanked you.*"));
                             }
                             return;
                         }
                     }
                     break;
+                default:
+                    InUse = false;
+                    return;
             }
             if (MakeNpcFocusOnGuardian)
             {

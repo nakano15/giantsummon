@@ -152,8 +152,7 @@ namespace giantsummon
                 }
                 CilleShelterX = PositionX;
                 CilleShelterY = HouseBottom;
-                //Main.NewText("Cille's house spawned at X " + CilleShelterX + "  Y " + CilleShelterY); //Remove after debugging.
-                if (!NpcMod.HasGuardianNPC(CilleID))
+                /*if (!NpcMod.HasGuardianNPC(CilleID))
                 {
                     NpcMod.SpawnGuardianNPC(PositionX * 16, PositionY * 16, CilleID);
                 }
@@ -163,18 +162,38 @@ namespace giantsummon
                     Cille.Position.X = PositionX * 16;
                     Cille.Position.Y = PositionY * 16;
                     Cille.SetFallStart();
-                }
+                }*/
                 WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY, true, true);
             }
             else
             {
-                if (!NpcMod.HasGuardianNPC(CilleID) && !WorldMod.CanGuardianNPCSpawnInTheWorld(CilleID))
+                if (!NpcMod.HasGuardianNPC(CilleID))
                 {
-                    if(Main.dayTime && Main.moonPhase != 4)
+                    if (!WorldMod.CanGuardianNPCSpawnInTheWorld(CilleID))
                     {
-                        WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY, true, true);
-                        NpcMod.SpawnGuardianNPC(CilleShelterX * 16, CilleShelterY * 16, CilleID);
+                        if (Main.dayTime && Main.moonPhase != 4)
+                        {
+                            if (WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY, true, true))
+                            {
+                                //NpcMod.SpawnGuardianNPC(CilleShelterX * 16, CilleShelterY * 16, CilleID);
+                            }
+                            else
+                            {
+                                CilleShelterX = CilleShelterY = -1;
+                            }
+                        }
                     }
+                }
+                else
+                {
+                    /*if (!Main.dayTime && !WorldMod.CanGuardianNPCSpawnInTheWorld(CilleID))
+                    {
+                        WorldMod.GuardianTownNpcState townnpc = CilleGuardian.GetTownNpcInfo;
+                        if (townnpc != null)
+                        {
+                            townnpc.Homeless = true;
+                        }
+                    }*/
                 }
             }
         }

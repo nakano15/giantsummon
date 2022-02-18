@@ -191,6 +191,7 @@ namespace giantsummon
         CantDie,
         VergeOfDeathAlert,
         DisableMovement,
-        CantTakeDamageWhenKod
+        CantTakeDamageWhenKod,
+        NoWarnUponLeaving
     }
 }
