@@ -67,7 +67,7 @@ Buffs/Debuffs/Passive:
 >Soul Sacrifice (dialogue passive)- The player can sacrifice other terra guardians to Bapha for an increase in his Hp/Mp by 1.2x for each companion and it affects the "Awakened Form" buff by decreasing the amount of enemies needed to achieve the form by 1 for each companion sacrificed.
 -(If the player manages to sacrifice 10 terra guardians then Bapha will be permanently in Awakened Form any where in the world)
 -(The terragaurdians sacrificed can be ressurected through a dialogue with Bapha)
--(Terraguardians that are sacrificed are effected by the attitude system towards players, so if they are revived then they will immediately be negative towards player which makes a lot of sense in this case instead of them being mad at player because they get killed own their own in some reandom way like falling to death)
+-(Terraguardians that are sacrificed are effected by the trust system towards players, so if they are revived then they will immediately be negative towards player which makes a lot of sense in this case instead of them being mad at player because they get killed own their own in some reandom way like falling to death)
 
 >Negates fall damage(Passive)
 
