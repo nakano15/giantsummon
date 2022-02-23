@@ -11,7 +11,6 @@ namespace giantsummon.Actions
         public OpenGiftBoxAction(int GiftBoxPosition)
         {
             ID = (int)ActionIDs.OpenGiftBox;
-            InUse = true;
             BoxPosition = GiftBoxPosition;
         }
 

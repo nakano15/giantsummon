@@ -12,7 +12,6 @@ namespace giantsummon.Actions
         {
             ID = (int)ActionIDs.ResurrectPlayer;
             Target = player;
-            InUse = true;
         }
 
         public override void Update(TerraGuardian guardian)

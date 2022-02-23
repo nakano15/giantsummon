@@ -12,14 +12,14 @@ namespace giantsummon
 {
     public class GuardianActions
     {
-        public bool InUse = false;
+        public bool InUse = true;
         private int _ID = 0;
         public int ID { get { return _ID; } set { _ID = value; } }
         public bool IsGuardianSpecificAction = false;
         public int Time = 0, Step = 0;
         public bool IgnoreCombat = false, Cancellable = false, AvoidItemUsage = false, FocusCameraOnGuardian = false, EffectOnlyMirror = false, 
             Invisibility = false, Immune = false, NoAggro = false, Inactivity = false, CantUseInventory = false, NpcCanFacePlayer = true, 
-            ProceedIdleAIDuringDialogue = false, BlockTwoHandedAttack = false, BlockOffHandUsage = false;
+            ProceedIdleAIDuringDialogue = false, BlockTwoHandedAttack = false, BlockOffHandUsage = false, BlockIdleAI = true;
         public bool StepStart { get { return Time == 0; } }
         private static bool StepChanged = false;
         public CombatTactic? ForcedTactic = null;
@@ -285,7 +285,9 @@ namespace giantsummon
             ReviveSomeone,
             GoSleep,
             BuySomethingFromNpcShop,
-            CarryDownedAlly
+            CarryDownedAlly,
+            GiveItemToSomeone,
+            DefendHouseAction
         }
     }
 }

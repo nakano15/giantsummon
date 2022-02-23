@@ -11,7 +11,6 @@ namespace giantsummon.Actions
         {
             ID = (int)ActionIDs.LiftPlayer;
             Target = target;
-            InUse = true;
         }
 
         public override void Update(TerraGuardian guardian)

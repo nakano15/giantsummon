@@ -13,7 +13,6 @@ namespace giantsummon.Actions
         {
             this.target = target;
             this.PotionPos = PotionPos;
-            InUse = true;
             ID = (int)ActionIDs.ThrowPotion;
         }
 

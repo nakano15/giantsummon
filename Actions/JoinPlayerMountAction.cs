@@ -9,7 +9,6 @@ namespace giantsummon.Actions
         public JoinPlayerMountAction(Player Target)
         {
             ID = (int)ActionIDs.JoinPlayerMount;
-            InUse = true;
             MountUser = Target;
         }
 

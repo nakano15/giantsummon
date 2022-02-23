@@ -15,6 +15,7 @@ namespace giantsummon.Npcs
         private byte TalkTimes = 255, DialogueStep = 0;
         private ushort RaceStartDelay = 0;
         private bool PlayerMetCille = false;
+        private bool RacingPose = false;
 
         public CilleNPC() : base(GuardianBase.Cille)
         {
@@ -46,9 +47,10 @@ namespace giantsummon.Npcs
                 TalkTimes = 0;
                 Main.NewText("A TerraGuardian was spotted " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + "'s position.");
             }
-            if(Main.netMode < 2 && Main.player[Main.myPlayer].talkNPC == -1)
+            if (Main.netMode < 2 && Main.player[Main.myPlayer].talkNPC == -1)
             {
-                if(DialogueStep > 0)
+                RacingPose = false;
+                if (DialogueStep > 0)
                 {
                     DialogueStep = 0;
                     if (TalkTimes < 2)
@@ -67,6 +69,7 @@ namespace giantsummon.Npcs
                     }
                     if(RaceStartDelay > 0)
                     {
+                        RacingPose = true;
                         RaceStartDelay--;
                         if(RaceStartDelay == 0)
                         {
@@ -154,6 +157,15 @@ namespace giantsummon.Npcs
             }
             Idle = Walk = TalkTimes != 3;
             base.AI();
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            base.FindFrame(frameHeight);
+            if(RacingPose && npc.velocity.X == 0 && npc.velocity.Y == 0)
+            {
+                BodyAnimationFrame = LeftArmAnimationFrame = RightArmAnimationFrame = Base.DuckingFrame;
+            }
         }
 
         public override string GetChat()

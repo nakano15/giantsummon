@@ -990,6 +990,21 @@ namespace giantsummon
             return false;
         }
 
+        public static List<GuardianTownNpcState> GetGuardianLivingHere(int X, int Y)
+        {
+            if (WorldGen.StartRoomCheck(X, Y))
+            {
+                foreach(GuardianBuildingInfo gbi in HouseInfos)
+                {
+                    if(gbi.BelongsToThisHousing(X, Y))
+                    {
+                        return gbi.GuardiansLivingHere;
+                    }
+                }
+            }
+            return new List<GuardianTownNpcState>();
+        }
+
         public static bool TrySpawningOrMovingGuardianNPC(int GuardianID, string ModID, int X, int Y, bool Force = false, bool Silent = false)
         {
             if (Main.tile[X, Y] == null || !Main.wallHouse[Main.tile[X, Y].wall] || !WorldGen.StartRoomCheck(X, Y))
@@ -1707,6 +1722,20 @@ namespace giantsummon
             public bool Homeless = true;
             public int HomeX = -1, HomeY = -1;
             public GuardianBuildingInfo HouseInfo;
+            public TerraGuardian GetGuardian
+            {
+                get
+                {
+                    foreach(TerraGuardian tg in GuardianTownNPC)
+                    {
+                        if (tg.MyID.IsSameID(CharID))
+                        {
+                            return tg;
+                        }
+                    }
+                    return null;
+                }
+            }
 
             public GuardianTownNpcState()
             {

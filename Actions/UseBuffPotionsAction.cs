@@ -7,7 +7,6 @@ namespace giantsummon.Actions
         public UseBuffPotionsAction()
         {
             ID = (int)ActionIDs.UseBuffPotions;
-            InUse = true;
         }
 
         public override void Update(TerraGuardian guardian)

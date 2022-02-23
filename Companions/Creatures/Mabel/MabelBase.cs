@@ -27,6 +27,7 @@ namespace giantsummon.Companions
             Width = 30;
             Height = 84;
             CompanionSlotWeight = 1.15f;
+            DefaultTactic = CombatTactic.Charge;
             SpriteWidth = 96;
             SpriteHeight = 96;
             Scale = 92f / 84;
@@ -204,6 +205,7 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             Mes.Add("*Hey! How do I look? I've been practicing all the day.*");
             Mes.Add("*The citizens of your town are very kind to me.*");
+            Mes.Add("*Hey, do you listen to Deadraccoon5 too? Whaaaaat? You don't know who he is?*");
             if (player.Male)
             {
                 Mes.Add("*Where are you looking at? My face is a bit more above.*");

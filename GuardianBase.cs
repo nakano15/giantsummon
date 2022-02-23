@@ -70,6 +70,7 @@ namespace giantsummon
         public List<GuardianSpecialAttack> SpecialAttackList = new List<GuardianSpecialAttack>();
         public int CharacterPositionYDiscount = 0;
         public GuardianRoles Roles = GuardianRoles.None;
+        public CombatTactic DefaultTactic = CombatTactic.Assist;
         
         public GuardianSprites sprites;
         public SoundData HurtSound, DeadSound;

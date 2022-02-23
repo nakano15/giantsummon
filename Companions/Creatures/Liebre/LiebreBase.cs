@@ -24,6 +24,7 @@ namespace giantsummon.Companions
             Size = GuardianSize.Large;
             Width = 24;
             Height = 66;
+            DefaultTactic = CombatTactic.Charge;
             //DuckingHeight = 62;
             SpriteWidth = 64;
             SpriteHeight = 80;

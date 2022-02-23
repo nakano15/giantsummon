@@ -10,7 +10,6 @@ namespace giantsummon.Actions
         public MountPutPlayerDownAction(Player Target)
         {
             ID = (int)ActionIDs.MountPutPlayerDown;
-            InUse = true;
             PlayerToPlaceOnFloor = Target;
             BlockOffHandUsage = true;
         }

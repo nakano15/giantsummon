@@ -16,7 +16,6 @@ namespace giantsummon.Actions
         public SellItemsAction()
         {
             ID = (int)ActionIDs.SellItems;
-            InUse = true;
         }
 
         public override void Update(TerraGuardian guardian)

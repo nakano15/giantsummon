@@ -22,6 +22,7 @@ namespace giantsummon.Companions
             Size = GuardianSize.Large;
             Width = 24;
             Height = 90;
+            DefaultTactic = CombatTactic.Charge;
             CompanionContributorName = "Boom";
             //DuckingHeight = 52;
             SpriteWidth = 96;
@@ -39,7 +40,7 @@ namespace giantsummon.Companions
             MaxSpeed = 5.6f;
             Acceleration = 0.18f;
             SlowDown = 0.52f;
-            CanDuck = false;
+            CanDuck = true;
             ReverseMount = false;
             DrinksBeverage = true;
             SetTerraGuardian();
@@ -53,8 +54,8 @@ namespace giantsummon.Companions
             PlayerMountedArmAnimation = JumpFrame = 9;
             //HeavySwingFrames = new int[] { 10, 11, 12 };
             ItemUseFrames = new int[] { 10, 11, 12, 13 };
-            //DuckingFrame = 20;
-            //DuckingSwingFrames = new int[] { 21, 22, 12 };
+            DuckingFrame = 21;
+            DuckingSwingFrames = new int[] { 22, 23, 24 };
             SittingFrame = 15;
             ChairSittingFrame = 14;
             ThroneSittingFrame = 17;
@@ -66,6 +67,9 @@ namespace giantsummon.Companions
 
             BackwardStanding = 20;
             //BackwardRevive = 30;
+
+            AddInitialItem(Terraria.ID.ItemID.GoldBroadsword);
+            AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(14, 0);
@@ -84,6 +88,10 @@ namespace giantsummon.Companions
 
             LeftHandPoints.AddFramePoint2x(18, 35, 33);
 
+            LeftHandPoints.AddFramePoint2x(22, 32, 24);
+            LeftHandPoints.AddFramePoint2x(23, 42, 35);
+            LeftHandPoints.AddFramePoint2x(24, 37, 43);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(10, 23, 3);
             RightHandPoints.AddFramePoint2x(11, 35, 11);
@@ -95,12 +103,18 @@ namespace giantsummon.Companions
 
             RightHandPoints.AddFramePoint2x(18, 42, 33);
 
+            RightHandPoints.AddFramePoint2x(22, 38, 24);
+            RightHandPoints.AddFramePoint2x(23, 45, 35);
+            RightHandPoints.AddFramePoint2x(24, 43, 43);
+
             //Mounted Placement
             MountShoulderPoints.DefaultCoordinate2x = new Point(16, 15);
+            MountShoulderPoints.AddFramePoint2x(21, 31, 30);
 
             //Headgear Placement
             HeadVanityPosition.DefaultCoordinate2x = new Point(24, 11);
             HeadVanityPosition.AddFramePoint2x(18, 30, 18);
+            HeadVanityPosition.AddFramePoint2x(21, 40, 37);
 
             AddOutfit(NoOutfitID, "No Outfit", delegate (GuardianData gd, Player player) { return true; });
         }
@@ -233,7 +247,7 @@ namespace giantsummon.Companions
                 Mes.Add("(She seems to be telling someone to stop. Did she say her own name?)");
                 Mes.Add("(You see tears falling from her eyes.)");
             }
-            else if (Main.bloodMoon || TriggerBeastState(guardian))
+            else if (TriggerBeastState(guardian))
             {
                 if (guardian.IsPlayerBuddy(player))
                 {

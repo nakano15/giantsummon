@@ -10,7 +10,6 @@ namespace giantsummon.Actions
         public BuySomethingFromNpcShopAction(int NpcPosition, int ItemID, int BuyStack, int BuyPrice)
         {
             ID = (int)ActionIDs.BuySomethingFromNpcShop;
-            InUse = true;
             this.NpcPosition = NpcPosition;
             this.ItemID = ItemID;
             this.BuyStack = BuyStack;
@@ -87,11 +86,11 @@ namespace giantsummon.Actions
                             if (guardian.PlayerMounted)
                             {
                                 string Message = guardian.GetMessage(GuardianBase.MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping, "*They ask you to wait a moment.*");
-                                Message.Replace("[shop]", npc.GivenOrTypeName);
+                                Message = Message.Replace("[shop]", npc.GivenOrTypeName);
                                 guardian.SaySomething(Message);
                             }
                         }
-                        if (Math.Abs(NpcBottom.Y - guardian.Position.Y) > 8)
+                        if (!guardian.PlayerMounted && Math.Abs(NpcBottom.Y - guardian.Position.Y) > 8)
                         {
                             if (guardian.Position.Y < NpcBottom.Y)
                             {

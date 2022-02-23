@@ -19,6 +19,7 @@ namespace giantsummon.Companions
             Height = 27 * 2;
             SpriteWidth = 72;
             SpriteHeight = 68;
+            DefaultTactic = CombatTactic.Snipe;
             //FramesInRows = 28;
             //DuckingHeight = 54;
             //Each pig should definitelly have the same size, birthday age and time, so I moved those infos.

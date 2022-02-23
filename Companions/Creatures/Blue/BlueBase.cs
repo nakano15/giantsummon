@@ -515,6 +515,7 @@ namespace giantsummon.Companions
                     Mes.Add("*Hey [nickname]. Did you knew that the TerraGuardians Popularity Contest is running right now? Be sure to vote some time.*");
                     Mes.Add("*The TerraGuardians Popularity Contest is currently running. You can access the voting by speaking to me about it.*");
                 }
+                Mes.Add("*Have you heard Deadraccoon5? Oh, I feel bad for you right now.*");
             }
             else
             {

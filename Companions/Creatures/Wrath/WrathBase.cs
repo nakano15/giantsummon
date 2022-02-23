@@ -28,6 +28,7 @@ namespace giantsummon.Companions
             FramesInRows = 28;
             //DuckingHeight = 54;
             //Each pig should definitelly have the same size, birthday age and time, so I moved those infos.
+            DefaultTactic = CombatTactic.Charge;
             Genderless = true;
             InitialMHP = 110; //320
             LifeCrystalHPBonus = 15;

@@ -10,7 +10,6 @@ namespace giantsummon.Actions
         public TeleportWithPlayerToTownAction(Player target)
         {
             ID = (int)ActionIDs.TeleportWithPlayerToTown;
-            InUse = true;
             Target = target;
         }
 

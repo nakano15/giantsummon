@@ -27,6 +27,12 @@ namespace giantsummon.Npcs
             npc.townNPC = false;
         }
 
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+            DisplayName.SetDefault("Captain Stench");
+        }
+
         public bool PlayerHasMaterials()
         {
             return Main.player[Main.myPlayer].CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount ||

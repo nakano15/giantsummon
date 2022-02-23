@@ -985,7 +985,7 @@ namespace giantsummon
             get { return HasBuff(Terraria.ID.BuffID.TheTongue); }
             set { if (value) { AddBuff(Terraria.ID.BuffID.TheTongue, 5, true); } else { RemoveBuff(Terraria.ID.BuffID.TheTongue); } }
         }
-        public GuardianActions DoAction = new GuardianActions();
+        public GuardianActions DoAction = new GuardianActions() { InUse = false };
         public bool BehindWall = false;
         public BitsByte Zone1 = new BitsByte(), Zone2 = new BitsByte(), Zone3 = new BitsByte(), Zone4 = new BitsByte();
         private bool SunflowerNearby = false, LifeCrystalChainNearby = false;
@@ -2236,7 +2236,6 @@ namespace giantsummon
             if (!DoAction.InUse)
             {
                 action.IsGuardianSpecificAction = true;
-                action.InUse = true;
                 action.ID = ID;
                 DoAction = action;
                 return true;
@@ -3233,7 +3232,9 @@ namespace giantsummon
         {
             //Age = Data.GetRealAgeDecimal();
             if (Age >= 18)
-                return 1f;
+            {
+                return 1f + (float)Age / (Age + 1) - 0.94f;
+            }
             return Age / 18 * 0.9f + 0.1f;
         }
 
@@ -3283,8 +3284,29 @@ namespace giantsummon
 
         public void EnforceScale()
         {
-            FinalScale = ScaleMult * AgeScale;
+            //FinalScale = ScaleMult * AgeScale;
+            DoUpdateGuardianStatus();
+            UpdateScale(true, true);
+        }
 
+        public void UpdateScale(bool ForceAgeScale = false, bool ForceSetScale = false)
+        {
+            if (SetToPlayerSize)
+            {
+                FinalScale = (float)42 / (Base.Height - (Base.Size == GuardianBase.GuardianSize.Large ? 10 : 0));
+            }
+            else
+            {
+                FinalScale = ScaleMult;
+                //FinalScale *= 3;
+            }
+            if (ForceAgeScale || WorldMod.DayChange)
+            {
+                AgeScale = GetAgeSize();
+            }
+            FinalScale *= AgeScale;
+            if (ForceSetScale)
+                Scale = FinalScale * ScaleMult;
         }
 
         public void UpdateExtraStuff()
@@ -3292,14 +3314,6 @@ namespace giantsummon
             if (UpdateAge)
             {
                 Data.UpdateAge();
-            }
-            if (SetToPlayerSize)
-            {
-                FinalScale = (float)42 / (Base.Height - (Base.Size == GuardianBase.GuardianSize.Large ? 10 : 0));
-            }
-            else
-            {
-                //FinalScale *= 3;
             }
             if(GuardianTownNpcInfoPosition == -1 && !HasCooldown(GuardianCooldownManager.CooldownType.TownNpcInfoCheckingCooldown))
             {
@@ -3315,11 +3329,7 @@ namespace giantsummon
                 }
             }
             UpdateLifeStealAndGhostDamageRate();
-            if (WorldMod.DayChange)
-            {
-                AgeScale = GetAgeSize();
-            }
-            FinalScale *= AgeScale;
+            UpdateScale();
             if(!UsingFurniture && HasCarpet())
             {
                 if (!HasCooldown(GuardianCooldownManager.CooldownType.CarpetFlightTime))
@@ -6148,6 +6158,10 @@ namespace giantsummon
             if (!Is2PControlled)
             {
                 bool LastHadTargetClose = TargetID > -1;
+                if(OwnerPos == -1 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 6 && Main.invasionType > 0 && !DoAction.InUse)
+                {
+                    StartNewGuardianAction(new Actions.DefendHouseOnInvasion());
+                }
                 LookForThreatsV2();
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
@@ -6579,7 +6593,7 @@ namespace giantsummon
             bool OnDamageTile = false;
             int MinTileX = (int)((Position.X - Width * 0.5f) * DivisionBy16), MaxTileX = (int)((Position.X + Width * 0.5f) * DivisionBy16), TileY = (int)(Position.Y * DivisionBy16);
             {
-                for (int y = 0; y < 2; y++)
+                for (int y = 0; y < 3; y++)
                 {
                     bool HasSolidTileOnTheWay = false;
                     for (int x = MinTileX; x <= MaxTileX; x++)
@@ -6760,9 +6774,9 @@ namespace giantsummon
 
         public bool TryBuyingItem(int NpcPos, int ID, int ItemPrice, int Stack)
         {
-            if(Coins < ItemPrice)
+            if(Coins < ItemPrice * Stack)
             {
-                int BuyableStacks = (int)(Coins / (uint)ItemPrice);
+                int BuyableStacks = (int)(Coins / (uint)(ItemPrice * Stack));
                 if (BuyableStacks == 0)
                     return false;
                 if (BuyableStacks < Stack)
@@ -6779,22 +6793,29 @@ namespace giantsummon
 
         public int BuyItem(int ID, int ItemPrice, int Stack)
         {
-            int ItemsBought = 0;
+            int ItemsBought = 0; //TODO - It's broken. Review how this works.
             for (int i = 0; i < 50; i++)
             {
                 if (Stack == 0)
                     break;
                 if (Stack > 0 && Inventory[i].type == 0)
                 {
-                    Inventory[i].SetDefaults(ID);
-                    Inventory[i].stack = Stack;
-                    if (Inventory[i].stack > Inventory[i].maxStack)
+                    int BuyableStack = (int)(Coins / (uint)(ItemPrice * Stack));
+                    if (BuyableStack > 0)
                     {
-                        Inventory[i].stack = Inventory[i].maxStack;
+                        Inventory[i].SetDefaults(ID);
+                        Inventory[i].stack = Stack;
+                        if (BuyableStack < Stack)
+                            Inventory[i].stack = BuyableStack;
+                        if (Inventory[i].stack > Inventory[i].maxStack)
+                        {
+                            Inventory[i].stack = Inventory[i].maxStack;
+                        }
+                        Stack -= Inventory[i].stack;
+                        ItemsBought += Inventory[i].stack;
+                        Coins -= (uint)(Inventory[i].stack * ItemPrice);
+                        continue;
                     }
-                    Stack -= Inventory[i].stack;
-                    ItemsBought += Inventory[i].stack;
-                    continue;
                 }
                 if (Stack > 0 && Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
                 {
@@ -6862,15 +6883,12 @@ namespace giantsummon
                         Tile tile = MainMod.GetTile(MyX + x * CheckDirection, MyY + y);
                         if (tile.active() && Main.tileSolid[tile.type])
                         {
-                            //SaySomething("*No jumping needed.*");
                             return;
                         }
                     }
                 }
                 if (OwnerPos > -1 && Main.player[OwnerPos].Bottom.Y > Position.Y + 8)
                     return;
-                //SaySomething("*Jumping needed.* " + (MaxSpeed * Base.MaxJumpHeight * DivisionBy16));
-                //There is a hole.
                 int uy = MyY - (int)(JumpSpeed * Base.MaxJumpHeight * DivisionBy16), ly = MyY + 2;
                 for (int X = 1; X < (MaxSpeed * Base.MaxJumpHeight * DivisionBy16 * 2); X++)
                 {
@@ -7755,13 +7773,48 @@ namespace giantsummon
 
         public void TryJumpingTallTiles()
         {
-            int CenterX = (int)(Position.X * DivisionBy16), BottomY = (int)(Position.Y * DivisionBy16);
             if (!IsBeingControlledByPlayer)
             {
                 if ((!LastJump || JumpHeight > 0) && (MoveLeft || MoveRight))
                 {
                     if (CollisionX)
                     {
+                        int AheadX = (int)((Position.X + (CollisionWidth * 0.5f - 2) * Direction) * DivisionBy16), BottomY = (int)(Position.Y * DivisionBy16);
+                        int yCeiling = -1;
+                        for (int i = 1; i < (int)(MaxJumpHeight * JumpSpeed) + 3; i++)
+                        {
+                            Tile tile = Framing.GetTileSafely(AheadX, BottomY - i);
+                            //Dust.NewDust(new Vector2(AheadX, BottomY - i) * 16, 16, 16, 5);
+                            if(tile != null && tile.active() && Main.tileSolid[tile.type])
+                            {
+                                yCeiling = i;
+                                break;
+                            }
+                        }
+                        if(yCeiling > -1)
+                        {
+                            AheadX = (int)((Position.X + (CollisionWidth * 0.5f + 2) * Direction) * DivisionBy16);
+                            byte HoleSize = 0;
+                            for(int i = yCeiling + 3; i >= 0; i--)
+                            {
+                                Tile tile = Framing.GetTileSafely(AheadX, BottomY - i);
+                                if (tile != null)
+                                {
+                                    if (tile.active() && Main.tileSolid[tile.type])
+                                    {
+                                        HoleSize = 0;
+                                    }
+                                    else
+                                    {
+                                        HoleSize++;
+                                    }
+                                    if (HoleSize >= 3)
+                                        break;
+                                }
+                            }
+                            if (HoleSize < 3)
+                                return;
+                        }
                         Jump = true;
                     }
                 }
@@ -8021,7 +8074,7 @@ namespace giantsummon
             }
             if (CurrentIdleAction == IdleActions.LookingAtTheBackground && Velocity.Length() > 0)
                 CurrentIdleAction = IdleActions.Wait;
-            if (OwnerPos > -1 && !Main.player[OwnerPos].ghost && (!IsPlayerIdle || DoAction.InUse || PlayerControl || 
+            if (OwnerPos > -1 && !Main.player[OwnerPos].ghost && (!IsPlayerIdle || (DoAction.InUse && DoAction.BlockIdleAI) || PlayerControl || 
                 (PlayerMounted && !GuardianHasControlWhenMounted) || SittingOnPlayerMount) || IsAttackingSomething || 
                 (GuardingPosition.HasValue && !GuardianHasControlWhenMounted))
             {
@@ -8933,6 +8986,33 @@ namespace giantsummon
             return -1;
         }
 
+        public int GetItemCount(int ItemID)
+        {
+            int Count = 0;
+            for (int i = 0; i < 50; i++)
+            {
+                if (Inventory[i].type == ItemID)
+                {
+                    Count += Inventory[i].stack;
+                }
+            }
+            return Count;
+        }
+
+        public void GiveItemToPlayer(Player player, int ItemSlot, int Stack = 1, bool Formally = true)
+        {
+            if (ItemSlot < 0 || ItemSlot >= Inventory.Length || !player.active || Inventory[ItemSlot].type == 0)
+                return;
+            StartNewGuardianAction(new Actions.GiveItemToSomeone(player, ItemSlot, Stack));
+        }
+
+        public void GiveItemToGuardian(TerraGuardian tg, int ItemSlot, int Stack = 1, bool Formally = true)
+        {
+            if (ItemSlot < 0 || ItemSlot >= Inventory.Length || !tg.Active || Inventory[ItemSlot].type == 0)
+                return;
+            StartNewGuardianAction(new Actions.GiveItemToSomeone(tg, ItemSlot, Stack));
+        }
+
         public bool MoveItemToInventory(Item item, bool DropItemWhenInventoryIsFull = false)
         {
             //Just move items to the inventory, how hard it can be?
@@ -9552,6 +9632,8 @@ namespace giantsummon
 
         public static void DoTriggerGroup(List<TerraGuardian> terraguardians, TriggerTypes trigger, Trigger.TriggerTarget Target, int Value, int Value2 = 0, float Value3 = 0, float Value4 = 0, float Value5 = 0f)
         {
+            if (terraguardians.Count == 0)
+                return;
             //Add here actions that can only be triggered by one of those.
             switch (trigger)
             {
@@ -9572,7 +9654,7 @@ namespace giantsummon
                                         TerraGuardian[] PossibleMentioners = terraguardians.Where(x => Target.TargetType != giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian || x.WhoAmID != Target.TargetID).ToArray();
                                         if (PossibleMentioners.Length > 0)
                                         {
-                                            TerraGuardian WhoMentionsThis = PossibleMentioners[Main.rand.Next(terraguardians.Count)];
+                                            TerraGuardian WhoMentionsThis = PossibleMentioners[Main.rand.Next(PossibleMentioners.Length)];
                                             if ((IsPlayer && Target.TargetID == WhoMentionsThis.OwnerPos))
                                             {
                                                 WhoMentionsThis.SaySomething(WhoMentionsThis.GetMessage(GuardianBase.MessageIDs.LeaderFallsMessage, "*They tell you a terrarian fell.*"));
@@ -10588,7 +10670,17 @@ namespace giantsummon
             ShotSpeed = i.shootSpeed;
             Damage = i.damage;
             Knockback = i.knockBack;
-			if(i.useAmmo == Terraria.ID.AmmoID.None)
+            if (i.consumable)
+            {
+                if (UseAmmo)
+                {
+                    i.stack--;
+                    if (i.stack <= 0)
+                        i.SetDefaults(0, true);
+                }
+                return;
+            }
+            if (i.useAmmo == Terraria.ID.AmmoID.None && !i.consumable)
 				return;
             bool HasAmmo = false;
             for (int j = 0; j < 50; j++)
@@ -16276,7 +16368,8 @@ namespace giantsummon
             }
             else
             {
-                AddSkillProgress(Math.Abs(Velocity.Y * 0.25f), GuardianSkills.SkillTypes.Acrobatic);
+                if(!IsBeingPulledByPlayer)
+                    AddSkillProgress(Math.Abs(Velocity.Y * 0.25f), GuardianSkills.SkillTypes.Acrobatic);
             }
             if (!DoAction.InUse || !DoAction.Immune)
             {

@@ -37,6 +37,7 @@ namespace giantsummon.Companions
             Scale = 38f / 46;
             FramesInRows = 23;
             CompanionSlotWeight = 0.8f;
+            DefaultTactic = CombatTactic.Charge;
             //DuckingHeight = 54;
             Age = 23; //5
             SetBirthday(SEASON_SUMMER, 18);

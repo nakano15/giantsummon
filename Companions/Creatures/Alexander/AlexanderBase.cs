@@ -18,6 +18,7 @@ namespace giantsummon.Companions
             Name = "Alexander";
             Description = "Member of a mystery solving gang,\nuntil they disappeared, and now he looks for them.\nDoesn't miss a clue.";
             Size = GuardianSize.Large;
+            DefaultTactic = CombatTactic.Charge;
             Width = 28;
             Height = 86;
             DuckingHeight = 62;

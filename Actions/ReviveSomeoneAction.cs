@@ -19,7 +19,6 @@ namespace giantsummon.Actions
             ID = (int)ActionIDs.ReviveSomeone;
             InUse = true;
             RevivePlayer = Target;
-            TargetIsPlayer = true;
         }
 
         public ReviveSomeoneAction(TerraGuardian Target)
@@ -27,7 +26,6 @@ namespace giantsummon.Actions
             ID = (int)ActionIDs.ReviveSomeone;
             InUse = true;
             ReviveGuardian = Target;
-            TargetIsPlayer = false;
         }
 
         public static bool IsRevivingThisGuardian(TerraGuardian OneBeingRevived, TerraGuardian OneToCheck)
@@ -44,7 +42,7 @@ namespace giantsummon.Actions
         {
             if (guardian.furniturex > -1)
                 guardian.LeaveFurniture(false);
-            if (guardian.IsBeingPulledByPlayer)
+            if (guardian.KnockedOut || guardian.IsBeingPulledByPlayer)
             {
                 InUse = false;
                 return;

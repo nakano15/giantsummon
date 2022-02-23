@@ -33,6 +33,7 @@ namespace giantsummon.Companions
             Height = 92;
             DuckingHeight = 52;
             CompanionSlotWeight = 1.3f;
+            DefaultTactic = CombatTactic.Charge;
             SpriteWidth = 112;
             SpriteHeight = 112;
             Scale = 110f / 92;

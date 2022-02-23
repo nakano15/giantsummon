@@ -10,7 +10,6 @@ namespace giantsummon.Actions
         public PickupPlayerMountAction(Player Target)
         {
             ID = (int)ActionIDs.PickupPlayerMount;
-            InUse = true;
             PlayerToPickup = Target;
         }
 

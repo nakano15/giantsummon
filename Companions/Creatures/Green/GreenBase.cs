@@ -20,6 +20,7 @@ namespace giantsummon.Companions
             SpriteHeight = 96;
             Scale = 89f / 86;
             CompanionSlotWeight = 1.15f;
+            DefaultTactic = CombatTactic.Snipe;
             Age = 31;
             SetBirthday(SEASON_SPRING, 4);
             Male = true;

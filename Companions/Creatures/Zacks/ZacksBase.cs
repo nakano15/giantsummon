@@ -36,6 +36,7 @@ namespace giantsummon.Companions
             SpriteWidth = 96;
             SpriteHeight = 96;
             Scale = 107f / 86;
+            DefaultTactic = CombatTactic.Charge;
             CompanionSlotWeight = 1.25f;
             Age = 16;
             SetBirthday(SEASON_AUTUMN, 12);

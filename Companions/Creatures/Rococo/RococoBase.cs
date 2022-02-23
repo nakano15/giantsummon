@@ -34,6 +34,7 @@ namespace giantsummon.Companions
             CompanionSlotWeight = 1.1f;
             Age = 15;
             SetBirthday(SEASON_SUMMER, 20); //Coincidence?
+            DefaultTactic = CombatTactic.Charge;
             Male = true;
             InitialMHP = 200; //1000
             LifeCrystalHPBonus = 40;

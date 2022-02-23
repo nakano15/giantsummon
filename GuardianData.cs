@@ -388,6 +388,7 @@ namespace giantsummon
                     Inventory[Slot].stack = i.Stack;
                     Slot++;
                 }
+                tactic = Base.DefaultTactic;
             }
         }
 

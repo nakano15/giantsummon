@@ -54,6 +54,8 @@
   <ItemGroup>
     <Compile Include="Actions\BuySomethingFromNpcShopAction.cs" />
     <Compile Include="Actions\CarryDownedAlly.cs" />
+    <Compile Include="Actions\DefendHouseOnInvasion.cs" />
+    <Compile Include="Actions\GiveItemToSomeone.cs" />
     <Compile Include="Actions\JoinPlayerMountAction.cs" />
     <Compile Include="Actions\LaunchPlayerAction.cs" />
     <Compile Include="Actions\LiftPlayerAction.cs" />
@@ -101,6 +103,7 @@
     <Compile Include="CharacterInfo.cs" />
     <Compile Include="Companions\Creatures\Cille\BeastStateAction.cs" />
     <Compile Include="Companions\Creatures\Cille\CilleBase.cs" />
+    <Compile Include="Companions\Creatures\Fluffles\FriendlyHauntAction.cs" />
     <Compile Include="Compatibility\CompatibilityHooks.cs" />
     <Compile Include="Compatibility\GuardianIdentity.cs" />
     <Compile Include="Compatibility\NExperienceCompatibility.cs" />

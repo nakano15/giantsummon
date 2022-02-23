@@ -11,7 +11,7 @@ namespace giantsummon.Companions
         {
             Name = "Joy";
             PossibleNames = new string[] { "Cheery", "Fortue", "Glee", "Joy" };
-            Description = "One of the emotion pieces fragments\nof a TerraGuardian. Very scaredy.";
+            Description = "";
             Width = 10 * 2;
             Height = 27 * 2;
             SpriteWidth = 64;
@@ -38,7 +38,7 @@ namespace giantsummon.Companions
 
             MountUnlockLevel = 255;
 
-            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.PurplePhaseblade, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.YellowPhaseblade, 1));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.LesserHealingPotion, 10));
 
             //Animation Frames

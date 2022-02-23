@@ -8,7 +8,6 @@ namespace giantsummon.Actions
         public UseSkillResetItemAction()
         {
             ID = (int)ActionIDs.UseSkillResetPotion;
-            InUse = true;
         }
 
         public override void Update(TerraGuardian guardian)

@@ -7,7 +7,6 @@ namespace giantsummon.Actions
         public UseStatusIncreaseItemsAction()
         {
             ID = (int)ActionIDs.UseStatusIncreaseItems;
-            InUse = true;
         }
 
         public override void Update(TerraGuardian guardian)

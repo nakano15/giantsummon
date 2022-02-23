@@ -2991,7 +2991,7 @@ namespace giantsummon
                     case 5: s = "Town management simulator."; break;
                     case 6: s = "It's hard to pick the best."; break;
                     case 7: s = "Gotta meet 'em all!"; break;
-                    case 8: s = "Deadraccoo5 - A City in Nakano"; break;
+                    case 8: s = "Deadraccoon5 - A City in Nakano"; break;
                     case 9: s = "Errand boy/girl simulator."; break;
                 }
                 return "Terraria: " + s;
@@ -3059,11 +3059,7 @@ namespace giantsummon
                 ContributorIconTexture = GetTexture("Interface/Contributor_Icon");
                 TrustIconsTexture = GetTexture("Interface/Trust_Icons");
             }
-            AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
-            AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
-            AddNewGroup(GuardianBase.TerraGuardianCaitSithGroupID, "Cait Sith Guardian", 1f / 0.272f, true, true);
-            Group g = AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "Giant Dog Guardian", 4.6667f, true, true);
-            g.ReverseMountWhenUnderaged = false;
+            GroupSetup();
             GetInitialCompanionsList();
             AddQuestContainer(this, new Quests.TgQuestContainer());
             new Requests.RequestDB(); //This automatically adds the RequestDB to the request database, so... Nothing else needed to do.
@@ -3075,6 +3071,15 @@ namespace giantsummon
             TerraClassesMod = ModLoader.GetMod("TerraClasses");
             ThoriumMod = ModLoader.GetMod("ThoriumMod");
             FargoMutantMod = ModLoader.GetMod("Fargowiltas");
+        }
+
+        public void GroupSetup()
+        {
+            AddNewGroup(GuardianBase.TerraGuardianGroupID, "TerraGuardian", true, true);
+            AddNewGroup(GuardianBase.TerrarianGroupID, "Terrarian", false);
+            AddNewGroup(GuardianBase.TerraGuardianCaitSithGroupID, "Cait Sith Guardian", 1f / 0.272f, true, true);
+            Group g = AddNewGroup(GuardianBase.GiantDogGuardianGroupID, "Giant Dog Guardian", 4.6667f, true, true);
+            g.ReverseMountWhenUnderaged = false;
         }
 
         public override void Unload()

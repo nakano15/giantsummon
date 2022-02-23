@@ -10,7 +10,6 @@ namespace giantsummon.Actions
         public RestAction(byte Time)
         {
             ID = (int)ActionIDs.GoSleep;
-            InUse = true;
             RestTime = Time;
         }
 
@@ -136,6 +135,8 @@ namespace giantsummon.Actions
                                         g.Data.Injury = 0;
                                     else
                                         g.Data.Injury -= (sbyte)InjuryValue;
+                                    if (g.request.Active)
+                                        g.request.RequestTimeLeft -= RestValue;
                                 }
                             }
                             guardian.GrabbingPlayer = false;

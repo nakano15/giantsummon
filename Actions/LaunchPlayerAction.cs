@@ -11,7 +11,6 @@ namespace giantsummon.Actions
         public LaunchPlayerAction(Player target)
         {
             this.Target = target;
-            this.InUse = true;
             ID = (int)ActionIDs.LaunchPlayer;
         }
 

@@ -668,9 +668,9 @@ namespace giantsummon.Companions
             FlufflesData data = (FlufflesData)guardian.Data;
             if (!guardian.KnockedOut && !guardian.MountedOnPlayer && !guardian.UsingFurniture && guardian.Velocity.Y == 0) //guardian.BodyAnimationFrame != ReviveFrame
                 guardian.OffsetY -= ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
-            guardian.ReviveBoost += 2;
             if (guardian.KnockedOut)
             {
+                guardian.ReviveBoost += 2;
                 if (data.KnockoutAlpha > 0)
                 {
                     data.KnockoutAlpha -= 0.005f;
@@ -733,6 +733,42 @@ namespace giantsummon.Companions
                     if (data.KnockoutAlpha > 1)
                         data.KnockoutAlpha = 1;
                 }
+                /*if (!guardian.UsingFurniture && !guardian.DoAction.InUse && Main.rand.Next(60) == 0) //Needs debugging
+                {
+                    List<KeyValuePair<byte, int>> PossibleTargets = new List<KeyValuePair<byte, int>>();
+                    //0 = Player, 1 = Tg
+                    const float RangeX = 100, RangeY = 60;
+                    for(int p = 0; p < 255; p++)
+                    {
+                        if(Main.player[p].active && !Main.player[p].dead && !guardian.IsPlayerHostile(Main.player[p]) &&
+                            Math.Abs(Main.player[p].Center.X - guardian.Position.X) < RangeX + 20 + guardian.Width * 0.5f &&
+                            Math.Abs(Main.player[p].Center.Y - guardian.CenterY) < RangeY + 27 + guardian.Height * 0.5f)
+                        {
+                            PossibleTargets.Add(new KeyValuePair<byte, int>(0, p));
+                        }
+                    }
+                    foreach(int key in MainMod.ActiveGuardians.Keys)
+                    {
+                        if(key != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[key]) &&
+                            Math.Abs(MainMod.ActiveGuardians[key].Position.X - guardian.Position.X) < RangeX + (guardian.Width + MainMod.ActiveGuardians[key].Width) * 0.5f &&
+                            Math.Abs(MainMod.ActiveGuardians[key].CenterY - guardian.CenterY) < RangeY + (guardian.Height + MainMod.ActiveGuardians[key].Height) * 0.5f)
+                        {
+                            PossibleTargets.Add(new KeyValuePair<byte, int>(1, key));
+                        }
+                    }
+                    if(PossibleTargets.Count > 0)
+                    {
+                        KeyValuePair<byte, int> PickedTarget = PossibleTargets[Main.rand.Next(PossibleTargets.Count)];
+                        if(PickedTarget.Key == 0)
+                        {
+                            guardian.StartNewGuardianAction(new Creatures.Fluffles.FriendlyHauntAction(Main.player[PickedTarget.Value]));
+                        }
+                        else
+                        {
+                            guardian.StartNewGuardianAction(new Creatures.Fluffles.FriendlyHauntAction(MainMod.ActiveGuardians[PickedTarget.Value]));
+                        }
+                    }
+                }*/
             }
             if (guardian.KnockedOut)
             {

@@ -12,6 +12,7 @@ namespace giantsummon.Companions.Brutus
         public const int ProtectModeAutoTriggerTime = 3600;
         public byte Action = 0;
         public bool PlayerWasKnockedOut = false;
+        public int DelayBeforePlacingOnTheGround = 0;
 
         public ProtectModeAction(bool PlayerKod)
         {
@@ -34,6 +35,36 @@ namespace giantsummon.Companions.Brutus
                 guardian.LeaveFurniture(false);
             Player defended = Main.player[guardian.OwnerPos];
             PlayerMod defendedPm = defended.GetModPlayer<PlayerMod>();
+            /*if (guardian.GrabbingPlayer)
+            {
+                guardian.PlayerCanEscapeGrab = true;
+                DelayBeforePlacingOnTheGround--;
+                if (guardian.Velocity.X != 0 || guardian.Velocity.Y != 0)
+                    DelayBeforePlacingOnTheGround = 5 * 60;
+                return;
+            }
+            {
+                int XStart = (int)(defended.position.X * (1f / 16)), XEnd = (int)((defended.position.X + defended.width) * (1f / 16));
+                int YCheck = (int)(defended.position.Y * (1f / 16));
+                bool TryPickingUpPlayer = false;
+                for (int x = XStart; x < XEnd; x++)
+                {
+                    if(MainMod.IsDangerousTile(x, YCheck, defended.fireWalk))
+                    {
+                        TryPickingUpPlayer = true;
+                        break;
+                    }
+                }
+                if (TryPickingUpPlayer)
+                {
+                    DelayBeforePlacingOnTheGround = 5 * 60;
+                    if(TryReachingPlayer(guardian, defended))
+                    {
+                        guardian.AttemptToGrabPlayer();
+                    }
+                    return;
+                }
+            }*/
             const int Offset = 7 * 2;
             float DefendX = defended.Center.X - Offset * defended.direction;
             if (Action == 0)

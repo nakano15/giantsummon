@@ -15,7 +15,6 @@ namespace giantsummon.Actions
         public CarryDownedAlly(Player player)
         {
             ID = (int)ActionIDs.CarryDownedAlly;
-            InUse = true;
             CarriedPlayer = player;
             BlockOffHandUsage = true;
         }
@@ -23,7 +22,6 @@ namespace giantsummon.Actions
         public CarryDownedAlly(TerraGuardian tg)
         {
             ID = (int)ActionIDs.CarryDownedAlly;
-            InUse = true;
             CarriedGuardian = tg;
             BlockOffHandUsage = true;
         }

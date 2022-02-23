@@ -95,7 +95,7 @@ namespace giantsummon.Companions
             RightArmFrontFrameSwap.Add(12, 1);
             RightArmFrontFrameSwap.Add(21, 2);
 
-            SittingPoint = new Microsoft.Xna.Framework.Point((27 + 3) * 2, 62 * 2);
+            SittingPoint = new Point((27 + 3) * 2, 62 * 2);
 
             //Mounted Position
             MountShoulderPoints.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(39, 46);

@@ -208,7 +208,7 @@ namespace giantsummon.Companions.Zacks
                     ChainEndPosition.Y += DifY;
                     DifX = ChainStartPosition.X - ChainEndPosition.X;
                     DifY = ChainStartPosition.Y - ChainEndPosition.Y;
-                    Microsoft.Xna.Framework.Color color = Lighting.GetColor((int)ChainEndPosition.X / 16, (int)ChainEndPosition.Y / 16);
+                    Color color = Lighting.GetColor((int)ChainEndPosition.X / 16, (int)ChainEndPosition.Y / 16);
                     GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.chain12Texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width * 0.5f, Main.chain12Texture.Height * 0.5f), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None);
                     gdds.Add(gdd);
                     //Main.spriteBatch.Draw(Main.chain12Texture, ChainEndPosition - Main.screenPosition, null, color, Rotation, new Vector2(Main.chain12Texture.Width * 0.5f, Main.chain12Texture.Height * 0.5f), 1f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0f);

@@ -173,6 +173,15 @@ namespace giantsummon
                     {
                         if (Main.dayTime && Main.moonPhase != 4)
                         {
+                            List<WorldMod.GuardianTownNpcState> TownNpcsAtThisHouse = WorldMod.GetGuardianLivingHere(CilleShelterX, CilleShelterY);
+                            foreach(WorldMod.GuardianTownNpcState tg in TownNpcsAtThisHouse)
+                            {
+                                if(!tg.CharID.IsSameID(CilleID))
+                                {
+                                    tg.Homeless = true;
+                                    tg.HomeX = tg.HomeY = -1;
+                                }
+                            }
                             if (WorldMod.TrySpawningOrMovingGuardianNPC(CilleID, "", CilleShelterX, CilleShelterY, true, true))
                             {
                                 //NpcMod.SpawnGuardianNPC(CilleShelterX * 16, CilleShelterY * 16, CilleID);

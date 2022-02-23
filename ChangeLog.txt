@@ -6,3 +6,18 @@ Requests not accepted will no longer be shown on your request list.
 Cille leaving the world at night is no longer a bug, but now part of the mod.
 	She always returns during the day, as long as you keep her house intact.
 	The mod will no longer show messages telling you when she leaves.
+Companions will get slightly bigger as they grow older than 18.
+Fixed a bug where companion animation frames could go out of bounds.
+Companions that move in to the house that Cille is living before she is your friend will be evicted.
+Resting now will have time discounted from requests.
+	Resting too much will end up making you fail your request, so be careful.
+Guardian actions will no longer have their "InUse" flag be false by default.
+Companions will now leave their houses during the invasions, to try defending the village from invasors.
+It's now possible to setup default combat tactic for companions. I've also set some companions to have different combat tactics.
+	Charge: Wrath, Bree, Sardine, Rococo, Miguel, Mabel, Liebre, Cille, Zacks, Brutus and Alexander.
+	Snipe: Green and Sadness.
+Companions will no longer gain Acrobatic exp from being pulled towards the player.
+Smelly's recruit npc will now show as "Captain Stench", instead of "Smelly N P C".
+Cille can now crouch.
+	She will now also start with a Gold Broadsword and 5 Healing Potions.
+	And she will no longer go "Arrrgg!! Grrr!! Rrrr!" during bloodmoons.

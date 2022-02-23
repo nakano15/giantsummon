@@ -159,6 +159,7 @@ namespace giantsummon
         public float ExerciseCounter = 0;
         public byte ExercisesDone = 0;
         public List<QuestData> QuestDatas = new List<QuestData>();
+        private static int AmmoCheckDelay = 300;
 
         public static QuestData[] GetPlayerQuestDatas(Player player)
         {
@@ -1427,24 +1428,6 @@ namespace giantsummon
                                 if (Main.netMode == 0)
                                 {
                                     WorldMod.SkipTime(Main.rand.Next(10, 36) * 0.1f);
-                                    /*Main.time += Main.rand.Next(10, 35) * 0.1f * 3600;
-                                    if (Main.dayTime)
-                                    {
-                                        if (Main.time >= 15 * 3600)
-                                        {
-                                            Main.time -= 15 * 3600;
-                                            Main.dayTime = false;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (Main.time >= 9 * 3600)
-                                        {
-                                            Main.time -= 9 * 3600;
-                                            Main.dayTime = true;
-                                            Main.AnglerQuestSwap();
-                                        }
-                                    }*/
                                 }
                             }
                         }
@@ -1493,6 +1476,73 @@ namespace giantsummon
             return Count;
         }
 
+        public void UpdateAmmoLeftCheck()
+        {
+            if(--AmmoCheckDelay <= 0)
+            {
+                AmmoCheckDelay = Main.rand.Next(360, 720);
+                if (Guardian.Active)
+                {
+                    Dictionary<int, int> AmmoCount = new Dictionary<int, int>();
+                    for (byte i = 0; i < 10; i++)
+                    {
+                        if(player.inventory[i].type > 0)
+                        {
+                            if (player.inventory[i].useAmmo > 0 && !AmmoCount.ContainsKey(player.inventory[i].useAmmo))
+                            {
+                                AmmoCount.Add(player.inventory[i].useAmmo, 0);
+                            }
+                        }
+                    }
+                    bool HasEmptySlot = false;
+                    for (int i = 0; i < 58; i++)
+                    {
+                        if (player.inventory[i].type > 0 && AmmoCount.ContainsKey(player.inventory[i].ammo))
+                        {
+                            AmmoCount[player.inventory[i].ammo] += player.inventory[i].stack;
+                        }
+                        if (player.inventory[i].type == 0)
+                            HasEmptySlot = true;
+                    }
+                    if (HasEmptySlot)
+                    {
+                        const int LowAmmoCount = 500;
+                        const int MoreThanEnoughAmmo = 1998;
+                        bool SomeoneGaveAmmo = false;
+                        foreach(int key in AmmoCount.Keys)
+                        {
+                            if(AmmoCount[key] < LowAmmoCount)
+                            {
+                                foreach(TerraGuardian tg in GetAllGuardianFollowers)
+                                {
+                                    if(tg.Active && !tg.DoAction.InUse && tg.GetItemCount(key) >= MoreThanEnoughAmmo)
+                                    {
+                                        List<int> ThisAmmoSlots = new List<int>();
+                                        for(int i = 0; i < tg.Inventory.Length; i++)
+                                        {
+                                            if(tg.Inventory[i].type > 0 && tg.Inventory[i].ammo == key)
+                                            {
+                                                ThisAmmoSlots.Add(i);
+                                            }
+                                        }
+                                        if(ThisAmmoSlots.Count > 1)
+                                        {
+                                            int SelectedSlot = ThisAmmoSlots[ThisAmmoSlots.Count - 1];
+                                            tg.GiveItemToPlayer(player, SelectedSlot, tg.Inventory[SelectedSlot].stack, tg.TargetID > -1);
+                                            SomeoneGaveAmmo = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (SomeoneGaveAmmo)
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public override void PreUpdate()
         {
             if (player.ghost)
@@ -1521,6 +1571,10 @@ namespace giantsummon
                             MainMod.FlufflesHauntOpacity = 1;
                     }
                 }
+            }
+            if(player.whoAmI == Main.myPlayer)
+            {
+                UpdateAmmoLeftCheck();
             }
         }
 
