@@ -328,7 +328,7 @@ namespace giantsummon
 
         public static int CalculateMessageTime(string s)
         {
-            int Time = 300;
+            int Time = 150;
             foreach (char c in s)
             {
                 if (c == '.' || c == ':')
@@ -341,7 +341,7 @@ namespace giantsummon
                 }
                 else if (c != ' ' && c != '\n')
                 {
-                    Time++;
+                    Time += 3;
                 }
             }
             return Time;

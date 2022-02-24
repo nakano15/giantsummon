@@ -138,7 +138,7 @@ namespace giantsummon.Npcs
                                     player.inventory[i].stack -= ToDiscount;
                                     BarsLeftToRemove -= ToDiscount;
                                     if (player.inventory[i].stack == 0)
-                                        player.inventory[i].SetDefaults(0);
+                                        player.inventory[i].SetDefaults(0, true);
                                     if (BarsLeftToRemove <= 0)
                                         break;
                                 }
@@ -157,7 +157,7 @@ namespace giantsummon.Npcs
                                     player.inventory[i].stack -= ToDiscount;
                                     BarsLeftToRemove -= ToDiscount;
                                     if (player.inventory[i].stack == 0)
-                                        player.inventory[i].SetDefaults(0);
+                                        player.inventory[i].SetDefaults(0, true);
                                     if (BarsLeftToRemove <= 0)
                                         break;
                                 }

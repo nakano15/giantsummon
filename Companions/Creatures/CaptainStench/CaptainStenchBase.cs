@@ -200,7 +200,7 @@ namespace giantsummon.Companions
             {
                 if (i.type == ItemID)
                 {
-                    i.SetDefaults(0);
+                    i.SetDefaults(0, true);
                     return true;
                 }
             }
@@ -208,7 +208,7 @@ namespace giantsummon.Companions
             {
                 if (i.type == ItemID)
                 {
-                    i.SetDefaults(0);
+                    i.SetDefaults(0, true);
                     return true;
                 }
             }
@@ -216,7 +216,7 @@ namespace giantsummon.Companions
             {
                 if (i.type == ItemID)
                 {
-                    i.SetDefaults(0);
+                    i.SetDefaults(0, true);
                     return true;
                 }
             }
@@ -674,7 +674,7 @@ namespace giantsummon.Companions
                                     {
                                         Main.player[Main.myPlayer].inventory[j].stack--;
                                         if (Main.player[Main.myPlayer].inventory[j].stack <= 0)
-                                            Main.player[Main.myPlayer].inventory[j].SetDefaults(0);
+                                            Main.player[Main.myPlayer].inventory[j].SetDefaults(0, true);
                                         break;
                                     }
                                 }

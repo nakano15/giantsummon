@@ -127,7 +127,7 @@ namespace giantsummon
         {
             this.ItemID = ItemID;
                 Item i = new Item();
-                i.SetDefaults(ItemID);
+                i.SetDefaults(ItemID, true);
             if(ItemName == "")
             {
                 this.ItemName = i.Name;
@@ -192,7 +192,7 @@ namespace giantsummon
                         StackToRemove = player.inventory[i].stack;
                     player.inventory[i].stack -= StackToRemove;
                     if (player.inventory[i].stack == 0)
-                        player.inventory[i].SetDefaults(0);
+                        player.inventory[i].SetDefaults(0, true);
                     ItemCount -= StackToRemove;
                     if (ItemCount <= 0)
                         break;

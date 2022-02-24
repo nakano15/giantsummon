@@ -6774,18 +6774,18 @@ namespace giantsummon
 
         public bool TryBuyingItem(int NpcPos, int ID, int ItemPrice, int Stack)
         {
-            if(Coins < ItemPrice * Stack)
+            if(Coins < (uint)(ItemPrice * Stack))
             {
-                int BuyableStacks = (int)(Coins / (uint)(ItemPrice * Stack));
+                int BuyableStacks = (int)(Coins / (uint)(ItemPrice));
                 if (BuyableStacks == 0)
                     return false;
                 if (BuyableStacks < Stack)
                     Stack = BuyableStacks;
 
             }
-            if (Coins >= ItemPrice)
+            if (Coins >= (uint)(ItemPrice * Stack))
             {
-                GuardianActions.BuyItemFromShopCommand(this, NpcPos, ID, Stack, ItemPrice);
+                GuardianActions.BuyItemFromShopAction(this, NpcPos, ID, Stack, ItemPrice);
                 return true;
             }
             return false;
@@ -6794,43 +6794,50 @@ namespace giantsummon
         public int BuyItem(int ID, int ItemPrice, int Stack)
         {
             int ItemsBought = 0; //TODO - It's broken. Review how this works.
-            for (int i = 0; i < 50; i++)
+            int PossibleToBuy = (int)(Coins / (uint)(ItemPrice));
+            if (PossibleToBuy < 0)
+                return 0;
+            if (PossibleToBuy < Stack)
+                Stack = PossibleToBuy;
+            bool HasEmptySlot = false;
+            for(int i = 0; i < 50; i++)
             {
                 if (Stack == 0)
                     break;
-                if (Stack > 0 && Inventory[i].type == 0)
+                if (Inventory[i].type == 0)
+                    HasEmptySlot = true;
+                else if(Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
                 {
-                    int BuyableStack = (int)(Coins / (uint)(ItemPrice * Stack));
-                    if (BuyableStack > 0)
+                    int LeftStack = Inventory[i].maxStack - Inventory[i].stack;
+                    if(LeftStack > Stack)
                     {
-                        Inventory[i].SetDefaults(ID);
-                        Inventory[i].stack = Stack;
-                        if (BuyableStack < Stack)
-                            Inventory[i].stack = BuyableStack;
-                        if (Inventory[i].stack > Inventory[i].maxStack)
-                        {
-                            Inventory[i].stack = Inventory[i].maxStack;
-                        }
-                        Stack -= Inventory[i].stack;
-                        ItemsBought += Inventory[i].stack;
-                        Coins -= (uint)(Inventory[i].stack * ItemPrice);
-                        continue;
+                        LeftStack = Stack;
                     }
+                    ItemsBought += LeftStack;
+                    Inventory[i].stack += LeftStack;
+                    Stack -= LeftStack;
+                    //Main.NewText("Coins: " + Coins + "  To Spend: " + (LeftStack * ItemPrice));
+                    Coins -= (uint)(LeftStack * ItemPrice);
                 }
-                if (Stack > 0 && Inventory[i].type == ID && Inventory[i].stack < Inventory[i].maxStack)
+            }
+            if (HasEmptySlot && Stack > 0)
+            {
+                for(int i = 0; i < 50; i++)
                 {
-                    int ToRefill = Inventory[i].maxStack - Inventory[i].stack;
-                    if (ToRefill > Stack)
-                        ToRefill = Stack;
+                    if (Stack == 0)
+                        break;
+                    if(Inventory[i].type == 0)
                     {
-                        int MaxRefil = (int)(Coins / ItemPrice);
-                        if (MaxRefil < ToRefill)
-                            ToRefill = MaxRefil;
+                        Inventory[i].SetDefaults(ID, true);
+                        int LeftStack = Stack;
+                        if (LeftStack > Inventory[i].maxStack)
+                            LeftStack = Inventory[i].maxStack;
+                        ItemsBought += LeftStack;
+                        Inventory[i].stack = LeftStack;
+                        Stack -= LeftStack;
+                        //Main.NewText("Coins: " + Coins + "  To Spend: " + (LeftStack * ItemPrice));
+                        Coins -= (uint)(LeftStack * ItemPrice);
                     }
-                    Inventory[i].stack += ToRefill;
-                    Stack -= ToRefill;
-                    Coins -= (uint)(ToRefill * ItemPrice);
-                    ItemsBought += ToRefill;
                 }
             }
             return ItemsBought;
@@ -9043,7 +9050,7 @@ namespace giantsummon
                         if (IsCoin)
                         {
                             Item newCoin = new Item();
-                            newCoin.SetDefaults(Inventory[i].type + 1);
+                            newCoin.SetDefaults(Inventory[i].type + 1, true);
                             newCoin.stack = Inventory[i].stack / 100;
                             Inventory[i].stack = Inventory[i].stack % 100;
                             MoveItemToInventory(newCoin, true);
@@ -9052,7 +9059,7 @@ namespace giantsummon
                     if (item.stack == 0)
                     {
                         GotItem = true;
-                        item.SetDefaults(0);
+                        item.SetDefaults(0, true);
                         item.active = false;
                     }
                 }
@@ -9074,7 +9081,7 @@ namespace giantsummon
                 {
                     Inventory[FirstEmptySlot] = item.Clone();
                     Inventory[FirstEmptySlot].newAndShiny = true;
-                    item.SetDefaults(0);
+                    item.SetDefaults(0, true);
                     item.active = false;
                     EmptyInventorySlots--;
                     GotItem = true;
@@ -9087,7 +9094,7 @@ namespace giantsummon
                     Main.item[ItemPos].position = ItemPosition;
                     Main.item[ItemPos].velocity = Velocity;
                     Main.item[ItemPos].active = true;
-                    item.SetDefaults(0);
+                    item.SetDefaults(0, true);
                     item.active = false;
                 }
             }
@@ -10811,7 +10818,7 @@ namespace giantsummon
                                 {
                                     Inventory[s].stack--;
                                     if (Inventory[s].stack <= 0)
-                                        Inventory[s].SetDefaults(0);
+                                        Inventory[s].SetDefaults(0, true);
                                     DepleteThisItemAmmo = false;
                                     LastItem = false;
                                     break;
@@ -10825,7 +10832,7 @@ namespace giantsummon
                             if (DepleteThisItemAmmo)
                                 Inventory[j].stack--;
                             if (Inventory[j].stack <= 0)
-                                Inventory[j].SetDefaults(0);
+                                Inventory[j].SetDefaults(0, true);
                         }
                     }
                     ShotSpeed *= ShotSpeedMult;
@@ -13821,7 +13828,7 @@ namespace giantsummon
                                 item.stack--;
                             }
                             if (item.stack <= 0)
-                                item.SetDefaults(0);
+                                item.SetDefaults(0, true);
                         }
                         if (item.reuseDelay > 0)
                         {
@@ -16530,7 +16537,7 @@ namespace giantsummon
             {
                 if (this.Inventory[i].type == 0)
                 {
-                    this.Inventory[i].SetDefaults(ID);
+                    this.Inventory[i].SetDefaults(ID, true);
                     this.Inventory[i].stack = Stack;
                     return;
                 }

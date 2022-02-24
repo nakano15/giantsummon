@@ -1413,6 +1413,9 @@ namespace giantsummon
                 PopContestResultNevermindMessage = "Mes.Contest.ResultNevermind";
             public const string RescueComingMessage = "Mes.Rescue.TellTheyreComing",
                 RescueGotMessage = "Mes.Rescue.TargetAcquired";
+            public const string DeliveryItemMissing = "Mes.Delivery.MissingItem",
+                DeliveryInventoryFull = "Mes.Delivery.InventoryFull",
+                DeliveryGiveItem = "Mes.Delivery.GiveItem";
         }
         
         public enum GuardianEffect

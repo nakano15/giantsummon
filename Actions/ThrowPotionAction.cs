@@ -43,7 +43,7 @@ namespace giantsummon.Actions
                         target.HealEffect(Value, true);
                         i.stack--;
                         if (i.stack == 0)
-                            i.SetDefaults(0);
+                            i.SetDefaults(0, true);
                     }
                     Main.PlaySound(Terraria.ID.SoundID.Item107, target.Center);
                 }

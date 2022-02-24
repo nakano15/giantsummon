@@ -79,7 +79,7 @@ namespace giantsummon
                     }
                     player.inventory[i].stack -= StackToTake;
                     if (player.inventory[i].stack == 0)
-                        player.inventory[i].SetDefaults(0);
+                        player.inventory[i].SetDefaults(0, true);
                     Stack -= StackToTake;
                     if (Stack <= 0)
                         return;

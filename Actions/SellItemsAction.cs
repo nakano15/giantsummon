@@ -166,7 +166,7 @@ namespace giantsummon.Actions
                                     guardian.Inventory[i].type != Terraria.ID.ItemID.DefenderMedal)
                                     {
                                         c += guardian.Inventory[i].value * guardian.Inventory[i].stack;
-                                        guardian.Inventory[i].SetDefaults(0);
+                                        guardian.Inventory[i].SetDefaults(0, true);
                                         SoldItems = true;
                                     }
                                     else if (SendToPiggyBank)
@@ -176,23 +176,23 @@ namespace giantsummon.Actions
                                         {
                                             case Terraria.ID.ItemID.CopperCoin:
                                                 copperstack += guardian.Inventory[i].stack;
-                                                guardian.Inventory[i].SetDefaults(0);
+                                                guardian.Inventory[i].SetDefaults(0, true);
                                                 break;
                                             case Terraria.ID.ItemID.SilverCoin:
                                                 s += guardian.Inventory[i].stack;
-                                                guardian.Inventory[i].SetDefaults(0);
+                                                guardian.Inventory[i].SetDefaults(0, true);
                                                 break;
                                             case Terraria.ID.ItemID.GoldCoin:
                                                 g += guardian.Inventory[i].stack;
-                                                guardian.Inventory[i].SetDefaults(0);
+                                                guardian.Inventory[i].SetDefaults(0, true);
                                                 break;
                                             case Terraria.ID.ItemID.PlatinumCoin:
                                                 p += guardian.Inventory[i].stack;
-                                                guardian.Inventory[i].SetDefaults(0);
+                                                guardian.Inventory[i].SetDefaults(0, true);
                                                 break;
                                             case Terraria.ID.ItemID.DefenderMedal:
                                                 token += guardian.Inventory[i].stack;
-                                                guardian.Inventory[i].SetDefaults(0);
+                                                guardian.Inventory[i].SetDefaults(0, true);
                                                 break;
                                         }
                                     }
@@ -333,7 +333,7 @@ namespace giantsummon.Actions
                                             }
                                             if (bank.item[i].stack == 0)
                                             {
-                                                bank.item[i].SetDefaults(0);
+                                                bank.item[i].SetDefaults(0, true);
                                             }
                                         }
                                     }
@@ -341,7 +341,7 @@ namespace giantsummon.Actions
                                     {
                                         if (EmptySlot > -1)
                                         {
-                                            bank.item[EmptySlot].SetDefaults(CoinID);
+                                            bank.item[EmptySlot].SetDefaults(CoinID, true);
                                             if (CoinsToDiscount > 1000)
                                             {
                                                 bank.item[EmptySlot].stack = 1000;
@@ -391,31 +391,31 @@ namespace giantsummon.Actions
                                     case Terraria.ID.ItemID.CopperCoin:
                                         {
                                             c += guardian.Inventory[i].stack;
-                                            guardian.Inventory[i].SetDefaults(0);
+                                            guardian.Inventory[i].SetDefaults(0, true);
                                         }
                                         break;
                                     case Terraria.ID.ItemID.SilverCoin:
                                         {
                                             s += guardian.Inventory[i].stack;
-                                            guardian.Inventory[i].SetDefaults(0);
+                                            guardian.Inventory[i].SetDefaults(0, true);
                                         }
                                         break;
                                     case Terraria.ID.ItemID.GoldCoin:
                                         {
                                             g += guardian.Inventory[i].stack;
-                                            guardian.Inventory[i].SetDefaults(0);
+                                            guardian.Inventory[i].SetDefaults(0, true);
                                         }
                                         break;
                                     case Terraria.ID.ItemID.PlatinumCoin:
                                         {
                                             p += guardian.Inventory[i].stack;
-                                            guardian.Inventory[i].SetDefaults(0);
+                                            guardian.Inventory[i].SetDefaults(0, true);
                                         }
                                         break;
                                     case Terraria.ID.ItemID.DefenderMedal:
                                         {
                                             token += guardian.Inventory[i].stack;
-                                            guardian.Inventory[i].SetDefaults(0);
+                                            guardian.Inventory[i].SetDefaults(0, true);
                                         }
                                         break;
                                 }
@@ -441,31 +441,31 @@ namespace giantsummon.Actions
                                 {
                                     if (token > 0)
                                     {
-                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.DefenderMedal);
+                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.DefenderMedal, true);
                                         guardian.Inventory[i].stack = token;
                                         token = 0;
                                     }
                                     else if (p > 0)
                                     {
-                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.PlatinumCoin);
+                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.PlatinumCoin, true);
                                         guardian.Inventory[i].stack = p;
                                         p = 0;
                                     }
                                     else if (g > 0)
                                     {
-                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.GoldCoin);
+                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.GoldCoin, true);
                                         guardian.Inventory[i].stack = g;
                                         g = 0;
                                     }
                                     else if (s > 0)
                                     {
-                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.SilverCoin);
+                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.SilverCoin, true);
                                         guardian.Inventory[i].stack = s;
                                         s = 0;
                                     }
                                     else if (c > 0)
                                     {
-                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.CopperCoin);
+                                        guardian.Inventory[i].SetDefaults(Terraria.ID.ItemID.CopperCoin, true);
                                         guardian.Inventory[i].stack = c;
                                         c = 0;
                                     }

@@ -756,30 +756,30 @@ namespace giantsummon
             {
                 case NPCID.Dryad:
                     {
-                        shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.RenameCard>());
+                        shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.RenameCard>(), true);
                     }
                     break;
                 case NPCID.PartyGirl:
                     {
-                        shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Misc.BirthdayPresent>());
+                        shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Misc.BirthdayPresent>(), true);
                     }
                     break;
                 case NPCID.Merchant:
                     {
                         if (MainMod.UsingGuardianNecessitiesSystem)
-                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.FirstAidKit>());
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.FirstAidKit>(), true);
                     }
                     break;
                 case NPCID.Cyborg:
                     {
                         if (!Main.halloween && PlayerMod.PlayerHasGuardianSummoned(Main.LocalPlayer, GuardianBase.Alex))
-                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>());
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>(), true);
                     }
                     break;
                 case NPCID.Mechanic:
                     {
                         if (!Main.halloween && PlayerMod.PlayerHasGuardianSummoned(Main.LocalPlayer, GuardianBase.Alex))
-                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>());
+                            shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Alex.AlexModel3000TurquoiseShark>(), true);
                     }
                     break;
                 case NPCID.Clothier:
@@ -788,11 +788,11 @@ namespace giantsummon
                         {
                             if (Main.dayTime && !Main.raining && Main.moonPhase % 4 < 2)
                             {
-                                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>());
+                                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.DamselOutfit>(), true);
                             }
                             if (!Main.halloween)
                             {
-                                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>());
+                                shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Outfit.Bree.WitchOutfit>(), true);
                             }
                         }
                     }

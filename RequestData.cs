@@ -306,7 +306,7 @@ namespace giantsummon
                 {
                     if(PickedChance >= Stack && PickedChance < Stack + r.AcquisitionChance)
                     {
-                        item.SetDefaults(r.itemID);
+                        item.SetDefaults(r.itemID, true);
                         item.stack = r.Stack;
                         break;
                     }

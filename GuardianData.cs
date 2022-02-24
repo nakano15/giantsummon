@@ -72,7 +72,26 @@ namespace giantsummon
         public bool IsStarter = false;
         public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;
         public bool OverrideQuickMountToMountGuardianInstead = false, UseHeavyMeleeAttackWhenMounted = true, HideWereForm = false;
-        public uint Coins = 0;
+        public uint Coins
+        {
+            get { return _Coins; }
+            set
+            {
+                if (value > 0 && unchecked(_Coins + value) < 0)
+                {
+                    _Coins = uint.MaxValue;
+                }
+                else if (value < 0 && unchecked(_Coins + value) > 0)
+                {
+                    _Coins = 0;
+                }
+                else
+                {
+                    _Coins = value;
+                }
+            }
+        }
+        private uint _Coins = 0;
         public Item[] Equipments = new Item[9]; //3 body equipments and 6 accessories
         public Item[] Inventory = new Item[50];
         public GuardianItemSlotFlag[] InventorySlotFlags = new GuardianItemSlotFlag[50];
@@ -266,8 +285,8 @@ namespace giantsummon
             {
                 Inventory[i] = new Item();
             }
-            Inventory[0].SetDefaults(Terraria.ID.ItemID.WoodenSword);
-            Inventory[1].SetDefaults(Terraria.ID.ItemID.Mushroom);
+            Inventory[0].SetDefaults(Terraria.ID.ItemID.WoodenSword, true);
+            Inventory[1].SetDefaults(Terraria.ID.ItemID.Mushroom, true);
             Inventory[1].stack = 5;
         }
 
@@ -336,7 +355,7 @@ namespace giantsummon
         
         public bool SubtractCoins(int Sub)
         {
-            if (Sub < Coins)
+            if ((uint)Sub < Coins)
                 return false;
             Coins -= (uint)Sub;
             return true;
@@ -384,7 +403,7 @@ namespace giantsummon
                 int Slot = 0;
                 foreach (GuardianBase.ItemPair i in Base.InitialItems)
                 {
-                    Inventory[Slot].SetDefaults(i.ItemID);
+                    Inventory[Slot].SetDefaults(i.ItemID, true);
                     Inventory[Slot].stack = i.Stack;
                     Slot++;
                 }
@@ -715,7 +734,7 @@ namespace giantsummon
                 tag.Add("ExistenceTime_" + UniqueID, LifeTime.Value.TotalSeconds);*/
             tag.Add("SkinID_" + UniqueID, SkinID);
             tag.Add("OutfitID_" + UniqueID, OutfitID);
-            tag.Add("Coins_" + UniqueID, (int)Coins - int.MaxValue);
+            tag.Add("Coins_" + UniqueID, (int)_Coins - int.MaxValue);
             SaveCustom(tag, UniqueID);
             GuardianCommonStatus.SaveStatus(ID, ModID);
         }
@@ -864,7 +883,7 @@ namespace giantsummon
                 Item j = new Item();
                 if (ModVersion < 2)
                 {
-                    j.SetDefaults(tag.GetInt("Inventory_" + i + "_Type_" + UniqueID));
+                    j.SetDefaults(tag.GetInt("Inventory_" + i + "_Type_" + UniqueID), true);
                     j.stack = tag.GetInt("Inventory_" + i + "_Stack_" + UniqueID);
                     j.prefix = tag.GetByte("Inventory_" + i + "_Prefix_" + UniqueID);
                 }
@@ -886,7 +905,7 @@ namespace giantsummon
                 Item j = new Item();
                 if (ModVersion < 4)
                 {
-                    j.SetDefaults(tag.GetInt("Equipment_" + e + "_Type_" + UniqueID));
+                    j.SetDefaults(tag.GetInt("Equipment_" + e + "_Type_" + UniqueID), true);
                     j.stack = tag.GetInt("Equipment_" + e + "_Stack_" + UniqueID);
                     j.prefix = tag.GetByte("Equipment_" + e + "_Prefix_" + UniqueID);
                 }
@@ -932,7 +951,7 @@ namespace giantsummon
                 }
             }
             if (ModVersion >= 29)
-                BodyDye.SetDefaults(tag.GetInt("BodyDye_" + UniqueID));
+                BodyDye.SetDefaults(tag.GetInt("BodyDye_" + UniqueID), true);
             if (ModVersion >= 56)
             {
                 Fatigue = (sbyte)tag.GetByte("FatigueCount_" + UniqueID);
@@ -968,7 +987,7 @@ namespace giantsummon
             }
             if (ModVersion >= 67)
             {
-                Coins = (uint)(tag.GetInt("Coins_" + UniqueID) + int.MaxValue);
+                _Coins = (uint)(tag.GetInt("Coins_" + UniqueID) + int.MaxValue);
             }
             if (ModVersion < 80)
                 ResetSkillsProgress();

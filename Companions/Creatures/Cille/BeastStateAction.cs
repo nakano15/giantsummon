@@ -10,6 +10,11 @@ namespace giantsummon.Companions.Creatures.Cille
     {
         public const int TimeUntilActivates = 7 * 60;
 
+        public BeastStateAction()
+        {
+            BlockOffHandUsage = true;
+        }
+
         public override void Update(TerraGuardian guardian)
         {
             switch (Step)

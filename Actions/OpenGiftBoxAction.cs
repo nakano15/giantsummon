@@ -30,7 +30,7 @@ namespace giantsummon.Actions
                         guardian.DisplayEmotion(TerraGuardian.Emotions.Question);
                         int ItemPosition = BoxPosition;
                         BoxID = guardian.Inventory[BoxPosition].type;
-                        guardian.Inventory[ItemPosition].SetDefaults(0);
+                        guardian.Inventory[ItemPosition].SetDefaults(0, true);
                     }
                     if (Time >= 120)
                         ChangeStep();

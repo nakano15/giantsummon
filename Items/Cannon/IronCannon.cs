@@ -32,7 +32,7 @@ namespace giantsummon.Items.Cannon
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.SetResult(ModContent.ItemType<IronCannon>(), 1);
-            recipe.requiredItem[0].SetDefaults(Terraria.ID.ItemID.IronBar);
+            recipe.requiredItem[0].SetDefaults(Terraria.ID.ItemID.IronBar, true);
             recipe.requiredItem[0].stack = 12;
             recipe.requiredTile[0] = Terraria.ID.TileID.Anvils;
             recipe.anyIronBar = true;

@@ -150,7 +150,7 @@ namespace giantsummon
             Guardian.DoAction = new RestAction(RestTime);
         }
 
-        public static void BuyItemFromShopCommand(TerraGuardian Guardian, int NpcPosition, int ItemID, int BuyStack, int BuyPrice)
+        public static void BuyItemFromShopAction(TerraGuardian Guardian, int NpcPosition, int ItemID, int BuyStack, int BuyPrice)
         {
             //if (Guardian.OwnerPos == -1) return;
             Guardian.DoAction = new BuySomethingFromNpcShopAction(NpcPosition, ItemID, BuyStack, BuyPrice);

@@ -149,7 +149,7 @@ namespace giantsummon.Quests
                             {
                                 i.stack--;
                                 if (i.stack <= 0)
-                                    i.SetDefaults(0);
+                                    i.SetDefaults(0, true);
                             }
                         }
                         if (Main.rand.NextDouble() < 1f / 20)

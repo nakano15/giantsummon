@@ -307,7 +307,7 @@ namespace giantsummon
                                 {
                                     //Buy Item :D
                                     Item item = new Item();
-                                    item.SetDefaults(Item.ItemID);
+                                    item.SetDefaults(Item.ItemID, true);
                                     if (Item.SellStack > 0)
                                         item.stack = Item.SellStack;
                                     if (Item.ItemName != item.Name)

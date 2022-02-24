@@ -102,7 +102,8 @@ namespace giantsummon.Actions
                         if(guardian.Inventory[ItemSlot].type == 0)
                         {
                             InUse = false; //Where's the item I was going to give?
-                            guardian.SaySomething("*They seems to have wanted to deliver something, but can't find it in their inventory.*");
+                            guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.DeliveryItemMissing, 
+                                "*They seems to have wanted to deliver something, but can't find it in their inventory.*"));
                             return;
                         }
                         if (StepStart)
@@ -122,7 +123,9 @@ namespace giantsummon.Actions
                                 }
                                 if (EmptySlot == 255)
                                 {
-                                    guardian.SaySomething("*It seems like you have no room for what they wanted to give you.*");
+                                    string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryInventoryFull,
+                                        "*It seems like you have no room for what they wanted to give [target].*").Replace("[target]", (player.whoAmI == Main.myPlayer ? "you" : player.name));
+                                    guardian.SaySomething(Message);
                                     InUse = false;
                                 }
                             }
@@ -136,7 +139,9 @@ namespace giantsummon.Actions
                                 }
                                 if (EmptySlot == 255)
                                 {
-                                    guardian.SaySomething("*It seems like you have no room for what they wanted to give you.*");
+                                    string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryInventoryFull,
+                                        "*It seems like you have no room for what they wanted to give [target].*").Replace("[target]", tg.Name);
+                                    guardian.SaySomething(Message);
                                     InUse = false;
                                 }
                             }
@@ -158,14 +163,19 @@ namespace giantsummon.Actions
                                 }
                                 if (EmptySlot == 255)
                                 {
-                                    guardian.SaySomething("*It seems like you have no room for what they wanted to give you.*");
+                                    string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryInventoryFull,
+                                        "*It seems like you have no room for what they wanted to give you.*").Replace("[target]", (player.whoAmI == Main.myPlayer ? "you" : player.name));
+                                    guardian.SaySomething(Message);
                                 }
                                 else
                                 {
                                     Item item = guardian.Inventory[ItemSlot].DeepClone();
                                     player.GetItem(player.whoAmI, item);
-                                    guardian.Inventory[ItemSlot].SetDefaults(0);
-                                    guardian.SaySomething("*They gave you some " + item.Name + "*");
+                                    guardian.Inventory[ItemSlot].SetDefaults(0, true);
+                                    string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryGiveItem,
+                                        "*"+guardian.Name+" gave [target] some [item].*").Replace("[target]", (player.whoAmI == Main.myPlayer ? "you" : player.name)).
+                                        Replace("[item]", item.Name);
+                                    guardian.SaySomething(Message);
                                 }
                             }
                             else
@@ -178,14 +188,19 @@ namespace giantsummon.Actions
                                 }
                                 if (EmptySlot == 255)
                                 {
-                                    guardian.SaySomething("*It seems like you have no room for what they wanted to give you.*");
+                                    string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryInventoryFull,
+                                        "*It seems like you have no room for what they wanted to give [target].*").Replace("[target]", tg.Name);
+                                    guardian.SaySomething(Message);
                                 }
                                 else
                                 {
                                     Item item = guardian.Inventory[ItemSlot].DeepClone();
                                     tg.Inventory[EmptySlot] = item;
-                                    guardian.Inventory[EmptySlot].SetDefaults(0);
-                                    guardian.SaySomething("*They gave " + tg.Name + " some " + item.Name + "*");
+                                    guardian.Inventory[EmptySlot].SetDefaults(0, true);
+                                    string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryGiveItem,
+                                        "*" + guardian.Name + " gave [target] some [item].*").Replace("[target]", tg.Name).
+                                        Replace("[item]", item.Name);
+                                    guardian.SaySomething(Message);
                                 }
                             }
                             InUse = false;

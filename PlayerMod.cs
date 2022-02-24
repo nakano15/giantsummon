@@ -429,11 +429,11 @@ namespace giantsummon
             {
                 if (player.inventory[i].type == PortraitID)
                 {
-                    player.inventory[i].SetDefaults(0);
+                    player.inventory[i].SetDefaults(0, true);
                 }
             }
             if (Main.myPlayer == player.whoAmI && Main.mouseItem.type == PortraitID)
-                Main.mouseItem.SetDefaults(0);
+                Main.mouseItem.SetDefaults(0, true);
             if(player.whoAmI == Main.myPlayer)
                 Main.NewText("Buddy mode activated.");
             GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.SomeonePickedABuddy, player.name, GetGuardian(BuddyID, BuddyModID).Name, 30, 75);
@@ -881,7 +881,7 @@ namespace giantsummon
                     Item i = player.armor[e];
                     Item.NewItem(player.getRect(), i.type);
                     //player.GetItem(player.whoAmI, i);
-                    player.armor[e].SetDefaults();
+                    player.armor[e].SetDefaults(0, true);
                     Main.NewText("This item doesn't fit on me.");
                 }
                 if (player.armor[e + 10].type > 0 && player.armor[e + 10].modItem is Items.GuardianItemPrefab &&
@@ -890,7 +890,7 @@ namespace giantsummon
                     Item i = player.armor[e + 10];
                     Item.NewItem(player.getRect(), i.type);
                     //player.GetItem(player.whoAmI, i);
-                    player.armor[e + 10].SetDefaults();
+                    player.armor[e + 10].SetDefaults(0, true);
                     Main.NewText("This item doesn't fit on me.");
                 }
             }
@@ -2408,7 +2408,7 @@ namespace giantsummon
             if (!mediumcoreDeath && Main.PlayerList.Count >= 1)
             {
                 Item i = new Item();
-                i.SetDefaults(ModContent.ItemType<Items.Consumable.PortraitOfAFriend>());
+                i.SetDefaults(ModContent.ItemType<Items.Consumable.PortraitOfAFriend>(), true);
                 items.Add(i);
             }
         }
@@ -2981,7 +2981,7 @@ namespace giantsummon
                 Item j = new Item();
                 if (ModVersion < 2)
                 {
-                    j.SetDefaults(tag.GetInt("Inventory_" + i + "_Type"));
+                    j.SetDefaults(tag.GetInt("Inventory_" + i + "_Type"), true);
                     j.stack = tag.GetInt("Inventory_" + i + "_Stack");
                     j.prefix = tag.GetByte("Inventory_" + i + "_Prefix");
                 }
@@ -3003,7 +3003,7 @@ namespace giantsummon
                 Item j = new Item();
                 if (ModVersion < 4)
                 {
-                    j.SetDefaults(tag.GetInt("Equipment_" + e + "_Type"));
+                    j.SetDefaults(tag.GetInt("Equipment_" + e + "_Type"), true);
                     j.stack = tag.GetInt("Equipment_" + e + "_Stack");
                     j.prefix = tag.GetByte("Equipment_" + e + "_Prefix");
                 }

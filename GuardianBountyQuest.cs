@@ -780,7 +780,7 @@ namespace giantsummon
                 if (c > 0)
                 {
                     Item i = new Item();
-                    i.SetDefaults(ItemID.CopperCoin);
+                    i.SetDefaults(ItemID.CopperCoin, true);
                     i.stack = c;
                     GiveRewardToPlayer(i, player);
                     //player.GetItem(player.whoAmI, i, true);
@@ -788,7 +788,7 @@ namespace giantsummon
                 if (s > 0)
                 {
                     Item i = new Item();
-                    i.SetDefaults(ItemID.SilverCoin);
+                    i.SetDefaults(ItemID.SilverCoin, true);
                     i.stack = s;
                     GiveRewardToPlayer(i, player);
                     //player.GetItem(player.whoAmI, i, true);
@@ -796,7 +796,7 @@ namespace giantsummon
                 if (g > 0)
                 {
                     Item i = new Item();
-                    i.SetDefaults(ItemID.GoldCoin);
+                    i.SetDefaults(ItemID.GoldCoin, true);
                     i.stack = g;
                     GiveRewardToPlayer(i, player);
                     //player.GetItem(player.whoAmI, i, true);
@@ -804,7 +804,7 @@ namespace giantsummon
                 if (p > 0)
                 {
                     Item i = new Item();
-                    i.SetDefaults(ItemID.PlatinumCoin);
+                    i.SetDefaults(ItemID.PlatinumCoin, true);
                     i.stack = p;
                     GiveRewardToPlayer(i, player);
                     //player.GetItem(player.whoAmI, i, true);
@@ -2019,16 +2019,16 @@ namespace giantsummon
                 switch (Main.rand.Next(4))
                 {
                     case 0:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.PackLeaderNecklace>());
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.PackLeaderNecklace>(), true);
                         break;
                     case 1:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.GoldenShowerPapyrus>());
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.GoldenShowerPapyrus>(), true);
                         break;
                     case 2:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.FirstSymbol>());
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.FirstSymbol>(), true);
                         break;
                     case 3:
-                        i.SetDefaults(ModContent.ItemType<Items.Accessories.TwoHandedMastery>());
+                        i.SetDefaults(ModContent.ItemType<Items.Accessories.TwoHandedMastery>(), true);
                         break;
                 }
                 Rewards.Add(i);
@@ -2039,13 +2039,13 @@ namespace giantsummon
                 switch (Main.rand.Next(3))
                 {
                     case 0:
-                        i.SetDefaults(ItemID.FishermansGuide);
+                        i.SetDefaults(ItemID.FishermansGuide, true);
                         break;
                     case 1:
-                        i.SetDefaults(ItemID.WeatherRadio);
+                        i.SetDefaults(ItemID.WeatherRadio, true);
                         break;
                     case 2:
-                        i.SetDefaults(ItemID.Sextant);
+                        i.SetDefaults(ItemID.Sextant, true);
                         break;
                 }
                 Rewards.Add(i);
@@ -2056,13 +2056,13 @@ namespace giantsummon
                 switch (Main.rand.Next(3))
                 {
                     case 0:
-                        i.SetDefaults(ItemID.LifeformAnalyzer);
+                        i.SetDefaults(ItemID.LifeformAnalyzer, true);
                         break;
                     case 1:
-                        i.SetDefaults(ItemID.MetalDetector);
+                        i.SetDefaults(ItemID.MetalDetector, true);
                         break;
                     case 2:
-                        i.SetDefaults(ItemID.Radar);
+                        i.SetDefaults(ItemID.Radar, true);
                         break;
                 }
                 Rewards.Add(i);
@@ -2072,11 +2072,11 @@ namespace giantsummon
                 i = new Item();
                 if (Main.rand.NextDouble() < 0.75)
                 {
-                    i.SetDefaults(ItemID.MagicMirror);
+                    i.SetDefaults(ItemID.MagicMirror, true);
                 }
                 else
                 {
-                    i.SetDefaults(ItemID.PocketMirror);
+                    i.SetDefaults(ItemID.PocketMirror, true);
                 }
                 Rewards.Add(i);
             }
@@ -2097,7 +2097,7 @@ namespace giantsummon
             if (Main.rand.NextDouble() < 0.1 * RewardMod)
             {
                 i = new Item();
-                i.SetDefaults(ModContent.ItemType<Items.Consumable.SkillResetPotion>());
+                i.SetDefaults(ModContent.ItemType<Items.Consumable.SkillResetPotion>(), true);
                 Rewards.Add(i);
             }
             if (Main.rand.NextDouble() < 0.25 * RewardMod)
@@ -2136,7 +2136,7 @@ namespace giantsummon
                     BossSpawnItems.Add(ItemID.CelestialSigil);
                 if (BossSpawnItems.Count > 0)
                 {
-                    i.SetDefaults(BossSpawnItems[Main.rand.Next(BossSpawnItems.Count)]);
+                    i.SetDefaults(BossSpawnItems[Main.rand.Next(BossSpawnItems.Count)], true);
                     /*if (i.maxStack > 0)
                     {
                         i.stack += Main.rand.Next((int)(3 * RewardMod));
@@ -2147,7 +2147,7 @@ namespace giantsummon
             if (!MainMod.NoEtherItems && Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
             {
                 i = new Item();
-                i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherFruit>());
+                i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherFruit>(), true);
                 if (Main.rand.NextDouble() < 0.6 * RewardMod)
                     i.stack += Main.rand.Next((int)(2 * RewardMod));
                 Rewards.Add(i);
@@ -2155,7 +2155,7 @@ namespace giantsummon
             if (!MainMod.NoEtherItems && Main.rand.Next(3) == 0)
             {
                 i = new Item();
-                i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherHeart>());
+                i.SetDefaults(ModContent.ItemType<Items.Consumable.EtherHeart>(), true);
                 //if (Main.rand.NextDouble() < 0.4 * RewardMod)
                 //    i.stack += Main.rand.Next((int)(2 * RewardMod));
                 Rewards.Add(i);
@@ -2163,7 +2163,7 @@ namespace giantsummon
             if (Main.hardMode && NPC.downedMechBoss1 && NPC.downedMechBoss2 && NPC.downedMechBoss3 && Main.rand.Next(3) == 0)
             {
                 i = new Item();
-                i.SetDefaults(ItemID.LifeFruit);
+                i.SetDefaults(ItemID.LifeFruit, true);
                 if (Main.rand.NextDouble() < 0.6 * RewardMod)
                     i.stack += Main.rand.Next((int)(2 * RewardMod));
                 Rewards.Add(i);
@@ -2171,7 +2171,7 @@ namespace giantsummon
             if (Main.rand.Next(3) == 0)
             {
                 i = new Item();
-                i.SetDefaults(ItemID.LifeCrystal);
+                i.SetDefaults(ItemID.LifeCrystal, true);
                 //if (Main.rand.NextDouble() < 0.4 * RewardMod)
                 //    i.stack += Main.rand.Next((int)(RewardMod));
                 Rewards.Add(i);
@@ -2182,22 +2182,22 @@ namespace giantsummon
                 switch (spawnBiome)
                 {
                     case SpawnBiome.Corruption:
-                        i.SetDefaults(ItemID.CorruptFishingCrate);
+                        i.SetDefaults(ItemID.CorruptFishingCrate, true);
                         break;
                     case SpawnBiome.Crimson:
-                        i.SetDefaults(ItemID.CrimsonFishingCrate);
+                        i.SetDefaults(ItemID.CrimsonFishingCrate, true);
                         break;
                     case SpawnBiome.Dungeon:
-                        i.SetDefaults(ItemID.DungeonFishingCrate);
+                        i.SetDefaults(ItemID.DungeonFishingCrate, true);
                         break;
                     case SpawnBiome.Hallow:
-                        i.SetDefaults(ItemID.HallowedFishingCrate);
+                        i.SetDefaults(ItemID.HallowedFishingCrate, true);
                         break;
                     case SpawnBiome.Jungle:
-                        i.SetDefaults(ItemID.JungleFishingCrate);
+                        i.SetDefaults(ItemID.JungleFishingCrate, true);
                         break;
                     case SpawnBiome.Sky:
-                        i.SetDefaults(ItemID.FloatingIslandFishingCrate);
+                        i.SetDefaults(ItemID.FloatingIslandFishingCrate, true);
                         break;
                 }
                 i.stack += Main.rand.Next((int)(3 * RewardMod));
@@ -2347,7 +2347,7 @@ namespace giantsummon
             if (WeaponID > 0)
             {
                 Item i = new Item();
-                i.SetDefaults(WeaponID);
+                i.SetDefaults(WeaponID, true);
                 byte prefix = 0;
                 if (i.melee)
                 {
@@ -2523,7 +2523,7 @@ namespace giantsummon
             if (ItemIDs.Count > 0)
             {
                 Item i = new Item();
-                i.SetDefaults(ItemIDs[Main.rand.Next(ItemIDs.Count)]);
+                i.SetDefaults(ItemIDs[Main.rand.Next(ItemIDs.Count)], true);
                 byte prefix = 0;
                 if (Main.rand.NextDouble() < 0.8f)
                 {
@@ -2620,8 +2620,10 @@ namespace giantsummon
                 string Text = NoRequestText;
                 if (!SardineTalkedToAboutBountyQuests)
                 {
-                    if(NpcMod.HasGuardianNPC(2))
-                        Text = "Hey, could you come talk to me about Bounty Quests?\n\n  - " + NpcMod.GetGuardianNPCName(2);
+                    if (NpcMod.HasGuardianNPC(2))
+                    {
+                        Text = "Sorry for using this sign, but I'd like to talk with you.\nCould you come talk to me about Bounties?\n\n  - " + NpcMod.GetGuardianNPCName(2);
+                    }
                 }
                 else if (TargetMonsterID > 0)
                 {

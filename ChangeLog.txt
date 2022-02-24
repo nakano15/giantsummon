@@ -21,3 +21,4 @@ Smelly's recruit npc will now show as "Captain Stench", instead of "Smelly N P C
 Cille can now crouch.
 	She will now also start with a Gold Broadsword and 5 Healing Potions.
 	And she will no longer go "Arrrgg!! Grrr!! Rrrr!" during bloodmoons.
+Companion messages text shall now have a reasonable time to be read, without taking too long if the message is short.

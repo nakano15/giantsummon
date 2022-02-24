@@ -687,7 +687,7 @@ namespace giantsummon.Npcs
                     {
                         if (Main.player[Main.myPlayer].inventory[i].type == FishID)
                         {
-                            Main.player[Main.myPlayer].inventory[i].SetDefaults(0);
+                            Main.player[Main.myPlayer].inventory[i].SetDefaults(0, true);
                         }
                     }
                     if (FishsTaken + Fish > 255)

@@ -1143,7 +1143,7 @@ namespace giantsummon
             if (GiftSlot > -1 && EmptyGuardianSlot > -1)
             {
                 Speaker.Inventory[EmptyGuardianSlot] = MainPlayer.inventory[GiftSlot].Clone();
-                MainPlayer.inventory[GiftSlot].SetDefaults(0);
+                MainPlayer.inventory[GiftSlot].SetDefaults(0, true);
                 GuardianActions.OpenBirthdayPresent(Speaker, EmptyGuardianSlot);
                 SetDialogue("*You gave the gift.*");
                 GetDefaultOptions();
