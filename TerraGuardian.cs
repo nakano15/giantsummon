@@ -159,7 +159,9 @@ namespace giantsummon
         public bool WaitingForManaRecharge = false;
         public byte SkinID { get { return Data.SkinID; } set { Data.SkinID = value; } }
         public byte OutfitID { get { return Data.OutfitID; } set { Data.OutfitID = value; } }
+        public Genders Gender { get { if (Base.CanChangeGender) { if (Data.Male) { return Genders.Male; } else { return Genders.Female; } } return Base.Gender; } }
         public bool Male { get { if (Base.CanChangeGender) { return Data.Male; } return Base.Male; } set { if (Base.CanChangeGender) Data.Male = value; } }
+        public bool IsGenderless { get { return Base.Genderless; } }
         public bool Tanker { get { return Data.Tanker; } set { Data.Tanker = value; if (Data.Tanker) { Aggro += TankerAggroBonus; } else { Aggro -= TankerAggroBonus; } } }
         public bool PlayerMounted = false;
         public bool PlayerControl = false;

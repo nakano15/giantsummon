@@ -510,9 +510,6 @@
     <Content Include="Companions\Creatures\Luna\left_arm.png" />
     <Content Include="Companions\Creatures\Luna\right_arm.png" />
     <Content Include="Companions\Creatures\Luna\right_arm_front.png" />
-    <Content Include="Companions\Creatures\Rococo\shadedbody.png" />
-    <Content Include="Companions\Creatures\Rococo\shadedbodyfront.png" />
-    <Content Include="Companions\Creatures\Rococo\shadedhead.png" />
     <Content Include="Companions\Creatures\Sadness\body.png" />
     <Content Include="Companions\Creatures\Sadness\body_front.png" />
     <Content Include="Companions\Creatures\Sadness\head.png" />
@@ -539,7 +536,6 @@
     <Content Include="Companions\Creatures\Alex\head.png" />
     <Content Include="Companions\Creatures\Alex\left_arm.png" />
     <Content Include="Companions\Creatures\Alex\right_arm.png" />
-    <Content Include="Companions\Creatures\Blue\right_arm_front.png" />
     <Content Include="Companions\Creatures\Bree\body.png" />
     <Content Include="Companions\Creatures\Bree\body_front.png" />
     <Content Include="Companions\Creatures\Bree\head.png" />

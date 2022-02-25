@@ -92,7 +92,7 @@ namespace giantsummon.Npcs
                 Main.npc[NpcPos].target = LiftedHauntPlayerPosition;
                 GhostFoxGuardianNPC gnpc = (GhostFoxGuardianNPC)Main.npc[NpcPos].modNPC;
                 gnpc.SetPostBossKill(-player.direction);
-                Main.NewText("Ghost Fox Guardian haunt has been lifted!", Microsoft.Xna.Framework.Color.Orange);
+                Main.NewText("The Ghost Fox Guardian haunt has been lifted from you!", Microsoft.Xna.Framework.Color.Orange);
             }
         }
 
@@ -256,7 +256,7 @@ namespace giantsummon.Npcs
                 Idle = true;
                 npc.TargetClosest(false);
                 Player player = Main.player[npc.target];
-                if (IsInPerceptionRange(player) && Collision.CanHitLine(npc.position, npc.width, npc.height, player.position, player.width, player.height))
+                if (((npc.direction == -1 && player.Center.X < npc.Center.X) || (npc.direction == 1 && player.Center.X > npc.Center.X)) && IsInPerceptionRange(player, 400, 300) && Collision.CanHitLine(npc.position, npc.width, npc.height, player.position, player.width, player.height))
                 {
                     PlayerChaseTime = 200;
                 }
@@ -357,7 +357,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.water && ((spawnInfo.player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0) ||
+            if (!spawnInfo.water && !NpcMod.HasBossSpawned && ((spawnInfo.player.position.Y < Main.worldSurface * 16 && !Main.dayTime && !Main.bloodMoon && !Main.pumpkinMoon && !Main.snowMoon && Main.invasionSize == 0) ||
                 (spawnInfo.player.position.Y >= Main.worldSurface * 16)) && !spawnInfo.playerSafe && !spawnInfo.playerInTown && CanGhostFoxSpawn(spawnInfo.player) && 
                 !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type))
             {

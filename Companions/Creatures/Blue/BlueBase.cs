@@ -30,7 +30,7 @@ namespace giantsummon.Companions
         /// -Dancer.
         /// </summary>
 
-        public BlueBase()
+        public BlueBase() //Todo - Need to work on her skin sprites.
         {
             Name = "Blue"; //Green Eyes
             Description = "It may not look like it, but she really cares about her look.\nShe constantly does her hair and paints her nail.";
@@ -106,12 +106,12 @@ namespace giantsummon.Companions
             LeftHandPoints.AddFramePoint2x(11, 40, 9);
             LeftHandPoints.AddFramePoint2x(12, 43, 41);
 
-            LeftHandPoints.AddFramePoint2x(16, 14, 4);
-            LeftHandPoints.AddFramePoint2x(17, 32, 4);
-            LeftHandPoints.AddFramePoint2x(18, 39, 19);
-            LeftHandPoints.AddFramePoint2x(19, 33, 32);
+            LeftHandPoints.AddFramePoint2x(16, 12, 5);
+            LeftHandPoints.AddFramePoint2x(17, 30, 7);
+            LeftHandPoints.AddFramePoint2x(18, 37, 19);
+            LeftHandPoints.AddFramePoint2x(19, 31, 32);
 
-            LeftHandPoints.AddFramePoint2x(21, 42, 22);
+            LeftHandPoints.AddFramePoint2x(21, 43, 22);
             LeftHandPoints.AddFramePoint2x(22, 43, 31);
             LeftHandPoints.AddFramePoint2x(23, 40, 42);
 
@@ -122,16 +122,16 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(11, 42, 9);
             RightHandPoints.AddFramePoint2x(12, 45, 41);
 
-            RightHandPoints.AddFramePoint2x(16, 16, 4);
-            RightHandPoints.AddFramePoint2x(17, 34, 4);
-            RightHandPoints.AddFramePoint2x(18, 41, 19);
-            RightHandPoints.AddFramePoint2x(19, 35, 32);
+            RightHandPoints.AddFramePoint2x(16, 15, 5);
+            RightHandPoints.AddFramePoint2x(17, 34, 7);
+            RightHandPoints.AddFramePoint2x(18, 39, 19);
+            RightHandPoints.AddFramePoint2x(19, 33, 32);
 
-            RightHandPoints.AddFramePoint2x(21, 44, 22);
+            RightHandPoints.AddFramePoint2x(21, 45, 22);
             RightHandPoints.AddFramePoint2x(22, 45, 31);
             RightHandPoints.AddFramePoint2x(23, 43, 42);
 
-            RightArmFrontFrameSwap.Add(29, 0);
+            //RightArmFrontFrameSwap.Add(29, 0);
 
             //Shoulder Position
             MountShoulderPoints.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(16, 16);
@@ -146,14 +146,14 @@ namespace giantsummon.Companions
             SittingPoint = new Point(21 * 2, 37 * 2);
 
             //Armor Head Points
-            HeadVanityPosition.DefaultCoordinate2x = new Point(21, 12);
-            HeadVanityPosition.AddFramePoint2x(11, 33 - 2, 17 + 2);
-            HeadVanityPosition.AddFramePoint2x(12, 38 - 2, 24 + 2);
-            HeadVanityPosition.AddFramePoint2x(20, 38 - 2, 24 + 2);
-            HeadVanityPosition.AddFramePoint2x(21, 38 - 2, 24 + 2);
-            HeadVanityPosition.AddFramePoint2x(22, 38 - 2, 24 + 2);
-            HeadVanityPosition.AddFramePoint2x(23, 38 - 2, 24 + 2);
-            HeadVanityPosition.AddFramePoint2x(33, 36, 27);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(21 + 1, 12 - 2);
+            HeadVanityPosition.AddFramePoint2x(11, 33 - 1, 17);
+            HeadVanityPosition.AddFramePoint2x(12, 38 - 1, 24);
+            HeadVanityPosition.AddFramePoint2x(20, 38 - 1, 24);
+            HeadVanityPosition.AddFramePoint2x(21, 38 - 1, 24);
+            HeadVanityPosition.AddFramePoint2x(22, 38 - 1, 24);
+            HeadVanityPosition.AddFramePoint2x(23, 38 - 1, 24);
+            HeadVanityPosition.AddFramePoint2x(33, 36 + 1, 27 - 2);
 
             HeadVanityPosition.AddFramePoint2x(30, -1000, -1000);
             HeadVanityPosition.AddFramePoint2x(31, -1000, -1000);

@@ -2622,7 +2622,7 @@ namespace giantsummon
                 {
                     if (NpcMod.HasGuardianNPC(2))
                     {
-                        Text = "Sorry for using this sign, but I'd like to talk with you.\nCould you come talk to me about Bounties?\n\n  - " + NpcMod.GetGuardianNPCName(2);
+                        Text = "Hey Terrarian, I'd like to talk to you.\nCould you come talk to me about Bounties?\n\n  - " + NpcMod.GetGuardianNPCName(2);
                     }
                 }
                 else if (TargetMonsterID > 0)

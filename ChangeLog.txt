@@ -22,3 +22,21 @@ Cille can now crouch.
 	She will now also start with a Gold Broadsword and 5 Healing Potions.
 	And she will no longer go "Arrrgg!! Grrr!! Rrrr!" during bloodmoons.
 Companion messages text shall now have a reasonable time to be read, without taking too long if the message is short.
+Removed AlphaPig's Shaded Body for Rococo due to being way too dated sprite-wise.
+The following companions got sprite revamps:
+	Rococo:
+		He now has a neck, so his head is now apart from the arms.
+		Also, fixed an issue with his belly sprites.
+		He will no longer have long chest when sleeping, ko'd or using throne. Instead, you will be able to see the extension of his belly.
+	Blue:
+		She also got a neck.
+		I had to move around some of her body parts, and also rework part of her spritework.
+		Her outfit also got changes, along the way of adaptation.
+Changed the text displayed when placing a sign inside Sardine's house, before talking to him about bounties.
+Ghost Fox Guardian no longer has absurdly high view range.
+	She will also only chase players she's staring in direction of, and can actually see.
+	She will no longer spawn when there's a boss fight.
+Fear now got a Flintlock pistol as their starter weapon.
+	There's no point into him fearing combat, and then going close range in combat.
+Nerfed Miguel's move speed from 6.7 to 6.2.
+Buffed Cille's move speed from 5.6 to 6.

@@ -17,8 +17,6 @@ namespace giantsummon.Companions
         /// -Want to be Blue's friend.
         /// -Good friend of Sardine and Alex.
         /// </summary>
-        public const string ShadedBodyID = "alphapigshadedbody", ShadedHeadID = "alphapigshadedhead", ShadedBodyFrontID = "alphapigshadedbodyfront";
-        public const int AlphapigShadedBodySkinID = 1;
 
         public RococoBase()
         {
@@ -26,11 +24,11 @@ namespace giantsummon.Companions
             Description = "He's a good definition of a big kid, very playful and innocent.\nLoves playing kids games, like Hide and Seek.";
             Size = GuardianSize.Large;
             Width = 28;
-            Height = 82;
+            Height = 86;
             DuckingHeight = 52;
             SpriteWidth = 96;
             SpriteHeight = 96;
-            Scale = 94f / 82;
+            Scale = 94f / 86;
             CompanionSlotWeight = 1.1f;
             Age = 15;
             SetBirthday(SEASON_SUMMER, 20); //Coincidence?
@@ -86,7 +84,7 @@ namespace giantsummon.Companions
             BodyFrontFrameSwap.Add(23, 0);
 
             //Left Hand
-            LeftHandPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point((17 + 1) * 2, 31 * 2);
+            LeftHandPoints.DefaultCoordinate = new Point((17 + 1) * 2, 31 * 2);
             LeftHandPoints.AddFramePoint2x(10, 7 + 1, 10);
             LeftHandPoints.AddFramePoint2x(11, 31 + 1, 9);
             LeftHandPoints.AddFramePoint2x(12, 43 + 1, 37);
@@ -96,7 +94,7 @@ namespace giantsummon.Companions
             LeftHandPoints.AddFramePoint2x(18, 39 + 1, 19);
             LeftHandPoints.AddFramePoint2x(19, 34 + 1, 31);
 
-            LeftHandPoints.AddFramePoint2x(21, 34 + 1, 16);
+            LeftHandPoints.AddFramePoint2x(21, 34, 14);
             LeftHandPoints.AddFramePoint2x(22, 43 + 1, 29);
 
             LeftHandPoints.AddFramePoint2x(26, 33 + 1, 41);
@@ -111,10 +109,10 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(18, 41 - 1, 19);
             RightHandPoints.AddFramePoint2x(19, 37 - 1, 31);
 
-            RightHandPoints.AddFramePoint2x(21, 36 - 1, 16);
+            RightHandPoints.AddFramePoint2x(21, 36, 16);
             RightHandPoints.AddFramePoint2x(22, 45 - 1, 29);
             //Mount Position
-            MountShoulderPoints.DefaultCoordinate = new Microsoft.Xna.Framework.Point(18 * 2, 14 * 2);
+            MountShoulderPoints.DefaultCoordinate = new Point(18 * 2, 14 * 2);
             MountShoulderPoints.AddFramePoint2x(11, 22, 20);
             MountShoulderPoints.AddFramePoint2x(12, 30, 27);
             MountShoulderPoints.AddFramePoint2x(20, 30, 27);
@@ -125,13 +123,13 @@ namespace giantsummon.Companions
             MountShoulderPoints.AddFramePoint2x(25, 25, 28);
 
             //Left Arm Positions
-            LeftArmOffSet.DefaultCoordinate = new Microsoft.Xna.Framework.Point(18 * 2, 15 * 2);
+            LeftArmOffSet.DefaultCoordinate = new Point(18 * 2, 15 * 2);
             //LeftArmOffSet.AddFramePoint2x(11, 21, 21);
             //LeftArmOffSet.AddFramePoint2x(12, 32, 30);
             //LeftArmOffSet.AddFramePoint2x(19, 32, 30);
 
             //Right Arm Positions
-            RightArmOffSet.DefaultCoordinate = new Microsoft.Xna.Framework.Point(28 * 2, 15 * 2);
+            RightArmOffSet.DefaultCoordinate = new Point(28 * 2, 15 * 2);
             //RightArmOffSet.AddFramePoint2x(11, 30, 21);
             //RightArmOffSet.AddFramePoint2x(12, 38, 32);
             //RightArmOffSet.AddFramePoint2x(19, 32, 30);
@@ -140,25 +138,23 @@ namespace giantsummon.Companions
             SittingPoint = new Point(23 * 2, 37 * 2); //21, 37
 
             //Head Vanity Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(24 - 1, 13);
-            HeadVanityPosition.AddFramePoint2x(11, 27 - 1, 16);
-            HeadVanityPosition.AddFramePoint2x(12, 36 - 1, 28);
-            HeadVanityPosition.AddFramePoint2x(20, 36 - 1, 28);
-            HeadVanityPosition.AddFramePoint2x(21, 36 - 1, 28);
-            HeadVanityPosition.AddFramePoint2x(22, 36 - 1, 28);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(24, 13 - 2);
+            HeadVanityPosition.AddFramePoint2x(11, 27, 16 - 2);
+            HeadVanityPosition.AddFramePoint2x(12, 36, 28 - 2);
+            HeadVanityPosition.AddFramePoint2x(20, 36, 28 - 2);
+            HeadVanityPosition.AddFramePoint2x(21, 36, 28 - 2);
+            HeadVanityPosition.AddFramePoint2x(22, 36, 28 - 2);
 
-            HeadVanityPosition.AddFramePoint2x(24, 24 - 1, 16);
+            HeadVanityPosition.AddFramePoint2x(24, 2 - 1, 16 - 2);
             HeadVanityPosition.AddFramePoint2x(25, 26 - 1, 48 - 6);
 
-            HeadVanityPosition.AddFramePoint2x(26, 31 - 1, 23);
+            HeadVanityPosition.AddFramePoint2x(26, 31, 23 - 2);
 
             //Wing Position
             WingPosition.DefaultCoordinate2x = new Point(20, 23);
 
             RewardList();
             GetTopics();
-			
-            AddSkin(AlphapigShadedBodySkinID, "Pigman Delta Shaded Skin", delegate(GuardianData gd, Player player) { return true; });
         }
 
         public void GetTopics()
@@ -254,55 +250,6 @@ namespace giantsummon.Companions
             AddReward(Terraria.ID.ItemID.SlimeStaff, 1, 0.01f);
             AddReward(Terraria.ID.ItemID.Daybloom, 2, 0.6f);
             AddReward(Terraria.ID.ItemID.BowlofSoup, 3, 0.55f);
-        }
-
-        public override void ManageExtraDrawScript(GuardianSprites sprites)
-        {
-            sprites.AddExtraTexture(ShadedBodyID, "shadedbody");
-            sprites.AddExtraTexture(ShadedHeadID, "shadedhead");
-            sprites.AddExtraTexture(ShadedBodyFrontID, "shadedbodyfront");
-        }
-
-        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect)
-        {
-            switch (guardian.SkinID)
-            {
-                case AlphapigShadedBodySkinID:
-                    foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
-                    {
-                        if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
-                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyID);
-                        if (gdd.textureType == GuardianDrawData.TextureType.TGBodyFront)
-                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyFrontID);
-                        if (gdd.textureType == GuardianDrawData.TextureType.TGHead)
-                            gdd.Texture = sprites.GetExtraTexture(ShadedHeadID);
-                    }
-                    foreach (GuardianDrawData gdd in TerraGuardian.DrawFront)
-                    {
-                        if (gdd.textureType == GuardianDrawData.TextureType.TGBody)
-                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyID);
-                        if (gdd.textureType == GuardianDrawData.TextureType.TGBodyFront)
-                            gdd.Texture = sprites.GetExtraTexture(ShadedBodyFrontID);
-                        if (gdd.textureType == GuardianDrawData.TextureType.TGHead)
-                            gdd.Texture = sprites.GetExtraTexture(ShadedHeadID);
-                    }
-                    break;
-            }
-        }
-
-        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, Microsoft.Xna.Framework.Graphics.SpriteEffects seffect, Vector2 Origin, ref List<GuardianDrawData> gdd)
-        {
-            if (guardian.SkinID == 1)
-            {
-                foreach (GuardianDrawData data in gdd)
-                {
-                    if (data.textureType == GuardianDrawData.TextureType.TGHead)
-                    {
-                        data.Texture = sprites.GetExtraTexture(ShadedHeadID);
-                        break;
-                    }
-                }
-            }
         }
 
         public override string MountUnlockMessage

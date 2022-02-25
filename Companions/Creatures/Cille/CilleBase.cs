@@ -37,7 +37,7 @@ namespace giantsummon.Companions
             LifeFruitHPBonus = 10;
             Accuracy = 0.89f;
             Mass = 0.48f;
-            MaxSpeed = 5.6f;
+            MaxSpeed = 6f;
             Acceleration = 0.18f;
             SlowDown = 0.52f;
             CanDuck = true;

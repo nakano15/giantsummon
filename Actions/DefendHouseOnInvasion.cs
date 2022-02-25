@@ -18,10 +18,14 @@ namespace giantsummon.Actions
 
         public override void Update(TerraGuardian guardian)
         {
-            if(guardian.OwnerPos > -1 || Main.invasionType == -1)
+            if(guardian.OwnerPos > -1 || Main.invasionType <= 0)
             {
                 InUse = false;
                 return;
+            }
+            if (guardian.UsingFurniture)
+            {
+                guardian.LeaveFurniture();
             }
             switch (Step)
             {

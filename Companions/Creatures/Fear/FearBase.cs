@@ -43,6 +43,8 @@ namespace giantsummon.Companions
             MountUnlockLevel = 255;
 
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.PurplePhaseblade, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.Handgun, 1));
+            InitialItems.Add(new ItemPair(Terraria.ID.ItemID.MusketBall, 250));
             InitialItems.Add(new ItemPair(Terraria.ID.ItemID.LesserHealingPotion, 10));
 
             RightArmFrontFrameSwap.Add(0, 0);
