@@ -74,7 +74,7 @@ Buffs/Debuffs/Passive:
 
 Combat:
 
-Attacks-
+Master Level Pyromancy/Satanic Magic:
 >Hell Splitter(Melee)(Default-Blazing Edge/ AF -Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AF) damage and applies "On Fire" debuff("Crimson Conflagration" debuff if in AF) 
 -HS scales with current weapon equiped dealing 1.2x(1.5x in AF) damage of what the weapon wouldve originally did.
 -HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attack applies "Crimson Conflagration" debuff 
@@ -94,14 +94,14 @@ Attacks-
 -High Velocity
 -Has Knockback value of 12
 
-Ultimate techniques:
+Master Level Satanic Magic:
 >Scarlet Shredder(Normal Form Exclusive)- Bapha conjures one enhanced demon scythe projectile and throws it at nearby enemies.
 -125 Mp cost
 -Mimics demon scythe projectile AI(Starts stationary then gains ever increasing velocity towards target. Hits once per enemy for 333 damage. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
 -Clashes with blocks and ignores 25% defense value of target
--Decent tracking AI
+-limited tracking AI
 -Knock value- 8
--15 second cooldown
+-25 second cooldown
 -Light source
 
 >Crescent Moon Shredder(Awakened Form)- Bapha conjures two Supreme demon scythe projectiles and throws them at nearby enemies.
@@ -112,14 +112,14 @@ White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity bu
 -Bypasses blocks and ignores 50% defense value of target
 -has very limitied tracking ai and each projectile can target different enemies
 -250 Mp cost
--Knockback value- 10
--30 second cooldown
+-Knockback value- 16
+-60 second cooldown
 -Light source
 
->Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 12 Enhanced freindly hell spawn enemies over 10 seconds that help the player in combat.
+>Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 12 Enhanced Allied hell spawn enemies over 10 seconds that help the player in combat.
 - 150 Mp cost
 - HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
 - HeP can only be used if Bapha is in Awakened form
 - In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be detected or a boss must be present and hostile.
-- 1:30 cooldown upon use
+- 30 second cooldown 
 -Light Source
