@@ -124,7 +124,8 @@ namespace giantsummon.Actions
                                 if (EmptySlot == 255)
                                 {
                                     string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryInventoryFull,
-                                        "*It seems like you have no room for what they wanted to give [target].*").Replace("[target]", (player.whoAmI == Main.myPlayer ? "you" : player.name));
+                                        "*It seems like [target] have no room for what they wanted to give.*").
+                                        Replace("[target]", (player.whoAmI == Main.myPlayer ? guardian.PersonalNicknameToPlayer : player.name));
                                     guardian.SaySomething(Message);
                                     InUse = false;
                                 }
@@ -164,7 +165,8 @@ namespace giantsummon.Actions
                                 if (EmptySlot == 255)
                                 {
                                     string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryInventoryFull,
-                                        "*It seems like you have no room for what they wanted to give you.*").Replace("[target]", (player.whoAmI == Main.myPlayer ? "you" : player.name));
+                                        "*It seems like [target] have no room for what they wanted to give.*").
+                                        Replace("[target]", (player.whoAmI == Main.myPlayer ? guardian.PersonalNicknameToPlayer : player.name));
                                     guardian.SaySomething(Message);
                                 }
                                 else
@@ -173,7 +175,8 @@ namespace giantsummon.Actions
                                     player.GetItem(player.whoAmI, item);
                                     guardian.Inventory[ItemSlot].SetDefaults(0, true);
                                     string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryGiveItem,
-                                        "*"+guardian.Name+" gave [target] some [item].*").Replace("[target]", (player.whoAmI == Main.myPlayer ? "you" : player.name)).
+                                        "*"+guardian.Name+" gave [target] some [item].*").
+                                        Replace("[target]", (player.whoAmI == Main.myPlayer ? guardian.PersonalNicknameToPlayer : player.name)).
                                         Replace("[item]", item.Name);
                                     guardian.SaySomething(Message);
                                 }
@@ -189,7 +192,8 @@ namespace giantsummon.Actions
                                 if (EmptySlot == 255)
                                 {
                                     string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryInventoryFull,
-                                        "*It seems like you have no room for what they wanted to give [target].*").Replace("[target]", tg.Name);
+                                        "*It seems like [target] have no room for what they wanted to give.*").
+                                        Replace("[target]", tg.Name);
                                     guardian.SaySomething(Message);
                                 }
                                 else
@@ -198,7 +202,8 @@ namespace giantsummon.Actions
                                     tg.Inventory[EmptySlot] = item;
                                     guardian.Inventory[EmptySlot].SetDefaults(0, true);
                                     string Message = guardian.GetMessage(GuardianBase.MessageIDs.DeliveryGiveItem,
-                                        "*" + guardian.Name + " gave [target] some [item].*").Replace("[target]", tg.Name).
+                                        "*" + guardian.Name + " gave [target] some [item].*").
+                                        Replace("[target]", tg.Name).
                                         Replace("[item]", item.Name);
                                     guardian.SaySomething(Message);
                                 }

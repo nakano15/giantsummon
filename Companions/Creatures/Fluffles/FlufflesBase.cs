@@ -545,6 +545,12 @@ namespace giantsummon.Companions
                     return "(She seems happy that someone Terrarian picked another person as their buddy.)";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "(She crouches to watch attentiously watch you're going to say, while smiling very happily.)";
+                case MessageIDs.DeliveryGiveItem:
+                    return "(She gave [target] some [item].)";
+                case MessageIDs.DeliveryItemMissing:
+                    return "(She seems to be looking for something in her bag, but can't find.)";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "(She tried to give some item to [target], but couldn't because they can't carry anymore.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

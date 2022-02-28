@@ -1583,7 +1583,13 @@ namespace giantsummon.Companions
                 case MessageIDs.FeatMentionSomeonePickedAsBuddy:
                     return "*I'm glad to hear that [player] has now a special place in their heart for [subject]. It's really good of them for declaring their buddy.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
-                    return "*Hello my buddy! I'm so happy having you pick me as your buddy. Do you need something from [name]?";
+                    return "*Hello my buddy! I'm so happy having you pick me as your buddy. Do you need something from [name]?*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*I hope this [item] is useful for you, [target].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*Huh? I thought I had an item here.*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*Sorry [target], I can't give you anything, since you can't carry anything else.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

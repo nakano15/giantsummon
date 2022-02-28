@@ -609,6 +609,12 @@ namespace giantsummon.Companions
                     return "*Yeah, [player] got [subject] as their buddy! Like do I care?*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*Yeah, you're my buddy! Don't feel bad about my anger, I'm always like this.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*I hope you really need this [item], [target].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*What?! Where is it? The item!*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*Your bag is full, [target]!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

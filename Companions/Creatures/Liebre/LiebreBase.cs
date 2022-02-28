@@ -1356,6 +1356,12 @@ namespace giantsummon.Companions
                     return "*Looks like [player] and [subject] bound their fates together. Don't feel scared about that, buddiship is actually a good thing for TerraGuardians. I can rest easy about them now.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*You know that this buddiship will last very long, right Terrarian? I can't die, so I guess I'll retire to ensure your rest when you die.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*I hope this [item] helps you, [target].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*Hm.. The item I was going to give is gone.*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*I wanted to give [target] something, but their inventory is full.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

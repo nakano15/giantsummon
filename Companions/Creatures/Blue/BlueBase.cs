@@ -1224,6 +1224,12 @@ namespace giantsummon.Companions
                     return "*I heard that [subject] got picked by [player] as their buddy. I hope their adventures go well.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*I was not expecting you to pick me as your buddy, but now I guess I'll have to work not to make you regret the choice, hahaha.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*Hey [target], have some of my [item].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*Wait, where did it go? Someone picked my pocket?*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*I wanted to give [target] something, but they can't hold anymore..*";
                 //Popularity Contest Messages
                 case MessageIDs.PopContestMessage:
                     return "*Hey, [nickname]! The TerraGuardians Popularity Contest is up and running. Will you vote on it now?*";

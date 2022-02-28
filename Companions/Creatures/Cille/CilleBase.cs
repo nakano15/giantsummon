@@ -612,6 +612,12 @@ namespace giantsummon.Companions
                     return "*Yes, I heard about [player] picking [subject] as buddy. That would never happen to me.. I'm a danger to everyone around me..*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*Why? Why did you picked me as your buddy? I feel like I'm endangering you.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*[target], have some [item] I have spare.*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*Huh? Where did the item go?*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*I think [target] can't carry anymore things...*";
             }
             return base.GetSpecialMessage(MessageID);
         }

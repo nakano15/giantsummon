@@ -377,6 +377,12 @@ namespace giantsummon.Companions
                     return "I heard about [player] picking [subject] as their buddy. I don't care.";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "Does being your buddy means that I'm officially your shadow?";
+                case MessageIDs.DeliveryGiveItem:
+                    return "Take that [item], [target].";
+                case MessageIDs.DeliveryItemMissing:
+                    return "Hm. The item isn't on me anymore.";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "I can't give [target] an item with their inventory full.";
             }
             return base.GetSpecialMessage(MessageID);
         }

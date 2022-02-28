@@ -621,6 +621,12 @@ namespace giantsummon.Companions
                     return "*I have hot gossip incoming, [nickname]! I heard that [player] declared [subject] as their buddy, and both seems happy!*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*I'm still trying to recover from the news. I was so excited when you picked me as buddy that my heart even was pounding really fast. I'm so happy.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*Here [target], some [item]!*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*My item! I was wanting to give that to someone.*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*Sorry [target], you can't have this until you clean your bag..*";
             }
             return base.GetSpecialMessage(MessageID);
         }

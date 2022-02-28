@@ -987,6 +987,12 @@ namespace giantsummon.Companions
                     return "*Hm... So [player] picked [subject] to be a minion of? Will be harder for me to induce them into helping me on my experiments like that.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*Hello minion. I'm still surprised you picked me as your buddy, it must be my charismatic appearance. Don't worry, I will treat you nicelly. Hehehe.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*This [item] is just a limited courtesy, [target].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*Did I tried to use the teleport magic on my inventory again?*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*You seems to be carring too much rubbish, [target]. You wont have my item that way.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -771,6 +771,12 @@ namespace giantsummon.Companions
                     return "*[name] is really happy about knowing [player] found their own buddy, and picked [subject] to be it.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*[name] is saying that is really glad you picked him as his buddy.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*[name] gave [item] to [target].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*[name] seems to be missing some item on their inventory.*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*[name] tells [target] that can't give them anything while their inventory is full.*";
                 //Popularity Contest Messages
                 case MessageIDs.PopContestMessage:
                     return "*[name] is asking if you're interessed in voting on the TerraGuardians Popularity Contest.*";

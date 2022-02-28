@@ -641,6 +641,12 @@ namespace giantsummon.Companions
                     return "Hey? What is it of having a buddy? [player] and [subject] are said to now be buddies, but I don't know what that is.";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "Hey there, buddy! I'm still surprised that you picked me as your buddy, and am really happy due to that.";
+                case MessageIDs.DeliveryGiveItem:
+                    return "[target], here! Take those [item].";
+                case MessageIDs.DeliveryItemMissing:
+                    return "The item! I was going to give it to someone... Maybe I dropped?";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "[target], I can't give you this while your inventory is full!";
             }
             return base.GetSpecialMessage(MessageID);
         }

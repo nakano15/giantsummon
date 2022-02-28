@@ -1137,6 +1137,12 @@ namespace giantsummon.Companions
                     return "*It's good to hear that [player] got someone to look for, and also to look for himself. I think [subject] by their side will help ensure their safety on their adventure.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*Since you picked me as your buddy, that means all my focus will be on your safety. I only ask you to take me to a tavern sometimes, we could use some drinks sometimes.*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*[target], I have some spare [item]. Take them.*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*Weird. Did my inventory changed?*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*It seems like [target] is carrying too much things.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

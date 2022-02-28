@@ -713,6 +713,12 @@ namespace giantsummon.Companions
                     return "I'm so jealous of [subject]... They got picked by [player] as their bff.";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "Hey there Buddy-Buddy! Want to play something? Rubby my belly? Want some licking? Sorry, I'm really new to this, and i'm excited!";
+                case MessageIDs.DeliveryGiveItem:
+                    return "Hey [target], take some of my [item].";
+                case MessageIDs.DeliveryItemMissing:
+                    return "Wait! Where did it go? Oh well, nevermind..";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "I can't give my [item] to [target] because can't carry anymore things....";
             }
             return base.GetSpecialMessage(MessageID);
         }
