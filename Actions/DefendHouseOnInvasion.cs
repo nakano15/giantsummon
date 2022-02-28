@@ -161,6 +161,10 @@ namespace giantsummon.Actions
                                     guardian.MoveRight = true;
                                 }
                             }
+                            else
+                            {
+
+                            }
                         }
                     }
                     break;

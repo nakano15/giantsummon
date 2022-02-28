@@ -6793,7 +6793,7 @@ namespace giantsummon
             return false;
         }
 
-        public int BuyItem(int ID, int ItemPrice, int Stack)
+        public int BuyItem(int ID, int ItemPrice, int Stack, bool SetAsFavorites = false)
         {
             int ItemsBought = 0; //TODO - It's broken. Review how this works.
             int PossibleToBuy = (int)(Coins / (uint)(ItemPrice));
@@ -6815,11 +6815,16 @@ namespace giantsummon
                     {
                         LeftStack = Stack;
                     }
-                    ItemsBought += LeftStack;
-                    Inventory[i].stack += LeftStack;
-                    Stack -= LeftStack;
-                    //Main.NewText("Coins: " + Coins + "  To Spend: " + (LeftStack * ItemPrice));
-                    Coins -= (uint)(LeftStack * ItemPrice);
+                    if (LeftStack > 0)
+                    {
+                        ItemsBought += LeftStack;
+                        Inventory[i].stack += LeftStack;
+                        if (SetAsFavorites)
+                            Inventory[i].favorited = true;
+                        Stack -= LeftStack;
+                        //Main.NewText("Coins: " + Coins + "  To Spend: " + (LeftStack * ItemPrice));
+                        Coins -= (uint)(LeftStack * ItemPrice);
+                    }
                 }
             }
             if (HasEmptySlot && Stack > 0)
@@ -6834,11 +6839,16 @@ namespace giantsummon
                         int LeftStack = Stack;
                         if (LeftStack > Inventory[i].maxStack)
                             LeftStack = Inventory[i].maxStack;
-                        ItemsBought += LeftStack;
-                        Inventory[i].stack = LeftStack;
-                        Stack -= LeftStack;
-                        //Main.NewText("Coins: " + Coins + "  To Spend: " + (LeftStack * ItemPrice));
-                        Coins -= (uint)(LeftStack * ItemPrice);
+                        if (LeftStack > 0)
+                        {
+                            ItemsBought += LeftStack;
+                            Inventory[i].stack = LeftStack;
+                            if (SetAsFavorites)
+                                Inventory[i].favorited = true;
+                            Stack -= LeftStack;
+                            //Main.NewText("Coins: " + Coins + "  To Spend: " + (LeftStack * ItemPrice));
+                            Coins -= (uint)(LeftStack * ItemPrice);
+                        }
                     }
                 }
             }
@@ -11511,7 +11521,7 @@ namespace giantsummon
                         }
                     }
                 }
-                else if (ChargeAhead && LeaderSpeedX != 0) //To try keeping up with the player when on charge AI.
+                /*else if (ChargeAhead && LeaderSpeedX != 0) //To try keeping up with the player when on charge AI.
                 {
                     if (LeaderSpeedX < 0)
                     {
@@ -11528,7 +11538,7 @@ namespace giantsummon
                         }
                     }
                     //StuckTimer = 0;
-                }
+                }*/
                 else if (LeaderSpeedX != 0)
                 {
                     if (Math.Abs(PositionDifference.X - LeaderSpeedX) > Distance * 0.75f + DistanceBonus - XDiscount) //36

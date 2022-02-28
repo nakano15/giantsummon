@@ -42,13 +42,22 @@ namespace giantsummon.Actions
                             InUse = false;
                             return;
                         }
-                        if (StepStart && guardian.PlayerMounted)
-                        {
-                            string Message = guardian.GetMessage(GuardianBase.MessageIDs.AskPlayerToGetCloserToShopNpc, "*This companion wants to buy from [shop]'s store.\nGet closer to It so they can buy from It.*");
-                            Message.Replace("[shop]", npc.GivenOrTypeName);
-                            guardian.SaySomething(Message);
-                        }
                         Vector2 NpcBottom = npc.Bottom;
+                        if (guardian.PlayerMounted)
+                        {
+                            if (StepStart)
+                            {
+                                string Message = guardian.GetMessage(GuardianBase.MessageIDs.AskPlayerToGetCloserToShopNpc, "*This companion wants to buy from [shop]'s store.\nGet closer to It so they can buy from It.*");
+                                Message.Replace("[shop]", npc.GivenOrTypeName);
+                                guardian.SaySomething(Message);
+                            }
+                            if(Math.Abs(guardian.Position.X - NpcBottom.X) >= 500)
+                            {
+                                guardian.DisplayEmotion(TerraGuardian.Emotions.Neutral);
+                                InUse = false;
+                                return;
+                            }
+                        }
                         if (!guardian.PlayerMounted && Time == 5 * 60)
                         {
                             guardian.Position = NpcBottom;
@@ -151,7 +160,7 @@ namespace giantsummon.Actions
                         }
                         if (Time == 60)
                         {
-                            guardian.BuyItem(ItemID, BuyPrice, BuyStack);
+                            guardian.BuyItem(ItemID, BuyPrice, BuyStack, true);
                         }
                         if (Time >= (int)(1.5f * 60))
                         {

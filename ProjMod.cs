@@ -442,5 +442,89 @@ namespace giantsummon
                 drawBackupUsed = false;
             }
         }
+
+        public static int GetProjectileChain(int Type)
+        {
+            switch (Type)
+            {
+                case 32:
+                    return 5;
+                case 73:
+                    return 8;
+                case 74:
+                    return 9;
+                case 171:
+                    return 16;
+                case 186:
+                    return 17;
+                case 475:
+                    return 38;
+                case 505:
+                    return 4;
+                case 506:
+                    return 6;
+                case 165:
+                    return 15;
+                case 230:
+                    return 1;
+                case 231:
+                    return 2;
+                case 232:
+                    return 3;
+                case 233:
+                    return 4;
+                case 234:
+                    return 5;
+                case 235:
+                    return 6;
+                case 256:
+                    return 20;
+                case 322:
+                    return 29;
+                case 315:
+                    return 28;
+                case 331:
+                    return 30;
+                case 332:
+                    return 31;
+                case 372:
+                    return 33;
+                case 383:
+                    return 34;
+                case 396:
+                    return 35;
+                case 403:
+                    return 36;
+                case 404:
+                    return 37;
+                case 486:
+                    return 0;
+                case 487:
+                    return 1;
+                case 488:
+                    return 2;
+                case 489:
+                    return 3;
+                case 646:
+                    return 8;
+                case 647:
+                    return 9;
+                case 648:
+                    return 10;
+                case 649:
+                    return 11;
+                case 652:
+                    return 16;
+                case 262:
+                    return 22;
+                case 273:
+                    return 23;
+                case 481:
+                    return 40;
+                case 271:
+                    return 18;
+            }
+            return 0;
+        }
     }
 }
