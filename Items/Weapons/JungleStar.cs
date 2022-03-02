@@ -9,7 +9,7 @@ namespace giantsummon.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Toxic stings on a blunt weapon, looks like a good idea.");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("Poisonous stings on a blunt weapon. Looks like a good idea.");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults()

@@ -9,7 +9,7 @@ namespace giantsummon.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("\'By the heavens light, I'll cut you in half!\'");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("\'By the light of the heavens, I'll cut you in half!\'");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults()

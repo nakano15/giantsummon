@@ -9,7 +9,7 @@ namespace giantsummon.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Blade forged inspired on the waves of the flames.");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("Blade forged with inspirations from the waves of a flame.");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults()

@@ -9,7 +9,7 @@ namespace giantsummon.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("It's like having a hornet shotting stings from your hands.");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("It's like having a hornet shooting stingers from your hands!");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults()

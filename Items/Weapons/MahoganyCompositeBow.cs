@@ -9,7 +9,7 @@ namespace giantsummon.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Looked better on my mind.");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("Looked better in my mind.");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults() //Mahogany bow

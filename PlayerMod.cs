@@ -178,6 +178,18 @@ namespace giantsummon
             return false;
         }
 
+        public static bool IsQuestActive(Player player, int QuestID, string QuestModID = "")
+        {
+            if (QuestModID == "")
+                QuestModID = MainMod.mod.Name;
+            foreach (QuestData qd in player.GetModPlayer<PlayerMod>().QuestDatas)
+            {
+                if (qd.QuestID == QuestID && qd.QuestModID == QuestModID)
+                    return qd.IsQuestStarted && !qd.IsQuestCompleted;
+            }
+            return false;
+        }
+
         public static QuestData GetQuestData(Player player, int QuestID, string QuestModID = "")
         {
             if (QuestModID == "")

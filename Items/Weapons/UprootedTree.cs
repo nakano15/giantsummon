@@ -9,7 +9,7 @@ namespace giantsummon.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("How my Terra Guardian wield this?");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("How can a Terra Guardian wield this?!");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults()

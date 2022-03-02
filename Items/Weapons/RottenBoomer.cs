@@ -9,7 +9,7 @@ namespace giantsummon.Items.Weapons
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("This gun is smelly, but It's shot can blow someone's head off");  //The (English) text shown below your weapon's name
+			Tooltip.SetDefault("This gun is smelly, but its shot can blow someone's head off.");  //The (English) text shown below your weapon's name
 		}
 
 		public override void SetDefaults()

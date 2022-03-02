@@ -270,6 +270,7 @@
     <Compile Include="QuestData.cs" />
     <Compile Include="Quests\BlueSeekingZacksQuest.cs" />
     <Compile Include="Quests\BlueTravellerOutfitQuest.cs" />
+    <Compile Include="Quests\BrutusAndDominoQuest.cs" />
     <Compile Include="Quests\GreenHealingUnlockQuest.cs" />
     <Compile Include="Quests\PigCompanionsQuest.cs" />
     <Compile Include="Quests\TgQuestContainer.cs" />
