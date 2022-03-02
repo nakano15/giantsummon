@@ -5614,7 +5614,7 @@ namespace giantsummon
                             }
                             if ((Inventory[i].ranged && Inventory[i].ammo == 0) || Inventory[i].thrown)
                             {
-                                if (Inventory[i].damage > HighestRangedDamage && (!UseWeaponsByInventoryOrder || RangedPosition == -1))
+                                if (Inventory[i].damage > HighestRangedDamage && (!UseWeaponsByInventoryOrder || RangedPosition == -1) && HasAmmo(Inventory[i]))
                                 {
                                     HighestRangedDamage = Inventory[i].damage;
                                     RangedPosition = (sbyte)i;
@@ -8623,10 +8623,10 @@ namespace giantsummon
             {
                 foreach (int key in MainMod.ActiveGuardians.Keys)
                 {
-                    if (key != this.WhoAmID)
+                    if (key != WhoAmID)
                     {
                         TerraGuardian g = MainMod.ActiveGuardians[key];
-                        if (g.OwnerPos == -1 && g.Velocity.X == 0 && g.Velocity.Y == 0 && g.HitBox.Intersects(HitBox))
+                        if (g.OwnerPos == -1 && g.Velocity.X == 0 && g.Velocity.Y == 0 && g.Position.Y == Position.Y && g.HitBox.Intersects(HitBox))
                         {
                             if (LookingLeft)
                                 MoveLeft = true;
@@ -8652,8 +8652,12 @@ namespace giantsummon
                         LeaveFurniture();
                     break;
                 case IdleActions.UseNearbyFurniture:
-                    if(!UsingFurniture)
+                    if (!UsingFurniture)
+                    {
                         UseNearbyFurniture();
+                        if (furniturex == -1 || furniturey == -1)
+                            CurrentIdleAction = IdleActions.Wait;
+                    }
                     break;
                 case IdleActions.UseNearbyFurnitureHome:
                     if (IsCompanionAtHome)
@@ -12703,6 +12707,10 @@ namespace giantsummon
                         {
                             AllowItemUsage = UseMana((int)(Inventory[SelectedItem].mana * ManaCostMult));
                         }
+                    }
+                    else if(Inventory[SelectedItem].useAmmo > 0)
+                    {
+                        AllowItemUsage = HasAmmo(Inventory[SelectedItem]);
                     }
                 }
                 if (GrabbingPlayer && !Base.DontUseRightHand)

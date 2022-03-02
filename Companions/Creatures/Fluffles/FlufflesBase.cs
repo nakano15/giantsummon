@@ -586,8 +586,11 @@ namespace giantsummon.Companions
         {
             float KoAlpha = 1, ColorMod = 0;
             FlufflesData data = (FlufflesData)guardian.Data;
-            KoAlpha = data.KnockoutAlpha;
-            ColorMod = GetColorMod;
+            if (!TerraGuardian.DrawingIgnoringLighting)
+            {
+                KoAlpha = data.KnockoutAlpha;
+                ColorMod = GetColorMod;
+            }
             foreach (GuardianDrawData gdd in TerraGuardian.DrawBehind)
             {
                 if(gdd.textureType == GuardianDrawData.TextureType.TGHeadAccessory)
@@ -708,7 +711,8 @@ namespace giantsummon.Companions
             }
             else
             {
-                bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && Main.tile[(int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))].wall == 0;
+                Tile t = Main.tile[(int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))];
+                bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && (t.wall == 0 || t.active() && Main.tileSolid[t.type]);
                 if (ReduceOpacity)
                 {
                     float MinOpacity = 0.2f;

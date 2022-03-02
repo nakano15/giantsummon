@@ -1497,9 +1497,28 @@ namespace giantsummon
                 {
                     New.Add(id.ToString());
                 }*/
-                New.Add("Player Position X: " + (int)(Main.player[Main.myPlayer].Center.X * (1f / 16)) + "  Y: " + (int)(Main.player[Main.myPlayer].Center.Y * (1f / 16)));
-                New.Add("Cille House Position X: " + GuardianSpawningScripts.CilleShelterX + "  Y: " + GuardianSpawningScripts.CilleShelterY);
-                New.Add("Irene's Tombstone Position X: " + AlexRecruitScripts.TombstoneTileX + "  Y: " + AlexRecruitScripts.TombstoneTileY);
+                if (NpcMod.HasGuardianNPC(GuardianBase.Vladimir))
+                {
+                    TerraGuardian tg = NpcMod.GetGuardianNPCCharacter(GuardianBase.Vladimir);
+                    Companions.VladimirBase.VladimirData data = (Companions.VladimirBase.VladimirData)tg.Data;
+                    New.Add("Vladimir Carrying Someone? " + data.CarrySomeone);
+                    New.Add("Picked up person? " + data.PickedUpPerson);
+                    if (data.PickedUpPerson)
+                    {
+                        New.Add("Carried Person Type: " + data.CarriedPersonType.ToString());
+                        New.Add("Carried Person ID: " + data.CarriedPersonID);
+                    }
+                    New.Add("Duration: " + data.Duration);
+                    New.Add("Time: " + data.Time);
+                    New.Add("Was Following Player? " + data.WasFollowingPlayerBefore);
+                    New.Add("Idle Action: " + tg.CurrentIdleAction.ToString());
+                    New.Add("Idle Time: " + tg.IdleActionTime);
+                    New.Add("Target Type: " + tg.TargetType.ToString());
+                    New.Add("Target ID: " + tg.TargetID);
+                }
+                //New.Add("Player Position X: " + (int)(Main.player[Main.myPlayer].Center.X * (1f / 16)) + "  Y: " + (int)(Main.player[Main.myPlayer].Center.Y * (1f / 16)));
+                //New.Add("Cille House Position X: " + GuardianSpawningScripts.CilleShelterX + "  Y: " + GuardianSpawningScripts.CilleShelterY);
+                //New.Add("Irene's Tombstone Position X: " + AlexRecruitScripts.TombstoneTileX + "  Y: " + AlexRecruitScripts.TombstoneTileY);
                 /*foreach (TerraGuardian g in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                 {
                     if (!g.Active) continue;
@@ -2981,7 +3000,7 @@ namespace giantsummon
             get
             {
                 string s = "";
-                switch (Main.rand.Next(10))
+                switch (Main.rand.Next(11))
                 {
                     case 0: s = "With more friends for you to meet!"; break;
                     case 1: s = "Contains snouts, furs and tails."; break;
@@ -2992,7 +3011,8 @@ namespace giantsummon
                     case 6: s = "It's hard to pick the best."; break;
                     case 7: s = "Gotta meet 'em all!"; break;
                     case 8: s = "Deadraccoon5 - A City in Nakano"; break;
-                    case 9: s = "Errand boy/girl simulator."; break;
+                    case 9: s = "With the mod few Youtubers dare to showcase."; break;
+                    case 10: s = "Wild Worlds."; break;
                 }
                 return "Terraria: " + s;
             }

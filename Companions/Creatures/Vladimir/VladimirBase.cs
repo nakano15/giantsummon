@@ -492,7 +492,8 @@ namespace giantsummon.Companions
             for (int p = 0; p < 255; p++)
             {
                 if (Main.player[p].active && !guardian.IsPlayerHostile(Main.player[p]) && Main.player[p].velocity.Length() == 0 &&
-                    Main.player[p].itemAnimation == 0 && (Main.player[p].Center - guardian.CenterPosition).Length() < 80)
+                     !PlayerMod.PlayerMountedOnGuardian(Main.player[p]) && !PlayerMod.PlayerControllingGuardian(Main.player[p]) && 
+                     Main.player[p].itemAnimation == 0 && (Main.player[p].Center - guardian.CenterPosition).Length() < 80)
                 {
                     PotentialPlayers.Add(p);
                 }
@@ -589,18 +590,21 @@ namespace giantsummon.Companions
                 float TargetCenterX = TargetRect.X + TargetRect.Width * 0.5f;
                 guardian.MoveLeft = guardian.MoveRight = false;
                 guardian.AttackingTarget = false;
-                if (guardian.Position.X < TargetCenterX)
-                {
-                    guardian.MoveRight = true;
-                }
-                else
-                {
-                    guardian.MoveLeft = true;
-                }
                 if (TargetRect.Intersects(guardian.HitBox) || data.Time >= 5 * 60)
                 {
                     data.PickedUpPerson = true;
                     data.Time = 0;
+                }
+                else
+                {
+                    if (guardian.Position.X < TargetCenterX)
+                    {
+                        guardian.MoveRight = true;
+                    }
+                    else
+                    {
+                        guardian.MoveLeft = true;
+                    }
                 }
                 if (!data.PickedUpPerson)
                     return;
@@ -613,7 +617,8 @@ namespace giantsummon.Companions
                 }
                 if (data.Time >= data.Duration)
                 {
-                    data.CarrySomeone = false;
+                    PlaceCarriedPersonOnTheFloor(guardian, false);
+                    return;
                 }
             }
             if (guardian.ItemAnimationTime > 0)
@@ -625,12 +630,28 @@ namespace giantsummon.Companions
             if (data.WasFollowingPlayerBefore && guardian.OwnerPos == -1)
             {
                 guardian.SaySomething("*The Terrarian will still need your help, better you go with them.*");
-                data.CarrySomeone = false;
+                PlaceCarriedPersonOnTheFloor(guardian, false);
+                return;
             }
             else if (!data.WasFollowingPlayerBefore && guardian.OwnerPos != -1)
             {
                 guardian.SaySomething("*It might be dangerous, better you stay here.*");
-                data.CarrySomeone = false;
+                PlaceCarriedPersonOnTheFloor(guardian, false);
+                return;
+            }
+            else
+            {
+                /*if (false && data.CarrySomeone && data.PickedUpPerson && guardian.OwnerPos == -1 && data.CarriedPersonType == TerraGuardian.TargetTypes.Guardian && MainMod.ActiveGuardians[data.CarriedPersonID].Base.Size >= GuardianSize.Large)
+                {
+                    if (!guardian.AttackMyTarget)
+                    {
+                        guardian.ChangeIdleAction(TerraGuardian.IdleActions.Wait, 50);
+                        if (guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
+                        {
+                            guardian.MoveDown = true;
+                        }
+                    }
+                }*/
             }
         }
 
@@ -651,7 +672,7 @@ namespace giantsummon.Companions
                         data.CarrySomeone = false;
                         guardian.DisplayEmotion(TerraGuardian.Emotions.Question);
                     }
-                    else
+                    else if(data.PickedUpPerson)
                     {
                         TerraGuardian HeldGuardian = MainMod.ActiveGuardians[data.CarriedPersonID];
                         if (HeldGuardian.CurrentIdleAction == TerraGuardian.IdleActions.Listening)
@@ -663,12 +684,23 @@ namespace giantsummon.Companions
                             HeldGuardian.LeaveFurniture(false);
                         HeldGuardian.AddFlag(GuardianFlags.DisableMovement);
                         HeldGuardian.AddBuff(ModContent.BuffType<Buffs.Hug>(), 5, true);
-                        HeldGuardian.Position = guardian.GetGuardianShoulderPosition;
-                        HeldGuardian.Position.Y += (HeldGuardian.SpriteHeight - HeldGuardian.Base.SittingPoint.Y) * HeldGuardian.Scale + 4 * guardian.Scale;
+                        Vector2 HeldPosition = guardian.GetGuardianShoulderPosition;
+                        HeldGuardian.Position = HeldPosition;
+                        //HeldGuardian.Position.Y += (HeldGuardian.SpriteHeight - HeldGuardian.Base.SittingPoint.Y) * HeldGuardian.Scale + 4 * guardian.Scale;
+                        HeldGuardian.Position.Y += (HeldGuardian.Height * 0.5f);
+                        if(HeldGuardian.Position.Y < HeldPosition.Y + 2)
+                        {
+                            HeldGuardian.Position.Y = HeldPosition.Y + 2;
+                        }
                         HeldGuardian.Velocity = Vector2.Zero;
                         HeldGuardian.Velocity.Y -= HeldGuardian.Mass;
                         HeldGuardian.gfxOffY = 0;
                         HeldGuardian.IsBeingPulledByPlayer = false;
+                        if (HeldGuardian.CurrentIdleAction != TerraGuardian.IdleActions.Listening)
+                        {
+                            HeldGuardian.CurrentIdleAction = TerraGuardian.IdleActions.Wait;
+                            HeldGuardian.IdleActionTime = 300;
+                        }
                         HeldGuardian.SetFallStart();
                         if (guardian.PlayerMounted || (guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction))
                             HeldGuardian.Position.X += 4 * guardian.Direction * guardian.Scale;
@@ -677,17 +709,6 @@ namespace giantsummon.Companions
                         if (HeldGuardian.ItemAnimationTime == 0)
                             HeldGuardian.Direction = guardian.Direction;
                         guardian.AddDrawMomentToTerraGuardian(HeldGuardian);
-                        if (HeldGuardian.Base.Size >= GuardianSize.Large && guardian.OwnerPos == -1)
-                        {
-                            if (!guardian.AttackMyTarget)
-                            {
-                                guardian.ChangeIdleAction(TerraGuardian.IdleActions.Wait, 50);
-                                if (guardian.Velocity.X == 0 && guardian.Velocity.Y == 0)
-                                {
-                                    guardian.MoveDown = true;
-                                }
-                            }
-                        }
                     }
                     break;
 
@@ -696,7 +717,7 @@ namespace giantsummon.Companions
                     {
                         data.CarrySomeone = false;
                     }
-                    else
+                    else if (data.PickedUpPerson)
                     {
                         NPC npc = Main.npc[data.CarriedPersonID];
                         for (int p = 0; p < 255; p++)
@@ -716,6 +737,7 @@ namespace giantsummon.Companions
                         if (guardian.PlayerMounted || (guardian.DoAction.InUse && guardian.DoAction.ID == HugActionID && guardian.DoAction.IsGuardianSpecificAction))
                             npc.position.X += 4 * guardian.Direction * guardian.Scale;
                         npc.velocity = Vector2.Zero;
+                        npc.velocity.Y = -0.3f;
                         guardian.AddDrawMomentToNpc(npc);
                     }
                     break;
@@ -725,7 +747,7 @@ namespace giantsummon.Companions
                     {
                         data.CarrySomeone = false;
                     }
-                    else
+                    else if (data.PickedUpPerson)
                     {
                         Player player = Main.player[data.CarriedPersonID];
                         player.position = guardian.GetGuardianShoulderPosition;

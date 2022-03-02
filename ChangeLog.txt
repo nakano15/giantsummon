@@ -40,3 +40,7 @@ Fear now got a Flintlock pistol as their starter weapon.
 	There's no point into him fearing combat, and then going close range in combat.
 Nerfed Miguel's move speed from 6.7 to 6.2.
 Buffed Cille's move speed from 5.6 to 6.
+Companions will no longer try using weapons they have no ammo.
+Companions that fails to find a furniture to use when idle, will now move to wait action.
+Vladimir will no longer try picking up players mounted on guardians, or controlling them.
+	He will also no longer run away when hugging a companion.
