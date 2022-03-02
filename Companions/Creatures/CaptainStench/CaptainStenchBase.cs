@@ -649,7 +649,7 @@ namespace giantsummon.Companions
                         case 5:
                             Mes = "Infuse with Ruby";
                             Description = "Ruby: Passive- Attacks gain lifesteal \n" +
-                                "Gem Power-Whiplike attack that drains enemies of their hp and heals stench for 5 % of her max health per enemy hit additionally if the sweat spot of the attack hits 50 % max health is restored";
+                                "Gem Power-Whiplike attack that drains enemies of their hp and heals stench for 5 % of her max health per enemy hit additionally if the sweet spot of the attack hits 50 % max health is restored";
                             ItemID = Terraria.ID.ItemID.Ruby;
                             break;
                         case 6:
