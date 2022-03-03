@@ -70,7 +70,8 @@ namespace giantsummon
         public GuardianID MyID = new GuardianID(0);
         public int MyGuardianID = 0;
         public bool IsStarter = false;
-        public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;
+        public bool Tanker = false, MayLootItems = false, AvoidCombat = false, ChargeAhead = false, AttackMyTarget = false, Passive = false, SitOnTheMount = false, 
+            SetToPlayerSize = false, GetItemsISendtoTrash = false, UseWeaponsByInventoryOrder = false, ProtectMode = false, AutoSellWhenInvIsFull = false;
         public bool OverrideQuickMountToMountGuardianInstead = false, UseHeavyMeleeAttackWhenMounted = true, HideWereForm = false;
         public uint Coins
         {
@@ -137,7 +138,7 @@ namespace giantsummon
         {
             get
             {
-                const float MaxTime = 54000 + 32400;
+                const float MaxTime = (54000 + 32400);
                 float Time = (float)Main.time;
                 if (!Main.dayTime) Time += 54000f;
                 TimeSpan CurrentTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(Time);
@@ -151,7 +152,7 @@ namespace giantsummon
         {
             get
             {
-                const float MaxTime = 54000 + 32400;
+                const float MaxTime = (54000 + 32400);
                 TimeSpan NextTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(MaxTime);
                 return (int)((NextTime.TotalDays + Base.Birthday) / DaysToYears) + (SavedAge > 0 ? SavedAge : Base.Age);
             }
@@ -593,10 +594,12 @@ namespace giantsummon
 
         public TimeSpan TimeUntilBirthday()
         {
-            TimeSpan CurrentTime = GetLifeTime.Duration();
-            TimeSpan NextBirthdayTime = CurrentTime.Duration();
-            NextBirthdayTime = NextBirthdayTime.Subtract(TimeSpan.FromDays((NextBirthdayTime.TotalDays - Base.Birthday) % DaysToYears));
-            NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(DaysToYears));
+            TimeSpan CurrentTime = GuardianGlobalInfos.GetTime.Duration();
+            TimeSpan NextBirthdayTime = GetLifeTime.Duration();//CurrentTime.Duration();
+            NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays((Base.Birthday - NextBirthdayTime.TotalDays) % DaysToYears));
+            //NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(Base.Birthday));
+            //if (NextBirthdayTime < CurrentTime)
+            //    NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(DaysToYears));
             TimeSpan T = (NextBirthdayTime - CurrentTime);
             //Main.NewText(T.ToString());
             return T;
@@ -604,9 +607,7 @@ namespace giantsummon
 
         public string TimeUntilBirthdayString()
         {
-            string T = "";
             TimeSpan Time = TimeUntilBirthday();
-            bool First = true;
             if (Time.Days > 0)
             {
                 return "In " + Time.Days + " day" + (Time.Days > 1 ? "s" : "");
@@ -615,6 +616,10 @@ namespace giantsummon
             {
                 return "In " + Time.Hours + " hour" + (Time.Hours > 1 ? "s" : "");
             }
+            if (Time.Days < 0)
+                return (Time.Days * -1) + " days ago.";
+            if (Time.Hours < 0)
+                return (Time.Hours * -1) + " hours ago.";
             return "Starting soon.";
         }
 
@@ -629,7 +634,7 @@ namespace giantsummon
 
         public int GetAge(bool ByCompanionLifeTimeSpeed = false)
         {
-            double AgingFactor = (!ByCompanionLifeTimeSpeed ? (double)Base.GetGroup.AgingSpeed : 1d);
+            double AgingFactor = (!ByCompanionLifeTimeSpeed ? Base.GetGroup.AgingSpeed : 1d);
             return (int)((SavedAge > 0 ? SavedAge : Base.Age) * (ByCompanionLifeTimeSpeed ? 1f : 1f / AgingFactor) + ((GetLifeTime.TotalDays - Base.Birthday) * AgingFactor) / DaysToYears);
         }
 

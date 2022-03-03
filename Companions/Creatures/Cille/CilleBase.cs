@@ -393,7 +393,7 @@ namespace giantsummon.Companions
 
         public static bool TriggerBeastState(TerraGuardian tg)
         {
-            return !Main.dayTime && Main.moonPhase == 4 && tg.Position.X < Main.worldSurface * 16;
+            return !Main.dayTime && Main.moonPhase == 4 && tg.Position.Y < Main.worldSurface * 16;
         }
 
         public override string GetSpecialMessage(string MessageID)

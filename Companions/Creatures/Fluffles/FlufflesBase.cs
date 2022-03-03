@@ -44,7 +44,7 @@ namespace giantsummon.Companions
             ReverseMount = true;
             DrinksBeverage = true;
             SetTerraGuardian();
-            IsNocturnal = true;
+            IsNocturnal = false;
 
             CallUnlockLevel = MountUnlockLevel = 0;
 
@@ -672,6 +672,16 @@ namespace giantsummon.Companions
             }
         }
 
+        public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
+        {
+            List<DialogueOption> Dialogues = base.GetGuardianExtraDialogueActions(guardian);
+            if(guardian.DoAction.InUse && guardian.DoAction.IsGuardianSpecificAction && guardian.DoAction is Creatures.Fluffles.FriendlyHauntAction)
+            {
+                //Add dialogues that uses her action
+            }
+            return Dialogues;
+        }
+
         public override void GuardianUpdateScript(TerraGuardian guardian)
         {
             FlufflesData data = (FlufflesData)guardian.Data;
@@ -743,7 +753,8 @@ namespace giantsummon.Companions
                     if (data.KnockoutAlpha > 1)
                         data.KnockoutAlpha = 1;
                 }
-                /*if (!guardian.UsingFurniture && !guardian.DoAction.InUse && Main.rand.Next(60) == 0) //Needs debugging
+                if (guardian.OwnerPos == -1 && !guardian.UsingFurniture && !guardian.DoAction.InUse && guardian.TargetID == -1 && 
+                    Main.rand.Next(60) == 0 && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait) //Needs debugging
                 {
                     List<KeyValuePair<byte, int>> PossibleTargets = new List<KeyValuePair<byte, int>>();
                     //0 = Player, 1 = Tg
@@ -759,7 +770,7 @@ namespace giantsummon.Companions
                     }
                     foreach(int key in MainMod.ActiveGuardians.Keys)
                     {
-                        if(key != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[key]) &&
+                        if(key != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[key]) && !guardian.PlayerMounted && !guardian.PlayerControl &&
                             Math.Abs(MainMod.ActiveGuardians[key].Position.X - guardian.Position.X) < RangeX + (guardian.Width + MainMod.ActiveGuardians[key].Width) * 0.5f &&
                             Math.Abs(MainMod.ActiveGuardians[key].CenterY - guardian.CenterY) < RangeY + (guardian.Height + MainMod.ActiveGuardians[key].Height) * 0.5f)
                         {
@@ -778,7 +789,7 @@ namespace giantsummon.Companions
                             guardian.StartNewGuardianAction(new Creatures.Fluffles.FriendlyHauntAction(MainMod.ActiveGuardians[PickedTarget.Value]));
                         }
                     }
-                }*/
+                }
             }
             if (guardian.KnockedOut)
             {

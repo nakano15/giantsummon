@@ -45,3 +45,5 @@ Companions that fails to find a furniture to use when idle, will now move to wai
 Vladimir will no longer try picking up players mounted on guardians, or controlling them.
 	He will also no longer run away when hugging a companion.
 You will now receive notices of companions skill levels increased is a multiple of 100, insteas of 25.
+Fixed a bug where Cille's beast state couldn't trigger.
+Fluffles is no longer nocturnal.
