@@ -3227,7 +3227,7 @@ namespace giantsummon
 
         public static float GetAgeDecimalValue(int StartAge, double BirthdayAge, TimeSpan Time, float AgingSpeed = 1f)
         {
-            return (float)(StartAge * AgingSpeed + ((Time.TotalDays - BirthdayAge) * (double)AgingSpeed) / GuardianData.DaysToYears);
+            return (float)(StartAge * AgingSpeed + ((Time.TotalDays - BirthdayAge) * AgingSpeed) / GuardianData.DaysToYears);
         }
 
         public static float GetAgeSizeValue(float Age)
@@ -17553,6 +17553,31 @@ namespace giantsummon
                 Terraria.DataStructures.DrawData[] dds = Main.playerDrawData.ToArray();
                 Main.instance.DrawPlayer(dummy, new Vector2(-50, -50), 0f, Vector2.Zero, 0f);
                 Main.playerDrawData = dds.ToList();
+            }
+        }
+
+        public static void CheckForBirthdays(Player player)
+        {
+            List<GuardianData> BirthdayTgs = new List<GuardianData>();
+            foreach(GuardianData gd in player.GetModPlayer<PlayerMod>().MyGuardians.Values)
+            {
+                if (gd.IsBirthday && NpcMod.HasGuardianNPC(gd.ID, gd.ModID))
+                    BirthdayTgs.Add(gd);
+            }
+            if(BirthdayTgs.Count > 0)
+            {
+                string Text = "Today is ";
+                bool First = true;
+                foreach(GuardianData g in BirthdayTgs)
+                {
+                    if (!First)
+                        Text += ", ";
+                    Text += g.Name;
+                }
+                Text += "'s birthday"+ (BirthdayTgs.Count > 1 ? "s" : "") + ".";
+                Main.NewText(Text, MainMod.BirthdayColor);
+                if (!Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
+                    Terraria.GameContent.Events.BirthdayParty.ToggleManualParty();
             }
         }
 

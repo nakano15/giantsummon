@@ -470,19 +470,21 @@ namespace giantsummon
                     SkillList[s].Level++;
                     SkillList[s].Progress -= (MainMod.IndividualSkillLeveling ? SkillList[s].MaxProgress : LastSkillRateMaxValue);
                     SkillList[s].MaxProgress = GuardianSkills.ReturnSkillMaxProgress(SkillList[s].Level, true);
-                    if (SkillList[s].Level % 25 == 0)
+                    if (SkillList[s].Level % 100 == 0)
                     {
                         LastSkillIncreaseLevel = SkillList[s].Level;
                     }
                 }
                 if (LastSkillIncreaseLevel > -1)
-                    Main.NewText(Name + " has reached " + SkillList[s].skillType.ToString() + " level " + LastSkillIncreaseLevel + ".");
+                {
+                    Main.NewText(Name + " has reached " + SkillList[s].skillType.ToString() + " level " + LastSkillIncreaseLevel + ".", MainMod.SkillUpColor);
+                }
                 LevelSum += SkillList[s].Level;
             }
             if (LevelSum != SkillLevelSum)
             {
                 SkillLevelSum = LevelSum;
-                LastSkillRateMaxValue = GuardianSkills.ReturnSkillMaxProgress(LevelSum);
+                LastSkillRateMaxValue = GuardianSkills.ReturnSkillMaxProgress(LevelSum, true);
                 if (PlayerMod.HasGuardianSummoned(player, ID, ModID))
                 {
                     PlayerMod.GetPlayerSummonedGuardian(player, ID, ModID).UpdateStatus = true;
@@ -574,13 +576,13 @@ namespace giantsummon
         {
             if (Main.dayTime && Main.time == 0)
             {
-                if (IsBirthday)
+                /*if (IsBirthday)
                 {
                     GiftGiven = false;
-                    Main.NewText("Today is " + Name + "'s birthday. Let's party!", Color.LightGreen);
+                    Main.NewText("Today is " + Name + "'s birthday. Let's party!", MainMod.BirthdayColor);
                     if (NpcMod.HasGuardianNPC(ID, ModID) && !Terraria.GameContent.Events.BirthdayParty.PartyIsUp)
                         Terraria.GameContent.Events.BirthdayParty.ToggleManualParty();
-                }
+                }*/
                 UpdateAge();
             }
             //

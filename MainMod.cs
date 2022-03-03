@@ -154,6 +154,7 @@ namespace giantsummon
         private const byte CompanionFaceJSMaxTime = 30;
         private static int CompanionFaceJSID = GuardianBase.Alex;
         private static string CompanionFaceJSModID = "";
+        public static Color SkillUpColor = new Color(132, 208, 192), MysteryCloseColor = new Color(152, 90, 214), BirthdayColor = new Color(112, 148, 192);
 
         public static void TriggerAlexJS()
         {

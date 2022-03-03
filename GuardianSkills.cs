@@ -143,9 +143,9 @@ namespace giantsummon
         {
             float Value = 0;
             if (IndividualSkill)
-                Value = 20 + StatusSum * 25 - (StatusSum - 1) * 12;
+                Value = StatusSum * 25 - (StatusSum - 1) * 12 + 20;
             else
-                Value = 20 + StatusSum * 15 - (StatusSum - 1) * 8;
+                Value = StatusSum * 15 - (StatusSum - 1) * 8 + 20;
             const int MaxPossibleValue = 500000000;
             if (Value > MaxPossibleValue || Value < 0) //To avoid overflow
                 Value = MaxPossibleValue;

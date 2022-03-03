@@ -934,6 +934,10 @@ namespace giantsummon
                 if (_InternalCarryTimer == 0)
                     _CarriedByGuardianID = -1;
             }
+            if(Main.dayTime && Main.time == 0)
+            {
+                TerraGuardian.CheckForBirthdays(player);
+            }
         }
 
         public void UpdateMouseOverSystem()
@@ -2589,6 +2593,7 @@ namespace giantsummon
             if (player.whoAmI == Main.myPlayer)
             {
                 GuardianGlobalInfos.UpdateSeason();
+                TerraGuardian.CheckForBirthdays(player);
             }
             if (SelectedGuardian > -1)
             {

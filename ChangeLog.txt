@@ -44,3 +44,4 @@ Companions will no longer try using weapons they have no ammo.
 Companions that fails to find a furniture to use when idle, will now move to wait action.
 Vladimir will no longer try picking up players mounted on guardians, or controlling them.
 	He will also no longer run away when hugging a companion.
+You will now receive notices of companions skill levels increased is a multiple of 100, insteas of 25.
