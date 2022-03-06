@@ -1,0 +1,118 @@
+Ailora Stats and Mechanics:
+
+Ailora-The Wicked Were-Cat Pyromancer
+Age-Unknown(Likely above 100,000 years old)
+Role-Support Dps
+
+Recruited Stats:
+Hp- 300(Base)/Hp-1000(Were-Cat/Temperorary boost in health until the form wears off)
+Mp- 216(Base)/Mp-666(Were-Cat/Temperorary boost in health until the form wears off)
+Life Crystal(15)-20
+Life Fruit(20)- 3.3
+Mana Crystal(9)- 50
+
+
+Boss fight stats:
+HP-2,000 (4,000 in expert mode)
+MP-666
+damage- 30
+defense- 10
+KB resist- 50%
+
+
+Recruit Conditions:
+>Possible to spawn in a blood moon in were-cat form(15% chance)
+>Possible to spawn during solar eclipse in were-cat form(71% chance)
+>Possible to spawn during full moon in were-beast form(5% chance)
+>Can possibly spawn in the Dungeon by book shelfs in base form(2% chance)
+>Can possibly spawn in a generated underground house in base form(2% chance)
+>Can possibly spawn in a floating island house in base form(2% chance)
+>Can possibly spawn in a underworld house in base form(2% chance)
+>Can possibly spawn in all biomes including evil ones in base form(1%)
+
+
+Buffs/Debuffs/etc.:
+(Passive Buff)Fire Incarnate- Ailora takes -80% reduced damage from all fire sources,attacks and debuffs. Also while affected by any fire buff/debuff she gains 20 defense for the duration.
+
+(Passive buff/Active skill Buff/60 second cooldown)Passive Warmth- passive: grants Ailora 2x regeneration to hp in and out of combat indefinently/Warmth Active: casts a fire spell that activates when Ailora or party members reach 50% hp or less. Heals her and allies for 30hp(60hp in Beast form) per second for 5 seconds.(Counts as a fire buff for the 5 second duration)
+-80 mp cost
+-The cooldown of this skill can be reduced by 2 seconds each time a melee attack is landed by Ailora(Melee attacks include "Blazing Paw Blast","Schorching Claw Slash" and "Demon Scar")
+-Grants 80% knockback resist when casting(100% in beast form)
+
+(Active skill Buff/Debuff/1:30 second cooldown)Power Within- casts a pyromancy spell that damages Ailora for 2% MaxHp per second while buffing her and allies damage output by 20%,mana regeration by 4x, jump height, movement and melee speed for 6 seconds.(Ailora only casts this spell in combat when she is above 30% health)
+-10 mp cost
+-inflicts "on fire" debuff to Ailora when casted
+-Grants 80% knockback resist when casting(100% in beast form)
+
+(Debuff/cooldown 60 seconds per enemy)Wicked inferno- causes all attacks agaisnt the target to deal a extra 1% current health on hit for the next 5 seconds.
+-is activated by "Demon Scar", "Floating Chaos Orb (WereCat)" and "Chaos Eruption"
+-The cooldown is applied to the enemy so they wont constantly be effected by the debuff
+
+(Active Transformation)(60 second duration/infinite duration in full moon/blood moon/Solar Eclipse/3:00 cooldown) Were-Cat form- A wicked transformation that can be triggered during full moon/blood moon/solar eclipse or when Ailora's health reaches atleast 20% in combat while on fire. 
+-Transformation causes a explosion that does 30% of Ailoras max Hp as damage, has a knockback value of 16 and instantly restores 30% of her missing health.(also a light source)
+-Healing for knocked out players and terra guardians is increased greatly while in this form
+-If Ailora reaches 0% health in this form she instantly reverts back to normal form
+-Ailora CAN NOT use any items while in this form
+
+
+
+Combat:
+
+Expert Level Pyromancy:
+
+>Blazing Paw Blast(Base form exclusive)(Melee)-blast target with fire infused paws.(used as a default melee attack)
+-20 base damage with no weapon equiped(deals 1.1x the of current weapon equiped as additional damage)
+-"applies on fire debuff"
+-melee attack has knockback value of 8
+-light source
+
+>Chaotic Fire Ball(Base form exclusive)(Ranged)- Ailora hurls a big ball of fire at enemies.(used as a default ranged attack)
+-30 base damage(deals 1.2x the of current weapon equiped as additional damage)
+-10 Mp
+-"applies on fire debuff"
+-knockback value 6
+-light source
+
+>Schorching Claw Slash(Were Beast Exclusive)(Melee)- Slashes with scorching claws that leave a afterimage that explodes.(used as a default melee attack in beast form)
+-60 base damage(attack deals 1.1x the damage of current weapon equiped as additional damage)
+-"applies on fire debuff"
+-heals for 10% of damage done/ if Ailora's Hp is already full then it restores 10 mana
+-light source
+
+
+Master Level Pyromancy/Wicked Spells:
+
+>Demon Scar(Base form exclusive Ultimate)(Melee/30 second cooldown)- Summons a fire blade to slash enemies.(This spell triggers periodically)
+-35 base damage(deals 2.0x the damage of equiped weapon as additional damage)
+-applies "on fire!" and "Wicked inferno" debuff
+-50 Mp
+-heals for 15% of damage done and restores 25 mana per enemy hit
+-knock back value 10
+-Grants 50% knockback resist when casting
+-Cool down can be reduced by 1 second each time a enemy is hit by "Blazing paw blast" or "Chaotic fire ball"
+-light source
+
+>Floating Chaos Orb(Active skill cast/15 second cooldown)- Ailora casts a fire-spitting orb that shoots fire balls at nearby enemies for 15 seconds at a rate of 1 projectile per 0.3 seconds.(This spell triggers periodically)
+-Projectiles deal 1 damage each(deals 10% additional damage from equiped weapon)
+-applies "on fire" debuff"(Applies "Wicked inferno" debuff additionally if casted in Beast form)
+-30 Mp/ 60 mp if casted as a Were-Cat(2 chaos orbs are summoned as a Were-Cat)
+-knockback value of 3
+-Very fast projectile travel speed
+-Light source
+
+Forbidden Nova(Were-Cat Exclusive)(Ranged)- Ailora hurls a miniature star at enemies that deals massive AOE damage.(used as default ranged attack)
+- 50 base damage, 20 base damage from explosion (deals 1.2 the damage of equiped weapon as additional damage)
+- 50 mp / if not enough mana is present ailora can use 2% of her current hp to cast instead(if she is below 30% health she doesnt do this)
+- knockback value of 16
+- Medium projectile travel speed
+-light source
+
+>Chaos Eruption(Were-Cat Exclusive Ultimate)(Active skill cast/60 second Cooldown)- Ailora summons fire pillars that erupt from the earth and hit 5 times per pillar.(This attack can trigger when a boss is detected on screen or when 10 enemies are close by or when Ailora is in Boss npc mode agaisnt the player)
+-15 base damage per tick(deals 25% additional damage from equiped weapon)
+-applies "On fire" and "Wicked inferno" debuff
+-knockback value of 3
+-Ailora Becomes immune to knockback while casting 
+-Ailora receives "on fire!" debuff immediately upon casting this pyromancy spell
+-300 mana cost/ if Ailora doesnt have enough mana to cast she can use 20% of her current hp to cast(if she is below 30% health she doesnt do this)
+-light source
+
