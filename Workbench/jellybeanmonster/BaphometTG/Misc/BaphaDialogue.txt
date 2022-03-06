@@ -1,0 +1,106 @@
+Dialogue:
+
+Conditions:
+
+>Before Boss Fight(Pentagram Orb NPC):
+1-"The orb is surging with immense power, you hear a demonic voice ask "What are you afraid of?"... Do you wish to release the Devil inside?" (Yes or no response)
+2-(Yes) You feel extreme pressure as the orb cracks and opens, prepare for battle...
+3-(No) Exits Dialogue menu
+
+>After defeating Bapha:
+1- "I have been imprisoned for several millennia. Your combat ability is phenomenal. There are very few that can compete with my overwhelming power.
+2- "Although you have defeated me in battle you cannot kill me as I am immortal."
+3- "Your skills are remarkable you would make a great servant. How about we form a alliance for the time being? You would be unstoppable with me around."(Yes or no)
+4- Yes answer(Recruit #1)- "Yes indeed!, with you at my side the surface will be at the mercy of my power!
+5- No Answer- "Although you refuse a great offer I respect your decision as a competent warrior. Whenever you wish to form a alliance I will be here ruling hell as its Overlord"
+6- Party Full- Huh whats this?! you wish for me to tag along with those weaklings you have with you? Get rid of them or sacrifice them to me for a hefty reward MWHAHAHAAHAHA!!!!
+7- Sacrifice(Recruit #2)- YEEEESSSS!!! YOUR SOUL IS MINE!!!
+8- Get Rid of them answer- Exits Dialogue
+
+>After recruited(General Dialogue):
+RNG Dialogue-
+- "So when will the subjugation begin? I didn't align with you to lollygag!"
+- "Bring me souls to unleash my full potential, slaughtering mortals should suffice"
+- "The surface needs some fine tuning, death and destruction should do the trick dont you think? HAHAHAHA!"
+- "Ever had a lava bath?......... What?! you say it burns? Thats the best part Hahaha!"
+- "If your wondering how old I am you would be out of luck because I dont know myself, I've been idle for so long that I lost count.
+- "Many have come to me to study the Wicked Arts. I gift them that power at a cost of their sanity."
+- "I have had several apprientces since the dawn of time. None seem to still be alive in this time.
+- "Why was I sealed inside the wall of flesh? Heh... I dont quite remember... Maybe murdering innocents will refresh my memory *Sadistic Laughter*
+
+>Re-recruiting:
+-"So you have come back to align yourself with the Devil? good choice indeed....." *evil laugh*
+
+>Reviving Player:
+- "I didnt expect you to be such a weakling, stand up!"
+- "Rise again!"
+
+>Conditional Outloud comments:
+Detects Enemy:
+- "I'll have fun dismembering you!! Muhahahahaa!!!"
+- "If you think you can defeat me your more delusional than ever!"
+- "So you wish to die?!"
+- "Fighting me is a death sentence!"
+
+>Respawned:
+- "IM IMMORTAL!"
+
+Scarlet Shredder/Crescent Moon shredder Attack:
+- "AAAAHAAAHAAAHAAA!"
+- "TRY TO DODGE THIS!"
+- "YOU WONT SURVIVE THIS ONE!"
+- "BEGONE!"
+
+Blood Moon:
+- "Yeeessss! let the beast of the night come forward hahaha!
+
+>Quest Dialogue:
+- "If you were to kill 666 hell spawn, I would grant you access to a dozen of my minions to bring devastation."
+Quest completed:
+- "Well done, my minions shall serve you well."
+
+>Special Dialogue:
+Sacrifice:
+- "Bring me mortal souls you may have befriended to increase my capabilites.(1.2x boost to Bapha's Hp/Mp(per companion) and lowers soul cost count by 1 for each companion sacrificed)
+-sacrifice yes option- "YOUR SOUL IS MINE!"
+-sacrifice no option- exits dialogue
+
+Ressurect Souls:
+- "You wish to revive a poor soul that I consumed? Well it will cost you a hefty price *Petty laughter*....I'll revive a soul in exchange for 50 gold.(This line can change to be more ruthless changing gold to platinum or something else that will cost the player a lot) 
+
+
+Terra guardian specific interactions:
+
+Wrath- 
+> "Haha little pig has a temper tantrum"
+
+Brutus-
+> "Serving justice will get you no where brutus, I have crushed plenty of knights before. It was fun watching them burn! hahahaha!"
+> "I love torching Martyrs!, let them cry in agony as their righteousness fades with the flame!"
+
+Dog TG's-
+>Dont stick your nose in the wrong place, you might get scorched.
+
+Leopold-
+> Wonder if the leopold ever tried learning demonic magic? could serve useful for tearing enemies apart.
+
+Malisha-
+> Malisha would make a great disciple for me. Her experiments show that she can be remorseless and sadistic, which is perfect for my kind of magic......hehehehe.
+
+Ailora(Scripted Dialogue for first meeting each other)-
+Bapha: "Ailora! Impressive your still alive, the immortality was useful afterall hahaha!"
+Ailora: "Yes of course! Almighty, after you were sealed during the God war I was forced into hiding as to not be executed by the opposing forces."
+Bapha: "Ahhhh yes!!! now I remember. *Sadistic Laughter*... Ha! those weaklings they couldnt defeat me so they sealed me for several millennia. I'll have my revenge soon enough."
+Ailora: "I could not find the the remaining apprentices, it seems like they were wiped out by the Divine order and Cthulus dominion unfortunately."
+Ailora: Cthulu was defeated by dryads and one Terrarian known as "The Guide". His organs were ripped out and scattered through out the world. The divine order seems to have disapeared leaving behind beings known as harpies.
+Ailora: "My eyes have witnessed many civilizations since their rise and fall throughout thousands of years and I have learned so much as a result.
+Ailora: "The world at this time is a blank slate for terrarians. The last war between mortals almost costed them extiction and now the population you see is but a atom of what it once was."
+Bapha: "Seems like the divine order couldnt stop them from destruction after all *Sadistic laughter*"
+Bapha: "With both of my adversaries gone,that means Terraria is all the easier to rule HAHAHAHAHAHA!."
+Ailora: "I wouldnt be so sure of that as their are dangerous new creatures that were born as a side effect of conflict. Corrupted amalgamations, Bloody monstrosities,colorful horned horses and many more now traverse the land."
+Ailora: "New land masses and environments have bloomed. I have yet to experience them all."
+Bapha:  "With me back in action no one will stand a chance!"
+
+
+
+
