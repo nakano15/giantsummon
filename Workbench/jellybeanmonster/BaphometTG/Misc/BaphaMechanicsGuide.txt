@@ -1,0 +1,130 @@
+Bapha's Mechanics guide:
+Key:
+HS-Hell Splitter
+AF-Awakened Form
+CF- Crimson Flame
+HF-Hell Flame
+CMS- Crescent Moon Shredder
+HeP-Hell Portal
+HP- Hit Points
+MP- Mana Points
+KB- Knock Back
+
+Bapha- Overlord of Hell.
+Age- Unknown (Likely above 100,000 years)
+Role-Solo Dps Juggarnaut 
+
+Recruited Stats:
+HP- 666
+MP- 333
+Life Crystal- 100
+Life Fruit- 5
+Mana Crystal-30
+
+Boss Fight Stats:
+Classic mode:
+HP= 20,000
+MP- 666
+Damage- (Based on attacks used as described in "Attacks" section)
+Defense- 20
+KB Resist- 100%
+-Can Fly
+
+Expert Mode:
+HP= 40,000
+MP- 800
+Damage- (Based on attack used as described in "Attacks" section)
+Defense- 40
+KB Resist- 100%
+-Can Fly
+
+Recruit Conditions-
+1.Player Must have defeated Wall of Flesh boss
+2. Player must interact with pentagram star orb,that spawns after wall of flesh is defeated, in order to have a dialogue which starts a boss fight
+3. Baphas health must reach atleast 10% in order for him to be defeated and for the player to be able to interact with him
+4. Player must accept Bapha's condtions for recruitment in order to have him on team
+
+Basics:
+-Bapha takes 5x increased damage when wet or submerged in water additionally can not activate Awakened Form.(Rain included)
+-When Baphas health reaches 0 on surface or any other place besides hell, his body desintagrates and gets sent back to hell. He reforms back in 10 seconds.
+-If Bapha is recruited and his health reaches 0 while in underworld, his respawn timer gets set to 5 seconds instead of 10.
+
+
+Buffs/Debuffs/Passive:
+
+>Demonic Presence(Passive)-Bapha is immune by all sources of fire damage including debuffs. Additionally attracts hostile hell creatures to periodically spawn close to where he is.(10% Chance)(35% in boss form)
+
+>Awakened Form(Buff->1:00 duration/permanent if in underworld)-Automatically activates while in underworld or activates after killing 10 foes within 20 seconds anywhere else in world. Bapha gains extra capabilites and new aesthetic as described below.(Buff is affected by "Soul Sacrifice")
+-When "Awakened" Bapha's health regeneration rate increases by 2.0x as well as healing for knocked out players and other terra gaurdian entities.(Recruited version only does not apply to boss form)
+-The transformation summons a flame that deals 10% of baphas max health as damage and can inflict the "Crimson Conflagration" debuff
+
+>Crimson ignite(Passive)- Bapha's attacks deal additional 10% damage to enemies effected by any fire debuff and heals him for 10% of the damage done
+
+>Crimson Conflagration(Debuff/20 seconds cooldown per enemy)(Awakened form only)- Flame that does 1% max health damage every second and last for 10 seconds + Lowers defense by 15 + Spreads to other enemies in 5 block radius+ Bapha gains 1 defense for every enemy effected by this debuff for the duration
+-Counts as a "fire debuff"
+-can be effected by defense resistance
+
+>Terrorized(Boss version debuff only)- Players cannot escape underworld until bapha is defeated, if they do leave a portal will appear at their location and instantly kill them with the message of "[player] was sent back to hell"
+
+>Diablo numeral(debuff)- if both projectiles from "CMS" manage to hit the same target the target receives additonal 666 true damage.(Symbol appears letting the player know if this effect is activated has been activated)
+
+>Soul Sacrifice (dialogue passive)- The player can sacrifice other terra guardians to Bapha for an increase in his Hp/Mp by 1.2x for each companion and it effects the "Awakened Form" buff by decreasing the amount of enemies needed to achieve the form by 1 for each companion sacrificed.
+-If the player manages to sacrifice 10 terra guardians then Bapha will be permanently in Awakened Form any where in the world
+-The terragaurdians sacrificed can be resurrected through a dialogue with Bapha
+-Terraguardians that are sacrificed are effected by the trust system towards players, so if they are revived then they will immediately be negative towards player.
+
+>Negates fall damage(Passive)
+
+
+Combat:
+
+Master Level Pyromancy/Wicked Magic:
+>Hell Splitter(Melee)(Default-Blazing Edge/ AF -Crimson Edge)- Summons a fire formed blade that slashes down in one attack dealing 25(50 when in AF) damage and applies "On Fire" debuff("Crimson Conflagration" debuff if in AF) 
+-deals 1.5x(2.0x in AF) damage of what the weapon damage
+-HS's properties change when Bapha is awakened, HS gains extra attack range, new vfx and its attack applies "Crimson Conflagration" debuff 
+-Has knockback value of 8(12 in AF)
+-Shockwave(Crimson Edge exclusive): After chopping down, summons a projectile that hits and deals 50% of total damage.(5 Knockback value)
+
+>Hell Flame(Normal Form Exclusive/Ranged)- hurls one or two fire ball(s) at enemies. 
+-20 base damage(deals 1.1x the damage of equiped weapon as additional damage)
+-Applies "on fire" debuff
+-15 Mp cost
+-Medium Velocity
+-Has knockback value of 6
+-light source
+
+>Crimson Flame(Awakened Form Exclusive/Ranged)- hurls one or two enhanced fire balls at enemies.
+-40 base damage(deals 1.5x the damage of equiped damage as additional damage)
+-Applies "Crimson Conflagration"
+-30 Mp cost
+-High Velocity
+-Has Knockback value of 12
+-light source
+
+Master Level Satanic/Wicked Magic:
+>Scarlet Shredder(Normal Form Exclusive/30 second cooldown)- Bapha conjures one enhanced demon scythe projectile and throws it at nearby enemies.
+-deals 333 stagnent damage
+-125 Mp cost
+-ignores 25% defense value of target
+-Mimics demon scythe projectile AI
+-Knock value- 8
+-Light source
+
+>Crescent Moon Shredder(Awakened Form/60 second cooldown)- Bapha conjures two Supreme demon scythe projectiles and throws them at nearby enemies.
+-deals 333 stagnent damage per projectile
+-Black Crescent Moon-Mimics demon scythe projectile AI
+-White Crescent Moon-Opposite of Black Crescent Moon starts with high velocity but slows down. Hits once per enemy. After hitting atleast 7 enemies it disapears/or continues and despawns offscreen)
+-White Crescent Moon applies 1 stack "diablo numeral" debuff per projectile. If both projectiles hit the same target then the debuff is fully activated.
+-Bypasses blocks and ignores 50% defense value of target
+-projectile can target different enemies
+-250 Mp cost
+-Knockback value- 16
+-Light source
+
+>Hell Portal(Awakened Form)- Opens a portal to the underworld which produces 12 Enhanced Allied hell spawn enemies over 10 seconds that help the player in combat.
+- 150 Mp cost
+- HeP can be attained by the player doing a quest for Bapha that requires 666 underworld enemies to be slain(All underworld enemies can contribute to this quest even "The Wall Of Flesh" Boss)
+- HeP can only be used if Bapha is in Awakened form
+- In order for Bapha to use HeP certain conditions need to be met- 10 or more hostile entites must be detected or a boss must be present and hostile.
+- 30 second cooldown 
+-Light Source
