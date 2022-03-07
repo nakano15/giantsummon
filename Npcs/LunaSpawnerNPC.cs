@@ -17,7 +17,7 @@ namespace giantsummon.Npcs
         {
             NpcMod.SpawnGuardianNPC(npc.Bottom.X, npc.Bottom.Y, GuardianBase.Luna);
             npc.active = false;
-            Main.NewText("Someone has came visit " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of "+Main.player[Main.myPlayer].name+" position.");
+            Main.NewText("Someone has came visit " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of "+Main.player[Main.myPlayer].name+" position.", MainMod.MysteryCloseColor);
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

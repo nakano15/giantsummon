@@ -230,7 +230,7 @@ namespace giantsummon
             Season %= 4;
             Day %= GuardianGlobalInfos.QuarterOfAYear;
             const int DaysInASeason = GuardianGlobalInfos.QuarterOfAYear;
-            Birthday = DaysInASeason * Season + (double)Day / DaysInASeason;
+            Birthday = DaysInASeason * Season + (double)Day;
         }
 
         /// <summary>

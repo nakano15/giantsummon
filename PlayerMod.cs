@@ -214,13 +214,13 @@ namespace giantsummon
 
         public void FriendshipLevelNotification()
         {
-            Main.NewText("You reached Friendship Rank " + FriendshipLevel + "!");
+            Main.NewText("You reached Friendship Rank " + FriendshipLevel + "!", Color.Green);
             int LastExtraCompanionBonus = GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel - 1),
                 NewExtraCompanionBonus = GetMaxNumberOfExtraCompanionsBasedOnFriendshipRank(FriendshipLevel);
             if (NewExtraCompanionBonus != LastExtraCompanionBonus)
             {
                 int CompanionCount = NewExtraCompanionBonus - LastExtraCompanionBonus;
-                Main.NewText("Your max companion weight increased by " + (CompanionCount * 1000) + "!");
+                Main.NewText("Your max companion weight increased by " + (CompanionCount * 1000) + "!", Color.Green);
             }
         }
         public int GetSummonedGuardianCount
@@ -335,12 +335,12 @@ namespace giantsummon
             Tile CenterTile = MainMod.GetTile(PlayerX, PlayerY);
             if (CenterTile == null || !Main.wallHouse[CenterTile.wall])
             {
-                if(ShowWarnMessages) Main.NewText("You are not in a house.");
+                if(ShowWarnMessages) Main.NewText("You are not in a house.", Color.Red);
                 return false;
             }
             if (!WorldGen.StartRoomCheck(PlayerX, PlayerY))
             {
-                if (ShowWarnMessages) Main.NewText("This is not a safe house.");
+                if (ShowWarnMessages) Main.NewText("This is not a safe house.", Color.Red);
                 return false;
             }
             return true;
@@ -447,7 +447,7 @@ namespace giantsummon
             if (Main.myPlayer == player.whoAmI && Main.mouseItem.type == PortraitID)
                 Main.mouseItem.SetDefaults(0, true);
             if(player.whoAmI == Main.myPlayer)
-                Main.NewText("Buddy mode activated.");
+                Main.NewText("Buddies mode activated.", Color.Green);
             GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.SomeonePickedABuddy, player.name, GetGuardian(BuddyID, BuddyModID).Name, 30, 75);
             return true;
         }
@@ -842,7 +842,7 @@ namespace giantsummon
                                 {
                                     GetPlayerSummonedGuardian(player, GuardianBase.Miguel).SaySomething("*That's enough travelling distance. Talk to me to end this exercise.*");
                                 }
-                                else Main.NewText("I have travelled enough distance for today's exercise.");
+                                else Main.NewText("I have travelled enough distance for today's exercise.", Color.LightGreen);
                             }
                         }
                         break;
@@ -857,7 +857,7 @@ namespace giantsummon
                                     GetPlayerSummonedGuardian(player, GuardianBase.Miguel).SaySomething("*That's enough jumps. Talk to me to end this exercise.*");
                                 }
                                 else
-                                    Main.NewText("I did enough jumps for today's exercise.");
+                                    Main.NewText("I did enough jumps for today's exercise.", Color.LightGreen);
                             }
                             else
                             {
@@ -894,7 +894,7 @@ namespace giantsummon
                     Item.NewItem(player.getRect(), i.type);
                     //player.GetItem(player.whoAmI, i);
                     player.armor[e].SetDefaults(0, true);
-                    Main.NewText("This item doesn't fit on me.");
+                    Main.NewText("This item doesn't fit on me.", Color.Gray);
                 }
                 if (player.armor[e + 10].type > 0 && player.armor[e + 10].modItem is Items.GuardianItemPrefab &&
                     !((Items.GuardianItemPrefab)player.armor[e + 10].modItem).PlayerCanUse)
@@ -903,7 +903,7 @@ namespace giantsummon
                     Item.NewItem(player.getRect(), i.type);
                     //player.GetItem(player.whoAmI, i);
                     player.armor[e + 10].SetDefaults(0, true);
-                    Main.NewText("This item doesn't fit on me.");
+                    Main.NewText("This item doesn't fit on me.", Color.Gray);
                 }
             }
             LastHealthValue = player.statLife;
@@ -1937,7 +1937,7 @@ namespace giantsummon
                 }
                 if (!First && ((guardian.Base.CompanionSlotWeight + GuardianFollowersWeight > MaxCompanions) || (TitanGuardian < 255 && TitanGuardian != AssistSlot)))
                 {
-                    Main.NewText(guardian.Name + " were dismissed.");
+                    Main.NewText(guardian.Name + " were dismissed.", Color.Red);
                     DismissGuardian(AssistSlot);
                     AssistSlot++;
                     continue;
@@ -1961,7 +1961,7 @@ namespace giantsummon
                 if (player.whoAmI == Main.myPlayer && guardian.Base.InvalidGuardian)
                 {
                     this.DismissGuardian();
-                    Main.NewText("Your guardian has been dismissed because the mod that created it isn't loaded.");
+                    Main.NewText("Your guardian has been dismissed because the mod that created it isn't loaded.", Color.Red);
                 }
                 if (guardian.GrabbingPlayer)
                 {
@@ -2115,7 +2115,7 @@ namespace giantsummon
                     }
                     else
                     {
-                        Main.NewText("I have attacked enough foes for today's exercise.");
+                        Main.NewText("I have attacked enough foes for today's exercise.", Color.LightGreen);
                     }
                 }
                 else
@@ -2629,7 +2629,7 @@ namespace giantsummon
             FreebiesGiving();
             if (MainMod.IsPopularityContestRunning)
             {
-                Main.NewText("TerraGuardians Popularity Contest is now running! Vote before " + MainMod.ContestEndDate.Month + "/" + MainMod.ContestEndDate.Day + "!");
+                Main.NewText("TerraGuardians Popularity Contest is now running! Vote before " + MainMod.ContestEndDate.Month + "/" + MainMod.ContestEndDate.Day + "!", Color.LightGreen);
             }
             RecalculateFriendshipLevel();
         }
@@ -2639,7 +2639,7 @@ namespace giantsummon
             if (!HasGuardian(4) && MainMod.CanGiveFreeNemesis())
             {
                 AddNewGuardian(4, Starter: true);
-                Main.NewText("You gained a free Nemesis guardian as halloween reward.");
+                Main.NewText("You gained a free Nemesis guardian as halloween reward.", MainMod.RecruitColor);
             }
             if (!HasGuardian(GuardianBase.Vladimir) && MainMod.CanGiveFreeVladimir())
             {
@@ -2647,17 +2647,17 @@ namespace giantsummon
                 int DaysCounter = (int)(new DateTime(DateTime.Now.Year, 05, 19) - DateTime.Now).TotalDays;
                 if (DaysCounter == 0)
                 {
-                    Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3");
+                    Main.NewText("Today is Terraria's Birthday! You got Vladimir for starting playing today. Enjoy. :3", MainMod.RecruitColor);
                 }
                 else
                 {
-                    Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.");
+                    Main.NewText("With Terraria's birthday just " + DaysCounter + " days away, you've got Vladimir to help you celebrate the day.", MainMod.RecruitColor);
                 }
             }
             if (!HasGuardian(GuardianBase.Liebre) && MainMod.CanGiveFreeLiebre())
             {
                 AddNewGuardian(GuardianBase.Liebre, Starter: true);
-                Main.NewText("Liebre has joined your companion rooster. You feel a chill going down on your spine.");
+                Main.NewText("Liebre has joined your companion rooster. You feel a chill going down on your spine.", MainMod.RecruitColor);
             }
         }
 
@@ -2788,7 +2788,7 @@ namespace giantsummon
             }
             else
             {
-                Main.NewText("Invalid ID.");
+                Main.NewText("Invalid ID.", Color.Red);
             }
         }
 

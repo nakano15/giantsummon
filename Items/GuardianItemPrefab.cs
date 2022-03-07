@@ -180,7 +180,7 @@ namespace giantsummon.Items
         {
             if (PlayerCanUse)
                 return true;
-            Main.NewText("This kind of item can only be used by Guardians.");
+            Main.NewText("This kind of item can only be used by Guardians.", Color.Gray);
             return false;
         }
 
@@ -188,7 +188,7 @@ namespace giantsummon.Items
         {
             if (PlayerCanUse)
                 return true;
-            Main.NewText("This kind of item can only be equipped by Guardians.");
+            Main.NewText("This kind of item can only be equipped by Guardians.", Color.Gray);
             return false;
         }
 	}

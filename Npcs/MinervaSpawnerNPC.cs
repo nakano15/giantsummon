@@ -21,7 +21,7 @@ namespace giantsummon.Npcs
         {
             NpcMod.SpawnGuardianNPC(npc.Bottom.X, npc.Bottom.Y, GuardianBase.Minerva);
             npc.active = false;
-            Main.NewText(Main.player[Main.myPlayer].name + " has sense someone " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of their position.");
+            Main.NewText(Main.player[Main.myPlayer].name + " has sense someone " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of their position.", MainMod.MysteryCloseColor);
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

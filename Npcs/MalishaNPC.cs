@@ -54,7 +54,7 @@ namespace giantsummon.Npcs
                 Idle = true;
                 AiStage = 1;
                 npc.direction = (Main.rand.NextDouble() < 0.5 ? -1 : 1);
-                Main.NewText("Something appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + ".");
+                Main.NewText("Something appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + ".", MainMod.MysteryCloseColor);
             }
             else if (AiStage == 1)
             {

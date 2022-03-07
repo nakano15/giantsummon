@@ -19,6 +19,7 @@ namespace giantsummon.Actions
             ID = (int)ActionIDs.ReviveSomeone;
             InUse = true;
             RevivePlayer = Target;
+            TargetIsPlayer = true;
         }
 
         public ReviveSomeoneAction(TerraGuardian Target)
@@ -26,6 +27,7 @@ namespace giantsummon.Actions
             ID = (int)ActionIDs.ReviveSomeone;
             InUse = true;
             ReviveGuardian = Target;
+            TargetIsPlayer = false;
         }
 
         public static bool IsRevivingThisGuardian(TerraGuardian OneBeingRevived, TerraGuardian OneToCheck)
@@ -33,7 +35,7 @@ namespace giantsummon.Actions
             if(OneToCheck.DoAction.InUse && !OneToCheck.DoAction.IsGuardianSpecificAction && OneToCheck.DoAction.ID == (int)ActionIDs.ReviveSomeone)
             {
                 ReviveSomeoneAction action = (ReviveSomeoneAction)OneToCheck.DoAction;
-                return action.ReviveGuardian.WhoAmID == OneBeingRevived.WhoAmID;
+                return action.ReviveGuardian != null && action.ReviveGuardian.WhoAmID == OneBeingRevived.WhoAmID;
             }
             return false;
         }
@@ -47,7 +49,7 @@ namespace giantsummon.Actions
                 InUse = false;
                 return;
             }
-            if ((guardian.PlayerMounted && !Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut) || guardian.Is2PControlled)
+            if ((guardian.OwnerPos > -1 && guardian.PlayerMounted && !Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut) || guardian.Is2PControlled)
             {
                 if (!guardian.MoveDown)
                 {
@@ -74,7 +76,7 @@ namespace giantsummon.Actions
                     InUse = false;
                     return;
                 }
-                if (RevivePlayer.whoAmI == guardian.OwnerPos && guardian.PlayerMounted)
+                if (guardian.PlayerMounted && RevivePlayer.whoAmI == guardian.OwnerPos)
                 {
                     IsMountedPlayer = true;
                 }
@@ -143,8 +145,7 @@ namespace giantsummon.Actions
                     }
                     if (ArmAnimation == -1)
                         ArmAnimation = Animation;
-                    int x, y;
-                    guardian.Base.GetBetweenHandsPosition(ArmAnimation, out x, out y);
+                    guardian.Base.GetBetweenHandsPosition(ArmAnimation, out int x, out int y);
                     float ArmXDistance = (x - guardian.SpriteWidth * 0.5f) * guardian.Scale;
                     if (ArmXDistance > 0)
                     {
@@ -211,7 +212,7 @@ namespace giantsummon.Actions
                             {
                                 if (MainMod.CompanionsSpeaksWhileReviving)
                                 {
-                                    Main.NewText(guardian.Name + ">>" + (TargetIsPlayer ? RevivePlayer.name : ReviveGuardian.Name) + ": " +
+                                    Main.NewText(guardian.Name + " >> " + (TargetIsPlayer ? RevivePlayer.name : ReviveGuardian.Name) + ": " +
                                         guardian.Base.ReviveMessage(guardian, TargetIsPlayer, (TargetIsPlayer ? RevivePlayer : null), (!TargetIsPlayer ? ReviveGuardian : null)));
                                 }
                                 TalkTime = (600 + Main.rand.Next(10) * 50) * 2;

@@ -569,7 +569,7 @@ namespace giantsummon.Npcs
                     if (player.Distance(npc.Center) >= Main.screenWidth)
                     {
                         npc.active = false;
-                        Main.NewText("The Bunny Guardian has escaped successfully.");
+                        Main.NewText("The Bunny Guardian has escaped.", Microsoft.Xna.Framework.Color.Red);
                         return;
                     }
                 }

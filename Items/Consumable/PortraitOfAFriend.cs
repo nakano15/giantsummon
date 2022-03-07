@@ -29,7 +29,7 @@ namespace giantsummon.Items.Consumable
             if (player.whoAmI == Main.myPlayer && Main.ActivePlayerFileData.GetPlayTime() >= TimeSpan.FromMinutes(12))
             {
                 item.SetDefaults(0, true);
-                Main.NewText("Portrait of a Friend has suddenly disappeared from your inventory.");
+                Main.NewText("Portrait of a Friend has suddenly disappeared from your inventory.", Microsoft.Xna.Framework.Color.PaleVioletRed);
             }
         }
 

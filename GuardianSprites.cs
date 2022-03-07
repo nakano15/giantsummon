@@ -144,7 +144,7 @@ namespace giantsummon
             {
                 TexturesLoaded = false;
                 ErrorLoading = true;
-                Terraria.Main.NewText("Error loading " + ReferedBase.Name+ "'s texture from "+mod.Name+" mod.");
+                Terraria.Main.NewText("Error loading " + ReferedBase.Name+ "'s texture from "+mod.Name+" mod.", Color.Red);
             }
         }
 

@@ -49,7 +49,7 @@ namespace giantsummon
             if (PlayerMod.PlayerHasGuardianSummoned(player.player, Guardian.ID, Guardian.ModID))
             {
                 Active = false;
-                Main.NewText("You already have the guardian summoned. Manage it through the buttons on bellow the inventory.");
+                Main.NewText("You already have the guardian summoned. Manage it through the buttons on bellow the inventory.", Color.Red);
                 return;
             }
             float HudStartX = 64, HudStartY = MainMod.InventoryEndY;
@@ -206,7 +206,7 @@ namespace giantsummon
                                         }
                                         else
                                         {
-                                            Main.NewText("I can't do that...");
+                                            Main.NewText("I can't do that...", Color.Red);
                                         }
                                     }
                                     ItemSlot.MouseHover(Guardian.Equipments, context, s);

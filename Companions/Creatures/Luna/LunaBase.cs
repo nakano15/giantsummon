@@ -185,7 +185,7 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             if (!player.GetModPlayer<PlayerMod>().TutorialDryadIntroduction)
             {
-                Main.NewText(guardian.Name + " can help solve your questions. She also may know rummors about companions in your world.");
+                Main.NewText(guardian.Name + " can help solve your questions. She also may know rummors about companions in your world.", Microsoft.Xna.Framework.Color.LightBlue);
                 player.GetModPlayer<PlayerMod>().TutorialDryadIntroduction = true;
             }
             if (MainMod.IsPopularityContestRunning && !Main.bloodMoon)

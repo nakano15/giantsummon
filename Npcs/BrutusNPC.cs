@@ -156,9 +156,9 @@ namespace giantsummon.Npcs
             int npcPos = NPC.NewNPC(SpawnPosX, SpawnPosY, ModContent.NPCType<BrutusNPC>());
             string Text = "A Lion TerraGuardian has came from the Ether Realm looking for someone to hire him as bodyguard.";
             if (Main.netMode == 0)
-                Main.NewText(Text);
+                Main.NewText(Text, MainMod.MysteryCloseColor);
             else
-                NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Text), 255, 255, 255, 255);
+                NetMessage.SendData(25, -1, -1, Terraria.Localization.NetworkText.FromLiteral(Text), MainMod.MysteryCloseColor.R, MainMod.MysteryCloseColor.G, MainMod.MysteryCloseColor.B, 255);
             WarnedAboutBrutus = true;
         }
 
@@ -175,7 +175,7 @@ namespace giantsummon.Npcs
                 npc.direction = Main.player[Main.myPlayer].Center.X < npc.Center.X ? -1 : 1;
             if (!WarnedAboutBrutus)
             {
-                Main.NewText("A Lion TerraGuardian is still visiting your world.");
+                Main.NewText("A Lion TerraGuardian is still visiting your world.", MainMod.MysteryCloseColor);
                 WarnedAboutBrutus = true;
             }
             if (SteelTestingTime > 0)
@@ -377,7 +377,7 @@ namespace giantsummon.Npcs
                 }
                 if (!PlayerInRange)
                 {
-                    Main.NewText("The Lion Guardian has returned to the Ether Realm.");
+                    Main.NewText("The Lion Guardian has returned to the Ether Realm.", Color.OrangeRed);
                     npc.active = false;
                     npc.life = 0;
                 }
@@ -514,7 +514,7 @@ namespace giantsummon.Npcs
                     PlayerMod.AddPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID);
                     PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], GuardianID, GuardianModID).IncreaseFriendshipProgress(1);
                     NpcMod.AddGuardianMet(6);
-                    Main.NewText("You bought " + Base.Name + "'s help.");
+                    Main.NewText("You bought " + Base.Name + "'s help.", MainMod.RecruitColor);
                     WorldMod.TurnNpcIntoGuardianTownNpc(npc, GuardianBase.Brutus);
                 }
                 else

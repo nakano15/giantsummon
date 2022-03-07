@@ -165,7 +165,7 @@ namespace giantsummon.Npcs
                     {
                         npc.direction = -1;
                     }
-                    Main.NewText("There's something on the campfire.");
+                    Main.NewText("There's something on the campfire.", MainMod.MysteryCloseColor);
                     AiValue = 1;
                 }
                 float CampfireX = BonfireX * 16 + 8;
@@ -344,7 +344,7 @@ namespace giantsummon.Npcs
                 }
                 if (!PlayerInRange)
                 {
-                    Main.NewText("The campfire is now empty.");
+                    Main.NewText("The campfire is now empty.", Color.OrangeRed);
                     npc.active = false;
                     npc.life = 0;
                 }

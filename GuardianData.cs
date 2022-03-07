@@ -132,7 +132,7 @@ namespace giantsummon
         public List<GuardianSkills> SkillList = new List<GuardianSkills>();
         public int SkillLevelSum = -1;
         public float LastSkillRateMaxValue = 100;
-        public const double DaysToYears = GuardianGlobalInfos.DaysInAYear;
+        public const double DaysInYear = GuardianGlobalInfos.DaysInAYear;
         public bool GiftGiven = false;
         public bool IsBirthday
         {
@@ -143,8 +143,8 @@ namespace giantsummon
                 if (!Main.dayTime) Time += 54000f;
                 TimeSpan CurrentTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(Time);
                 TimeSpan NextTime = GetLifeTime.Duration() + TimeSpan.FromSeconds(MaxTime - Time);
-                int CurrentAge = (int)((CurrentTime.TotalDays - Base.Birthday) / DaysToYears);
-                int NextAge = (int)((NextTime.TotalDays - Base.Birthday) / DaysToYears);
+                int CurrentAge = (int)((CurrentTime.TotalDays - Base.Birthday) / DaysInYear);
+                int NextAge = (int)((NextTime.TotalDays - Base.Birthday) / DaysInYear);
                 return CurrentAge != NextAge && NextAge > 0;
             }
         }
@@ -154,7 +154,7 @@ namespace giantsummon
             {
                 const float MaxTime = (54000 + 32400);
                 TimeSpan NextTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(MaxTime);
-                return (int)((NextTime.TotalDays + Base.Birthday) / DaysToYears) + (SavedAge > 0 ? SavedAge : Base.Age);
+                return (int)((NextTime.TotalDays + Base.Birthday) / DaysInYear) + (SavedAge > 0 ? SavedAge : Base.Age);
             }
         }
         public byte FriendshipGrade
@@ -261,7 +261,7 @@ namespace giantsummon
         {
             double Birthday = Base.Birthday;
             season = (Season)(Birthday / GuardianGlobalInfos.QuarterOfAYear);
-            Day = (int)((Birthday - (int)season * GuardianGlobalInfos.QuarterOfAYear) * GuardianGlobalInfos.QuarterOfAYear);
+            Day = (int)(Birthday - (int)season * GuardianGlobalInfos.QuarterOfAYear);
         }
 
         public bool HasItem(int ItemID)
@@ -594,15 +594,12 @@ namespace giantsummon
 
         public TimeSpan TimeUntilBirthday()
         {
-            TimeSpan CurrentTime = GuardianGlobalInfos.GetTime.Duration();
-            TimeSpan NextBirthdayTime = GetLifeTime.Duration();//CurrentTime.Duration();
-            NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays((Base.Birthday - NextBirthdayTime.TotalDays) % DaysToYears));
-            //NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(Base.Birthday));
-            //if (NextBirthdayTime < CurrentTime)
-            //    NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(DaysToYears));
-            TimeSpan T = (NextBirthdayTime - CurrentTime);
-            //Main.NewText(T.ToString());
-            return T;
+            TimeSpan CurrentTime = GetLifeTime;
+            TimeSpan NextBirthdayTime = CurrentTime.Duration()
+                .Subtract(TimeSpan.FromDays((CurrentTime.TotalDays - Base.Birthday) % DaysInYear));
+            if((NextBirthdayTime - CurrentTime).Days < 0)
+                NextBirthdayTime = NextBirthdayTime.Add(TimeSpan.FromDays(DaysInYear));
+            return (NextBirthdayTime - CurrentTime);
         }
 
         public string TimeUntilBirthdayString()
@@ -620,7 +617,7 @@ namespace giantsummon
                 return (Time.Days * -1) + " days ago.";
             if (Time.Hours < 0)
                 return (Time.Hours * -1) + " hours ago.";
-            return "Starting soon.";
+            return "It's "+Name+"'s birthday.";
         }
 
         public string GetAgeString()
@@ -635,7 +632,7 @@ namespace giantsummon
         public int GetAge(bool ByCompanionLifeTimeSpeed = false)
         {
             double AgingFactor = (!ByCompanionLifeTimeSpeed ? Base.GetGroup.AgingSpeed : 1d);
-            return (int)((SavedAge > 0 ? SavedAge : Base.Age) * (ByCompanionLifeTimeSpeed ? 1f : 1f / AgingFactor) + ((GetLifeTime.TotalDays - Base.Birthday) * AgingFactor) / DaysToYears);
+            return (int)((SavedAge > 0 ? SavedAge : Base.Age) * (ByCompanionLifeTimeSpeed ? 1f : 1f / AgingFactor) + ((GetLifeTime.TotalDays - Base.Birthday) * AgingFactor) / DaysInYear);
         }
 
         public float GetRealAgeDecimal()

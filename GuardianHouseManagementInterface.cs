@@ -90,7 +90,7 @@ namespace giantsummon
                             int TileX = (int)(Main.mouseX + Main.screenPosition.X) / 16, TileY = (int)(Main.mouseY + Main.screenPosition.Y) / 16;
                             if (WorldMod.MoveGuardianToHouse(MainMod.ActiveGuardians[PickedGuardianToGiveHousing], TileX, TileY))
                             {
-                                Main.NewText(MainMod.ActiveGuardians[PickedGuardianToGiveHousing].Name + " will move to this room.");
+                                Main.NewText(MainMod.ActiveGuardians[PickedGuardianToGiveHousing].Name + " will move to this room.", Color.Yellow);
                                 IsPickingAGuardianHouse = false;
                                 Main.PlaySound(12, -1, -1, 1, 1f, 0f);
                             }
@@ -167,7 +167,7 @@ namespace giantsummon
                             {
                                 if (!guardian.IsStarter && !guardian.IsPlayerBuddy(Main.LocalPlayer) && guardian.FriendshipLevel < guardian.Base.MoveInLevel)
                                 {
-                                    Main.NewText(guardian.Name + (Main.rand.Next(2) == 0 ? " refuses to leave their house." : " doesn't want to be kicked out of their house."));
+                                    Main.NewText(guardian.Name + (Main.rand.Next(2) == 0 ? " refuses to leave their house." : " doesn't want to be kicked out of their house."), Color.PaleVioletRed);
                                 }
                                 else
                                 {

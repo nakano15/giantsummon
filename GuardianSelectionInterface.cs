@@ -837,7 +837,7 @@ namespace giantsummon
                         else
                             Url += DisplayGuardian.Base.Name;
                         System.Diagnostics.Process.Start(Url);
-                        Main.NewText("Opening wiki page of " + DisplayGuardian.Name + ".");
+                        Main.NewText("Opening wiki page of " + DisplayGuardian.Name + ".", Color.Yellow);
                     }
                 }
                 Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);

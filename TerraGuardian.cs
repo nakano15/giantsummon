@@ -3220,14 +3220,14 @@ namespace giantsummon
         {
             GuardianData data = Data;
             data.SavedAge = RebirthAge;
-            data.LifeTime = new TimeSpan(0);
+            data.LifeTime = new TimeSpan(0); //The time must be set in away, where the companion grows older exactly at its birthday.
             AgeScale = Scale = FinalScale = GetAgeSize();
             Main.NewText(Name + " has rebirth to age " + RebirthAge + "!");
         }
 
         public static float GetAgeDecimalValue(int StartAge, double BirthdayAge, TimeSpan Time, float AgingSpeed = 1f)
         {
-            return (float)(StartAge * AgingSpeed + ((Time.TotalDays - BirthdayAge) * AgingSpeed) / GuardianData.DaysToYears);
+            return (float)(StartAge * AgingSpeed + ((Time.TotalDays - BirthdayAge) * AgingSpeed) / GuardianData.DaysInYear);
         }
 
         public static float GetAgeSizeValue(float Age)

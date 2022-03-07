@@ -1393,7 +1393,7 @@ namespace giantsummon
             if (npc.type == NPCID.PossessedArmor && !HasMetGuardian(4) && Main.rand.Next(100) == 0)
             {
                 SpawnGuardianNPC(npc.Center.X, npc.Bottom.Y, GuardianBase.Nemesis);
-                Main.NewText("There's something over there.");
+                Main.NewText("The wraith stayed after you broke its armor.", MainMod.MysteryCloseColor);
                 AddGuardianMet(4);
             }
             Npcs.GhostFoxGuardianNPC.OnMobKill(npc.type);
@@ -1442,7 +1442,7 @@ namespace giantsummon
                     if (Main.player[p].active && Math.Abs(Main.player[p].position.X - npc.Center.X) < Distance && Math.Abs(Main.player[p].position.Y - npc.Center.Y) < Distance)
                     {
                         if (p == Main.myPlayer && !PlayerMod.PlayerHasGuardian(Main.player[p], GuardianBase.Sardine))
-                            Main.NewText("You have met Sardine.");
+                            Main.NewText("You have met Sardine.", MainMod.RecruitColor);
                         PlayerMod.AddPlayerGuardian(Main.player[p], GuardianBase.Sardine);
                     }
                 }

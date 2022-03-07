@@ -237,7 +237,7 @@ namespace giantsummon
 
             public GuardianShopItem AddNewItem(int ItemID, int Price = -1, string Name = "", int FixedSellStack = 1)
             {
-                Main.NewText("Tried to add ID zero item to shop.", 200, 128, 0);
+                //Main.NewText("Tried to add ID zero item to shop.", 200, 128, 0);
                 GuardianShopItem item = new GuardianShopItem();
                 item.SetItemForSale(ItemID, Price, Name, FixedSellStack);
                 if(ItemID > 0)

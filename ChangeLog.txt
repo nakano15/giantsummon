@@ -47,3 +47,6 @@ Vladimir will no longer try picking up players mounted on guardians, or controll
 You will now receive notices of companions skill levels increased is a multiple of 100, insteas of 25.
 Fixed a bug where Cille's beast state couldn't trigger.
 Fluffles is no longer nocturnal.
+Fixed an issue where the mod wasn't correctly finding out the companion birthday, due to the the day and season storing of the companion being totally wrong.
+Changed the text for when the bounty target spawns.
+Changed the coloring of many of the notifications the mod give you.

@@ -45,7 +45,7 @@ namespace giantsummon.Npcs
             if(TalkTimes == 255)
             {
                 TalkTimes = 0;
-                Main.NewText("A TerraGuardian was spotted " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + "'s position.");
+                Main.NewText("A TerraGuardian was spotted " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + "'s position.", MainMod.MysteryCloseColor);
             }
             if (Main.netMode < 2 && Main.player[Main.myPlayer].talkNPC == -1)
             {

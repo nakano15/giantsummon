@@ -85,7 +85,7 @@ namespace giantsummon.Npcs
                 {
                     player = Main.player[NearestPlayer];
                     npc.target = NearestPlayer;
-                    Main.NewText("A White Cat appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - player.Center) + " of " + player.name + " position.");
+                    Main.NewText("A White Cat appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - player.Center) + " of " + player.name + " position.", MainMod.MysteryCloseColor);
                 }
                 JustSpawned = false;
             }
@@ -752,7 +752,7 @@ namespace giantsummon.Npcs
                 }
                 if (!PlayerInRange)
                 {
-                    Main.NewText("The White Cat resumed the search for her husband.");
+                    Main.NewText("The White Cat resumed the search for her husband.", Color.OrangeRed);
                     npc.active = false;
                     npc.life = 0;
                 }

@@ -28,7 +28,7 @@ namespace giantsummon.Npcs
             NPC TravellingMerchant = Main.npc[MerchantPos];
             NpcMod.SpawnGuardianNPC(TravellingMerchant.Bottom.X, TravellingMerchant.Bottom.Y, GuardianBase.Cinnamon);
             npc.active = false;
-            Main.NewText("Someone has arrived by following the Travelling Merchant.");
+            Main.NewText("Someone has arrived by following the Travelling Merchant.", MainMod.MysteryCloseColor);
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

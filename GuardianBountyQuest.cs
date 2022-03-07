@@ -736,11 +736,11 @@ namespace giantsummon
                 {
                     if (PlayerMod.HasGuardianSummoned(player, SardineID))
                     {
-                        Main.NewText(PlayerMod.GetPlayerSummonedGuardian(player, SardineID).Name + ": Nice job, let's go back home and check the sign so I can give your reward.");
+                        Main.NewText(PlayerMod.GetPlayerSummonedGuardian(player, SardineID).Name + ": Nice job, let's go back home and check the sign so I can give your reward.", MainMod.BountyProgressUpdate);
                     }
                     else
                     {
-                        Main.NewText("Bounty hunted successfully. Report back to " + NpcMod.GetGuardianNPCName(SardineID) + ".");
+                        Main.NewText("Bounty hunted successfully. Report back to " + NpcMod.GetGuardianNPCName(SardineID) + ".", MainMod.BountyProgressUpdate);
                     }
                 }
             }
@@ -853,7 +853,7 @@ namespace giantsummon
                     }
                     if (SpawnStress == 0)
                     {
-                        Main.NewText("You hear a furious roar coming from somewhere...", 255, 50, 0);
+                        Main.NewText("You can sense the bounty charging towards you...", 255, 50, 0);
                     }
                 }
                 SpawnStress--;
@@ -938,7 +938,7 @@ namespace giantsummon
                             TargetMonsterSpawnPosition = NpcPos;
                             Microsoft.Xna.Framework.Vector2 Direction = Main.npc[TargetMonsterSpawnPosition].Center - Main.player[Main.myPlayer].Center;
                             string DirectionText = GetDirectionText(Direction);
-                            Main.NewText(TargetFullName + " has appeared to the " + DirectionText + "!");
+                            Main.NewText(TargetFullName + " has appeared to the " + DirectionText + "!", Color.OrangeRed);
                             return;
                         }
                     }
@@ -1145,12 +1145,12 @@ namespace giantsummon
                 Dialogue += ": Nice job, here's your reward.";
                 Main.NewText(Dialogue);
             }
-            if (TargetMonsterSpawnPosition > -1)
+            if (TargetMonsterSpawnPosition > -1 && !PlayerCanRedeemReward(Main.LocalPlayer))
             {
                 if ((!Main.npc[TargetMonsterSpawnPosition].active && Main.npc[TargetMonsterSpawnPosition].life > 0) || Main.npc[TargetMonsterSpawnPosition].type != TargetMonsterID)
                 {
                     TargetMonsterSpawnPosition = -1;
-                    Main.NewText(TargetName + " has retreated.");
+                    Main.NewText(TargetName + " has retreated.", Color.Red);
                 }
             }
             if (SignID == -1 && Main.rand.Next(200) == 0)

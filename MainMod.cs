@@ -154,7 +154,8 @@ namespace giantsummon
         private const byte CompanionFaceJSMaxTime = 30;
         private static int CompanionFaceJSID = GuardianBase.Alex;
         private static string CompanionFaceJSModID = "";
-        public static Color SkillUpColor = new Color(132, 208, 192), MysteryCloseColor = new Color(152, 90, 214), BirthdayColor = new Color(112, 148, 192);
+        public static Color SkillUpColor = new Color(132, 208, 192), MysteryCloseColor = new Color(152, 90, 214), BirthdayColor = new Color(112, 148, 192), 
+            RecruitColor = Color.CornflowerBlue, BountyProgressUpdate = Color.PaleGreen;
 
         public static void TriggerAlexJS()
         {
@@ -2273,14 +2274,14 @@ namespace giantsummon
                                                     if (i < 10 && !Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialVanityIntroduction)
                                                     {
                                                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialVanityIntroduction = true;
-                                                        Main.NewText("You can make the companion wear some vanity items by placing it on one of the 10 inventory slots. They will use it If they are able to, so get ready to experiement.");
+                                                        Main.NewText("You can make the companion wear some vanity items by placing it on one of the 10 inventory slots. They will use it If they are able to, so get ready to experiement.", Color.LightBlue);
                                                     }
                                                     if ((LastItemID == Terraria.ID.ItemID.LifeCrystal || LastItemID == Terraria.ID.ItemID.LifeFruit || LastItemID == Terraria.ID.ItemID.ManaCrystal ||
                                                         LastItemID == ModContent.ItemType<Items.Consumable.EtherHeart>() || LastItemID == ModContent.ItemType<Items.Consumable.EtherFruit>()) && 
                                                         !Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialStatusIncreaseItemIntroduction)
                                                     {
                                                         Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().TutorialStatusIncreaseItemIntroduction = true;
-                                                        Main.NewText("You gave a status increase item to your companion, but they wont use it unless you tell them to. Give them the order to use the item so they know It's okay to use it.");
+                                                        Main.NewText("You gave a status increase item to your companion, but they wont use it unless you tell them to. Give them the order to use the item so they know It's okay to use it.", Color.LightBlue);
                                                     }
                                                 }
                                             }
@@ -2463,7 +2464,7 @@ namespace giantsummon
                                                             }
                                                             else
                                                             {
-                                                                Main.NewText("I can't do that...");
+                                                                Main.NewText("I can't do that...", Color.Red);
                                                             }
                                                             if (HeldItemID != Main.mouseItem.type)
                                                                 Guardian.EquipmentChanged();
@@ -2947,10 +2948,10 @@ namespace giantsummon
         public static void Update2PControl(TerraGuardian Guardian)
         {
             gamePadState = GamePad.GetState(controlPort);
-            if (MainMod.Gameplay2PMode && !gamePadState.IsConnected)
+            if (Gameplay2PMode && !gamePadState.IsConnected)
             {
                 Gameplay2PMode = false;
-                Main.NewText("Controller disconnected: 2P mode now turned off.");
+                Main.NewText("Controller disconnected: 2P mode now turned off.", Color.Red);
             }
             if (CheckForButtonPress(Buttons.Start))
             {
@@ -2958,10 +2959,10 @@ namespace giantsummon
                 if(Gameplay2PMode && !PlayerMod.GetPlayerMainGuardian(Main.LocalPlayer).Active)
                 {
                     Gameplay2PMode = false;
-                    Main.NewText("You must have a Leader Guardian following you to start 2P mode.");
+                    Main.NewText("You must have a Leader Guardian following you to start 2P mode.", Color.Red);
                 }
                 else
-                    Main.NewText("2P gameplay is now " + (Gameplay2PMode ? "ON" : "OFF") + ".");
+                    Main.NewText("2P gameplay is now " + (Gameplay2PMode ? "ON" : "OFF") + ".", Color.Green);
             }
             MoveUpPress = MoveDownPress = MoveLeftPress = MoveRightPress = UseItemPress = false;
             if (Gameplay2PMode && Guardian.Active)

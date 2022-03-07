@@ -42,7 +42,7 @@ namespace giantsummon.Compatibility
             {
                 if (!IsModActive)
                 {
-                    Main.NewText("Subworld Library isn't installed.");
+                    Main.NewText("Subworld Library isn't installed.", Microsoft.Xna.Framework.Color.Red);
                     return false;
                 }
                 object Value = MainMod.SubworldLibrary.Call(
