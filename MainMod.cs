@@ -3257,6 +3257,20 @@ namespace giantsummon
             return Word + 's';
         }
 
+        public static string SplitTextByCapitals(string Word)
+        {
+            string NewWord = "";
+            bool First = true;
+            foreach(char c in Word)
+            {
+                if (!First && char.IsUpper(c))
+                    NewWord += ' ';
+                NewWord += c;
+                First = false;
+            }
+            return NewWord;
+        }
+
         public enum GuardianItemSlotButtons
         {
             Nothing = -1,

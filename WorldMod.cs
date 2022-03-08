@@ -1139,6 +1139,7 @@ namespace giantsummon
                 {
                     string Message = guardian.Name + (SpawnGuardian ? " arrives." : " settles in your world.");
                     Color color = (guardian.Base.Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
+                    GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.SomeoneMovedInToAWorld, Main.LocalPlayer.name, guardian.Name + ":" + Main.worldName, 15, 35, GuardianGlobalInfos.GetGuardiansInTheWorld(guardian.MyID));
                     if (Main.netMode == 0)
                     {
                         Main.NewText(Message, color);

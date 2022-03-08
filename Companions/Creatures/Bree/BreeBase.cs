@@ -992,6 +992,8 @@ namespace giantsummon.Companions
                     return "Someone told me that [subject] seems to be bound to [player] now... I wonder if they even have privacy to use toilet alone.";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "There are three things you need to know: 1: Don't try anything funny, 2: I wont cook or clean for you, and 3: I'm already married. Other than those, I'll be nice to you.";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "[subject] has got a house in [world]. For me, at least one house is enough, but at least they wont be exposed to weather there.";
                 case MessageIDs.DeliveryGiveItem:
                     return "Here, [target], just because you seems in need of [item].";
                 case MessageIDs.DeliveryItemMissing:

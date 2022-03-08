@@ -525,6 +525,8 @@ namespace giantsummon.Companions
                     return "*You could think of congratulating [subject] for being picked as [player]'s buddy. I fear I'll never manage to be picked as someone's buddy... Who'd pick a scaredy person like me as their buddy?*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*I'm still... I still want to... I... Thank you... For picking me as buddy... I fear... No... I..*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*I know about [subject]'s new house in [world]. I hope that place isn't scary.*";
                 case MessageIDs.DeliveryGiveItem:
                     return "*H-here some [item], [target].*";
                 case MessageIDs.DeliveryItemMissing:

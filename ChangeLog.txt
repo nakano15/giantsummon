@@ -44,9 +44,16 @@ Companions will no longer try using weapons they have no ammo.
 Companions that fails to find a furniture to use when idle, will now move to wait action.
 Vladimir will no longer try picking up players mounted on guardians, or controlling them.
 	He will also no longer run away when hugging a companion.
+Readjusted companions position when they are being carried by Vladimir.
 You will now receive notices of companions skill levels increased is a multiple of 100, insteas of 25.
 Fixed a bug where Cille's beast state couldn't trigger.
-Fluffles is no longer nocturnal.
 Fixed an issue where the mod wasn't correctly finding out the companion birthday, due to the the day and season storing of the companion being totally wrong.
+	Yes, birthday parties will happen too.
 Changed the text for when the bounty target spawns.
 Changed the coloring of many of the notifications the mod give you.
+Changed how the mod checks for birthdays.
+Companions will no longer ask you to kill a Wyvern just because you killed any first boss. Instead, will only ask for that if you've beaten at least one mech boss.
+Companions will now mention if another companion moves in to a world.
+The mod will now correctly split words from information posted on Sardine's Bounty Board, like for example, the biome the bounty appears, and the mods necessary.
+Companions will no longer tell you to get Rotten Chunks or Vertebraes undepending on the affliction the world is suffering.
+Companions will now be able to ask you to collect Power Cores, if you have beaten Plantera.

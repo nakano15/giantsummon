@@ -263,7 +263,7 @@ namespace giantsummon.Companions
                 {
                     if (Main.rand.Next(2) == 0)
                     {
-                        GuardianMouseOverAndDialogueInterface.SetDialogue("The bounty target appears in the " + GuardianBountyQuest.spawnBiome.ToString() + ", cause a mayhem on it until It shows up.");
+                        GuardianMouseOverAndDialogueInterface.SetDialogue(GuardianBountyQuest.TargetFullName + " appears in the " + GuardianBountyQuest.spawnBiome.ToString() + ", cause a mayhem on it until It shows up.");
                     }
                     else
                     {
@@ -932,6 +932,8 @@ namespace giantsummon.Companions
                     return "Be sure to give your congratulations to [player], It's such a feat having [subject] accept them as their buddy.";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "Buddy! Came to check me out? Or want something? Haha, sorry, I'm not used to that buddy thing.";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "[subject] got a shiny new place to live in [world].";
                 case MessageIDs.DeliveryGiveItem:
                     return "Take those [item], [target].";
                 case MessageIDs.DeliveryItemMissing:

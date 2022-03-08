@@ -543,6 +543,8 @@ namespace giantsummon.Companions
                     return "*I'm really happy with [subject] and [player]. They seem like the perfect buddies.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*I'm actually also [player]'s buddy, but I may still join your travels when they're not around.*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*A noble Terrarian has given [subject] a house in [world].*";
                 case MessageIDs.DeliveryGiveItem:
                     return "*You look in need of this, [target]. Take my [item].*";
                 case MessageIDs.DeliveryItemMissing:

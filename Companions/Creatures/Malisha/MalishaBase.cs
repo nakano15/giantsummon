@@ -987,6 +987,8 @@ namespace giantsummon.Companions
                     return "*Hm... So [player] picked [subject] to be a minion of? Will be harder for me to induce them into helping me on my experiments like that.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*Hello minion. I'm still surprised you picked me as your buddy, it must be my charismatic appearance. Don't worry, I will treat you nicelly. Hehehe.*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*Yes, I heard about [subject] getting a house on [world], but I don't care.*";
                 case MessageIDs.DeliveryGiveItem:
                     return "*This [item] is just a limited courtesy, [target].*";
                 case MessageIDs.DeliveryItemMissing:

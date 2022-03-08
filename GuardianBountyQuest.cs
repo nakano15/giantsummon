@@ -2582,15 +2582,7 @@ namespace giantsummon
                     if (First)
                         First = false;
                     else
-                        DifficultyString += ", ";
-                    bool FirstLetter = true;
-                    foreach(char c in mod.ToString())
-                    {
-                        if (char.IsUpper(c) && !First)
-                            DifficultyString += " ";
-                        DifficultyString += c;
-                        FirstLetter = false;
-                    }
+                        DifficultyString += ", " + MainMod.SplitTextByCapitals(mod.ToString());
                     //DifficultyString += mod.ToString();
                 }
             }
@@ -2629,8 +2621,8 @@ namespace giantsummon
                 {
                     Text = "Hunt " + TargetFullName + ".";
                     Text += "\n  Difficulty: " + GetDifficultyList() + ".";
-                    Text += "\n  Dangerous Trait: " + dangerousModifier.ToString();
-                    Text += "\n  Last seen in the " + spawnBiome.ToString() + ".";
+                    Text += "\n  Dangerous Trait: " + MainMod.SplitTextByCapitals(dangerousModifier.ToString());
+                    Text += "\n  Last seen in the " + MainMod.SplitTextByCapitals(spawnBiome.ToString()) + ".";
                     Text += "\n  Reward: " + Main.ValueToCoins(CoinReward);
                     Text += "\n  ";
                     bool First = true;

@@ -1422,7 +1422,8 @@ namespace giantsummon
                 FeatKilledMoonLord = "Mes.Feat.KilledMoonLord",
                 FeatStartedHardMode = "Mes.Feat.StartedHardMode",
                 FeatMentionSomeonePickedAsBuddy = "Mes.Feat.PickedAsBuddy",
-                FeatSpeakerPlayerPickedMeAsBuddy = "Mes.Feat.SpeakerPickedMeAsBuddy";
+                FeatSpeakerPlayerPickedMeAsBuddy = "Mes.Feat.SpeakerPickedMeAsBuddy",
+                FeatMentionSomeoneMovingIntoAWorld = "Mes.Feat.SomeoneMovedToAWorld";
             public const string PopContestMessage = "Mes.Contest",
                 PopContestIntroduction = "Mes.Contest.Intro",
                 PopContestLinkOpen = "Mes.Contest.LinkOpen",

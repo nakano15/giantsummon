@@ -992,6 +992,8 @@ namespace giantsummon.Companions
                     return "*Yeah, yeah... [player] got [subject] as their buddy. Nothing special... So... Want to be my buddy? *";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*I'm still shocked, [nickname]. Of everyone else, you picked me.. Me. From all the people who are alive, and whole... You picked me as your buddy. Thank you.... Really...*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*I heard that [subject] now got a reason to spend their time in [world].*";
                 case MessageIDs.DeliveryGiveItem:
                     return "*I think you might be needing this [item], [target].*";
                 case MessageIDs.DeliveryItemMissing:

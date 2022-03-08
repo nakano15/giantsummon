@@ -44,7 +44,7 @@ namespace giantsummon.Companions
             ReverseMount = true;
             DrinksBeverage = true;
             SetTerraGuardian();
-            IsNocturnal = false;
+            IsNocturnal = true;
 
             CallUnlockLevel = MountUnlockLevel = 0;
 
@@ -545,6 +545,8 @@ namespace giantsummon.Companions
                     return "(She seems happy that someone Terrarian picked another person as their buddy.)";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "(She crouches to watch attentiously watch you're going to say, while smiling very happily.)";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "(She seems amazed that someone got a house somewhere else.)";
                 case MessageIDs.DeliveryGiveItem:
                     return "(She gave [target] some [item].)";
                 case MessageIDs.DeliveryItemMissing:

@@ -17562,7 +17562,9 @@ namespace giantsummon
             foreach(GuardianData gd in player.GetModPlayer<PlayerMod>().MyGuardians.Values)
             {
                 if (gd.IsBirthday && NpcMod.HasGuardianNPC(gd.ID, gd.ModID))
+                {
                     BirthdayTgs.Add(gd);
+                }
             }
             if(BirthdayTgs.Count > 0)
             {

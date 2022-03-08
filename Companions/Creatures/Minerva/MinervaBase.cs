@@ -652,6 +652,8 @@ namespace giantsummon.Companions
                     return "*I'm happy for [player] and [subject] having formed a buddiship with each other. I wish them well.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*Hi... I'm good happy speaking with you... I want to thank you for picking me as your buddy. I hope to retribute this honor to you.*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*[subject] got a place to live in [world]. I hope they be happy there.*";
                 case MessageIDs.DeliveryGiveItem:
                     return "*Here... Take this [item].. You need it, [target]...*";
                 case MessageIDs.DeliveryItemMissing:

@@ -550,6 +550,8 @@ namespace giantsummon.Companions
                     return "I heard about [player] picking [subject] as their buddy. I wonder if I can pick one too, but who would it be?";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "Hey buddy! Came to check on me? I don't know what buddiship is about, but I'm really happy about that.";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "Did you hear? [subject] now has a house in [world]!";
                 case MessageIDs.DeliveryGiveItem:
                     return "Here some [item], [target]!";
                 case MessageIDs.DeliveryItemMissing:

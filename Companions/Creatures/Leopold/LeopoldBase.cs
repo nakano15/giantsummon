@@ -739,6 +739,8 @@ namespace giantsummon.Companions
                     return "*I see, so [player] just did it... They picked [subject] as a buddy. You may think that may be trivial, but that's actually of heavy importance for TerraGuardians. Their fate are now literally linked together.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
                     return "*I'm sorry if I don't end up being a good buddy for you, but I also have researches to do. If you help me with them, I think would be like a time we spend together, right?*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*[subject] now has a place to live in [world]. I don't remember if I have a house there.*";
                 case MessageIDs.DeliveryGiveItem:
                     return "*I know you need those [item], [target]. Just take it.*";
                 case MessageIDs.DeliveryItemMissing:

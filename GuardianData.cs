@@ -139,13 +139,17 @@ namespace giantsummon
             get
             {
                 const float MaxTime = (54000 + 32400);
-                float Time = (float)Main.time;
-                if (!Main.dayTime) Time += 54000f;
-                TimeSpan CurrentTime = GetLifeTime.Duration() - TimeSpan.FromSeconds(Time);
-                TimeSpan NextTime = GetLifeTime.Duration() + TimeSpan.FromSeconds(MaxTime - Time);
-                int CurrentAge = (int)((CurrentTime.TotalDays - Base.Birthday) / DaysInYear);
-                int NextAge = (int)((NextTime.TotalDays - Base.Birthday) / DaysInYear);
-                return CurrentAge != NextAge && NextAge > 0;
+                float Time = (float)Main.time + 16200;
+                if (!Main.dayTime)
+                {
+                    Time += 54000f;
+                    if (Time >= MaxTime) Time -= MaxTime;
+                }
+                TimeSpan CurrentTime = GetLifeTime.Duration() + TimeSpan.FromDays(DaysInYear) - TimeSpan.FromDays(Base.Birthday) - TimeSpan.FromSeconds(Time);
+                TimeSpan NextTime = CurrentTime.Duration() + TimeSpan.FromSeconds(MaxTime);
+                int CurrentAge = (int)(CurrentTime.TotalDays / DaysInYear);
+                int NextAge = (int)(NextTime.TotalDays / DaysInYear);
+                return CurrentAge != NextAge;
             }
         }
         public int GetBirthdayAge

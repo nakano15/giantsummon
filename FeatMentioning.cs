@@ -49,7 +49,8 @@ namespace giantsummon
             ManyAnglerQuestsCompleted,
             KilledMoonLordFirstTime,
             StartedHardMode,
-            SomeonePickedABuddy
+            SomeonePickedABuddy,
+            SomeoneMovedInToAWorld
         }
     }
 }

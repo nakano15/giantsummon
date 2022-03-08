@@ -248,6 +248,18 @@ namespace giantsummon
                         }
                     }
                     break;
+                case FeatMentioning.FeatType.SomeoneMovedInToAWorld:
+                    {
+                        bool IsMe = (tg.Base.Name == Subject || tg.Base.PossibleNames.Contains(Subject));
+                        if (!IsMe && feat.PlayerName != Main.LocalPlayer.name)
+                        {
+                            string[] SubjectSplit = feat.FeatSubject.Split(':');
+                            Subject = SubjectSplit[0];
+                            string WorldName = SubjectSplit[1];
+                            Message = tg.GetMessage(GuardianBase.MessageIDs.FeatMentionSomeoneMovingIntoAWorld).Replace("[world]", WorldName);
+                        }
+                    }
+                    break;
             }
             Message = Message.Replace("[player]", feat.PlayerName).Replace("[subject]", Subject);
             return Message;

@@ -145,7 +145,7 @@ namespace giantsummon.Requests
             AddHuntRequest(1103, NPCID.RedDevil, InitialCount: 15).CanGetRequest = AnyMechBossKillRequirement;
             //Sky
             AddHuntRequest(1104, NPCID.Harpy).CanGetRequest = AnyFirstBossKillRequirement;
-            AddHuntRequest(1105, NPCID.WyvernHead, InitialCount: 1, ExtraFriendshipLevelCount: 0, RewardValue: 8000).CanGetRequest = AnyFirstBossKillRequirement;
+            AddHuntRequest(1105, NPCID.WyvernHead, InitialCount: 1, ExtraFriendshipLevelCount: 0, RewardValue: 8000).CanGetRequest = AnyMechBossKillRequirement;
             //Pirate Army
             AddHuntRequest(1106, NPCID.PirateCorsair).CanGetRequest = DefeatedPiratesRequirement;
             AddHuntRequest(1107, NPCID.PirateCrossbower).CanGetRequest = DefeatedPiratesRequirement;
@@ -171,9 +171,9 @@ namespace giantsummon.Requests
             //Desert
             AddItemRequest(2004, ItemID.AntlionMandible, InitialCount: 7).CanGetRequest = EoCKillRequirement;
             //Corruption
-            AddItemRequest(2005, ItemID.RottenChunk, InitialCount: 9).CanGetRequest = AnyFirstBossKillRequirement;
+            AddItemRequest(2005, ItemID.RottenChunk, InitialCount: 9).CanGetRequest = AnyFirstBossKillRequirementCorruption;
             //Crimson
-            AddItemRequest(2006, ItemID.Vertebrae, InitialCount: 9).CanGetRequest = AnyFirstBossKillRequirement;
+            AddItemRequest(2006, ItemID.Vertebrae, InitialCount: 9).CanGetRequest = AnyFirstBossKillRequirementCrimson;
             //Jungle
             AddItemRequest(2007, ItemID.Stinger, InitialCount: 12).CanGetRequest = AnyFirstBossKillRequirement;
             AddItemRequest(2008, ItemID.Vine, InitialCount: 5).CanGetRequest = AnyFirstBossKillRequirement;
@@ -193,6 +193,8 @@ namespace giantsummon.Requests
             AddItemRequest(2017, ItemID.FossilOre, InitialCount: 15).CanGetRequest = HardmodeRequirement;
             AddItemRequest(2018, ItemID.DarkShard, InitialCount: 3).CanGetRequest = HardmodeRequirement;
             AddItemRequest(2019, ItemID.LightShard, InitialCount: 15).CanGetRequest = HardmodeRequirement;
+            //Temple
+            AddItemRequest(2020, ItemID.LihzahrdPowerCell, InitialCount: 5).CanGetRequest = PlanteraKillRequirement;
         }
     }
 }
