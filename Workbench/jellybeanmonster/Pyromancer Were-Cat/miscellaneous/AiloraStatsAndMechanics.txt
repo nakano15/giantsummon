@@ -73,7 +73,7 @@ Expert Level Pyromancy:
 -knockback value 6
 -light source
 
->Schorching Claw Slash(Were Beast Exclusive)(Melee)- Slashes with scorching claws that leave a afterimage that explodes.(used as a default melee attack in beast form)
+>Schorching Claw Slash(Were Beast Exclusive)(Melee)- Slashes with scorching claws.(used as a default melee attack in beast form)
 -60 base damage(attack deals 1.1x the damage of current weapon equiped as additional damage)
 -"applies on fire debuff"
 -heals for 10% of damage done/ if Ailora's Hp is already full then it restores 10 mana
@@ -82,7 +82,7 @@ Expert Level Pyromancy:
 
 Master Level Pyromancy/Wicked Spells:
 
->Demon Scar(Base form exclusive Ultimate)(Melee/30 second cooldown)- Summons a fire blade to slash enemies.(This spell triggers periodically)
+>Demon Scar(Base form exclusive Ultimate)(Melee/30 second cooldown)- Ailora conjures a demon slaying fire blade to slash enemies.(This spell triggers periodically)
 -35 base damage(deals 2.0x the damage of equiped weapon as additional damage)
 -applies "on fire!" and "Wicked inferno" debuff
 -50 Mp
@@ -108,11 +108,11 @@ Forbidden Nova(Were-Cat Exclusive)(Ranged)- Ailora hurls a miniature star at ene
 -light source
 
 >Chaos Eruption(Were-Cat Exclusive Ultimate)(Active skill cast/60 second Cooldown)- Ailora summons fire pillars that erupt from the earth and hit 5 times per pillar.(This attack can trigger when a boss is detected on screen or when 10 enemies are close by or when Ailora is in Boss npc mode agaisnt the player)
--15 base damage per tick(deals 25% additional damage from equiped weapon)
+-15 base damage per hit(deals 25% additional damage from equiped weapon)
 -applies "On fire" and "Wicked inferno" debuff
 -knockback value of 3
 -Ailora Becomes immune to knockback while casting 
 -Ailora receives "on fire!" debuff immediately upon casting this pyromancy spell
--300 mana cost/ if Ailora doesnt have enough mana to cast she can use 20% of her current hp to cast(if she is below 30% health she doesnt do this)
+-300 mana cost/ if Ailora doesnt have enough mana to cast she can use 20% of her current hp to cast(if she is below 70% health she doesnt do this)
 -light source
 
