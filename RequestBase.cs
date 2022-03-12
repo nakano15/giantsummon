@@ -211,7 +211,7 @@ namespace giantsummon
             this.ExtraDistance = ExtraDistance;
             if(RewardValue == 0)
             {
-                this.RewardValue = (10000 + ExtraDistance) / 3;
+                this.RewardValue = (2000 + ExtraDistance) / 3;
             }
             else
             {

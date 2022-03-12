@@ -990,7 +990,7 @@ namespace giantsummon
                 case SpawnBiome.Ocean:
                     return player.ZoneBeach;
                 case SpawnBiome.Underground:
-                    return player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight;
+                    return (player.ZoneDirtLayerHeight || player.ZoneRockLayerHeight) && !player.ZoneDungeon;
                 case SpawnBiome.Sky:
                     return player.ZoneSkyHeight;
                 case SpawnBiome.OldOneArmy:

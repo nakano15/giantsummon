@@ -1,1 +1,3 @@
-﻿
+﻿Nerfed defense bonus from the npcs with gem boosts.
+Underground bounty targets will no longer spawn or be triggered in the dungeon.
+Reduced the travel distance you need to take with the companion, to complete their request.

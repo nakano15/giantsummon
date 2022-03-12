@@ -55,7 +55,7 @@ namespace giantsummon
             }
         }
         //End contest related
-        public const int ModVersion = 102, LastModVersion = 101;
+        public const int ModVersion = 102, LastModVersion = 102;
         public const int MaxExtraGuardianFollowers = 7;
         public static bool ShowDebugInfo = false;
         //Downed system configs
@@ -3244,6 +3244,10 @@ namespace giantsummon
         {
             if (Count < 2)
                 return Word;
+            if (Word.Length > 1 && Word[Word.Length - 1] == 'y')
+            {
+                return Word.Substring(0, Word.Length - 1) + "ies";
+            }
             if (Word.Length > 1 && Word[Word.Length - 1] == 'f')
             {
                 return Word.Substring(0, Word.Length - 1) + "ves";

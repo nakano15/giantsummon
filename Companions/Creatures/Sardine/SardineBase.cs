@@ -263,7 +263,7 @@ namespace giantsummon.Companions
                 {
                     if (Main.rand.Next(2) == 0)
                     {
-                        GuardianMouseOverAndDialogueInterface.SetDialogue(GuardianBountyQuest.TargetFullName + " appears in the " + GuardianBountyQuest.spawnBiome.ToString() + ", cause a mayhem on it until It shows up.");
+                        GuardianMouseOverAndDialogueInterface.SetDialogue(GuardianBountyQuest.TargetFullName + " appears in the " + MainMod.SplitTextByCapitals(GuardianBountyQuest.spawnBiome.ToString()) + ", cause a mayhem on it until It shows up.");
                     }
                     else
                     {

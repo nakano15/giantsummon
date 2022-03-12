@@ -194,7 +194,7 @@ namespace giantsummon.Requests
             AddItemRequest(2018, ItemID.DarkShard, InitialCount: 3).CanGetRequest = HardmodeRequirement;
             AddItemRequest(2019, ItemID.LightShard, InitialCount: 15).CanGetRequest = HardmodeRequirement;
             //Temple
-            AddItemRequest(2020, ItemID.LihzahrdPowerCell, InitialCount: 5).CanGetRequest = PlanteraKillRequirement;
+            AddItemRequest(2020, ItemID.LihzahrdPowerCell, InitialCount: 3).CanGetRequest = PlanteraKillRequirement;
         }
     }
 }

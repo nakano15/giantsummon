@@ -67,15 +67,15 @@ namespace giantsummon
                 switch (mobType)
                 {
                     case MobTypes.Veteran:
-                        return 5;
+                        return 2;
                     case MobTypes.Elite:
-                        return 10;
+                        return 4;
                     case MobTypes.Champion:
-                        return 15;
+                        return 6;
                     case MobTypes.Legendary:
-                        return 20;
+                        return 8;
                     case MobTypes.Epic:
-                        return 30;
+                        return 10;
                 }
                 return 0;
             }

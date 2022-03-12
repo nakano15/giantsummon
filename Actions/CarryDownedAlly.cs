@@ -139,9 +139,12 @@ namespace giantsummon.Actions
                             SafeToPlaceAllyDown = false;
                             break;
                         }
-                        Tile tile = MainMod.GetTile(x, CheckY);
+                        /*Tile tile = MainMod.GetTile(x, CheckY);
                         if (tile.liquid >= 20)
+                        {
                             SafeToPlaceAllyDown = false;
+                            break;
+                        }*/
                     }
                 }
                 else
