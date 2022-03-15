@@ -18,7 +18,7 @@ namespace giantsummon
         public const int DaysInAYear = 120,
             QuarterOfAYear = DaysInAYear / 4; //30
         private static int LoggedDay = 0;
-        private static Season LoggedSeason = Season.Summer;
+        private static Season LoggedSeason = (Season)0;
         private static DayOfWeek LoggedWeekday = DayOfWeek.Sunday;
         private static bool GlobalInfosLoaded = false, FeatsLoaded = false;
         private static BitsByte GlobalFlags1 = new BitsByte();

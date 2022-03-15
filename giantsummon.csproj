@@ -79,6 +79,7 @@
     <Compile Include="Buffs\Defended.cs" />
     <Compile Include="Buffs\DrainingHealth.cs" />
     <Compile Include="Buffs\Fit.cs" />
+    <Compile Include="Buffs\GhostFoxHaunts\FriendlyHaunt.cs" />
     <Compile Include="Buffs\GhostFoxHaunts\BeeHaunt.cs" />
     <Compile Include="Buffs\GhostFoxHaunts\ConstructHaunt.cs" />
     <Compile Include="Buffs\GhostFoxHaunts\SawHaunt.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="QuestData.cs" />
     <Compile Include="Quests\BlueSeekingZacksQuest.cs" />
     <Compile Include="Quests\BlueTravellerOutfitQuest.cs" />
+    <Compile Include="Quests\BreeStayQuest.cs" />
     <Compile Include="Quests\BrutusAndDominoQuest.cs" />
     <Compile Include="Quests\GreenHealingUnlockQuest.cs" />
     <Compile Include="Quests\PigCompanionsQuest.cs" />
@@ -361,6 +363,7 @@
     <Content Include="Buffs\DrainingHealth.png" />
     <Content Include="Buffs\FirstAidCooldown.png" />
     <Content Include="Buffs\Fit.png" />
+    <Content Include="Buffs\GhostFoxHaunts\FriendlyHaunt.png" />
     <Content Include="Buffs\GhostFoxHaunts\BeeHaunt.png" />
     <Content Include="Buffs\GhostFoxHaunts\ConstructHaunt.png" />
     <Content Include="Buffs\GhostFoxHaunts\SawHaunt.png" />

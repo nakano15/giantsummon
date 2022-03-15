@@ -674,14 +674,92 @@ namespace giantsummon.Companions
             }
         }
 
+        public static bool IsFriendlyHauntActive(TerraGuardian guardian)
+        {
+            return guardian.DoAction.InUse && guardian.DoAction.IsGuardianSpecificAction && guardian.DoAction is Creatures.Fluffles.FriendlyHauntAction;
+        }
+
         public override List<DialogueOption> GetGuardianExtraDialogueActions(TerraGuardian guardian)
         {
             List<DialogueOption> Dialogues = base.GetGuardianExtraDialogueActions(guardian);
-            if(guardian.DoAction.InUse && guardian.DoAction.IsGuardianSpecificAction && guardian.DoAction is Creatures.Fluffles.FriendlyHauntAction)
+            if(IsFriendlyHauntActive(guardian))
             {
-                //Add dialogues that uses her action
+                Creatures.Fluffles.FriendlyHauntAction action = (Creatures.Fluffles.FriendlyHauntAction)guardian.DoAction;
+                if(action.TargetIsPlayer)
+                {
+                    if(action.GetPlayer.whoAmI == Main.myPlayer)
+                    {
+                        Dialogues.Add(new DialogueOption("Get off my shoulder.", delegate ()
+                        {
+                            action.InUse = false;
+                            guardian.SaySomething("(She did as you asked.)");
+                            GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
+                        }));
+                    }
+                }
+                else
+                {
+                    Dialogues.Add(new DialogueOption("Get off " + action.GetGuardian.Name + " shoulders.", delegate ()
+                    {
+                        action.InUse = false;
+                        guardian.SaySomething("(She did as you asked.)");
+                        GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
+                    }));
+                    Dialogues.Add(new DialogueOption("I wanted to speak with " + action.GetGuardian.Name + ".", delegate ()
+                    {
+                        GuardianMouseOverAndDialogueInterface.StartDialogue(action.GetGuardian);
+                    }));
+                }
+            }
+            else
+            {
+                if(guardian.OwnerPos == Main.myPlayer && HasMountableCompanions(Main.LocalPlayer))
+                {
+                    Dialogues.Add(new DialogueOption("Mount on someones shoulder", MountOnSomeonesShoulderDialogue));
+                }
             }
             return Dialogues;
+        }
+
+        public TerraGuardian[] GetWhoSheCanMountOn(Player player)
+        {
+            List<TerraGuardian> Mountables = new List<TerraGuardian>();
+            foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+            {
+                if(tg.Active && (tg.ID != Fluffles || tg.ModID != MainMod.mod.Name))
+                {
+                    Mountables.Add(tg);
+                }
+            }
+            return Mountables.ToArray();
+        }
+
+        public bool HasMountableCompanions(Player player)
+        {
+            return GetWhoSheCanMountOn(player).Length > 0;
+        }
+
+        public void MountOnSomeonesShoulderDialogue()
+        {
+            TerraGuardian Fluffles = Dialogue.GetSpeaker;
+            TerraGuardian[] Guardians = GetWhoSheCanMountOn(Main.LocalPlayer);
+            GuardianMouseOverAndDialogueInterface.Options.Clear();
+            GuardianMouseOverAndDialogueInterface.SetDialogue("(She nods, and awaits you to tell who.)");
+            for(int i = 0; i < Guardians.Length; i++)
+            {
+                TerraGuardian tg = Guardians[i];
+                GuardianMouseOverAndDialogueInterface.Options.Add(new DialogueOption(tg.Name, delegate ()
+                {
+                    Fluffles.StartNewGuardianAction(new Creatures.Fluffles.FriendlyHauntAction(tg, true));
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("(She does as you asked.)");
+                    GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
+                }));
+            }
+            GuardianMouseOverAndDialogueInterface.Options.Add(new DialogueOption("Nevermind", delegate ()
+            {
+                GuardianMouseOverAndDialogueInterface.SetDialogue("(She nods, and wonders what else you want to talk about.)");
+                GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
+            }));
         }
 
         public override void GuardianUpdateScript(TerraGuardian guardian)
@@ -724,7 +802,7 @@ namespace giantsummon.Companions
             else
             {
                 Tile t = Main.tile[(int)(guardian.Position.X * (1f / 16)), (int)(guardian.CenterY * (1f / 16))];
-                bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && (t.wall == 0 || t.active() && Main.tileSolid[t.type]);
+                bool ReduceOpacity = Main.dayTime && !Main.eclipse && guardian.Position.Y < Main.worldSurface * 16 && (t.wall == 0 || t.active() && !Main.tileSolid[t.type]);
                 if (ReduceOpacity)
                 {
                     float MinOpacity = 0.2f;
@@ -756,8 +834,8 @@ namespace giantsummon.Companions
                         data.KnockoutAlpha = 1;
                 }
                 //fluffles random haunting script.
-                /*if (guardian.OwnerPos == -1 && !guardian.UsingFurniture && !guardian.DoAction.InUse && guardian.TargetID == -1 && 
-                    Main.rand.Next(60) == 0 && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait) //Needs debugging
+                if (guardian.OwnerPos == -1 && !guardian.UsingFurniture && !guardian.DoAction.InUse && guardian.TargetID == -1 && 
+                    Main.rand.Next(300) == 0 && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait) //Needs debugging
                 {
                     List<KeyValuePair<byte, int>> PossibleTargets = new List<KeyValuePair<byte, int>>();
                     //0 = Player, 1 = Tg
@@ -792,7 +870,7 @@ namespace giantsummon.Companions
                             guardian.StartNewGuardianAction(new Creatures.Fluffles.FriendlyHauntAction(MainMod.ActiveGuardians[PickedTarget.Value]));
                         }
                     }
-                }*/
+                }
             }
             if (guardian.KnockedOut)
             {

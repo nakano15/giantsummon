@@ -1,3 +1,10 @@
 ﻿Nerfed defense bonus from the npcs with gem boosts.
 Underground bounty targets will no longer spawn or be triggered in the dungeon.
 Reduced the travel distance you need to take with the companion, to complete their request.
+Changed the name of the seasons.
+	Summer => Safari
+    Autumn => Harvest,
+    Winter => Hibernate
+    Spring >= Blooming
+Fluffles can now haunt npcs, terraguardians and players around where she lives.
+	You can also ask her to haunt someone on your team, if she's your follower.

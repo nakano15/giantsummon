@@ -3135,6 +3135,7 @@ namespace giantsummon
                     if(gdm.GuardianWhoAmID == g.WhoAmID && !gdm.DrawAtWhoAmID)
                     {
                         HasDrawMoment = true;
+                        //DrawTargetIsPlayer = gdm.DrawTargetType == TerraGuardian.TargetTypes.Player && gdm.DrawTargetID == player.whoAmI;
                         break;
                     }
                 }
@@ -3144,30 +3145,29 @@ namespace giantsummon
                 g.DrawDataCreation();
                 if (!HasDrawMoment)
                 {
+                    List<GuardianDrawData> drawbehind = TerraGuardian.DrawBehind, drawfront = TerraGuardian.DrawFront;
+                    foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
                     {
-                        List<GuardianDrawData> drawbehind = TerraGuardian.DrawBehind, drawfront = TerraGuardian.DrawFront;
-                        foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
+                        if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.DrawTargetID == g.WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
                         {
-                            if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.DrawTargetID == g.WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
+                            GetTerraGuardianDrawData(MainMod.ActiveGuardians[gdm.GuardianWhoAmID], gdm.DrawAtWhoAmID, ref drawbehind, ref drawfront); //Loops this method until all companions are drawn
+                            /*TerraGuardian.DrawBehind = new List<GuardianDrawData>();
+                            TerraGuardian.DrawFront = new List<GuardianDrawData>();
+                            MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
+                            if (!gdm.DrawAtWhoAmID)
                             {
-                                TerraGuardian.DrawBehind = new List<GuardianDrawData>();
-                                TerraGuardian.DrawFront = new List<GuardianDrawData>();
-                                MainMod.ActiveGuardians[gdm.GuardianWhoAmID].DrawDataCreation();
-                                if (!gdm.DrawAtWhoAmID)
-                                {
-                                    drawbehind.InsertRange(0, TerraGuardian.DrawBehind);
-                                    drawfront.AddRange(TerraGuardian.DrawFront);
-                                }
-                                else
-                                {
-                                    drawbehind.AddRange(TerraGuardian.DrawBehind);
-                                    drawfront.InsertRange(0, TerraGuardian.DrawFront);
-                                }
+                                drawbehind.InsertRange(0, TerraGuardian.DrawBehind);
+                                drawfront.AddRange(TerraGuardian.DrawFront);
                             }
+                            else
+                            {
+                                drawbehind.AddRange(TerraGuardian.DrawBehind);
+                                drawfront.InsertRange(0, TerraGuardian.DrawFront);
+                            }*/
                         }
-                        TerraGuardian.DrawBehind = drawbehind;
-                        TerraGuardian.DrawFront = drawfront;
                     }
+                    TerraGuardian.DrawBehind = drawbehind;
+                    TerraGuardian.DrawFront = drawfront;
                 }
                 else
                 {
@@ -3219,6 +3219,30 @@ namespace giantsummon
                 Counter++;
             }
             MyDrawOrderID += (int)(Counter * 0.5f);
+        }
+
+        private void GetTerraGuardianDrawData(TerraGuardian guardian, bool DrawAtWhoAmID, ref List<GuardianDrawData> drawbehind, ref List<GuardianDrawData> drawfront)
+        {
+            TerraGuardian.DrawBehind = new List<GuardianDrawData>();
+            TerraGuardian.DrawFront = new List<GuardianDrawData>();
+            guardian.DrawDataCreation();
+            if (!DrawAtWhoAmID)
+            {
+                drawbehind.InsertRange(0, TerraGuardian.DrawBehind);
+                drawfront.AddRange(TerraGuardian.DrawFront);
+            }
+            else
+            {
+                drawbehind.AddRange(TerraGuardian.DrawBehind);
+                drawfront.InsertRange(0, TerraGuardian.DrawFront);
+            }
+            foreach (GuardianDrawMoment gdm in MainMod.DrawMoment)
+            {
+                if (gdm.DrawTargetType == TerraGuardian.TargetTypes.Guardian && gdm.DrawTargetID == guardian.WhoAmID && MainMod.ActiveGuardians.ContainsKey(gdm.GuardianWhoAmID))
+                {
+                    GetTerraGuardianDrawData(MainMod.ActiveGuardians[gdm.GuardianWhoAmID], gdm.DrawAtWhoAmID, ref drawbehind, ref drawfront);
+                }
+            }
         }
 
         public override void ModifyDrawLayers(List<PlayerLayer> layers)

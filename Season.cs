@@ -2,7 +2,7 @@
 {
     public enum Season : byte
     {
-        Summer,
+        Safari, //Summer,
         Harvest, //Autumn,
         Hibernate, //Winter,
         Blooming //Spring

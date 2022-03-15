@@ -374,7 +374,7 @@ namespace giantsummon.Companions
                     guardian.BodyAnimationFrame = ThroneSittingFrame + 1;
                 if (guardian.BodyAnimationFrame == BedSleepingFrame)
                     guardian.BodyAnimationFrame = BedSleepingFrame + 1;
-                if (!UsingLeftArm)
+                if (!UsingLeftArm || (UsingLeftArm && UsingRightArm))
                 {
                     guardian.LeftArmAnimationFrame = Frame;
                     UsingLeftArm = true;
@@ -629,7 +629,7 @@ namespace giantsummon.Companions
             }
             if (data.WasFollowingPlayerBefore && guardian.OwnerPos == -1)
             {
-                guardian.SaySomething("*The Terrarian will still need your help, better you go with them.*");
+                guardian.SaySomething("*" + guardian.PersonalNicknameToPlayer + " will still need your help, better you go with them.*");
                 PlaceCarriedPersonOnTheFloor(guardian, false);
                 return;
             }
