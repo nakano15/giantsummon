@@ -5159,6 +5159,11 @@ namespace giantsummon
             return false;
         }
 
+        public bool CreatePathingTo(Vector2 Position)
+        {
+            return CreatePathingTo((int)(Position.X * (1f / 16)), (int)(Position.Y * (1f / 16)));
+        }
+
         public bool CreatePathingTo(int X, int Y)
         {
             byte Attempts = 0;
@@ -5233,10 +5238,23 @@ namespace giantsummon
                 PathFinder.Breadcrumbs path = Paths[0];
                 switch (path.NodeOrientation)
                 {
+                    case PathFinder.Node.NONE:
+                        {
+                            Paths.RemoveAt(0);
+                        }
+                        break;
                     case PathFinder.Node.DIR_UP:
                         {
                             float Y = path.Y * 16;
-                            if (Position.Y > Y)
+                            float X = path.X * 16;
+                            if(Position.X < X - 20 || Position.X > X + 20)
+                            {
+                                if (Position.X < X)
+                                    MoveRight = true;
+                                else
+                                    MoveLeft = true;
+                            }
+                            else if (Position.Y > Y)
                             {
                                 if ((Velocity.Y == 0 && !LastJump) || (JumpHeight > 0))
                                 {
@@ -5276,7 +5294,15 @@ namespace giantsummon
                     case PathFinder.Node.DIR_DOWN:
                         {
                             float Y = path.Y * 16;
-                            if (Position.Y < Y)
+                            float X = path.X * 16;
+                            if (Position.X < X - 20 || Position.X > X + 20)
+                            {
+                                if (Position.X < X)
+                                    MoveRight = true;
+                                else
+                                    MoveLeft = true;
+                            }
+                            else if (Position.Y < Y)
                             {
                                 DropFromPlatform = true;
                             }
@@ -7398,6 +7424,10 @@ namespace giantsummon
                     furniturex = furniturey = -1;
                     UsingFurniture = false;
                 }
+                /*else
+                {
+                    CreatePathingTo(furniturex, furniturey);
+                }*/
                 return !GuardianUsingFurniture;
             }
             return false;
@@ -7596,7 +7626,7 @@ namespace giantsummon
                 }
                 if (tile.type == Terraria.ID.TileID.Beds)
                     TileCenterX -= 8;
-                if (!UsingFurniture)
+                if (Paths.Count == 0 && !UsingFurniture)
                 {
                     float DistanceFromTile = Math.Abs(Position.X + Velocity.X - TileCenterX);
                     if (DistanceFromTile > 8)

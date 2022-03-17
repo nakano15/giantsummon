@@ -36,7 +36,7 @@ namespace giantsummon
             }
             List<Node> LastNodeList = new List<Node>(), NextNodeList = new List<Node>();
             List<Point> VisitedNodes = new List<Point>();
-            NextNodeList.Add(new Node(StartPosX, StartPosY));
+            NextNodeList.Add(new Node(StartPosX, StartPosY, Node.NONE));
             VisitedNodes.Add(new Point(StartPosX, StartPosY));
             const int MaxDistance = 35;
             Node NodeFound = null;
@@ -261,7 +261,7 @@ namespace giantsummon
         public class Node
         {
             public byte NodeDirection = 0;
-            public const byte DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3;
+            public const byte DIR_UP = 0, DIR_RIGHT = 1, DIR_DOWN = 2, DIR_LEFT = 3, NONE = 255;
             public Node LastNode;
             public int NodeX = 0, NodeY = 0;
 
