@@ -10,30 +10,33 @@ namespace giantsummon.Companions
 {
     public class BaphaBase : GuardianBase
     {
-        private const int DownedFrameID = 22, RevivingFrameID = 29;
-        private const string HellGateSpriteID = "hellgate";
+        private const int DownedFrameID = 21, RevivingFrameID = 28;
+        private const string HellGateSpriteID = "hellgate", FireEffectsTextureID = "firefxs";
+        private const string RightWingTextureID = "rwing";
         private const int HellGateAnimationFrameTime = 8;
         private const byte CrimsonFlameID = 0;
 
         public BaphaBase()
         {
             Name = "Bapha";
-            Description = "";
+            Description = "Overlord of Hell.";
             Size = GuardianSize.Large;
-            Width = 22;
-            Height = 90;
-            Scale = 1.5f;
+            Width = 17 * 2; //17
+            Height = 62 * 2; //61
+            Scale = 1.333f;
             CompanionSlotWeight = 3f;
             ForceScale = true;
-            SpriteWidth = 112;
-            SpriteHeight = 128;
-            FramesInRows = 17;
-            Age = 999;
+            SpriteWidth = 99 * 2;
+            SpriteHeight = 91 * 2;
+            FramesInRows = 11;
+            Age = 104357;
             SetBirthday(SEASON_SUMMER, 6);
             Male = true;
-            InitialMHP = 200; //1000
-            LifeCrystalHPBonus = 40;
-            LifeFruitHPBonus = 10;
+            InitialMHP = 666; //1000
+            LifeCrystalHPBonus = 100;
+            LifeFruitHPBonus = 5;
+            InitialMP = 333;
+            ManaCrystalMPBonus = 30;
             Accuracy = 0.15f;
             Mass = 0.5f;
             MaxSpeed = 5.2f;
@@ -52,39 +55,52 @@ namespace giantsummon.Companions
             VladimirBase.AddCarryBlacklist(Bapha);
 
             StandingFrame = 0;
-            WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
-            JumpFrame = 9;
-            ItemUseFrames = new int[] { 0, 21, 20, 19 };
-            //SittingFrame = 23;
-            //ThroneSittingFrame = 24;
+            WalkingFrames = new int[] { 3, 4, 5, 6, 7, 8, 9, 10 };
+            JumpFrame = 12;
+            ItemUseFrames = new int[] { 17, 18, 19, 20 };
+            SittingFrame = 60;
+            ThroneSittingFrame = 59;
             //BedSleepingFrame = 25;
             //SleepingOffset.X = 16;
             ReviveFrame = RevivingFrameID;
             DownedFrame = DownedFrameID;
 
+            SittingPoint2x = new Point(48, 74);
+
+            RightArmFrontFrameSwap.Add(1, 0);
+            RightArmFrontFrameSwap.Add(59, 1);
+            RightArmFrontFrameSwap.Add(60, 2);
+
+            SpecificBodyFrontFramePositions = true;
+            BodyFrontFrameSwap.Add(60, 0);
+
             //Left Arm
-            LeftHandPoints.AddFramePoint(10, 62, 53);
-            LeftHandPoints.AddFramePoint(11, 52, 47);
-            LeftHandPoints.AddFramePoint(12, 52, 47);
-            LeftHandPoints.AddFramePoint(13, 47, 42);
-            LeftHandPoints.AddFramePoint(14, 35, 29);
-            LeftHandPoints.AddFramePoint(15, 60, 25);
-            LeftHandPoints.AddFramePoint(16, 74, 36);
-            LeftHandPoints.AddFramePoint(17, 74, 60);
-            LeftHandPoints.AddFramePoint(18, 74, 67);
+            LeftHandPoints.AddFramePoint2x(17, 51, 26);
+            LeftHandPoints.AddFramePoint2x(18, 68, 38);
+            LeftHandPoints.AddFramePoint2x(19, 66, 54);
+            LeftHandPoints.AddFramePoint2x(20, 61, 65);
 
-            LeftHandPoints.AddFramePoint(19, 112, 128);
-            LeftHandPoints.AddFramePoint(20, 83, 55);
-            LeftHandPoints.AddFramePoint(21, 75, 28);
-
-            LeftHandPoints.AddFramePoint(29, 84, 113);
-            LeftHandPoints.AddFramePoint(30, 84, 113);
-            LeftHandPoints.AddFramePoint(31, 84, 113);
+            LeftHandPoints.AddFramePoint2x(28, 57, 69);
+            LeftHandPoints.AddFramePoint2x(29, 57, 69);
+            LeftHandPoints.AddFramePoint2x(30, 57, 69);
+            LeftHandPoints.AddFramePoint2x(31, 57, 69);
 
             //Right Arm
-            RightHandPoints.AddFramePoint(29, 86, 113);
-            RightHandPoints.AddFramePoint(30, 86, 113);
-            RightHandPoints.AddFramePoint(31, 86, 113);
+            RightHandPoints.AddFramePoint2x(17, 63, 28);
+            RightHandPoints.AddFramePoint2x(18, 74, 40);
+            RightHandPoints.AddFramePoint2x(19, 73, 54);
+            RightHandPoints.AddFramePoint2x(20, 64, 64);
+
+            RightHandPoints.AddFramePoint2x(28, 66, 66);
+            RightHandPoints.AddFramePoint2x(29, 66, 66);
+            RightHandPoints.AddFramePoint2x(30, 66, 66);
+            RightHandPoints.AddFramePoint2x(31, 66, 66);
+
+            //Shoulders
+            MountShoulderPoints.DefaultCoordinate2x = new Point(42, 44);
+
+            //Wings
+            WingPosition.DefaultCoordinate2x = new Point(-1000, -1000);
 
             SubAttackSetup();
         }
@@ -102,70 +118,7 @@ namespace giantsummon.Companions
 
         public void SubAttackSetup()
         {
-            //Anim duration: 10~18
-            //15 = 25º
-            //16 = 65º
-            //17 = 120º
-            //18 = 180º
             GuardianSpecialAttack specialAttack = AddNewSubAttack(new Bapha.FireballAttack());
-            /*specialAttack.CanMove = false;
-            specialAttack.CalculateAttackDamage = delegate (TerraGuardian tg)
-            {
-                int Damage = 20;
-                if (tg.SelectedItem > -1)
-                    Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.75f);
-                Damage = (int)(Damage * tg.MagicDamageMultiplier);
-                return Damage;
-            };
-            specialAttack.WhenFrameBeginsScript = delegate (TerraGuardian tg, int Frame)
-            {
-                if(Frame == 0)
-                {
-                    tg.LookingLeft = tg.Position.X > tg.AimDirection.X;
-                }
-                if(Frame == 5) //= frame 15
-                {
-                    Vector2 ProjectileSpawnPosition = tg.GetGuardianLeftHandPosition;
-                    Vector2 ShotDirection = new Vector2(tg.AimDirection.X, tg.AimDirection.Y) - ProjectileSpawnPosition;
-                    ShotDirection.Normalize();
-                    ShotDirection *= 8f;
-                    int Damage = tg.SubAttackDamage;
-                    int resultproj = Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection, 
-                        Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>(),
-                        Damage, 1.2f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer));
-                    tg.SetProjectileOwnership(resultproj);
-                    Main.projectile[resultproj].scale = tg.Scale;
-                }
-            };
-            specialAttack.AnimationReplacer = delegate (TerraGuardian tg, int FrameID, int FrameTime, ref int BodyFrame, ref int LeftArmFrame, ref int RightArmFrame)
-            {
-                if (FrameID == 5)
-                {
-                    Vector2 PosDif = tg.AimDirection - tg.CenterPosition;
-                    float RotationValue = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(PosDif.Y, PosDif.X)));
-                    if (RotationValue < 0.0174533f * 25f)
-                    {
-                        BodyFrame = 15;
-                    }
-                    else if (RotationValue < 0.0174533f * 65f)
-                    {
-                        BodyFrame = 16;
-                    }
-                    else if (RotationValue < 0.0174533f * 120)
-                    {
-                        BodyFrame = 17;
-                    }
-                    else
-                    {
-                        BodyFrame = 18;
-                    }
-                    LeftArmFrame = RightArmFrame = BodyFrame;
-                }
-            };
-            for (int i = 10; i < 16; i++)
-            {
-                AddNewSubAttackFrame(6, i, i, i);
-            }*/
         }
 
         public override void Attributes(TerraGuardian g)
@@ -180,32 +133,82 @@ namespace giantsummon.Companions
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
             sprites.AddExtraTexture(HellGateSpriteID, "hell_gate");
+            sprites.AddExtraTexture(RightWingTextureID, "wing_r");
+            sprites.AddExtraTexture(FireEffectsTextureID, "fire_effects");
         }
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
-            switch (Frame)
+            if (guardian.SittingOnPlayerMount)
+                return;
+            if (guardian.Velocity.Y != 0 && guardian.WingMaxFlightTime == 0)
             {
-                case DownedFrameID:
-
-                    break;
-                case RevivingFrameID:
-                    {
-                        const float AnimationDuration = 12;
-                        if (guardian.AnimationTime >= AnimationDuration * 4)
-                            guardian.AnimationTime -= AnimationDuration * 4;
-                        byte PickedFrame = (byte)(guardian.AnimationTime / AnimationDuration);
-                        if (PickedFrame == 3)
-                            PickedFrame = 1;
-                        Frame = PickedFrame + RevivingFrameID;
-                    }
-                    break;
+                if (guardian.Velocity.Y < -1.5f)
+                {
+                    Frame = 11;
+                }
+                else if (guardian.Velocity.Y < 1.5f)
+                {
+                    Frame = 12;
+                }
+                else
+                {
+                    Frame = 13;
+                }
+            }
+            else if((guardian.Velocity.X != 0 && guardian.DashCooldown <= 0 && guardian.DashSpeed > guardian.MoveSpeed) || (guardian.WingMaxFlightTime > 0 && guardian.Velocity.Y != 0))
+            {
+                const float FrameTime = 6;
+                if (guardian.AnimationTime >= FrameTime * 5)
+                {
+                    guardian.AnimationTime -= FrameTime * 5;
+                }
+                else if (guardian.AnimationTime < 0)
+                {
+                    guardian.AnimationTime += FrameTime * 5;
+                }
+                Frame = 32 + (int)(guardian.AnimationTime / FrameTime);
+            }
+            else
+            {
+                switch (Frame)
+                {
+                    case 0:
+                        {
+                            if(guardian.AnimationTime >= 3600)
+                            {
+                                Frame = 1;
+                            }
+                        }
+                        break;
+                    case DownedFrameID:
+                        {
+                            const float AnimationDuration = 6;
+                            if (guardian.AnimationTime > AnimationDuration * 7)
+                                guardian.AnimationTime = AnimationDuration * 7;
+                            byte PickedFrame = (byte)(guardian.AnimationTime / AnimationDuration);
+                            Frame = PickedFrame + DownedFrame;
+                        }
+                        break;
+                    case RevivingFrameID:
+                        {
+                            const float AnimationDuration = 6;
+                            if (guardian.AnimationTime >= AnimationDuration * 4)
+                                guardian.AnimationTime -= AnimationDuration * 4;
+                            byte PickedFrame = (byte)(guardian.AnimationTime / AnimationDuration);
+                            if (PickedFrame == 3)
+                                PickedFrame = 1;
+                            Frame = PickedFrame + RevivingFrameID;
+                        }
+                        break;
+                }
             }
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
         {
-            if(guardian.BodyAnimationFrame >= 22 && guardian.BodyAnimationFrame <= 28)
+            GuardianDrawData gdd;
+            /*if (guardian.BodyAnimationFrame >= 22 && guardian.BodyAnimationFrame <= 28)
             {
                 if(guardian.AnimationTime >= HellGateAnimationFrameTime * 6)
                 {
@@ -219,10 +222,38 @@ namespace giantsummon.Companions
                     {
                         Frame = 6 - (Frame + 6); //6 - 12 + 6 = 0, 6 - 7 + 6 = 5
                     }
-                    GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(HellGateSpriteID), DrawPosition, 
+                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(HellGateSpriteID), DrawPosition, 
                         new Rectangle(SpriteWidth * Frame, 0, SpriteWidth, SpriteHeight), Color.White, Rotation, Origin, Scale, SpriteEffects.None);
                     TerraGuardian.DrawFront.Add(gdd);
                 }
+            }*/
+            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(RightWingTextureID), DrawPosition, guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
+                color, Rotation, Origin, Scale, seffect);
+            TerraGuardian.DrawBehind.Insert(0, gdd);
+            byte FlamesEffect = 255;
+            if(guardian.KnockedOut && guardian.BodyAnimationFrame == 28)
+            {
+                TerraGuardian.DrawFront.Clear();
+                TerraGuardian.DrawBehind.Clear();
+                return;
+            }
+            if (guardian.BodyAnimationFrame >= 14 && guardian.BodyAnimationFrame < 18)
+            {
+                FlamesEffect = (byte)(guardian.BodyAnimationFrame - 14);
+            }
+            else if (guardian.BodyAnimationFrame >= 28 && guardian.BodyAnimationFrame < 33)
+            {
+                FlamesEffect = (byte)(guardian.BodyAnimationFrame - 28 + 10);
+            }
+            else if (guardian.BodyAnimationFrame >= 21 && guardian.BodyAnimationFrame < 29)
+            {
+                FlamesEffect = (byte)(guardian.BodyAnimationFrame - 21 + 3);
+            }
+            if(FlamesEffect < 255)
+            {
+                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(FireEffectsTextureID), DrawPosition, guardian.GetAnimationFrameRectangle(FlamesEffect),
+                    Color.White, Rotation, Origin, Scale, seffect);
+                InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
             }
         }
 

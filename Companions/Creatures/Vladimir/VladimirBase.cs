@@ -554,7 +554,8 @@ namespace giantsummon.Companions
                     return;
                 if (guardian.CurrentIdleAction == TerraGuardian.IdleActions.Listening)
                     return;
-                guardian.WalkMode = true;
+                if(guardian.OwnerPos == -1)
+                    guardian.WalkMode = true;
                 data.Time++;
                 Rectangle TargetRect;
                 switch (data.CarriedPersonType)

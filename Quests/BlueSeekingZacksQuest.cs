@@ -281,6 +281,7 @@ namespace giantsummon.Quests
                     Dialogue.ShowEndDialogueMessage("*Now, is there something else you need?*", false);
                 }
             }
+            QuestCompletedNotification(data);
         }
 
         public override List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
@@ -341,6 +342,7 @@ namespace giantsummon.Quests
                 Dialogue.ShowDialogueWithContinue("*Last time I saw them, they were off to do a mission on some Terra Realm world, and then I never heard of them again.*", ContinueText:"What can you tell me about the TerraGuardian you're looking for?");
                 Dialogue.ShowDialogueWithContinue("*Well, he's a Wolf Guardian, just like me. He's also taller, and likes pulling jokes on people, really easy to find out.*");
                 Dialogue.ShowDialogueWithContinue("*I am getting a bit desperated trying to look for him, so if you find him, please tell me.*", ContinueText:"Okay.");
+                QuestStartedNotification(data);
                 data.BlueDialogueStep = 2;
                 Dialogue.ShowEndDialogueMessage("*Thank you, [nickname]...\nBy the way, want to speak about something else? Or do you want more details?*");
             }

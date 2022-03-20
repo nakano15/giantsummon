@@ -407,6 +407,11 @@ namespace giantsummon.Companions
                 Mes.Clear();
                 Mes.Add("Who's she? Is she friendly? Can she play with me?");
             }
+            /*if (FlufflesBase.IsCompanionHaunted(guardian) && Main.rand.Next(2) == 0)
+            {
+                Mes.Clear();
+                Mes.Add("");
+            }*/
             return Mes[Main.rand.Next(Mes.Count)];
         }
 

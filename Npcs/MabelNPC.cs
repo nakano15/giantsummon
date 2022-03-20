@@ -182,7 +182,7 @@ namespace giantsummon.Npcs
             base.AI();
         }
 
-        private bool IsntXmasClose { get { return DateTime.Now.Month != 12 || DateTime.Now.Day >= 25; } }
+        private bool IsntXmasClose { get { return DateTime.Now.Month != 12 || DateTime.Now.Day > 25; } }
 
         public string GetDialogueMessage(int DialogueID)
         {

@@ -46,6 +46,8 @@ namespace giantsummon
         {
             SpawnClearOwnership = true;
             MyParent = ProjParent;
+            if (projectile.whoAmI > -1 && GuardianProj.ContainsKey(projectile.whoAmI))
+                GuardianProj.Remove(projectile.whoAmI);
             switch (projectile.type)
             {
                 case Terraria.ID.ProjectileID.BoneJavelin:

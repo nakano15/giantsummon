@@ -319,6 +319,8 @@ namespace giantsummon
 
             //Sitting Position
             SittingPoint = new Point(10 * 2, 21 * 2);
+
+            //WalkAnimationFrameTime = (8f / 60) * 1.3f; //1f / 8;
         }
 
         /// <summary>
@@ -840,6 +842,11 @@ namespace giantsummon
             Point p = GetBetweenHandsPosition(Frame);
             X = p.X;
             Y = p.Y;
+        }
+
+        public Vector2 GetBetweenHandsPositionVector(int Frame)
+        {
+            return GetBetweenHandsPosition(Frame).ToVector2();
         }
 
         public Point GetBetweenHandsPosition(int Frame)

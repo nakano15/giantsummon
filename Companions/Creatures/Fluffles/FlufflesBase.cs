@@ -568,6 +568,7 @@ namespace giantsummon.Companions
             g.AddFlag(GuardianFlags.CantTakeDamageWhenKod);
             g.AddFlag(GuardianFlags.BreathUnderwater);
             g.AddFlag(GuardianFlags.FireblocksImmunity);
+            g.AddBuffImmunity(Terraria.ID.BuffID.Suffocation);
         }
 
         public static Color GhostfyColor(Color Original, float KoAlpha, float ColorMod)
@@ -851,7 +852,7 @@ namespace giantsummon.Companions
                     }
                     foreach(int key in MainMod.ActiveGuardians.Keys)
                     {
-                        if(key != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[key]) && !guardian.PlayerMounted && !guardian.PlayerControl &&
+                        if(key != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[key]) && !guardian.PlayerMounted && !guardian.PlayerControl && guardian.OwnerPos == -1 &&
                             Math.Abs(MainMod.ActiveGuardians[key].Position.X - guardian.Position.X) < RangeX + (guardian.Width + MainMod.ActiveGuardians[key].Width) * 0.5f &&
                             Math.Abs(MainMod.ActiveGuardians[key].CenterY - guardian.CenterY) < RangeY + (guardian.Height + MainMod.ActiveGuardians[key].Height) * 0.5f)
                         {
@@ -967,6 +968,11 @@ namespace giantsummon.Companions
                 if (Main.rand.Next(3) == 0)
                     Dust.NewDust(data.SoulPosition - new Vector2(8, 10), 16, 20, 75, 0f, -0.5f); //CursedTorchID
             }
+        }
+
+        public static bool IsCompanionHaunted(TerraGuardian tg)
+        {
+            return tg.HasBuff(ModContent.BuffType<Buffs.GhostFoxHaunts.FriendlyHaunt>());
         }
 
         public class FlufflesData : GuardianData

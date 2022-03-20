@@ -252,7 +252,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (CanSpawn && !spawnInfo.water && !Main.dayTime && !Main.bloodMoon && !NPC.AnyNPCs(ModContent.NPCType<LiebreNPC>()) && !NpcMod.HasGuardianNPC(GuardianBase.Liebre) && !NpcMod.HasMetGuardian(GuardianBase.Liebre))
+            if (CanSpawn && !spawnInfo.water && !Main.bloodMoon && !NPC.AnyNPCs(ModContent.NPCType<LiebreNPC>()) && !NpcMod.HasGuardianNPC(GuardianBase.Liebre) && !NpcMod.HasMetGuardian(GuardianBase.Liebre))
             {
                 Tile tile = Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY];
                 if (Lighting.Brightness(spawnInfo.spawnTileX, spawnInfo.spawnTileY) < 0.15f)
@@ -268,18 +268,18 @@ namespace giantsummon.Npcs
                         case 1:
                             if (spawnInfo.player.ZoneCorrupt || spawnInfo.player.ZoneCrimson)
                             {
-                                return 1f / 250;
+                                return 1f / 200;
                             }
                             break;
                         case 2:
                             if (spawnInfo.player.ZoneDungeon)
                             {
-                                return 1f / 300;
+                                return 1f / 200;
                             }
                             break;
                         case 3:
                             if(spawnInfo.playerInTown)
-                                return 1f / 400;
+                                return 1f / 200;
                             break;
                     }
                     //Can spawn :D

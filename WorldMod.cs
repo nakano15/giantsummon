@@ -163,7 +163,6 @@ namespace giantsummon
 
         public override void PreUpdate()
         {
-            ProjMod.CheckForInactiveProjectiles();
             if (!Main.gameMenu && Terraria.GameContent.Events.DD2Event.Ongoing && !OldOneArmyWasLastActive)
             {
                 Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().CompanionReaction(GuardianBase.MessageIDs.WhenOldOneArmyStarts);

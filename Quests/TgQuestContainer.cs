@@ -7,7 +7,7 @@ namespace giantsummon.Quests
 {
     public class TgQuestContainer : QuestContainer
     {
-        public const int ZacksMeatbagOutfitQuest = 0, ShatteredQuest = 1, MissingQuest = 2, KnowYouInsideQuest = 3, TutorialQuest = 4;
+        public const int ZacksMeatbagOutfitQuest = 0, ShatteredQuest = 1, MissingQuest = 2, KnowYouInsideQuest = 3, TutorialQuest = 4, BreeStayQuest = 5;
 
         public override void CreateQuestDB()
         {
@@ -16,6 +16,7 @@ namespace giantsummon.Quests
             AddQuest(MissingQuest, new BlueSeekingZacksQuest());
             AddQuest(KnowYouInsideQuest, new GreenHealingUnlockQuest());
             AddQuest(TutorialQuest, new TutorialQuest());
+            AddQuest(BreeStayQuest, new BreeStayQuest());
         }
     }
 }

@@ -22,6 +22,16 @@ namespace giantsummon
 
         public virtual QuestData GetQuestData { get { return new QuestData(); } }
 
+        public static void QuestStartedNotification(QuestData Data)
+        {
+            Main.NewText("[" + Data.GetBase.Name + "] quest has started.", Microsoft.Xna.Framework.Color.Chocolate);
+        }
+
+        public static void QuestCompletedNotification(QuestData Data)
+        {
+            Main.NewText("[" + Data.GetBase.Name + "] quest has been completed.", Microsoft.Xna.Framework.Color.Chocolate);
+        }
+
         public virtual List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
         {
             return new List<DialogueOption>();

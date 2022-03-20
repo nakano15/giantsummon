@@ -306,6 +306,7 @@ namespace giantsummon.Quests
                             data.MetPigs[WrathID] = true;
                             if (tg.FriendshipLevel >= 5 && !data.SolidificationRequestGiven[WrathID])
                             {
+                                QuestStartedNotification(rawdata);
                                 data.SolidificationRequestGiven[WrathID] = true;
                                 //Wrath speaks about trying to find a way of solidifying his body.
                                 return new Action(WrathTellingYouAboutFormChanging);
@@ -315,6 +316,7 @@ namespace giantsummon.Quests
                             data.MetPigs[HappinessID] = true;
                             /*if (tg.FriendshipLevel >= 5 && !data.SolidificationRequestGiven[HappinessID])
                             {
+                                QuestStartedNotification(rawdata);
                                 data.SolidificationRequestGiven[HappinessID] = true;
                                 //Solidifying quest
                                 return new Action(WrathTellingYouAboutFormChanging);
@@ -324,6 +326,7 @@ namespace giantsummon.Quests
                             data.MetPigs[SadnessID] = true;
                             /*if (tg.FriendshipLevel >= 5 && !data.SolidificationRequestGiven[SadnessID])
                             {
+                                QuestStartedNotification(rawdata);
                                 data.SolidificationRequestGiven[SadnessID] = true;
                                 //Solidifying quest
                                 return new Action(WrathTellingYouAboutFormChanging);
@@ -333,6 +336,7 @@ namespace giantsummon.Quests
                             data.MetPigs[FearID] = true;
                             if (tg.FriendshipLevel >= 5 && !data.SolidificationRequestGiven[FearID])
                             {
+                                QuestStartedNotification(rawdata);
                                 data.SolidificationRequestGiven[FearID] = true;
                                 //Solidifying quest
                                 return new Action(FearTellingYouAboutFormChanging);

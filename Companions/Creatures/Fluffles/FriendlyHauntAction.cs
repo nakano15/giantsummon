@@ -76,6 +76,7 @@ namespace giantsummon.Companions.Creatures.Fluffles
                         if(TargetHitbox.Intersects(guardian.HitBox) || Time >= 10 * 60)
                         {
                             ChangeStep();
+                            guardian.AddFlag(GuardianFlags.IgnoreGfx);
                         }
                         else if(guardian.Position.X > TargetPosition.X)
                         {
@@ -113,15 +114,15 @@ namespace giantsummon.Companions.Creatures.Fluffles
                         }
                         guardian.MoveLeft = guardian.MoveRight = guardian.Jump = false;
                         guardian.ChangeIdleAction(TerraGuardian.IdleActions.Wait, 300);
-                        Vector2 MountedPosition = guardian.Base.LeftHandPoints.GetPositionFromFrameVector(Reviving ? guardian.Base.ReviveFrame : guardian.Base.PlayerMountedArmAnimation);
+                        Vector2 MountedPosition = guardian.Base.GetBetweenHandsPositionVector(Reviving ? guardian.Base.ReviveFrame : guardian.Base.PlayerMountedArmAnimation);
                         MountedPosition.X = MountedPosition.X - guardian.Base.SpriteWidth * 0.5f;
                         Vector2 HauntPosition = Vector2.Zero;
-                        if (guardian.Direction > 0)
-                            MountedPosition.X *= -1;
                         if (TargetPlayer != null)
                         {
                             if (guardian.ItemAnimationTime == 0)
                                 guardian.Direction = TargetPlayer.direction;
+                            if (guardian.Direction > 0)
+                                MountedPosition.X *= -1;
                             if (Reviving)
                                 HauntPosition = TargetPlayer.Center;
                             else
@@ -139,6 +140,8 @@ namespace giantsummon.Companions.Creatures.Fluffles
                         {
                             if (guardian.ItemAnimationTime == 0)
                                 guardian.Direction = TargetGuardian.Direction;
+                            if (guardian.Direction > 0)
+                                MountedPosition.X *= -1;
                             if (Reviving)
                             {
                                 HauntPosition = guardian.CenterPosition;
@@ -146,7 +149,8 @@ namespace giantsummon.Companions.Creatures.Fluffles
                             else
                             {
                                 HauntPosition = TargetGuardian.Position;
-                                HauntPosition.X += (MountedPosition.X * guardian.Direction - (TargetGuardian.Width * 0.5f - 8) * guardian.Direction) * guardian.Scale; //TargetGuardian.Width * 0.2f * guardian.Direction;
+                                HauntPosition.X += MountedPosition.X * guardian.Scale - TargetGuardian.Width * 0.2f * guardian.Direction;
+                                //HauntPosition.X += (MountedPosition.X - (TargetGuardian.Width * 0.5f - 8) * guardian.Direction) * guardian.Scale; //- 8
                                 HauntPosition.Y += MountedPosition.Y * guardian.Scale - TargetGuardian.Height * 0.95f;
                             }
                             guardian.AddDrawMomentToTerraGuardian(TargetGuardian);
@@ -171,6 +175,7 @@ namespace giantsummon.Companions.Creatures.Fluffles
             {
                 guardian.Position = TargetGuardian.Position;
             }
+            guardian.RemoveFlag(GuardianFlags.IgnoreGfx);
         }
 
         public override void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)

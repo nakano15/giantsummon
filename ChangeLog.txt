@@ -8,3 +8,10 @@ Changed the name of the seasons.
     Spring >= Blooming
 Fluffles can now haunt npcs, terraguardians and players around where she lives.
 	You can also ask her to haunt someone on your team, if she's your follower.
+Added notifications for when quests starts or ends.
+Added Stay quest to the mod.
+	Bree will trigger it depending on friendship level.
+Nerfed Glenn's recruit npc spawn rate. He should spawn easier now.
+Liebre's recruit npc will no longer have ascending spawn rates depending on times you met him.
+	That will definitelly make it sure that you'll be able to recruit him.
+	He can also now be found during the day.

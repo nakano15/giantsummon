@@ -57,7 +57,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 102, LastModVersion = 102;
         public const int MaxExtraGuardianFollowers = 7;
-        public static bool ShowDebugInfo = false;
+        public static bool ShowDebugInfo = true;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -795,7 +795,7 @@ namespace giantsummon
 
         public override void MidUpdateProjectileItem()
         {
-
+            ProjMod.CheckForInactiveProjectiles();
         }
 
         public override void MidUpdateItemDust()
@@ -2610,7 +2610,7 @@ namespace giantsummon
                                     {
                                         AddOnOffButton(ButtonPosX, SlotStartPosition.Y, "Force draw guardian on front of the player? ", ref TestForceGuardianOnFront);
                                         SlotStartPosition.Y += 26;
-                                        int[] TestGuardianIDs = new int[] { 19, 20, 22, 26, 27, 28, 29, 30, 31 };
+                                        int[] TestGuardianIDs = new int[] { 20 };
                                         bool b = false;
                                         foreach (int TestGuardianID in TestGuardianIDs)
                                         {

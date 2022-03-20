@@ -13033,12 +13033,15 @@ namespace giantsummon
                     {
                         ItemWidth = (int)(Main.itemTexture[Inventory[SelectedItem].type].Width * ItemScale);
                         ItemHeight = (int)(Main.itemTexture[Inventory[SelectedItem].type].Height * ItemScale);
+                        if (Main.itemAnimationsRegistered.Contains(Inventory[SelectedItem].type))
+                            ItemHeight /= Main.itemAnimations[Inventory[SelectedItem].type].FrameCount;
                     }
                     else
                     {
                         ItemWidth = (int)(Inventory[SelectedItem].width * ItemScale);
                         ItemHeight = (int)(Inventory[SelectedItem].height * ItemScale);
                     }
+
                     ItemOrigin = GetItemOrigin(Inventory[SelectedItem]) * ItemScale;//giantsummon.GetGuardianItemData(Inventory[SelectedItem].type).ItemOrigin;
                     InclinedWeapon = Inclined45Degrees(Inventory[SelectedItem]);
                 }
@@ -17081,7 +17084,8 @@ namespace giantsummon
             Vector4 SlopeCollision = Collision.SlopeCollision(cPosition, Velocity, cWidth, cHeight, Mass, Fall);
             if (Collision.stair && Math.Abs(SlopeCollision.Y - Position.Y) > 8f)
             {
-                gfxOffY -= SlopeCollision.Y - cPosition.Y;
+                if(!HasFlag(GuardianFlags.IgnoreGfx))
+                    gfxOffY -= SlopeCollision.Y - cPosition.Y;
                 StepSpeed = 4;
             }
             this.Position += PositionDifference(SlopeCollision.XY());

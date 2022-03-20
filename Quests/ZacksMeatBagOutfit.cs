@@ -294,6 +294,7 @@ namespace giantsummon.Quests
             {
                 data.QuestStep = 2;
             }
+            QuestStartedNotification(data);
             Dialogue.ShowDialogueWithContinue("*For this to work, we need to go see those people ourselves.*", Dialogue.GetParticipant(BlueSlot));
             if (!PlayerMod.PlayerHasGuardianSummoned(Main.player[Main.myPlayer], GuardianBase.Blue))
             {
@@ -753,6 +754,7 @@ namespace giantsummon.Quests
             Zacks.OutfitID = Companions.ZacksBase.MeatBagOutfitID;
             //MainMod.ScreenColorAlpha = 0;
             data.QuestStep = (byte)(ZacksKnow ? 9 : 8);
+            QuestCompletedNotification(data);
             Dialogue.ShowDialogueWithContinue("*... How do I look?*", Zacks);
             Dialogue.ShowDialogueWithContinue("*Perfect! Now you look less half eaten and gross.*", Blue);
             Blue.IncreaseFriendshipProgress(2);

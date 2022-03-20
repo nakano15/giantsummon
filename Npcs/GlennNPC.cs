@@ -430,7 +430,7 @@ namespace giantsummon.Npcs
             if (!spawnInfo.water && Main.dayTime && spawnInfo.player.townNPCs == 0 && GlennCanSpawn && !NpcMod.HasMetGuardian(GuardianBase.Glenn) && !NpcMod.HasGuardianNPC(GuardianBase.Glenn) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Glenn) && 
                 !NPC.AnyNPCs(ModContent.NPCType<GlennNPC>()))
             {
-                return 1f / 300; //250
+                return 1f / 200; //250
             }
             return 0;
         }

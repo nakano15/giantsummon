@@ -192,6 +192,7 @@ namespace giantsummon
         VergeOfDeathAlert,
         DisableMovement,
         CantTakeDamageWhenKod,
-        NoWarnUponLeaving
+        NoWarnUponLeaving,
+        IgnoreGfx
     }
 }
