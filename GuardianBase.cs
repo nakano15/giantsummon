@@ -1265,7 +1265,7 @@ namespace giantsummon
             }*/
         }
 
-        public void ReplaceTexture(GuardianDrawData.TextureType textureType, Microsoft.Xna.Framework.Graphics.Texture2D texture)
+        public void ReplaceTexture(GuardianDrawData.TextureType textureType, Microsoft.Xna.Framework.Graphics.Texture2D texture, Color? replaceColor = null)
         {
             for(byte sprite = 0; sprite < 2; sprite++)
             {
@@ -1279,6 +1279,8 @@ namespace giantsummon
                     if(gdd.textureType == textureType)
                     {
                         gdd.Texture = texture;
+                        if (replaceColor.HasValue)
+                            gdd.color = replaceColor.Value;
                     }
                 }
             }

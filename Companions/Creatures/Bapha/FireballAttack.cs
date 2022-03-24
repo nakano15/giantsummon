@@ -26,6 +26,11 @@ namespace giantsummon.Companions.Bapha
 
         public override void Update(TerraGuardian tg, GuardianSpecialAttackData data)
         {
+            tg.ShowOffHand = false;
+            if(data.Step < 4)
+            {
+                Lighting.AddLight(tg.CenterPosition, Vector3.One);
+            }
             if (data.FirstFrame)
             {
                 if (data.Step == 4)
@@ -39,9 +44,11 @@ namespace giantsummon.Companions.Bapha
                     if (ArmAngle < -0.75f)
                         FrameID = 0;
                     else if (ArmAngle > 0.6f)
-                        FrameID = 2;
-                    else
+                        FrameID = 3;
+                    else if (ArmAngle >= -0.2f)
                         FrameID = 1;
+                    else
+                        FrameID = 2;
                     //
                     int BackupFrame = tg.LeftArmAnimationFrame;
                     tg.LeftArmAnimationFrame = 17 + FrameID;

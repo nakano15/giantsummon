@@ -11,8 +11,10 @@ namespace giantsummon.Companions
     public class BaphaBase : GuardianBase
     {
         private const int DownedFrameID = 21, RevivingFrameID = 28;
-        private const string HellGateSpriteID = "hellgate", FireEffectsTextureID = "firefxs";
+        private const string HellGateSpriteID = "hellgate", FireEffectsTextureID = "firefxs", CrimsonFireEffectsTextureID = "crimfirefx";
         private const string RightWingTextureID = "rwing";
+        private const string AwakenedBodyTextureID = "aw_body", AwakenedBodyGlowTextureID = "aw_body_glow", AwakenedLeftArmGlowTextureID = "aw_leftarm", AwakenedRightArmGlowTextureID = "aw_rightarm", 
+            AwakenedBodyFrontGlowTextureID = "aw_bodyfront", AwakenedRightArmFrontGlowTextureID = "aw_rightarmfront", AwakenedWingRightTextureID = "aw_rwing";
         private const int HellGateAnimationFrameTime = 8;
         private const byte CrimsonFlameID = 0;
 
@@ -48,8 +50,8 @@ namespace giantsummon.Companions
             ReverseMount = false;
             DrinksBeverage = false;
             SpecialAttackBasedCombat = true;
-            UsesRightHandByDefault = true;
-            ForceWeaponUseOnMainHand = true;
+            //UsesRightHandByDefault = true;
+            //ForceWeaponUseOnMainHand = true;
             CompanionContributorName = "Smokey";
             SetTerraGuardian();
             VladimirBase.AddCarryBlacklist(Bapha);
@@ -134,12 +136,21 @@ namespace giantsummon.Companions
         {
             sprites.AddExtraTexture(HellGateSpriteID, "hell_gate");
             sprites.AddExtraTexture(RightWingTextureID, "wing_r");
-            sprites.AddExtraTexture(FireEffectsTextureID, "fire_effects");
+            sprites.AddExtraTexture(FireEffectsTextureID, "fire_and_despawn_effect");
+            sprites.AddExtraTexture(CrimsonFireEffectsTextureID, "crimson_fire");
+            //
+            sprites.AddExtraTexture(AwakenedBodyTextureID, "aw_body");
+            sprites.AddExtraTexture(AwakenedBodyGlowTextureID, "aw_body_glow");
+            sprites.AddExtraTexture(AwakenedLeftArmGlowTextureID, "aw_left_arm_glow");
+            sprites.AddExtraTexture(AwakenedRightArmGlowTextureID, "aw_right_arm_glow");
+            sprites.AddExtraTexture(AwakenedBodyFrontGlowTextureID, "aw_body_front_glow");
+            sprites.AddExtraTexture(AwakenedRightArmFrontGlowTextureID, "aw_right_arm_front_glow");
+            sprites.AddExtraTexture(AwakenedWingRightTextureID, "aw_wing_r");
         }
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
-            if (guardian.SittingOnPlayerMount)
+            if (guardian.SittingOnPlayerMount || (BodyPartID == 1 && TerraGuardian.UsingLeftArmAnimation) || (BodyPartID == 2 && TerraGuardian.UsingRightArmAnimation))
                 return;
             if (guardian.Velocity.Y != 0 && guardian.WingMaxFlightTime == 0)
             {
@@ -227,9 +238,41 @@ namespace giantsummon.Companions
                     TerraGuardian.DrawFront.Add(gdd);
                 }
             }*/
-            gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(RightWingTextureID), DrawPosition, guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
-                color, Rotation, Origin, Scale, seffect);
-            TerraGuardian.DrawBehind.Insert(0, gdd);
+            bool Awakened = false;
+            if (Awakened)
+            {
+                ReplaceTexture(GuardianDrawData.TextureType.TGBody, sprites.GetExtraTexture(AwakenedBodyTextureID));
+                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(AwakenedBodyGlowTextureID), DrawPosition,
+                    guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame), Color.White, Rotation, Origin, Scale, seffect);
+                InjectTextureAfter(GuardianDrawData.TextureType.TGBody, gdd);
+                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(AwakenedLeftArmGlowTextureID), DrawPosition, 
+                    guardian.GetAnimationFrameRectangle(guardian.LeftArmAnimationFrame),  Color.White, Rotation, Origin, Scale, seffect);
+                InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
+                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(AwakenedRightArmGlowTextureID), DrawPosition,
+                    guardian.GetAnimationFrameRectangle(guardian.RightArmAnimationFrame), Color.White, Rotation, Origin, Scale, seffect);
+                InjectTextureAfter(GuardianDrawData.TextureType.TGRightArm, gdd);
+                if (guardian.Base.BodyFrontFrameSwap.ContainsKey(guardian.BodyAnimationFrame))
+                {
+                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(AwakenedBodyFrontGlowTextureID), DrawPosition,
+                        guardian.GetAnimationFrameRectangle(guardian.Base.BodyFrontFrameSwap[guardian.BodyAnimationFrame]), Color.White, Rotation, Origin, Scale, seffect);
+                    InjectTextureAfter(GuardianDrawData.TextureType.TGBodyFront, gdd);
+                }
+                if (guardian.Base.RightArmFrontFrameSwap.ContainsKey(guardian.RightArmAnimationFrame))
+                {
+                    gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(AwakenedRightArmFrontGlowTextureID), DrawPosition,
+                        guardian.GetAnimationFrameRectangle(guardian.Base.RightArmFrontFrameSwap[guardian.RightArmAnimationFrame]), Color.White, Rotation, Origin, Scale, seffect);
+                    InjectTextureAfter(GuardianDrawData.TextureType.TGRightArmFront, gdd);
+                }
+                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(AwakenedWingRightTextureID), DrawPosition, guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
+                    Color.White, Rotation, Origin, Scale, seffect);
+                TerraGuardian.DrawBehind.Insert(0, gdd);
+            }
+            else
+            {
+                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(RightWingTextureID), DrawPosition, guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame),
+                    color, Rotation, Origin, Scale, seffect);
+                TerraGuardian.DrawBehind.Insert(0, gdd);
+            }
             byte FlamesEffect = 255;
             if(guardian.KnockedOut && guardian.BodyAnimationFrame == 28)
             {
@@ -237,13 +280,13 @@ namespace giantsummon.Companions
                 TerraGuardian.DrawBehind.Clear();
                 return;
             }
-            if (guardian.BodyAnimationFrame >= 14 && guardian.BodyAnimationFrame < 18)
+            if (guardian.LeftArmAnimationFrame >= 14 && guardian.LeftArmAnimationFrame < 18)
             {
-                FlamesEffect = (byte)(guardian.BodyAnimationFrame - 14);
+                FlamesEffect = (byte)(guardian.LeftArmAnimationFrame - 14);
             }
             else if (guardian.BodyAnimationFrame >= 28 && guardian.BodyAnimationFrame < 33)
             {
-                FlamesEffect = (byte)(guardian.BodyAnimationFrame - 28 + 10);
+                FlamesEffect = (byte)(guardian.LeftArmAnimationFrame - 28 + 10);
             }
             else if (guardian.BodyAnimationFrame >= 21 && guardian.BodyAnimationFrame < 29)
             {
@@ -251,8 +294,8 @@ namespace giantsummon.Companions
             }
             if(FlamesEffect < 255)
             {
-                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(FireEffectsTextureID), DrawPosition, guardian.GetAnimationFrameRectangle(FlamesEffect),
-                    Color.White, Rotation, Origin, Scale, seffect);
+                gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(Awakened && FlamesEffect < 4 ? CrimsonFireEffectsTextureID : FireEffectsTextureID), DrawPosition, 
+                    guardian.GetAnimationFrameRectangle(FlamesEffect), Color.White, Rotation, Origin, Scale, seffect);
                 InjectTextureAfter(GuardianDrawData.TextureType.TGLeftArm, gdd);
             }
         }
