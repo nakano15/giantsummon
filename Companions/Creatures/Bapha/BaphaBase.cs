@@ -11,10 +11,11 @@ namespace giantsummon.Companions
     public class BaphaBase : GuardianBase
     {
         private const int DownedFrameID = 21, RevivingFrameID = 28;
-        private const string HellGateSpriteID = "hellgate", FireEffectsTextureID = "firefxs", CrimsonFireEffectsTextureID = "crimfirefx";
+        private const string HellPortalSpriteID = "hellgate", HellSplitterTextureID = "hellsplitter", FireEffectsTextureID = "firefxs", CrimsonFireEffectsTextureID = "crimfirefx",
+            TransformTextureID = "transform", CrescentMoonShredderPentagram = "c_pentagram";
         private const string RightWingTextureID = "rwing";
         private const string AwakenedBodyTextureID = "aw_body", AwakenedBodyGlowTextureID = "aw_body_glow", AwakenedLeftArmGlowTextureID = "aw_leftarm", AwakenedRightArmGlowTextureID = "aw_rightarm", 
-            AwakenedBodyFrontGlowTextureID = "aw_bodyfront", AwakenedRightArmFrontGlowTextureID = "aw_rightarmfront", AwakenedWingRightTextureID = "aw_rwing";
+            AwakenedBodyFrontGlowTextureID = "aw_bodyfront", AwakenedRightArmFrontGlowTextureID = "aw_rightarmfront", AwakenedWingRightTextureID = "aw_rwing",;
         private const int HellGateAnimationFrameTime = 8;
         private const byte CrimsonFlameID = 0;
 
@@ -134,10 +135,13 @@ namespace giantsummon.Companions
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
-            sprites.AddExtraTexture(HellGateSpriteID, "hell_gate");
+            sprites.AddExtraTexture(HellPortalSpriteID, "Hell_Portal");
+            sprites.AddExtraTexture(HellSplitterTextureID, "HellSplitter");
             sprites.AddExtraTexture(RightWingTextureID, "wing_r");
             sprites.AddExtraTexture(FireEffectsTextureID, "fire_and_despawn_effect");
             sprites.AddExtraTexture(CrimsonFireEffectsTextureID, "crimson_fire");
+            sprites.AddExtraTexture(TransformTextureID, "transform");
+            sprites.AddExtraTexture(CrescentMoonShredderPentagram, "pentagram_sigil");
             //
             sprites.AddExtraTexture(AwakenedBodyTextureID, "aw_body");
             sprites.AddExtraTexture(AwakenedBodyGlowTextureID, "aw_body_glow");

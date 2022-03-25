@@ -76,6 +76,7 @@
     <Compile Include="BuffData.cs" />
     <Compile Include="BuffMod.cs" />
     <Compile Include="Buffs\BurningRage.cs" />
+    <Compile Include="Buffs\CrimsonConflagration.cs" />
     <Compile Include="Buffs\Defended.cs" />
     <Compile Include="Buffs\DrainingHealth.cs" />
     <Compile Include="Buffs\Fit.cs" />
@@ -258,6 +259,8 @@
     <Compile Include="PathFinder.cs" />
     <Compile Include="PlayerDataBackup.cs" />
     <Compile Include="PlayerItems\StaffOfRenew.cs" />
+    <Compile Include="Projectiles\HellFlame .cs" />
+    <Compile Include="Projectiles\CrimsonFlame.cs" />
     <Compile Include="Projectiles\EmeraldGP.cs" />
     <Compile Include="Projectiles\SapphireGP.cs" />
     <Compile Include="Projectiles\AmethystGP.cs" />
@@ -400,13 +403,13 @@
     <Content Include="Companions\Creatures\Bapha\crimson_fire.png" />
     <Content Include="Companions\Creatures\Bapha\fire_and_despawn_effect.png" />
     <Content Include="Companions\Creatures\Bapha\head.png" />
-    <Content Include="Companions\Creatures\Bapha\hell_gate.png" />
+    <Content Include="Companions\Creatures\Bapha\HellSplitter.png" />
+    <Content Include="Companions\Creatures\Bapha\Hell_Portal.png" />
     <Content Include="Companions\Creatures\Bapha\left_arm.png" />
     <Content Include="Companions\Creatures\Bapha\pentagram_sigil.png" />
     <Content Include="Companions\Creatures\Bapha\right_arm.png" />
     <Content Include="Companions\Creatures\Bapha\right_arm_front.png" />
-    <Content Include="Companions\Creatures\Bapha\transform_b.png" />
-    <Content Include="Companions\Creatures\Bapha\transform_f.png" />
+    <Content Include="Companions\Creatures\Bapha\transform.png" />
     <Content Include="Companions\Creatures\Bapha\wing_r.png" />
     <Content Include="Companions\Creatures\Blue\bunny.png" />
     <Content Include="Companions\Creatures\Blue\red_hood_outfit.png" />
@@ -710,8 +713,10 @@
     <Content Include="Projectiles\AmethystGP.png" />
     <Content Include="Projectiles\BloodVomit.png" />
     <Content Include="Projectiles\CannonBlast.png" />
+    <Content Include="Projectiles\CrimsonFlame.png" />
     <Content Include="Projectiles\CrimsonFlameProjectile.png" />
     <Content Include="Projectiles\EmeraldGP.png" />
+    <Content Include="Projectiles\HellFlame.png" />
     <Content Include="Projectiles\SapphireGP.png" />
     <Content Include="Projectiles\TopazGP.png" />
     <Content Include="Projectiles\ZombieFart.png" />
