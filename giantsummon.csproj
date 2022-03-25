@@ -224,6 +224,7 @@
     <Compile Include="Items\Outfit\Wrath\UnholyAmulet.cs" />
     <Compile Include="Items\Shields\LifeShield.cs" />
     <Compile Include="Items\Shields\DiamondShield.cs" />
+    <Compile Include="Items\Weapons\CaitSithScimitar.cs" />
     <Compile Include="Maps\TestMap.cs" />
     <Compile Include="ModGuardianData.cs" />
     <Compile Include="ModTargetting.cs" />
@@ -278,6 +279,7 @@
     <Compile Include="Quests\BrutusAndDominoQuest.cs" />
     <Compile Include="Quests\GreenHealingUnlockQuest.cs" />
     <Compile Include="Quests\PigCompanionsQuest.cs" />
+    <Compile Include="Quests\SardineOutfitQuest.cs" />
     <Compile Include="Quests\TgQuestContainer.cs" />
     <Compile Include="Quests\TutorialQuest.cs" />
     <Compile Include="Quests\ZacksMeatBagOutfit.cs" />
@@ -662,6 +664,7 @@
     <Content Include="Items\Consumable\PortraitOfAFriend.png" />
     <Content Include="Items\Consumable\RenameCard.png" />
     <Content Include="Items\Consumable\SkillResetPotion.png" />
+    <Content Include="Items\Weapons\CaitSithScimitar.png" />
     <Content Include="Items\Misc\BirthdayPresent.png" />
     <Content Include="Items\Misc\Note.png" />
     <Content Include="Items\Outfit\Alex\AlexModel3000TurquoiseShark.png" />

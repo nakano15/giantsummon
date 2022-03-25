@@ -34,8 +34,8 @@ namespace giantsummon.Items.Weapons
 		public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(Terraria.ID.ItemID.HallowedBar, 35);
-            recipe.AddTile(Terraria.ID.TileID.Anvils);
+            recipe.AddIngredient(ItemID.HallowedBar, 35);
+            recipe.AddTile(TileID.Anvils);
             recipe.SetResult(this);
             recipe.AddRecipe();
 		}
