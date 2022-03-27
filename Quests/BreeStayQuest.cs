@@ -33,7 +33,7 @@ namespace giantsummon.Quests
             {
                 Story = "Bree told me that many people in this world are asking her to stay. She seems to be really annoyed by that, and said that if I want her to stay in my world, I should bring her "+FishCount+" " + MainMod.PluralifyWord(FishName, FishCount) + ".";
             }
-            if(data.QuestStep == 2)
+            if(data.QuestStep >= 2)
             {
                 Story += "\n\nI brought Bree the fishs she asked for, and she looked really happy for that. ";
                 switch (data.ConclusionState)
@@ -76,7 +76,7 @@ namespace giantsummon.Quests
         public override bool IsQuestComplete(QuestData rawdata)
         {
             BreeStayQuestData data = (BreeStayQuestData)rawdata;
-            return data.QuestStep == 2;
+            return data.QuestStep == 3;
         }
 
         public override void UpdatePlayer(Player player, QuestData rawdata)
@@ -261,18 +261,18 @@ namespace giantsummon.Quests
 
             public override void CustomSaveQuest(string QuestKey, TagCompound Writer)
             {
-                Writer.Add("questver", QuestVersion);
-                Writer.Add("qstep", QuestStep);
-                Writer.Add("qfish", FishGiven);
-                Writer.Add("qconc", ConclusionState);
+                Writer.Add(QuestKey+"questver", QuestVersion);
+                Writer.Add(QuestKey + "qstep", QuestStep);
+                Writer.Add(QuestKey + "qfish", FishGiven);
+                Writer.Add(QuestKey + "qconc", ConclusionState);
             }
 
             public override void CustomLoadQuest(string QuestKey, TagCompound Reader, int ModVersion)
             {
-                byte LastVer = Reader.GetByte("questver");
-                QuestStep = Reader.GetByte("qstep");
-                FishGiven = Reader.GetByte("qfish");
-                ConclusionState = Reader.GetByte("qconc");
+                byte LastVer = Reader.GetByte(QuestKey + "questver");
+                QuestStep = Reader.GetByte(QuestKey + "qstep");
+                FishGiven = Reader.GetByte(QuestKey + "qfish");
+                ConclusionState = Reader.GetByte(QuestKey + "qconc");
 
             }
         }

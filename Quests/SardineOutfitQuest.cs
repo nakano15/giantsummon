@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria;
+using Terraria.ModLoader.IO;
 
 namespace giantsummon.Quests
 {
@@ -189,7 +190,20 @@ namespace giantsummon.Quests
                     {
                         Dialogue.ShowDialogueWithContinue("Hey! But I liked it. Anyways, it also came with a sword.");
                     }
-                    Dialogue.ShowDialogueWithContinue("I don't know if I should use it, but probably will make me look cooler.");
+                    /*if(Glenn != null)
+                    {
+                        Dialogue.ShowDialogueWithContinue("You look cool in that outfit.", Glenn);
+                        Dialogue.ShowDialogueWithContinue("Thanks Glenn, I'll see if I can get one for you too.", Sardine);
+                        Dialogue.ShowDialogueWithContinue("Please, no! Matching outfits are lame.", Glenn);
+                    }
+                    if (Bree != null)
+                    {
+                        Dialogue.ShowDialogueWithContinue("I actually think it looks good on you.", Bree);
+                        Dialogue.ShowDialogueWithContinue("Haha, I think I did a good investiment then.", Sardine);
+                        Dialogue.ShowDialogueWithContinue("You didn't bought it with your shared funds, right?", Bree);
+                        Dialogue.ShowDialogueWithContinue("Ah, eh... Let's talk about that later?", Sardine);
+                    }*/
+                    Dialogue.ShowDialogueWithContinue("I don't know if I should use it, but probably will make me look cooler.", Sardine);
                     QuestCompletedNotification(data);
                     data.QuestStep = 5;
                     Terraria.Item.NewItem(Dialogue.GetSpeaker.HitBox, Terraria.ModLoader.ModContent.ItemType<Items.Weapons.CaitSithScimitar>(), 1, true, noGrabDelay: true);
@@ -238,6 +252,10 @@ namespace giantsummon.Quests
                             break;
                         }
                     }
+                    if(KingSlimeSlot < 255 && PlayerMod.HasGuardianSummoned(player, GuardianBase.Sardine))
+                    {
+                        PlayerMod.GetPlayerSummonedGuardian(player, GuardianBase.Sardine).SaySomething("There it is! Let's slay it!");
+                    }
                 }
             }
         }
@@ -253,13 +271,17 @@ namespace giantsummon.Quests
                     {
                         if (data.SardineFell)
                         {
-                            data.QuestStep = 3;
+                            data.QuestStep = 4;
                         }
                         else
                         {
                             data.QuestStep = 2;
                             PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Sardine).SaySomethingCanSchedule("We did it! Yes!!");
                         }
+                    }
+                    else
+                    {
+                        data.QuestStep = 3;
                     }
                 }
             }
@@ -278,6 +300,21 @@ namespace giantsummon.Quests
             /// </summary>
             public byte QuestStep = 0;
             public bool SardineFell = false;
+            private const byte QVer = 0;
+
+            public override void CustomSaveQuest(string QuestKey, TagCompound Writer)
+            {
+                Writer.Add(QuestKey + "qver", QVer);
+                Writer.Add(QuestKey + "qstep", QuestStep);
+                Writer.Add(QuestKey + "sardinefell", SardineFell);
+            }
+
+            public override void CustomLoadQuest(string QuestKey, TagCompound Reader, int ModVersion)
+            {
+                byte questver = Reader.GetByte(QuestKey + "qver");
+                QuestStep = Reader.GetByte(QuestKey + "qstep");
+                SardineFell = Reader.GetBool(QuestKey + "sardinefell");
+            }
         }
     }
 }

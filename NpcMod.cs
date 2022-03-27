@@ -1499,6 +1499,15 @@ namespace giantsummon
             }
             if (npc.type == NPCID.WallofFlesh)
                 MainMod.LastWof = false;
+            if (npc.playerInteraction[Main.myPlayer])
+            {
+                PlayerMod pm = Main.LocalPlayer.GetModPlayer<PlayerMod>();
+                foreach(QuestData qd in pm.QuestDatas)
+                {
+                    if(!qd.IsInvalid)
+                        qd.GetBase.OnMobKill(npc);
+                }
+            }
             bool SomeGuardianHurt = false, SomeGuardianNeedMana = false;
             for (int p = 0; p < 255; p++)
             {
