@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using giantsummon.Trigger;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -11,11 +12,11 @@ namespace giantsummon.Companions
     public class BaphaBase : GuardianBase
     {
         private const int DownedFrameID = 21, RevivingFrameID = 28;
-        private const string HellPortalSpriteID = "hellgate", HellSplitterTextureID = "hellsplitter", FireEffectsTextureID = "firefxs", CrimsonFireEffectsTextureID = "crimfirefx",
+        public const string HellPortalSpriteID = "hellgate", HellSplitterTextureID = "hellsplitter", FireEffectsTextureID = "firefxs", CrimsonFireEffectsTextureID = "crimfirefx",
             TransformTextureID = "transform", CrescentMoonShredderPentagram = "c_pentagram";
         private const string RightWingTextureID = "rwing";
         private const string AwakenedBodyTextureID = "aw_body", AwakenedBodyGlowTextureID = "aw_body_glow", AwakenedLeftArmGlowTextureID = "aw_leftarm", AwakenedRightArmGlowTextureID = "aw_rightarm", 
-            AwakenedBodyFrontGlowTextureID = "aw_bodyfront", AwakenedRightArmFrontGlowTextureID = "aw_rightarmfront", AwakenedWingRightTextureID = "aw_rwing",;
+            AwakenedBodyFrontGlowTextureID = "aw_bodyfront", AwakenedRightArmFrontGlowTextureID = "aw_rightarmfront", AwakenedWingRightTextureID = "aw_rwing";
         private const int HellGateAnimationFrameTime = 8;
         private const byte CrimsonFlameID = 0;
 
@@ -121,7 +122,16 @@ namespace giantsummon.Companions
 
         public void SubAttackSetup()
         {
-            GuardianSpecialAttack specialAttack = AddNewSubAttack(new Bapha.FireballAttack());
+            GuardianSpecialAttack specialAttack = AddNewSubAttack(new Creatures.Bapha.HellFlameAttack());
+            specialAttack = AddNewSubAttack(new Creatures.Bapha.CrimsonFlameAttack());
+            specialAttack = AddNewSubAttack(new Creatures.Bapha.HellSplitterAttack());
+        }
+
+        public static bool IsAwakened(TerraGuardian g)
+        {
+            if (g.Data is BaphaData)
+                return ((BaphaData)g.Data).AwakenedTime > 0;
+            return false;
         }
 
         public override void Attributes(TerraGuardian g)
@@ -304,6 +314,21 @@ namespace giantsummon.Companions
             }
         }
 
+        public override void GuardianUpdateScript(TerraGuardian guardian)
+        {
+            BaphaData data = (BaphaData)guardian.Data;
+            if (data.AwakenedTime > 0)
+                data.AwakenedTime--;
+            else if(data.KillTime> 0)
+            {
+                data.KillTime--;
+                if(data.KillTime == 0)
+                {
+                    data.KillCount = 0;
+                }
+            }
+        }
+
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
@@ -370,6 +395,38 @@ namespace giantsummon.Companions
         public override string GetSpecialMessage(string MessageID) //Check other companion scripts
         {
             return base.GetSpecialMessage(MessageID);
+        }
+
+        public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
+        {
+            return new BaphaData(ID, ModID);
+        }
+
+        public class BaphaData : GuardianData
+        {
+            public byte KillCount = 0;
+            public int KillTime = 0;
+            public const int MaxKillTime = 20 * 60 * 60;
+            public int AwakenedTime = 0;
+
+            public BaphaData(int Id, string ModId) : base(Id, ModId)
+            {
+
+            }
+
+            public void IncreaseKillTime()
+            {
+                if (AwakenedTime > 0) return;
+                KillCount++;
+                if (KillTime == 0)
+                    KillTime = MaxKillTime;
+                if(KillCount >= 10)
+                {
+                    AwakenedTime = 60 * 60 * 60;
+                    KillCount = 0;
+                    KillTime = 0;
+                }
+            }
         }
     }
 }

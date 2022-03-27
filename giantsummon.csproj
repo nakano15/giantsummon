@@ -103,6 +103,8 @@
     <Compile Include="Buffs\WellBeing.cs" />
     <Compile Include="ChangeNicknameCommand.cs" />
     <Compile Include="CharacterInfo.cs" />
+    <Compile Include="Companions\Creatures\Bapha\CrimsonFlameAttack.cs" />
+    <Compile Include="Companions\Creatures\Bapha\HellSplitterAttack.cs" />
     <Compile Include="Companions\Creatures\Cille\BeastStateAction.cs" />
     <Compile Include="Companions\Creatures\Cille\CilleBase.cs" />
     <Compile Include="Companions\Creatures\Fluffles\FriendlyHauntAction.cs" />
@@ -117,7 +119,7 @@
     <Compile Include="Companions\Creatures\Alex\AlexBase.cs" />
     <Compile Include="Companions\Creatures\Alex\HealingLickAction.cs" />
     <Compile Include="Companions\Creatures\Bapha\BaphaBase.cs" />
-    <Compile Include="Companions\Creatures\Bapha\FireballAttack.cs" />
+    <Compile Include="Companions\Creatures\Bapha\HellFlameAttack.cs" />
     <Compile Include="Companions\Creatures\Blue\FullMoonHowlingBehavior.cs" />
     <Compile Include="Companions\Terrarians\Brandon\BrandonBase.cs" />
     <Compile Include="Companions\Creatures\Brutus\ProtectModeAction.cs" />

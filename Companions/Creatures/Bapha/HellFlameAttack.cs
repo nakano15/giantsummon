@@ -2,22 +2,29 @@
 using Terraria;
 using Microsoft.Xna.Framework;
 
-namespace giantsummon.Companions.Bapha
+namespace giantsummon.Companions.Creatures.Bapha
 {
-    public class FireballAttack : GuardianSpecialAttack
+    public class HellFlameAttack : GuardianSpecialAttack
     {
         private byte FrameID = 0;
+        protected bool IsAwakenedVersion = false;
 
-        public FireballAttack()
+        public HellFlameAttack()
         {
-            Name = "Fireball";
+            Name = "Hell Flame";
             CanMove = true;
             AttackType = SubAttackCombatType.Magic;
+            ManaCost = 15;
+        }
+
+        public override bool CanUse(TerraGuardian tg)
+        {
+            return BaphaBase.IsAwakened(tg) == IsAwakenedVersion;
         }
 
         public int GetAttackDamage(TerraGuardian tg)
         {
-            int Damage = 20;
+            int Damage = (IsAwakenedVersion ? 40 : 20);
             if (tg.SelectedItem > -1)
                 Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.75f);
             Damage = (int)(Damage * tg.MagicDamageMultiplier);
@@ -50,19 +57,27 @@ namespace giantsummon.Companions.Bapha
                     else
                         FrameID = 2;
                     //
-                    int BackupFrame = tg.LeftArmAnimationFrame;
-                    tg.LeftArmAnimationFrame = 17 + FrameID;
-                    Vector2 ProjectileSpawnPosition = tg.GetGuardianLeftHandPosition;
-                    tg.LeftArmAnimationFrame = BackupFrame;
-                    Vector2 ShotDirection = tg.AimDirection - ProjectileSpawnPosition;
-                    ShotDirection.Normalize();
-                    ShotDirection *= 8f;
-                    int Damage = GetAttackDamage(tg);
-                    int resultproj = Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection,
-                        Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>(),
-                        Damage, 1.2f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer));
-                    tg.SetProjectileOwnership(resultproj);
-                    Main.projectile[resultproj].scale = tg.Scale;
+                    int BackupLArmFrame = tg.LeftArmAnimationFrame, BackupRArmFrame = tg.RightArmAnimationFrame;
+                    for (byte i = 0; i < 2; i++)
+                    {
+                        if ((i == 0 && TerraGuardian.UsingLeftArmAnimation) || (i == 1 && TerraGuardian.UsingRightArmAnimation))
+                            continue;
+                        if (i == 0) tg.LeftArmAnimationFrame = 17 + FrameID;
+                        else tg.RightArmAnimationFrame = 17 + FrameID;
+                        Vector2 ProjectileSpawnPosition = tg.GetGuardianLeftHandPosition;
+                        if (i == 0) tg.LeftArmAnimationFrame = BackupLArmFrame;
+                        else tg.RightArmAnimationFrame = BackupRArmFrame;
+                        Vector2 ShotDirection = tg.AimDirection - ProjectileSpawnPosition;
+                        ShotDirection.Normalize();
+                        ShotDirection *= 8f;
+                        int Damage = GetAttackDamage(tg);
+                        int Proj = IsAwakenedVersion ? Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>() : Terraria.ModLoader.ModContent.ProjectileType<Projectiles.HellFlame>();
+                        int resultproj = Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection,
+                            Proj,
+                            Damage, 1.2f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer));
+                        tg.SetProjectileOwnership(resultproj);
+                        Main.projectile[resultproj].scale = tg.Scale;
+                    }
                 }
             }
             if(data.Time >= 6)
@@ -84,25 +99,7 @@ namespace giantsummon.Companions.Bapha
             }
             else
             {
-                //Vector2 PosDif = tg.AimDirection - tg.CenterPosition;
-                //float RotationValue = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(PosDif.Y, PosDif.X)));
                 int Frame = 17 + FrameID;
-                /*if (RotationValue < 0.0174533f * 25f)
-                {
-                    Frame = 17;
-                }
-                else if (RotationValue < 0.0174533f * 65f)
-                {
-                    Frame = 18;
-                }
-                else if (RotationValue < 0.0174533f * 120)
-                {
-                    Frame = 19;
-                }
-                else
-                {
-                    Frame = 20;
-                }*/
                 tg.LeftArmAnimationFrame = tg.RightArmAnimationFrame = Frame;
             }
         }
