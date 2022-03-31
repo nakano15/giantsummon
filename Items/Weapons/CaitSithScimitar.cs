@@ -9,6 +9,9 @@ namespace giantsummon.Items.Weapons
 {
     class CaitSithScimitar : GuardianItemPrefab
     {
+        private byte ItemLevel = 0;
+        private int Exp = 0;
+
         public override void SetDefaults()
         {
             item.damage = 29;
@@ -26,5 +29,24 @@ namespace giantsummon.Items.Weapons
 			PlayerCanUse = true;
             ItemOrigin = new Vector2(6, 43);
         }
+
+        /*public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
+        {
+            if(ItemLevel < 255 && damage > 0 && target.type != Terraria.ID.NPCID.TargetDummy)
+            {
+                int ExpGot = (int)Math.Max(1, damage * 0.125f);
+                Exp += ExpGot;
+                if (Exp >= 100 * (ItemLevel +1))
+                {
+                    ItemLevel++;
+                    Exp = 0;
+                }
+            }
+        }
+
+        public override void OnHitPvp(Player player, Player target, int damage, bool crit)
+        {
+            base.OnHitPvp(player, target, damage, crit);
+        }*/
     }
 }

@@ -67,7 +67,45 @@ namespace giantsummon.Companions.Brutus
             }*/
             const int Offset = 7 * 2;
             float DefendX = defended.Center.X - Offset * defended.direction;
-            if (Action == 0)
+            if(defendedPm.KnockedOut && (defendedPm.BeingCarriedByGuardian || (defendedPm.ControllingGuardian && defendedPm.Guardian.BeingCarriedByGuardian)))
+            {
+                Action = 2;
+            }
+            if(Action == 2)
+            {
+                if (guardian.Position.X + guardian.Velocity.X * 0.5f > DefendX)
+                    guardian.MoveLeft = true;
+                else
+                    guardian.MoveRight = true;
+                PlayerMod pm = defendedPm;
+                if (pm.ControllingGuardian)
+                {
+                    pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3, true);
+                    if (pm.Guardian.KnockedOut)
+                        pm.Guardian.ReviveBoost++;
+                    else
+                    {
+                        if (guardian.AfkCounter < ProtectModeAutoTriggerTime && PlayerWasKnockedOut)
+                            InUse = false;
+                    }
+                    if (!pm.Guardian.BeingCarriedByGuardian)
+                        Action = 0;
+                }
+                else
+                {
+                    defended.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3);
+                    if (pm.KnockedOut)
+                        pm.ReviveBoost++;
+                    else
+                    {
+                        if (guardian.AfkCounter < ProtectModeAutoTriggerTime && PlayerWasKnockedOut)
+                            InUse = false;
+                    }
+                    if (pm.BeingCarriedByGuardian)
+                        Action = 0;
+                }
+            }
+            else if (Action == 0)
             {
                 if (guardian.PlayerMounted || guardian.SittingOnPlayerMount)
                 {
@@ -131,7 +169,7 @@ namespace giantsummon.Companions.Brutus
                 if (!guardian.SittingOnPlayerMount)
                     guardian.MoveDown = true;
                 guardian.OffHandAction = true;
-                PlayerMod pm = defended.GetModPlayer<PlayerMod>();
+                PlayerMod pm = defendedPm;
                 if (pm.ControllingGuardian)
                 {
                     pm.Guardian.AddBuff(ModContent.BuffType<Buffs.Defended>(), 3, true);
@@ -159,7 +197,7 @@ namespace giantsummon.Companions.Brutus
 
         public override void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
         {
-            if (Action == 1 && guardian.SittingOnPlayerMount && !UsingRightArmAnimation)
+            if (Action >= 1 && guardian.SittingOnPlayerMount && !UsingRightArmAnimation)
             {
                 guardian.RightArmAnimationFrame = 1;
             }

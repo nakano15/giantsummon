@@ -886,7 +886,7 @@ namespace giantsummon.Companions
         {
             if (!guardian.DoAction.InUse && guardian.OwnerPos > -1 && (guardian.AfkCounter >= ProtectModeAutoTriggerTime || Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut))
             {
-                guardian.StartNewGuardianAction(new Companions.Brutus.ProtectModeAction(Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut), ProtectModeID);
+                guardian.StartNewGuardianAction(new Brutus.ProtectModeAction(Main.player[guardian.OwnerPos].GetModPlayer<PlayerMod>().KnockedOut), ProtectModeID);
             }
         }
 
