@@ -835,7 +835,7 @@ namespace giantsummon.Companions
                         data.KnockoutAlpha = 1;
                 }
                 //fluffles random haunting script.
-                if (guardian.OwnerPos == -1 && !guardian.UsingFurniture && !guardian.DoAction.InUse && guardian.TargetID == -1 && 
+                if (guardian.OwnerPos == -1 && guardian.TalkPlayerID == -1 && !guardian.UsingFurniture && !guardian.DoAction.InUse && guardian.TargetID == -1 && 
                     Main.rand.Next(300) == 0 && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait) //Needs debugging
                 {
                     List<KeyValuePair<byte, int>> PossibleTargets = new List<KeyValuePair<byte, int>>();

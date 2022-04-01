@@ -477,7 +477,7 @@ namespace giantsummon.Companions
 
         public void TryCarryingSomeone(TerraGuardian guardian, VladimirData data)
         {
-            if (!(guardian.TargetID == -1 && guardian.DoAction.InUse == false && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait && 
+            if (!(guardian.TargetID == -1 && guardian.TalkPlayerID == -1 && guardian.DoAction.InUse == false && guardian.CurrentIdleAction == TerraGuardian.IdleActions.Wait && 
                 Main.rand.Next(350) == 0))
                 return;
             List<int> PotentialNpcs = new List<int>();

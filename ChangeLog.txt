@@ -15,3 +15,8 @@ Nerfed Glenn's recruit npc spawn rate. He should spawn easier now.
 Liebre's recruit npc will no longer have ascending spawn rates depending on times you met him.
 	That will definitelly make it sure that you'll be able to recruit him.
 	He can also now be found during the day.
+Rococo and Blue got sprite changes.
+	One of the changes is that you can now see their eyes.
+Vladimir will no longer try picking up someone, and neither Fluffles will try to haunt someone if they're speaking with the player.
+	Fluffles was actually giving me on the nerves, though.
+Companions will no longer speak about things when they're asleep.

@@ -119,40 +119,46 @@ namespace giantsummon.Companions.Creatures.Fluffles
                         Vector2 HauntPosition = Vector2.Zero;
                         if (TargetPlayer != null)
                         {
-                            if (guardian.ItemAnimationTime == 0)
-                                guardian.Direction = TargetPlayer.direction;
-                            if (guardian.Direction > 0)
-                                MountedPosition.X *= -1;
                             if (Reviving)
+                            {
+                                if (guardian.ItemAnimationTime == 0)
+                                    guardian.Direction = -TargetPlayer.direction;
                                 HauntPosition = TargetPlayer.Center;
+                            }
                             else
                             {
+                                if (guardian.ItemAnimationTime == 0)
+                                    guardian.Direction = TargetPlayer.direction;
                                 HauntPosition = TargetPlayer.position;
-                                HauntPosition.X += TargetPlayer.width * 0.5f;
-                                HauntPosition.Y += TargetPlayer.height + (guardian.Base.SpriteHeight - MountedPosition.Y - 30) * guardian.Scale;
-                                HauntPosition.X += (MountedPosition.X - 6 * guardian.Direction) * guardian.Scale;
                             }
+                            if (guardian.Direction > 0)
+                                MountedPosition.X *= -1;
+                            HauntPosition.X += TargetPlayer.width * 0.5f;
+                            HauntPosition.Y += TargetPlayer.height + (guardian.Base.SpriteHeight - MountedPosition.Y - 30) * guardian.Scale;
+                            HauntPosition.X += (MountedPosition.X - 6 * guardian.Direction) * guardian.Scale;
                             guardian.AddDrawMomentToPlayer(TargetPlayer);
                             TargetPlayer.AddBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.GhostFoxHaunts.FriendlyHaunt>(), 5);
                             Reviving = TargetPlayer.GetModPlayer<PlayerMod>().KnockedOut;
                         }
                         else
                         {
-                            if (guardian.ItemAnimationTime == 0)
-                                guardian.Direction = TargetGuardian.Direction;
-                            if (guardian.Direction > 0)
-                                MountedPosition.X *= -1;
                             if (Reviving)
                             {
-                                HauntPosition = guardian.CenterPosition;
+                                if (guardian.ItemAnimationTime == 0)
+                                    guardian.Direction = -TargetGuardian.Direction;
+                                HauntPosition = TargetGuardian.CenterPosition;
                             }
                             else
                             {
+                                if (guardian.ItemAnimationTime == 0)
+                                    guardian.Direction = TargetGuardian.Direction;
                                 HauntPosition = TargetGuardian.Position;
-                                HauntPosition.X += MountedPosition.X * guardian.Scale - TargetGuardian.Width * 0.2f * guardian.Direction;
-                                //HauntPosition.X += (MountedPosition.X - (TargetGuardian.Width * 0.5f - 8) * guardian.Direction) * guardian.Scale; //- 8
-                                HauntPosition.Y += MountedPosition.Y * guardian.Scale - TargetGuardian.Height * 0.95f;
                             }
+                            if (guardian.Direction > 0)
+                                MountedPosition.X *= -1;
+                            HauntPosition.X += MountedPosition.X * guardian.Scale - TargetGuardian.Width * 0.2f * guardian.Direction;
+                            //HauntPosition.X += (MountedPosition.X - (TargetGuardian.Width * 0.5f - 8) * guardian.Direction) * guardian.Scale; //- 8
+                            HauntPosition.Y += MountedPosition.Y * guardian.Scale - TargetGuardian.Height * 0.95f;
                             guardian.AddDrawMomentToTerraGuardian(TargetGuardian);
                             TargetGuardian.AddBuff(Terraria.ModLoader.ModContent.BuffType<Buffs.GhostFoxHaunts.FriendlyHaunt>(), 5, true);
                             Reviving = TargetGuardian.KnockedOut || TargetGuardian.IsUsingBed;

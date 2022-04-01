@@ -163,9 +163,9 @@ namespace giantsummon
             }
             else
             {
-                if (ShowImportantMessages())
+                if (!tg.IsSleeping && ShowImportantMessages())
                     return;
-                if (tg.ComfortPoints >= tg.MaxComfortExp)
+                if (!tg.IsSleeping && tg.ComfortPoints >= tg.MaxComfortExp)
                 {
                     tg.ComfortPoints = 0;
                     tg.IncreaseFriendshipProgress(1);
@@ -173,11 +173,11 @@ namespace giantsummon
                         tg.Name, 7, 5, new GuardianID[] { tg.MyID });
                     Message = tg.Base.TalkMessage(MainPlayer, tg);
                 }
-                else if (PlayerMod.IsGuardianBirthday(MainPlayer, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
+                else if (!tg.IsSleeping && PlayerMod.IsGuardianBirthday(MainPlayer, tg.ID, tg.ModID) && Main.rand.Next(2) == 0)
                     Message = tg.Base.BirthdayMessage(MainPlayer, tg);
                 else
                 {
-                    if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
+                    if (tg.OwnerPos == -1 && tg.GetTownNpcInfo != null && tg.GetTownNpcInfo.Homeless && !tg.IsSleeping && (tg.IsStarter || tg.FriendshipLevel >= tg.Base.MoveInLevel))
                     {
                         Message = tg.Base.HomelessMessage(MainPlayer, tg);
                     }
