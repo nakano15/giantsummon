@@ -20,3 +20,4 @@ Rococo and Blue got sprite changes.
 Vladimir will no longer try picking up someone, and neither Fluffles will try to haunt someone if they're speaking with the player.
 	Fluffles was actually giving me on the nerves, though.
 Companions will no longer speak about things when they're asleep.
+Vladimir will no longer pickup Large or bigger companions.

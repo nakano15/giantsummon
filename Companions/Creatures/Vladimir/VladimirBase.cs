@@ -491,9 +491,10 @@ namespace giantsummon.Companions
             List<int> PotentialPlayers = new List<int>();
             for (int p = 0; p < 255; p++)
             {
-                if (Main.player[p].active && !guardian.IsPlayerHostile(Main.player[p]) && Main.player[p].velocity.Length() == 0 &&
-                     !PlayerMod.PlayerMountedOnGuardian(Main.player[p]) && !PlayerMod.PlayerControllingGuardian(Main.player[p]) && 
-                     Main.player[p].itemAnimation == 0 && (Main.player[p].Center - guardian.CenterPosition).Length() < 80)
+                if (Main.player[p].active && guardian.Base.Size < GuardianSize.Large && !guardian.IsPlayerHostile(Main.player[p]) && 
+                    Main.player[p].velocity.Length() == 0 && !PlayerMod.PlayerMountedOnGuardian(Main.player[p]) && 
+                    !PlayerMod.PlayerControllingGuardian(Main.player[p]) && Main.player[p].itemAnimation == 0 && 
+                    (Main.player[p].Center - guardian.CenterPosition).Length() < 80)
                 {
                     PotentialPlayers.Add(p);
                 }

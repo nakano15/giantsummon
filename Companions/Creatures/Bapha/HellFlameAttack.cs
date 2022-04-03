@@ -64,7 +64,7 @@ namespace giantsummon.Companions.Creatures.Bapha
                             continue;
                         if (i == 0) tg.LeftArmAnimationFrame = 17 + FrameID;
                         else tg.RightArmAnimationFrame = 17 + FrameID;
-                        Vector2 ProjectileSpawnPosition = tg.GetGuardianLeftHandPosition;
+                        Vector2 ProjectileSpawnPosition = (i == 0 ? tg.GetGuardianLeftHandPosition : tg.GetGuardianRightHandPosition);
                         if (i == 0) tg.LeftArmAnimationFrame = BackupLArmFrame;
                         else tg.RightArmAnimationFrame = BackupRArmFrame;
                         Vector2 ShotDirection = tg.AimDirection - ProjectileSpawnPosition;

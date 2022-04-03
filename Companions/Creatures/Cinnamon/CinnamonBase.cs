@@ -47,8 +47,6 @@ namespace giantsummon.Companions
             AddInitialItem(Terraria.ID.ItemID.LesserHealingPotion, 5);
             AddInitialItem(Terraria.ID.ItemID.CookedFish, 3);
 
-            SleepingOffset = new Point(-16, 0);
-
             //Animation Frames
             StandingFrame = 0;
             WalkingFrames = new int[] { 2, 3, 4, 5, 6, 7, 8, 9 };

@@ -1496,7 +1496,7 @@ namespace giantsummon.Companions
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
-            if (guardian.UsingFurniture)
+            if (guardian.UsingFurniture || (BodyPartID == 2 && guardian.OffHandAction))
                 return;
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
             bool UsingWeapon = data.HoldingWeaponTime > 0 || (guardian.OffHandAction && guardian.SelectedOffhand > -1), 
