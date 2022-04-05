@@ -89,6 +89,15 @@ namespace giantsummon.Companions
             LeftHandPoints.AddFramePoint2x(30, 57, 69);
             LeftHandPoints.AddFramePoint2x(31, 57, 69);
 
+            LeftHandPoints.AddFramePoint2x(37, 23, 37);
+            LeftHandPoints.AddFramePoint2x(38, 51, 25);
+            LeftHandPoints.AddFramePoint2x(39, 72, 69);
+            LeftHandPoints.AddFramePoint2x(40, 71, 73);
+            LeftHandPoints.AddFramePoint2x(41, 71, 73);
+            LeftHandPoints.AddFramePoint2x(42, 71, 73);
+
+            LeftHandPoints.AddFramePoint2x(43, 26, 51);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(17, 63, 28);
             RightHandPoints.AddFramePoint2x(18, 74, 40);
@@ -99,6 +108,8 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(29, 66, 66);
             RightHandPoints.AddFramePoint2x(30, 66, 66);
             RightHandPoints.AddFramePoint2x(31, 66, 66);
+
+            RightHandPoints.AddFramePoint2x(43, 73, 51);
 
             //Shoulders
             MountShoulderPoints.DefaultCoordinate2x = new Point(42, 44);
@@ -116,6 +127,11 @@ namespace giantsummon.Companions
                 Retreat = true;
             if (Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) > 600)
                 Approach = true;
+            if(Owner.CanUseSubAttack(1) && Math.Abs(TargetPosition.X + TargetWidth * 0.5f - Owner.Position.X) < 120 * Owner.Scale + TargetWidth * 0.5f &&
+                Math.Abs(TargetPosition.Y + TargetHeight * 0.5f - Owner.CenterY) < 120 * Owner.Scale + TargetHeight * 0.5f)
+            {
+                return 2;
+            }
             return 0;
             //return base.GuardianSubAttackBehaviorAI(Owner, tactic, TargetPosition, TargetVelocity, TargetWidth, TargetHeight, ref Approach, ref Retreat, ref Jump, ref Couch, out DefaultBehavior);
         }
@@ -164,7 +180,7 @@ namespace giantsummon.Companions
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
-            if (guardian.SittingOnPlayerMount || (BodyPartID == 1 && TerraGuardian.UsingLeftArmAnimation) || (BodyPartID == 2 && TerraGuardian.UsingRightArmAnimation))
+            if (guardian.SittingOnPlayerMount || (Frame != ReviveFrame && (BodyPartID == 1 && TerraGuardian.UsingLeftArmAnimation) || (BodyPartID == 2 && TerraGuardian.UsingRightArmAnimation)))
                 return;
             if (guardian.Velocity.Y != 0 && guardian.WingMaxFlightTime == 0)
             {
@@ -217,12 +233,10 @@ namespace giantsummon.Companions
                         break;
                     case RevivingFrameID:
                         {
-                            const float AnimationDuration = 6;
-                            if (guardian.AnimationTime >= AnimationDuration * 4)
-                                guardian.AnimationTime -= AnimationDuration * 4;
-                            byte PickedFrame = (byte)(guardian.AnimationTime / AnimationDuration);
-                            if (PickedFrame == 3)
-                                PickedFrame = 1;
+                            const float AnimationFrameDuration = 6;
+                            if (guardian.AnimationTime >= AnimationFrameDuration * 4)
+                                guardian.AnimationTime -= AnimationFrameDuration * 4;
+                            byte PickedFrame = (byte)(guardian.AnimationTime / AnimationFrameDuration);
                             Frame = PickedFrame + RevivingFrameID;
                         }
                         break;
@@ -294,15 +308,15 @@ namespace giantsummon.Companions
                 TerraGuardian.DrawBehind.Clear();
                 return;
             }
-            if (guardian.LeftArmAnimationFrame >= 14 && guardian.LeftArmAnimationFrame < 18)
+            if (guardian.LeftArmAnimationFrame >= 14 && guardian.LeftArmAnimationFrame < 17)
             {
                 FlamesEffect = (byte)(guardian.LeftArmAnimationFrame - 14);
             }
-            else if (guardian.BodyAnimationFrame >= 28 && guardian.BodyAnimationFrame < 33)
+            else if (guardian.LeftArmAnimationFrame >= 28 && guardian.LeftArmAnimationFrame < 32)
             {
                 FlamesEffect = (byte)(guardian.LeftArmAnimationFrame - 28 + 10);
             }
-            else if (guardian.BodyAnimationFrame >= 21 && guardian.BodyAnimationFrame < 29)
+            else if (guardian.BodyAnimationFrame >= 21 && guardian.BodyAnimationFrame < 28)
             {
                 FlamesEffect = (byte)(guardian.BodyAnimationFrame - 21 + 3);
             }

@@ -26,7 +26,7 @@ namespace giantsummon.Companions.Creatures.Bapha
         {
             int Damage = (IsAwakenedVersion ? 40 : 20);
             if (tg.SelectedItem > -1)
-                Damage += (int)(tg.Inventory[tg.SelectedItem].damage * 0.75f);
+                Damage += (int)(tg.Inventory[tg.SelectedItem].damage * (IsAwakenedVersion ? 1.5f : 1.1f));
             Damage = (int)(Damage * tg.MagicDamageMultiplier);
             return Damage;
         }
@@ -74,7 +74,7 @@ namespace giantsummon.Companions.Creatures.Bapha
                         int Proj = IsAwakenedVersion ? Terraria.ModLoader.ModContent.ProjectileType<Projectiles.CrimsonFlameProjectile>() : Terraria.ModLoader.ModContent.ProjectileType<Projectiles.HellFlame>();
                         int resultproj = Projectile.NewProjectile(ProjectileSpawnPosition, ShotDirection,
                             Proj,
-                            Damage, 1.2f, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer));
+                            Damage, 6, (tg.OwnerPos > -1 ? tg.OwnerPos : Main.myPlayer));
                         tg.SetProjectileOwnership(resultproj);
                         Main.projectile[resultproj].scale = tg.Scale;
                     }
@@ -95,12 +95,14 @@ namespace giantsummon.Companions.Creatures.Bapha
         {
             if(data.Step < 3)
             {
-                /*tg.BodyAnimationFrame = */tg.LeftArmAnimationFrame = tg.RightArmAnimationFrame = data.Step + 14;
+                if (!UsingLeftArm) tg.LeftArmAnimationFrame = data.Step + 14;
+                if(!UsingRightArm)tg.RightArmAnimationFrame = data.Step + 14;
             }
             else
             {
                 int Frame = 17 + FrameID;
-                tg.LeftArmAnimationFrame = tg.RightArmAnimationFrame = Frame;
+                if (!UsingLeftArm) tg.LeftArmAnimationFrame = Frame;
+                if (!UsingRightArm) tg.RightArmAnimationFrame = Frame;
             }
         }
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 
 namespace giantsummon.Companions.Creatures.Bapha
 {
@@ -29,7 +30,7 @@ namespace giantsummon.Companions.Creatures.Bapha
                         data.ChangeStep();
                         Frame = 0;
                         FrameTime = 0;
-                        AwakenedVersion = Companions.BaphaBase.IsAwakened(tg);
+                        AwakenedVersion = BaphaBase.IsAwakened(tg);
                     }
                     break;
                 case 1:
@@ -49,9 +50,33 @@ namespace giantsummon.Companions.Creatures.Bapha
                         }
                         if (Hit)
                         {
-                            Rectangle Rect = new Rectangle(0, 0, 200, 200);
-                            Rect.X = (int)(tg.Position.X - 90);
-                            Rect.Y = (int)(tg.Position.Y - 90);
+                            Rectangle Rect = new Rectangle(0, 0, (int)(240 * tg.Scale), (int)(240 * tg.Scale));
+                            Rect.X = (int)(tg.Position.X - (tg.LookingLeft ? Rect.Width * 0.55f : Rect.Width * 0.45f));
+                            Rect.Y = (int)(tg.CenterY - Rect.Height * 0.45f);
+                            int Damage = AwakenedVersion ? 50 : 25;
+                            if (tg.SelectedItem > -1)
+                            {
+                                Damage += (int)(tg.Inventory[tg.SelectedItem].damage * ((float)tg.Inventory[tg.SelectedItem].useAnimation / tg.Inventory[tg.SelectedItem].useTime) * (AwakenedVersion ? 2 : 1.5f));
+                            }
+                            Damage = (int)(Damage * tg.MeleeDamageMultiplier);
+                            GuardianSpecialAttackData.AffectedTargets[] targets = AreaDamage(tg, Damage, AwakenedVersion ? 12 : 8, Rect, BlockConsecutiveHits: false);
+                            int BuffID = AwakenedVersion ? Terraria.ModLoader.ModContent.BuffType<Buffs.CrimsonConflagration>() : Terraria.ID.BuffID.OnFire;
+                            foreach(GuardianSpecialAttackData.AffectedTargets t in targets)
+                            {
+                                switch (t.Target)
+                                {
+                                    case GuardianSpecialAttackData.AffectedTargets.TargetTypes.Player:
+                                        Main.player[t.TargetID].AddBuff(BuffID, 5 * 60);
+                                        break;
+                                    case GuardianSpecialAttackData.AffectedTargets.TargetTypes.NPC:
+                                        Main.npc[t.TargetID].AddBuff(BuffID, 5 * 60);
+                                        Main.npc[t.TargetID].HitEffect(tg.Direction, t.Damage);
+                                        break;
+                                    case GuardianSpecialAttackData.AffectedTargets.TargetTypes.TerraGuardian:
+                                        MainMod.ActiveGuardians[t.TargetID].AddBuff(BuffID, 5 * 60);
+                                        break;
+                                }
+                            }
                         }
                     }
                     break;
@@ -71,13 +96,13 @@ namespace giantsummon.Companions.Creatures.Bapha
             if (data.Step == 1)
             {
                 Texture2D blade = tg.Base.sprites.GetExtraTexture(BaphaBase.HellSplitterTextureID);
-                Vector2 Pivot = new Vector2(8, 95);
+                Vector2 Pivot = new Vector2(10, 102);
                 if (tg.LookingLeft)
                     Pivot.X = 88 - Pivot.X;
-                float Rotation = MathHelper.ToRadians(-90) + (float)(FrameTime + Frame * 6) * (1f / (6 * 6)) * (MathHelper.ToRadians(135f));
+                float Rotation = (MathHelper.ToRadians(-90) + (float)(FrameTime + Frame * 6) * (1f / (6 * 6)) * (MathHelper.ToRadians(210f))) * tg.Direction;
 
-                GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, blade, tg.GetGuardianLeftHandPosition, new Rectangle(Frame * 88, AwakenedVersion ? 0 : 100, 88, 100), Color.White, Rotation, Pivot, tg.Scale, tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
-                tg.Base.InjectTextureBefore(GuardianDrawData.TextureType.TGLeftArm, gdd);
+                GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, blade, tg.GetGuardianLeftHandPosition - Main.screenPosition, new Rectangle(Frame * 88, AwakenedVersion ? 100 : 0, 88, 100), Color.White, Rotation, Pivot, tg.Scale, tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
+                tg.Base.InjectTextureAfter(GuardianDrawData.TextureType.TGRightArm, gdd);
             }
         }
     }

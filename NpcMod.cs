@@ -1504,6 +1504,7 @@ namespace giantsummon
                 PlayerMod pm = Main.LocalPlayer.GetModPlayer<PlayerMod>();
                 foreach(QuestData qd in pm.QuestDatas)
                 {
+                    QuestBase.Data = qd;
                     if(!qd.IsInvalid)
                         qd.GetBase.OnMobKill(npc);
                 }

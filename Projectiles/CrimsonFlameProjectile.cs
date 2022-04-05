@@ -25,6 +25,7 @@ namespace giantsummon.Projectiles
             projectile.height = 22;
             projectile.friendly = true;
             projectile.hostile = false;
+            projectile.magic = true;
             projectile.timeLeft = 180;
             projectile.alpha = 255;
             projectile.light = 1.15f;
