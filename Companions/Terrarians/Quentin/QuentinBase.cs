@@ -72,7 +72,10 @@ namespace giantsummon.Companions
             Texture2D texture = sprites.GetExtraTexture(HeadTextureID);
             Vector2 Position = DrawPosition;
             Position.Y -= 2;
-            for(int i = gdds.Count - 1; i >= 0; i--)
+            byte SkinID = guardian.SkinID;
+            if (TerraGuardian.HeadSlot > 0)
+                SkinID = 1;
+            for (int i = gdds.Count - 1; i >= 0; i--)
             {
                 if (gdds[i].textureType == GuardianDrawData.TextureType.PlEye ||
                     gdds[i].textureType == GuardianDrawData.TextureType.PlEyeWhite)
@@ -88,7 +91,7 @@ namespace giantsummon.Companions
                         gdds.Add(gdd);
                     else
                         gdds.Insert(i + 1, gdd);
-                    rect.Y = rect.Height * (guardian.SkinID == 1 ? 2 : 1);
+                    rect.Y = rect.Height * (SkinID == 1 ? 2 : 1);
                     gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
                          Color.White, 0f, Origin, Scale, seffect);
                     if (i + 2 >= gdds.Count)
@@ -106,11 +109,14 @@ namespace giantsummon.Companions
             Vector2 NewOrigin = new Vector2(Origin.X, Origin.Y);
             Position.Y -= 2 * guardian.GravityDirection;
             //Position.X += 2 * guardian.Direction;
+            byte SkinID = guardian.SkinID;
+            if (TerraGuardian.HeadSlot > 0)
+                SkinID = 1;
             if (guardian.ItemAnimationTime == 0 && 
                 ((guardian.LeftArmAnimationFrame >= 7 && guardian.LeftArmAnimationFrame < 10) ||
                 (guardian.LeftArmAnimationFrame >= 14 && guardian.LeftArmAnimationFrame < 17)))
                 Position.Y -= 2 * guardian.GravityDirection;
-            rect.Y = rect.Height * (guardian.SkinID == 1 ? 2 : 1);
+            rect.Y = rect.Height * (SkinID == 1 ? 2 : 1);
             Texture2D texture = sprites.GetExtraTexture(HeadTextureID);
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
                 color, Rotation, NewOrigin, Scale, seffect);

@@ -869,6 +869,7 @@ namespace giantsummon
                     PlayerHelpedKillBounty(Main.player[i]);
                 }
             }
+            TargetMonsterSpawnPosition = -1;
         }
 
         public static byte GetBountyState(Player player)

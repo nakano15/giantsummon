@@ -1350,7 +1350,6 @@ namespace giantsummon
 
         public TerraGuardian(int CreateByType = -1, string ModID = "")
         {
-            //Main.NewText("Created ID: " + CreateByType + " Mod: " + ModID);
             AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, 60);
             if (CreateByType != -1)
             {
@@ -1677,7 +1676,6 @@ namespace giantsummon
                 SaySomething(GuardianMouseOverAndDialogueInterface.MessageParser(Mes, this));
                 if (!IsFoodBuff)
                 {
-                    //MainMod.SetIdleCommentCooldown();
                     AddCooldown(GuardianCooldownManager.CooldownType.BuffCommentCooldown, Main.rand.Next(45 * 60, 80 * 60));
                 }
             }
@@ -6926,7 +6924,7 @@ namespace giantsummon
                     for(int y = 0; y < 3; y++)
                     {
                         Tile tile = MainMod.GetTile(MyX + x * CheckDirection, MyY + y);
-                        if (tile.active() && Main.tileSolid[tile.type])
+                        if (tile.active() && Main.tileSolid[tile.type] && !Terraria.ID.TileID.Sets.Platforms[tile.type])
                         {
                             return;
                         }

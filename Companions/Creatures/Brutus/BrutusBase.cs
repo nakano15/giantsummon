@@ -107,7 +107,7 @@ namespace giantsummon.Companions
             LeftHandPoints.AddFramePoint2x(8, 25, 31, 0, true);
             LeftHandPoints.AddFramePoint2x(9, 25, 28, 0, true);
 
-            LeftHandPoints.AddFramePoint2x(10, 16, 4);
+            LeftHandPoints.AddFramePoint2x(10, 17, 17);
             LeftHandPoints.AddFramePoint2x(11, 37, 12);
             LeftHandPoints.AddFramePoint2x(12, 43, 24);
             LeftHandPoints.AddFramePoint2x(13, 37, 36);
@@ -116,7 +116,7 @@ namespace giantsummon.Companions
             LeftHandPoints.AddFramePoint2x(17, 46, 20);
             LeftHandPoints.AddFramePoint2x(18, 50, 45);
 
-            LeftHandPoints.AddFramePoint2x(20, 15, 11);
+            LeftHandPoints.AddFramePoint2x(20, 16, 12);
             LeftHandPoints.AddFramePoint2x(21, 39, 20);
             LeftHandPoints.AddFramePoint2x(22, 39, 37);
 
@@ -133,16 +133,16 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(7, 39, 29, 0.7853981633974483f, true);
             RightHandPoints.AddFramePoint2x(8, 39, 29, 0.7853981633974483f, true);
 
-            RightHandPoints.AddFramePoint2x(10, 19, 4);
-            RightHandPoints.AddFramePoint2x(11, 42, 12);
-            RightHandPoints.AddFramePoint2x(12, 46, 24);
+            RightHandPoints.AddFramePoint2x(10, 23, 7);
+            RightHandPoints.AddFramePoint2x(11, 41, 12);
+            RightHandPoints.AddFramePoint2x(12, 46, 25);
             RightHandPoints.AddFramePoint2x(13, 40, 36);
 
             RightHandPoints.AddFramePoint2x(16, 36, 18);
             RightHandPoints.AddFramePoint2x(17, 45, 32);
             RightHandPoints.AddFramePoint2x(18, 51, 47);
 
-            RightHandPoints.AddFramePoint2x(20, 18, 11);
+            RightHandPoints.AddFramePoint2x(20, 20, 12);
             RightHandPoints.AddFramePoint2x(21, 42, 20);
             RightHandPoints.AddFramePoint2x(22, 42, 37);
 
@@ -170,19 +170,19 @@ namespace giantsummon.Companions
             WingPosition.AddFramePoint2x(22, 25, 44);
 
             //Headgear Position
-            HeadVanityPosition.DefaultCoordinate2x = new Point(26, 15);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(30 - 2, 14);
             HeadVanityPosition.AddFramePoint2x(16, 16 + 1, 16);
             HeadVanityPosition.AddFramePoint2x(17, 32 + 1, 17);
             HeadVanityPosition.AddFramePoint2x(18, 41 + 1, 28);
 
-            HeadVanityPosition.AddFramePoint2x(19, 25 + 1, 22);
-            HeadVanityPosition.AddFramePoint2x(20, 25 + 1, 22);
-            HeadVanityPosition.AddFramePoint2x(21, 25 + 1, 22);
-            HeadVanityPosition.AddFramePoint2x(22, 25 + 1, 22);
+            HeadVanityPosition.AddFramePoint2x(19, 30 - 2, 21);
+            HeadVanityPosition.AddFramePoint2x(20, 30 - 2, 21);
+            HeadVanityPosition.AddFramePoint2x(21, 30 - 2, 21);
+            HeadVanityPosition.AddFramePoint2x(22, 30 - 2, 21);
 
-            HeadVanityPosition.AddFramePoint2x(24, 26, 23);
+            HeadVanityPosition.AddFramePoint2x(24, 27 - 2, 21);
 
-            HeadVanityPosition.AddFramePoint2x(26, 41, 30);
+            HeadVanityPosition.AddFramePoint2x(26, 43 - 2, 31);
 
             SkinsAndOutfits();
 			TopicList();

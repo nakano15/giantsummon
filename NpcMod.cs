@@ -768,6 +768,7 @@ namespace giantsummon
                     {
                         if (MainMod.UsingGuardianNecessitiesSystem)
                             shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Consumable.FirstAidKit>(), true);
+                        shop.item[nextSlot++].SetDefaults(ModContent.ItemType<Items.Misc.BirthdayPresent>(), true);
                     }
                     break;
                 case NPCID.Cyborg:
