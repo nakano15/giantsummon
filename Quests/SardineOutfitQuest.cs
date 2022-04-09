@@ -87,7 +87,7 @@ namespace giantsummon.Quests
         public override List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
         {
             List<DialogueOption> Options = base.AddDialogueOptions(IsTalkDialogue, GuardianID, GuardianModID);
-            if (IsTalkDialogue)
+            if (IsTalkDialogue && GuardianID == GuardianBase.Sardine && GuardianModID == MainMod.mod.Name)
             {
                 OutfitQuestData data = (OutfitQuestData)Data;
                 if (data.QuestStep > 0)
@@ -120,7 +120,7 @@ namespace giantsummon.Quests
         public override Action ImportantDialogueMessage(QuestData rawdata, TerraGuardian tg, int GuardianID, string GuardianModID)
         {
             OutfitQuestData data = (OutfitQuestData)rawdata;
-            if(tg.ID == GuardianBase.Sardine && tg.ModID == MainMod.mod.Name)
+            if(GuardianID == GuardianBase.Sardine && GuardianModID == MainMod.mod.Name)
             {
                 if(tg.FriendshipLevel >= 3 && data.QuestStep == 0)
                 {

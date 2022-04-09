@@ -73,6 +73,7 @@ namespace giantsummon.Npcs
                         RaceStartDelay--;
                         if(RaceStartDelay == 0)
                         {
+                            Main.player[Main.myPlayer].ClearBuff(Terraria.ID.BuffID.Frozen);
                             SayMessage("*Go!*");
                         }
                     }

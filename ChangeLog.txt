@@ -6,8 +6,9 @@ Changed the name of the seasons.
     Autumn => Harvest,
     Winter => Hibernate
     Spring >= Blooming
-Fluffles can now haunt npcs, terraguardians and players around where she lives.
-	You can also ask her to haunt someone on your team, if she's your follower.
+Fluffles can now haunt npcs, terraguardians and players around where she's idling.
+	Yes, you can ask her to stop haunting someone, but I can't assure you that she wont do that for long.
+	You can also ask her to mount the back of someone on your team, if she's your follower.
 Added notifications for when quests starts or ends.
 Added Stay quest to the mod.
 	Bree will trigger it depending on friendship level.
@@ -23,3 +24,6 @@ Companions will no longer speak about things when they're asleep.
 Vladimir will no longer pickup Large or bigger companions.
 The Merchant now sells Birthday Presents.
 The bounty target will no longer haunt you after you killed it.
+Trying to race against the Cheetah Guardian will now clear the Frozen debuff when the race starts.
+Added Bash the King! quest to the mod.
+	Sardine will trigger it depending on friendship level.

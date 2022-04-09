@@ -520,13 +520,19 @@ namespace giantsummon.Npcs
                             break;
                         case SceneIds.BreeSaysNoToButs:
                             {
-                                SayMessage("No buts! We are going back now! I just need to remember which world we...");
+                                SayMessage("No buts! We are going back now! I just need to remember which world we-");
+                                ChangeScene(SceneIds.BreeTakesAPauseToRealizeSheForgotToo);
+                            }
+                            break;
+                        case SceneIds.BreeTakesAPauseToRealizeSheForgotToo:
+                            {
+                                SayMessage("...");
                                 ChangeScene(SceneIds.BreeForgotTheWorldTheyLived);
                             }
                             break;
                         case SceneIds.BreeForgotTheWorldTheyLived:
                             {
-                                SayMessage("Oh no! I can't believe it! I forgot which world we lived!");
+                                SayMessage("This can't be happening... I forgot which world we lived on!");
                                 ChangeScene(SceneIds.SardineLaughsOfBree);
                             }
                             break;
@@ -969,6 +975,7 @@ namespace giantsummon.Npcs
             BreeTalksAboutTakingSardineBackWithHer,
             SardineTriesTheButs,
             BreeSaysNoToButs,
+            BreeTakesAPauseToRealizeSheForgotToo,
             BreeForgotTheWorldTheyLived,
             SardineLaughsOfBree,
             BreeAgrees,
