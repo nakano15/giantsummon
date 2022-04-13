@@ -167,8 +167,8 @@ namespace giantsummon.Companions
 
         public void SetupOutfits()
         {
-            AddOutfit(RedHoodOutfitID, "Red Hood Traveller", delegate (GuardianData gd, Player player) { return false; }); //TODO - Need to add alternative way of getting those outfits.
-            AddOutfit(CloaklessOutfitID, "Cloakless Traveller Outfit", delegate (GuardianData gd, Player player) { return false; });
+            AddOutfit(RedHoodOutfitID, "Red Hood Traveller", delegate (GuardianData gd, Player player) { return gd.FriendshipLevel >= 5; }); //TODO - Need to add alternative way of getting those outfits.
+            AddOutfit(CloaklessOutfitID, "Cloakless Traveller Outfit", delegate (GuardianData gd, Player player) { return gd.FriendshipLevel >= 5; });
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)

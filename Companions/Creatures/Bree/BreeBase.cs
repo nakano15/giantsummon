@@ -138,7 +138,7 @@ namespace giantsummon.Companions
         {
             AddSkin(BaglessSkinID, "Bagless", delegate (GuardianData gd, Player player) //TODO - Need alternative way of getting this skin.
             {
-                return false;
+                return Quests.BreeStayQuest.IsThisQuestCompleted();
             });
             AddSkin(WitchSkinID, "Witch Body", delegate (GuardianData gd, Player player)
             {

@@ -79,6 +79,11 @@ namespace giantsummon.Quests
             return data.QuestStep == 3;
         }
 
+        public static bool IsThisQuestCompleted()
+        {
+            return PlayerMod.GetQuestData(Main.LocalPlayer, Quests.TgQuestContainer.BreeStayQuest).IsQuestCompleted;
+        }
+
         public override void UpdatePlayer(Player player, QuestData rawdata)
         {
             BreeStayQuestData data = (BreeStayQuestData)rawdata;

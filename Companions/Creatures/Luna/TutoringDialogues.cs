@@ -29,7 +29,7 @@ namespace giantsummon.Companions.Luna
             Dialogue.AddOption("About Friendship Rank.", AboutFriendshipRank, true);
             Dialogue.AddOption("About Buddy TerraGuardian.", AboutBuddyGuardian, true);
             Dialogue.AddOption("About Skills.", AboutTerraGuardiansSkills, true);
-            Dialogue.AddOption("About Companions Living in my World.", AboutCompanionLivingInTheWorld);
+            Dialogue.AddOption("About Companions Living in my World.", AboutCompanionLivingInTheWorld, true);
             Dialogue.AddOption("About Other kinds of TerraGuardians.", AboutDemiTerraGuardians, true);
 
             //After picking what you want.

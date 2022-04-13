@@ -84,6 +84,11 @@ namespace giantsummon.Quests
             return data.QuestStep == 5;
         }
 
+        public static bool IsThisQuestCompleted()
+        {
+            return PlayerMod.GetQuestData(Main.LocalPlayer, Quests.TgQuestContainer.SardineOutfitQuest).IsQuestCompleted;
+        }
+
         public override List<DialogueOption> AddDialogueOptions(bool IsTalkDialogue, int GuardianID, string GuardianModID)
         {
             List<DialogueOption> Options = base.AddDialogueOptions(IsTalkDialogue, GuardianID, GuardianModID);

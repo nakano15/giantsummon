@@ -134,7 +134,7 @@ namespace giantsummon.Companions
         {
             AddOutfit(1, "Cait Sith", delegate(GuardianData gd, Player player) //TODO - Need alternative way of getting this outfit.
             {
-                return false;
+                return Quests.SardineOutfitQuest.IsThisQuestCompleted();
             }, true);
         }
 

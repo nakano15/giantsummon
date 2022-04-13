@@ -308,7 +308,7 @@ namespace giantsummon.Companions
 
         public void SkinsAndOutfits()
         {
-            AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return false; }); //TODO - Need to add alternative way of getting this outfit.
+            AddOutfit(1, "Royal Guard Outfit", delegate(GuardianData gd, Player player) { return gd.FriendshipLevel >= 5; }); //TODO - Need to add alternative way of getting this outfit.
         }
 
         public override string MountUnlockMessage
