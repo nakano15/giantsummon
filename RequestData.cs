@@ -182,31 +182,59 @@ namespace giantsummon
                 RewardPosition = 2;
             string RewardString = "";
             if (Rewards[RewardPosition].item.type != 0)
-                RewardString = Rewards[RewardPosition].item.HoverName + " and ";
+                RewardString = Rewards[RewardPosition].item.HoverName;
             int p = 0, g = 0, s = 0, c = Rewards[RewardPosition].value;
-            if (c >= 100)
-            {
-                s += c / 100;
-                c -= s * 100;
-            }
-            if (s >= 100)
-            {
-                g += s / 100;
-                s -= g * 100;
-            }
-            if (g >= 100)
-            {
-                p += g / 100;
-                g -= p * 100;
-            }
-            if (p > 0)
-                RewardString += p + "p ";
-            if (g > 0)
-                RewardString += g + "g ";
-            if (s > 0)
-                RewardString += s + "s ";
             if (c > 0)
-                RewardString += c + "c";
+            {
+                RewardString += " and ";
+                if (c >= 100)
+                {
+                    s += c / 100;
+                    c -= s * 100;
+                }
+                if (s >= 100)
+                {
+                    g += s / 100;
+                    s -= g * 100;
+                }
+                if (g >= 100)
+                {
+                    p += g / 100;
+                    g -= p * 100;
+                }
+                bool First = true;
+                if (p > 0)
+                {
+                    RewardString += p + " platinum";
+                    First = false;
+                }
+                if (g > 0)
+                {
+                    if (!First)
+                        RewardString += ", ";
+                    First = false;
+                    RewardString += g + " gold";
+                }
+                if (s > 0)
+                {
+                    if (!First)
+                        RewardString += ", ";
+                    First = false;
+                    RewardString += s + "silver";
+                }
+                if (c > 0)
+                {
+                    if (!First)
+                        RewardString += ", ";
+                    First = false;
+                    RewardString += c + " copper";
+                }
+                RewardString += "coins";
+            }
+            if (RewardString == "")
+                RewardString = "Nothing.";
+            else
+                RewardString += ".";
             return RewardString;
         }
 

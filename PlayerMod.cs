@@ -278,7 +278,7 @@ namespace giantsummon
             }
         }
         private string Nickname = null;
-        public string GetNickname { get { if (Nickname == null) return "Terrarian"; return Nickname; } set { Nickname = value; } }
+        public string GetNickname { get { if (Nickname == null) { return (MainMod.ReferCharacterByName ? player.name : "Terrarian"); } return Nickname; } set { Nickname = value; } }
         public bool ReceivedFoodFromMinerva = false;
         public float BuddiesModeEffective = 1f;
 

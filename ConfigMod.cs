@@ -25,6 +25,11 @@ namespace giantsummon
         [DefaultValue(PlayerIndex.Two)]
         public PlayerIndex Control2P { get { return MainMod.controlPort; } set { MainMod.controlPort = value; } }
 
+        [Label("Companions speaks of me by my name?")]
+        [Tooltip("This makes so companions reffer to your character by your character name, instead of Terrarian nickname, if there isn't any set.")]
+        [DefaultValue(false)]
+        public bool ReferPlayerByName { get { return MainMod.ReferCharacterByName; } set { MainMod.ReferCharacterByName = value; } }
+
         [Label("Allow guardians to idle easier when near town npcs?")]
         [Tooltip("Guardians will take less longer to start their Idle AI when you are stopped in a place with town npcs nearby.")]
         [DefaultValue(true)]

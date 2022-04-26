@@ -13176,7 +13176,7 @@ namespace giantsummon
                         }
                         else
                         {
-                            Frame = 2;
+                            Frame = 3;
                             AnimationFrame = Base.ItemUseFrames[3];
                         }
                     }

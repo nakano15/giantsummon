@@ -1,7 +1,3 @@
-﻿Changed mod icon.
-Fixed a softlock that would happen if you ask Luna about the companions living in your world.
-Outfits from Brutus and Blue can be unlocked if they pass friendship level 5.
-	I don't think I'll add quests for them on this version of the mod.
-Bree and Sardine outfits will now correctly be unlocked after the quest is done.
-Increased the maximum number of extra companion followers to 8.
-	Alongside leader, you now can have 9 companions following you.
+﻿Fixed a bug where companions couldn't do an entire swing with their one handed weapons.
+Reduced the amount of distance necessary to travel to complete travelling requests.
+Added an option to make companions reffer to your character by name, instead of Terrarian nickname, if there's none set.
