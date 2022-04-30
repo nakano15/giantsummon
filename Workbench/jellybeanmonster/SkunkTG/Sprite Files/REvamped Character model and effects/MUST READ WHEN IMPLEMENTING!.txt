@@ -1,0 +1,139 @@
+Tweaks, Additions,removals:
+> means has changed
+Initial Stats:
+Hp- 150>250
+Mp- 50>100
+
+Life Crystal Bonus-25>45
+Life fruit bonus - 5>10
+mana crystal bonus - 30>35
+
+Weapon:
+Default Stench's Saber(Yegg)(no gemstone equiped)
+> base damage- 15>25
+
+(NEW)Laser Pistol(replaces arm blaster as ranged weapon)
+>base damage- 5>15
+>any ranged weapon equiped increases damage by a flat amount additionally.example:Base(15)+ equiped weapon(25)= 40
+>very fast use rate
+>mana cost 2>1
+-use my edited version of phoneix blaster
+projectile info:
+-projectile mimics "space gun" projectile(Highest Velocity)
+>(REMOVE) the current health damage bonus all together(that was op as hell anyway)
+-(new) ignores 80% of armor instead
+-use my edited version of space gun projectile
+
+(New)Group Passive:
+Phantom Crew member- Captain Stench has recognized you as a ally and grants you with +10% movement speed and 5% dodge chance
+>applies to players and other companions
+
+(REMOVE)slow fall > (Tweaked)only negate fall damage(Horse shoe effect)
+
+Gemstone infusions:
+
+Amethyst
+(New)>Changed vfx of projectile
+(New)>now fires 3 purple crescent wave projectiles after each swing of the slash combination attack that mimics the "flying dragon" weapon
+projectile info:
+>each projectile does 80% of total damage
+>knock value- 8
+>velocity- 17
+>projectile uses afterimage effect
+>use gemAmethysts dust effect 
+>Light source
+(everything else stays the same for this gemstone.Contact me if needed)
+
+Topaz
+(tweak)>changed projectile vfx slighty
+(Tweaked)> Sends 2 topaz shards per "slash combination" totaling 6 projectiles overall
+projectile info:
+>projectiles deal 90% of total damage 
+>projectiles peirce enemies and additionaly blocks now
+>velocity> 18
+>cuts enemies defense by 15%>30% per projectile for 5 seconds
+Passive description ingame- attacks send enemies flying backwards at the cost of slower attack speed.
+Gp description description ingame- send out topaz shards that pierce and lowers enemies defense. 
+(everything else stays the same for this gemstone)
+
+Sapphire
+(New)>completly changed projectile to now be Electric Bolt("MartianTurretBolt") which when making contact with anything spawns a "electrosphere" projectile
+>1 electrosphere missle is fired apon each swing of "slash combination" totaling 3 projectiles
+>saber damage reduction -20%>-10%
+>sword attacks gain 1>2 mana per swing
+(New)>sword attacks apply electrify debuff
+Projectile info:
+-does 50% of total damage
+Passive description ingame- attacks become a lot faster at the cost of some damage
+Gp description description ingame- send forth electrospheres that slow and damage enemies.
+(everything else stays the same for this gemstone.Contact me if needed)
+
+Ruby
+(New)> Now sends out a red typhoon projectile that functions like its ingame counterpart mostly aside from some changes.
+(REMOVED)sweet spot and whip
+(REMOVED)old lifesteal animation that played when stench did damage 
+>1 typhoon is fired apon each swing of "slash combination" totaling 3 projectiles
+projectile info:
+>each projectile does 25% of total damage
+>each projectile heals for 2% of damage done   
+-use Life Drain (235) particle effect around stench to show she is being healed. 
+Passive description ingame- attacks gain life steal.
+Gp description description ingame- flings out blood sickles that do damage and life steal from enemies.
+(everything else mostly stays the same for this gemstone)
+
+
+Emerald
+(tweaked)changed projectile to a green "WeatherPainShot" from ingame 
+>1 tornado is fired apon each swing of "slash combination" totaling 3 projectiles
+Projectile info:
+-projectile damage scales with 25%>75% of total damage 
+-mimics vanilla "WeatherPainShot" behaviour 
+Passive description ingame- Gives High Crit chance on attacks
+Gp description description ingame- sends out tornados that always deal critical hits scaling to weapon equipeds.
+(everything else stays the same for this gemstone.Contact me if needed)
+
+(New)Amber
+Gp- Each swing from "Slash Combination" spawns edited blood thorn ("SharpTears") projectile which mimics vanilla blood thorn behaviour.
+>1 amber thorn projectile is spawned by each swing of "slash combination" totaling 3 projectiles
+>Regular attacks with this weapon infusion spawns 1-4 friendly bees to attack foes just like bee keeper.(The bees spawned deal 50% of total damage)
+Projectile info:
+-does 80% of total weapon damage
+-use my color swaped blood thorn named "AmberThorns"
+-Scale to be 2x as big as a normal blood thorn with bigger hitbox
+-use "GemAmber" dust effect as a substitute for the red particles that would usually be used
+Passive description ingame - attacks spawn friendly bees that scale with weapon damage.
+Gp description description ingame - Amber Thorns are sent out to attack nearby enemies.
+
+
+Diamond
+(New)changed gp to be the "RainbowRodBullet" projectile from ingame which home ins on enemies and causes a explosion.
+>fires 1 projectile per swing of "slash combination" totaling 3 projectiles 
+Projectile info:
+-the projectiles do 20 unresisted/true damage each 
+-causes a explosion just like the base game rainbowrodbullet does but additionally has a 100% chance to cause confuse debuff
+Passive description ingame- causes attacks to deal extra max health true damage and have a chance to cause confusion.
+Gp description description ingame- Cast 3 projectiles that deal 20 true damage each and cause confusion.
+(everything else stays the same for this gemstone.Contact me if needed)
+
+
+Special attacks:
+
+(name change)"H swing" > "Slash combination"
+(New)> a combination attack that slashes 3 times in succession and activates any gemstone power equiped
+(everything else about this move stays the same for the most part.Contact me if needed)
+
+(name change)"Phantom Blitz" > "Phantom Zip"
+Functions pretty much the same with 1 added effect and possibly a quality of life addition
+(New)does more damage based on how low an enemies health is.Deals 1% more damage for each percentage of health at and after 20% health. 
+-Use PinkTorch(242) dust effect when this move makes contact with anyone
+Quality of life:
+>allow use in all 8 directions
+- basically allow the attack to be able to track opponents on a vertical and diagonal level if possible. Would be cool seeing her zip from enemy to enemy in aerial combat kind of like eye of cthulu second phase.
+
+
+
+
+
+
+
+
