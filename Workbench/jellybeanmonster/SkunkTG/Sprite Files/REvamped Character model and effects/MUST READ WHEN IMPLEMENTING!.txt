@@ -23,6 +23,10 @@ projectile info:
 >(REMOVE) the current health damage bonus all together(that was op as hell anyway)
 -(new) ignores 80% of armor instead
 -use my edited version of space gun projectile
+Layer/Frame note:
+The holster and the gun on hip are seperate layers.
+This is so when the gun is in use the gun layer can be turned off to give the effect of it actully being tooken out of holster.
+So far i have only split the holster and gun into seperate layers. If need be let me know if i literally have to make duplicate frames of the character sprite in all cases such as walk run etc without the pistol holstered.
 
 (New)Group Passive:
 Phantom Crew member- Captain Stench has recognized you as a ally and grants you with +10% movement speed and 5% dodge chance
