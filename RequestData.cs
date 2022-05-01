@@ -186,7 +186,7 @@ namespace giantsummon
             int p = 0, g = 0, s = 0, c = Rewards[RewardPosition].value;
             if (c > 0)
             {
-                RewardString += " and ";
+                if(RewardString != "") RewardString += " and ";
                 if (c >= 100)
                 {
                     s += c / 100;
@@ -220,7 +220,7 @@ namespace giantsummon
                     if (!First)
                         RewardString += ", ";
                     First = false;
-                    RewardString += s + "silver";
+                    RewardString += s + " silver";
                 }
                 if (c > 0)
                 {

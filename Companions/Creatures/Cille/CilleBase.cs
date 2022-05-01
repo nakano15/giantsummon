@@ -396,6 +396,25 @@ namespace giantsummon.Companions
             return !Main.dayTime && Main.moonPhase == 4 && tg.Position.Y < Main.worldSurface * 16;
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*There's no end of new people here, right?*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+
+                }
+            }
+            Weight = 1f;
+            return "*Uh... Hello..*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -540,10 +559,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Back home, we go.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Uh... Hello..*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*There's no end of new people here, right..?*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Summon!*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

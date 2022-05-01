@@ -687,6 +687,60 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Bree)
+                {
+                    Weight = 1.5f;
+                    return "Don't worry "+WhoJoined.Name+", we'll find out where our house is at*";
+                }
+                if(WhoJoined.ID == Glenn)
+                {
+                    Weight = 1.5f;
+                    return "I'm disappointed that you disobeyed your mother, but I'm also happy that you made it here safelly.";
+                }
+                if(WhoJoined.ID == Blue)
+                {
+                    Weight = 1.5f;
+                    return "Wait, why is she showing me her teeth?";
+                }
+            }
+            Weight = 1f;
+            return "A new person! Nice to meet you.";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Bree:
+                        Weight = 1.5f;
+                        return "She's coming with us? I hope isn't for keeping an eye on me.";
+                    case Glenn:
+                        Weight = 1.5f;
+                        return "I don't mind him coming with us, as long as he doesn't get in danger.";
+                    case Vladimir:
+                        Weight = 1.5f;
+                        return "Hey big guy, carry me.";
+                    case Blue:
+                        Weight = 1.5f;
+                        return "No! Please! Don't!!";
+                    case Zacks:
+                        Weight = 1.5f;
+                        return "You aren't here to bite me, right?";
+                    case Fluffles:
+                        Weight = 1.5f;
+                        return "You don't plan on mounting on my shoulder again, don't you?";
+                }
+            }
+            Weight = 1f;
+            return "Hi! Nice to see you joining us.";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -860,10 +914,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "Yes, let's check our loot there.";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "Hi! Nice to see you joining.";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "A new person! Nice to meet you.";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "Time to make things easier.";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

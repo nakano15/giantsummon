@@ -501,6 +501,47 @@ namespace giantsummon.Companions
             }
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Malisha)
+                {
+                    Weight = 1.5f;
+                    return "*You're going to stay here?! No! No! NO!!!*";
+                }
+            }
+            Weight = 1f;
+            return "*Interesting having someone new here.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Green:
+                        Weight = 1.5f;
+                        return "*A medic. Perfect! We will need one.*";
+                    case Malisha:
+                        Weight = 1.5f;
+                        return "*Oh no, this expedition will be a trip in hell...*";
+                    case Fluffles:
+                        Weight = 1.5f;
+                        return "*Yikes! She has to come too?!*";
+                    case Brutus:
+                        Weight = 1.5f;
+                        return "*Can he defend me, instead? I'm alergic to pain.*";
+                    case Miguel:
+                        Weight = 1.2f;
+                        return "*Is that some way you're telling me to do exercises?*";
+                }
+            }
+            Weight = 1f;
+            return "*Great, another person for the expedition.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -667,10 +708,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Back home, we go.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Great, another person for the expedition.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*Interesting having someone new here.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Me and my minion army will obliterate our opposition.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

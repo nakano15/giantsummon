@@ -510,6 +510,30 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*Interesting. I'd like to know more about you.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Domino:
+                        Weight = 1.2f;
+                        return "*We aren't going to do anything shady, are we?*";
+                    case Minerva:
+                        Weight = 1.5f;
+                        return "*I like the smell of this.*";
+                }
+            }
+            Weight = 1f;
+            return "*That will increase our survival chances.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -664,10 +688,6 @@ namespace giantsummon.Companions
                     //
                 case MessageIDs.TeleportHomeMessage:
                     return "*I agree, I'm sick of this place.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*That will increase our survival chances.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*Interesting. I'd like to know more about you.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Handy.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

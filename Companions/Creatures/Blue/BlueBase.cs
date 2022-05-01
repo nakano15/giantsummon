@@ -975,6 +975,41 @@ namespace giantsummon.Companions
             }
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Zacks)
+                {
+                    Weight = 1.5f;
+                    return "*I'm so glad that you joined us, "+WhoJoined.Name+".*";
+                }
+            }
+            Weight = 1f;
+            return "*Amazing, a new person!*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Zacks:
+                        Weight = 1.5f;
+                        return "*You'll join us, "+WhoJoined.Name+"? I'm happy for having your persence.*";
+                    case Rococo:
+                        Weight = 1.2f;
+                        return "*You're joining too... Great...*";
+                    case Sardine:
+                        Weight = 1.2f;
+                        return "*Perfect, my teeth were in need of biting something.*";
+                }
+            }
+            Weight = 1f;
+            return "*Hello.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -1154,8 +1189,6 @@ namespace giantsummon.Companions
                     return "*Great, I was starting to get sweaty.*";
                 case MessageIDs.SomeoneJoinsTeamMessage:
                     return "*Hello.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*Amazing, a new person!*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*This will help.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

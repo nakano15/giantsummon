@@ -2733,8 +2733,31 @@ namespace giantsummon
                 {
                     guardian = new TerraGuardian(MyGuardians[Id]);
                 }
-                if(player.immuneTime <= 0) //Work around to avoid message when player enters world.
-                    CompanionReaction(GuardianBase.MessageIDs.SomeoneJoinsTeamMessage);
+                if (player.immuneTime <= 0)
+                { //Work around to avoid message when player enters world.
+                    float HighestWeight = 0;
+                    List<KeyValuePair<TerraGuardian, string>> Messages = new List<KeyValuePair<TerraGuardian, string>>();
+                    foreach(TerraGuardian tg in GetAllGuardianFollowers)
+                    {
+                        if(tg.Active && tg.InPerceptionRange(player.Center))
+                        {
+                            float Weight;
+                            string Message = tg.Base.CompanionJoinGroupMessage(guardian.Data, out Weight);
+                            if(Weight > HighestWeight)
+                            {
+                                Messages.Clear();
+                                HighestWeight = Weight;
+                            }
+                            if(Weight == HighestWeight)
+                                Messages.Add(new KeyValuePair<TerraGuardian, string>(tg, Message));
+                        }
+                    }
+                    if(Messages.Count > 0)
+                    {
+                        int Picked = Main.rand.Next(Messages.Count);
+                        Messages[Picked].Key.SaySomethingCanSchedule(Messages[Picked].Value, DelayUntilSaying: Main.rand.Next(90, 120));
+                    }
+                }
                 guardian.MyGuardianID = Id;
                 guardian.OwnerPos = player.whoAmI;
                 guardian.Active = true;
@@ -2953,7 +2976,31 @@ namespace giantsummon
                 }
                 if (player.whoAmI == Main.myPlayer)
                 {
-                    CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
+                    float LastWeightValue = 0;
+                    List<KeyValuePair<TerraGuardian, string>> Reactions = new List<KeyValuePair<TerraGuardian, string>>();
+                    foreach(TerraGuardian tg in GetAllGuardianFollowers)
+                    {
+                        if (tg.Active && tg.InPerceptionRange(player.Center))
+                        {
+                            float Weight;
+                            string Message = tg.Base.CompanionRecruitedMessage(MyGuardians[SpawnID], out Weight);
+                            if(Weight > LastWeightValue)
+                            {
+                                Reactions.Clear();
+                                LastWeightValue = Weight;
+                            }
+                            if(Weight == LastWeightValue)
+                            {
+                                Reactions.Add(new KeyValuePair<TerraGuardian, string>(tg, Message));
+                            }
+                        }
+                    }
+                    if(Reactions.Count > 0)
+                    {
+                        int PickedPosition = Main.rand.Next(Reactions.Count);
+                        Reactions[PickedPosition].Key.SaySomethingCanSchedule(Reactions[PickedPosition].Value, DelayUntilSaying: Main.rand.Next(90, 120));
+                    }
+                    //CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
                     GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MetSomeoneNew,
                         player.name, MyGuardians[SpawnID].Name, 6, MyGuardians.Count,
                         GuardianGlobalInfos.GetGuardiansInTheWorld());

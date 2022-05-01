@@ -209,6 +209,23 @@ namespace giantsummon
             return !MainMod.NoEtherItems && gd.Base.IsTerraGuardian;
         }
 
+        public static RequestReward GetAPossibleReward(Player player, GuardianData gd)
+        {
+            float TotalChance;
+            List<RequestReward> Rewards = GetPossibleRewards(player, gd, out TotalChance);
+            float Stack = 0;
+            float Picked = Main.rand.NextFloat() * TotalChance;
+            foreach(RequestReward reward in Rewards)
+            {
+                if(Picked >= Stack && Picked < Stack + reward.AcquisitionChance)
+                {
+                    return reward;
+                }
+                Stack += reward.AcquisitionChance;
+            }
+            return null;
+        }
+
         public static List<RequestReward> GetPossibleRewards(Player player, GuardianData gd)
         {
             float Chance;

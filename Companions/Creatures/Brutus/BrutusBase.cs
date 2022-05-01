@@ -890,6 +890,55 @@ namespace giantsummon.Companions
             }
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Domino)
+                {
+                    Weight = 1.5f;
+                    return "*Fine, if you think that's alright. Do let me know if he do something illegal.*";
+                }
+                if(WhoJoined.ID == Blue || WhoJoined.ID == Mabel || WhoJoined.ID == Malisha || WhoJoined.ID == Luna)
+                {
+                    Weight = 1.2f;
+                    return "*Oh hello, aren't you a pret- I mean... Do you need a bodyguard?*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome to our world.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Blue:
+                        Weight = 1.2f;
+                        return "*She's coming with us? That's nice.*";
+                    case Mabel:
+                        Weight = 1.2f;
+                        return "*I'm starting to enjoy more this job.*";
+                    case Malisha:
+                        Weight = 1.5f;
+                        return "*I'm curious to see what magic trick she'll do next.*";
+                    case Miguel:
+                        Weight = 1.5f;
+                        return "*I don't need a personal trainer.*";
+                    case Vladimir:
+                        Weight = 1.2f;
+                        return "*Don't you even dare hug me.*";
+                    case Liebre:
+                        Weight = 1.5f;
+                        return "*Wait, we'll even return home alive?*";
+                }
+            }
+            Weight = 1f;
+            return "*Don't worry, I will protect you too.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -1065,10 +1114,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Let's end this travel then.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Don't worry, I will protect you too.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*Welcome to our world.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*I wonder if they can cook.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

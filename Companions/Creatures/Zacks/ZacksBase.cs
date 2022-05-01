@@ -747,6 +747,53 @@ namespace giantsummon.Companions
 
         public const int FullMoonBehaviorID = 0, PullSomeoneID = 1;
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Blue)
+                {
+                    Weight = 1.5f;
+                    return "*I'm so happy to see you again.*";
+                }
+                if(WhoJoined.ID == Mabel)
+                {
+                    Weight = 1.5f;
+                    return "*Woah, venison.*";
+                }
+            }
+            Weight = 1f;
+            return "*A new person. Hello, and don't worry, I wont eat you.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Blue:
+                        Weight = 1.5f;
+                        return "*You just made this adventure better.*";
+                    case Mabel:
+                        Weight = 1.5f;
+                        return "*I... Must... Control... My hunger...*";
+                    case Sardine:
+                        Weight = 1.5f;
+                        return "*I was in need of a squeaky toy, how did you knew?*";
+                    case Glenn:
+                    case Cinnamon:
+                        Weight = 1.5f;
+                        return "*Better you not stray too far away from the group, zombies loves lonelly children, you know.*";
+                    case Minerva:
+                        Weight = 1.5f;
+                        return "*She might help me control my hunger.*";
+                }
+            }
+            Weight = 1f;
+            return "*I hope you don't mind having me around, too.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -920,10 +967,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Alright, let's go home then.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*I hope you don't mind having me around, too.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*A new person. Hello. Don't worry, I wont eat you.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*This looks interesting.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

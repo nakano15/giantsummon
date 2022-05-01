@@ -285,6 +285,25 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "*I'm glad they're friendly.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+
+                }
+            }
+            Weight = 1f;
+            return "*Hi... Please, don't do something scary.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -451,10 +470,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Don't leave me here!*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Hi... Please, don't do something scary.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*I'm glad they're friendly.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*They're not going to hurt me, right?*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

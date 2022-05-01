@@ -736,6 +736,46 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Leopold)
+                {
+                    Weight = 1.5f;
+                    return "*Hello master, missed me? Hehehe...*";
+                }
+                if(WhoJoined.ID == Brutus)
+                {
+                    Weight = 1.2f;
+                    return "*Um... You're making me nervous looking that way, you know.*";
+                }
+            }
+            Weight = 1f;
+            return "*A new subject, perfect.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Brutus:
+                        Weight = 1.5f;
+                        return "*Hm, I think I have some experiment that might need you.*";
+                    case Leopold:
+                        Weight = 1.5f;
+                        return "*Happy to see me? Because I am happy to see you.*";
+                    case Glenn:
+                        Weight = 1.2f;
+                        return "*Yes, good that you joined too.*";
+                }
+            }
+            Weight = 1f;
+            return "*I'm glad you joined. Could you aid me on a little experiment?*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -915,10 +955,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*I think I left something on the cauldron, I'll check when we get home.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*I'm glad you joined, could you aid me on a experiment?*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*A new subject, perfect.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Aww, such lovely minions.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

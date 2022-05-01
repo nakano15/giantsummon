@@ -1097,6 +1097,39 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Malisha)
+                {
+                    Weight = 1.5f;
+                    return "*I hope you aren't planning on making me deliver more souls, "+WhoJoined.Name+".*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome, and please, don't freak out.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Fluffles:
+                        Weight = 1.5f;
+                        return "*I hope this trip bring you peace of spirit.*";
+                    case Glenn:
+                    case Cinnamon:
+                        Weight = 1.5f;
+                        return "*I will ensure their time doesn't come now.*";
+                }
+            }
+            Weight = 1f;
+            return "*Another soul joins us.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -1284,8 +1317,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Enough exploration for now?*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Another soul joins us.*";
                 case MessageIDs.PlayerMeetsSomeoneNewMessage:
                     return "*Welcome, and please, don't freak out.*";
                 case MessageIDs.CompanionInvokesAMinion:

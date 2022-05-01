@@ -488,6 +488,29 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "A new friend!";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Rococo:
+                    case Michelle:
+                    case Bree:
+                        Weight = 1.5f;
+                        return "*"+WhoJoined.Name+" is coming too? Yay!*";
+                }
+            }
+            Weight = 1f;
+            return "*Bark Bark* Welcome! Welcome!";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -648,10 +671,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "Yay! Let's go home!";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Bark Bark* Welcome! Welcome!";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "A new friend!";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
                     return "*Whine whine* I want some too...";
                 //

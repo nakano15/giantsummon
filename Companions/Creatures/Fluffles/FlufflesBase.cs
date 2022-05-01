@@ -374,6 +374,35 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Leopold)
+                {
+                    Weight = 1.5f;
+                    return "(She gave a shy looking greeting to "+WhoJoined.Name+".)";
+                }
+            }
+            Weight = 1f;
+            return "(She looks happy for meeting someone new.)";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Leopold:
+                        Weight = 1.5f;
+                        return "(She greets "+WhoJoined.Name+", and ends up spooking him out.)";
+                }
+            }
+            Weight = 1f;
+            return "(She waves at the person, while smiling.)";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)

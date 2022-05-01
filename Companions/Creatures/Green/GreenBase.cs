@@ -303,6 +303,45 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Leopold)
+                {
+                    Weight = 1.5f;
+                    return "*You are here too, "+Leopold+"? This world surelly is interesting.*";
+                }
+            }
+            Weight = 1f;
+            return "*One more person.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Leopold:
+                        Weight = 1.5f;
+                        return "*I think I will finally witness " + WhoJoined.Name + "'s magic mastery.*";
+                    case Malisha:
+                        Weight = 1.5f;
+                        return "*Oh, she's coming too.*";
+                    case Cinnamon:
+                        Weight = 1.2f;
+                        return "*I hope you don't end up intoxicated again.*";
+                    case Brutus:
+                    case Sardine:
+                        Weight = 1.5f;
+                        return "*I can predict that I will have lots of work.*";
+                }
+            }
+            Weight = 1f;
+            return "*I'm glad to see you join us.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -468,8 +507,6 @@ namespace giantsummon.Companions
                     return "*Feeling home sick? Let's go, then.*";
                 case MessageIDs.SomeoneJoinsTeamMessage:
                     return "*I'm glad to see you join us.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*One more person.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*I wonder if I can train them to help me on surgeries.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

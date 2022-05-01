@@ -401,6 +401,62 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Leopold:
+                        Weight = 1.2f;
+                        return "*Hey, nerd guy, time to gain some muscles.*";
+                    case Rococo:
+                        Weight = 1.2f;
+                        return "*You need to work out that chest.*";
+                    case Brutus:
+                        Weight = 1.2f;
+                        return "*Amazing, we just met a keg of ale.*";
+                    case Malisha:
+                        Weight = 1.2f;
+                        return "*Interessed in exercising your glutes, lady?*";
+                    case Mabel:
+                        Weight = 1.2f;
+                        return "*Oh my... T-that... Physique...*";
+                    case Vladimir:
+                        Weight = 1.2f;
+                        return "*Well, that's one big guy. I think we can make you get some muscles.*";
+                    case Domino:
+                        Weight = 1.2f;
+                        return "*Your upper body will need some exercises, but your legs seems fit.*";
+                }
+            }
+            Weight = 1f;
+            return "*You're getting more popular, [nickname].*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Minerva:
+                    case Brutus:
+                    case Vladimir:
+                        Weight = 1.5f;
+                        return "*Let's try burning that fat.*";
+                    case Malisha:
+                        Weight = 1.5f;
+                        return "*Time to gain some muscles, witch.*";
+                    case Mabel:
+                        Weight = 1.2f;
+                        return "*Y-yes, good to see you too.*";
+                }
+            }
+            Weight = 1f;
+            return "*Oh, hello. Want to exercise your legs too?*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -552,10 +608,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Enough of this.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Oh, hello.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*You're getting more popular, [nickname].*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*I wish they could help me on my exercises.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

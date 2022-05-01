@@ -396,6 +396,54 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Bree)
+                {
+                    Weight = 1.5f;
+                    return "I'm not grounded, am I, mom?";
+                }
+                if(WhoJoined.ID == Sardine)
+                {
+                    Weight = 1.2f;
+                    return "Dad will be helping you too? Cool!";
+                }
+                if(WhoJoined.ID == Cinnamon)
+                {
+                    Weight = 1.2f;
+                    return "She's about my age, I hope we be friends.";
+                }
+            }
+            Weight = 1f;
+            return "Are you interessed in books or games?";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Bree:
+                        Weight = 1.5f;
+                        return "Mom is be coming too? I hope she doesn't embarrass me.";
+                    case Sardine:
+                        Weight = 1.5f;
+                        return "Dad is coming too? Dad will teach those monsters a lesson!";
+                    case Cinnamon:
+                        Weight = 1.5f;
+                        return "Hey, "+WhoJoined.Name+"!";
+                    case Zacks:
+                        Weight = 1.2f;
+                        return "He has to come with us, too?";
+                }
+            }
+            Weight = 1f;
+            return "Hi.";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -559,10 +607,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "Home, sweet home.";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "Hi.";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "Are you interessed in books or games?";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "My mother would never let me use those...";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

@@ -419,6 +419,38 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Brutus)
+                {
+                    Weight = 1.5f;
+                    return "*Oh great, just exactly you had to join us. At least you can't arrest me here.*";
+                }
+            }
+            Weight = 1f;
+            return "*Another potential customer. Nice.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Brutus:
+                        Weight = 1.5f;
+                        return "*I'll behave, I don't need a babysitter.*";
+                    case Malisha:
+                        Weight = 1.2f;
+                        return "*Well, well, well... You're going with us, right?*";
+                }
+            }
+            Weight = 1f;
+            return "*Hey, a new follower.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -599,8 +631,6 @@ namespace giantsummon.Companions
                     return "*I hope nobody messed on my goods.*";
                 case MessageIDs.SomeoneJoinsTeamMessage:
                     return "*Hey, a new follower.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*Another potential customer. Nice.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*This would have been useful when I was being chased by guards.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

@@ -434,6 +434,41 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Rococo)
+                {
+                    Weight = 1.2f;
+                    return "*I'm happy that you are here.*";
+                }
+            }
+            Weight = 1f;
+            return "*That's nice, [nickname]. We just met someone new.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Mabel:
+                        Weight = 1.5f;
+                        return "*Hi "+WhoJoined.Name+". I heard you want to be a Miss North Pole.*";
+                    case Blue:
+                        Weight = 1.2f;
+                        return "*I like having your company around.*";
+                    case Minerva:
+                        Weight = 1.5f;
+                        return "*I'm not against doing some exploration with the belly full.*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome. I hope we keep you for a while.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -619,10 +654,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*Back home we go, then.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*Welcome, I hope we keep you for a while.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*That's nice, [nickname]. We just met someone new.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Rise, minion! Protect your mentor!*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

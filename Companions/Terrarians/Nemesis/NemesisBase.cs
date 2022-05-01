@@ -228,6 +228,24 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            Weight = 0.8f;
+            return "...";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+
+                }
+            }
+            Weight = 1f;
+            return "...Welcome.";
+        }
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -339,10 +357,6 @@ namespace giantsummon.Companions
                     return "";
                 //
                 case MessageIDs.TeleportHomeMessage:
-                    return "";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
                     return "";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "Minion, do my bidding.";

@@ -94,9 +94,9 @@ namespace giantsummon.Companions
             LeftHandPoints.AddFramePoint2x(14, 42, 20);
             LeftHandPoints.AddFramePoint2x(15, 42, 39);
 
-            LeftHandPoints.AddFramePoint2x(18, 14, 11);
-            LeftHandPoints.AddFramePoint2x(19, 37, 14);
-            LeftHandPoints.AddFramePoint2x(20, 39, 27);
+            LeftHandPoints.AddFramePoint2x(18, 14, 12);
+            LeftHandPoints.AddFramePoint2x(19, 37, 15);
+            LeftHandPoints.AddFramePoint2x(20, 39, 28);
 
             LeftHandPoints.AddFramePoint2x(23, 36, 40);
 
@@ -107,17 +107,18 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(13, 38, 33);
 
             RightHandPoints.AddFramePoint2x(14, 45, 20);
-            RightHandPoints.AddFramePoint2x(15, 45, 39);
+            RightHandPoints.AddFramePoint2x(15, 44, 39);
 
-            RightHandPoints.AddFramePoint2x(18, 17, 11);
-            RightHandPoints.AddFramePoint2x(19, 40, 14);
-            RightHandPoints.AddFramePoint2x(20, 43, 40);
+            RightHandPoints.AddFramePoint2x(18, 17, 12);
+            RightHandPoints.AddFramePoint2x(19, 40, 15);
+            RightHandPoints.AddFramePoint2x(20, 42, 27);
 
             //Headgear Position
             HeadVanityPosition.DefaultCoordinate2x = new Point(23, 12);
             HeadVanityPosition.AddFramePoint2x(14, 36, 21);
             HeadVanityPosition.AddFramePoint2x(15, 38, 31);
-            HeadVanityPosition.AddFramePoint2x(17, 23, 18);
+
+            HeadVanityPosition.AddFramePoint2x(17, 23, 19);
 
             HeadVanityPosition.AddFramePoint2x(23, 34, 28);
         }
@@ -508,6 +509,57 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Brutus)
+                {
+                    Weight = 1.2f;
+                    return "*Uh, my face is a bit above.*";
+                }
+                if(WhoJoined.ID == Blue)
+                {
+                    Weight = 1.2f;
+                    return "*Hello. I like your hair, by the way.*";
+                }
+                if(WhoJoined.ID == Luna)
+                {
+                    Weight = 1.5f;
+                    return "*Uh, hi... Didn't I see you somewhere?*";
+                }
+            }
+            Weight = 1f;
+            return "*This world is getting more and more people, I like that.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Blue:
+                        Weight = 1.5f;
+                        return "*She's coming with us? That's nice.*";
+                    case Brutus:
+                        Weight = 1.5f;
+                        return "*I feel safer already.*";
+                    case Vladimir:
+                        Weight = 1.5f;
+                        return "*It's so nice to have you join us.*";
+                    case Sardine:
+                        Weight = 1.5f;
+                        return "*Are you happy for joining us?*";
+                    case Miguel:
+                        Weight = 1.5f;
+                        return "*Are you here to help me do exercises?*";
+                }
+            }
+            Weight = 1f;
+            return "Hello! I'm glad you joined us.*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -683,8 +735,6 @@ namespace giantsummon.Companions
                     return "*Nice timing, my feet were aching.*";
                 case MessageIDs.SomeoneJoinsTeamMessage:
                     return "*Hello! I'm glad you joined us.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*This world is getting more and more people, I like that.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*I wonder if they could teach me proper posing.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

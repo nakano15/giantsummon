@@ -535,6 +535,41 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Blue)
+                {
+                    Weight = 1.2f;
+                    return "*[name] waves at "+WhoJoined.Name+", but she doesn't seems to care.*";
+                }
+            }
+            Weight = 1f;
+            return "*[name] is happy for meeting someone new.*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Blue:
+                    case Alex:
+                    case Vladimir:
+                        Weight = 1.5f;
+                        return "*[name] is happy that "+WhoJoined.Name+" has joined your group.*";
+                    case Minerva:
+                    case Cinnamon:
+                        Weight = 1.5f;
+                        return "*[name] asked her when is dinner time.*";
+                }
+            }
+            Weight = 1f;
+            return "*[name] greets "+WhoJoined.Name+".*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -699,10 +734,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "*[name] seems happy to return home.*";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "*[name] waves at the new person.*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*[name] is happy for meeting someone new.*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*[name] seems to like invoking those.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

@@ -320,6 +320,29 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            Weight = 1f;
+            return "Hi, I'm [name], what is your name?";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+
+                }
+            }
+            Weight = 1f;
+            if (WhoJoined.Base.IsTerraGuardian)
+            {
+                return "They are coming with us? My day is getting even better!";
+            }
+            return "Hello!";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -478,10 +501,6 @@ namespace giantsummon.Companions
                 //
                 case MessageIDs.TeleportHomeMessage:
                     return "Ending adventure? Okay.";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "Hello!";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "Hi, I'm [name], what is your name?";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "Minions!";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:

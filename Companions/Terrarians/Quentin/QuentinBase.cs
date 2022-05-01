@@ -309,6 +309,19 @@ namespace giantsummon.Companions
             }
         }
 
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+
+                }
+            }
+            Weight = 1f;
+            return "Yay!! New friends.";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -383,8 +396,6 @@ namespace giantsummon.Companions
                     return "Thanks i feel a lot better now.";
                 case MessageIDs.RevivedByRecovery:
                     return "I thought i wasn't gonna make it.";
-                case MessageIDs.SomeoneJoinsTeamMessage:
-                    return "Yay!! new friends.";
             }
             return base.GetSpecialMessage(MessageID);
         }

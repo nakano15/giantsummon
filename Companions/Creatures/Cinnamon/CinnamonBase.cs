@@ -382,6 +382,49 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
+        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                if(WhoJoined.ID == Minerva)
+                {
+                    Weight = 1.5f;
+                    return "*You cook too? That's great! We could be BFF!*";
+                }
+                if(WhoJoined.ID == Glenn)
+                {
+                    Weight = 1.2f;
+                    return "*Wow, you're nearly the same age as I! I'm "+ WhoJoined.Name+", by the way.*";
+                }
+            }
+            Weight = 1f;
+            return "*A new person! Do you like tasty foods?*";
+        }
+
+        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        {
+            if (WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Minerva:
+                        Weight = 1.2f;
+                        return "*"+WhoJoined.Name+" is coming too? Cool!*";
+                    case Glenn:
+                        Weight = 1.2f;
+                        return "*I'm so happy that you joined us.*";
+                    case Green:
+                        Weight = 1.5f;
+                        return "*I hope I don't need you for a check up.*";
+                    case Vladimir:
+                        Weight = 1.5f;
+                        return "*Teddy is coming with us!*";
+                }
+            }
+            Weight = 1f;
+            return "*Welcome!*";
+        }
+
         public override string GetSpecialMessage(string MessageID)
         {
             switch (MessageID)
@@ -551,8 +594,6 @@ namespace giantsummon.Companions
                     return "*We could get somethign to eat at home.*";
                 case MessageIDs.SomeoneJoinsTeamMessage:
                     return "*Welcome!*";
-                case MessageIDs.PlayerMeetsSomeoneNewMessage:
-                    return "*A new person! Do you like tasty foods?*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Can they hold cooking utensils?*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
