@@ -82,7 +82,7 @@ Ruby
 projectile info:
 >each projectile does 25% of total damage
 >each projectile heals for 2% of damage done   
--use Life Drain (235) particle effect around stench to show she is being healed. 
+-use Life Drain (235) dust effect around stench to show she is being healed. 
 Passive description ingame- attacks gain life steal.
 Gp description description ingame- flings out blood sickles that do damage and life steal from enemies.
 (everything else mostly stays the same for this gemstone)
@@ -95,7 +95,7 @@ Projectile info:
 -projectile damage scales with 25%>75% of total damage 
 -mimics vanilla "WeatherPainShot" behaviour 
 Passive description ingame- Gives High Crit chance on attacks
-Gp description description ingame- sends out tornados that always deal critical hits scaling to weapon equipeds.
+Gp description description ingame- sends out tornados that always deal critical hits scaling to weapon equiped.
 (everything else stays the same for this gemstone.Contact me if needed)
 
 (New)Amber
