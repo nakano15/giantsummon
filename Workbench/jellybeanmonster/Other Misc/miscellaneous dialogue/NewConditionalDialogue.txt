@@ -1,0 +1,48 @@
+New conditional Dialogue:
+
+>>Wrath: 
+>New recruit condition:
+Streamline- "Another annoying little rat joins."
+Specific:
+Fear- "Why did you invite this scared little sh*t on the team?!"
+Sorrow- "Oh my god why is this whiny little b*tch here!"
+Joy- "Go sit your happy a** down!"
+Miguel- "The only thing I will be exercising is my fist in your face!"
+Glenn- "Hey brat! you should go back home and wait on your parents return."
+
+>Removal of a companion on team:
+Streamline- "Good Riddance!"
+
+
+>>Fear:
+>New recruit condition:
+Streamline- "Why are you inviting more trouble!?"
+Specific:
+Wrath- "This guy scares the ever living sh*t out of me!"
+Sorrow- "Your whining sends chills down my spine......"
+Joy- "Hey! keep your distance! you might look innocent but your deadly!"
+Miguel- "Thoes abs!, are terrifying!!!"
+
+>Removal of a companion on team:
+Streamline- "Phew! Im a little more at ease now."
+
+
+>>Captain Stench:
+>New recruit condition:
+Streamline- "Howdy there newcomer!"
+Specific:
+Bree- "Oi there! you wouldnt happen to have anything valuable in that bag of yours?"
+Brutus- "Oi mate! dont think you can enforce law on us since you joined."
+Domino- "Not bad mate, you just invited a black market dealer hehehe."
+Blue- "Holy dooley! ya remind of my crew member Ace! you look just like em!"
+Zacks- "Stuffed, I’ll be! ya remind of my crew member Ace! except your missing some ligaments there mate!"
+
+>Removal of a companion on team:
+Streamline- "See ya around mate!" or "Have a good one!" 
+ 
+>>Bapha:
+>New recruit condition:
+Streamline- "Would you look at that, a careless soul arrives!"
+
+>Removal of a companion on team:
+Streamline- "Oh gone too soon?"
