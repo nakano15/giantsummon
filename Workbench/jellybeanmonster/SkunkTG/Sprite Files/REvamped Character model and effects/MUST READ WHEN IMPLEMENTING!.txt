@@ -46,6 +46,8 @@ projectile info:
 >projectile uses afterimage effect
 >use gemAmethysts dust effect 
 >Light source
+Passive description ingame- attacks apply shadow flame debuff.
+Gp description description ingame- Conjure waves of purple energy that does damage and applys shadow flame debuff.
 (everything else stays the same for this gemstone.Contact me if needed)
 
 Topaz
@@ -62,7 +64,7 @@ Gp description description ingame- send out topaz shards that pierce and lowers 
 
 Sapphire
 (New)>completly changed projectile to now be Electric Bolt("MartianTurretBolt") which when making contact with anything spawns a "electrosphere" projectile
->1 electrosphere missle is fired apon each swing of "slash combination" totaling 3 projectiles
+>1 Electric Bolt is fired apon each swing of "slash combination" totaling 3 projectiles
 >saber damage reduction -20%>-10%
 >sword attacks gain 1>2 mana per swing
 (New)>sword attacks apply electrify debuff
