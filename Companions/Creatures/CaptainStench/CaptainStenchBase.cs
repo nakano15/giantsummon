@@ -520,15 +520,15 @@ namespace giantsummon.Companions
                                     break;
                                 case 5: //Tier 5
                                     {
-                                        Dialogue.ShowDialogueOnly("There's no more upgrades I can do on the Phantom Device.");
+                                        Dialogue.ShowDialogueOnly("Cheers!, ya did it mate, this is peak technology, im afriad I wont be able to upgrade it any further now.");
                                         if (!MeOrPlayerHasTheItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier5>(), player, guardian))
                                         {
                                             Dialogue.AddOption("I lost the Phantom Device...", delegate ()
                                             {
                                                 const int SecondBarCount = 20, GoldCoinCount = 50, ManaCrystalCount = 7, HMBarCount = 10, ChlorophyteBarCount = 10;
-                                                Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + SecondBarCount + " Gold or Platinum Bars, " + HMBarCount + " Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
+                                                Dialogue.ShowDialogueOnly("Piss Off! This will cost ya big time mate, ya need to collect " + SecondBarCount + " Gold or Platinum Bars, " + HMBarCount + " Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
                                                     "I will also need a Gold or Platinum Watch, and a Lightning Boots.\n" +
-                                                    "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                                    "And since you managed to lose my baby, you'll have to pay up " + GoldCoinCount + " Gold Coins.");
                                                 bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= SecondBarCount,
                                                      HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= SecondBarCount;
                                                 bool HasCobaltBars = Dialogue.CountItem(Terraria.ID.ItemID.CobaltBar) >= HMBarCount,
@@ -558,18 +558,18 @@ namespace giantsummon.Companions
                                                         Dialogue.TakeItem(Terraria.ID.ItemID.ChlorophyteBar, ChlorophyteBarCount);
                                                         Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
                                                         Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier5>());
-                                                        Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                                        Dialogue.ShowEndDialogueMessage("Make sure to be veeerrry careful next time there mate.");
                                                     });
                                                 }
                                                 Dialogue.AddOption("Nah, too expensive.", delegate ()
                                                 {
-                                                    Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                                    Dialogue.ShowEndDialogueMessage("Piss Off! Next time don't gamble with me equipment!");
                                                 });
                                             });
                                         }
                                         Dialogue.AddOption("Let's talk about something else, then.", delegate ()
                                         {
-                                            Dialogue.ShowEndDialogueMessage("What else you want to talk about?");
+                                            Dialogue.ShowEndDialogueMessage("How’s it hangin?");
                                         });
                                     }
                                     break;
@@ -663,7 +663,7 @@ namespace giantsummon.Companions
                     {
                         GuardianMouseOverAndDialogueInterface.AddOption(Mes, delegate ()
                         {
-                            GuardianMouseOverAndDialogueInterface.SetDialogue(Description + "\n\nShould I infuse my saber with this gem?");
+                            GuardianMouseOverAndDialogueInterface.SetDialogue(Description + "\n\nShould I infuse me saber with this gem?");
                             GuardianMouseOverAndDialogueInterface.Options.Clear();
                             GuardianMouseOverAndDialogueInterface.AddOption("Yes", delegate ()
                             {
@@ -685,7 +685,7 @@ namespace giantsummon.Companions
                             });
                             GuardianMouseOverAndDialogueInterface.AddOption("No", delegate ()
                             {
-                                GuardianMouseOverAndDialogueInterface.SetDialogue("Well, anything else then?");
+                                GuardianMouseOverAndDialogueInterface.SetDialogue("Anything else mate?");
                                 GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
                             });
                         });
@@ -699,7 +699,7 @@ namespace giantsummon.Companions
                 });
                 GuardianMouseOverAndDialogueInterface.AddOption("Nevermind", delegate ()
                 {
-                    GuardianMouseOverAndDialogueInterface.SetDialogue("Thanks for wasting my time.");
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("Toodle-oo.");
                     GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
                 });
             }));
