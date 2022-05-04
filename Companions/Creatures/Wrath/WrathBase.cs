@@ -179,7 +179,7 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             Mes.Add("*I'm so furious, why I'm furious? I don't know! That's what makes me more furious!*");
             Mes.Add("*Grrr. GRRRRR!! Grrrrrrrrrrr!*");
-            Mes.Add("*Who are you?! What?! Something's funny with my face?! Want to taste my punch?!*");
+            Mes.Add("*Who are you?! What?! Something's funny with my face?! Want to taste my fist?!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -194,14 +194,14 @@ namespace giantsummon.Companions
             bool CloudForm = player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID];
             if (CloudForm)
             {
-                Mes.Add("*Don't you dare doing any joke about my current form. DON'T. YOU. DARE!*");
-                Mes.Add("*I really hate being a cloud, and don't you dare breath near me.*");
+                Mes.Add("*Don't dare joke about my current form. DON'T. YOU. DARE!*");
+                Mes.Add("*Being a ghost is weak, I need a solid form to pound people harder.*");
             }
             if (Main.dayTime)
             {
                 if (Main.eclipse)
                 {
-                    Mes.Add("*Perfect! I can discount my rage on them!*");
+                    Mes.Add("*Perfect! more faces to pound!*");
                     Mes.Add("*Bring them on! I'll take care of them!*");
                 }
                 else
@@ -214,7 +214,7 @@ namespace giantsummon.Companions
                 if (Main.bloodMoon)
                 {
                     Mes.Add("*What?! You thought I would be more angry this night? Get lost!*");
-                    Mes.Add("*Maybe beating them very hard will make me less angry!*");
+                    Mes.Add("*More skulls to bash!*");
                 }
                 else
                 {
@@ -224,15 +224,15 @@ namespace giantsummon.Companions
             if (guardian.IsUsingToilet)
             {
                 Mes.Add("*Don't you have anything else to do? Go away!*");
-                Mes.Add("*Want me to put your head in the toilet and then push the flush? Then GO AWAY!*");
+                Mes.Add("*Want me to put your flush your head in the toilet?! GO AWAY!*");
             }
             if (Main.raining)
             {
-                Mes.Add("*Great, It couldn't get worse, right?*");
-                Mes.Add("*I tried! Even being in the rain wont make me less furious!*");
+                Mes.Add("*Great!, It couldn't get worse could it?!, now I have to be annoyed by rain drops?*");
+                Mes.Add("*Oh my god! the splashes are infuriating!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Alex))
-                Mes.Add("*GO AWAY! Oh, my bad. I thought It was [gn:"+GuardianBase.Alex+"] wanting to play.*");
+                Mes.Add("*GO AWAY!. Pftt nevermind, I thought It was [gn:"+GuardianBase.Alex+"] wanting to play.*");
             if (NpcMod.HasGuardianNPC(GuardianBase.Brutus))
                 Mes.Add("My rage wont lower! I even asked [gn:"+GuardianBase.Brutus+"] if he would let me beat him to try lowering my rage, and It didn't work!");
             if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
