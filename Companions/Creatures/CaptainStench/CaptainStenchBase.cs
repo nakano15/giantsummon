@@ -234,7 +234,7 @@ namespace giantsummon.Companions
                         delegate ()
                         {
                             data.PhantomDeviceMiniquestProgress = 0;
-                            Dialogue.ShowEndDialogueMessage("*That thing is the Phantom Device. It broke during the crash, and now It needs repair.*", false);
+                            Dialogue.ShowEndDialogueMessage("*This is me Phantom Device. It broke during the crash, and now It needs repair.*", false);
                         });
                     NewOptions.Add(option);
                 }
@@ -252,7 +252,7 @@ namespace giantsummon.Companions
                                 case 0: //Broken
                                     {
                                         const int BarCount = 15;
-                                        Dialogue.ShowDialogueOnly("It will give us some work. It isn't unrepairable, though.\n" +
+                                        Dialogue.ShowDialogueOnly("It will give us some work. No wuckers.\n" +
                                             "I will need " + BarCount + " Platinum or Gold Bars to repair it.");
                                         int GoldBarCount = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar),
                                         PlatinumBarCount = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar);
@@ -272,13 +272,13 @@ namespace giantsummon.Companions
                                                 }
                                                 data.PhantomDeviceMiniquestProgress = 1;
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier1>());
-                                                Dialogue.ShowEndDialogueMessage("Great. I managed to fix It. I will now be able to use Phantom Dash.\n" +
-                                                    "I can upgrade It to allow me to better use the Phantom Dash.", false);
+                                                Dialogue.ShowEndDialogueMessage("Sweet. I managed to fix It. Oi! Now I will be able to use the phantom technology to zip through enemies.\n" +
+                                                    "I can upgrade this more for better capabilities.", false);
                                             });
                                         }
                                         Dialogue.AddOption("I'll try gathering them.", delegate ()
                                         {
-                                            Dialogue.ShowEndDialogueMessage("Alright.", false);
+                                            Dialogue.ShowEndDialogueMessage("Good on ya.", false);
                                         });
                                     }
                                     break;
@@ -294,9 +294,9 @@ namespace giantsummon.Companions
                                                 TakeItemFromMeOrPlayer(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier1>(), player, guardian);
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier2>());
-                                                Dialogue.ShowEndDialogueMessage("Not bad! The Phantom Device got improved.\n" +
-                                                    "I can improve It some more, if you're up to It.\n" +
-                                                    "I can make use of Phantom Blitz if I equip that in one of my accessory slots.", false);
+                                                Dialogue.ShowEndDialogueMessage("Grouse! The Device just improved.\n" +
+                                                    "I can upgrade it further, if you're up for it.\n" +
+                                                    "I can make use of Phantom Zip attack if I equip that in one of my accessory slots.", false);
                                                 data.PhantomDeviceMiniquestProgress = 2;
                                             });
                                         }
@@ -305,8 +305,8 @@ namespace giantsummon.Companions
                                             Dialogue.AddOption("I lost the Phantom Device...", delegate ()
                                             {
                                                 const int BarCount = 20, GoldCoinCount = 10;
-                                                Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + BarCount + " Gold or Platinum Bars.\n" +
-                                                    "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                                Dialogue.ShowDialogueOnly("No way?! That will cost ya mate, I need" + BarCount + " Gold or Platinum Bars.\n" +
+                                                    "And since you managed to rack off with me device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
                                                 bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount,
                                                      HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= BarCount;
                                                 if ((HasGoldBars || HasPlatinumBars) && Dialogue.GetPlayerCoinValues() >= Dialogue.GetCoinValues(0, 0, GoldCoinCount))
@@ -319,12 +319,12 @@ namespace giantsummon.Companions
                                                             Dialogue.TakeItem(Terraria.ID.ItemID.PlatinumBar, BarCount);
                                                         Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
                                                         Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier1>());
-                                                        Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                                        Dialogue.ShowEndDialogueMessage("Make sure to be careful next time there mate.");
                                                     });
                                                 }
                                                 Dialogue.AddOption("Nah, too expensive.", delegate ()
                                                 {
-                                                    Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                                    Dialogue.ShowEndDialogueMessage("Next time don't gamble with me equipment.");
                                                 });
                                             });
                                         }
@@ -337,7 +337,7 @@ namespace giantsummon.Companions
                                 case 2: //Tier 2
                                     {
                                         const int ManaCrystalNecessary = 2;
-                                        Dialogue.ShowDialogueOnly("You know the drill. I will need a Phantom Device Tier 2, but will also need " + ManaCrystalNecessary + " mana crystals.");
+                                        Dialogue.ShowDialogueOnly("Next up I will need a Phantom Device Tier 2, but also a " + ManaCrystalNecessary + " mana crystals.");
                                         if (MeOrPlayerHasTheItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier2>(), player, guardian) &&
                                         Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalNecessary)
                                         {
@@ -346,8 +346,8 @@ namespace giantsummon.Companions
                                                 TakeItemFromMeOrPlayer(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier2>(), player, guardian);
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier3>());
-                                                Dialogue.ShowEndDialogueMessage("It looks even better than the last one!\n" +
-                                                    "But I think we can still do better.", false);
+                                                Dialogue.ShowEndDialogueMessage("Ripper, you little! Its even better than the last one!\n" +
+                                                    "We can take this thing even further.", false);
                                                 data.PhantomDeviceMiniquestProgress = 3;
                                             });
                                         }
@@ -356,7 +356,7 @@ namespace giantsummon.Companions
                                             Dialogue.AddOption("I lost the Phantom Device...", delegate ()
                                             {
                                                 const int BarCount = 20, GoldCoinCount = 20, ManaCrystalCount = 1;
-                                                Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + BarCount + " Gold or Platinum Bars and " + ManaCrystalCount + " Mana Crystal.\n" +
+                                                Dialogue.ShowDialogueOnly("You what?! That will cost ya mate, I need " + BarCount + " Gold or Platinum Bars and " + ManaCrystalCount + " Mana Crystal.\n" +
                                                     "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
                                                 bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount,
                                                      HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= BarCount;
@@ -372,18 +372,18 @@ namespace giantsummon.Companions
                                                         Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalCount);
                                                         Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
                                                         Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier2>());
-                                                        Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                                        Dialogue.ShowEndDialogueMessage("Make sure to be careful next time there mate.");
                                                     });
                                                 }
                                                 Dialogue.AddOption("Nah, too expensive.", delegate ()
                                                 {
-                                                    Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                                    Dialogue.ShowEndDialogueMessage("Next time don't gamble with me equipment.");
                                                 });
                                             });
                                         }
                                         Dialogue.AddOption("Too hard...", delegate ()
                                         {
-                                            Dialogue.ShowEndDialogueMessage("Bad luck with fallen stars?", false);
+                                            Dialogue.ShowEndDialogueMessage("Bad luck with fallen stars ay?", false);
                                         });
                                     }
                                     break;
@@ -406,8 +406,8 @@ namespace giantsummon.Companions
                                                 TakeItemFromMeOrPlayer(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier3>(), player, guardian);
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier4>());
-                                                Dialogue.ShowEndDialogueMessage("This is amazing! It's even better than before!\n" +
-                                                    "I think I can overclock this. May be dangerous, but we can try. Right?", false);
+                                                Dialogue.ShowEndDialogueMessage("Im stoked!,its expected at this point! Holy dooley! mate,I'll be dashing around like theres no tommorow!\n" +
+                                                    "I think I can push this thing even further beyond its limit. Fair suck of the say, but theres no telling what the next upgrade will do.", false);
                                                 data.PhantomDeviceMiniquestProgress = 4;
                                             });
                                         }
@@ -416,8 +416,8 @@ namespace giantsummon.Companions
                                             Dialogue.AddOption("I lost the Phantom Device...", delegate ()
                                             {
                                                 const int BarCount = 20, GoldCoinCount = 30, ManaCrystalCount = 3;
-                                                Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + BarCount + " Gold or Platinum Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
-                                                    "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                                Dialogue.ShowDialogueOnly("You what?! That will cost ya mate, I need you to collect " + BarCount + " Gold or Platinum Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
+                                                    "And since you managed to lose me device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
                                                 bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= BarCount,
                                                      HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= BarCount;
                                                 if ((HasGoldBars || HasPlatinumBars) && Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalCount &&
@@ -432,18 +432,18 @@ namespace giantsummon.Companions
                                                         Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalCount);
                                                         Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
                                                         Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier3>());
-                                                        Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                                        Dialogue.ShowEndDialogueMessage("Make sure to be careful next time there mate.");
                                                     });
                                                 }
                                                 Dialogue.AddOption("Nah, too expensive.", delegate ()
                                                 {
-                                                    Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                                    Dialogue.ShowEndDialogueMessage("Next time don't gamble with me equipment.");
                                                 });
                                             });
                                         }
                                         Dialogue.AddOption("Too hard...", delegate ()
                                         {
-                                            Dialogue.ShowEndDialogueMessage("You're just lazy, aren't you?", false);
+                                            Dialogue.ShowEndDialogueMessage("Galah aren't ya?", false);
                                         });
                                     }
                                     break;
@@ -472,7 +472,7 @@ namespace giantsummon.Companions
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.ChlorophyteBar, BarCount);
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.LightningBoots);
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier5>());
-                                                Dialogue.ShowEndDialogueMessage("Look at this! It's beautiful! I will cause so much damage with this thing.", false);
+                                                Dialogue.ShowEndDialogueMessage("Stuffed, I’ll be! Its a beauty isnt it?! Foes are as good as cut snags with this.", false);
                                                 data.PhantomDeviceMiniquestProgress = 5;
                                             });
                                         }
@@ -481,8 +481,8 @@ namespace giantsummon.Companions
                                             Dialogue.AddOption("I lost the Phantom Device...", delegate ()
                                             {
                                                 const int SecondBarCount = 20, GoldCoinCount = 40, ManaCrystalCount = 7, HMBarCount = 10;
-                                                Dialogue.ShowDialogueOnly("You what?! Then I will need you to collect " + SecondBarCount + " Gold or Platinum Bars, " + HMBarCount + " Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
-                                                    "And since you managed to lose my Phantom Device, you'll have to give me " + GoldCoinCount + " Gold Coins.");
+                                                Dialogue.ShowDialogueOnly("Piss Off! This will cost ya big time mate, ya need to collect" + SecondBarCount + " Gold or Platinum Bars, " + HMBarCount + " Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
+                                                    "And since you managed to lose my baby, you'll have to pay up" + GoldCoinCount + " Gold Coins.");
                                                 bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= SecondBarCount,
                                                      HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= SecondBarCount;
                                                 bool HasCobaltBars = Dialogue.CountItem(Terraria.ID.ItemID.CobaltBar) >= HMBarCount,
@@ -503,18 +503,18 @@ namespace giantsummon.Companions
                                                         Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalCount);
                                                         Dialogue.TakeCoins(Dialogue.GetCoinValues(0, 0, GoldCoinCount));
                                                         Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier4>());
-                                                        Dialogue.ShowEndDialogueMessage("Now think twice before you lose my Phantom Device.");
+                                                        Dialogue.ShowEndDialogueMessage("Make sure to be veeerrry careful next time there mate.");
                                                     });
                                                 }
                                                 Dialogue.AddOption("Nah, too expensive.", delegate ()
                                                 {
-                                                    Dialogue.ShowEndDialogueMessage("Then the next time don't lose something that isn't yours.");
+                                                    Dialogue.ShowEndDialogueMessage("Piss Off! Next time don't gamble with me equipment!");
                                                 });
                                             });
                                         }
                                         Dialogue.AddOption("Too hard...", delegate ()
                                         {
-                                            Dialogue.ShowEndDialogueMessage("You're just lazy, aren't you?", false);
+                                            Dialogue.ShowEndDialogueMessage("Galah aren't ya?", false);
                                         });
                                     }
                                     break;
