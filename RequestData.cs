@@ -229,7 +229,7 @@ namespace giantsummon
                     First = false;
                     RewardString += c + " copper";
                 }
-                RewardString += "coins";
+                RewardString += " coins";
             }
             if (RewardString == "")
                 RewardString = "Nothing.";

@@ -196,6 +196,7 @@ namespace giantsummon.Quests
             TerraGuardian Zacks = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Zacks);
             if(Zacks != null)
                 Dialogue.AddParticipant(Zacks);
+            Dialogue.SetImportantDialogue();
             data.SpokeToBluePosQuest = true;
             if (data.BlueWasPresent)
             {

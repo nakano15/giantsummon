@@ -256,6 +256,7 @@ namespace giantsummon.Quests
             {
                 Dialogue.AddParticipant(PlayerMod.GetPlayerSummonedGuardian(Main.player[Main.myPlayer], GuardianBase.Zacks));
             }
+            Dialogue.SetImportantDialogue();
             Dialogue.GatherAroundGuardian(Dialogue.GetParticipant(BlueSlot));
             Dialogue.ShowDialogueWithContinue("*I'm glad for Zacks back into my life, but I think we should do something about his wounds.*");
             //After this point, Dialogue.GetParticipant breaks.

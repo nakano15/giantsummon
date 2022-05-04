@@ -117,8 +117,7 @@ namespace giantsummon.Quests
             else
             {
                 Dialogue.ShowDialogueWithContinue("Amazing! Whenever I remember of the fight we had against it, I remember how awesome it was.");
-                Dialogue.ShowDialogueWithContinue("We really did a really great job at kicking that slimey ass.");
-                Dialogue.ShowEndDialogueMessage("");
+                Dialogue.ShowEndDialogueMessage("We really did a really great job at kicking that slimey ass.", false);
             }
         }
 
@@ -146,6 +145,7 @@ namespace giantsummon.Quests
                 Glenn = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Glenn);
             Dialogue.ShowDialogueWithContinue("Hey [nickname], I need to speak with you.");
             Dialogue.ShowDialogueWithContinue("I didn't liked the result of my last fight against the King Slime, and I think there's still some gel inside my ears.");
+            Dialogue.SetImportantDialogue();
             if (Bree != null)
             {
                 Dialogue.ShowDialogueWithContinue("You're still sad about that? I'm actually glad that [nickname] actually were able to rescue you from the inside of that creature.", Bree);
@@ -178,6 +178,7 @@ namespace giantsummon.Quests
                 Bree = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Bree),
                 Glenn = PlayerMod.GetPlayerSummonedGuardian(Main.LocalPlayer, GuardianBase.Glenn);
             OutfitQuestData data = (OutfitQuestData)Data;
+            Dialogue.SetImportantDialogue();
             switch (data.QuestStep)
             {
                 case 2: // KS Down, Sardine around.

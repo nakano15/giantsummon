@@ -81,6 +81,7 @@ namespace giantsummon
 
         public static void StartDialogue(TerraGuardian tg)
         {
+            giantsummon.Dialogue.SetImportantDialogue(false);
             Speaker = StarterSpeaker = tg;
             giantsummon.Dialogue.DialogueParticipants = new TerraGuardian[0];
             if (giantsummon.Dialogue.DialogueThread != null && giantsummon.Dialogue.DialogueThread.IsAlive)
@@ -334,7 +335,7 @@ namespace giantsummon
                             if (Options[MouseOverOptionNumber].ThreadedDialogue)
                             {
                                 if (giantsummon.Dialogue.DialogueParticipants.Length > 0)
-                                    giantsummon.Dialogue.FollowUpDilogue(Options[MouseOverOptionNumber].Action);
+                                    giantsummon.Dialogue.FollowUpDialogue(Options[MouseOverOptionNumber].Action);
                                 else
                                     giantsummon.Dialogue.StartNewDialogue(Options[MouseOverOptionNumber].Action, Speaker);
                             }

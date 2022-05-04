@@ -45,10 +45,10 @@ namespace giantsummon
             GatherAroundPosition
         }
 
-        public static void SetImportantDialogue()
+        public static void SetImportantDialogue(bool Important = true)
         {
-            if (DialogueThread != null && DialogueThread.IsAlive)
-                ImportantDialogue = true;
+            //if (DialogueThread != null && DialogueThread.IsAlive)
+            ImportantDialogue = Important;
         }
 
         public static bool IsImportantDialogue()
@@ -351,11 +351,10 @@ namespace giantsummon
         }
 
 
-        public static void FollowUpDilogue(Action Dialogue)
+        public static void FollowUpDialogue(Action Dialogue)
         {
             if (DialogueThread != null && DialogueThread.ThreadState == ThreadState.Running)
                 return;
-            ImportantDialogue = false;
             IsDialogue = true;
             ThreadStart ts = new ThreadStart(delegate () {
                 if (Main.rand == null)

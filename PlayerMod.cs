@@ -2755,7 +2755,7 @@ namespace giantsummon
                     if(Messages.Count > 0)
                     {
                         int Picked = Main.rand.Next(Messages.Count);
-                        Messages[Picked].Key.SaySomethingCanSchedule(Messages[Picked].Value, DelayUntilSaying: Main.rand.Next(90, 120));
+                        Messages[Picked].Key.SaySomethingCanSchedule(GuardianMouseOverAndDialogueInterface.MessageParser(Messages[Picked].Value, Messages[Picked].Key), DelayUntilSaying: Main.rand.Next(90, 120));
                     }
                 }
                 guardian.MyGuardianID = Id;
@@ -2998,7 +2998,7 @@ namespace giantsummon
                     if(Reactions.Count > 0)
                     {
                         int PickedPosition = Main.rand.Next(Reactions.Count);
-                        Reactions[PickedPosition].Key.SaySomethingCanSchedule(Reactions[PickedPosition].Value, DelayUntilSaying: Main.rand.Next(90, 120));
+                        Reactions[PickedPosition].Key.SaySomethingCanSchedule(GuardianMouseOverAndDialogueInterface.MessageParser(Reactions[PickedPosition].Value, Reactions[PickedPosition].Key), DelayUntilSaying: Main.rand.Next(90, 120));
                     }
                     //CompanionReaction(GuardianBase.MessageIDs.PlayerMeetsSomeoneNewMessage);
                     GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.MetSomeoneNew,
