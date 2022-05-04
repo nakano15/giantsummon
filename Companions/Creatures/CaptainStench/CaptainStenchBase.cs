@@ -1821,19 +1821,19 @@ namespace giantsummon.Companions
             }
             if(PlayerMod.HasGuardianSummoned(player, Blue))
             {
-                Mes.Add("Blue reminds me of one of my cadets that died in the crash....Red his name was....ironic.. and he was a wolf....");
+                Mes.Add("Blue reminds me of one of my cadets that died in the crash....Red Ace his name was....ironic.. and he was a wolf....");
             }
             if(PlayerMod.HasGuardianSummoned(player, Zacks))
             {
-                Mes.Add("Zacks reminds me of one of my cadets that died in the crash...Red his name was...kinda ironic since he was a wolf also");
+                Mes.Add("Zacks reminds me of one of my cadets that died in the crash...Red Ace his name was...kinda ironic since he was a wolf also");
             }
             if(PlayerMod.HasGuardianSummoned(player, Bree) && PlayerMod.GetPlayerGuardian(player, Bree).SkinID != Companions.BreeBase.BaglessSkinID)
             {
-                Mes.Add("I wonder whats in the white cats bag...Something valuable probably...");
+                Mes.Add("I wonder whats in the white cats bag...Something valuable possibly?...");
             }
             if(PlayerMod.HasGuardianSummoned(player, Domino))
             {
-                Mes.Add("This mouse looks like he might sell some black market supplies.");
+                Mes.Add("This mouse looks like he might sell some great black market supplies.");
             }
             if(PlayerMod.HasGuardianSummoned(player, Brutus))
             {
