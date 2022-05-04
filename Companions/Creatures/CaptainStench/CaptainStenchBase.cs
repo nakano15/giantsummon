@@ -252,7 +252,7 @@ namespace giantsummon.Companions
                                 case 0: //Broken
                                     {
                                         const int BarCount = 15;
-                                        Dialogue.ShowDialogueOnly("It will give us some work. No wuckers.\n" +
+                                        Dialogue.ShowDialogueOnly("This will be some trouble. No wuckers though.\n" +
                                             "I will need " + BarCount + " Platinum or Gold Bars to repair it.");
                                         int GoldBarCount = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar),
                                         PlatinumBarCount = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar);
@@ -272,7 +272,7 @@ namespace giantsummon.Companions
                                                 }
                                                 data.PhantomDeviceMiniquestProgress = 1;
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier1>());
-                                                Dialogue.ShowEndDialogueMessage("Sweet. I managed to fix It. Oi! Now I will be able to use the phantom technology to zip through enemies.\n" +
+                                                Dialogue.ShowEndDialogueMessage("Sweet! I managed to fix It. Oi! Now I will be able to use the phantom technology to zip through enemies.\n" +
                                                     "I can upgrade this more for better capabilities.", false);
                                             });
                                         }
@@ -285,7 +285,7 @@ namespace giantsummon.Companions
                                 case 1: //Tier 1
                                     {
                                         const int ManaCrystalNecessary = 1;
-                                        Dialogue.ShowDialogueOnly("For this upgrade, not only I will need the Phantom Device Tier 1, but will also need " + ManaCrystalNecessary + " mana crystal.");
+                                        Dialogue.ShowDialogueOnly("For this upgrade, not only will I need the Phantom Device Tier 1, but also " + ManaCrystalNecessary + " mana crystal.");
                                         if (MeOrPlayerHasTheItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier1>(), player, guardian) &&
                                         Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalNecessary)
                                         {
@@ -296,7 +296,7 @@ namespace giantsummon.Companions
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier2>());
                                                 Dialogue.ShowEndDialogueMessage("Grouse! The Device just improved.\n" +
                                                     "I can upgrade it further, if you're up for it.\n" +
-                                                    "I can make use of Phantom Zip attack if I equip that in one of my accessory slots.", false);
+                                                    "I can make use of Phantom Zip attack if I equip that in me accessory slot.", false);
                                                 data.PhantomDeviceMiniquestProgress = 2;
                                             });
                                         }
@@ -337,7 +337,7 @@ namespace giantsummon.Companions
                                 case 2: //Tier 2
                                     {
                                         const int ManaCrystalNecessary = 2;
-                                        Dialogue.ShowDialogueOnly("Next up I will need a Phantom Device Tier 2, but also a " + ManaCrystalNecessary + " mana crystals.");
+                                        Dialogue.ShowDialogueOnly("I will need a Phantom Device Tier 2, but also a " + ManaCrystalNecessary + " mana crystals.");
                                         if (MeOrPlayerHasTheItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier2>(), player, guardian) &&
                                         Dialogue.CountItem(Terraria.ID.ItemID.ManaCrystal) >= ManaCrystalNecessary)
                                         {
@@ -347,7 +347,7 @@ namespace giantsummon.Companions
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier3>());
                                                 Dialogue.ShowEndDialogueMessage("Ripper, you little! Its even better than the last one!\n" +
-                                                    "We can take this thing even further.", false);
+                                                    "We can take this baby even further.", false);
                                                 data.PhantomDeviceMiniquestProgress = 3;
                                             });
                                         }
@@ -383,7 +383,7 @@ namespace giantsummon.Companions
                                         }
                                         Dialogue.AddOption("Too hard...", delegate ()
                                         {
-                                            Dialogue.ShowEndDialogueMessage("Bad luck with fallen stars ay?", false);
+                                            Dialogue.ShowEndDialogueMessage("Bad luck with fallen stars ayyy...?", false);
                                         });
                                     }
                                     break;
@@ -406,7 +406,7 @@ namespace giantsummon.Companions
                                                 TakeItemFromMeOrPlayer(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier3>(), player, guardian);
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.ManaCrystal, ManaCrystalNecessary);
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier4>());
-                                                Dialogue.ShowEndDialogueMessage("Im stoked!,its expected at this point! Holy dooley! mate,I'll be dashing around like theres no tommorow!\n" +
+                                                Dialogue.ShowEndDialogueMessage("Stuffed, I’ll be! Its a beauty isnt it?! Foes are as good as cut snags with this.\n"+
                                                     "I think I can push this thing even further beyond its limit. Fair suck of the say, but theres no telling what the next upgrade will do.", false);
                                                 data.PhantomDeviceMiniquestProgress = 4;
                                             });
@@ -450,8 +450,8 @@ namespace giantsummon.Companions
                                 case 4: //Tier 4
                                     {
                                         const int BarCount = 10;
-                                        Dialogue.ShowDialogueOnly("To overclock the Phantom Device, I'll need a Tier 4 version of It, a Gold or Platinum Watch, and a Lightning Boots.\n" +
-                                            "And also " + BarCount + " Chlorophyte Bars.");
+                                        Dialogue.ShowDialogueOnly("To overclock this thing, I'll need a Tier 4 version of it, a Gold or Platinum Watch, Lightning Boots.\n" +
+                                            "and lastly" + BarCount + " Chlorophyte Bars.");
                                         bool HasGoldWatch = Dialogue.HasItem(Terraria.ID.ItemID.GoldWatch);
                                         bool HasPlatinumWatch = Dialogue.HasItem(Terraria.ID.ItemID.PlatinumWatch);
                                         if (MeOrPlayerHasTheItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier4>(),player, guardian) &&
@@ -472,7 +472,7 @@ namespace giantsummon.Companions
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.ChlorophyteBar, BarCount);
                                                 Dialogue.TakeItem(Terraria.ID.ItemID.LightningBoots);
                                                 Dialogue.GiveItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier5>());
-                                                Dialogue.ShowEndDialogueMessage("Stuffed, I’ll be! Its a beauty isnt it?! Foes are as good as cut snags with this.", false);
+                                                Dialogue.ShowEndDialogueMessage("Im stoked!, its expected at this point! Holy dooley! mate, I'll be dashing around like theres no tommorow!", false);
                                                 data.PhantomDeviceMiniquestProgress = 5;
                                             });
                                         }
@@ -481,7 +481,7 @@ namespace giantsummon.Companions
                                             Dialogue.AddOption("I lost the Phantom Device...", delegate ()
                                             {
                                                 const int SecondBarCount = 20, GoldCoinCount = 40, ManaCrystalCount = 7, HMBarCount = 10;
-                                                Dialogue.ShowDialogueOnly("Piss Off! This will cost ya big time mate, ya need to collect" + SecondBarCount + " Gold or Platinum Bars, " + HMBarCount + " Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
+                                                Dialogue.ShowDialogueOnly("Piss Off!! This will cost ya big time mate, ya need to collect" + SecondBarCount + " Gold or Platinum Bars, " + HMBarCount + " Cobalt or Palladium Bars and " + ManaCrystalCount + " Mana Crystals.\n" +
                                                     "And since you managed to lose my baby, you'll have to pay up" + GoldCoinCount + " Gold Coins.");
                                                 bool HasGoldBars = Dialogue.CountItem(Terraria.ID.ItemID.GoldBar) >= SecondBarCount,
                                                      HasPlatinumBars = Dialogue.CountItem(Terraria.ID.ItemID.PlatinumBar) >= SecondBarCount;
@@ -508,7 +508,7 @@ namespace giantsummon.Companions
                                                 }
                                                 Dialogue.AddOption("Nah, too expensive.", delegate ()
                                                 {
-                                                    Dialogue.ShowEndDialogueMessage("Piss Off! Next time don't gamble with me equipment!");
+                                                    Dialogue.ShowEndDialogueMessage("Piss Off!!! Next time don't gamble off with me equipment!");
                                                 });
                                             });
                                         }
@@ -520,7 +520,7 @@ namespace giantsummon.Companions
                                     break;
                                 case 5: //Tier 5
                                     {
-                                        Dialogue.ShowDialogueOnly("Cheers!, ya did it mate, this is peak technology, im afriad I wont be able to upgrade it any further now.");
+                                        Dialogue.ShowDialogueOnly("Cheers!!! ya did it mate, this is peak technology, im afriad I wont be able to upgrade it any further now.");
                                         if (!MeOrPlayerHasTheItem(Terraria.ModLoader.ModContent.ItemType<Creatures.CaptainStench.PhantomDevices.PhantomDeviceTier5>(), player, guardian))
                                         {
                                             Dialogue.AddOption("I lost the Phantom Device...", delegate ()
@@ -563,7 +563,7 @@ namespace giantsummon.Companions
                                                 }
                                                 Dialogue.AddOption("Nah, too expensive.", delegate ()
                                                 {
-                                                    Dialogue.ShowEndDialogueMessage("Piss Off! Next time don't gamble with me equipment!");
+                                                    Dialogue.ShowEndDialogueMessage("Piss Off!!! Next time don't gamble off with me equipment!");
                                                 });
                                             });
                                         }
@@ -607,7 +607,7 @@ namespace giantsummon.Companions
                             Mes = "Diamond power";
                             break;
                     }
-                    GuardianMouseOverAndDialogueInterface.SetDialogue("My Saber is infused with " + Mes + ".\nWhat should I infuse my weapon with?\nGem will be used upon changing Infusion.");
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("Yeggy is infused with " + Mes + ".\nWhat should I infuse her weapon with now?\nGem will be used upon changing Infusion.");
                 }
                 for (byte i = 0; i < NumberOfSwords; i++)
                 {
@@ -625,7 +625,7 @@ namespace giantsummon.Companions
                         case 1:
                             Mes = "Infuse with Amethyst";
                             Description = "Amethyst: Passive-Sword attacks apply shadowflame debuff. \n" +
-                                "Gem Power-Blade wave that does damage and bypasses enemies and blocks.";
+                                "Gem Power-Purple wave that damages and bypasses enemies and blocks.";
                             ItemID = Terraria.ID.ItemID.Amethyst;
                             break;
                         case 2:
@@ -643,7 +643,7 @@ namespace giantsummon.Companions
                         case 4:
                             Mes = "Infuse with Emerald";
                             Description = "Emerald: Passive- Gains 50% critical chance on sword attacks additonally critical strikes receive a 3x damage boost(3x damage boost applies to gem power also)\n" +
-                                "Gem Power-Conjures up a slow moving tornado that hits many times in a 3 second duration, each hit is a garunteed critical strike that scales with 75% of total weapon damage";
+                                "Gem Power-Conjures up a tornado that hits many times, each hit is a garunteed critical strike that scales with 75% of total weapon damage";
                             ItemID = Terraria.ID.ItemID.Emerald;
                             break;
                         case 5:
@@ -663,7 +663,7 @@ namespace giantsummon.Companions
                     {
                         GuardianMouseOverAndDialogueInterface.AddOption(Mes, delegate ()
                         {
-                            GuardianMouseOverAndDialogueInterface.SetDialogue(Description + "\n\nShould I infuse me saber with this gem?");
+                            GuardianMouseOverAndDialogueInterface.SetDialogue(Description + "\n\nShould I infuse Yeggy with this gem?");
                             GuardianMouseOverAndDialogueInterface.Options.Clear();
                             GuardianMouseOverAndDialogueInterface.AddOption("Yes", delegate ()
                             {
@@ -693,7 +693,7 @@ namespace giantsummon.Companions
                 }
                 GuardianMouseOverAndDialogueInterface.AddOption("What does Weapon infusion do?", delegate ()
                 {
-                    GuardianMouseOverAndDialogueInterface.SetDialogue("I can infuse my Saber with gemstone powers to cause different effects when I use it.\n" +
+                    GuardianMouseOverAndDialogueInterface.SetDialogue("I can infuse me Saber with gemstone powers to cause different effects when I use it.\n" +
                         "I need to have a gemstone before I can do the infusion.");
                     GuardianMouseOverAndDialogueInterface.GetDefaultOptions();
                 });
@@ -1767,24 +1767,24 @@ namespace giantsummon.Companions
             Mes.Add("Unfortunately, I am now the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we'll find.");
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
             if(data.SwordID == 0)
-                Mes.Add("This here saber has a empty socket for a gemstone to fit in, find some gems for me to use.");
+                Mes.Add("I named me blade Yeggy, she has been great for cracking into safes hehehe.");
             Mes.Add("Find any loot yet mate? pop around.");
             Mes.Add("Slicing things up gets me excited.");
-            Mes.Add("I guess im retired from space travel as my only source of family is dead now. This world will be my last plunder land.");
+            Mes.Add("I guess im retired from piloting as my only source of family is dead now. This world will be my last plunder land.");
             Mes.Add("The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live ya'know? some people are just collateral damage.");
             Mes.Add("As a young gal I never had nothing, thieving has been ingrained in me since childhood");
             Mes.Add("Im surprised you dont have any space ships here for travel? theres a whole galaxy out there to explore.");
-	    Mes.Add("Surprised me runners are still effecient, these rocket boots have saved my life on many occasions");
+	    Mes.Add("Surprised me runners are still effecient, these rocket boots have saved me life on many occasions");
 	    Mes.Add("You woulnd't happen to have coldie's around would ya? I feel like getting tipsy every once and a while.");
             Mes.Add("This world is bloody rich with resources, I should have came here sooner.");
-	    Mes.Add("You might make a good cobber there mate, spending time with you has been good so far.");
+	    Mes.Add("You might make a good cobber here mate, spending time with you has been good so far.");
 	    Mes.Add("Im a bit of a dag me self mate, I reverse engineered the phantom device.");
 	    Mes.Add("We should piss up on me birthday mate, all I want is tinnies for gifts so we can all get pissy together hahahaha.");
 	    Mes.Add("I was captain of the Phantom 6, that was our name,the crew members were First class Red Ace, Hawk Adams, Jack Venom, Ford Duckbill, Ellis Kangaroo and lastly me Commander Sally Stench.");
-	    Mes.Add("I wasen't the only one that had my eyes on this planet, there are others who also travel the cosmos theres no wonder who will show up.");
-	    Mes.Add("A bit iffy on if Commander Trick and his crew of rebels will appear here to confront me, I nagged a bunch of there equipment, hahaha.");
+	    Mes.Add("I wasen't the only one that had my eyes on this planet, there are others who also travel the cosmos, theres no telling who will show up.");
+	    Mes.Add("A bit iffy on if Commander Trick and his crew of rebels will appear here to confront me, I nagged a bunch of their equipment, hahaha.");
             if(data.PhantomDeviceMiniquestProgress == -1)
-                Mes.Add("My phantom device has been broken, if you have any spare platinum/gold bars you could help fix it.");
+                Mes.Add("My phantom device is broken, if you have any spare platinum/gold bars you could help fix it.");
             bool AnyMetal = false, AnyGemstone = false;
             if (guardian.GetTileCount(Terraria.ID.TileID.Topaz) > 0 ||
                 guardian.GetTileCount(Terraria.ID.TileID.Amethyst) > 0 ||
