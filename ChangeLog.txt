@@ -1,4 +1,4 @@
 ﻿Fixed a bug where companions couldn't do an entire swing with their one handed weapons.
 Reduced the amount of distance necessary to travel to complete travelling requests.
 Added an option to make companions reffer to your character by name, instead of Terrarian nickname, if there's none set.
-Mabel got sprite changes.
+Mabel and Domino got sprite changes.

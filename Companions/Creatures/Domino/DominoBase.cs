@@ -55,8 +55,8 @@ namespace giantsummon.Companions
             WalkingFrames = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             PlayerMountedArmAnimation = JumpFrame = 9;
             ItemUseFrames = new int[] { 10, 11, 12, 13 };
-            DuckingFrame = 14;
-            DuckingSwingFrames = new int[] { 15, 16, 14 };
+            DuckingFrame = 26;
+            DuckingSwingFrames = new int[] { 14, 15, 16 };
             SittingFrame = 17;
             ChairSittingFrame = 18;
             DrawLeftArmInFrontOfHead.AddRange(new int[] { 9, 10, 11, 12 });
@@ -70,41 +70,45 @@ namespace giantsummon.Companions
             BackwardRevive = 25;
 
             BodyFrontFrameSwap.Add(17, 0);
+            BodyFrontFrameSwap.Add(18, 1);
+            BodyFrontFrameSwap.Add(23, 0);
             SpecificBodyFrontFramePositions = true;
 
-            //Mounted Position
-            MountShoulderPoints.DefaultCoordinate2x = new Point(16, 14);
+            RightArmFrontFrameSwap.Add(26, 0);
 
-            MountShoulderPoints.AddFramePoint2x(14, 28, 20);
-            SittingPoint = new Point(25 * 2, (36 - 2) * 2);
+            //Mounted Position
+            MountShoulderPoints.DefaultCoordinate2x = new Point(18, 15);
+
+            MountShoulderPoints.AddFramePoint2x(26, 23, 22);
+            SittingPoint2x = new Point(25, 36 - 2);
 
             //Left Arm
-            LeftHandPoints.AddFramePoint2x(10, 14, 5);
+            LeftHandPoints.AddFramePoint2x(10, 16, 5);
             LeftHandPoints.AddFramePoint2x(11, 32, 11);
-            LeftHandPoints.AddFramePoint2x(12, 35, 19);
+            LeftHandPoints.AddFramePoint2x(12, 35, 20);
             LeftHandPoints.AddFramePoint2x(13, 31, 28);
 
-            LeftHandPoints.AddFramePoint2x(14, 39, 30);
-            LeftHandPoints.AddFramePoint2x(15, 30, 11);
-            LeftHandPoints.AddFramePoint2x(16, 42, 16);
+            LeftHandPoints.AddFramePoint2x(14, 25, 13);
+            LeftHandPoints.AddFramePoint2x(15, 38, 19);
+            LeftHandPoints.AddFramePoint2x(16, 36, 32);
 
-            LeftHandPoints.AddFramePoint2x(21, 43, 40);
+            LeftHandPoints.AddFramePoint2x(21, 44, 38);
 
             //Right Arm
-            RightHandPoints.AddFramePoint2x(10, 17, 5);
-            RightHandPoints.AddFramePoint2x(11, 34, 11);
-            RightHandPoints.AddFramePoint2x(12, 39, 19);
-            RightHandPoints.AddFramePoint2x(13, 35, 28);
+            RightHandPoints.AddFramePoint2x(10, 19, 5);
+            RightHandPoints.AddFramePoint2x(11, 36, 11);
+            RightHandPoints.AddFramePoint2x(12, 40, 20);
+            RightHandPoints.AddFramePoint2x(13, 36, 28);
 
-            RightHandPoints.AddFramePoint2x(14, 41, 30);
-            RightHandPoints.AddFramePoint2x(15, 33, 11);
-            RightHandPoints.AddFramePoint2x(16, 44, 16);
+            RightHandPoints.AddFramePoint2x(14, 30, 13);
+            RightHandPoints.AddFramePoint2x(15, 42, 19);
+            RightHandPoints.AddFramePoint2x(16, 39, 32);
 
             //Head Vanity Pos
-            HeadVanityPosition.DefaultCoordinate2x = new Point(23, 11);
-            HeadVanityPosition.AddFramePoint2x(14, 35, 17);
+            HeadVanityPosition.DefaultCoordinate2x = new Point(23, 10);
+            HeadVanityPosition.AddFramePoint2x(27, 29, 20);
 
-            HeadVanityPosition.AddFramePoint2x(21, 35, 17);
+            HeadVanityPosition.AddFramePoint2x(21, 29, 20);
         }
 
         public override void SetupShop(int GuardianID, string GuardianModID)

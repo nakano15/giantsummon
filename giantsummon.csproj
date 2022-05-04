@@ -435,6 +435,7 @@
     <Content Include="Companions\Creatures\Cille\outfit_leftarm.png" />
     <Content Include="Companions\Creatures\Cille\outfit_rightarm.png" />
     <Content Include="Companions\Creatures\Cille\right_arm.png" />
+    <Content Include="Companions\Creatures\Domino\right_arm_front.png" />
     <Content Include="Companions\Creatures\Fear\body.png" />
     <Content Include="Companions\Creatures\Fear\body_front.png" />
     <Content Include="Companions\Creatures\Fear\head.png" />
