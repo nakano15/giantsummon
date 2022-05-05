@@ -20,7 +20,7 @@ namespace giantsummon.Companions
         {
             Name = "Wrath";
             PossibleNames = new string[] { "Wrath", "Rage", "Fury", "Irk" };
-            Description = "One of the emotion pieces fragments\nof a TerraGuardian. Very volatile.";
+            Description = "The angry emotional pig piece\nof a TerraGuardian. Very volatile.";
             Width = 10 * 2;
             Height = 27 * 2;
             SpriteWidth = 70;
@@ -177,25 +177,25 @@ namespace giantsummon.Companions
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*I'm so furious, why I'm furious? I don't know! That's what makes me more furious!*");
-            Mes.Add("*Grrr. GRRRRR!! Grrrrrrrrrrr!*");
-            Mes.Add("*Who are you?! What?! Something's funny with my face?! Want to taste my fist?!*");
+            Mes.Add("*I'm furious, why I'm furious? I don't know! This is pissing me off!!!*");
+            Mes.Add("*Agh!GRRRRR!! UUGGGHHHHH!*");
+            Mes.Add("*Who are you?! What?! Something's funny with my face?! Want to taste these hands?!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*I'm so angry, actually I'm FURIOUS!*");
-            Mes.Add("*Stay away! I'm not in the mood.*");
-            Mes.Add("*Grrr! I'm so furious!*");
-            Mes.Add("*Whaaaaaaaat?!*");
-            Mes.Add("*I'm trying my best to be less angry, but I can't!*");
+            Mes.Add("*UGHHH!what is there to talk about?!*");
+            Mes.Add("*Stay away! I'm not in the mood! I never am!*");
+            Mes.Add("*No talking on smashing!*");
+            Mes.Add("*WHAT?!*");
+            Mes.Add("*Just looking at things aggravates me, I need something to unleash this pent up anger!*");
             bool CloudForm = player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID];
             if (CloudForm)
             {
-                Mes.Add("*Don't dare joke about my current form. DON'T. YOU. DARE!*");
-                Mes.Add("*Being a ghost is weak, I need a solid form to pound people harder.*");
+                Mes.Add("*Don't dare joke about my current form. DON'T... YOU... DARE!*");
+                Mes.Add("*Being a ghost is weakens me, I need a solid form to pound people harder!*");
             }
             if (Main.dayTime)
             {
@@ -213,38 +213,38 @@ namespace giantsummon.Companions
             {
                 if (Main.bloodMoon)
                 {
-                    Mes.Add("*What?! You thought I would be more angry this night? Get lost!*");
-                    Mes.Add("*More skulls to bash!*");
+                    Mes.Add("*HAHAHA TONIGHTS MENU?! UNDEAD BUTT CHEEKS!!!*");
+                    Mes.Add("*More undead skulls to bash!*");
                 }
                 else
                 {
-                    Mes.Add("*Urgh! All those \"Grahs\" during the night are infuriating me! I'm nearly going outside and shutting them up!*");
+                    Mes.Add("*Urgh! All those \"Grahs\" during the night are infuriating me! I'm about to go outside and kick their undead a**!*");
                 }
             }
             if (guardian.IsUsingToilet)
             {
-                Mes.Add("*Don't you have anything else to do? Go away!*");
+                Mes.Add("*Don't you know privacy! Go away! Im taking a dump here!*");
                 Mes.Add("*Want me to put your flush your head in the toilet?! GO AWAY!*");
             }
             if (Main.raining)
             {
                 Mes.Add("*Great!, It couldn't get worse could it?!, now I have to be annoyed by rain drops!*");
-                Mes.Add("*Oh my god! the splashes are infuriating!*");
+                Mes.Add("*OG MY GOD! THE SPLASHES ARE INFURIATING!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Alex))
-                Mes.Add("*GO AWAY!. Pftt nevermind, I thought It was [gn:"+GuardianBase.Alex+"] wanting to play.*");
+                Mes.Add("*GO AWAY!. Pftt, I thought It was [gn:"+GuardianBase.Alex+"] wanting to play.*");
             if (NpcMod.HasGuardianNPC(GuardianBase.Brutus))
                 Mes.Add("Looking at [gn:"+GuardianBase.Brutus+"] try to be tuff makes me want to beat him to a pulp!");
             if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
             {
-                Mes.Add("How many times do I have to tell [gn:"+GuardianBase.Malisha+"] that I'M NOT GOING TO PARTICIPATE IN ANY OF YOUR TRASH A** EXPERIMENTS!!!.");
+                Mes.Add("How many times do I have to tell [gn:"+GuardianBase.Malisha+"] that.. I'M NOT GOING TO PARTICIPATE IN ANY OF YOUR TRASH A** EXPERIMENTS!!!.");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Leopold))
             {
                 if (player.GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
-                    Mes.Add("*The bunny may know something about me that I dont? Thats maddening!*");
+                    Mes.Add("*The bunny may know something about me that I dont?! Thats maddening!*");
                 else
-                    Mes.Add("*Tell the white bunny to help me get out of this form.*");
+                    Mes.Add("*Tell the white bunny to help me change forms now!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Sardine))
             {
@@ -252,20 +252,20 @@ namespace giantsummon.Companions
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Domino))
             {
-                Mes.Add("*If I ever see [gn:" + Domino + "] making another joke about me, I'll make his other eye a sunny side up egg!*");
+                Mes.Add("*If I ever see [gn:" + Domino + "] making another joke about me, I'll turn his other eye into a sunny side up egg!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Vladimir))
             {
-                Mes.Add("*I dont care how big [gn:"+GuardianBase.Vladimir+"] is, I'll pummel him like the rest if he tries to smuther me again!*");
+                Mes.Add("*I dont care how big [gn:"+GuardianBase.Vladimir+"] is, I'll pummel his fat a** until he becomes a malnourished bear!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
             {
                 if (CloudForm)
-                    Mes.Add("*I know im a ghost at the moment but dont compare me to [gn:" + Fluffles + "]!*");
+                    Mes.Add("*SO what im a ghost for the moment? just dont compare me to [gn:" + Fluffles + "]!*");
             }
             if (NpcMod.HasGuardianNPC(Fear))
             {
-                Mes.Add("*At least [gn:" + Fear + "] knows what to do when I'm around, to just get out of my away. But I really hate when he screams its annoying as hell.*");
+                Mes.Add("*At least [gn:" + Fear + "] knows what to do when I'm around, to just stay out of my away. But Its really annoying when he screams like a little b*tch.*");
             }
             if (guardian.IsPlayerRoomMate(player))
             {
@@ -278,12 +278,12 @@ namespace giantsummon.Companions
                 Mes.Clear();
                 if (!guardian.KnockedOutCold)
                 {
-                    Mes.Add("*Ngh... Just you wait... Until I stand up...* (He seems very furious to the one who have beaten him.)");
-                    Mes.Add("*Ugh... Im boiling right now... Pain is increasing... The rage rises... Cough...* (He seems very furious to the one who have beaten him.)");
+                    Mes.Add("*Ngh... Just you wait... Until I stand up...* (He seems very furious to the one who defeated him.)");
+                    Mes.Add("*Ugh... Im boiling right now!.. Pain is increasing!... The rage rises!... Cough...* (He seems very furious to the one who defeated him.)");
                 }
                 else
                 {
-                    Mes.Add("(His body is trembling while he's passed out.)");
+                    Mes.Add("(His body is vibrating while he's passed out.)");
                     Mes.Add("(You can hear loud breathing noises coming from his nose.)");
                 }
             }
