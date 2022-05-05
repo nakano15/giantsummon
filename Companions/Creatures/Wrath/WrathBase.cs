@@ -256,7 +256,7 @@ namespace giantsummon.Companions
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Vladimir))
             {
-                Mes.Add("*I dont care how big [gn:"+GuardianBase.Vladimir+"] is I'll pummel him like the rest if he tries to smuther me again!*");
+                Mes.Add("*I dont care how big [gn:"+GuardianBase.Vladimir+"] is, I'll pummel him like the rest if he tries to smuther me again!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
             {
@@ -338,7 +338,7 @@ namespace giantsummon.Companions
         public override string BirthdayMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*No, I'm not happy,I can never be happy!*");
+            Mes.Add("*No, I'm not happy, I can never be happy!*");
             Mes.Add("*All those people dancing around, meanwhile I'm here, this is making me furious!!*");
             if (!PlayerMod.HasGuardianBeenGifted(player, Wrath))
                 Mes.Add("*This gift better be good.*");
@@ -367,7 +367,7 @@ namespace giantsummon.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*I need a house! Now!*");
-            Mes.Add("*This delay is really getting me angry. How long until you give me a house?*");
+            Mes.Add("*This delay is really getting me irked. How long until you give me a house?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -387,7 +387,7 @@ namespace giantsummon.Companions
                 }
             }
             Weight = 1f;
-            return "*Grrr. Welcome!*";
+            return "*Grrr. you wont get a welcome from me!*";
         }
 
         public override string GetSpecialMessage(string MessageID)
@@ -395,54 +395,54 @@ namespace giantsummon.Companions
             switch (MessageID)
             {
                 case MessageIDs.BuddySelected:
-                    return "*Your lucky you picked me because i was inches away from pounding you!*";
+                    return "*Your lucky you picked me because I was inches away from pounding you!*";
                 case MessageIDs.RescueMessage:
-                    return "*When you wake up, tell me who did this to you.*";
+                    return "*When you wake up, tell me who did this to you so i can beat their a**.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:
                     switch (Main.rand.Next(3))
                     {
                         case 0:
-                            return "*You got the nerve of waking me up in the middle of the night. Do you want to be punched?*";
+                            return "*You got the nerve of waking me up in the middle of the night. Do you want your sh*t kicked in?!!!*";
                         case 1:
-                            return "*I'm not happy at all about you waking me up. Actually, I'm FURIOUS!*";
+                            return "*You really woke me up!? are you trying to get your a** kicked!*";
                         case 2:
-                            return "*Grrr... I had several troubles getting to sleep. Why you woke me up?*";
+                            return "*Grrr... I already have trouble sleeping and you decided to wake me up?!*";
                     }
                     break;
                 case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
                     switch (Main.rand.Next(2))
                     {
                         case 0:
-                            return "*Please, tell me you did my request, tell me, because I really want to hit you hard.*";
+                            return "*Please, tell me you did my request, tell me!, because If not im going on a rampage!*";
                         case 1:
-                            return "*You better have completed my request, because I'm even more furious now.*";
+                            return "*You better have completed my request, because if not im smashing stuff.*";
                     }
                     break;
                 //
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
-                    return "*Good, I could use discounting my rage on our opposition.*";
+                    return "*Good, I could use the opposition as anger relief.*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
-                    return "*There's too many people! I hate mobs! They make me furious!*";
+                    return "*There's too many people! I hate mobs! This makes me aggravated!*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
                     return "*Not now!*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
                     return "*You're crazy?! You plan on leaving me here?!*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
-                    return "*Grr... Fine.*";
+                    return "*Grr... whatever.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
-                    return "*Grrr.... Alright... Do It your way then...*";
+                    return "*Grrr.... dont ask me to join back!...*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*I thought so.*";
                 case MessageIDs.RequestAccepted:
-                    return "*Try not to take too long.*";
+                    return "*hurry up!*";
                 case MessageIDs.RequestCantAcceptTooManyRequests:
                     return "*No more. Go deal with your other requests first!*";
                 case MessageIDs.RequestRejected:
-                    return "*Grr... Fine. I'll do It myself.*";
+                    return "*Grr... Fine. I'll do It myself as always.*";
                 case MessageIDs.RequestPostpone:
                     return "*What?! But I wanted It now!*";
                 case MessageIDs.RequestFailed:
-                    return "*WHAT? GRrrrrrrrr.... GRRRRRRRRRRRRR... *";
+                    return "*WHAT? SOME BODY'S A** IS ABOUT TO GET KICKED! *";
                 case MessageIDs.RequestAsksIfCompleted:
                     return "*What?! You did my request?*";
                 case MessageIDs.RequestRemindObjective:
@@ -464,51 +464,51 @@ namespace giantsummon.Companions
                 case MessageIDs.GenericThankYou:
                     return "*THANKS!*";
                 case MessageIDs.ChatAboutSomething:
-                    return "*Grrr... Fine. Just don't annoy me.*";
+                    return "*Grrr... whatever. Don't annoy me.*";
                 case MessageIDs.NevermindTheChatting:
-                    return "*Finally.*";
+                    return "*Finally!*";
                 case MessageIDs.CancelRequestAskIfSure:
-                    return "*You what? Tell me that you really didn't mean that!*";
+                    return "*You what?! Tell me that you really didn't mean that!*";
                 case MessageIDs.CancelRequestYesAnswered:
-                    return "*Urgh... Okay... I can do It myself them. No thanks to you, of course!*";
+                    return "*Urgh... Whatever then... I'll do it myself. No thanks to you, of course!*";
                 case MessageIDs.CancelRequestNoAnswered:
-                    return "*Then you just wanted to anger me?!*";
+                    return "*So you just wanted to irritate me?!*";
                 case MessageIDs.LeopoldMessage1:
-                    return "*He's already starting to annoy me. Can I beat him up?*";
+                    return "*He's already starting to annoy me. I might just pound him.*";
                 case MessageIDs.LeopoldMessage2:
-                    return "*What?! How can you think of attacking me? I'm trying to save you!*";
+                    return "*What?! why do you want to attack me? I'm trying to save you!*";
                 case MessageIDs.LeopoldMessage3:
-                    return "*Save me? I'm following that Terrarian because I want, and also because he asked me to.*";
+                    return "*Save me?! I'm following that Terrarian because they give me monsters to smash.*";
                 //
                 case MessageIDs.ReviveByOthersHelp:
                     if (Main.rand.NextDouble() < 0.5f)
-                        return "*THANK YOU!!! There's no other way I can express this!*";
-                    return "*This rage is of happiness, believe It or not!*";
+                        return "*Ok im healed get off me!*";
+                    return "*Im still as furios!*";
                 case MessageIDs.RevivedByRecovery:
-                    return "*I hate you all! Why didn't you helped me?!*";
+                    return "*I hate you all! I didn't need your help anyway?!*";
                 //
                 case MessageIDs.AcquiredPoisonedDebuff:
                     return "*Agh!! Poison!*";
                 case MessageIDs.AcquiredBurningDebuff:
-                    return "*Fire! Fire! AAAHHH!!!*";
+                    return "*Fire! Fire! THIS REALLY PISSES ME OFF!!!!*";
                 case MessageIDs.AcquiredDarknessDebuff:
-                    return "*Wait until I see you again!*";
+                    return "*I fight in the darkness all the time, this is no different!*";
                 case MessageIDs.AcquiredConfusedDebuff:
-                    return "*I don't care how many of you are, I'll take you down!*";
+                    return "*I don't care how many of you are, I'll still smack you down!*";
                 case MessageIDs.AcquiredCursedDebuff:
-                    return "*Cheater! You can't bind my arms forever!*";
+                    return "*What the hell?! I cant use my arms!*";
                 case MessageIDs.AcquiredSlowDebuff:
-                    return "*I can't move faster!! That makes me more angry!*";
+                    return "*Oh my lord! WHY AM I SO SLOW!!!*";
                 case MessageIDs.AcquiredWeakDebuff:
-                    return "*That wont allow you to escape from a beating!*";
+                    return "*ME WEAK?! I could never be!*";
                 case MessageIDs.AcquiredBrokenArmorDebuff:
-                    return "*Ah!! Prepare to suffer!*";
+                    return "*Who cares about armor?!*";
                 case MessageIDs.AcquiredHorrifiedDebuff:
                     return "*Great! Something worth unleashing my rage on.*";
                 case MessageIDs.AcquiredIchorDebuff:
-                    return "*You piece of...*";
+                    return "*You piece of sh*t!*";
                 case MessageIDs.AcquiredChilledDebuff:
-                    return "*That doesn't make me less angry!*";
+                    return "*Argh its cold!*";
                 case MessageIDs.AcquiredWebbedDebuff:
                     return "*Get me off here now!*";
                 case MessageIDs.AcquiredFeralBiteDebuff:
@@ -517,9 +517,9 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredDefenseBuff:
                     return "*Come on! Hit me!*";
                 case MessageIDs.AcquiredWellFedBuff:
-                    return "*THANKS!!*";
+                    return "*Now I can kick a** while on full stomach!!*";
                 case MessageIDs.AcquiredDamageBuff:
-                    return "*Now you made me more furious!*";
+                    return "*Now you made me mad!*";
                 case MessageIDs.AcquiredSpeedBuff:
                     return "*Rush!*";
                 case MessageIDs.AcquiredHealthIncreaseBuff:
@@ -540,11 +540,11 @@ namespace giantsummon.Companions
                 case MessageIDs.FoundDetonatorTile:
                     return "*Don't even think about it.*";
                 case MessageIDs.FoundPlanteraTile:
-                    return "*I could discount my rage on that.*";
+                    return "*Whats that? something to smash I hope.*";
                 case MessageIDs.WhenOldOneArmyStarts:
-                    return "*That seems perfect to discount my rage.*";
+                    return "*Perfect, lots of faces to smash.*";
                 case MessageIDs.FoundTreasureTile:
-                    return "*I hope that doesn't waste our time.*";
+                    return "*That better not waste our time.*";
                 case MessageIDs.FoundGemTile:
                     return "*Gems! There!*";
                 case MessageIDs.FoundRareOreTile:
@@ -555,61 +555,61 @@ namespace giantsummon.Companions
                     return "";
                 //
                 case MessageIDs.TeleportHomeMessage:
-                    return "*Let's get out of here.*";
+                    return "*Let's get out of here!*";
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Summon!*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                    return "*Even watching that doesn't make me less angry!*";
+                    return "*Why do you let him sumther you like that?!*";
                 //
                 case MessageIDs.LeaderFallsMessage:
                     return "*[nickname]! You're still weak!*";
                 case MessageIDs.LeaderDiesMessage:
-                    return "*Grrr!! GRRRR!!! GRAAAAHH!!! YOU SHOULDN'T HAVE DONE THAT!!!*";
+                    return "*NO!!! YOU SHOULDN'T HAVE DONE THAT!!!*";
                 case MessageIDs.AllyFallsMessage:
                     return "*Someone is down!!*";
                 case MessageIDs.SpotsRareTreasure:
                     return "*LOOT!*";
                 case MessageIDs.LeavingToSellLoot:
-                    return "*Okay, I'll sell this stinky loot!*";
+                    return "*Ok whatever, I'll sell this trashy loot.*";
                 case MessageIDs.PlayerAtDangerousHealthLevel:
                     return "*Watch your health, fool!*";
                 case MessageIDs.CompanionHealthAtDangerousLevel:
-                    return "*Grrr... That's all you've got?!*";
+                    return "*That's all you've got?!*";
                 case MessageIDs.RunningOutOfPotions:
                     return "*Low on potions here!*";
                 case MessageIDs.UsesLastPotion:
                     return "*No more potions left!!*";
                 case MessageIDs.SpottedABoss:
-                    return "*Time to make some mashed meat!*";
+                    return "*Time to take my pummeling to the big league!*";
                 case MessageIDs.DefeatedABoss:
                     return "*Boom!*";
                 case MessageIDs.InvasionBegins:
-                    return "*Perfect! I was needing punching bags.*";
+                    return "*Perfect! I was in need of punching bags.*";
                 case MessageIDs.RepelledInvasion:
                     return "*Anyone else?! Come on!*";
                 case MessageIDs.EventBegins:
-                    return "*I'm ready. Bring it on!*";
+                    return "*I was born for this! Bring it on!*";
                 case MessageIDs.EventEnds:
-                    return "*Already over?! That makes me more angry!*";
+                    return "*Already over?! NO! I wanted to smash more faces!*";
                 case MessageIDs.RescueComingMessage:
                     return "*What!? No way you're dying!!*";
                 case MessageIDs.RescueGotMessage:
-                    return "*Wake up! WAKE UP!! I'll be very angry if you die!*";
+                    return "*Wake up now! before I put you back to sleep!*";
                 //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
                 case MessageIDs.FeatMentionPlayer:
-                    return "*Do you know [player]? He also managed to defeat me when we met.*";
+                    return "*Do you know [player]? They somehow managed to defeat me when we met.*";
                 case MessageIDs.FeatMentionBossDefeat:
-                    return "*I heard that [player] killed [subject]. They could have left it for me to unleash my rage!*";
+                    return "*I heard that [player] killed [subject]. I wish I woudlve did it instead!*";
                 case MessageIDs.FeatFoundSomethingGood:
-                    return "*[player] has found a [subject] in their travels! Grrreat!*";
+                    return "*[player] has found a [subject] in their travels!*";
                 case MessageIDs.FeatEventFinished:
-                    return "*I ended up with sore arms due to beating up several creatures during a [subject]. Thankfully, [player] managed to end it.*";
+                    return "*I ended up with sore arms due to beating up several creatures during a [subject]. Good thing [player] managed to end it.*";
                 case MessageIDs.FeatMetSomeoneNew:
                     return "*I don't care if [player] has met someone new. If you do, their name was [subject].*";
                 case MessageIDs.FeatPlayerDied:
-                    return "*Grrr!! I'm not in the mood! [player] died and I could do nothing! NOTHING!! Damn!!*";
+                    return "*I'm not in the mood! [player] died and I could do nothing! NOTHING!! Damn!!*";
                 case MessageIDs.FeatOpenTemple:
-                    return "*[player] opened the door of some kind of temple at [subject]. I'm glad to see new things to beat in there.*";
+                    return "*[player] opened the door of some kind of temple at [subject]. Luckily there are things to beat in there.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*[player] bumped into a coin portal during their travel.*";
                 case MessageIDs.FeatPlayerMetMe:
@@ -619,15 +619,15 @@ namespace giantsummon.Companions
                 case MessageIDs.FeatKilledMoonLord:
                     return "*You should have seen the beating I gave to Moon Lord at [subject]. [player] just helped a bit with the dps, though.*";
                 case MessageIDs.FeatStartedHardMode:
-                    return "*Even though freaky creatures begun appearing at [subject], beating them up doesn't help me get less angry.*";
+                    return "*Even though freaky creatures begun appearing at [subject], beating them up doesn't help much for me.*";
                 case MessageIDs.FeatMentionSomeonePickedAsBuddy:
-                    return "*Yeah, [player] got [subject] as their buddy! Like do I care?*";
+                    return "*Yeah, [player] got [subject] as their buddy! I don't care.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
-                    return "*Yeah, you're my buddy! Don't feel bad about my anger, I'm always like this.*";
+                    return "*Yu can call me your buddy but I can careless about being buddies. Im always mad and forever will be so what?! gonna cry?!*";
                 case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
-                    return "*Yes, [subject] got a new house at [world], what about it?*";
+                    return "*Yes, [subject] got a new house at [world], no one cares.*";
                 case MessageIDs.DeliveryGiveItem:
-                    return "*I hope you really need this [item], [target].*";
+                    return "*You better need this [item], [target].*";
                 case MessageIDs.DeliveryItemMissing:
                     return "*What?! Where is it? The item!*";
                 case MessageIDs.DeliveryInventoryFull:
