@@ -269,7 +269,7 @@ namespace giantsummon.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*It's terrifying here! I need a place to live and lock myself in!*");
-            Mes.Add("*Aahhh!! Sorry, I thought you were a slime.*");
+            Mes.Add("*Aahhh!! I thought you were a slime.*");
             Mes.Add("*I need a place to lock myself in! This place is too dangerous. Anything could try killing me.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -336,7 +336,7 @@ namespace giantsummon.Companions
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
                     return "*I really don't like this idea... But okay...*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
-                    return "*It's... It's late for me to say, that I'm enochlophobe? Sorry, I just wont join your group right now.*";
+                    return "*It's... It's late for me to say, that I'm enochlophobe? eh, I just wont join your group right now.*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
                     return "*No! I already have a lot to worry about right now.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
@@ -364,25 +364,25 @@ namespace giantsummon.Companions
                 case MessageIDs.RestAskForHowLong:
                     return "*Wait, you're proposing the idea of laying down somewhere, closing the eyes and not worrying about any threats or scary things?! How long we'll realize that beautiful idea for?*";
                 case MessageIDs.RestNotPossible:
-                    return "*Now?! Couldn't you have a worser moment to pick for taking a rest?! I'm sorry but... Look around.*";
+                    return "*Now?! Couldn't you have a worser moment to pick for taking a rest?! Just...Look around.*";
                 case MessageIDs.RestWhenGoingSleep:
                     return "*It will be good to keep my head off scary things for a while, if possible.*";
                 case MessageIDs.AskPlayerToGetCloserToShopNpc:
-                    return "*Look! [shop] has something I need to check.*";
+                    return "*Look! [shop] has something I need to check maybe.*";
                 case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
-                    return "*Do I need this...?*";
+                    return "*Do I need this...I think?*";
                 case MessageIDs.GenericYes:
                     return "*Yes!*";
                 case MessageIDs.GenericNo:
                     return "*No...*";
                 case MessageIDs.GenericThankYou:
-                    return "*Thank you!*";
+                    return "*Thanks I guess*";
                 case MessageIDs.ChatAboutSomething:
                     return "*Do you need to know about something? What is it?*";
                 case MessageIDs.NevermindTheChatting:
-                    return "*Enough chatting then?*";
+                    return "*Enough chatting then?I hope so...*";
                 case MessageIDs.CancelRequestAskIfSure:
-                    return "*You want to cancel my request? Are you sure?*";
+                    return "*You want to cancel my request? Are you sure?Its more stress on you me.*";
                 case MessageIDs.CancelRequestYesAnswered:
                     return "*Aww... Now I need to do this myself...*";
                 case MessageIDs.CancelRequestNoAnswered:
@@ -392,14 +392,14 @@ namespace giantsummon.Companions
                 case MessageIDs.LeopoldMessage2:
                     return "*I'm not crazy! Why are you following that Terrarian?*";
                 case MessageIDs.LeopoldMessage3:
-                    return "*I don't know either, their adventure is scary for me. I just joined them because they asked me.*";
+                    return "*I joined to use them as protection somewhat, they still have to keep their distance from me.*";
                 //
                 case MessageIDs.ReviveByOthersHelp:
                     if (Main.rand.NextDouble() < 0.5)
                         return "*The feeling of death terrifies me...*";
-                    return "*Thank you for pulling me out of that tunnel.*";
+                    return "*I felt it the eternal darkness haunting me, it wasen't my time luckily.*";
                 case MessageIDs.RevivedByRecovery:
-                    return "*I'm alive?! I'm alive!!*";
+                    return "*I'm alive?! oh no I still have to worry about dieing again!*";
                 //
                 case MessageIDs.AcquiredPoisonedDebuff:
                     return "*I CAN FEEL IT CREEP THROUGH MY VEINS!*";
@@ -410,7 +410,7 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredConfusedDebuff:
                     return "*My head isn't right right now...*";
                 case MessageIDs.AcquiredCursedDebuff:
-                    return "*I didn't want to fight anyway! Cursing me only doesn't make it any better!*";
+                    return "*I didn't want to fight anyway! Cursing me doesn't make it any better!*";
                 case MessageIDs.AcquiredSlowDebuff:
                     return "*I can't move faster! hurry!";
                 case MessageIDs.AcquiredWeakDebuff:
@@ -435,9 +435,9 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredDamageBuff:
                     return "*I... Don't know if this will be very helpful.*";
                 case MessageIDs.AcquiredSpeedBuff:
-                    return "*I can now outrun threats!*";
+                    return "*If I wasen't already fast enough! now I can outrun threats!*";
                 case MessageIDs.AcquiredHealthIncreaseBuff:
-                    return "*I will survive longer with this.*";
+                    return "*I will survive longer with this...I hope...*";
                 case MessageIDs.AcquiredCriticalBuff:
                     return "*I hope scary things die faster due to this.*";
                 case MessageIDs.AcquiredMeleeWeaponBuff:
@@ -506,14 +506,14 @@ namespace giantsummon.Companions
                         return "*WE'RE ALL GONNA DIE!*";
                     return "*What is going on? Why things suddenly look grim?*";
                 case MessageIDs.EventEnds:
-                    return "*Is it over? Can I stop panicking now?*";
+                    return "*Is it over? Can I stop panicking now? no I can never stop panicking!*";
                 case MessageIDs.RescueComingMessage:
                     return "*Ahhh!! NOO!!!*";
                 case MessageIDs.RescueGotMessage:
                     return "*Alright! Now we run away!!*";
                 //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
                 case MessageIDs.FeatMentionPlayer:
-                    return "*I feel a bit more safer latelly, [player] also checks if i'm fine frequently.*";
+                    return "*I feel a bit less stressed latelly, [player] also checks if i'm fine frequently but its possible they will try something.*";
                 case MessageIDs.FeatMentionBossDefeat:
                     return "*It was really creepy when [subject] surged and caused chaos, but [player] managed to take it down.*";
                 case MessageIDs.FeatFoundSomethingGood:
@@ -523,25 +523,25 @@ namespace giantsummon.Companions
                 case MessageIDs.FeatMetSomeoneNew:
                     return "*I heard that [player] met [subject] recently. I hope they're not scary.*";
                 case MessageIDs.FeatPlayerDied:
-                    return "*You wont do that, right? End up dead like [player], right? Please don't.*";
+                    return "*You wont do that, right? End up dead like [player]?*";
                 case MessageIDs.FeatOpenTemple:
                     return "*A temple door was open at [subject]. No, I didn't checked out what is inside, and I don't want to know.*";
                 case MessageIDs.FeatCoinPortal:
                     return "*[player] was surprised by a coin portal recently.*";
                 case MessageIDs.FeatPlayerMetMe:
-                    return "*I... I have met [player]. I thought they were scary, but they turned out to be nice.*";
+                    return "*I... I have met [player]. They were definently nerve racking to be around.*";
                 case MessageIDs.FeatCompletedAnglerQuests:
                     return "*I heard that [player] has been catching many weird fish.*";
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*Did you knew? [player] managed to kill [subject] and save everyone.*";
+                    return "*Did you knew? [player] managed to kill [subject]...wonder if they would do it to me?!*";
                 case MessageIDs.FeatStartedHardMode:
                     return "*It was really weird. I was at my house, until I felt something really weird. After that, scarier monsters begun showing on the world. What just happened on [subject]?*";
                 case MessageIDs.FeatMentionSomeonePickedAsBuddy:
-                    return "*You could think of congratulating [subject] for being picked as [player]'s buddy. I fear I'll never manage to be picked as someone's buddy... Who'd pick a scaredy person like me as their buddy?*";
+                    return "*You could probably congratulate [subject] for being picked as [player]'s buddy. Its horrifying to be picked as someone's buddy...why would they want to pick me out of all others?!*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
-                    return "*I'm still... I still want to... I... Thank you... For picking me as buddy... I fear... No... I..*";
+                    return "*Well since you classify me as a buddy I name you buddy sheild! Your reward? stay atleast 5 feet away from me! since your a buddy you get a -5 deduction from the usual 10 feet I give to everyone else.*";
                 case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
-                    return "*I know about [subject]'s new house in [world]. I hope that place isn't scary.*";
+                    return "*I know about [subject]'s new house in [world]. Hopeully it may be a safe haven.*";
                 case MessageIDs.DeliveryGiveItem:
                     return "*H-here some [item], [target].*";
                 case MessageIDs.DeliveryItemMissing:
