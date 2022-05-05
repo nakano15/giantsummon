@@ -180,7 +180,7 @@ namespace giantsummon.Companions
                 {
                     if (player.GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
                     {
-                        Mes.Add("*I'm... Fragmented? Just this thought makes me really scared. Please help me find my other pieces.*");
+                        Mes.Add("*I'm... Fragmented? Just this thought makes me nervous.*");
                     }
                     else
                     {
@@ -193,11 +193,11 @@ namespace giantsummon.Companions
                 }
                 if (NpcMod.HasGuardianNPC(Wrath))
                 {
-                    Mes.Add("*Make sure [gn:" + Wrath + "] stay VERY, VERY far away from me! They are menacing and should be caged up.*");
+                    Mes.Add("*Make sure [gn:" + Wrath + "] stay VERY, VERY far away from me! They are a menace and should be caged up.*");
                 }
                 if (NpcMod.HasGuardianNPC(Joy))
                 {
-                    Mes.Add("*I don't care how nice [gn:" + Joy + "] may seem, just don't get them close to me!*");
+                    Mes.Add("*I don't care how nice [gn:" + Joy + "] may seem, they are just trying to gain my trust now to hurt me later!*");
                 }
                 /*if (NpcMod.HasGuardianNPC(Sadness))
                 {
@@ -205,12 +205,12 @@ namespace giantsummon.Companions
                 }*/
                 if (NpcMod.HasGuardianNPC(Miguel))
                 {
-                    Mes.Add("*Those abs on [gn:" + Miguel + "] are menacing. They really scare me.*");
+                    Mes.Add("*Those abs on [gn:" + Miguel + "] are menacing!*");
                 }
                 if (guardian.IsPlayerRoomMate(player))
                 {
                     Mes.Add("*You... You will protect me at night, right? You know... Under bed monsters? Closet monsters? And those things?*");
-                    Mes.Add("*Sharing the house with you is the best idea ever!! Just please, don't do scary noises.*");
+                    Mes.Add("*Sharing the house with you is not the best idea. Just please, don't make weird noises it makes me anxious.*");
                 }
             }
             return Mes[Main.rand.Next(Mes.Count)];
@@ -220,7 +220,7 @@ namespace giantsummon.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*It doesn't work, I'm like 24/7 scared, "+GuardianGlobalInfos.DaysInAYear+" days in a year.*");
-            Mes.Add("*I think my other pieces must think of me as a scaredy cat. But It can't be helped, I am a scaredy cat!*");
+            Mes.Add("*I think my other pieces must think of me as a scaredy cat. But It can't be helped, everything is frightening for me!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -237,11 +237,11 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             if (guardian.request.Base is TravelRequestBase)
             {
-                Mes.Add("*There is no way I will explore the world by myself, so can you take me with you?*");
+                Mes.Add("*There is no way I will explore the world by myself, you have to be a sheild for me.*");
             }
             else
             {
-                Mes.Add("*Yes... There is. It's too scary for me to do this, so I need your help with it. Can you [objective]?*");
+                Mes.Add("*Yes... There is. It's too scary for me to do this, so I need your assistance with it. Can you [objective]?*");
                 Mes.Add("*It's so scary outside, so I can't get this done by myself. Could you help me with [objective]?*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
@@ -250,18 +250,18 @@ namespace giantsummon.Companions
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Thank you! Thank you! You're a life saver!!*");
-            Mes.Add("*I'm really grateful for you, I fear if the reward isn't enough.*");
+            Mes.Add("*Thanks your a live life saver! just make sure to keep a few feet away from me though!*");
+            Mes.Add("*I'm grateful, but I fear the reward may not be enough.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string BirthdayMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*I know I should be happy, but each birthday I'm a year older, and that means... Oh no... I should not think about that.*");
-            Mes.Add("*Please! No surprise party!! I still want to live a few more years!*");
+            Mes.Add("*I should probably be happy, but each birthday I'm a year older, and that means... Oh no... I should not think about that.*");
+            Mes.Add("*Please! No surprise party!! I still want to live atleast few more years!*");
             if (PlayerMod.HasGuardianBeenGifted(player, guardian))
-                Mes.Add("*Did you brought me a gift? I wonder if you brought me a gift. I really don't want to think about what it is, since I fear I may either like it or not.*");
+                Mes.Add("*Did you bring me a gift? I really don't want to think about what it is, since I fear you may try somehing on me.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -269,8 +269,8 @@ namespace giantsummon.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*It's scary here! I need a place to live and lock myself in!*");
-            Mes.Add("*Aahhh!! Sorry, I thought you was a slime.*");
-            Mes.Add("*I need a place to lock myself in! This place is too dangerous and scary. Anything could try killing me.*");
+            Mes.Add("*Aahhh!! Sorry, I thought you were a slime.*");
+            Mes.Add("*I need a place to lock myself in! This place is too dangerous. Anything could try killing me.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -288,7 +288,7 @@ namespace giantsummon.Companions
         public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
         {
             Weight = 1f;
-            return "*I'm glad they're friendly.*";
+            return "*I'm glad they're somewhat friendly I guess?*";
         }
 
         public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
@@ -301,7 +301,7 @@ namespace giantsummon.Companions
                 }
             }
             Weight = 1f;
-            return "*Hi... Please, don't do something scary.*";
+            return "*Hey... Please, don't try anything.*";
         }
 
         public override string GetSpecialMessage(string MessageID)
@@ -309,7 +309,7 @@ namespace giantsummon.Companions
             switch (MessageID)
             {
                 case MessageIDs.BuddySelected:
-                    return "*Y-You picked me?! I... Ah... Will ever be a good buddy? I mean... Thanks... Thanks really..*";
+                    return "*Y-You picked me?! I... Ah... was not expecting to be out so soon. You can be my sheild I suppose.*";
                 case MessageIDs.RescueMessage:
                     return "*I managed to find you, gladly I could get back home too.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:
@@ -329,7 +329,7 @@ namespace giantsummon.Companions
                         case 0:
                             return "*Aahh!! Oh... Did you do my request?*";
                         case 1:
-                            return "*Waahh!! Ah... Oh... Did... You completed what I asked for?*";
+                            return "*Waahh!! Ah... Oh... Did... You complete what I asked for?*";
                     }
                     break;
                 //
