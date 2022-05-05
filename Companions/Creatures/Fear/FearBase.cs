@@ -100,7 +100,7 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
-                Mes.Add("*Oh, hi [nickname]. What do you wa-AAAHHHHH!! A GHOST!!! BEHIND YOU!!*");
+                Mes.Add("*Oh, hey....[nickname]. What do you wa-AAAHHHHH!! A GHOST!!! BEHIND YOU!!*");
                 Mes.Add("*Waah!! What is that!! On your back!!*");
             }
             else if (guardian.IsSleeping)
@@ -127,7 +127,7 @@ namespace giantsummon.Companions
                 Mes.Add("*I need my space, why are you so close!?*");
                 Mes.Add("*Hey! Stay away from me!*");
                 Mes.Add("*I have nothing to discuss. You should be on your way far from me.*");
-                Mes.Add("*Hey! Stop moving around me, it's giving me anxiety.*");
+                Mes.Add("*Hey! Stop moving around so much, it's giving me anxiety.*");
                 Mes.Add("*Just existing around here gives me the creeps.*");
 
                 if (Main.dayTime)
@@ -164,13 +164,13 @@ namespace giantsummon.Companions
                 }
                 if (NpcMod.HasGuardianNPC(Rococo))
                 {
-                    Mes.Add("*Please tell [gn:"+Rococo+"] to stop scaring me! He'll end up killing me like that.*");
+                    Mes.Add("*Please tell [gn:"+Rococo+"] to stop staring at me! His quiet nature doesn't fool me!.*");
                 }
                 if (NpcMod.HasGuardianNPC(Brutus))
                 {
-                    Mes.Add("*[gn:"+Brutus+"] told me to stop seeing him everytime I get scared at something.*");
+                    Mes.Add("*[gn:"+Brutus+"] seems to be good meat sheild, lets exploit that to our advantage.*");
                     Mes.Add("*Even with [gn:" + Brutus + "] here, I can't feel entirelly safe.*");
-                    Mes.Add("*I sometimes also fear the presence of [gn:" + Brutus + "] here. What if we end up in a discussion? He could easily beat me up to the ground.*");
+                    Mes.Add("*My only use for [gn:" + Brutus + "] is a sheild.*");
                 }
                 if (NpcMod.HasGuardianNPC(Malisha))
                 {
@@ -180,16 +180,16 @@ namespace giantsummon.Companions
                 {
                     if (player.GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
                     {
-                        Mes.Add("*I'm... Fragmented? Just this thought makes me nervous.*");
+                        Mes.Add("*I'm... Fragmented? Just that thought makes me nervous.*");
                     }
                     else
                     {
-                        Mes.Add("*It seems like [gn:" + Leopold + "] really wants to ask many things, but I can't concentrate well on the talking.*");
+                        Mes.Add("*It seems like [gn:" + Leopold + "] really wants to ask many things, but I can't trust him too much, he could be planning something.*");
                     }
                 }
                 if (NpcMod.HasGuardianNPC(Fluffles))
                 {
-                    Mes.Add("*Please! Tell that ghost to stay very far away from me!*");
+                    Mes.Add("*Fox ghost!*");
                 }
                 if (NpcMod.HasGuardianNPC(Wrath))
                 {
@@ -227,7 +227,7 @@ namespace giantsummon.Companions
         public override string NoRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*No... There is nothing scaring me..*");
+            Mes.Add("*No... I don't need anything at the moment..I hope..*");
             Mes.Add("*Ah... No.. I fear I disappointed you.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -237,7 +237,7 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             if (guardian.request.Base is TravelRequestBase)
             {
-                Mes.Add("*There is no way I will explore the world by myself, you have to be a sheild for me.*");
+                Mes.Add("*There is no way I will explore the world by myself, I need a tangible sheild, you look like one.*");
             }
             else
             {
@@ -268,7 +268,7 @@ namespace giantsummon.Companions
         public override string HomelessMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*It's scary here! I need a place to live and lock myself in!*");
+            Mes.Add("*It's terrifying here! I need a place to live and lock myself in!*");
             Mes.Add("*Aahhh!! Sorry, I thought you were a slime.*");
             Mes.Add("*I need a place to lock myself in! This place is too dangerous. Anything could try killing me.*");
             return Mes[Main.rand.Next(Mes.Count)];
@@ -288,7 +288,7 @@ namespace giantsummon.Companions
         public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
         {
             Weight = 1f;
-            return "*I'm glad they're somewhat friendly I guess?*";
+            return "*They're somewhat friendly I guess?*";
         }
 
         public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
@@ -311,7 +311,7 @@ namespace giantsummon.Companions
                 case MessageIDs.BuddySelected:
                     return "*Y-You picked me?! I... Ah... was not expecting to be out so soon. You can be my sheild I suppose.*";
                 case MessageIDs.RescueMessage:
-                    return "*I managed to find you, gladly I could get back home too.*";
+                    return "*I managed to find you, luckily I could get back home too.*";
                 case MessageIDs.GuardianWokeUpByPlayerMessage:
                     switch (Main.rand.Next(3))
                     {
@@ -338,7 +338,7 @@ namespace giantsummon.Companions
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
                     return "*It's... It's late for me to say, that I'm enochlophobe? Sorry, I just wont join your group right now.*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
-                    return "*No! I already have a lot to fear of right now.*";
+                    return "*No! I already have a lot to worry about right now.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
                     return "*What?! You want to leave me here?! Alone? In the danger?*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
@@ -350,9 +350,9 @@ namespace giantsummon.Companions
                 case MessageIDs.RequestAccepted:
                     return "*I will anxiously wait for your return. Seriously, try doing that fast, It's a horrible feeling.*";
                 case MessageIDs.RequestCantAcceptTooManyRequests:
-                    return "*You're overloaded of things to do. Why don't you take care of your other requests before taking mine?*";
+                    return "*You're overloaded of things to do. Why don't you take care of your other requests before taking mine?your trying to do something to me?*";
                 case MessageIDs.RequestRejected:
-                    return "*I feared that would end up happening. Now I will need to do it myself.*";
+                    return "*I feared that would end up happening. Now I will need to do it myself maybe......*";
                 case MessageIDs.RequestPostpone:
                     return "*Later? Later?! Oh my...*";
                 case MessageIDs.RequestFailed:
@@ -410,9 +410,9 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredConfusedDebuff:
                     return "*My head isn't right right now...*";
                 case MessageIDs.AcquiredCursedDebuff:
-                    return "*I can't attack anymore! No, I really mean it, isn't because of fear!*";
+                    return "*I didn't want to fight anyway! Cursing me only doesn't make it any better!*";
                 case MessageIDs.AcquiredSlowDebuff:
-                    return "*I can't move faster!*";
+                    return "*I can't move faster! hurry!";
                 case MessageIDs.AcquiredWeakDebuff:
                     return "*I feel like dropping on the ground...*";
                 case MessageIDs.AcquiredBrokenArmorDebuff:
