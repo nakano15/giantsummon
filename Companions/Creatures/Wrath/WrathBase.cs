@@ -228,50 +228,50 @@ namespace giantsummon.Companions
             }
             if (Main.raining)
             {
-                Mes.Add("*Great!, It couldn't get worse could it?!, now I have to be annoyed by rain drops?*");
+                Mes.Add("*Great!, It couldn't get worse could it?!, now I have to be annoyed by rain drops!*");
                 Mes.Add("*Oh my god! the splashes are infuriating!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Alex))
                 Mes.Add("*GO AWAY!. Pftt nevermind, I thought It was [gn:"+GuardianBase.Alex+"] wanting to play.*");
             if (NpcMod.HasGuardianNPC(GuardianBase.Brutus))
-                Mes.Add("My rage wont lower! I even asked [gn:"+GuardianBase.Brutus+"] if he would let me beat him to try lowering my rage, and It didn't work!");
+                Mes.Add("Looking at [gn:"+GuardianBase.Brutus+"] try to be tuff makes me want to beat him to a pulp!");
             if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
             {
-                Mes.Add("How many times I have to tell you, that I'M NOT GOING TO PARTICIPATE OF ANY... Oh.. My bad, I thought you were [gn:"+GuardianBase.Malisha+"].");
+                Mes.Add("How many times do I have to tell [gn:"+GuardianBase.Malisha+"] that I'M NOT GOING TO PARTICIPATE IN ANY OF YOUR TRASH A** EXPERIMENTS!!!.");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Leopold))
             {
                 if (player.GetModPlayer<PlayerMod>().TalkedToLeopoldAboutThePigs)
-                    Mes.Add("*It seems like the only way of lowering my rage, is if I get fused together with my other emotions. But where could they be?*");
+                    Mes.Add("*The bunny may know something about me that I dont? Thats maddening!*");
                 else
-                    Mes.Add("*I wonder if the nerdy guy knows how I could get off this form.*");
+                    Mes.Add("*Tell the white bunny to help me get out of this form.*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Sardine))
             {
-                Mes.Add("*[gn:" + Sardine + "] has the kind of thing that keeps me busy with, that's why I'm not punching random people here.*");
+                Mes.Add("*[gn:" + Sardine + "] is the only reason I haven't pounded anyone here since he keeps me busy with fighting monsters.*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Domino))
             {
-                Mes.Add("*If I ever see [gn:" + Domino + "] making another joke about me, I'll beat him so hard that he'll need plastic surgery!*");
+                Mes.Add("*If I ever see [gn:" + Domino + "] making another joke about me, I'll make his other eye a sunny side up egg!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Vladimir))
             {
-                Mes.Add("*The hugs [gn:"+GuardianBase.Vladimir+"] gives doesn't works either! I can't get less angry with them!*");
+                Mes.Add("*I dont care how big [gn:"+GuardianBase.Vladimir+"] is I'll pummel him like the rest if he tries to smuther me again!*");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
             {
                 if (CloudForm)
-                    Mes.Add("*I already said that I'm not a ghost. Don't compare me to [gn:" + Fluffles + "].*");
+                    Mes.Add("*I know im a ghost at the moment but dont compare me to [gn:" + Fluffles + "]!*");
             }
             if (NpcMod.HasGuardianNPC(Fear))
             {
-                Mes.Add("*At least [gn:" + Fear + "] knows what to do when I'm around, to just get out of my away. But I really hate when he screams.*");
+                Mes.Add("*At least [gn:" + Fear + "] knows what to do when I'm around, to just get out of my away. But I really hate when he screams its annoying as hell.*");
             }
             if (guardian.IsPlayerRoomMate(player))
             {
-                Mes.Add("*Great... A room mate. It couldn't get worse, right?*");
+                Mes.Add("*Great... A room mate. Don't try anything unless you want your a** beat.*");
                 if(CloudForm)
-                    Mes.Add("*Don't think that we can share bed since I'm not solid.*");
+                    Mes.Add("*Don't think that we can share beds since I'm not fully tangible.*");
             }
             if (guardian.KnockedOut)
             {
@@ -279,7 +279,7 @@ namespace giantsummon.Companions
                 if (!guardian.KnockedOutCold)
                 {
                     Mes.Add("*Ngh... Just you wait... Until I stand up...* (He seems very furious to the one who have beaten him.)");
-                    Mes.Add("*Ugh... My blood is boiling right now... Pain is increasing... The rage rises... Cough...* (He seems very furious to the one who have beaten him.)");
+                    Mes.Add("*Ugh... Im boiling right now... Pain is increasing... The rage rises... Cough...* (He seems very furious to the one who have beaten him.)");
                 }
                 else
                 {
@@ -297,7 +297,7 @@ namespace giantsummon.Companions
             if (FlufflesBase.IsHauntedByFluffles(player) && Main.rand.NextDouble() < 0.75)
             {
                 Mes.Clear();
-                Mes.Add("*Does It look like I'm the same as her? I'm alive!*");
+                Mes.Add("*Does It look like I'm the same as her?! I'm actually alive!*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -305,8 +305,8 @@ namespace giantsummon.Companions
         public override string TalkMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Sometimes I temble out of rage. If you ever see me in that state, don't get close.*");
-            Mes.Add("*I still don't remember anything from before I woke up. I wonder who was I before what ever made me unconscious.*");
+            Mes.Add("*Sometimes I temble out of rage. Stay out of my way for your own safety.*");
+            Mes.Add("*I still don't remember anything from before I woke up. I wonder who was I before what ever made me unconscious, it pisses me off not knowing.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -330,18 +330,18 @@ namespace giantsummon.Companions
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Good. I can't feel happy about this, so take this as a... Friendly rage.*");
-            Mes.Add("*Okay, I wont hurt you for a few hours, is that a good reward?*");
+            Mes.Add("*Good I will direct my animosity else where for now.*");
+            Mes.Add("*Okay, I wont hurt you for a few hours, is that a good enough reward?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string BirthdayMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*No, I'm not happy, I'm still angry, you know.*");
-            Mes.Add("*All those people dancing around, meanwhile I'm here, this is making me so furious.*");
+            Mes.Add("*No, I'm not happy,I can never be happy!*");
+            Mes.Add("*All those people dancing around, meanwhile I'm here, this is making me furious!!*");
             if (!PlayerMod.HasGuardianBeenGifted(player, Wrath))
-                Mes.Add("*I hope the gift is good.*");
+                Mes.Add("*This gift better be good.*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -350,15 +350,15 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             if (IsPlayer && RevivePlayer.whoAmI == Guardian.OwnerPos)
             {
-                Mes.Add("*Come on, wake up!*");
-                Mes.Add("*I didn't agree to baby sit you.*");
-                Mes.Add("*I hope you don't die on me, I will be very angry with you if you do so.*");
+                Mes.Add("*Come on! get up now!*");
+                Mes.Add("*I didn't agree to baby sit you!*");
+                Mes.Add("*Rise up now or I'll give you a worse fate then death!*");
             }
             else
             {
-                Mes.Add("*Hey, get up, now!*");
-                Mes.Add("*I hope you aren't doing that on purpose.*");
-                Mes.Add("*This is already getting me furious.*");
+                Mes.Add("*Hey, get up before I bash your head in more!*");
+                Mes.Add("*I hope you aren't acting like this on purpose, because if you are your as good as dead regardless.*");
+                Mes.Add("*This is already making me mad!*");
             }
             return Mes[Main.rand.Next(Mes.Count)];
         }
