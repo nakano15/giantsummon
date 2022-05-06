@@ -1870,10 +1870,72 @@ namespace giantsummon.Companions
         {
             switch (MessageID)
             {
+	    case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return "*Nice I could use a adventure right about now.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return "*Ehh im a bit iffy on joining mate. You seem to be stuffed with a crew already.*";
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return "*Cant join right now. Sorry mate.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return "*No worriers, you sure ya want me to leave?*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return "*Ahh! Ok then. Tingle me later.*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return "*Ay mate! if your gonna leave me atleast leave me in a desirable place!*";
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return "*Ta Ta.*";
+                case MessageIDs.RequestAccepted:
+                    return "*Cheers!*";
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return "*Im sorry to inform your already filled with too many request mate. Go complete the others first.*";
+                case MessageIDs.RequestRejected:
+                    return "*Dam thats disapointing. No wuckers!*";
+                case MessageIDs.RequestPostpone:
+                    return "*No drama. Just complete when ya have the time.*";
+                case MessageIDs.RequestFailed:
+                    return "*Ahhh dam. I hope you atleast tried ya best.*";
+                case MessageIDs.RequestAsksIfCompleted:
+                    return "*Did ya finish mate?*";
+                case MessageIDs.RequestRemindObjective:
+                    return "*Ahh I see, you have bad memory. The request was [objective].*";
+                case MessageIDs.RestAskForHowLong:
+                    return "*How long should I stay rooted?*";
+                case MessageIDs.RestNotPossible:
+                    return "*Nows not the time mate.*";
+                case MessageIDs.RestWhenGoingSleep:
+                    return "*Dont peak at me knickers mate.*";
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return "*Wait, [shop] has something I need.*";
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return "*Hold on a second mate.*";
+                case MessageIDs.GenericYes:
+                    return "*Yep.*";
+                case MessageIDs.GenericNo:
+                    return "*Nope.*";
+                case MessageIDs.GenericThankYou:
+                    return "*Ta! Ta!*";
+                case MessageIDs.ChatAboutSomething:
+                    return "*How's it hangin mate?*";
+                case MessageIDs.NevermindTheChatting:
+                    return "*ooroo.*";
+                case MessageIDs.CancelRequestAskIfSure:
+                    return "*You sure mate?*";
+                case MessageIDs.CancelRequestYesAnswered:
+                    return "*No worriers! pop around later.*";
+                case MessageIDs.CancelRequestNoAnswered:
+                    return "*Eh ok then.*";
+	    //
+	      case MessageIDs.ReviveByOthersHelp:
+                    if (Main.rand.NextDouble() < 0.5f)
+                        return "*Thanks mate!*";
+                    return "*Yeggy wants get back!*";
+                case MessageIDs.RevivedByRecovery:
+                    return "*I guess ya were to busy to help sheila here?!*";
+	    //
                 case MessageIDs.BuddySelected:
-                    return "As long as you share loot with me we'll be the best of mates.";
+                    return "As long as you share loot with me, we'll be the best of mates.";
                 case MessageIDs.ReviveByOthersHelp:
-                    return "Once more im in debt to you I hope me performance in combat won't be this lackluster next time...";
+                    return "Once more im in debt to you, I hope me performance in combat won't be this lackluster next time...";
                 case MessageIDs.RevivedByRecovery:
                     return "Must've been going off for not helping me there....";
                 case MessageIDs.FoundRareOreTile:
@@ -1886,6 +1948,149 @@ namespace giantsummon.Companions
                     return "I feel pissy but in a bad way....";
                 case MessageIDs.AcquiredBurningDebuff:
                     return "IT BlOODY BURNS!";
+		    //
+		    case MessageIDs.AcquiredDarknessDebuff:
+                    return "*WHAT! Me eyes no longer work!*";
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return "*whoaaa there chap, I didnt know there were so many of you.*";
+                case MessageIDs.AcquiredCursedDebuff:
+                    return "*Ahh me arms are busted!*";
+                case MessageIDs.AcquiredSlowDebuff:
+                    return "*I've become a slowpoke!*";
+                case MessageIDs.AcquiredWeakDebuff:
+                    return "*Ahhh! me combat ability has been hampered!*";
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return "*I seem to be taking more damage then usual mate.*";
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return "*I don't feel so good right now mate...*";
+                case MessageIDs.AcquiredIchorDebuff:
+                    return "*Oi! Oi! Oi! they pissed on me literally!";
+                case MessageIDs.AcquiredChilledDebuff:
+                    return "*A little chilly in here, yeah mate?*";
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return "*Well, this isn't me first time being in a sticky sitations hehehe.*";
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return "*Huh? I feel stronger but weirder now?....*";
+		    //
+		      case MessageIDs.AcquiredDefenseBuff:
+                    return "*Not afraid of being hit now!*";
+                case MessageIDs.AcquiredWellFedBuff:
+                    return "*Choc A Block!*";
+                case MessageIDs.AcquiredDamageBuff:
+                    return "*Heh... if I didnt hit hard enough already.*";
+                case MessageIDs.AcquiredSpeedBuff:
+                    return "*I got heaps of speed now.*";
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return "*Lasting longer won't be a issue now*";
+                case MessageIDs.AcquiredCriticalBuff:
+                    return "*Gnarly!*";
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return "*Yeggy wants to play now.*";
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return "Its fine to drink a stubby every once in a while eeh?";
+		    //
+		    case MessageIDs.FoundLifeCrystalTile:
+                    return "*OOOooooo!! a heart crystal.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*Watch out mate! a Trap!*";
+                case MessageIDs.FoundMineTile:
+                    return "*Mine tiles spotted.*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*Not a smart idea to mess with that mate. Unless you want to be blown to smithereens.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*Hmm whats that?*";
+                case MessageIDs.WhenOldOneArmyStarts:
+                    return "*Hahaha Yeggy craves battle! Especially when loot is involved.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*Oi Oi treasure!*";
+                case MessageIDs.FoundGemTile:
+                    return "*Jackpot mate! gems!*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*Pop around mate, theres ores here.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*Stuffed I'll be! very rare ore it seems!*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "";
+		    //
+		      case MessageIDs.TeleportHomeMessage:
+                    return "*Lets go mate.*";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "*Extra help.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*Hmm, seems like he may be suffocating you there mate?...*";
+		    //
+		     case MessageIDs.LeaderFallsMessage:
+                    return "*Are ya ok [nickname] ?!*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*Dammit me new best mate has fallen!*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*A crew member has fallen!*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*Mickey Mouse! LOOT!*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*Im sure to get some big coin from my inventory I hope.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*Oi! stay alive drongo!*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*Ughh! I wont go down without a bloody fight!*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*Defo need more health potions*";
+                case MessageIDs.UsesLastPotion:
+                    return "*No more potions left!!*";
+                case MessageIDs.SpottedABoss:
+                    return "*Aaahaaa! Big trouble, big loot!*";
+                case MessageIDs.DefeatedABoss:
+                    return "*Cheerio!*";
+                case MessageIDs.InvasionBegins:
+                    return "*Would you look at that? Walking plunder bags!*";
+                case MessageIDs.RepelledInvasion:
+                    return "*That was fun!*";
+                case MessageIDs.EventBegins:
+                    return "*Holy dooley! something has started!*";
+                case MessageIDs.EventEnds:
+                    return "*Phew that was something*";
+                case MessageIDs.RescueComingMessage:
+                    return "*No worriers mate! help shall arrive!*";
+                case MessageIDs.RescueGotMessage:
+                    return "*Not bad mate, your still alive.*";
+		     //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*Do you know [player]? They helped me when I first arrived.*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*I heard that [player] killed [subject]. Thats impressive isn't it?*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*[player] has found a [subject] in their travels!*";
+                case MessageIDs.FeatEventFinished:
+                    return "*Me and Yeggy managed to slay lots of enemies during [subject]. With the help of [player].*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*[player] has met someone new. Their name was [subject].*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*I'm very devo that [player] managed to die. I've already lost too many people already.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[player] managed to open the door of a temple at [subject]. Wonder if it is raidable?*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*[player] bumped into a coin portal during their travel. They should think about sharing some boons with me.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*I was able to meet [player]. They are gnarly.*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*Eh my patience is not high enough to fish for loot. It seems to be working for [player] though.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*It was a blast at [subject], the moon lord was the biggest baddest thing I have ever seen. [player] helped a great deal in the battle.*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*New creatures started appearing in [subject], good thing they drop better loot now.*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*[player] picked [subject] as their buddy! That's good on them I suppose.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*Oh Ripper!? You wanted me as your mate? I could give you many pashes right now. Im stoked for whats to come!*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*I heard [subject] got a new house at [world].*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*I hope you need this [item], [target].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*whoaa there mate?! did you gsmble off with the item?!*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*Your bag is stuffed, [target].*";
+		    
             }
             return base.GetSpecialMessage(MessageID);
         }
