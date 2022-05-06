@@ -1760,7 +1760,7 @@ namespace giantsummon.Companions
                 TerraGuardian.DrawFront.Insert(Position, gdd);
         }
 	
-	public override string GreetMessage(Player player, TerraGuardian guardian)
+	    public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
 			Mes.Add("G day to ya stranger, im not of this world, I come from out in the cosmos.");
@@ -1775,7 +1775,7 @@ namespace giantsummon.Companions
             Mes.Add("Before coming to this planet I was a space pirate, going around taking things from other worlds.");
             Mes.Add("Unfortunately, I am now the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we'll find.");
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
-            if(data.SwordID == 0)
+            if (data.SwordID == 0)
                 Mes.Add("I named me blade Yeggy, she has been great for cracking safes and chopping heads hehehe.");
             Mes.Add("Find any loot yet mate? pop around when ya do.");
             Mes.Add("I always have a hand on me laser pistol since me trigger finger itches.");
@@ -1783,19 +1783,18 @@ namespace giantsummon.Companions
             Mes.Add("The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live ya'know? some people are just collateral damage.");
             Mes.Add("As a young gal I never had nothing, thieving has been ingrained in me since childhood");
             Mes.Add("Im surprised you dont have any space ships here for travel? theres a whole galaxy out there to explore.");
-	    Mes.Add("Surprised me runners are still effecient, these rocket boots have saved me life on many occasions");
-	    Mes.Add("You woulnd't happen to have coldie's around would ya? I feel like getting tipsy every once and a while.");
+            Mes.Add("Surprised me runners are still effecient, these rocket boots have saved me life on many occasions");
+            Mes.Add("You woulnd't happen to have coldie's around would ya? I feel like getting tipsy every once and a while.");
             Mes.Add("This world is bloody rich with resources, I should have came here sooner.");
-	    Mes.Add("You might make a good cobber here mate, spending time with you has been good so far.");
-	    Mes.Add("Im a bit of a dag me self mate, I reverse engineered the phantom device.");
-	    Mes.Add("We should piss up on me birthday mate, all I want is tinnies for gifts so we can all get pissy together hahahaha.");
-	    Mes.Add("I was captain of the Phantom 6, that was our name,the crew members were First class Red Ace, Hawk Adams, Jack Venom, Ford Duckbill, Ellis Kangaroo and lastly me Commander Sally Stench.");
-	    Mes.Add("I wasen't the only one that had my eyes on this planet, there are others who also travel the cosmos, theres no telling who will show up.");
-	    Mes.Add("A bit iffy on if Commander Trick and his crew of rebels will appear here to confront me, I nagged a bunch of their equipment, hahaha.");
-	      if (Main.dayTime)
+            Mes.Add("You might make a good cobber here mate, spending time with you has been good so far.");
+            Mes.Add("Im a bit of a dag me self mate, I reverse engineered the phantom device.");
+            Mes.Add("We should piss up on me birthday mate, all I want is tinnies for gifts so we can all get pissy together hahahaha.");
+            Mes.Add("I was captain of the Phantom 6, that was our name,the crew members were First class Red Ace, Hawk Adams, Jack Venom, Ford Duckbill, Ellis Kangaroo and lastly me Commander Sally Stench.");
+            Mes.Add("I wasen't the only one that had my eyes on this planet, there are others who also travel the cosmos, theres no telling who will show up.");
+            Mes.Add("A bit iffy on if Commander Trick and his crew of rebels will appear here to confront me, I nagged a bunch of their equipment, hahaha.");
+            if (Main.dayTime)
             {
-	           Mes.Add("*G Day!*"); 
-		}     
+                Mes.Add("*G Day!*");
                 if (Main.eclipse)
                 {
                     Mes.Add("*Yeggy is calling for action!*");
@@ -1827,8 +1826,8 @@ namespace giantsummon.Companions
             {
                 Mes.Add("*Ehh I wasen't inteden on getten wet today.*");
                 Mes.Add("*I reckon a few splashes won't hurt.*");
-		}
-            if(data.PhantomDeviceMiniquestProgress == -1)
+            }
+            if (data.PhantomDeviceMiniquestProgress == -1)
                 Mes.Add("My phantom device is broken, if you have any spare platinum/gold bars you could help fix it.");
             bool AnyMetal = false, AnyGemstone = false;
             if (guardian.GetTileCount(Terraria.ID.TileID.Topaz) > 0 ||
@@ -1852,7 +1851,7 @@ namespace giantsummon.Companions
                     }
                 }
             }
-            if(AnyGemstone || AnyMetal)
+            if (AnyGemstone || AnyMetal)
             {
                 Mes.Add("Me scouter is picking up high volumes of rare materials here just keep up your mining it will be all ours soon enough.");
             }
@@ -1864,37 +1863,37 @@ namespace giantsummon.Companions
                     break;
                 }
             }*/
-            if(Main.screenTileCounts[Terraria.ID.TileID.Traps] > 0 || Main.screenTileCounts[Terraria.ID.TileID.GeyserTrap] > 0)
+            if (Main.screenTileCounts[Terraria.ID.TileID.Traps] > 0 || Main.screenTileCounts[Terraria.ID.TileID.GeyserTrap] > 0)
             {
                 Mes.Add("Me scouter is picking up danger signals in this area watch out for traps.");
             }
-            if(PlayerMod.HasGuardianSummoned(player, Rococo))
+            if (PlayerMod.HasGuardianSummoned(player, Rococo))
             {
                 Mes.Add("Even though the racoon is a weird one, he sure has some combat skill.");
                 Mes.Add("I cant understand what the racoon is saying can you translate it for me, yeah?");
             }
-            if(PlayerMod.HasGuardianSummoned(player, Blue))
+            if (PlayerMod.HasGuardianSummoned(player, Blue))
             {
                 Mes.Add("Blue reminds me of a cadet that died in the crash....Red Ace his name was....ironic.. and he was a wolf....");
             }
-            if(PlayerMod.HasGuardianSummoned(player, Zacks))
+            if (PlayerMod.HasGuardianSummoned(player, Zacks))
             {
                 Mes.Add("Zacks reminds me of a cadet that died in the crash...Red Ace his name was...kinda ironic since he was a wolf also");
             }
-            if(PlayerMod.HasGuardianSummoned(player, Bree) && PlayerMod.GetPlayerGuardian(player, Bree).SkinID != Companions.BreeBase.BaglessSkinID)
+            if (PlayerMod.HasGuardianSummoned(player, Bree) && PlayerMod.GetPlayerGuardian(player, Bree).SkinID != Companions.BreeBase.BaglessSkinID)
             {
                 Mes.Add("I wonder goes in the white cats bag...Something valuable possibly?...");
             }
-            if(PlayerMod.HasGuardianSummoned(player, Domino))
+            if (PlayerMod.HasGuardianSummoned(player, Domino))
             {
                 Mes.Add("This mouse looks like he might sell some great black market supplies.");
             }
-            if(PlayerMod.HasGuardianSummoned(player, Brutus))
+            if (PlayerMod.HasGuardianSummoned(player, Brutus))
             {
                 Mes.Add("This guy reminds me of space coppers, I have been dodging them for years now and will do so again if he tries something.");
             }
-            if(PlayerMod.PlayerHasGuardianSummoned(player, Alex) || 
-                PlayerMod.PlayerHasGuardianSummoned(player, Alexander) || 
+            if (PlayerMod.PlayerHasGuardianSummoned(player, Alex) ||
+                PlayerMod.PlayerHasGuardianSummoned(player, Alexander) ||
                 PlayerMod.PlayerHasGuardianSummoned(player, Daphne))
             {
                 Mes.Add("Tell that mutt to stop sniffing me! I know I dont smell the greatest but its annoying feeling wet noses touch me backside.");
@@ -1970,25 +1969,20 @@ namespace giantsummon.Companions
                 case MessageIDs.CancelRequestNoAnswered:
                     return "*Eh ok then.*";
 	    //
-	      case MessageIDs.ReviveByOthersHelp:
-                    if (Main.rand.NextDouble() < 0.5f)
-                        return "*Thanks mate!*";
-                    return "*Yeggy wants get back!*";
+	            case MessageIDs.ReviveByOthersHelp:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0: return "*Thanks mate!*";
+                        case 1: return "*Yeggy wants get back!*";
+                        default: return "*Once more im in debt to you, I hope me performance in combat won't be this lackluster next time...*";
+                    }
                 case MessageIDs.RevivedByRecovery:
+                    if(Main.rand.NextFloat() < 0.5f)
+                        return "*Must've been going off for not helping me there....*";
                     return "*I guess ya were to busy to help sheila here?!*";
 	    //
                 case MessageIDs.BuddySelected:
                     return "As long as you share loot with me, we'll be the best of mates.";
-                case MessageIDs.ReviveByOthersHelp:
-                    return "Once more im in debt to you, I hope me performance in combat won't be this lackluster next time...";
-                case MessageIDs.RevivedByRecovery:
-                    return "Must've been going off for not helping me there....";
-                case MessageIDs.FoundRareOreTile:
-                    return "Me scouter is picking up high volumes of rare materials here just keep up your mining it will be ours soon enough.";
-                case MessageIDs.FoundPressurePlateTile:
-                case MessageIDs.FoundDetonatorTile:
-                case MessageIDs.FoundMineTile:
-                    return "Picking up danger signals in this area look out for traps.";
                 case MessageIDs.AcquiredPoisonedDebuff:
                     return "I feel pissy but in a bad way....";
                 case MessageIDs.AcquiredBurningDebuff:
