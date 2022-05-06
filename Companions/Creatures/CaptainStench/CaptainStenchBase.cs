@@ -1759,6 +1759,15 @@ namespace giantsummon.Companions
             else
                 TerraGuardian.DrawFront.Insert(Position, gdd);
         }
+	
+	public override string GreetMessage(Player player, TerraGuardian guardian)
+        {
+            List<string> Mes = new List<string>();
+			Mes.Add("G day to ya stranger, im not of this world, I come from out in the cosmos.");
+			Mes.Add("Howdy foreign creature, you think you could help me?");
+			Mes.Add("Too right! I knew some intellegent creature would eventually approach me.");
+			return Mes[Main.rand.Next(Mes.Count)];
+		}
 
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
@@ -1783,6 +1792,41 @@ namespace giantsummon.Companions
 	    Mes.Add("I was captain of the Phantom 6, that was our name,the crew members were First class Red Ace, Hawk Adams, Jack Venom, Ford Duckbill, Ellis Kangaroo and lastly me Commander Sally Stench.");
 	    Mes.Add("I wasen't the only one that had my eyes on this planet, there are others who also travel the cosmos, theres no telling who will show up.");
 	    Mes.Add("A bit iffy on if Commander Trick and his crew of rebels will appear here to confront me, I nagged a bunch of their equipment, hahaha.");
+	      if (Main.dayTime)
+            {
+	           Mes.Add("*G Day!*"); 
+		   Mes.Add("*I think  mayeed some sunnies for the bright light.*");
+                if (Main.eclipse)
+                {
+                    Mes.Add("*Yeggy is calling for action!*");
+                    Mes.Add("*Bring em on!*");
+                }
+                else
+                {
+                    Mes.Add("*This world has some bloody nice weather!*");
+                }
+            }
+            else
+            {
+                if (Main.bloodMoon)
+                {
+                    Mes.Add("*The sky has turned*");
+                    Mes.Add("*More undead skulls to bash!*");
+                }
+                else
+                {
+                    Mes.Add("*Urgh! All those \"Grahs\" during the night are infuriating me! I'm about to go outside and kick their undead a**!*");
+                }
+            }
+            if (guardian.IsUsingToilet)
+            {
+                Mes.Add("*Don't you know privacy! Go away! Im taking a dump here!*");
+                Mes.Add("*Want me to put your flush your head in the toilet?! GO AWAY!*");
+            }
+            if (Main.raining)
+            {
+                Mes.Add("*Great!, It couldn't get worse could it?!, now I have to be annoyed by rain drops!*");
+                Mes.Add("*OG MY GOD! THE SPLASHES ARE INFURIATING!*");
             if(data.PhantomDeviceMiniquestProgress == -1)
                 Mes.Add("My phantom device is broken, if you have any spare platinum/gold bars you could help fix it.");
             bool AnyMetal = false, AnyGemstone = false;
