@@ -1776,9 +1776,9 @@ namespace giantsummon.Companions
             Mes.Add("Unfortunately, I am now the only one who survived the crash of my ship. My cadets won't get to enjoy the treasures we'll find.");
             CaptainStenchData data = (CaptainStenchData)guardian.Data;
             if(data.SwordID == 0)
-                Mes.Add("I named me blade Yeggy, she has been great for cracking into safes hehehe.");
-            Mes.Add("Find any loot yet mate? pop around.");
-            Mes.Add("Slicing things up gets me excited.");
+                Mes.Add("I named me blade Yeggy, she has been great for cracking safes and chopping heads hehehe.");
+            Mes.Add("Find any loot yet mate? pop around when ya do.");
+            Mes.Add("I always have a hand on me laser pistol since me trigger finger itches.");
             Mes.Add("I guess im retired from piloting as my only source of family is dead now. This world will be my last plunder land.");
             Mes.Add("The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live ya'know? some people are just collateral damage.");
             Mes.Add("As a young gal I never had nothing, thieving has been ingrained in me since childhood");
@@ -1811,7 +1811,7 @@ namespace giantsummon.Companions
                 if (Main.bloodMoon)
                 {
                     Mes.Add("*The sky has turned bloody red*");
-                    Mes.Add("*Ahhh look at that, easy heads to chop!*");
+                    Mes.Add("*Ahhh look at that, easy target practice!*");
                 }
                 else
                 {
@@ -1825,8 +1825,9 @@ namespace giantsummon.Companions
             }
             if (Main.raining)
             {
-                Mes.Add("*Ehh I wasen't inteden*");
-                Mes.Add("*OG MY GOD! THE SPLASHES ARE INFURIATING!*");
+                Mes.Add("*Ehh I wasen't inteden on getten wet today.*");
+                Mes.Add("*I reckon a few splashes won't hurt.*");
+		}
             if(data.PhantomDeviceMiniquestProgress == -1)
                 Mes.Add("My phantom device is broken, if you have any spare platinum/gold bars you could help fix it.");
             bool AnyMetal = false, AnyGemstone = false;
