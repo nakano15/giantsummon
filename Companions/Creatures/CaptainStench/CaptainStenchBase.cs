@@ -1779,19 +1779,19 @@ namespace giantsummon.Companions
                 Mes.Add("I named me blade Yeggy, she has been great for cracking safes and chopping heads hehehe.");
             Mes.Add("Find any loot yet mate? pop around when ya do.");
             Mes.Add("I always have a hand on me laser pistol since me trigger finger itches.");
-            Mes.Add("I guess im retired from piloting as my only source of family is dead now. This world will be my last plunder land.");
+            Mes.Add("I guess im retired from piloting as me only source of family is dead now. This world is the last plunder land.");
             Mes.Add("The weapons I use were stolen of course but I take what I want. That isn't to say I steal out of malicious intent, I just get it how I live ya'know? some people are just collateral damage.");
             Mes.Add("As a young gal I never had nothing, thieving has been ingrained in me since childhood");
-            Mes.Add("Im surprised you dont have any space ships here for travel? theres a whole galaxy out there to explore.");
-            Mes.Add("Surprised me runners are still effecient, these rocket boots have saved me life on many occasions");
+            Mes.Add("Im surprised you don't have any space ships here for travel? theres a whole galaxy out there to explore.");
+            Mes.Add("Surprised me runners are still effecient, these boots have saved me life on many occasions");
             Mes.Add("You woulnd't happen to have coldie's around would ya? I feel like getting tipsy every once and a while.");
-            Mes.Add("This world is bloody rich with resources, I should have came here sooner.");
-            Mes.Add("You might make a good cobber here mate, spending time with you has been good so far.");
-            Mes.Add("Im a bit of a dag me self mate, I reverse engineered the phantom device.");
+            Mes.Add("This world is bloody rich with resources, I should have came here sooner!");
+            Mes.Add("You might make a good cobber there mate, spending time with you has been bloody good so far.");
+            Mes.Add("Im a bit of a dag me self mate, I reverse engineered the phantom device ya know.");
             Mes.Add("We should piss up on me birthday mate, all I want is tinnies for gifts so we can all get pissy together hahahaha.");
             Mes.Add("I was captain of the Phantom 6, that was our name,the crew members were First class Red Ace, Hawk Adams, Jack Venom, Ford Duckbill, Ellis Kangaroo and lastly me Commander Sally Stench.");
             Mes.Add("I wasen't the only one that had my eyes on this planet, there are others who also travel the cosmos, theres no telling who will show up.");
-            Mes.Add("A bit iffy on if Commander Trick and his crew of rebels will appear here to confront me, I nagged a bunch of their equipment, hahaha.");
+            Mes.Add("A bit iffy on if Commander Trick and his crew of buckaroos will appear here to confront me, since I nagged a bunch of their equipment, hahaha.");
             if (Main.dayTime)
             {
                 Mes.Add("*G Day!*");
@@ -1809,12 +1809,12 @@ namespace giantsummon.Companions
             {
                 if (Main.bloodMoon)
                 {
-                    Mes.Add("*The sky has turned bloody red*");
+                    Mes.Add("*The sky has turned bloody red!*");
                     Mes.Add("*Ahhh look at that, easy target practice!*");
                 }
                 else
                 {
-                    Mes.Add("*Those \"Grahs\" during the night are make me iffy mate, maybe I should go handle it yeah?*");
+                    Mes.Add("*Those \"Grahs\" during the night are making me iffy mate, maybe I should go handle it yeah?*");
                 }
             }
             if (guardian.IsUsingToilet)
@@ -1828,7 +1828,7 @@ namespace giantsummon.Companions
                 Mes.Add("*I reckon a few splashes won't hurt.*");
             }
             if (data.PhantomDeviceMiniquestProgress == -1)
-                Mes.Add("My phantom device is broken, if you have any spare platinum/gold bars you could help fix it.");
+                Mes.Add("Me phantom device is broken, if you have any spare platinum/gold bars you could help fix it.");
             bool AnyMetal = false, AnyGemstone = false;
             if (guardian.GetTileCount(Terraria.ID.TileID.Topaz) > 0 ||
                 guardian.GetTileCount(Terraria.ID.TileID.Amethyst) > 0 ||
@@ -1870,7 +1870,7 @@ namespace giantsummon.Companions
             if (PlayerMod.HasGuardianSummoned(player, Rococo))
             {
                 Mes.Add("Even though the racoon is a weird one, he sure has some combat skill.");
-                Mes.Add("I cant understand what the racoon is saying can you translate it for me, yeah?");
+                Mes.Add("I can't understand what the coon is saying, I reckon you can translate it for me, yeah?");
             }
             if (PlayerMod.HasGuardianSummoned(player, Blue))
             {
@@ -1878,11 +1878,11 @@ namespace giantsummon.Companions
             }
             if (PlayerMod.HasGuardianSummoned(player, Zacks))
             {
-                Mes.Add("Zacks reminds me of a cadet that died in the crash...Red Ace his name was...kinda ironic since he was a wolf also");
+                Mes.Add("Zacks reminds me of a cadet that died in the crash...Red Ace his name was... he was a wolf also but without the missing body parts.");
             }
             if (PlayerMod.HasGuardianSummoned(player, Bree) && PlayerMod.GetPlayerGuardian(player, Bree).SkinID != Companions.BreeBase.BaglessSkinID)
             {
-                Mes.Add("I wonder goes in the white cats bag...Something valuable possibly?...");
+                Mes.Add("I wonder what goes in the white cats bag...Something valuable possibly?...");
             }
             if (PlayerMod.HasGuardianSummoned(player, Domino))
             {
@@ -1917,7 +1917,7 @@ namespace giantsummon.Companions
 	    case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
                     return "*Nice I could use a adventure right about now.*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
-                    return "*Ehh im a bit iffy on joining mate. You seem to be stuffed with a crew already.*";
+                    return "*Ehh im a bit iffy on joining mate. Ya seem to be stuffed with a crew already.*";
                 case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
                     return "*Cant join right now. Sorry mate.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
@@ -1925,7 +1925,7 @@ namespace giantsummon.Companions
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
                     return "*Ahh! Ok then. Tingle me later.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
-                    return "*Ay mate! if your gonna leave me atleast leave me in a desirable place!*";
+                    return "*Oi mate! if your gonna leave me atleast leave me in a desirable place!*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*Ta Ta.*";
                 case MessageIDs.RequestAccepted:
@@ -1933,7 +1933,7 @@ namespace giantsummon.Companions
                 case MessageIDs.RequestCantAcceptTooManyRequests:
                     return "*Im sorry to inform your already filled with too many request mate. Go complete the others first.*";
                 case MessageIDs.RequestRejected:
-                    return "*Dam thats disapointing. No wuckers!*";
+                    return "*Dam thats disappointing. No wuckers though!*";
                 case MessageIDs.RequestPostpone:
                     return "*No drama. Just complete when ya have the time.*";
                 case MessageIDs.RequestFailed:
@@ -1941,13 +1941,13 @@ namespace giantsummon.Companions
                 case MessageIDs.RequestAsksIfCompleted:
                     return "*Did ya finish mate?*";
                 case MessageIDs.RequestRemindObjective:
-                    return "*Ahh I see, you have bad memory. The request was [objective].*";
+                    return "*Ahh I see, you have short memory. The request was [objective].*";
                 case MessageIDs.RestAskForHowLong:
                     return "*How long should I stay rooted?*";
                 case MessageIDs.RestNotPossible:
                     return "*Nows not the time mate.*";
                 case MessageIDs.RestWhenGoingSleep:
-                    return "*Dont peak at me knickers mate.*";
+                    return "*Dont sneak a peak at me knickers while im sleepen mate.*";
                 case MessageIDs.AskPlayerToGetCloserToShopNpc:
                     return "*Wait, [shop] has something I need.*";
                 case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
@@ -1973,8 +1973,8 @@ namespace giantsummon.Companions
                     switch (Main.rand.Next(3))
                     {
                         case 0: return "*Thanks mate!*";
-                        case 1: return "*Yeggy wants get back!*";
-                        default: return "*Once more im in debt to you, I hope me performance in combat won't be this lackluster next time...*";
+                        case 1: return "*Yeggy wants her get back!*";
+                        default: return "*Once more im in debt to ya, I hope me performance in combat won't be this lackluster next time...*";
                     }
                 case MessageIDs.RevivedByRecovery:
                     if(Main.rand.NextFloat() < 0.5f)
@@ -1982,7 +1982,7 @@ namespace giantsummon.Companions
                     return "*I guess ya were to busy to help sheila here?!*";
 	    //
                 case MessageIDs.BuddySelected:
-                    return "As long as you share loot with me, we'll be the best of mates.";
+                    return "As long as ya share loot with me, we'll be the best of mates.";
                 case MessageIDs.AcquiredPoisonedDebuff:
                     return "I feel pissy but in a bad way....";
                 case MessageIDs.AcquiredBurningDebuff:
@@ -1991,7 +1991,7 @@ namespace giantsummon.Companions
 		    case MessageIDs.AcquiredDarknessDebuff:
                     return "*WHAT! Me eyes no longer work!*";
                 case MessageIDs.AcquiredConfusedDebuff:
-                    return "*whoaaa there chap, I didnt know there were so many of you.*";
+                    return "*whoaaa there chap, I didnt know there were so many of you!*";
                 case MessageIDs.AcquiredCursedDebuff:
                     return "*Ahh me arms are busted!*";
                 case MessageIDs.AcquiredSlowDebuff:
@@ -2001,13 +2001,13 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredBrokenArmorDebuff:
                     return "*I seem to be taking more damage then usual mate.*";
                 case MessageIDs.AcquiredHorrifiedDebuff:
-                    return "*I don't feel so good right now mate...*";
+                    return "*I don't feel so good mate...*";
                 case MessageIDs.AcquiredIchorDebuff:
-                    return "*Oi! Oi! Oi! they pissed on me literally!";
+                    return "*Oi! Oi! Oi! they pissed on me... literally!";
                 case MessageIDs.AcquiredChilledDebuff:
                     return "*A little chilly in here, yeah mate?*";
                 case MessageIDs.AcquiredWebbedDebuff:
-                    return "*Well, this isn't me first time being in a sticky sitations hehehe.*";
+                    return "*Well, this isn't me first time being in a sticky situation hehehe.*";
                 case MessageIDs.AcquiredFeralBiteDebuff:
                     return "*Huh? I feel stronger but weirder now?....*";
 		    //
@@ -2016,11 +2016,11 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredWellFedBuff:
                     return "*Choc A Block!*";
                 case MessageIDs.AcquiredDamageBuff:
-                    return "*Heh... if I didnt hit hard enough already.*";
+                    return "*Heh... if I didn't already hit hard enough.*";
                 case MessageIDs.AcquiredSpeedBuff:
                     return "*I got heaps of speed now.*";
                 case MessageIDs.AcquiredHealthIncreaseBuff:
-                    return "*Lasting longer won't be a issue now*";
+                    return "*Lasting longer won't be a issue now.*";
                 case MessageIDs.AcquiredCriticalBuff:
                     return "*Gnarly!*";
                 case MessageIDs.AcquiredMeleeWeaponBuff:
@@ -2031,21 +2031,21 @@ namespace giantsummon.Companions
 		    case MessageIDs.FoundLifeCrystalTile:
                     return "*OOOooooo!! a heart crystal.*";
                 case MessageIDs.FoundPressurePlateTile:
-                    return "*Watch out mate! a Trap!*";
+                    return "*Watch out mate! A Trap!*";
                 case MessageIDs.FoundMineTile:
                     return "*Mine tiles spotted.*";
                 case MessageIDs.FoundDetonatorTile:
-                    return "*Not a smart idea to mess with that mate. Unless you want to be blown to smithereens.*";
+                    return "*Not a smart idea to mess with that mate. Unless you want to be blown to smithereens?!*";
                 case MessageIDs.FoundPlanteraTile:
-                    return "*Hmm whats that?*";
+                    return "*Hmm whats that?!*";
                 case MessageIDs.WhenOldOneArmyStarts:
-                    return "*Hahaha Yeggy craves battle! Especially when loot is involved.*";
+                    return "*Heaps of loot to be gained with this one!*";
                 case MessageIDs.FoundTreasureTile:
-                    return "*Oi Oi treasure!*";
+                    return "*Oi! Oi! treasure!*";
                 case MessageIDs.FoundGemTile:
-                    return "*Jackpot mate! gems!*";
+                    return "*Jackpot! gems!*";
                 case MessageIDs.FoundRareOreTile:
-                    return "*Pop around mate, theres ores here.*";
+                    return "*Pop around mate, theres ores here!*";
                 case MessageIDs.FoundVeryRareOreTile:
                     return "*Stuffed I'll be! very rare ore it seems!*";
                 case MessageIDs.FoundMinecartRailTile:
@@ -2056,7 +2056,7 @@ namespace giantsummon.Companions
                 case MessageIDs.CompanionInvokesAMinion:
                     return "*Extra help.*";
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                    return "*Hmm, seems like he may be suffocating you there mate?...*";
+                    return "*Hmm, seems like he may be suffocating ya mate?...*";
 		    //
 		     case MessageIDs.LeaderFallsMessage:
                     return "*Are ya ok [nickname] ?!*";
@@ -2071,13 +2071,13 @@ namespace giantsummon.Companions
                 case MessageIDs.PlayerAtDangerousHealthLevel:
                     return "*Oi! stay alive drongo!*";
                 case MessageIDs.CompanionHealthAtDangerousLevel:
-                    return "*Ughh! I wont go down without a bloody fight!*";
+                    return "*Ughh! I won't go down without a  fight!*";
                 case MessageIDs.RunningOutOfPotions:
                     return "*Defo need more health potions*";
                 case MessageIDs.UsesLastPotion:
                     return "*No more potions left!!*";
                 case MessageIDs.SpottedABoss:
-                    return "*Aaahaaa! Big trouble, big loot!*";
+                    return "*Aaahaaa! big trouble! big loot!*";
                 case MessageIDs.DefeatedABoss:
                     return "*Cheerio!*";
                 case MessageIDs.InvasionBegins:
@@ -2094,9 +2094,9 @@ namespace giantsummon.Companions
                     return "*Not bad mate, your still alive.*";
 		     //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
                 case MessageIDs.FeatMentionPlayer:
-                    return "*Do you know [player]? They helped me when I first arrived.*";
+                    return "*Do ya know [player]? They helped me when I first arrived.*";
                 case MessageIDs.FeatMentionBossDefeat:
-                    return "*I heard that [player] killed [subject]. Thats impressive isn't it?*";
+                    return "*I heard that [player] killed [subject]. Thats bloody impressive isn't it?*";
                 case MessageIDs.FeatFoundSomethingGood:
                     return "*[player] has found a [subject] in their travels!*";
                 case MessageIDs.FeatEventFinished:
@@ -2104,7 +2104,7 @@ namespace giantsummon.Companions
                 case MessageIDs.FeatMetSomeoneNew:
                     return "*[player] has met someone new. Their name was [subject].*";
                 case MessageIDs.FeatPlayerDied:
-                    return "*I'm very devo that [player] managed to die. I've already lost too many people already.*";
+                    return "*I'm very devo that [player] managed to die. I've already lost too many important people already.*";
                 case MessageIDs.FeatOpenTemple:
                     return "*[player] managed to open the door of a temple at [subject]. Wonder if it is raidable?*";
                 case MessageIDs.FeatCoinPortal:
@@ -2120,13 +2120,13 @@ namespace giantsummon.Companions
                 case MessageIDs.FeatMentionSomeonePickedAsBuddy:
                     return "*[player] picked [subject] as their buddy! That's good on them I suppose.*";
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
-                    return "*Oh Ripper!? You wanted me as your mate? I could give you many pashes right now. Im stoked for whats to come!*";
+                    return "*Oh Ripper! You wanted me as your mate? I could give you many pashes right now. Im stoked for whats to come!*";
                 case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
                     return "*I heard [subject] got a new house at [world].*";
                 case MessageIDs.DeliveryGiveItem:
-                    return "*I hope you need this [item], [target].*";
+                    return "*I hope ya need this [item], [target].*";
                 case MessageIDs.DeliveryItemMissing:
-                    return "*whoaa there mate?! did you gsmble off with the item?!*";
+                    return "*whoaa there mate?! did you gamble off with the item?!*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*Your bag is stuffed, [target].*";
 		    
