@@ -1795,7 +1795,7 @@ namespace giantsummon.Companions
 	      if (Main.dayTime)
             {
 	           Mes.Add("*G Day!*"); 
-		   Mes.Add("*I think  mayeed some sunnies for the bright light.*");
+		}     
                 if (Main.eclipse)
                 {
                     Mes.Add("*Yeggy is calling for action!*");
@@ -1810,22 +1810,22 @@ namespace giantsummon.Companions
             {
                 if (Main.bloodMoon)
                 {
-                    Mes.Add("*The sky has turned*");
-                    Mes.Add("*More undead skulls to bash!*");
+                    Mes.Add("*The sky has turned bloody red*");
+                    Mes.Add("*Ahhh look at that, easy heads to chop!*");
                 }
                 else
                 {
-                    Mes.Add("*Urgh! All those \"Grahs\" during the night are infuriating me! I'm about to go outside and kick their undead a**!*");
+                    Mes.Add("*Those \"Grahs\" during the night are make me iffy mate, maybe I should go handle it yeah?*");
                 }
             }
             if (guardian.IsUsingToilet)
             {
-                Mes.Add("*Don't you know privacy! Go away! Im taking a dump here!*");
-                Mes.Add("*Want me to put your flush your head in the toilet?! GO AWAY!*");
+                Mes.Add("*Hold on! do ya know privacy mate?! Im using the dunny here!*");
+                Mes.Add("*Hey ya drongo! trying to get a peak of me knickers?! how about I shoot ya head off?!*");
             }
             if (Main.raining)
             {
-                Mes.Add("*Great!, It couldn't get worse could it?!, now I have to be annoyed by rain drops!*");
+                Mes.Add("*Ehh I wasen't inteden*");
                 Mes.Add("*OG MY GOD! THE SPLASHES ARE INFURIATING!*");
             if(data.PhantomDeviceMiniquestProgress == -1)
                 Mes.Add("My phantom device is broken, if you have any spare platinum/gold bars you could help fix it.");
