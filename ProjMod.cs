@@ -227,13 +227,16 @@ namespace giantsummon
                     if (tg.Active && !tg.Downed)
                     {
                         bool ProjIsHostile = projectile.hostile;
+                        bool PvPHostile = false;
                         if (IsGuardianProjectile(projectile.whoAmI) && tg.WhoAmID != GuardianProj[projectile.whoAmI].WhoAmID)
                         {
                             ProjIsHostile = GuardianProj[projectile.whoAmI].IsGuardianHostile(tg);
+                            PvPHostile = true;
                         }
                         else if(!ProjIsHostile && tg.IsPlayerHostile(Main.player[projectile.owner]))
                         {
                             ProjIsHostile = true;
+                            PvPHostile = true;
                         }
                         if (ProjIsHostile && projectile.getRect().Intersects(tg.HitBox))
                         {
@@ -241,7 +244,7 @@ namespace giantsummon
                             {
                                 if (tg.Base.GuardianWhenAttackedProjectile(tg, projectile.damage, false, projectile))
                                 {
-                                    int DamageDealt = tg.Hurt(projectile.damage, projectile.Center.X < tg.Position.X ? 1 : -1, false, false, " was slain by a " + projectile.Name + ".");
+                                    int DamageDealt = tg.Hurt(projectile.damage, projectile.Center.X < tg.Position.X ? 1 : -1, false, false, " was slain by a " + projectile.Name + ".", PvPHostile);
                                     if (DamageDealt > 0)
                                     {
                                         TrySimulatingProjectileDamageOnGuardian(projectile, tg);

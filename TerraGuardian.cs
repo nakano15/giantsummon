@@ -143,8 +143,8 @@ namespace giantsummon
                 return tg.Active && tg.WhoAmID == WhoAmID;
             }
         }
-        public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false, FollowingPlayer = false;
-        public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false, LastFollowingPlayer = false;
+        public bool MoveRight = false, MoveLeft = false, MoveUp = false, MoveDown = false;
+        public bool LastMoveRight = false, LastMoveLeft = false, LastMoveUp = false, LastMoveDown = false;
         public bool DropFromPlatform { get { return MoveDown && Jump; } set { MoveDown = Jump = value; } }
         public bool LastDroppedFromPlatform { get { return LastMoveDown && LastJump; } }
         public bool Action = false, Jump = false, OffHandAction = false;
@@ -1350,7 +1350,6 @@ namespace giantsummon
 
         public TerraGuardian(int CreateByType = -1, string ModID = "")
         {
-            AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, 60);
             if (CreateByType != -1)
             {
                 if (ModID == "")
@@ -1368,7 +1367,8 @@ namespace giantsummon
             {
                 _Data = new GuardianData();
             }
-            if(CreateByType > -1)
+            AddCooldown(GuardianCooldownManager.CooldownType.SpottingCooldown, 60);
+            if (CreateByType > -1)
                 WhoAmID = IDStack++;
         }
 
@@ -2816,19 +2816,12 @@ namespace giantsummon
             if (Channeling && !Action)
                 Channeling = false;
             ShowOffHand = OffHandAction;
-            if (CanSyncMe || OwnerPos == Main.myPlayer) //TODO - A spamfest of netmessage will happen here if a companion is following the player. Find a way of fixing that.
+            if (CanSyncMe) //TODO - A spamfest of netmessage will happen here if a companion is following the player. Find a way of fixing that.
             {
-                if (OwnerPos == Main.myPlayer && FollowingPlayer)
-                {
-                    if (!LastFollowingPlayer)
-                    {
-                        Netplay.SendGuardianMovementUpdate(WhoAmID, -1, OwnerPos);
-                    }
-                }
-                else if (MoveUp != LastMoveUp || MoveRight != LastMoveRight || MoveDown != LastMoveDown || MoveLeft != LastMoveLeft || Jump != LastJump)
+                /*if (MoveUp != LastMoveUp || MoveRight != LastMoveRight || MoveDown != LastMoveDown || MoveLeft != LastMoveLeft || Jump != LastJump)
                 {
                     Netplay.SendGuardianMovementUpdate(WhoAmID, -1, OwnerPos);
-                }
+                }*/
                 if(LastAction != Action || LastOffHandAction != OffHandAction)
                 {
                     Netplay.SendGuardianItemUseUpdate(WhoAmID, -1, OwnerPos);
@@ -2838,17 +2831,12 @@ namespace giantsummon
             LastMoveLeft = MoveLeft;
             LastMoveUp = MoveUp;
             LastMoveDown = MoveDown;
-            LastAction = Action;
             LastJump = Jump;
+            LastAction = Action;
             LastOffHandAction = OffHandAction;
-            LastFollowingPlayer = FollowingPlayer;
-            if (Main.netMode == 0 || OwnerPos == Main.myPlayer)
+            //if (Main.netMode == 0 || OwnerPos == Main.myPlayer)
             {
-                MoveRight = MoveLeft = MoveUp = MoveDown = Action = Jump = OffHandAction = FollowingPlayer = false;
-            }
-            else if (FollowingPlayer)
-            {
-                MoveRight = MoveLeft = MoveUp = MoveDown = Jump = false;
+                MoveRight = MoveLeft = MoveUp = MoveDown = Action = Jump = OffHandAction = false;
             }
             for (int c = 0; c < Cooldowns.Count; c++)
             {
@@ -6073,8 +6061,6 @@ namespace giantsummon
                     this.Action = true;
                 }
             }
-            if (AttackingTarget && OwnerPos == Main.myPlayer)
-                FollowingPlayer = false;
         }
 
         public void CheckIfSomeoneNeedsRevive(bool MountedEdition = false)
@@ -6152,7 +6138,7 @@ namespace giantsummon
         {
             if (Main.netMode == 1 && OwnerPos != Main.myPlayer)
             {
-                if (!Downed && !KnockedOut && !KnockedOutCold && FollowingPlayer)
+                if (!Downed && !KnockedOut && !KnockedOutCold)
                     FollowPlayerAI();
                 return;
             }
@@ -11336,7 +11322,6 @@ namespace giantsummon
         public void FollowPlayerAI()
         {
             if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
-            if (OwnerPos == Main.myPlayer) FollowingPlayer = true;
             Player Owner = Main.player[OwnerPos];
             TerraGuardian LeaderGuardian = PlayerMod.GetPlayerMainGuardian(Owner);
             {
@@ -11829,7 +11814,7 @@ namespace giantsummon
             }
         }
 
-        public int Hurt(int Damage, int HitDirection, bool Critical = false, bool ForceHurt = false, string DeathMessage = "")
+        public int Hurt(int Damage, int HitDirection, bool Critical = false, bool ForceHurt = false, string DeathMessage = "", bool PvP = false)
         {
             if (!ForceHurt && ImmuneTime > 0 || Downed || (DoAction.InUse && DoAction.Immune) || KnockedOutCold || HasFlag(GuardianFlags.CantBeHurt))
                 return 0;
@@ -11932,6 +11917,8 @@ namespace giantsummon
                 ImmuneTime = GetImmuneTime;
                 if (HasFlag(GuardianFlags.ImprovedImmuneTime))
                     ImmuneTime *= 2;
+                if (PvP)
+                    ImmuneTime = (int)(ImmuneTime * 0.1f);
                 if (HasFlag(GuardianFlags.PanicNecklace))
                     AddBuff(63, 300);
                 if (!EvadedAttack && Damage > 0) AddSkillProgress(Damage * 2, GuardianSkills.SkillTypes.Endurance);
@@ -12539,6 +12526,33 @@ namespace giantsummon
             p.StatusPvP(weapon.type, target.whoAmI);
             p.frostBurn = false;
             p.magmaStone = false;
+        }
+
+        public void TryApplyingDebuffsToGuardian(Item weapon, TerraGuardian target)
+        {
+            Player p = Main.player[255];
+            p.meleeEnchant = MeleeEnchant;
+            p.frostBurn = HasFlag(GuardianFlags.FrostBurn);
+            p.magmaStone = HasFlag(GuardianFlags.MagmaStone);
+            for(int i = p.buffTime.Length - 1; i >= 0; i--)
+            {
+                if(p.buffTime[i] > 0)
+                {
+                    p.DelBuff(i);
+                }
+            }
+            p.StatusPvP(weapon.type, 255);
+            p.frostBurn = false;
+            p.magmaStone = false;
+            for (int i = p.buffTime.Length - 1; i >= 0; i--)
+            {
+                if (p.buffTime[i] > 0)
+                {
+                    target.AddBuff(p.buffType[i], p.buffTime[i]);
+                    p.DelBuff(i);
+                    i++;
+                }
+            }
         }
 
         public bool UseMana(int value)
@@ -13548,6 +13562,37 @@ namespace giantsummon
                                     AddNpcHit(t);
                                     this.Hurt((int)(Main.npc[t].damage * 1.3f), -this.Direction, false, false, " couldn't endure " + Main.npc[t].GivenOrTypeName + " electricity.");
                                 }
+                            }
+                        }
+                    }
+                    foreach(TerraGuardian tg in MainMod.ActiveGuardians.Values)
+                    {
+                        if(IsGuardianHostile(tg) && tg.HitBox.Intersects(WeaponCollision) && CanHit(tg.TopLeftPosition, tg.Width, tg.Height))
+                        {
+                            int HitDirection = Direction;
+                            if ((HitDirection == -1 && Position.X < tg.Position.X) ||
+                                (HitDirection == 1 && Position.X > tg.Position.X))
+                            {
+                                HitDirection *= -1;
+                            }
+                            bool Critical = (Main.rand.Next(100) < CriticalRate);
+                            int NewDamage = Damage;
+                            if (OwnerPos > -1 && !MainMod.DisableDamageReductionByNumberOfCompanions)
+                            {
+                                float DamageMult = Main.player[OwnerPos].GetModPlayer<PlayerMod>().DamageMod;
+                                NewDamage = (int)(NewDamage * DamageMult);
+                            }
+                            int result = tg.Hurt(NewDamage, HitDirection, Critical, false, " was slain by "+Name + ".", true);
+                            IncreaseDamageStacker(result, tg.MHP);
+                            if(result > 0)
+                            {
+                                TryApplyingDebuffsToGuardian(Inventory[SelectedItem], tg);
+                                if (HasFlag(GuardianFlags.BeetleOffenseEffect))
+                                    IncreaseCooldownValue(GuardianCooldownManager.CooldownType.BeetleCounter, (int)result);
+                                //OnHitSomething(Main.npc[t]);
+                                AddSkillProgress((float)result, GuardianSkills.SkillTypes.Strength); //(float)result
+                                if (Critical)
+                                    AddSkillProgress((float)result, GuardianSkills.SkillTypes.Luck); //(float)result
                             }
                         }
                     }

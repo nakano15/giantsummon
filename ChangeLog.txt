@@ -2,3 +2,7 @@
 Reduced the amount of distance necessary to travel to complete travelling requests.
 Added an option to make companions reffer to your character by name, instead of Terrarian nickname, if there's none set.
 Mabel and Domino got sprite changes.
+Fixed crashes when trying to play on multiplayer with this mod.
+	That doesn't means that multiplayer support is added, but at least is playable.
+Wrath shall no longer spawn underwater.
+Added reviving frames for when Vladimir is reviving someone while carrying someone.

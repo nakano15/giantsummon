@@ -24,10 +24,10 @@ namespace giantsummon
         public static void GetMessage(BinaryReader reader, int whoAmI)
         {
             MessageIDs mID = (MessageIDs)reader.ReadByte();
-            /*if (Main.netMode == 2)
+            if (Main.netMode == 2)
                 Console.WriteLine("Received message: " + mID.ToString());
             else
-                Main.NewText("Received message: " + mID.ToString());*/
+                Main.NewText("Received message: " + mID.ToString());
             switch (mID)
             {
                 case MessageIDs.SpawnCompanionOnPlayer:
@@ -278,7 +278,7 @@ namespace giantsummon
                 return;
             ModPacket packet = StartNewMessage(MessageIDs.GuardianMovementUpdate);
             TerraGuardian tg = MainMod.ActiveGuardians[GuardianWhoAmID];
-            BitsByte firstControls = new BitsByte(tg.MoveUp, tg.MoveDown, tg.MoveLeft, tg.MoveRight, tg.Jump, tg.FollowingPlayer);
+            BitsByte firstControls = new BitsByte(tg.MoveUp, tg.MoveDown, tg.MoveLeft, tg.MoveRight, tg.Jump);
             packet.Write(GuardianWhoAmID);
             packet.WriteVector2(tg.Position);
             packet.WriteVector2(tg.Velocity);
@@ -302,7 +302,6 @@ namespace giantsummon
             tg.MoveLeft = controls[2];
             tg.MoveRight = controls[3];
             tg.Jump = controls[4];
-            tg.FollowingPlayer = controls[5];
             if (Main.netMode == 2)
             {
                 SendGuardianMovementUpdate(WhoAmID, -1, SenderWhoAmI);

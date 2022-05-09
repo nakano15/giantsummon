@@ -380,10 +380,10 @@ namespace giantsummon
 
         public GuardianData(int ID = -1, string ModID = "")
         {
-            request = new RequestData(this);
-            request.SetRequestOnCooldown(true);
             if (Main.rand == null)
                 Main.rand = new Terraria.Utilities.UnifiedRandom();
+            request = new RequestData(this);
+            request.SetRequestOnCooldown(true);
             if (ID != -1)
             {
                 this.ID = ID;

@@ -654,7 +654,7 @@ namespace giantsummon
         {
             if (Npcs.WrathNPC.WrathCanSpawn && !Main.dayTime && !spawnInfo.playerSafe && !spawnInfo.playerInTown && spawnInfo.player.ZoneOverworldHeight && 
                 !NpcMod.HasMetGuardian(GuardianBase.Wrath) && !PlayerMod.PlayerHasGuardian(spawnInfo.player, GuardianBase.Wrath) && !NPC.AnyNPCs(ModContent.NPCType<Npcs.WrathNPC>()) && 
-                !Main.snowMoon && !Main.pumpkinMoon && !Main.bloodMoon)
+                !Main.snowMoon && !Main.pumpkinMoon && !Main.bloodMoon && !spawnInfo.water)
             {
                 if (Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY].wall == 0)
                 {

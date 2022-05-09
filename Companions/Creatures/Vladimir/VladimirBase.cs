@@ -83,8 +83,8 @@ namespace giantsummon.Companions
             DownedFrame = 26;
             ReviveFrame = 27;
 
-            BackwardStanding = 28;
-            BackwardRevive = 30;
+            BackwardStanding = 29;
+            BackwardRevive = 31;
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(20, 0);
@@ -93,7 +93,8 @@ namespace giantsummon.Companions
 
             RightArmFrontFrameSwap.Add(1, 0);
             RightArmFrontFrameSwap.Add(12, 1);
-            RightArmFrontFrameSwap.Add(21, 2);
+            RightArmFrontFrameSwap.Add(20, 2);
+            RightArmFrontFrameSwap.Add(28, 4);
 
             SittingPoint = new Point((27 + 3) * 2, 62 * 2);
 
@@ -120,6 +121,10 @@ namespace giantsummon.Companions
 
             LeftHandPoints.AddFramePoint2x(27, 44, 71);
 
+            LeftHandPoints.AddFramePoint2x(28, 42, 65);
+
+            LeftHandPoints.AddFramePoint2x(32, 42, 65);
+
             //Right Arm
             RightHandPoints.AddFramePoint2x(13, 35, 14);
             RightHandPoints.AddFramePoint2x(14, 48, 26);
@@ -134,6 +139,10 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(25, 40, 72);
 
             RightHandPoints.AddFramePoint2x(27, 51, 71);
+
+            RightHandPoints.AddFramePoint2x(28, 42, 65);
+
+            RightHandPoints.AddFramePoint2x(32, 42, 65);
 
             //Hat Position
             HeadVanityPosition.DefaultCoordinate2x = new Microsoft.Xna.Framework.Point(30, 28);
@@ -368,6 +377,10 @@ namespace giantsummon.Companions
                     Frame = 12;
                 else if (guardian.BodyAnimationFrame == BackwardStanding)
                     Frame = BackwardStanding + 1;
+                else if (guardian.BodyAnimationFrame == BackwardRevive)
+                    Frame = BackwardRevive + 1;
+                else if (guardian.BodyAnimationFrame == ReviveFrame)
+                    Frame = ReviveFrame + 1;
                 if (guardian.BodyAnimationFrame == StandingFrame || guardian.BodyAnimationFrame == DuckingFrame)
                     guardian.BodyAnimationFrame = Frame;
                 if (guardian.BodyAnimationFrame == ThroneSittingFrame)
@@ -681,6 +694,10 @@ namespace giantsummon.Companions
                         {
                             guardian.ChangeIdleAction(TerraGuardian.IdleActions.Listening, 5);
                             guardian.LookAt(Main.player[HeldGuardian.TalkPlayerID].Center);
+                        }
+                        if (HeldGuardian.PlayerMounted)
+                        {
+                            HeldGuardian.ToggleMount(true);
                         }
                         if (HeldGuardian.UsingFurniture)
                             HeldGuardian.LeaveFurniture(false);

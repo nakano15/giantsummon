@@ -770,6 +770,9 @@ namespace giantsummon.Companions
                     case Alex:
                         Weight = 1.2f;
                         return "He's coming too? Good.";
+                    case Vladimir:
+                        Weight = 1.2f;
+                        return "I will no longer need to walk, right?";
                 }
             }
             Weight = 1f;

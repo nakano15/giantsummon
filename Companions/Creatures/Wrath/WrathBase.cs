@@ -188,7 +188,7 @@ namespace giantsummon.Companions
             List<string> Mes = new List<string>();
             Mes.Add("*UGHHH!what is there to talk about?!*");
             Mes.Add("*Stay away! I'm not in the mood! I never am!*");
-            Mes.Add("*No talking on smashing!*");
+            Mes.Add("*No talking, only smashing!*");
             Mes.Add("*WHAT?!*");
             Mes.Add("*Just looking at things aggravates me, I need something to unleash this pent up anger!*");
             bool CloudForm = player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID];
