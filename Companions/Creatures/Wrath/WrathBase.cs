@@ -186,16 +186,16 @@ namespace giantsummon.Companions
         public override string NormalMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*UGHHH!what is there to talk about?!*");
+            Mes.Add("*UGHHH! what is there to talk about?!*");
             Mes.Add("*Stay away! I'm not in the mood! I never am!*");
             Mes.Add("*No talking, only smashing!*");
-            Mes.Add("*WHAT?!*");
-            Mes.Add("*Just looking at things aggravates me, I need something to unleash this pent up anger!*");
+            Mes.Add("*What do you want?!*");
+            Mes.Add("*Just looking at things aggravates me, I need something demolish!*");
             bool CloudForm = player.GetModPlayer<PlayerMod>().PigGuardianCloudForm[Companions.PigGuardianFragmentBase.AngerPigGuardianID];
             if (CloudForm)
             {
                 Mes.Add("*Don't dare joke about my current form. DON'T... YOU... DARE!*");
-                Mes.Add("*Being a ghost is weakens me, I need a solid form to pound people harder!*");
+                Mes.Add("*Being intangible weakens me, I need a more solid form to pound people harder!*");
             }
             if (Main.dayTime)
             {
@@ -237,7 +237,7 @@ namespace giantsummon.Companions
                 Mes.Add("Looking at [gn:"+GuardianBase.Brutus+"] try to be tuff makes me want to beat him to a pulp!");
             if (NpcMod.HasGuardianNPC(GuardianBase.Malisha))
             {
-                Mes.Add("How many times do I have to tell [gn:"+GuardianBase.Malisha+"] that.. I'M NOT GOING TO PARTICIPATE IN ANY OF YOUR TRASH A** EXPERIMENTS!!!.");
+                Mes.Add("How many times do I have to tell [gn:"+GuardianBase.Malisha+"] that.. I'M NOT GOING TO PARTICIPATE IN ANY OF YOUR GOD DANM EXPERIMENTS!!!.");
             }
             if (NpcMod.HasGuardianNPC(GuardianBase.Leopold))
             {
@@ -261,7 +261,7 @@ namespace giantsummon.Companions
             if (NpcMod.HasGuardianNPC(GuardianBase.Fluffles))
             {
                 if (CloudForm)
-                    Mes.Add("*SO what im a ghost for the moment? just dont compare me to [gn:" + Fluffles + "]!*");
+                    Mes.Add("*So what im a ghost for the moment? just dont compare me to [gn:" + Fluffles + "]!*");
             }
             if (NpcMod.HasGuardianNPC(Fear))
             {
@@ -305,8 +305,8 @@ namespace giantsummon.Companions
         public override string TalkMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Sometimes I temble out of rage. Stay out of my way for your own safety.*");
-            Mes.Add("*I still don't remember anything from before I woke up. I wonder who was I before what ever made me unconscious, it pisses me off not knowing.*");
+            Mes.Add("*I temble out of rage a lot. Stay out of my way for your own safety.*");
+            Mes.Add("*I still don't remember anything from before I woke up. I wonder who was I before what ever made me unconscious, it really pisses me off not knowing!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -314,8 +314,8 @@ namespace giantsummon.Companions
         {
             List<string> Mes = new List<string>();
             if(!guardian.request.IsTravelRequest)
-                Mes.Add("*I'm too furious to try doing this right now. Could you do It instead? Just [objective]!*");
-            Mes.Add("*Grrr!! There is something I should do that is making me furious, but I can't do that myself. Would you [objective]?*");
+                Mes.Add("*I'm too mad for this right now. You should do It instead! Just [objective]!*");
+            Mes.Add("*Grrr!! There is something I should do that is making me angry, but I can't do it myself. You should [objective]?!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
@@ -330,7 +330,7 @@ namespace giantsummon.Companions
         public override string CompletedRequestMessage(Player player, TerraGuardian guardian)
         {
             List<string> Mes = new List<string>();
-            Mes.Add("*Good I will direct my animosity else where for now.*");
+            Mes.Add("*I will direct my animosity else where for now.*");
             Mes.Add("*Okay, I wont hurt you for a few hours, is that a good enough reward?*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
@@ -367,14 +367,14 @@ namespace giantsummon.Companions
         {
             List<string> Mes = new List<string>();
             Mes.Add("*I need a house! Now!*");
-            Mes.Add("*This delay is really getting me irked. How long until you give me a house?*");
+            Mes.Add("*This delay is driving me nuts! How long until you give me a house?!*");
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
         public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
         {
             Weight = 1f;
-            return "*Another person!*";
+            return "*Another person, are you serious!*";
         }
 
         public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
@@ -415,7 +415,7 @@ namespace giantsummon.Companions
                         case 0:
                             return "*Please, tell me you did my request, tell me!, because If not im going on a rampage!*";
                         case 1:
-                            return "*You better have completed my request, because if not im smashing stuff.*";
+                            return "*You better have completed my request, because im very close to smashing stuff.*";
                     }
                     break;
                 //
@@ -430,23 +430,23 @@ namespace giantsummon.Companions
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
                     return "*Grr... whatever.*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
-                    return "*Grrr.... dont ask me to join back!...*";
+                    return "*Don't ask me to join back!...*";
                 case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
                     return "*I thought so.*";
                 case MessageIDs.RequestAccepted:
-                    return "*hurry up!*";
+                    return "*Hurry up!*";
                 case MessageIDs.RequestCantAcceptTooManyRequests:
                     return "*No more. Go deal with your other requests first!*";
                 case MessageIDs.RequestRejected:
-                    return "*Grr... Fine. I'll do It myself as always.*";
+                    return "*Fine! I'll do It myself as always!*";
                 case MessageIDs.RequestPostpone:
                     return "*What?! But I wanted It now!*";
                 case MessageIDs.RequestFailed:
                     return "*WHAT? SOME BODY'S A** IS ABOUT TO GET KICKED! *";
                 case MessageIDs.RequestAsksIfCompleted:
-                    return "*What?! You did my request?*";
+                    return "*What?! You did my request?!*";
                 case MessageIDs.RequestRemindObjective:
-                    return "*You what?! Fine! Here it goes! [objective]! That is it! Need me to nail that on your head?*";
+                    return "*You what?! Fine! Here it goes! [objective]! That is it! Need me to nail that in your head?*";
                 case MessageIDs.RestAskForHowLong:
                     return "*Hmph, how long?!*";
                 case MessageIDs.RestNotPossible:
@@ -454,7 +454,7 @@ namespace giantsummon.Companions
                 case MessageIDs.RestWhenGoingSleep:
                     return "*You'll be sorry If you make me fall from the bed.*";
                 case MessageIDs.AskPlayerToGetCloserToShopNpc:
-                    return "*Wait, [shop] has something I need.*";
+                    return "*Wait! [shop] has something I need!*";
                 case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
                     return "*Don't you dare leave me behind!*";
                 case MessageIDs.GenericYes:
@@ -494,21 +494,21 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredDarknessDebuff:
                     return "*I fight in the darkness all the time, this is no different!*";
                 case MessageIDs.AcquiredConfusedDebuff:
-                    return "*I don't care how many of you are, I'll still smack you down!*";
+                    return "*I don't care how many of you there are, I'll still smack you down!*";
                 case MessageIDs.AcquiredCursedDebuff:
                     return "*What the hell?! I cant use my arms!*";
                 case MessageIDs.AcquiredSlowDebuff:
-                    return "*Oh my lord! WHY AM I SO SLOW!!!*";
+                    return "*Oh my god! WHY AM I SO SLOW!!!*";
                 case MessageIDs.AcquiredWeakDebuff:
                     return "*ME WEAK?! I could never be!*";
                 case MessageIDs.AcquiredBrokenArmorDebuff:
                     return "*Who cares about armor?!*";
                 case MessageIDs.AcquiredHorrifiedDebuff:
-                    return "*Great! Something worth unleashing my rage on.*";
+                    return "*Great! Something worth unleashing my rage on!*";
                 case MessageIDs.AcquiredIchorDebuff:
                     return "*You piece of sh*t!*";
                 case MessageIDs.AcquiredChilledDebuff:
-                    return "*Argh its cold!*";
+                    return "*Argh! its cold!*";
                 case MessageIDs.AcquiredWebbedDebuff:
                     return "*Get me off here now!*";
                 case MessageIDs.AcquiredFeralBiteDebuff:
@@ -525,7 +525,7 @@ namespace giantsummon.Companions
                 case MessageIDs.AcquiredHealthIncreaseBuff:
                     return "*Try taking me down now!*";
                 case MessageIDs.AcquiredCriticalBuff:
-                    return "*Harder hitting!*";
+                    return "*Harder Striking!*";
                 case MessageIDs.AcquiredMeleeWeaponBuff:
                     return "*This should be fun.*";
                 case MessageIDs.AcquiredTipsyDebuff:
