@@ -179,9 +179,6 @@ namespace giantsummon
             AddRequestReward(ItemID.TitanPotion, 3, 0.1f);
             AddRequestReward(ItemID.WaterWalkingPotion, 3, 0.1f);
             AddRequestReward(ItemID.WrathPotion, 3, 0.1f);
-            //Food
-            AddRequestReward(ItemID.CookedFish, 3, 0.1f);
-            AddRequestReward(ItemID.BowlofSoup, 3, 0.1f);
         }
 
         private static bool FemaleQuestGiverRequirement(Player player, GuardianData gd)

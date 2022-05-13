@@ -6600,7 +6600,7 @@ namespace giantsummon
 
         public void CheckIfIsSteppingOnDamageTiles()
         {
-            if (Velocity.Y != 0 || MoveLeft || MoveRight)
+            if (Velocity.Y != 0)// || MoveLeft || MoveRight)
                 return;
             bool OnDamageTile = false;
             int MinTileX = (int)((Position.X - Width * 0.5f) * DivisionBy16), MaxTileX = (int)((Position.X + Width * 0.5f) * DivisionBy16), TileY = (int)(Position.Y * DivisionBy16);
@@ -6631,10 +6631,68 @@ namespace giantsummon
             if (!OnDamageTile)
                 return;
             bool MoveToLeft = LookingLeft;
-            if(OwnerPos > -1)
+            bool FoundDirection = false;
+            /*if (OwnerPos > -1)
             {
                 MoveToLeft = Main.player[OwnerPos].Center.X < Position.X;
+            }*/
+            //else
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    for (int d = -1; d < 2; d += 2)
+                    {
+                        if (d == 1 && x == 0)
+                            break;
+                        for (int y = 0; y < 3; y++)
+                        {
+                            int tx = (int)(Position.X * DivisionBy16) + x * d,
+                                ty = (int)(Position.Y * DivisionBy16) + y;
+                            Tile tile = Framing.GetTileSafely(tx, ty);
+                            if (tile.active())
+                            {
+                                if (!(Terraria.ID.TileID.Sets.TouchDamageHot[tile.type] > 0 || Terraria.ID.TileID.Sets.TouchDamageOther[tile.type] > 0) && Main.tileSolid[tile.type])
+                                {
+                                    bool Success = false;
+                                    for (int ytry = 0; ytry < 5; ytry++)
+                                    {
+                                        bool Blocked = false;
+                                        for (int x2 = -1; x2 < 1; x2++)
+                                        {
+                                            for (int y2 = 0; y2 < 3; y2++)
+                                            {
+                                                tile = Framing.GetTileSafely(tx + x2, ty - y2 - 1);
+                                                if ((tile.active() && Main.tileSolid[tile.type]) || tile.lava())
+                                                {
+                                                    Blocked = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (Blocked) break;
+                                        }
+                                        if (!Blocked)
+                                        {
+                                            Success = true;
+                                            break;
+                                        }
+                                    }
+                                    if (Success)
+                                    {
+                                        MoveToLeft = d == -1;
+                                        FoundDirection = true;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        if (FoundDirection)
+                            break;
+                    }
+                    if (FoundDirection)
+                        break;
+                }
             }
+            MoveLeft = MoveRight = false;
             if (MoveToLeft)
                 MoveLeft = true;
             else
@@ -6910,7 +6968,7 @@ namespace giantsummon
                     for(int y = 0; y < 3; y++)
                     {
                         Tile tile = MainMod.GetTile(MyX + x * CheckDirection, MyY + y);
-                        if (tile.active() && Main.tileSolid[tile.type] && !Terraria.ID.TileID.Sets.Platforms[tile.type])
+                        if (tile.active() && Main.tileSolid[tile.type])// && !Terraria.ID.TileID.Sets.Platforms[tile.type])
                         {
                             return;
                         }
@@ -8118,7 +8176,7 @@ namespace giantsummon
             bool IsTownNpc = OwnerPos == -1;
             bool DoIdleMovement = true;
             int HouseX = -1, HouseY = -1;
-            if(CurrentIdleAction == IdleActions.DefendVillage)
+            if(IsTownNpc && CurrentIdleAction == IdleActions.DefendVillage)
             {
                 if(Main.invasionType > Terraria.ID.InvasionID.None)
                 {
@@ -8145,8 +8203,6 @@ namespace giantsummon
             else if (IsTownNpc)
             {
                 bool MoveIndoors = Main.raining || Main.eclipse || Main.snowMoon || Main.pumpkinMoon;
-                if (OwnerPos == -1)
-                    MoveIndoors = false;
                 if (!MoveIndoors)
                 {
                     if (!Base.IsNocturnal)
