@@ -426,6 +426,14 @@
     <Content Include="Companions\Creatures\Bree\witch_leg.png" />
     <Content Include="Companions\Creatures\Brutus\royal_guard_outfit.png" />
     <Content Include="Companions\Creatures\Brutus\royal_guard_outfit_f.png" />
+    <Content Include="Companions\Creatures\Castella\body.png" />
+    <Content Include="Companions\Creatures\Castella\body_front.png" />
+    <Content Include="Companions\Creatures\Castella\hair_back.png" />
+    <Content Include="Companions\Creatures\Castella\head.png" />
+    <Content Include="Companions\Creatures\Castella\head_were.png" />
+    <Content Include="Companions\Creatures\Castella\left_arm.png" />
+    <Content Include="Companions\Creatures\Castella\right_arm.png" />
+    <Content Include="Companions\Creatures\Castella\right_arm_front.png" />
     <Content Include="Companions\Creatures\Cille\body.png" />
     <Content Include="Companions\Creatures\Cille\body_front.png" />
     <Content Include="Companions\Creatures\Cille\head.png" />
