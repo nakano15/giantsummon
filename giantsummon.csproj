@@ -105,6 +105,7 @@
     <Compile Include="CharacterInfo.cs" />
     <Compile Include="Companions\Creatures\Bapha\CrimsonFlameAttack.cs" />
     <Compile Include="Companions\Creatures\Bapha\HellSplitterAttack.cs" />
+    <Compile Include="Companions\Creatures\Castella\CastellaBase.cs" />
     <Compile Include="Companions\Creatures\Cille\BeastStateAction.cs" />
     <Compile Include="Companions\Creatures\Cille\CilleBase.cs" />
     <Compile Include="Companions\Creatures\Fluffles\FriendlyHauntAction.cs" />
