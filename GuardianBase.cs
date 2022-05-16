@@ -186,7 +186,8 @@ namespace giantsummon
             Sadness = 28,
             Joy = 29,
             Green = 30,
-            Cille = 31;
+            Cille = 31,
+            Castella = 32;
 
         public struct DialogueTopic
         {
@@ -997,6 +998,9 @@ namespace giantsummon
                         break;
                     case Cille:
                         gb = new CilleBase();
+                        break;
+                    case Castella:
+                        gb = new CastellaBase();
                         break;
                 }
             }

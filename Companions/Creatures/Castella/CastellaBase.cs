@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace giantsummon.Companions
 {
     public class CastellaBase : GuardianBase
     {
+        private const string HairBackTextureID = "hairback";
+
         public CastellaBase()
         {
             Name = "Castella";
@@ -14,6 +18,7 @@ namespace giantsummon.Companions
             Size = GuardianSize.Large;
             Width = 24;
             Height = 88;
+            FramesInRows = 16;
             DuckingHeight = 56;
             SpriteWidth = 128;
             SpriteHeight = 96;
@@ -133,11 +138,87 @@ namespace giantsummon.Companions
             RightHandPoints.AddFramePoint2x(52, 48, 41);
 
             RightHandPoints.AddFramePoint2x(62, 42, 12);
+
+            //Mounted Positions
+            MountShoulderPoints.DefaultCoordinate2x = new Point(26, 14);
+            MountShoulderPoints.AddFramePoint2x(23, 32, 25);
+            MountShoulderPoints.AddFramePoint2x(24, 32, 25);
+            MountShoulderPoints.AddFramePoint2x(25, 32, 25);
+            MountShoulderPoints.AddFramePoint2x(26, 32, 25);
+
+            MountShoulderPoints.AddFramePoint2x(49, 32, 25);
+            MountShoulderPoints.AddFramePoint2x(50, 32, 25);
+            MountShoulderPoints.AddFramePoint2x(51, 32, 25);
+            MountShoulderPoints.AddFramePoint2x(52, 32, 25);
+        }
+
+        public override void ManageExtraDrawScript(GuardianSprites sprites)
+        {
+            sprites.AddExtraTexture(HairBackTextureID, "hair_back");
+        }
+
+        public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
+        {
+            return new CastellaData(ID, ModID);
         }
 
         public override void Attributes(TerraGuardian g) //Add transformation action, and replace frames based on her form.
         {
             g.AddFlag(GuardianFlags.WerewolfAcc);
+        }
+
+        public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
+        {
+            if (!guardian.HasFlag(GuardianFlags.Werewolf)) return;
+            switch (Frame)
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                    Frame += 29;
+                    return;
+                case 17:
+                case 18:
+                    Frame += 26;
+                    return;
+                case 19:
+                    Frame = 46;
+                    return;
+                case 20:
+                    Frame = 45;
+                    return;
+                case 21:
+                    Frame = 48;
+                    return;
+                case 22:
+                    Frame = 47;
+                    return;
+                case 23:
+                case 24:
+                case 25:
+                case 26:
+                    Frame += 26;
+                    return;
+            }
+        }
+
+        public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
+        {
+            Rectangle bodyRect = guardian.GetAnimationFrameRectangle(guardian.BodyAnimationFrame);
+            GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, sprites.GetExtraTexture(HairBackTextureID), DrawPosition, bodyRect,
+                color, Rotation, Origin, Scale, seffect);
+            InjectTextureBefore(GuardianDrawData.TextureType.TGRightArm, gdd);
         }
 
         public class CastellaData : GuardianData
