@@ -2221,17 +2221,17 @@ namespace giantsummon
             ChangeGravity(GravityDirection * -1);
         }
 
-        public bool StartNewGuardianAction(GuardianActions action)
+        public bool StartNewGuardianAction(GuardianActions action, bool Force = false)
         {
-            return StartNewGuardianAction(action, action.ID);
+            return StartNewGuardianAction(action, action.ID, Force);
         }
 
-        public bool StartNewGuardianAction(GuardianActions action, int ID)
+        public bool StartNewGuardianAction(GuardianActions action, int ID, bool Force = false)
         {
-            if (action.Cancellable && action.InUse)
+            if ((DoAction.Cancellable && DoAction.InUse) || Force)
             {
-                action.OnActionEnd(this);
-                action.InUse = false;
+                DoAction.OnActionEnd(this);
+                DoAction.InUse = false;
             }
             if (!DoAction.InUse)
             {
@@ -13939,7 +13939,7 @@ namespace giantsummon
                             }
                             if (item.type == Terraria.ID.ItemID.LifeFruit || item.type == ModContent.ItemType<Items.Consumable.EtherFruit>())
                             {
-                                if (LifeCrystalHealth == MaxLifeCrystals && GetUsedLifeFruit < MaxLifeFruit)
+                                if (GetUsedLifeCrystal == MaxLifeCrystals && GetUsedLifeFruit < MaxLifeFruit)
                                 {
                                     ForceUse = true;
                                     GetUsedLifeFruit++;

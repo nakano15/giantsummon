@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using giantsummon.Companions.Creatures.Castella;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,6 +11,7 @@ namespace giantsummon.Companions
     public class CastellaBase : GuardianBase
     {
         private const string HairBackTextureID = "hairback";
+        private const byte MetamorphosisActionID = 0;
 
         public CastellaBase()
         {
@@ -150,6 +152,12 @@ namespace giantsummon.Companions
             MountShoulderPoints.AddFramePoint2x(50, 32, 25);
             MountShoulderPoints.AddFramePoint2x(51, 32, 25);
             MountShoulderPoints.AddFramePoint2x(52, 32, 25);
+
+            MountShoulderPoints.AddFramePoint2x(55, 31, 26);
+            MountShoulderPoints.AddFramePoint2x(56, 38, 31);
+            MountShoulderPoints.AddFramePoint2x(57, 38, 31);
+            MountShoulderPoints.AddFramePoint2x(58, 38, 31);
+            MountShoulderPoints.AddFramePoint2x(59, 30, 26);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
@@ -164,12 +172,13 @@ namespace giantsummon.Companions
 
         public override void Attributes(TerraGuardian g) //Add transformation action, and replace frames based on her form.
         {
-            g.AddFlag(GuardianFlags.WerewolfAcc);
+            //g.AddFlag(GuardianFlags.WerewolfAcc);
         }
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
         {
-            if (!guardian.HasFlag(GuardianFlags.Werewolf)) return;
+            CastellaData data = (CastellaData)guardian.Data;
+            if (!data.LastWereform) return;
             switch (Frame)
             {
                 case 0:
@@ -211,6 +220,17 @@ namespace giantsummon.Companions
                     Frame += 26;
                     return;
             }
+        }
+
+        public override void GuardianUpdateScript(TerraGuardian guardian)
+        {
+            CastellaData data = (CastellaData)guardian.Data;
+            bool IsWerewolf = guardian.HasFlag(GuardianFlags.Werewolf) || Terraria.Main.moonPhase == 0;
+            if (data.LastWereform != IsWerewolf)
+            {
+                guardian.StartNewGuardianAction(new CastellaMetamorphosis(), MetamorphosisActionID, true);
+            }
+            data.LastWereform = IsWerewolf;
         }
 
         public override void GuardianPostDrawScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, Color armorColor, float Rotation, Vector2 Origin, float Scale, SpriteEffects seffect)
