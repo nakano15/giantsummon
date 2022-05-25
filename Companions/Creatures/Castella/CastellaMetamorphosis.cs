@@ -42,7 +42,11 @@ namespace giantsummon.Companions.Creatures.Castella
                 case 3:
                 case 4:
                     if (Time >= 30)
+                    {
+                        if (Step == 2)
+                            guardian.UpdateStatus = true;
                         ChangeStep();
+                    }
                     break;
                 case 5:
                     if (Time >= 15)
