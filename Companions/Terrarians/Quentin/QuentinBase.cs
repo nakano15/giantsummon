@@ -309,7 +309,7 @@ namespace giantsummon.Companions
             }
         }
 
-        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        public override string CompanionJoinGroupMessage(TerraGuardian WhoReacts, GuardianData WhoJoined, out float Weight)
         {
             if (WhoJoined.ModID == MainMod.mod.Name)
             {

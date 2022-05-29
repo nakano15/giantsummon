@@ -285,13 +285,13 @@ namespace giantsummon.Companions
             return Mes[Main.rand.Next(Mes.Count)];
         }
 
-        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        public override string CompanionRecruitedMessage(TerraGuardian WhoReacts, GuardianData WhoJoined, out float Weight)
         {
             Weight = 1f;
             return "*They're somewhat friendly I guess?*";
         }
 
-        public override string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        public override string CompanionJoinGroupMessage(TerraGuardian WhoReacts, GuardianData WhoJoined, out float Weight)
         {
             if (WhoJoined.ModID == MainMod.mod.Name)
             {

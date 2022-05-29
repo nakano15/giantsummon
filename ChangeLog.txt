@@ -2,3 +2,4 @@
 Companions will now correctly get off dangerous tiles when stepping on them.
 Fixed a bug where the mod wasn't recognizing companions with full life crystal health, when they tried to use life fruits, and shared max health is turned on.
 Fixed a bug where actions that were cancellable were not being cancelled, because of using the wrong action object.
+Companions reviving someone will only talk upon reaching their target.

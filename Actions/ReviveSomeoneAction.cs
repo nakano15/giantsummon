@@ -12,7 +12,8 @@ namespace giantsummon.Actions
         public Player RevivePlayer;
         public TerraGuardian ReviveGuardian;
         public bool TargetIsPlayer = false;
-        public int TalkTime = 0, ResTime = 0;
+        public int ResTime = 0;
+        public bool SpeakToFallen = true;
 
         public ReviveSomeoneAction(Player Target)
         {
@@ -206,22 +207,13 @@ namespace giantsummon.Actions
                         }
                         guardian.StuckTimer = 0;
                         guardian.OffHandAction = false;
-                        if (TalkTime == 0)
+                        if (SpeakToFallen)
                         {
-                            if (MainMod.ReviveTalkDelay <= 0)
+                            SpeakToFallen = false;
+                            if (MainMod.CompanionsSpeaksWhileReviving)
                             {
-                                if (MainMod.CompanionsSpeaksWhileReviving)
-                                {
-                                    Main.NewText(guardian.Name + " >> " + (TargetIsPlayer ? RevivePlayer.name : ReviveGuardian.Name) + ": " +
-                                        guardian.Base.ReviveMessage(guardian, TargetIsPlayer, (TargetIsPlayer ? RevivePlayer : null), (!TargetIsPlayer ? ReviveGuardian : null)));
-                                }
-                                TalkTime = (600 + Main.rand.Next(10) * 50) * 2;
-                                MainMod.ReviveTalkDelay = 600 + Main.rand.Next(10) * 50;
+                                guardian.SaySomething(guardian.Base.ReviveMessage(guardian, TargetIsPlayer, (TargetIsPlayer ? RevivePlayer : null), (!TargetIsPlayer ? ReviveGuardian : null)));
                             }
-                        }
-                        else
-                        {
-                            TalkTime--;
                         }
                     }
                 }

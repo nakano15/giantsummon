@@ -15930,14 +15930,14 @@ namespace giantsummon
 
         public void ApplyFrameAnimationChangeScripts()
         {
-            if (!FreezeItemUseAnimation && DoAction.InUse)
-            {
-                DoAction.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
-            }
             Base.GuardianAnimationScript(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
             Base.GuardianAnimationOverride(this, 0, ref BodyAnimationFrame);
             Base.GuardianAnimationOverride(this, 1, ref LeftArmAnimationFrame);
             Base.GuardianAnimationOverride(this, 2, ref RightArmAnimationFrame);
+            if (!FreezeItemUseAnimation && DoAction.InUse)
+            {
+                DoAction.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);
+            }
             if (SubAttackInUse)
             {
                 SpecialAttack.UpdateAnimation(this, ref UsingLeftArmAnimation, ref UsingRightArmAnimation);

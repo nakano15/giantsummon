@@ -60,8 +60,11 @@ namespace giantsummon.Companions.Creatures.Castella
             int Frame = 0;
             switch (Step)
             {
-                case 0:
-                    Frame = WereTransform ? 0 : 29;
+                default:
+                    if(guardian.Velocity.Y != 0)
+                        Frame = WereTransform ? 9 : 38;
+                    else
+                        Frame = WereTransform ? 0 : 29;
                     break;
                 case 1:
                     Frame = WereTransform ? 55 : 59;

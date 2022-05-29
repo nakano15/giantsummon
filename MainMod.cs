@@ -128,7 +128,6 @@ namespace giantsummon
         public static byte DButtonPress = 255;
         public static int ToReviveID = -1;
         public static bool ToReviveIsGuardian = false, IsReviving = false;
-        public static int ReviveTalkDelay = 0;
         public static int LastEventWave = 0;
         private static Dictionary<string, Group> CompanionGroups = new Dictionary<string, Group>();
         public static float TimeTranslated = 0;
@@ -1082,8 +1081,6 @@ namespace giantsummon
                 CarpetAnimationTime -= 6;
             ForceUpdateGuardiansStatus = false;
             LastWof = Main.wof > -1;
-            if (ReviveTalkDelay > 0)
-                ReviveTalkDelay--;
             LastEventWave = Main.invasionProgressWave;
             for (int dm = 0; dm < MainMod.DrawMoment.Count; dm++)
             {

@@ -11,7 +11,7 @@ namespace giantsummon.Companions
 {
     public class CastellaBase : GuardianBase
     {
-        private const string HairBackTextureID = "hairback";
+        private const string HairBackTextureID = "hairback",HeadWerewolfTextureID = "headwere";
         private const byte MetamorphosisActionID = 0;
 
         public CastellaBase()
@@ -63,7 +63,7 @@ namespace giantsummon.Companions
             ReviveFrame = 21;
             DownedFrame = 22;
 
-            SittingPoint2x = new Microsoft.Xna.Framework.Point(32, 36);
+            SittingPoint2x = new Point(32, 36);
 
             SpecificBodyFrontFramePositions = true;
             BodyFrontFrameSwap.Add(17, 0);
@@ -159,11 +159,43 @@ namespace giantsummon.Companions
             MountShoulderPoints.AddFramePoint2x(57, 38, 31);
             MountShoulderPoints.AddFramePoint2x(58, 38, 31);
             MountShoulderPoints.AddFramePoint2x(59, 30, 26);
+
+            //Hat Positions
+            HeadVanityPosition.DefaultCoordinate2x = new Point(32, 11);
+            HeadVanityPosition.AddFramePoint2x(14, 28, 13);
+            HeadVanityPosition.AddFramePoint2x(15, 35, 11);
+            HeadVanityPosition.AddFramePoint2x(16, 50, 19);
+
+            HeadVanityPosition.AddFramePoint2x(21, 38, 24);
+
+            HeadVanityPosition.AddFramePoint2x(23, 41, 28);
+            HeadVanityPosition.AddFramePoint2x(24, 41, 28);
+            HeadVanityPosition.AddFramePoint2x(25, 41, 28);
+            HeadVanityPosition.AddFramePoint2x(26, 41, 28);
+
+            HeadVanityPosition.AddFramePoint2x(48, 35, 20);
+
+            HeadVanityPosition.AddFramePoint2x(49, 41, 27);
+            HeadVanityPosition.AddFramePoint2x(50, 41, 27);
+            HeadVanityPosition.AddFramePoint2x(51, 41, 27);
+            HeadVanityPosition.AddFramePoint2x(52, 41, 27);
+
+            HeadVanityPosition.AddFramePoint2x(55, 37, 22);
+            HeadVanityPosition.AddFramePoint2x(56, 44, 40);
+            HeadVanityPosition.AddFramePoint2x(57, 44, 40);
+            HeadVanityPosition.AddFramePoint2x(58, 45, 40);
+            HeadVanityPosition.AddFramePoint2x(59, 37, 22);
+
+            HeadVanityPosition.AddFramePoint2x(63, 42, 33);
+            HeadVanityPosition.AddFramePoint2x(64, 42, 33);
+            HeadVanityPosition.AddFramePoint2x(65, 43, 34);
+            HeadVanityPosition.AddFramePoint2x(66, 43, 35);
         }
 
         public override void ManageExtraDrawScript(GuardianSprites sprites)
         {
             sprites.AddExtraTexture(HairBackTextureID, "hair_back");
+            sprites.AddExtraTexture(HeadWerewolfTextureID, "head_were");
         }
 
         public override GuardianData GetGuardianData(int ID = -1, string ModID = "")
@@ -174,6 +206,18 @@ namespace giantsummon.Companions
         public override void Attributes(TerraGuardian g) //Add transformation action, and replace frames based on her form.
         {
             //g.AddFlag(GuardianFlags.WerewolfAcc);
+            if (OnWerewolfForm(g))
+            {
+                g.MaxSpeed += 1.2f;
+                if (g.DashSpeed == 0)
+                    g.DashSpeed = MaxSpeed * 2;
+                else
+                    g.DashSpeed += 2f;
+                g.JumpHeight += 0.6f;
+                g.MeleeDamageMultiplier += 0.08f;
+                g.MeleeCriticalRate += 10;
+                g.Defense += 6;
+            }
         }
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte BodyPartID, ref int Frame)
@@ -242,6 +286,21 @@ namespace giantsummon.Companions
             InjectTextureBefore(GuardianDrawData.TextureType.TGRightArm, gdd);
         }
 
+        public override void GuardianModifyDrawHeadScript(TerraGuardian guardian, Vector2 DrawPosition, Color color, float Scale, SpriteEffects seffect, Vector2 Origin, ref List<GuardianDrawData> gdds)
+        {
+            if (OnWerewolfForm(guardian))
+            {
+                foreach(GuardianDrawData gdd in gdds)
+                {
+                    if(gdd.textureType == GuardianDrawData.TextureType.TGHead)
+                    {
+                        gdd.Texture = sprites.GetExtraTexture(HeadWerewolfTextureID);
+                        break;
+                    }
+                }
+            }
+        }
+
         public override string GreetMessage(Player player, TerraGuardian guardian)
         {
             if (OnWerewolfForm(guardian))
@@ -251,7 +310,7 @@ namespace giantsummon.Companions
                     default:
                         return "*Hello, I am " + guardian.Name + ", and I will hunt you.*";
                     case 1:
-                        return "*Generally my prey doesn't try to speak to me, but at least I'll let you know that I'm " + guardian.Name + ".*";
+                        return "*Generally my prey doesn't try to speak to me, but at least you know that I am " + guardian.Name + ".*";
                     case 2:
                         return "*I am " + guardian.Name + ", unhappy to meet me? We'll have enough time to get acquaintanced.*";
                 }
@@ -299,8 +358,8 @@ namespace giantsummon.Companions
             }
             else
             {
-                M("*You came to check me?*", "*I'm not interessed in hunting you right now, if that was what you're wanting.*");
-                M("*This place looks friendly to me.*", "*So many preys around to catch.*");
+                M("*You came to check me?*", "*I'm not interessed in hunting you right now, if that was what you're wanting to know.*");
+                M("*This place is really friendly. I like that.*", "*I really don't like it when people watch me dine. Keep that in mind.*");
                 M("*Do I look different some nights? Sorry, I don't actually remember what happens during the nights.*", "*I always leave my prey alive after I finish nibbling them, that way I can try catching them again another time.*");
                 M("*It's nice to be outside of my castle for a while.*", "*I'm enjoying my time outside of that castle. There is more space for me to move, and hide.*");
                 M("*I hope my servants aren't thrashing my castle during my absence.*", "*If I catch my servants destroying my castle, they will not live to see tomorrow.*");
@@ -460,9 +519,321 @@ namespace giantsummon.Companions
             }
         }
 
-        public override string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight) //Need the companion who triggered the message to be referenced.
+        public override string CompanionRecruitedMessage(TerraGuardian WhoReacts, GuardianData WhoJoined, out float Weight) //Need the companion who triggered the message to be referenced.
         {
-            return base.CompanionRecruitedMessage(WhoJoined, out Weight);
+            bool Wereform = OnWerewolfForm(WhoReacts);
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            Weight = 1f;
+            return M("*Oh, hello. I hope... You're friendly.*", "*I hope you remember my face, you will see it whenever I catch you.*");
+        }
+
+        public override string CompanionJoinGroupMessage(TerraGuardian WhoReacts, GuardianData WhoJoined, out float Weight)
+        {
+            bool Wereform = OnWerewolfForm(WhoReacts);
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            if(WhoJoined.ModID == MainMod.mod.Name)
+            {
+                switch (WhoJoined.ID)
+                {
+                    case Malisha:
+                        Weight = 1.5f;
+                        return M("*I'm starting to like this already.*", "*Finally, a wise choice.*");
+                    case Brutus:
+                        Weight = 1.5f;
+                        return M("*He's going to protect me, right?*", "*I really want to put my paws on you.*");
+                    case Bree:
+                        Weight = 1.5f;
+                        return M("*I'm disliking this already...*", "*I hope you don't bother me.*");
+                    case Sardine:
+                        Weight = 1.5f;
+                        return M("*You think it's safe for him to come with me.*", "*My teeth were needing to bite something.*");
+                }
+            }
+            Weight = 1f;
+            return M("*I like having more company.*", "*Just because you joined us doesn't means you're safe from me.*");
+        }
+
+        public override string CompanionLeavesGroupMessage(TerraGuardian WhoReacts, GuardianData WhoLeft, out float Weight)
+        {
+            bool Wereform = OnWerewolfForm(WhoReacts);
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+            if (WhoLeft.ModID == MainMod.mod.Name)
+            {
+                switch (WhoLeft.ID)
+                {
+                    case Bree:
+                        Weight = 1.5f;
+                        return M("*I feel relieved now.*", "*Good riddance.*");
+                }
+            }
+            Weight = 1f;
+            return M("*You gotta go? Goodbye.*", "*Watch yourself on your way back... Hehehe..*");
+        }
+
+        public override string GetSpecialMessage(string MessageID)
+        {
+            bool Wereform = false;//OnWerewolfForm(WhoReacts);
+            foreach(TerraGuardian tg in MainMod.ActiveGuardians.Values)
+            {
+                if(tg.ModID == MainMod.mod.Name && tg.ID == Castella)
+                {
+                    Wereform = OnWerewolfForm(tg);
+                    break;
+                }
+            }
+            Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
+
+            switch (MessageID)
+            {
+                case MessageIDs.BuddySelected:
+                    return M("*You want to be my buddy? Yes, I accept it. That means I should order a bed for you on my castle?*","*Yes, I accept you being my buddy, but doesn't mean you're safe from me. At least you can live in my castle.*");
+                case MessageIDs.RescueMessage:
+                    return M("*You're safe! Hang on.*", "*I got you. Keep breathing.*");
+                case MessageIDs.GuardianWokeUpByPlayerMessage:
+                    switch (Main.rand.Next(3))
+                    {
+                        case 0:
+                            return M("*[nickname], it's too late to have a formal chatting. Please, be brief.*", "*What? Just because I'm like this I shouldn't sleep? Or you want me to hunt you?*");
+                        case 1:
+                            return M("*I'm not in the mood for chatting. What do you want?*", "*Can't I be able to get some rare moment to sleep?*");
+                        case 2:
+                            return M("*What do you want? It's a really dark night and you want to talk. Go sleep!*", "*[nickname], if you don't stop waking me up, I'll use you as my personal body pillow for the rest of the night.*");
+                    }
+                    break;
+                case MessageIDs.GuardianWokeUpByPlayerRequestActiveMessage:
+                    switch (Main.rand.Next(2))
+                    {
+                        case 0:
+                            return M("*W-what? Oh, is it about my request? Be brief, please.*", "*You woke me up. It is really rare of me to sleep, so I hope it's important.*");
+                        case 1:
+                            return M("*What is it? You did my request? You couldn't have woke me up for no reason, right?*", "*I hope It's about my request, or else I'll make you wake up with pain throughout your body.*");
+                    }
+                    break;
+                //
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupSuccess:
+                    return M("*I will join you in your travels.*", "*You want to take me for a walk? Alright. I hope I don't scare you with what I'll do with the monsters.*");
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty:
+                    return M("*There's too many people.*", "*That group is too big. Maybe I could take one member with me, if you don't mind.*");
+                case MessageIDs.AfterAskingCompanionToJoinYourGroupFail:
+                    return M("*I'm not interessed in travelling right now.*", "*No way. I'd rather try catching someone, and your presence would ruin it.*");
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupAskIfYoureSure:
+                    return M("*Can't I leave the group somewhere safe?*", "*I don't mind going back like this, but wouldn't it be better if I left in a town?*");
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupSuccessAnswer:
+                    return M("*I'll be back to my house then.*", "*[nickname], remember that you're no longer safe now.*");
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace:
+                    return M("*If you say so, I'll try surviving my way back.*", "*I hope you can run really fast, [nickname].*");
+                case MessageIDs.AfterAskingCompanionToLeaveYourGroupNoAnswer:
+                    return M("*Good to see that you're reasonable.*", "*You're safer for now.*");
+                case MessageIDs.RequestAccepted:
+                    return M("*Please have my request completed.*", "*Leave me happy and I'll give you a friendly nibble.*");
+                case MessageIDs.RequestCantAcceptTooManyRequests:
+                    return M("*I want you to focus on my task, so get your others done.*", "*I don't like having to compete with others requests, take care of those before you try mine.*");
+                case MessageIDs.RequestRejected:
+                    return M("*Oh... Okay..*", "*Now I didn't liked that. Get out of my sight.*");
+                case MessageIDs.RequestPostpone:
+                    return M("*I have no hurry, anyways..*", "*Grrr... Fine.*");
+                case MessageIDs.RequestFailed:
+                    return M("*What a disappointing result, [nickname]. Should I ask someone else to help me?*", "*Grrr... I'm so furious that I could shred something to pieces.*");
+                case MessageIDs.RequestAsksIfCompleted:
+                    return M("*My request? You completed it, right?*", "*Huh? What about my request? Did you do it?*");
+                case MessageIDs.RequestRemindObjective:
+                    return M("*You forgot?! Sigh... [objective] is what I need of you... Anything else?*", "*You disturbed me because you forgot my request? [objective] is what I asked you to do, and is what you should be doing now. Go!*");
+                case MessageIDs.RestAskForHowLong:
+                    return M("*I like the idea of resting. How long should we rest?*", "*You're already tired? I'm still full of energy. Well, how long you'll rest then?*");
+                case MessageIDs.RestNotPossible:
+                    return M("*Not now!*", "*This looks like a horrible moment to rest.*");
+                case MessageIDs.RestWhenGoingSleep:
+                    return M("*Yawn... Good night...*", "*While you rest, I'll go try catching something.*");
+                case MessageIDs.AskPlayerToGetCloserToShopNpc:
+                    return M("*Hm, [shop] has something I must check. Let me get closer.*", "*[shop] seems to have something interesting. Let me check it out.*");
+                case MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping:
+                    return M("*Hm...*", "*This... And this...*");
+                case MessageIDs.GenericYes:
+                    return M("*Yes.*", "*Yes!*");
+                case MessageIDs.GenericNo:
+                    return M("*No..*", "*No.*");
+                case MessageIDs.GenericThankYou:
+                    return M("*I appreciate.*", "*Thank you for this.*");
+                case MessageIDs.ChatAboutSomething:
+                    return M("*You want to know more about me? Alright, what is your question?*", "*You want to know me? That's getting scarily too intimate, but I will answer your questions.*");
+                case MessageIDs.NevermindTheChatting:
+                    return M("*Had enough questions? Okay. Is there something else you want?*", "*You had enough? Me too. Better we talk about something else.*");
+                case MessageIDs.CancelRequestAskIfSure:
+                    return M("*You think you can't complete my request? Are you sure you want to drop it?*", "*WHAT?! You want to cancel my request?!*");
+                case MessageIDs.CancelRequestYesAnswered:
+                    return M("*I'm extremelly disappointed at you, [nickname].*", "*Grr... Why did you accept it then?*");
+                case MessageIDs.CancelRequestNoAnswered:
+                    return M("*I'm glad that you changed your mind.*", "*I'm still furious about that, though. But at least no longer feel like leaving you with teeth marks.*");
+                //
+                case MessageIDs.ReviveByOthersHelp:
+                    return M("*I thank you all for the help.*", "*Thank you. But don't tell anyone about this.*");
+                case MessageIDs.RevivedByRecovery:
+                    return M("*I'm fine.. I'm fine...*", "*Grr.. I'm not done yet!*");
+                //
+                case MessageIDs.AcquiredPoisonedDebuff:
+                    return M("*Argh! My blood!*", "*Vile creature... Grr... You need way more to beat me!*");
+                case MessageIDs.AcquiredBurningDebuff:
+                    return M("*Aahhhh!! My fur!!*", "*Fire! Fire! Fire!!*");
+                case MessageIDs.AcquiredDarknessDebuff:
+                    return M("*Ouch! I can't see!*", "*You think you will get away from me?! I can smell and hear you!*");
+                case MessageIDs.AcquiredConfusedDebuff:
+                    return M("*Everything is spinning!*", "*Which one of those are you? I'll catch you1*");
+                case MessageIDs.AcquiredCursedDebuff:
+                    return M("*My arms wont obey me!*", "*I can't pounce!!*");
+                case MessageIDs.AcquiredSlowDebuff:
+                    return M("*I feel sluggish!*", "*I got slowed down! You slowed me down!*");
+                case MessageIDs.AcquiredWeakDebuff:
+                    return M("*I feel a bit beaten...*", "*I still can tackle you...*");
+                case MessageIDs.AcquiredBrokenArmorDebuff:
+                    return M("*You piece of...*", "*Grrr!! You!*");
+                case MessageIDs.AcquiredHorrifiedDebuff:
+                    return M("*Oh... My.... What is THAT?!*", "*Wow... [nickname], thank you for invoking my dinner.*");
+                case MessageIDs.AcquiredIchorDebuff:
+                    return M("*What the... Is this what I think it is?*", "*Hey! Even I don't do that to people!*");
+                case MessageIDs.AcquiredChilledDebuff:
+                    return M("*S-someone can lend to m-me a c-cotton shirt?*", "*Hey [nickname], want to help warm me up?*");
+                case MessageIDs.AcquiredWebbedDebuff:
+                    return M("*No. No! No!!*", "*Dare you to approach me!*");
+                case MessageIDs.AcquiredFeralBiteDebuff:
+                    return M("*Grrr... I'll have your head!*", "*Grrr... Bark! Bow!*");
+                //
+                case MessageIDs.AcquiredDefenseBuff:
+                    return M("*I feel like I can take on the world.*", "*Come at me!*");
+                case MessageIDs.AcquiredWellFedBuff:
+                    return M("*I have to meet who made this.*", "*Yum.. Delicious. Now I have energy to hunt something.*");
+                case MessageIDs.AcquiredDamageBuff:
+                    return M("*I'm ready to inflict pain.*", "*Who will challenge me?*");
+                case MessageIDs.AcquiredSpeedBuff:
+                    return M("*Take my dust!*", "*It will be easier to catch things now.*");
+                case MessageIDs.AcquiredHealthIncreaseBuff:
+                    return M("*I feel better.*", "*I should be able to win fights like this.*");
+                case MessageIDs.AcquiredCriticalBuff:
+                    return M("*Time to inflict pain!*", "*Even my claws look sharper.*");
+                case MessageIDs.AcquiredMeleeWeaponBuff:
+                    return M("*This should ease things up.*", "*I'm fine with using it on my weapon, but not on my claws.*");
+                case MessageIDs.AcquiredTipsyDebuff:
+                    return M("*I was needing this.*", "*I could have some meat too.*");
+                case MessageIDs.AcquiredHoneyBuff:
+                    return M("*I'd swim in a pool full of this.*", "*This should go well with meat.*");
+                //
+                case MessageIDs.FoundLifeCrystalTile: //TODO : Add dialogues from here and ahead.
+                    return "*[name] tells you of the Life Crystal.*";
+                case MessageIDs.FoundPressurePlateTile:
+                    return "*[name] warns you of the Pressure Plate.*";
+                case MessageIDs.FoundMineTile:
+                    return "*[name] warns you of the mine.*";
+                case MessageIDs.FoundDetonatorTile:
+                    return "*[name] asks if can press the Detonator.*";
+                case MessageIDs.FoundPlanteraTile:
+                    return "*[name] seems scared of the Bulb.*";
+                case MessageIDs.WhenOldOneArmyStarts:
+                    return "*[name] seems a bit nervous.*";
+                case MessageIDs.FoundTreasureTile:
+                    return "*[name] tells you of the Chest.*";
+                case MessageIDs.FoundGemTile:
+                    return "*[name] tells you of gems he found.*";
+                case MessageIDs.FoundRareOreTile:
+                    return "*[name] points at some rare ores.*";
+                case MessageIDs.FoundVeryRareOreTile:
+                    return "*[name] shows you some very rare ores.*";
+                case MessageIDs.FoundMinecartRailTile:
+                    return "*[name] seems anxious to ride a minecart.*";
+                //
+                case MessageIDs.TeleportHomeMessage:
+                    return "*[name] seems happy to return home.*";
+                case MessageIDs.CompanionInvokesAMinion:
+                    return "*[name] seems to like invoking those.*";
+                case MessageIDs.VladimirRecruitPlayerGetsHugged:
+                    return "*[name] stares at you and the big bear, without understanding what is happening.*";
+                //
+                case MessageIDs.LeaderFallsMessage:
+                    return "*[name] yells your name.*";
+                case MessageIDs.LeaderDiesMessage:
+                    return "*[name] is very saddened by your death.*";
+                case MessageIDs.AllyFallsMessage:
+                    return "*[name] tells you someone nearby fell.*";
+                case MessageIDs.SpotsRareTreasure:
+                    return "*[name] points joyfully at something that fell.*";
+                case MessageIDs.LeavingToSellLoot:
+                    return "*[name] waves at you, saying that will sell the items he has.*";
+                case MessageIDs.PlayerAtDangerousHealthLevel:
+                    return "*[name] tells you to be careful of your health.*";
+                case MessageIDs.CompanionHealthAtDangerousLevel:
+                    return "*[name] is trying to hide that he's badly hurt.*";
+                case MessageIDs.RunningOutOfPotions:
+                    return "*[name] seems shocked at the number of potions he has.*";
+                case MessageIDs.UsesLastPotion:
+                    return "*[name] tells you that has no more potions left.*";
+                case MessageIDs.SpottedABoss:
+                    return "*[name] tells you that sees a creature coming.*";
+                case MessageIDs.DefeatedABoss:
+                    return "*[name] celebrates our victory.*";
+                case MessageIDs.InvasionBegins:
+                    return "*[name] name warns you of hordes of foes coming.*";
+                case MessageIDs.RepelledInvasion:
+                    return "*[name] seems glad that it's over.*";
+                case MessageIDs.EventBegins:
+                    return "*[name] seems scared right now.*";
+                case MessageIDs.EventEnds:
+                    return "*[name] calmed down.*";
+                case MessageIDs.RescueComingMessage:
+                    return "*[name] tells the fallen ally they're coming.*";
+                case MessageIDs.RescueGotMessage:
+                    return "*[name] told the fallen ally that he will keep them safe.*";
+                //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
+                case MessageIDs.FeatMentionPlayer:
+                    return "*[name] tells you of another friend of his, called [player].*";
+                case MessageIDs.FeatMentionBossDefeat:
+                    return "*[name] mentions that [player] defeated [subject].*";
+                case MessageIDs.FeatFoundSomethingGood:
+                    return "*[name] seems really impressed by [player] finding a [subject].*";
+                case MessageIDs.FeatEventFinished:
+                    return "*[name] is telling you a story involving a [subject] and [player].*";
+                case MessageIDs.FeatMetSomeoneNew:
+                    return "*[name] says that [player] met someone named [subject].*";
+                case MessageIDs.FeatPlayerDied:
+                    return "*[name] is saddened, because his friend, [player], has died.*";
+                case MessageIDs.FeatOpenTemple:
+                    return "*[name] seems curious about what is inside a temple [player] opened the door of, at [subject].*";
+                case MessageIDs.FeatCoinPortal:
+                    return "*[name] tells you the story of [player] finding a coin portal.*";
+                case MessageIDs.FeatPlayerMetMe:
+                    return "*[name] is saying that has met [player].*";
+                case MessageIDs.FeatCompletedAnglerQuests:
+                    return "*[name] is impressed by the number of fish [player] caught.*";
+                case MessageIDs.FeatKilledMoonLord:
+                    return "*[name] is happy for [player], for having killed Moon Lord in [subject].*";
+                case MessageIDs.FeatStartedHardMode:
+                    return "*[name] told me that creepy creatures are now roaming [subject].*";
+                case MessageIDs.FeatMentionSomeonePickedAsBuddy:
+                    return "*[name] is really happy about knowing [player] found their own buddy, and picked [subject] to be it.*";
+                case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
+                    return "*[name] is saying that is really glad you picked him as his buddy.*";
+                case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
+                    return "*[name] tells you that [subject] got a house in [world].*";
+                case MessageIDs.DeliveryGiveItem:
+                    return "*[name] gave [item] to [target].*";
+                case MessageIDs.DeliveryItemMissing:
+                    return "*[name] seems to be missing some item on their inventory.*";
+                case MessageIDs.DeliveryInventoryFull:
+                    return "*[name] tells [target] that can't give them anything while their inventory is full.*";
+                //Popularity Contest Messages
+                case MessageIDs.PopContestMessage:
+                    return "*[name] is asking if you're interessed in voting on the TerraGuardians Popularity Contest.*";
+                case MessageIDs.PopContestIntroduction:
+                    return "*[name] tells you that the contest allows you to vote on your favorite companions. The event is so big that you can vote on TerraGuardians and Non-TerraGuardians companions on it, which he likes. He told you to vote before the event ends.*";
+                case MessageIDs.PopContestLinkOpen:
+                    return "*[name] tells you to pick everyone you like in it, and tells you to enjoy.*";
+                case MessageIDs.PopContestOnReturnToOtherTopics:
+                    return "*[name] asks what else you want to speak about.*";
+                case MessageIDs.PopContestResultMessage:
+                    return "*[name] seems happy about the Popularity Contest results being out. He asks you if you want to check it.*";
+                case MessageIDs.PopContestResultLinkClickMessage:
+                    return "*[name] seems really curious to see who won too.*";
+                case MessageIDs.PopContestResultNevermindMessage:
+                    return "*[name] tells you to check him back if you want to check the results.*";
+            }
+            return base.GetSpecialMessage(MessageID);
         }
 
         public bool OnWerewolfForm(TerraGuardian tg)

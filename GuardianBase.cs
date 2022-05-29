@@ -1140,19 +1140,19 @@ namespace giantsummon
 
         }
 
-        public virtual string CompanionRecruitedMessage(GuardianData WhoJoined, out float Weight)
+        public virtual string CompanionRecruitedMessage(TerraGuardian WhoReacts, GuardianData WhoJoined, out float Weight)
         {
             Weight = 1f;
             return "*They are pleased to meet " + WhoJoined.Name + ".*";
         }
 
-        public virtual string CompanionJoinGroupMessage(GuardianData WhoJoined, out float Weight)
+        public virtual string CompanionJoinGroupMessage(TerraGuardian WhoReacts, GuardianData WhoJoined, out float Weight)
         {
             Weight = 1f;
             return "*They greeted " + WhoJoined.Name + ".*";
         }
 
-        public virtual string CompanionLeavesGroupMessage(GuardianData WhoLeft, out float Weight)
+        public virtual string CompanionLeavesGroupMessage(TerraGuardian WhoReacts, GuardianData WhoLeft, out float Weight)
         {
             Weight = 1f;
             return "*They sent farewell to " + WhoLeft.Name + ".*";
