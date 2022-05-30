@@ -648,7 +648,7 @@ namespace giantsummon.Companions
                 case MessageIDs.SpottedABoss:
                     return "*I... Shall face It too... As long as you're with me, [nickname].*";
                 case MessageIDs.DefeatedABoss:
-                    return "*We won... Someone wants to celebrate the victory?*";
+                    return "*We won! Should we celebrate our victory with a feast?*";
                 case MessageIDs.InvasionBegins:
                     return "*[nickname]! Look! At the horizon!*";
                 case MessageIDs.RepelledInvasion:

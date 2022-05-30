@@ -732,9 +732,9 @@ namespace giantsummon.Companions
                 case MessageIDs.UsesLastPotion:
                     return "*That was my last potion!*";
                 case MessageIDs.SpottedABoss:
-                    return "*That's no match for my magic!*";
+                    return "*That's no match to my magic!*";
                 case MessageIDs.DefeatedABoss:
-                    return "*And we win, as always.*";
+                    return "*It was no match to my magic.*";
                 case MessageIDs.InvasionBegins:
                     return "*If I don't use HP instead of MP, I can try casting Meteor.*";
                 case MessageIDs.RepelledInvasion:

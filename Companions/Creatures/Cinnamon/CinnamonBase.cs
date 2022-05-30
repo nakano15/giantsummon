@@ -620,7 +620,7 @@ namespace giantsummon.Companions
                 case MessageIDs.SpottedABoss:
                     return "*Waah! I'm scared!!*";
                 case MessageIDs.DefeatedABoss:
-                    return "*Uff... Uff... My heart is still racing...*";
+                    return "*Uff... Uff... My heart is still racing... We managed to win...*";
                 case MessageIDs.InvasionBegins:
                     return "*Who are they? They don't look friendly.*";
                 case MessageIDs.RepelledInvasion:

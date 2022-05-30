@@ -761,7 +761,7 @@ namespace giantsummon.Companions
                 case MessageIDs.SpottedABoss:
                     return "*It's... Huge... I'm scared! We'll be fine?*";
                 case MessageIDs.DefeatedABoss:
-                    return "*I'm glad we're safe...*";
+                    return "*I'm glad we defeated it.*";
                 case MessageIDs.InvasionBegins:
                     return "*Who are they? Are they stalkers?!*";
                 case MessageIDs.RepelledInvasion:

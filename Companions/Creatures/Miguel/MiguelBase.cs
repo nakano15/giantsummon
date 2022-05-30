@@ -634,7 +634,7 @@ namespace giantsummon.Companions
                 case MessageIDs.SpottedABoss:
                     return "*We are going to fight that, right? Sigh... Fine...*";
                 case MessageIDs.DefeatedABoss:
-                    return "*Is everyone okay? Good to know.*";
+                    return "*Is everyone okay? Good to know. That was one heck of a exercise, good job.*";
                 case MessageIDs.InvasionBegins:
                     return "*I thought this place was peaceful.*";
                 case MessageIDs.RepelledInvasion:

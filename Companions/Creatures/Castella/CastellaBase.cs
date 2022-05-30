@@ -17,7 +17,7 @@ namespace giantsummon.Companions
         public CastellaBase()
         {
             Name = "Castella";
-            Description = "";
+            Description = "A mysterious woman, owner of a castle, \nafflicted by a curse.";
             Size = GuardianSize.Large;
             Width = 24;
             Height = 88;
@@ -582,7 +582,6 @@ namespace giantsummon.Companions
                 }
             }
             Func<string, string, string> M = new Func<string, string, string>(delegate (string normal, string were) { if (Wereform) { return (were); } else { return (normal); } });
-
             switch (MessageID)
             {
                 case MessageIDs.BuddySelected:
@@ -717,126 +716,126 @@ namespace giantsummon.Companions
                     return M("*I'd swim in a pool full of this.*", "*This should go well with meat.*");
                 //
                 case MessageIDs.FoundLifeCrystalTile: //TODO : Add dialogues from here and ahead.
-                    return "*[name] tells you of the Life Crystal.*";
+                    return M("*I see a life crystal ahead.*", "*Oh, lovely thing ahead.*");
                 case MessageIDs.FoundPressurePlateTile:
-                    return "*[name] warns you of the Pressure Plate.*";
+                    return M("*Watch your step! Pressure plate.*", "*Nothing good might come from stepping on that.*");
                 case MessageIDs.FoundMineTile:
-                    return "*[name] warns you of the mine.*";
+                    return M("*Watch your step! A mine.*", "*There's a mine on the ground, beware.*");
                 case MessageIDs.FoundDetonatorTile:
-                    return "*[name] asks if can press the Detonator.*";
+                    return M("*I hope you know what you do with that.*", "*Better not pull that.*");
                 case MessageIDs.FoundPlanteraTile:
-                    return "*[name] seems scared of the Bulb.*";
+                    return M("*That might be connected to danger.*", "*What a exquisite plant. Smash it.*");
                 case MessageIDs.WhenOldOneArmyStarts:
-                    return "*[name] seems a bit nervous.*";
+                    return M("*I'll do my best to protect the crystal.*", "*Bring it on!*");
                 case MessageIDs.FoundTreasureTile:
-                    return "*[name] tells you of the Chest.*";
+                    return M("*Open it!*", "*I'm curious. What is inside?*");
                 case MessageIDs.FoundGemTile:
-                    return "*[name] tells you of gems he found.*";
+                    return M("*I could have some jewels of those.*", "*You will gift me those, will you?*");
                 case MessageIDs.FoundRareOreTile:
-                    return "*[name] points at some rare ores.*";
+                    return M("*You might be interessed in this.*", "*That's shiny, you might be interessed on it.*");
                 case MessageIDs.FoundVeryRareOreTile:
-                    return "*[name] shows you some very rare ores.*";
+                    return M("*That looks rare.*", "*You might want to dig this.*");
                 case MessageIDs.FoundMinecartRailTile:
-                    return "*[name] seems anxious to ride a minecart.*";
+                    return M("*I wonder where that will lead us.*", "*You want to ride that, don't you?*");
                 //
                 case MessageIDs.TeleportHomeMessage:
-                    return "*[name] seems happy to return home.*";
+                    return M("*Yes, I had enough of exploring too.*", "*Already? Aww..*");
                 case MessageIDs.CompanionInvokesAMinion:
-                    return "*[name] seems to like invoking those.*";
+                    return M("*I could use my castle minions, but those will do.*", "*I hope they can help pinning my preys.*");
                 case MessageIDs.VladimirRecruitPlayerGetsHugged:
-                    return "*[name] stares at you and the big bear, without understanding what is happening.*";
+                    return M("*I just had to leave my castle to begin seeing weird things.*", "*Why do you accept his hugs but not mine?*");
                 //
                 case MessageIDs.LeaderFallsMessage:
-                    return "*[name] yells your name.*";
+                    return M("*[nickname]!*", "*[nickname]! No!*");
                 case MessageIDs.LeaderDiesMessage:
-                    return "*[name] is very saddened by your death.*";
+                    return "*NO! [nickname]!!!*";
                 case MessageIDs.AllyFallsMessage:
-                    return "*[name] tells you someone nearby fell.*";
+                    return M("*Someone was knocked out!*", "*Someone fell!*");
                 case MessageIDs.SpotsRareTreasure:
-                    return "*[name] points joyfully at something that fell.*";
+                    return M("*Look! That look good.*", "*My eyes sees something unusual there.*");
                 case MessageIDs.LeavingToSellLoot:
-                    return "*[name] waves at you, saying that will sell the items he has.*";
+                    return M("*I'll be right back.*", "*You wont even notice me gone.*");
                 case MessageIDs.PlayerAtDangerousHealthLevel:
-                    return "*[name] tells you to be careful of your health.*";
+                    return M("*You better watch yourself, [nickname].*", "*Come on, you don't want me to carry you, don't you?*");
                 case MessageIDs.CompanionHealthAtDangerousLevel:
-                    return "*[name] is trying to hide that he's badly hurt.*";
+                    return M("*I'm reaching my limit...*", "*I'm not done yet.*");
                 case MessageIDs.RunningOutOfPotions:
-                    return "*[name] seems shocked at the number of potions he has.*";
+                    return M("*I'm running out of potions!*", "*I'm running out of potions!*");
                 case MessageIDs.UsesLastPotion:
-                    return "*[name] tells you that has no more potions left.*";
+                    return M("*That was my last potion!*", "*I don't have any more potions!*");
                 case MessageIDs.SpottedABoss:
-                    return "*[name] tells you that sees a creature coming.*";
+                    return M("*Watch out!*", "*I can't wait to make you fall!*");
                 case MessageIDs.DefeatedABoss:
-                    return "*[name] celebrates our victory.*";
+                    return M("*It shouldn't have tried to mess with me.*", "*What should I jump on next?*");
                 case MessageIDs.InvasionBegins:
-                    return "*[name] name warns you of hordes of foes coming.*";
+                    return M("*I hope you're ready.*", "*Looks like they made a mistake of appearing with me around.*");
                 case MessageIDs.RepelledInvasion:
-                    return "*[name] seems glad that it's over.*";
+                    return M("*Everyone is okay? Good.*", "*That was it? Disappointing! My teeth still want to bite things.*");
                 case MessageIDs.EventBegins:
-                    return "*[name] seems scared right now.*";
+                    return M("*I don't like this...*", "*That doesn't seems natural, I like it.*");
                 case MessageIDs.EventEnds:
-                    return "*[name] calmed down.*";
+                    return M("*I'm glad it's over.*", "*Too bad that it's over already.*");
                 case MessageIDs.RescueComingMessage:
-                    return "*[name] tells the fallen ally they're coming.*";
+                    return M("*Hang on! I'm coming.*", "*Worry not, I'll get you!*");
                 case MessageIDs.RescueGotMessage:
-                    return "*[name] told the fallen ally that he will keep them safe.*";
+                    return M("*You stay with me for a while.*", "*Got you, now don't you die.*");
                 //Feat Mentioning, [player] replaced by mentioned player. [subject] for feat subject
                 case MessageIDs.FeatMentionPlayer:
-                    return "*[name] tells you of another friend of his, called [player].*";
+                    return M("*I have been speaking a lot with [player] recently.*", "*You're not the only prey I've got. [player] is another one I tend to hunt.*");
                 case MessageIDs.FeatMentionBossDefeat:
-                    return "*[name] mentions that [player] defeated [subject].*";
+                    return M("*Looks like [player] managed to take down [subject].*", "*I heard about [player] beating up [subject]. What a show off.*");
                 case MessageIDs.FeatFoundSomethingGood:
-                    return "*[name] seems really impressed by [player] finding a [subject].*";
+                    return M("*[player] has found a [subject] recently. Did you got anything cool too?*", "*People are all drolling because [player] got a [subject]. I don't see what's so special about that.*");
                 case MessageIDs.FeatEventFinished:
-                    return "*[name] is telling you a story involving a [subject] and [player].*";
+                    return M("*It seems like [player] has a [subject] happening in their presence.*", "*I wonder where was you when a [subject] happened? I know [player] was there.*");
                 case MessageIDs.FeatMetSomeoneNew:
-                    return "*[name] says that [player] met someone named [subject].*";
+                    return M("*It seems like [player] met [subject] recently.*", "*Looks like [player] found me a new prey. They're called [subject].*");
                 case MessageIDs.FeatPlayerDied:
-                    return "*[name] is saddened, because his friend, [player], has died.*";
+                    return M("*I'm still saddened about [player]'s death. They were a good friend to me.*", "*Don't look at me, it wasn't me who killed [player]. I'd never do that to a friend.*");
                 case MessageIDs.FeatOpenTemple:
-                    return "*[name] seems curious about what is inside a temple [player] opened the door of, at [subject].*";
+                    return M("*I'm curious about what might be hidden inside the temple [player] discovered...*", "*[player] unlocked the entrance to a spooky temple. I wonder what I could find inside.*");
                 case MessageIDs.FeatCoinPortal:
-                    return "*[name] tells you the story of [player] finding a coin portal.*";
+                    return M("*[player] must be feeling lucky, after witnessing a coin portal appear before them.*", "*You should have seen [player] running left to right when that coin portal appeared.*");
                 case MessageIDs.FeatPlayerMetMe:
-                    return "*[name] is saying that has met [player].*";
+                    return M("*I've met [player] recently. I hope they're nice to me.*", "*I've met a new victim recently. They told me they're named [player].*");
                 case MessageIDs.FeatCompletedAnglerQuests:
-                    return "*[name] is impressed by the number of fish [player] caught.*";
+                    return M("*I don't see why [player] keep helping that kid. He's awful.*", "*Only [player] might have patience to deal with that kid.*");
                 case MessageIDs.FeatKilledMoonLord:
-                    return "*[name] is happy for [player], for having killed Moon Lord in [subject].*";
+                    return M("*I think I might have underestimated [player]. They are strong enough to defeat godly creatures.*", "*I wouldn't believe if someone told me that [player] defeated a godly creature, even more since I can knock them out with ease.*");
                 case MessageIDs.FeatStartedHardMode:
-                    return "*[name] told me that creepy creatures are now roaming [subject].*";
+                    return M("*Looks like things changed on [subject].*", "*New things to kill have appeared recently on [subject].*");
                 case MessageIDs.FeatMentionSomeonePickedAsBuddy:
-                    return "*[name] is really happy about knowing [player] found their own buddy, and picked [subject] to be it.*";
+                    return M("*I've heard about [player] picking [subject] as their buddy. I wish them a healthy life.*", "*Awww.. It will be harder to hunt down [player] with [subject] around. At least I hope they be good buddies to each other.*");
                 case MessageIDs.FeatSpeakerPlayerPickedMeAsBuddy:
-                    return "*[name] is saying that is really glad you picked him as his buddy.*";
+                    return M("*I'm still happy about you picking me as your buddy. You are also a welcome guest on my castle too.*", "*I'm really glad that you are now my buddy, now I have my personal chew toy. Don't worry, I won't hurt you when biting.*");
                 case MessageIDs.FeatMentionSomeoneMovingIntoAWorld:
-                    return "*[name] tells you that [subject] got a house in [world].*";
+                    return M("*Looks like [subject] has moved in to [world]. That place must be nice to live.*", "*[subject] thinks that can escape from me by moving to [world].*");
                 case MessageIDs.DeliveryGiveItem:
-                    return "*[name] gave [item] to [target].*";
+                    return M("*[target]! Take this [item].*", "*Hey [target]! Fetch.*");
                 case MessageIDs.DeliveryItemMissing:
-                    return "*[name] seems to be missing some item on their inventory.*";
+                    return M("*I thought I had... Nevermind...*", "*What? My head must not be right, I thought I had... Oh well...*");
                 case MessageIDs.DeliveryInventoryFull:
-                    return "*[name] tells [target] that can't give them anything while their inventory is full.*";
+                    return M("*[target], I can't give you something until you take care of your inventory.*", "*[target]! Clean your inventory, now!*");
                 //Popularity Contest Messages
                 case MessageIDs.PopContestMessage:
-                    return "*[name] is asking if you're interessed in voting on the TerraGuardians Popularity Contest.*";
+                    return M("*Hey, [nickname]. I'll be helping hosting the TerraGuardians Popularity contest, do you plan on participating?*", "*[nickname], the TerraGuardians Popularity contest is up. Are you going to vote for me? I will bite you less harder if you do.*");
                 case MessageIDs.PopContestIntroduction:
-                    return "*[name] tells you that the contest allows you to vote on your favorite companions. The event is so big that you can vote on TerraGuardians and Non-TerraGuardians companions on it, which he likes. He told you to vote before the event ends.*";
+                    return M("*You want to know more? From what people told me, is a contest where Terrarians can vote on their favorite companions. That instantly made me interessed.*", "*You don't know what that is? People like you vote on your favorite companions, so they see who wins. Of course I'm gonna win, why wouldn't I?*");
                 case MessageIDs.PopContestLinkOpen:
-                    return "*[name] tells you to pick everyone you like in it, and tells you to enjoy.*";
+                    return M("*Be sure to pick everyone you like on the contest, before you send your vote.*", "*Be sure to vote for me! Ah, and also vote on some other people you might like too, just so you don't say I'm egoist.*");
                 case MessageIDs.PopContestOnReturnToOtherTopics:
-                    return "*[name] asks what else you want to speak about.*";
+                    return M("*Want to speak about something else?*", "*So, are you going to vote, or what?*");
                 case MessageIDs.PopContestResultMessage:
-                    return "*[name] seems happy about the Popularity Contest results being out. He asks you if you want to check it.*";
+                    return M("*[nickname], the results are out. I can show you the results if you want.*", "*[nickname]! [nickname]! They're out! The results of the Popularity Contest came! Hurry! Let's check it out!*");
                 case MessageIDs.PopContestResultLinkClickMessage:
-                    return "*[name] seems really curious to see who won too.*";
+                    return M("*I'm just as curious as you, let's see.*", "*So, did I win? Come on, tell me!*");
                 case MessageIDs.PopContestResultNevermindMessage:
-                    return "*[name] tells you to check him back if you want to check the results.*";
+                    return M("*Not now? Alright. You can check that another time then.*", "*Now now? Come on [nickname], don't leave me curious!*");
             }
             return base.GetSpecialMessage(MessageID);
         }
 
-        public bool OnWerewolfForm(TerraGuardian tg)
+        public static bool OnWerewolfForm(TerraGuardian tg)
         {
             if (tg.Data is CastellaData)
             {

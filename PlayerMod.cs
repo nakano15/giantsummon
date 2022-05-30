@@ -2742,7 +2742,7 @@ namespace giantsummon
                         if(tg.Active && tg.InPerceptionRange(player.Center))
                         {
                             float Weight;
-                            string Message = tg.Base.CompanionJoinGroupMessage(guardian.Data, out Weight);
+                            string Message = tg.Base.CompanionJoinGroupMessage(tg, guardian.Data, out Weight);
                             if(Weight > HighestWeight)
                             {
                                 Messages.Clear();
@@ -2983,7 +2983,7 @@ namespace giantsummon
                         if (tg.Active && tg.InPerceptionRange(player.Center))
                         {
                             float Weight;
-                            string Message = tg.Base.CompanionRecruitedMessage(MyGuardians[SpawnID], out Weight);
+                            string Message = tg.Base.CompanionRecruitedMessage(tg, MyGuardians[SpawnID], out Weight);
                             if(Weight > LastWeightValue)
                             {
                                 Reactions.Clear();
