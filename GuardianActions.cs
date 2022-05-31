@@ -76,7 +76,10 @@ namespace giantsummon
         public static bool UseLiftPlayer(TerraGuardian Guardian, Player Target)
         {
             if (Guardian.DoAction.InUse) return false;
-            Guardian.DoAction = new LiftPlayerAction(Target);
+            if(PlayerMod.PlayerControllingGuardian(Target))
+                Guardian.DoAction = new LiftPlayerAction(Target.GetModPlayer<PlayerMod>().Guardian);
+            else
+                Guardian.DoAction = new LiftPlayerAction(Target);
             return true;
         }
 
@@ -260,6 +263,25 @@ namespace giantsummon
             {
                 guardian.MoveLeft = guardian.MoveRight = false;
                 if (player.Center.X < guardian.Position.X)
+                    guardian.MoveLeft = true;
+                else
+                    guardian.MoveRight = true;
+            }
+            return false;
+        }
+
+        public bool TryReachingTg(TerraGuardian guardian, TerraGuardian tg)
+        {
+            if (guardian.OwnerPos == tg.OwnerPos && guardian.PlayerMounted)
+                return true;
+            if (guardian.HitBox.Intersects(tg.HitBox) && !guardian.IsBeingPulledByPlayer && guardian.ItemAnimationTime == 0)
+            {
+                return true;
+            }
+            else
+            {
+                guardian.MoveLeft = guardian.MoveRight = false;
+                if (tg.Position.X < guardian.Position.X)
                     guardian.MoveLeft = true;
                 else
                     guardian.MoveRight = true;

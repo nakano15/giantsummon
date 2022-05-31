@@ -635,6 +635,7 @@
     <Content Include="Companions\Creatures\Rococo\body.png" />
     <Content Include="Companions\Creatures\Rococo\left_arm.png" />
     <Content Include="Companions\Creatures\Rococo\right_arm.png" />
+    <Content Include="Interface\CompactCompanionInfo.png" />
     <Content Include="Interface\Contributor_Icon.png" />
     <Content Include="Interface\Crown.png" />
     <Content Include="Interface\EditButton.png" />

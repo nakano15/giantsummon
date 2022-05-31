@@ -17,7 +17,6 @@ namespace giantsummon
         public static bool UpdateAge = false;
         public const int MinimumAgeToDrink = 18;
         public const int TimeUntilCompanionForgetsTarget = 5 * 60;
-
         public DrawMoment drawMoment = DrawMoment.DontDraw;
         public List<PathFinder.Breadcrumbs> Paths = new List<PathFinder.Breadcrumbs>();
         public int WhoAmID = 0;
@@ -300,7 +299,7 @@ namespace giantsummon
             get
             {
                 string NewName = Name;
-                if (OwnerPos > -1)
+                if (!IsCommander && OwnerPos > -1)
                     NewName = Main.player[OwnerPos].name + "'s " + NewName;
                 return NewName;
             }
@@ -423,6 +422,83 @@ namespace giantsummon
         public bool SubAttackInUse { get { return SpecialAttack.InUse; } }
         public int MyDrawOrder = 0; //For getting when the companion is drawn. The lower the number, the more behind the companion is drawn.
         public static int CurrentDrawnOrderID = 0;
+        public short CommanderCharacterID = -1;
+        public int GetCommanderLeaderID
+        {
+            get
+            {
+                if (CommanderCharacterID == -1)
+                    return -1;
+                return Main.player[CommanderCharacterID].GetModPlayer<PlayerMod>().CompanionCommanderLeaderPlayer;
+            }
+        }
+        public bool IsCommander { get { return CommanderCharacterID > -1; } }
+
+        public bool SetAsCommander(int LeaderPlayerID)
+        {
+            if (CommanderCharacterID > -1 || LeaderPlayerID < 0 || LeaderPlayerID > 255)
+                return false;
+            for(int i = 254; i >= 0; i--)
+            {
+                if (!Main.player[i].active)
+                {
+                    if (OwnerPos > -1)
+                        Main.player[OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian(ID, ModID, false);
+                    Main.player[i] = new Player() { whoAmI = i };
+                    Player p = Main.player[i];
+                    PlayerMod pm = p.GetModPlayer<PlayerMod>();
+                    for (int j = 0; j < 50; j++)
+                    {
+                        p.inventory[j].SetDefaults(0);
+                    }
+                    /*for(int j = 0; j < 50; j++)
+                    {
+                        p.inventory[j] = Inventory[j];
+                        if (j < 9)
+                            p.armor[j] = Equipments[j];
+                    }
+                    p.dye[0] = BodyDye;*/
+                    p.name = Name;
+                    p.Center = CenterPosition;
+                    p.active = true;
+                    pm.CompanionCommanderLeaderPlayer = (short)LeaderPlayerID;
+                    pm.GetSharedProgress(Main.player[Main.myPlayer].GetModPlayer<PlayerMod>());
+                    pm.MyGuardians = Main.player[LeaderPlayerID].GetModPlayer<PlayerMod>().MyGuardians;
+                    CommanderCharacterID = (short)i;
+                    if(OwnerPos > -1)
+                    {
+                        if (PlayerMounted)
+                            ToggleMount(true, false);
+                        if (PlayerControl)
+                            TogglePlayerControl(true);
+                        if (SittingOnPlayerMount)
+                            DoSitOnPlayerMount(false);
+                        Main.player[OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian();
+                    }
+                    pm.CallGuardian(ID, ModID);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public void RemoveFromCommanding()
+        {
+            if (!IsCommander)
+                return;
+            Main.player[CommanderCharacterID].active = false;
+            PlayerMod pm = Main.player[CommanderCharacterID].GetModPlayer<PlayerMod>();
+            bool First = true;
+            foreach (TerraGuardian tg in pm.GetAllGuardianFollowers)
+            {
+                if (tg.Active)
+                {
+                    pm.DismissGuardian(tg.ID, tg.ModID, !First);
+                }
+                First = false;
+            }
+            CommanderCharacterID = -1;
+        }
 
         public bool IsSameAs(GuardianData guardian)
         {
@@ -8882,7 +8958,7 @@ namespace giantsummon
 
         public void DoLootItems()
         {
-            if (OwnerPos == -1 || (DoAction.InUse && (DoAction.Inactivity || DoAction.CantUseInventory))) return;
+            if (this.OwnerPos == -1 || (DoAction.InUse && (DoAction.Inactivity || DoAction.CantUseInventory))) return;
             bool ChaseItems = MayLootItems && !PlayerControl && !PlayerMounted;
             Vector2 Center = CenterPosition;
             float GrabItemDistance = 65f;
@@ -8894,6 +8970,7 @@ namespace giantsummon
             {
                 NearestPos = (Main.item[SeekingItem].Center - CenterPosition).Length();
             }
+            int OwnerPos = this.CommanderCharacterID > -1 ? this.CommanderCharacterID : this.OwnerPos;
             bool SeekHeart = HP < MHP * 0.5f || Main.player[OwnerPos].statLife < Main.player[OwnerPos].statLifeMax2 * 0.5f,
                 SeekMana = Main.player[OwnerPos].statMana < Main.player[OwnerPos].statManaMax2 * 0.5f;
             int CurrentStack = GetCooldownValue(GuardianCooldownManager.CooldownType.ItemLootStackCheck) * ItemStackCount;
@@ -8905,7 +8982,7 @@ namespace giantsummon
             }
             for (int i = 0; i < Main.item.Length; i++)
             {
-                if (Main.item[i].active && Main.item[i].type > 0 && Main.item[i].stack > 0 && Main.item[i].noGrabDelay == 0 && Main.item[i].owner == OwnerPos)
+                if (Main.item[i].active && Main.item[i].type > 0 && Main.item[i].stack > 0 && Main.item[i].noGrabDelay == 0 && (Main.item[i].owner == OwnerPos || (Main.netMode == 0 && Main.item[i].owner == CommanderCharacterID)))
                 {
                     bool IsHealthPickup = Main.item[i].type == 58 || Main.item[i].type == 1734 || Main.item[i].type == 1867,
                         IsManaPickup = Main.item[i].type == Terraria.ID.ItemID.Star || Main.item[i].type == Terraria.ID.ItemID.SoulCake || Main.item[i].type == Terraria.ID.ItemID.SugarPlum;
@@ -12775,7 +12852,7 @@ namespace giantsummon
                         AllowItemUsage = false;
                     else if (LastAction && !Inventory[SelectedItem].autoReuse)
                         AllowItemUsage = false;
-                    else if (Inventory[SelectedItem].createTile > -1 || Inventory[SelectedItem].createWall > -1)
+                    else if (!PlayerControl && (Inventory[SelectedItem].createTile > -1 || Inventory[SelectedItem].createWall > -1))
                     {
                         AllowItemUsage = false;
                     }
@@ -13846,10 +13923,6 @@ namespace giantsummon
                                 }
                             }
                         }
-                        if (item.createTile >= 0)
-                        {
-
-                        }
                     }
                 }
                 //Time reduce
@@ -13957,6 +14030,27 @@ namespace giantsummon
                                 UpdateStatus = true;
                             }
                             else Failed = true;
+                        }
+                        if (item.createTile >= 0)
+                        {
+                            int TileX = (int)(AimDirection.X / 16);
+                            int TileY = (int)(AimDirection.Y / 16);
+                            int tileType = item.createTile;
+                            int tileStyle = item.placeStyle;
+                            if (item.createTile == 20)
+                            {
+                                Tile underTile = Main.tile[TileX, TileY + 1];
+                                if (underTile.active())
+                                    TileLoader.SaplingGrowthType(underTile.type, ref tileType, ref tileStyle);
+                            }
+                            if (TileObject.CanPlace(TileX, TileY, tileType, tileStyle, Direction, out TileObject to))
+                                TileObject.Place(to);
+                        }
+                        if(item.createWall > 0)
+                        {
+                            int TileX = (int)(AimDirection.X / 16);
+                            int TileY = (int)(AimDirection.Y / 16);
+                            WorldGen.PlaceWall(TileX, TileY, item.createTile);
                         }
                         if (!Failed && item.consumable && (OwnerPos > -1 || ForceUse))
                         {
@@ -15427,7 +15521,7 @@ namespace giantsummon
             }
             else
             {
-                if (PlayerControl && Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian != null)
+                if ((PlayerControl || IsCommander) && Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian != null)
                 {
                     TerraGuardian otherguardian = Main.player[OwnerPos].GetModPlayer<PlayerMod>().MountGuardian;
                     int Animation = Base.SittingFrame;
@@ -16046,7 +16140,7 @@ namespace giantsummon
                     Owner.GetModPlayer<PlayerMod>().ReviveBoost += 2;
                 }
             }
-            if (MountedOnPlayer && Owner.GetModPlayer<PlayerMod>().ControllingGuardian)
+            if (MountedOnPlayer && (Owner.GetModPlayer<PlayerMod>().ControllingGuardian || Owner.GetModPlayer<PlayerMod>().IsCompanionParty))
             {
                 TerraGuardian otherGuardian = Owner.GetModPlayer<PlayerMod>().Guardian;
                 //Add a script for when the guardian is downed.
@@ -16063,7 +16157,7 @@ namespace giantsummon
                 Position.Y += SpriteHeight - Base.SittingPoint.Y;
                 return;
             }
-            if (PlayerControl && Owner.GetModPlayer<PlayerMod>().MountGuardian != null)
+            if ((PlayerControl || IsCommander) && Owner.GetModPlayer<PlayerMod>().MountGuardian != null)
             {
                 TerraGuardian otherGuardian = Owner.GetModPlayer<PlayerMod>().MountGuardian;
                 if (ItemAnimationTime == 0 && !FreezeItemUseAnimation)
@@ -16334,7 +16428,8 @@ namespace giantsummon
 
         public void SetTurnLock()
         {
-            TurnLock = TurnLockTime;
+            if(!PlayerControl && !PlayerMounted)
+                TurnLock = TurnLockTime;
         }
 
         public Point[] UpdateTouchingTiles()
@@ -18389,12 +18484,12 @@ namespace giantsummon
             AddDrawData(dd, DrawLeftBodyPartsInFrontOfPlayer);
         }
 
-        public void DrawHead(Vector2 Position, float Scale = 1f, float XOffset = 0.5f, float YOffset = 0.5f)
+        public void DrawHead(Vector2 Position, float Scale = 1f, float XOffset = 0.5f, float YOffset = 0.5f, bool FaceCharacterDirection = false)
         {
             if (Base.InvalidGuardian)
             {
-                Position.X -= MainMod.LosangleOfUnnown.Width * XOffset;
-                Position.Y -= MainMod.LosangleOfUnnown.Height * XOffset;
+                Position.X -= MainMod.LosangleOfUnnown.Width * XOffset * Scale;
+                Position.Y -= MainMod.LosangleOfUnnown.Height * XOffset * Scale;
                 new GuardianDrawData(GuardianDrawData.TextureType.TGHead, MainMod.LosangleOfUnnown, Position,
                  null, Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None).Draw(Main.spriteBatch);
                 return;
@@ -18415,13 +18510,19 @@ namespace giantsummon
                 HeadTexture = MainMod.LosangleOfUnnown;
                 Scale *= 32f / HeadTexture.Height;
             }
-            Position.X -= HeadTexture.Width * XOffset;
-            Position.Y -= HeadTexture.Height * YOffset;
+            SpriteEffects spriteEffects = SpriteEffects.None;
+            if(FaceCharacterDirection && LookingLeft)
+            {
+                XOffset = 1f - XOffset;
+                spriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            Position.X -= HeadTexture.Width * XOffset * Scale;
+            Position.Y -= HeadTexture.Height * YOffset * Scale;
             List<GuardianDrawData> gddlist = new List<GuardianDrawData>();
             GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGHead, HeadTexture, Position,
-                null, Color.White, 0f, Origin, Scale, SpriteEffects.None);
+                null, Color.White, 0f, Origin, Scale, spriteEffects);
             gddlist.Add(gdd);
-            Base.GuardianModifyDrawHeadScript(this, Position, Color.White, Scale, SpriteEffects.None, Origin, ref gddlist);
+            Base.GuardianModifyDrawHeadScript(this, Position, Color.White, Scale, spriteEffects, Origin, ref gddlist);
             foreach (GuardianDrawData d in gddlist)
             {
                 d.Draw(Main.spriteBatch);

@@ -6,11 +6,20 @@ namespace giantsummon.Actions
     public class LiftPlayerAction : GuardianActions
     {
         public Player Target;
+        public TerraGuardian TargetTg;
 
         public LiftPlayerAction(Player target)
         {
             ID = (int)ActionIDs.LiftPlayer;
             Target = target;
+            TargetTg = null;
+        }
+
+        public LiftPlayerAction(TerraGuardian target)
+        {
+            ID = (int)ActionIDs.LiftPlayer;
+            Target = null;
+            TargetTg = target;
         }
 
         public override void Update(TerraGuardian guardian)
@@ -29,10 +38,10 @@ namespace giantsummon.Actions
                 case 0:
                     if (guardian.furniturex > -1)
                         guardian.LeaveFurniture();
-                    if (guardian.ItemAnimationTime == 0 && TryReachingPlayer(guardian, Target)) //guardian.HitBox.Intersects(p.getRect()) && !guardian.BeingPulledByPlayer && 
+                    if (guardian.ItemAnimationTime == 0 && ((Target != null && TryReachingPlayer(guardian, Target)) || (TargetTg != null && TryReachingTg(guardian, TargetTg)))) //guardian.HitBox.Intersects(p.getRect()) && !guardian.BeingPulledByPlayer && 
                     {
                         ChangeStep();
-                        if (Target.mount.Active)
+                        if (Target != null && Target.mount.Active)
                             Target.mount.Dismount(Target);
                     }
                     else
@@ -47,44 +56,80 @@ namespace giantsummon.Actions
                     BlockOffHandUsage = true;
                     if (Time < 12)
                     {
-                        Target.Center = HandPosition;
-                        Target.velocity = Vector2.Zero;
-                        Target.velocity.Y = -Player.defaultGravity;
-                        Target.fallStart = (int)Target.position.Y / 16;
+                        if (Target != null)
+                        {
+                            Target.Center = HandPosition;
+                            Target.velocity = Vector2.Zero;
+                            Target.velocity.Y = -Player.defaultGravity;
+                            Target.fallStart = (int)Target.position.Y / 16;
+                        }
+                        else
+                        {
+                            TargetTg.Position = HandPosition + new Vector2(0, TargetTg.Height * 0.5f);
+                            TargetTg.Velocity = Vector2.Zero;
+                            TargetTg.SetFallStart();
+                        }
                         FocusCameraOnGuardian = true;
                     }
                     else
                     {
-                        if (Time == 18 && Collision.SolidCollision(Target.position, Target.width, Target.height))
+                        if (Time == 18 && Target != null && Collision.SolidCollision(Target.position, Target.width, Target.height))
                         {
                             Target.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" should've noticed the ceiling was low, before asking " + guardian.Name + " to lift it up..."), 20, 0);
                             guardian.DisplayEmotion(TerraGuardian.Emotions.Sweat);
-                            if (Target.dead)
+                            if (Target.dead || Target.GetModPlayer<PlayerMod>().KnockedOut)
+                                InUse = false;
+                            ChangeStep();
+                        }
+                        else if (Time == 18 && TargetTg != null && Collision.SolidCollision(TargetTg.TopLeftPosition, TargetTg.Width, TargetTg.Height))
+                        {
+                            TargetTg.Hurt(20, 0, DeathMessage: " should've noticed the ceiling was low, before asking " + guardian.Name + " to lift it up...");
+                            guardian.DisplayEmotion(TerraGuardian.Emotions.Sweat);
+                            if (TargetTg.Downed || TargetTg.KnockedOut)
                                 InUse = false;
                             ChangeStep();
                         }
                         else
                         {
                             FocusCameraOnGuardian = false;
-                            Target.position.Y = HandPosition.Y - Target.height;
-                            Target.position.X = HandPosition.X - Target.width * 0.5f;
-                            Target.velocity.Y = -Target.gravity;
-                            Target.velocity.X = 0;
-                            Target.fallStart = (int)Target.position.Y / 16;
-                            if (Target.controlRight)
+                            if (Target != null)
                             {
-                                guardian.MoveRight = true;
+                                Target.position.Y = HandPosition.Y - Target.height;
+                                Target.position.X = HandPosition.X - Target.width * 0.5f;
+                                Target.velocity.Y = -Target.gravity;
+                                Target.velocity.X = 0;
+                                Target.fallStart = (int)Target.position.Y / 16;
+                                if (Target.controlRight)
+                                {
+                                    guardian.MoveRight = true;
+                                }
+                                if (Target.controlLeft)
+                                {
+                                    guardian.MoveLeft = true;
+                                }
+                                if (Target.controlJump)
+                                {
+                                    Target.justJumped = true;
+                                    Target.velocity.Y = -Player.jumpSpeed * Target.gravDir;
+                                    Target.jump = Player.jumpHeight;
+                                    InUse = false;
+                                }
                             }
-                            if (Target.controlLeft)
+                            else
                             {
-                                guardian.MoveLeft = true;
-                            }
-                            if (Target.controlJump)
-                            {
-                                Target.justJumped = true;
-                                Target.velocity.Y = -Player.jumpSpeed * Target.gravDir;
-                                Target.jump = Player.jumpHeight;
-                                InUse = false;
+                                TargetTg.Position = HandPosition;
+                                TargetTg.Velocity.Y = -0.3f;
+                                TargetTg.Velocity.X = 0;
+                                TargetTg.SetFallStart();
+                                if (TargetTg.LastMoveRight)
+                                    guardian.MoveRight = true;
+                                if (TargetTg.LastMoveLeft)
+                                    guardian.MoveLeft = true;
+                                if(TargetTg.LastJump)
+                                {
+                                    TargetTg.Velocity.Y = -TargetTg.JumpSpeed * TargetTg.GravityDirection;
+                                    InUse = false;
+                                }
                             }
                         }
                     }
@@ -93,17 +138,35 @@ namespace giantsummon.Actions
                     FocusCameraOnGuardian = true;
                     if (Time >= 22)
                     {
-                        Target.position.X = guardian.Position.X - Target.width * 0.5f;
-                        Target.position.Y = guardian.Position.Y - Target.height;
-                        Target.fallStart = (int)Target.position.Y / 16;
-                        Target.velocity = Vector2.Zero;
-                        Target.velocity.Y = -Player.defaultGravity;
-                        InUse = false;
+                        if (Target != null)
+                        {
+                            Target.position.X = guardian.Position.X - Target.width * 0.5f;
+                            Target.position.Y = guardian.Position.Y - Target.height;
+                            Target.fallStart = (int)Target.position.Y / 16;
+                            Target.velocity = Vector2.Zero;
+                            Target.velocity.Y = -Player.defaultGravity;
+                            InUse = false;
+                        }
+                        else
+                        {
+                            TargetTg.Position = guardian.Position;
+                            TargetTg.Velocity.Y = 0;
+                            TargetTg.Velocity.X = 0;
+                            TargetTg.SetFallStart();
+                        }
                     }
                     else
                     {
-                        Target.Center = guardian.GetGuardianBetweenHandPosition;
-                        Target.fallStart = (int)Target.position.Y / 16;
+                        if (Target != null)
+                        {
+                            Target.Center = guardian.GetGuardianBetweenHandPosition;
+                            Target.fallStart = (int)Target.position.Y / 16;
+                        }
+                        else
+                        {
+                            TargetTg.Position = guardian.GetGuardianBetweenHandPosition + new Vector2(0, TargetTg.Height * 0.5f);
+                            TargetTg.SetFallStart();
+                        }
                     }
                     break;
             }

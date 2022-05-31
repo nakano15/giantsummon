@@ -16,6 +16,7 @@ namespace giantsummon.Actions
 
         public override void Update(TerraGuardian guardian)
         {
+            TerraGuardian ControlledGuardian = PlayerMod.PlayerControllingGuardian(PlayerToPlaceOnFloor) ? PlayerToPlaceOnFloor.GetModPlayer<PlayerMod>().Guardian : null;
             if (Time == 0 && guardian.PlayerMounted)
             {
                 guardian.ToggleMount(false, false);
@@ -30,10 +31,19 @@ namespace giantsummon.Actions
                 if (Time >= 20)
                 {
                     InUse = false;
-                    PlayerToPlaceOnFloor.position.X = guardian.Position.X - PlayerToPlaceOnFloor.width * 0.5f;
-                    PlayerToPlaceOnFloor.position.Y = guardian.Position.Y - PlayerToPlaceOnFloor.height;
-                    PlayerToPlaceOnFloor.velocity = guardian.Velocity;
-                    PlayerToPlaceOnFloor.fallStart = (int)PlayerToPlaceOnFloor.position.Y / 16;
+                    if (ControlledGuardian == null)
+                    {
+                        PlayerToPlaceOnFloor.position.X = guardian.Position.X - PlayerToPlaceOnFloor.width * 0.5f;
+                        PlayerToPlaceOnFloor.position.Y = guardian.Position.Y - PlayerToPlaceOnFloor.height;
+                        PlayerToPlaceOnFloor.velocity = guardian.Velocity;
+                        PlayerToPlaceOnFloor.fallStart = (int)PlayerToPlaceOnFloor.position.Y / 16;
+                    }
+                    else
+                    {
+                        ControlledGuardian.Position = guardian.Position;
+                        ControlledGuardian.Velocity = guardian.Velocity;
+                        ControlledGuardian.SetFallStart();
+                    }
                 }
                 else
                 {
@@ -46,15 +56,28 @@ namespace giantsummon.Actions
                     Vector2 HandPosition = guardian.Position;
                     HandPosition.X += HPosX;
                     HandPosition.Y += HPosY;
-                    HandPosition.X -= PlayerToPlaceOnFloor.width * 0.5f;
-                    HandPosition.Y -= PlayerToPlaceOnFloor.height * 0.5f;
-                    PlayerToPlaceOnFloor.position = HandPosition;
-                    PlayerToPlaceOnFloor.fallStart = (int)PlayerToPlaceOnFloor.position.Y / 16;
-                    PlayerToPlaceOnFloor.velocity.X = 0;
-                    PlayerToPlaceOnFloor.velocity.Y = -Player.defaultGravity;
-                    if (PlayerToPlaceOnFloor.itemAnimation == 0)
+                    if (ControlledGuardian == null)
                     {
-                        PlayerToPlaceOnFloor.direction = guardian.Direction;
+                        HandPosition.X -= PlayerToPlaceOnFloor.width * 0.5f;
+                        HandPosition.Y -= PlayerToPlaceOnFloor.height * 0.5f;
+                        PlayerToPlaceOnFloor.position = HandPosition;
+                        PlayerToPlaceOnFloor.fallStart = (int)PlayerToPlaceOnFloor.position.Y / 16;
+                        PlayerToPlaceOnFloor.velocity.X = 0;
+                        PlayerToPlaceOnFloor.velocity.Y = -Player.defaultGravity;
+                        if (PlayerToPlaceOnFloor.itemAnimation == 0)
+                        {
+                            PlayerToPlaceOnFloor.direction = guardian.Direction;
+                        }
+                    }
+                    else
+                    {
+                        HandPosition.Y += ControlledGuardian.Height * 0.5f;
+                        ControlledGuardian.Position = HandPosition;
+                        ControlledGuardian.SetFallStart();
+                        ControlledGuardian.Velocity.X = 0;
+                        ControlledGuardian.Velocity.Y = -ControlledGuardian.Mass;
+                        if (ControlledGuardian.ItemAnimationTime == 0)
+                            ControlledGuardian.Direction = guardian.Direction;
                     }
                 }
             }

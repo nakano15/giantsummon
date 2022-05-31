@@ -54,6 +54,8 @@ namespace giantsummon
 
         public override bool OnPickup(Item item, Player player)
         {
+            //if (player.GetModPlayer<PlayerMod>().IsCompanionParty)
+            //    return false;
             if (item.type > 0)
             {
                 if (player.GetModPlayer<PlayerMod>().Guardian.Active)

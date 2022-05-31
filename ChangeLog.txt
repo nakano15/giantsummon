@@ -4,3 +4,4 @@ Fixed a bug where the mod wasn't recognizing companions with full life crystal h
 Fixed a bug where actions that were cancellable were not being cancelled, because of using the wrong action object.
 Companions reviving someone will only talk upon reaching their target.
 Adjusted some boss victory dialogues of companions.
+Alex's recruit npc will now get you off your companion when he jumps on you.

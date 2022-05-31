@@ -29,6 +29,8 @@ namespace giantsummon
             AddOption(Option.OptionType.Action);
             AddOption(Option.OptionType.Item);
             AddOption(Option.OptionType.Tactic);
+            if (Main.netMode == 0)
+                AddOption(Option.OptionType.SwitchGroup);
         }
 
         public static void AddOptionHolder()
@@ -158,7 +160,21 @@ namespace giantsummon
                         {
                             if (!Guardians[i].Active)
                                 continue;
+                            if (i == 0 && player.ControllingGuardian)
+                                continue;
                             AddOption(Option.OptionType.PickGuardian, true, i);
+                        }
+                    }
+                    break;
+                case Option.OptionType.SwitchGroup:
+                    {
+                        AddOptionHolder();
+                        for(int i = 0; i < 255; i++)
+                        {
+                            if(Main.player[i].active && i != Main.myPlayer)
+                            {
+                                AddOption(Option.OptionType.PickTeam, true, i);
+                            }
                         }
                     }
                     break;
@@ -169,6 +185,12 @@ namespace giantsummon
                         AddOption(Option.OptionType.AvoidContactWithTarget);
                         AddOption(Option.OptionType.AttackTargetFromAwayIt);
                         AddOption(Option.OptionType.FreeWill);
+                    }
+                    break;
+                case Option.OptionType.PickTeam:
+                    {
+                        PlayerMod.ChangeSelectedGroup(option.InternalValue);
+                        Close();
                     }
                     break;
                 case Option.OptionType.PickGuardian:
@@ -218,8 +240,9 @@ namespace giantsummon
                                         ((SelectedGuardian == 255 && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Any(x => x.Active && x.HasMagicMirror)) ||
                                         (SelectedGuardian != 255 && Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetAllGuardianFollowers[SelectedGuardian].HasMagicMirror)));
                                     AddOption(Option.OptionType.PlayerControl,
+                                        !player.IsCompanionParty && (
                                         (SelectedGuardian == 255 && Guardians.Any(x => x.Active && x.HasFlag(GuardianFlags.PlayerControl) && (MainMod.ShowDebugInfo || x.TrustLevel >= TrustLevels.ControlTrust))) ||
-                                        (SelectedGuardian < 255 && Guardians[SelectedGuardian].Active && Guardians[SelectedGuardian].HasFlag(GuardianFlags.PlayerControl) && (MainMod.ShowDebugInfo || Guardians[SelectedGuardian].TrustLevel >= TrustLevels.ControlTrust)));
+                                        (SelectedGuardian < 255 && Guardians[SelectedGuardian].Active && Guardians[SelectedGuardian].HasFlag(GuardianFlags.PlayerControl) && (MainMod.ShowDebugInfo || Guardians[SelectedGuardian].TrustLevel >= TrustLevels.ControlTrust))));
                                     AddOption(Option.OptionType.SetLeader, SelectedGuardian != 0 && SelectedGuardian != 255 && !player.ControllingGuardian);
                                 }
                                 break;
@@ -228,7 +251,7 @@ namespace giantsummon
                                     TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                                     for (int g = 0; g < guardians.Length; g++)
                                     {
-                                        if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active)
+                                        if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander)
                                         {
                                             guardians[g].BePulledByPlayer();
                                         }
@@ -245,7 +268,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander)
                             {
                                 guardians[g].GuardingPosition = null;
                             }
@@ -259,7 +282,7 @@ namespace giantsummon
                         Point GuardPosition = new Point((int)player.player.Center.X / 16, (int)(player.player.position.Y + player.player.height - 1) / 16);
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerMounted)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerMounted)
                             {
                                 guardians[g].GuardingPosition = GuardPosition;
                                 guardians[g].IsGuardingPlace = false;
@@ -274,7 +297,7 @@ namespace giantsummon
                         Point GuardPosition = new Point((int)player.player.Center.X / 16, (int)(player.player.position.Y + player.player.height - 1) / 16);
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerMounted)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerMounted)
                             {
                                 guardians[g].GuardingPosition = GuardPosition;
                                 guardians[g].IsGuardingPlace = true;
@@ -288,7 +311,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander)
                             {
                                 guardians[g].ChargeAhead = !guardians[g].ChargeAhead;
                             }
@@ -301,7 +324,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander)
                             {
                                 guardians[g].AvoidCombat = !guardians[g].AvoidCombat;
                             }
@@ -316,7 +339,7 @@ namespace giantsummon
                         TerraGuardian MountedPriority = null;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && guardians[g].PlayerMounted && guardians[g].HasFlag(GuardianFlags.StopMindingAfk))
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && guardians[g].PlayerMounted && guardians[g].HasFlag(GuardianFlags.StopMindingAfk))
                             {
                                 byte Priority = 0;
                                 if (guardians[g].ReverseMount)
@@ -347,7 +370,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && guardians[g].HasFlag(GuardianFlags.MayGoSellLoot) && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && guardians[g].HasFlag(GuardianFlags.MayGoSellLoot) && !guardians[g].PlayerControl)
                             {
                                 GuardianActions.SellLootCommand(guardians[g]);
                             }
@@ -360,7 +383,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerControl)
                             {
                                 if (GuardianActions.TeleportWithPlayerCommand(guardians[g], player.player))
                                     break;
@@ -374,7 +397,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander)
                             {
                                 if (guardians[g].furniturex != -1)
                                 {
@@ -394,7 +417,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerControl)
                             {
                                 if (GuardianActions.UseLiftPlayer(guardians[g], Main.player[guardians[g].OwnerPos]))
                                     break;
@@ -408,7 +431,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerControl)
                             {
                                 GuardianActions.UseLaunchPlayer(guardians[g], Main.player[guardians[g].OwnerPos]);
                             }
@@ -422,7 +445,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerControl)
                             {
                                 guardians[g].AttemptToUseHealingPotion();
                             }
@@ -435,7 +458,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerControl)
                             {
                                 GuardianActions.UseBuffPotions(guardians[g]);
                             }
@@ -448,7 +471,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander)
                             {
                                 GuardianActions.UseSkillResetPotionCommand(guardians[g]);
                             }
@@ -461,7 +484,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerControl)
                             {
                                 GuardianActions.UseStatusIncreaseItems(guardians[g]);
                             }
@@ -477,7 +500,7 @@ namespace giantsummon
                         bool SomeoneMounted = player.GuardianMountingOnPlayer, MountedOnGuardian = player.MountedOnGuardian;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && guardians[g].HasFlag(GuardianFlags.AllowMount) && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && guardians[g].HasFlag(GuardianFlags.AllowMount) && !guardians[g].PlayerControl)
                             {
                                 if (SelectedGuardian == 255)
                                 {
@@ -530,7 +553,7 @@ namespace giantsummon
                         TerraGuardian[] guardians = player.GetAllGuardianFollowers;
                         for (int g = 0; g < guardians.Length; g++)
                         {
-                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].PlayerControl)
+                            if ((SelectedGuardian == 255 || g == SelectedGuardian) && guardians[g].Active && !guardians[g].IsCommander && !guardians[g].PlayerControl)
                             {
                                 if (guardians[g].SittingOnPlayerMount)
                                     guardians[g].DoSitOnPlayerMount(false);
@@ -717,6 +740,11 @@ namespace giantsummon
                     return "Attack from safe distance";
                 case Option.OptionType.FreeWill:
                     return "Free Will";
+
+                case Option.OptionType.SwitchGroup:
+                    return "Change Team";
+                case Option.OptionType.PickTeam:
+                    return Main.player[option.InternalValue].name + "'s Team";
             }
         }
 
@@ -736,6 +764,7 @@ namespace giantsummon
             public enum OptionType
             {
                 PickGuardian,
+                PickTeam,
 
                 Order,
                 Action,
@@ -743,6 +772,7 @@ namespace giantsummon
                 Interaction,
                 PullGuardians,
                 Tactic,
+                SwitchGroup,
 
                 //Order
                 Follow,

@@ -163,6 +163,11 @@ namespace giantsummon
             }
         }
 
+        public static TerraGuardian SpawnGuardianNPC(TerraGuardian tg, bool ForceMove = false)
+        {
+            return SpawnGuardianNPC(tg.Position.X, tg.Position.Y, tg.ID, tg.ModID, ForceMove);
+        }
+
         public static TerraGuardian SpawnGuardianNPC(float X, float Y, int ID, string ModID = "", bool ForceMove = false) //Will try spawning if there is no other of his type existing
         {
             TerraGuardian tg = null;

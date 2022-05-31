@@ -16,6 +16,8 @@ namespace giantsummon
         private bool BuddiesMode = false;
         public GuardianID BuddiesModeBuddyID = null;
         public EyeState eye = EyeState.Open;
+        public bool IsCompanionParty { get { return CompanionCommanderLeaderPlayer > -1; } }
+        public short CompanionCommanderLeaderPlayer = -1; 
         public Dictionary<int, GuardianData> MyGuardians = new Dictionary<int, GuardianData>();
         public TerraGuardian Guardian = new TerraGuardian();
         public TerraGuardian[] AssistGuardians = new TerraGuardian[MainMod.MaxExtraGuardianFollowers];
@@ -160,6 +162,53 @@ namespace giantsummon
         public byte ExercisesDone = 0;
         public List<QuestData> QuestDatas = new List<QuestData>();
         private static int AmmoCheckDelay = 300;
+
+        public void GetSharedProgress(PlayerMod OtherPlayer)
+        {
+            MyGuardians = OtherPlayer.MyGuardians;
+            QuestDatas = OtherPlayer.QuestDatas;
+            LifeCrystalsUsed = OtherPlayer.LifeCrystalsUsed;
+            LifeFruitsUsed = OtherPlayer.LifeFruitsUsed;
+            ManaCrystalsUsed = OtherPlayer.ManaCrystalsUsed;
+            ExtraMaxHealthValue = OtherPlayer.ExtraMaxHealthValue;
+            MaxGuardianFollowersWeight = OtherPlayer.MaxGuardianFollowersWeight;
+            FriendshipLevel = OtherPlayer.FriendshipLevel;
+        }
+
+        public static void ChangeSelectedGroup(int NewPlayer)
+        {
+            if (!Main.player[NewPlayer].active || Main.netMode > 0)
+                return;
+            Player curPlayer = Main.player[Main.myPlayer];
+            PlayerMod pm = curPlayer.GetModPlayer<PlayerMod>();
+            if (!pm.IsCompanionParty)
+            {
+                if (pm.MountedOnGuardian)
+                {
+                    pm.MountGuardian.GuardianHasControlWhenMounted = true;
+                }
+                else if (pm.Guardian.Active)
+                {
+                    pm.Guardian.GrabbingPlayer = true;
+                }
+                curPlayer.controlLeft = curPlayer.controlRight = curPlayer.controlJump = curPlayer.controlDown = false;
+            }
+            int LastGroup = Main.myPlayer;
+            Main.myPlayer = NewPlayer;
+            curPlayer = Main.player[NewPlayer];
+            pm = curPlayer.GetModPlayer<PlayerMod>();
+            if (!pm.IsCompanionParty)
+            {
+                if (pm.MountedOnGuardian)
+                {
+                    pm.MountGuardian.GuardianHasControlWhenMounted = false;
+                }
+                else if (pm.Guardian.Active)
+                {
+                    pm.Guardian.ReleasePlayerFromGrab();
+                }
+            }
+        }
 
         public static QuestData[] GetPlayerQuestDatas(Player player)
         {
@@ -1561,6 +1610,53 @@ namespace giantsummon
 
         public override void PreUpdate()
         {
+            if (IsCompanionParty)
+            {
+                GetSharedProgress(Main.player[CompanionCommanderLeaderPlayer].GetModPlayer<PlayerMod>());
+                Guardian.PlayerControl = Main.myPlayer == player.whoAmI;
+                if (!Guardian.PlayerControl)
+                    player.Center = Guardian.CenterPosition;
+                for(int i = 0; i < 58; i++)
+                {
+                    if(player.inventory[i].type > 0)
+                    {
+                        Guardian.MoveItemToInventory(player.inventory[i]);
+                        player.inventory[i].SetDefaults(0);
+                    }
+                }
+                for (int i = 9; i < player.armor.Length; i++)
+                {
+                    if (player.armor[i].type > 0)
+                    {
+                        Guardian.MoveItemToInventory(player.armor[i]);
+                        player.armor[i].SetDefaults(0);
+                    }
+                }
+                for (int i = 0; i < player.miscEquips.Length; i++)
+                {
+                    if (player.miscEquips[i].type > 0)
+                    {
+                        Guardian.MoveItemToInventory(player.miscEquips[i]);
+                        player.miscEquips[i].SetDefaults(0);
+                    }
+                }
+                for (int i = 1; i < player.dye.Length; i++)
+                {
+                    if (player.dye[i].type > 0)
+                    {
+                        Guardian.MoveItemToInventory(player.dye[i]);
+                        player.dye[i].SetDefaults(0);
+                    }
+                }
+                for (int i = 0; i < player.miscDyes.Length; i++)
+                {
+                    if (player.miscDyes[i].type > 0)
+                    {
+                        Guardian.MoveItemToInventory(player.miscDyes[i]);
+                        player.miscDyes[i].SetDefaults(0);
+                    }
+                }
+            }
             if (player.ghost)
             {
                 UpdateGuardian();
@@ -1588,7 +1684,7 @@ namespace giantsummon
                     }
                 }
             }
-            if(player.whoAmI == Main.myPlayer)
+            if(player.whoAmI == Main.myPlayer || IsCompanionParty)
             {
                 UpdateAmmoLeftCheck();
             }
@@ -2407,7 +2503,16 @@ namespace giantsummon
 
         public override void ModifyDrawHeadLayers(List<PlayerHeadLayer> layers)
         {
-            base.ModifyDrawHeadLayers(layers);
+            if (IsCompanionParty) {
+                layers.Clear();
+                layers.Add(new PlayerHeadLayer(MainMod.mod.Name, "Draw Tg Head", delegate (PlayerHeadDrawInfo drawInfo)
+                {
+                    Vector2 DrawPos = new Vector2(
+                        drawInfo.drawPlayer.position.X + drawInfo.drawPlayer.width * 0.5f - Main.screenPosition.X,
+                        drawInfo.drawPlayer.position.Y + drawInfo.drawPlayer.height * 0.25f - Main.screenPosition.Y);
+                    Guardian.DrawHead(DrawPos, drawInfo.scale, FaceCharacterDirection: true);
+                }));
+            }
         }
 
         public override void Initialize()
@@ -2815,7 +2920,7 @@ namespace giantsummon
             }
         }
 
-        public void DismissGuardian(int ID, string ModID)
+        public void DismissGuardian(int ID, string ModID, bool Despawn = true)
         {
             if (ModID == "")
                 ModID = mod.Name;
@@ -2824,13 +2929,13 @@ namespace giantsummon
             {
                 if (guardians[i].Active && guardians[i].ID == ID && guardians[i].ModID == ModID)
                 {
-                    DismissGuardian(i);
+                    DismissGuardian(i, Despawn);
                     return;
                 }
             }
         }
 
-        public void DismissGuardian(byte AssistSlot = 0)
+        public void DismissGuardian(byte AssistSlot = 0, bool Despawn = true)
         {
             TerraGuardian Guardian;
             if (AssistSlot == 0)
@@ -2877,8 +2982,15 @@ namespace giantsummon
                         //Guardian.OwnerPos = -1;
                         //Guardian.AssistSlot = 0;
                         //WorldMod.GuardianTownNPC.Add(Guardian);
-                        Guardian.Active = false;
-                        Guardian.PlayAppearDisappearEffect();
+                        if (Despawn)
+                        {
+                            Guardian.Active = false;
+                            Guardian.PlayAppearDisappearEffect();
+                        }
+                        else
+                        {
+                            NpcMod.SpawnGuardianNPC(Guardian, false);
+                        }
                     }
                     //Guardian.Spawn();
                 }
@@ -3222,7 +3334,7 @@ namespace giantsummon
                 }
                 //Add draw moment checking.
                 int BackStack = 0, FurnitureStack = 0;
-                if (g.PlayerControl || (MainMod.ShowBackwardAnimations && KnockedOut && Counter > 0 && g.Base.BackwardRevive > -1))
+                if (g.PlayerControl || g.IsCommander || (MainMod.ShowBackwardAnimations && KnockedOut && Counter > 0 && g.Base.BackwardRevive > -1))
                 {
                     Front.InsertRange(0, TerraGuardian.GetDrawFrontData);
                     Front.InsertRange(0, TerraGuardian.GetDrawBehindData);
@@ -3294,7 +3406,7 @@ namespace giantsummon
 
         public override void ModifyDrawLayers(List<PlayerLayer> layers)
         {
-            if (ControllingGuardian)
+            if (ControllingGuardian || IsCompanionParty)
                 layers.Clear();
             if (player.whoAmI == Main.myPlayer && MainMod.SoulSaved)
             {
@@ -3302,70 +3414,73 @@ namespace giantsummon
                 return;
             }
             PlayerLayer l;
-            if (!Main.gameMenu && HasGhostFoxHauntDebuff)
+            if (!IsCompanionParty)
             {
-                l = new PlayerLayer(mod.Name, "Ghost Fox Guardian Haunt", delegate (PlayerDrawInfo pdi)
+                if (!Main.gameMenu && HasGhostFoxHauntDebuff)
                 {
-                    bool PlayerKOd = !pdi.drawPlayer.dead && pdi.drawPlayer.GetModPlayer<PlayerMod>().KnockedOut;
-                    const int Frame = 10, ReviveFrame = 15;
-                    GuardianBase gb = GuardianBase.GetGuardianBase(16);
-                    float DirectionFace = pdi.drawPlayer.direction;
-                    if (!gb.sprites.IsTextureLoaded)
-                        gb.sprites.LoadTextures();
-                    Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = pdi.spriteEffects;
-                    Vector2 FluffelPosition = gb.LeftHandPoints.GetPositionFromFrameVector((PlayerKOd ? ReviveFrame : Frame));
-                    FluffelPosition.X = FluffelPosition.X - gb.SpriteWidth * 0.5f;
-                    if (DirectionFace > 0)
+                    l = new PlayerLayer(mod.Name, "Ghost Fox Guardian Haunt", delegate (PlayerDrawInfo pdi)
                     {
-                        FluffelPosition.X *= -1;
-                    }
-                    Vector2 HauntPosition = pdi.position;
-                    HauntPosition.X += player.width * 0.5f - 6 * DirectionFace;
-                    if (PlayerKOd)
-                    {
-                        HauntPosition.Y += player.height * 0.35f;
-                        DirectionFace *= -1;
-                        if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.None)
-                            seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
-                        else if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally)
-                            seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.None;
-                        FluffelPosition.X *= -1f;
-                    }
-                    HauntPosition.Y += player.height + (gb.SpriteHeight - FluffelPosition.Y - 30) * gb.GetScale;
-                    HauntPosition.X += FluffelPosition.X * gb.GetScale;
+                        bool PlayerKOd = !pdi.drawPlayer.dead && pdi.drawPlayer.GetModPlayer<PlayerMod>().KnockedOut;
+                        const int Frame = 10, ReviveFrame = 15;
+                        GuardianBase gb = GuardianBase.GetGuardianBase(16);
+                        float DirectionFace = pdi.drawPlayer.direction;
+                        if (!gb.sprites.IsTextureLoaded)
+                            gb.sprites.LoadTextures();
+                        Microsoft.Xna.Framework.Graphics.SpriteEffects seffects = pdi.spriteEffects;
+                        Vector2 FluffelPosition = gb.LeftHandPoints.GetPositionFromFrameVector((PlayerKOd ? ReviveFrame : Frame));
+                        FluffelPosition.X = FluffelPosition.X - gb.SpriteWidth * 0.5f;
+                        if (DirectionFace > 0)
+                        {
+                            FluffelPosition.X *= -1;
+                        }
+                        Vector2 HauntPosition = pdi.position;
+                        HauntPosition.X += player.width * 0.5f - 6 * DirectionFace;
+                        if (PlayerKOd)
+                        {
+                            HauntPosition.Y += player.height * 0.35f;
+                            DirectionFace *= -1;
+                            if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.None)
+                                seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally;
+                            else if (seffects == Microsoft.Xna.Framework.Graphics.SpriteEffects.FlipHorizontally)
+                                seffects = Microsoft.Xna.Framework.Graphics.SpriteEffects.None;
+                            FluffelPosition.X *= -1f;
+                        }
+                        HauntPosition.Y += player.height + (gb.SpriteHeight - FluffelPosition.Y - 30) * gb.GetScale;
+                        HauntPosition.X += FluffelPosition.X * gb.GetScale;
                     //HauntPosition.Y += ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
                     Vector2 Origin = new Vector2(gb.SpriteWidth * 0.5f, gb.SpriteHeight);
-                    Rectangle DrawFrame = new Rectangle((PlayerKOd ? ReviveFrame : Frame) * gb.SpriteWidth, 0, gb.SpriteWidth, gb.SpriteHeight);
-                    float Opacity = MainMod.FlufflesHauntOpacity;
-                    if (Opacity < 0)
-                        Opacity = 0;
-                    Color color = Companions.FlufflesBase.GhostfyColor(Color.White, Opacity, Companions.FlufflesBase.GetColorMod);
-                    bool IgnoreRotation = PlayerKOd;
-                    Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(gb.sprites.BodySprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
-                    dd.ignorePlayerRotation = IgnoreRotation;
-                    Main.playerDrawData.Insert(0, dd);
-                    dd = new Terraria.DataStructures.DrawData(gb.sprites.RightArmSprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
-                    dd.ignorePlayerRotation = IgnoreRotation;
-                    Main.playerDrawData.Insert(0, dd);
-                    dd = new Terraria.DataStructures.DrawData(gb.sprites.LeftArmSprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
-                    dd.ignorePlayerRotation = IgnoreRotation;
-                    Main.playerDrawData.Add(dd);
-                });
-                layers.Add(l);
-            }
-            l = new PlayerLayer(mod.Name, "TerraGuardians: Player Buff Effects", delegate (PlayerDrawInfo pdi)
-            {
-                if (player.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
-                {
-                    Vector2 Velocity = new Vector2(Main.rand.Next(-10, 11), Main.rand.Next(-10, 11));
-                    Velocity.Normalize();
-                    Velocity.X *= 0.66f;
-                    int gore = Gore.NewGore(player.position + new Vector2(Main.rand.Next(player.width + 1), Main.rand.Next(player.height + 1)), Velocity * Main.rand.Next(3, 6) * 0.33f, 331, Main.rand.Next(40, 121) * 0.01f);
-                    Main.gore[gore].sticky = false;
-                    Main.gore[gore].velocity *= 0.4f;
-                    Main.gore[gore].velocity.Y -= 0.6f;
+                        Rectangle DrawFrame = new Rectangle((PlayerKOd ? ReviveFrame : Frame) * gb.SpriteWidth, 0, gb.SpriteWidth, gb.SpriteHeight);
+                        float Opacity = MainMod.FlufflesHauntOpacity;
+                        if (Opacity < 0)
+                            Opacity = 0;
+                        Color color = Companions.FlufflesBase.GhostfyColor(Color.White, Opacity, Companions.FlufflesBase.GetColorMod);
+                        bool IgnoreRotation = PlayerKOd;
+                        Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(gb.sprites.BodySprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
+                        dd.ignorePlayerRotation = IgnoreRotation;
+                        Main.playerDrawData.Insert(0, dd);
+                        dd = new Terraria.DataStructures.DrawData(gb.sprites.RightArmSprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
+                        dd.ignorePlayerRotation = IgnoreRotation;
+                        Main.playerDrawData.Insert(0, dd);
+                        dd = new Terraria.DataStructures.DrawData(gb.sprites.LeftArmSprite, HauntPosition - Main.screenPosition, DrawFrame, color, 0, Origin, 1f, seffects, 0);
+                        dd.ignorePlayerRotation = IgnoreRotation;
+                        Main.playerDrawData.Add(dd);
+                    });
+                    layers.Add(l);
                 }
-            });
+                l = new PlayerLayer(mod.Name, "TerraGuardians: Player Buff Effects", delegate (PlayerDrawInfo pdi)
+                {
+                    if (player.HasBuff(ModContent.BuffType<Buffs.Love>()) && Main.rand.Next(15) == 0)
+                    {
+                        Vector2 Velocity = new Vector2(Main.rand.Next(-10, 11), Main.rand.Next(-10, 11));
+                        Velocity.Normalize();
+                        Velocity.X *= 0.66f;
+                        int gore = Gore.NewGore(player.position + new Vector2(Main.rand.Next(player.width + 1), Main.rand.Next(player.height + 1)), Velocity * Main.rand.Next(3, 6) * 0.33f, 331, Main.rand.Next(40, 121) * 0.01f);
+                        Main.gore[gore].sticky = false;
+                        Main.gore[gore].velocity *= 0.4f;
+                        Main.gore[gore].velocity.Y -= 0.6f;
+                    }
+                });
+            }
             l = new PlayerLayer(mod.Name, "Terra Guardian Layer", delegate (PlayerDrawInfo pdi)
             {
                 if (pdi.shadow != 0)
@@ -3410,83 +3525,86 @@ namespace giantsummon
                 }
             });
             layers.Add(l);
-            if (AlexRecruitScripts.AlexNPCPosition > -1)
+            if (!IsCompanionParty)
             {
-                if (Main.npc[AlexRecruitScripts.AlexNPCPosition].target == player.whoAmI)
+                if (AlexRecruitScripts.AlexNPCPosition > -1)
                 {
-                    l = new PlayerLayer(mod.Name, "Alex Front Part Layer", delegate (PlayerDrawInfo pdi)
+                    if (Main.npc[AlexRecruitScripts.AlexNPCPosition].target == player.whoAmI)
                     {
-                        if (!(Main.npc[AlexRecruitScripts.AlexNPCPosition].modNPC is Npcs.AlexNPC))
-                            return;
-                        Npcs.AlexNPC npc = (Main.npc[AlexRecruitScripts.AlexNPCPosition].modNPC as Npcs.AlexNPC);
-                        Microsoft.Xna.Framework.Color c = Lighting.GetColor((int)npc.npc.Center.X / 16, (int)npc.npc.Center.Y / 16, Microsoft.Xna.Framework.Color.White);
-                        Terraria.DataStructures.DrawData[] dds = npc.GetNpcDrawDatas(c, true);
-                        for (int x = 0; x < dds.Length; x++)
+                        l = new PlayerLayer(mod.Name, "Alex Front Part Layer", delegate (PlayerDrawInfo pdi)
                         {
-                            dds[x].ignorePlayerRotation = true;
-                            Main.playerDrawData.Add(dds[x]);
-                        }
+                            if (!(Main.npc[AlexRecruitScripts.AlexNPCPosition].modNPC is Npcs.AlexNPC))
+                                return;
+                            Npcs.AlexNPC npc = (Main.npc[AlexRecruitScripts.AlexNPCPosition].modNPC as Npcs.AlexNPC);
+                            Microsoft.Xna.Framework.Color c = Lighting.GetColor((int)npc.npc.Center.X / 16, (int)npc.npc.Center.Y / 16, Microsoft.Xna.Framework.Color.White);
+                            Terraria.DataStructures.DrawData[] dds = npc.GetNpcDrawDatas(c, true);
+                            for (int x = 0; x < dds.Length; x++)
+                            {
+                                dds[x].ignorePlayerRotation = true;
+                                Main.playerDrawData.Add(dds[x]);
+                            }
                         /*foreach (Terraria.DataStructures.DrawData dd in npc.GetNpcDrawDatas(c, true))
                         {
                             dd.ignorePlayerRotation = true;
                             Main.playerDrawData.Add(dd);
                         }*/
-                    });
-                    layers.Add(l);
-                }
-            }
-            l = new PlayerLayer(mod.Name, "Guardian NPCs Front Body Parts", delegate (PlayerDrawInfo pdi)
-            {
-                for (int n = 0; n < 200; n++)
-                {
-                    if (Main.npc[n].active && Main.npc[n].modNPC is Npcs.GuardianActorNPC && ((Npcs.GuardianActorNPC)Main.npc[n].modNPC).DrawInFrontOfPlayers.Contains(player.whoAmI))
-                    {
-                        Npcs.GuardianActorNPC ganpc = ((Npcs.GuardianActorNPC)Main.npc[n].modNPC);
-                        Color color = Lighting.GetColor((int)ganpc.npc.Center.X / 16, (int)ganpc.npc.Center.Y / 16);
-                        List<GuardianDrawData> dds = ganpc.GetDrawDatas(color, true);
-                        for (int x = 0; x < dds.Count; x++)
-                        {
-                            Terraria.DataStructures.DrawData dd = dds[x].GetDrawData();
-                            dd.ignorePlayerRotation = true;
-                            Main.playerDrawData.Add(dd);
-                        }
+                        });
+                        layers.Add(l);
                     }
                 }
-            });
-            layers.Add(l);
-            if (eye != EyeState.Open)
-            {
-                l = new PlayerLayer(mod.Name, "Player Eye", delegate (PlayerDrawInfo pdi)
+                l = new PlayerLayer(mod.Name, "Guardian NPCs Front Body Parts", delegate (PlayerDrawInfo pdi)
                 {
-                    const int FrameYBonus = 336;
-                    for (int t = 0; t < Main.playerDrawData.Count; t++)
+                    for (int n = 0; n < 200; n++)
                     {
-                        if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.Eyes])
+                        if (Main.npc[n].active && Main.npc[n].modNPC is Npcs.GuardianActorNPC && ((Npcs.GuardianActorNPC)Main.npc[n].modNPC).DrawInFrontOfPlayers.Contains(player.whoAmI))
                         {
-                            Vector2 Position = Main.playerDrawData[t].position;
-                            if ((player.headFrame.Y + FrameYBonus >= 7 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 11 * player.headFrame.Height) ||
-                                player.headFrame.Y + FrameYBonus >= 14 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 17 * player.headFrame.Height)
+                            Npcs.GuardianActorNPC ganpc = ((Npcs.GuardianActorNPC)Main.npc[n].modNPC);
+                            Color color = Lighting.GetColor((int)ganpc.npc.Center.X / 16, (int)ganpc.npc.Center.Y / 16);
+                            List<GuardianDrawData> dds = ganpc.GetDrawDatas(color, true);
+                            for (int x = 0; x < dds.Count; x++)
                             {
-                                Position.Y -= 2;
+                                Terraria.DataStructures.DrawData dd = dds[x].GetDrawData();
+                                dd.ignorePlayerRotation = true;
+                                Main.playerDrawData.Add(dd);
                             }
-                            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 0, 40, 56), (eye == EyeState.Closed ? pdi.bodyColor : Main.playerDrawData[t].color), Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
-                            Main.playerDrawData[t] = dd;
-                        }
-                        if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.EyeWhites])
-                        {
-                            Vector2 Position = Main.playerDrawData[t].position;
-                            if ((player.headFrame.Y + FrameYBonus >= 7 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 11 * player.headFrame.Height) ||
-                                player.headFrame.Y + FrameYBonus >= 14 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 17 * player.headFrame.Height)
-                            {
-                                Position.Y -= 2;
-                            }
-                            Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 56, 40, 56), (eye == EyeState.Closed ? pdi.bodyColor : Main.playerDrawData[t].color), Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
-                            Main.playerDrawData[t] = dd;
                         }
                     }
                 });
+                layers.Add(l);
+                if (eye != EyeState.Open)
+                {
+                    l = new PlayerLayer(mod.Name, "Player Eye", delegate (PlayerDrawInfo pdi)
+                    {
+                        const int FrameYBonus = 336;
+                        for (int t = 0; t < Main.playerDrawData.Count; t++)
+                        {
+                            if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.Eyes])
+                            {
+                                Vector2 Position = Main.playerDrawData[t].position;
+                                if ((player.headFrame.Y + FrameYBonus >= 7 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 11 * player.headFrame.Height) ||
+                                    player.headFrame.Y + FrameYBonus >= 14 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 17 * player.headFrame.Height)
+                                {
+                                    Position.Y -= 2;
+                                }
+                                Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 0, 40, 56), (eye == EyeState.Closed ? pdi.bodyColor : Main.playerDrawData[t].color), Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
+                                Main.playerDrawData[t] = dd;
+                            }
+                            if (Main.playerDrawData[t].texture == Main.playerTextures[player.skinVariant, Terraria.ID.PlayerTextureID.EyeWhites])
+                            {
+                                Vector2 Position = Main.playerDrawData[t].position;
+                                if ((player.headFrame.Y + FrameYBonus >= 7 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 11 * player.headFrame.Height) ||
+                                    player.headFrame.Y + FrameYBonus >= 14 * player.headFrame.Height && player.headFrame.Y + FrameYBonus < 17 * player.headFrame.Height)
+                                {
+                                    Position.Y -= 2;
+                                }
+                                Terraria.DataStructures.DrawData dd = new Terraria.DataStructures.DrawData(MainMod.EyeTexture, Position, new Rectangle(40 * ((int)eye), 56, 40, 56), (eye == EyeState.Closed ? pdi.bodyColor : Main.playerDrawData[t].color), Main.playerDrawData[t].rotation, Main.playerDrawData[t].origin, Main.playerDrawData[t].scale, Main.playerDrawData[t].effect, 0);
+                                Main.playerDrawData[t] = dd;
+                            }
+                        }
+                    });
+                }
+                layers.Add(l);
             }
-            layers.Add(l);
             //For debug purpose only.
             /*l = new PlayerLayer(mod.Name, "Debug: Nearby Tiles slope types", delegate (PlayerDrawInfo pdi)
             {

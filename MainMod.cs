@@ -16,7 +16,7 @@ namespace giantsummon
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
             GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture, GSI_ForegroundInterfaceTexture, GSI_BackgroundInterfaceTexture,
-            TrustIconsTexture;
+            TrustIconsTexture, CompactCompanionInfosTexture;
         public static Texture2D EyeTexture;
         public static Texture2D TacticsBarTexture, TacticsIconsTexture;
         public static Texture2D TrappedCatTexture;
@@ -1191,7 +1191,7 @@ namespace giantsummon
                         BuddyModeSetupInterface.Draw();
                         return true;
                     }, InterfaceScaleType.UI);
-                    dgqi = new LegacyGameInterfaceLayer("Terra Guardians: Test Quest Interface", delegate ()
+                    dgqi = new LegacyGameInterfaceLayer("Terra Guardians: Quest Interface", delegate ()
                     {
                         GuardianQuestInterface.Draw();
                         return true;
@@ -1240,7 +1240,7 @@ namespace giantsummon
                 bool RemoveHealthBarAndInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
                 for (int l = 0; l < layers.Count; l++)
                 {
-                    if (RemoveHealthBarAndInventory && layers[l].Name.Contains("Resource Bars"))
+                    if (RemoveHealthBarAndInventory && (layers[l].Name.Contains("Resource Bars") || layers[l].Name.Contains("Hotbar")))
                     {
                         layers.RemoveAt(l);
                     }
@@ -1935,6 +1935,54 @@ namespace giantsummon
             if(!Gameplay2PMode)
                 Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", HealthbarPosition, Color.White, 0.95f);
             HealthbarPosition.Y += 22f;
+            for(byte i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active && i != Main.myPlayer)
+                {
+                    PlayerMod pm = Main.player[i].GetModPlayer<PlayerMod>();
+                    Vector2 UiPos = new Vector2(HealthbarPosition.X, HealthbarPosition.Y);
+                    Utils.DrawBorderString(Main.spriteBatch, Main.player[i].name + "'s Party", UiPos, Color.White, 0.9f);
+                    UiPos.Y += 20;
+                    if (!pm.IsCompanionParty)
+                    {
+                        Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos, new Rectangle(0, 0, 52, 36), Color.White);
+                        //Main.instance.(UiPos + new Vector2(17, 17), 0.8f);
+                        UiPos.X += 36;
+                        UiPos.Y += 2;
+                        const int BarHeight = 32;
+                        float Value = (float)Main.player[i].statLife / Main.player[i].statLifeMax2;
+                        Vector2 YSum = new Vector2(0, BarHeight * (1f - Value));
+                        Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(36, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
+                        UiPos.X += 8;
+                        Value = (float)Main.player[i].statMana / Main.player[i].statManaMax2;
+                        YSum = new Vector2(0, BarHeight * (1f - Value));
+                        Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(44, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
+                        UiPos.Y -= 2;
+                        UiPos.X += 12;
+                    }
+                    foreach(TerraGuardian tg in pm.GetAllGuardianFollowers)
+                    {
+                        if (tg.Active)
+                        {
+                            Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos, new Rectangle(0, 0, 52, 36), Color.White);
+                            tg.DrawHead(UiPos + new Vector2(17, 17), 0.8f);
+                            UiPos.X += 36;
+                            UiPos.Y += 2;
+                            const int BarHeight = 32;
+                            float Value = (float)tg.HP / tg.MHP;
+                            Vector2 YSum = new Vector2(0, BarHeight * (1f - Value));
+                            Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(36, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
+                            UiPos.X += 8;
+                            Value = (float)tg.MP / tg.MMP;
+                            YSum = new Vector2(0, BarHeight * (1f - Value));
+                            Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(44, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
+                            UiPos.Y -= 2;
+                            UiPos.X += 12;
+                        }
+                    }
+                    HealthbarPosition.Y += 55;
+                }
+            }
             if (MouseOverText != "")
             {
                 Utils.DrawBorderString(Main.spriteBatch, MouseOverText, new Vector2(Main.mouseX + 16, Main.mouseY + 16), Color.White);
@@ -2018,16 +2066,20 @@ namespace giantsummon
             //
             float StartX = 0;
             float StartY = 258;
-            if(MainMod.FargoMutantMod != null)
+            if(FargoMutantMod != null)
             {
                 StartY += 28;
             }
-            else if (MainMod.KalciphozMod != null)
+            else if (KalciphozMod != null)
             {
                 float kscale = Math.Min(1f, (float)Main.screenWidth / 3840 + 0.4f);
                 StartY = 432 * kscale;
                 StartX = 52;
             }
+            /*if (PlayerMod.PlayerControllingGuardian(Main.LocalPlayer))
+            {
+                StartY = 16;
+            }*/
             if (Main.playerInventory)
             {
                 TerraGuardian[] guardians = player.GetAllGuardianFollowers;
@@ -2726,8 +2778,6 @@ namespace giantsummon
                         }
                         break;
                     case GuardianItemSlotButtons.Requests:
-                        //Guardian.DrawFriendshipHeart(SlotStartPosition);
-                        //SlotStartPosition.X += 24;
                         List<GuardianData> RequestCount = new List<GuardianData>();
                         foreach (GuardianData d in Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().MyGuardians.Values)
                         {
@@ -2844,14 +2894,12 @@ namespace giantsummon
                 {
                     for (int x = 0; x < 10; x++)
                     {
-                        Vector2 SlotPosition = new Vector2(8, 64 + 8);
+                        Vector2 SlotPosition = new Vector2(16, 16); //64 + 8);
                         SlotPosition.X += x * 56 * Main.inventoryScale;
-                        //SlotPosition.Y += y * 56 * Main.inventoryScale + 20;
-                        int i = x;
-                        ItemSlot.Draw(Main.spriteBatch, Guardian.Inventory, 0, i, SlotPosition);
+                        ItemSlot.Draw(Main.spriteBatch, Guardian.Inventory, 0, x, SlotPosition);
                     }
                 }
-                SelectedGuardianInventorySlot = GuardianItemSlotButtons.Nothing;
+                SelectedGuardianInventorySlot = GuardianItemSlotButtons.Inventory;
             }
             if (MouseOverText != "")
             {
@@ -2864,7 +2912,6 @@ namespace giantsummon
             }
             if (HoverItem != null && HoverItem.type != 0)
             {
-
                 //List<string> ItemInfo = new List<string>();
                 //ItemInfo.Add(HoverItem.HoverName);
                 //ItemInfo.AddRange(GetItemInfo(HoverItem, Guardian));
@@ -3077,6 +3124,7 @@ namespace giantsummon
                 GSI_ForegroundInterfaceTexture = GetTexture("Interface/gsi_fg");
                 ContributorIconTexture = GetTexture("Interface/Contributor_Icon");
                 TrustIconsTexture = GetTexture("Interface/Trust_Icons");
+                CompactCompanionInfosTexture = GetTexture("Interface/CompactCompanionInfo");
             }
             GroupSetup();
             GetInitialCompanionsList();

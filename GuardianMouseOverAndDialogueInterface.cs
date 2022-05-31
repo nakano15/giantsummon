@@ -274,7 +274,11 @@ namespace giantsummon
                         if (Main.mouseRight && Main.mouseRightRelease)
                         {
                             TerraGuardian tg = MainMod.ActiveGuardians[MouseOverGuardian];
-                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg) && ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1) &&
+                            if (!tg.IsAttackingSomething && !tg.Downed && !tg.KnockedOut && IsInChattingRange(tg) && 
+                                ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1 || 
+                                (tg.IsCommander && tg.GetCommanderLeaderID == Main.myPlayer) || 
+                                (Main.LocalPlayer.GetModPlayer<PlayerMod>().CompanionCommanderLeaderPlayer == tg.OwnerPos) || 
+                                (tg.OwnerPos > -1 && Main.player[tg.OwnerPos].GetModPlayer<PlayerMod>().IsCompanionParty)) &&
                                 (!tg.DoAction.InUse || (!tg.DoAction.Invisibility && !tg.DoAction.Inactivity)))
                             {
                                 StartDialogue(tg);
@@ -296,7 +300,8 @@ namespace giantsummon
                     return;
                 }
                 TerraGuardian tg = MainMod.ActiveGuardians[player.TalkingGuardianPosition];
-                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut ||
+                if (!IsInChattingRange(tg) || (Main.playerInventory && !GuardianShopInterface.ShopOpen && !GuardianManagement.Active) || 
+                    (MainPlayer.talkNPC > -1 && Main.npc[MainPlayer.talkNPC].active) || MainPlayer.sign > -1 || MainPlayer.chest > -1 || tg.Downed || tg.KnockedOut ||
                     (tg.DoAction.InUse && (tg.DoAction.Invisibility || tg.DoAction.Inactivity)))
                 {
                     CloseDialogue();
@@ -362,7 +367,7 @@ namespace giantsummon
                 int[] Keys = MainMod.ActiveGuardians.Keys.ToArray();
                 foreach (int key in Keys)
                 {
-                    if (!MainMod.ActiveGuardians[key].IsPlayerHostile(Main.player[Main.myPlayer]))
+                    if (!MainMod.ActiveGuardians[key].IsPlayerHostile(Main.player[Main.myPlayer]) && !MainMod.ActiveGuardians[key].PlayerControl)
                     {
                         float Left = MainMod.ActiveGuardians[key].Position.X - MainMod.ActiveGuardians[key].Width * 0.5f,
                             Bottom = MainMod.ActiveGuardians[key].Position.Y,
@@ -413,7 +418,9 @@ namespace giantsummon
                 if (IsInChattingRange(tg) && !tg.Downed && !tg.KnockedOut && !MainPlayer.GetModPlayer<PlayerMod>().KnockedOut)
                 {
                     Vector2 DialogueBubblePosition = new Vector2(tg.Position.X - Main.chatTexture.Width * 0.5f - (-tg.Width * 0.5f - 8) * tg.Direction, tg.Position.Y - tg.Height - Main.chatTexture.Height) - Main.screenPosition;
-                    if ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1)
+                    if ((tg.OwnerPos == Main.myPlayer && DialogueDelayTime >= DialogueMaxDelayTime) || tg.OwnerPos == -1 || (tg.IsCommander && tg.GetCommanderLeaderID == Main.myPlayer) ||
+                                (tg.OwnerPos > -1 && Main.player[tg.OwnerPos].GetModPlayer<PlayerMod>().IsCompanionParty) ||
+                        (Main.LocalPlayer.GetModPlayer<PlayerMod>().CompanionCommanderLeaderPlayer == tg.OwnerPos))
                     {
                         Main.spriteBatch.Draw(Main.chatTexture, DialogueBubblePosition, null, Main.mouseTextColorReal, 0f, Vector2.Zero, 1f, (tg.LookingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0f);
                     }
@@ -575,7 +582,7 @@ namespace giantsummon
             {
                 if (!Speaker.Base.InvalidGuardian)
                 {
-                    if (!HideCallDismissButton)
+                    if (!Speaker.IsCommander && !HideCallDismissButton)
                     {
                         if (!PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]) || !PlayerMod.GetPlayerBuddy(Main.player[Main.myPlayer]).IsSameID(Speaker))
                         {
@@ -583,7 +590,7 @@ namespace giantsummon
                             {
                                 AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
                             }
-                            else
+                            else if(Speaker.OwnerPos == -1)
                             {
                                 AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
                             }
@@ -615,6 +622,17 @@ namespace giantsummon
                     if (true || Speaker.Base.Topics.Count > 0)
                     {
                         AddOption("Let's talk about other things.", LetsChatButtonPressed);
+                    }
+                    if (Main.netMode == 0)
+                    {
+                        if (!Speaker.IsCommander)
+                        {
+                            AddOption("Lead a group", SetLeadYourOwnGroup);
+                        }
+                        else
+                        {
+                            AddOption("Dismiss your group", RemoveFromLeadingGroup);
+                        }
                     }
                     if (Speaker.Base.Roles.HasFlag(GuardianBase.GuardianRoles.PopularityContestHost))
                     {
@@ -652,6 +670,26 @@ namespace giantsummon
                 Options.AddRange(Speaker.Base.GetGuardianExtraDialogueActions(Speaker));
             }
             AddOption("Goodbye", CloseDialogueButtonAction);
+        }
+
+        public static void SetLeadYourOwnGroup()
+        {
+            if (Speaker.SetAsCommander(Main.myPlayer))
+            {
+                SetDialogue("I shall lead my own group then.");
+            }
+            else
+            {
+                SetDialogue("I can't do that.");
+            }
+            GetDefaultOptions();
+        }
+
+        public static void RemoveFromLeadingGroup()
+        {
+            Speaker.RemoveFromCommanding();
+            SetDialogue("My group is gone now.");
+            GetDefaultOptions();
         }
 
         public static void LetsChatButtonPressed()

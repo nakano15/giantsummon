@@ -15,6 +15,7 @@ namespace giantsummon.Actions
 
         public override void Update(TerraGuardian guardian)
         {
+            TerraGuardian ControlledGuardian = PlayerMod.PlayerControllingGuardian(PlayerToPickup) ? PlayerToPickup.GetModPlayer<PlayerMod>().Guardian : null;
             if (Step == 0) //Try reaching player
             {
                 if (guardian.PlayerMounted)
@@ -66,15 +67,28 @@ namespace giantsummon.Actions
                         Vector2 HandPosition = guardian.Position;
                         HandPosition.X += HPosX;
                         HandPosition.Y += HPosY;
-                        HandPosition.X -= PlayerToPickup.width * 0.5f;
-                        HandPosition.Y -= PlayerToPickup.height * 0.5f;
-                        PlayerToPickup.position = HandPosition;
-                        PlayerToPickup.fallStart = (int)PlayerToPickup.position.Y / 16;
-                        PlayerToPickup.velocity.X = 0;
-                        PlayerToPickup.velocity.Y = -Player.defaultGravity;
-                        if (PlayerToPickup.itemAnimation == 0)
+                        if (ControlledGuardian == null)
                         {
-                            PlayerToPickup.direction = guardian.Direction;
+                            HandPosition.X -= PlayerToPickup.width * 0.5f;
+                            HandPosition.Y -= PlayerToPickup.height * 0.5f;
+                            PlayerToPickup.position = HandPosition;
+                            PlayerToPickup.fallStart = (int)PlayerToPickup.position.Y / 16;
+                            PlayerToPickup.velocity.X = 0;
+                            PlayerToPickup.velocity.Y = -Player.defaultGravity;
+                            if (PlayerToPickup.itemAnimation == 0)
+                            {
+                                PlayerToPickup.direction = guardian.Direction;
+                            }
+                        }
+                        else
+                        {
+                            HandPosition.Y += ControlledGuardian.Height * 0.5f;
+                            ControlledGuardian.Position = HandPosition;
+                            ControlledGuardian.SetFallStart();
+                            ControlledGuardian.Velocity.X = 0;
+                            ControlledGuardian.Velocity.Y = -ControlledGuardian.Mass;
+                            if (ControlledGuardian.ItemAnimationTime == 0)
+                                ControlledGuardian.Direction = guardian.Direction;
                         }
                     }
                 }

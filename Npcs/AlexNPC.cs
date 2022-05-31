@@ -161,6 +161,10 @@ namespace giantsummon.Npcs
                                 {
                                     PlayerOnFloor = true;
                                 }
+                                if (PlayerMod.PlayerMountedOnGuardian(Main.player[Main.myPlayer]))
+                                {
+                                    Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().MountGuardian.ToggleMount(true, false);
+                                }
                             }
                         }
                     }
