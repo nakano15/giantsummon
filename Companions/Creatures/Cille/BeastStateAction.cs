@@ -12,6 +12,7 @@ namespace giantsummon.Companions.Creatures.Cille
 
         public BeastStateAction()
         {
+            Forced = true;
             BlockOffHandUsage = true;
         }
 
@@ -30,6 +31,8 @@ namespace giantsummon.Companions.Creatures.Cille
                                 guardian.DoSitOnPlayerMount(false);
                             if (guardian.UsingFurniture)
                                 guardian.LeaveFurniture(false);
+                            if (guardian.IsLeader)
+                                guardian.RemoveFromCommanding();
                             string Message;
                             switch (Main.rand.Next(3))
                             {

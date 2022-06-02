@@ -134,16 +134,19 @@ namespace giantsummon
                         MainPlayer.direction = -1;
                 }
             }
-            foreach (QuestData data in PlayerMod.GetPlayerQuestDatas(MainPlayer))
+            if (!Main.LocalPlayer.GetModPlayer<PlayerMod>().IsCompanionParty)
             {
-                if (data.IsInvalid)
-                    continue;
-                Action dialogue = data.GetBase.ImportantDialogueMessage(data, Speaker, Speaker.ID, Speaker.ModID);
-                if (dialogue != null)
+                foreach (QuestData data in PlayerMod.GetPlayerQuestDatas(MainPlayer))
                 {
-                    QuestBase.Data = data;
-                    giantsummon.Dialogue.StartNewDialogue(dialogue, Speaker);
-                    return;
+                    if (data.IsInvalid)
+                        continue;
+                    Action dialogue = data.GetBase.ImportantDialogueMessage(data, Speaker, Speaker.ID, Speaker.ModID);
+                    if (dialogue != null)
+                    {
+                        QuestBase.Data = data;
+                        giantsummon.Dialogue.StartNewDialogue(dialogue, Speaker);
+                        return;
+                    }
                 }
             }
             //GetCompanionDialogue
@@ -586,8 +589,10 @@ namespace giantsummon
                     {
                         if (!PlayerMod.HasBuddiesModeOn(Main.player[Main.myPlayer]) || !PlayerMod.GetPlayerBuddy(Main.player[Main.myPlayer]).IsSameID(Speaker))
                         {
-                            if (Speaker.OwnerPos == Main.myPlayer)
+                            ReferedGroup = Main.myPlayer;
+                            if (Speaker.OwnerPos == Main.myPlayer || (Speaker.OwnerPos > -1 && Main.netMode == 0))
                             {
+                                ReferedGroup = Speaker.OwnerPos;
                                 AddOption("Remove from the group", AskGuardianToLeaveGroupButtonPressed);
                             }
                             else if(Speaker.OwnerPos == -1)
@@ -595,6 +600,22 @@ namespace giantsummon
                                 AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
                             }
                         }
+                    }
+                    if (Main.netMode == 0 && Speaker.OwnerPos == -1)
+                    {
+                        if (!Speaker.IsCommander)
+                        {
+                            if(true || MainMod.ShowDebugInfo || Speaker.FriendshipLevel >= Speaker.Base.ControlUnlockLevel)
+                                AddOption("Lead a group", SetLeadYourOwnGroup);
+                        }
+                        else
+                        {
+                            AddOption("Dismiss your group", RemoveFromLeadingGroup);
+                        }
+                    }
+                    if (Speaker.IsCommander)
+                    {
+                        AddOption("Give Order", ChangeCommandingAction);
                     }
                     string OptionText = "Check Request";
                     if (Speaker.request.IsComplete)
@@ -622,17 +643,6 @@ namespace giantsummon
                     if (true || Speaker.Base.Topics.Count > 0)
                     {
                         AddOption("Let's talk about other things.", LetsChatButtonPressed);
-                    }
-                    if (Main.netMode == 0)
-                    {
-                        if (!Speaker.IsCommander)
-                        {
-                            AddOption("Lead a group", SetLeadYourOwnGroup);
-                        }
-                        else
-                        {
-                            AddOption("Dismiss your group", RemoveFromLeadingGroup);
-                        }
                     }
                     if (Speaker.Base.Roles.HasFlag(GuardianBase.GuardianRoles.PopularityContestHost))
                     {
@@ -672,15 +682,79 @@ namespace giantsummon
             AddOption("Goodbye", CloseDialogueButtonAction);
         }
 
+        public static void ChangeCommandingAction()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CommandingChangeOrder, "*What you want me to do?*"));
+            if (Speaker.IsCommander)
+            {
+                Options.Clear();
+                PlayerMod.CommandingOrders order = Main.player[Speaker.CommanderCharacterID].GetModPlayer<PlayerMod>().CommandingOrder;
+                if (order != PlayerMod.CommandingOrders.Idle) AddOption("Just idle.", SetIdleCommand);
+                if (order != PlayerMod.CommandingOrders.FollowLeader) AddOption("Follow me.", SetFollowCommand);
+                if (order != PlayerMod.CommandingOrders.Defend) AddOption("Defend this place.", SetDefendCommand);
+                if (order != PlayerMod.CommandingOrders.Explore) AddOption("Explore the world.", SetExploreCommand);
+                AddOption("Nevermind.", delegate ()
+                {
+                    GetDefaultOptions();
+                    SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.GenericNevermind, "*Alright then.*"), Speaker);
+                });
+            }
+            else
+            {
+                GetDefaultOptions();
+            }
+        }
+
+        public static void SetIdleCommand()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.GenericYes, "*I will do.*"));
+            if (Speaker.IsCommander)
+            {
+                Main.player[Speaker.CommanderCharacterID].GetModPlayer<PlayerMod>().CommandingOrder = PlayerMod.CommandingOrders.Idle;
+            }
+            GetDefaultOptions();
+        }
+
+        public static void SetDefendCommand()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.GenericYes, "*I will do.*"));
+            if (Speaker.IsCommander)
+            {
+                Main.player[Speaker.CommanderCharacterID].GetModPlayer<PlayerMod>().CommandingOrder = PlayerMod.CommandingOrders.Defend;
+            }
+            GetDefaultOptions();
+        }
+
+        public static void SetExploreCommand()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.GenericYes, "*I will do.*"));
+            if (Speaker.IsCommander)
+            {
+                Main.player[Speaker.CommanderCharacterID].GetModPlayer<PlayerMod>().CommandingOrder = PlayerMod.CommandingOrders.Explore;
+            }
+            GetDefaultOptions();
+        }
+
+        public static void SetFollowCommand()
+        {
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.GenericYes, "*I will do.*"));
+            if (Speaker.IsCommander)
+            {
+                Main.player[Speaker.CommanderCharacterID].GetModPlayer<PlayerMod>().CommandingOrder = PlayerMod.CommandingOrders.FollowLeader;
+            }
+            GetDefaultOptions();
+        }
+
         public static void SetLeadYourOwnGroup()
         {
             if (Speaker.SetAsCommander(Main.myPlayer))
             {
-                SetDialogue("I shall lead my own group then.");
+                ChangeCommandingAction();
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CommandingLeadGroupSuccess, "*I shall lead my own group then.*"));
             }
             else
             {
-                SetDialogue("I can't do that.");
+                SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CommandingLeadGroupFail, "*I can't do that.*"));
             }
             GetDefaultOptions();
         }
@@ -688,7 +762,7 @@ namespace giantsummon
         public static void RemoveFromLeadingGroup()
         {
             Speaker.RemoveFromCommanding();
-            SetDialogue("My group is gone now.");
+            SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CommandingDisbandGroup, "*My group is gone now.*"));
             GetDefaultOptions();
         }
 
@@ -741,6 +815,8 @@ namespace giantsummon
 
         //Call/Dismiss Related
 
+        private static int ReferedGroup = 0;
+
         public static void AskGuardianToFollowYouButtonPressed()
         {
             HideCallDismissButton = true;
@@ -751,7 +827,7 @@ namespace giantsummon
             }
             else
             {
-                PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+                PlayerMod pm = Main.player[ReferedGroup].GetModPlayer<PlayerMod>();
                 if (pm.Guardian.Active && pm.GuardianFollowersWeight + Speaker.Base.CompanionSlotWeight >= pm.MaxExtraGuardiansAllowed)
                 {
                     SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFullParty, "(There is no place for this companion in the group.)"), Speaker);
@@ -781,7 +857,7 @@ namespace giantsummon
 
         public static void AskGuardianToLeaveGroupYesButtonPressed()
         {
-            PlayerMod pm = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>();
+            PlayerMod pm = Main.player[ReferedGroup].GetModPlayer<PlayerMod>();
             pm.DismissGuardian(Speaker.ID, Speaker.ModID);
             if (Speaker.TownNpcs < 3)
             {

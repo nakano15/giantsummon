@@ -1372,7 +1372,8 @@ namespace giantsummon
                 AskPlayerToWaitAMomentWhileCompanionIsShopping = "Mes.AskPlayerToWaitWhileShopping";
             public const string GenericYes = "Mes.Yes",
                 GenericNo = "Mes.No",
-                GenericThankYou = "Mes.ThankYou";
+                GenericThankYou = "Mes.ThankYou",
+                GenericNevermind = "Mes.Nevermind";
             public const string ChatAboutSomething = "Mes.ChatAboutSomething",
                 NevermindTheChatting = "Mes.NevermindChatting";
             public const string CancelRequestAskIfSure = "Mes.AskIfSureOnCancelRequest",
@@ -1467,6 +1468,10 @@ namespace giantsummon
             public const string DeliveryItemMissing = "Mes.Delivery.MissingItem",
                 DeliveryInventoryFull = "Mes.Delivery.InventoryFull",
                 DeliveryGiveItem = "Mes.Delivery.GiveItem";
+            public const string CommandingLeadGroupSuccess = "Mes.Group.Success",
+                CommandingLeadGroupFail = "Mes.Group.Fail",
+                CommandingDisbandGroup = "Mes.Group.Disband",
+                CommandingChangeOrder = "Mes.Group.ChangeOrder";
         }
         
         public enum GuardianEffect

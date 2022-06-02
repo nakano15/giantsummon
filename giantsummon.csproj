@@ -648,6 +648,7 @@
     <Content Include="Interface\GuardianStatusIcon.png" />
     <Content Include="Interface\GuideArrow.png" />
     <Content Include="Interface\HideButton.png" />
+    <Content Include="Interface\PlayerFlags.png" />
     <Content Include="Interface\ReportButton.png" />
     <Content Include="Interface\TacticsBar.png" />
     <Content Include="Interface\GuardianEquipButtons.png" />

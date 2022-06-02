@@ -683,15 +683,34 @@ namespace giantsummon
                 string Text = "Call";
                 bool IsCallButton = player.GetGuardianSlot(ContentList[Selected].Index) == 255;
                 byte SummonSlot = player.GetEmptyGuardianSlot();
-                if (!IsCallButton)
+                if(IsCallButton)
+                {
+                    int ID = player.MyGuardians[ContentList[Selected].Index].ID;
+                    string ModID = player.MyGuardians[ContentList[Selected].Index].ModID;
+                    if (Main.netMode == 0 && NpcMod.HasGuardianNPC(ID, ModID))
+                    {
+                        if(NpcMod.GetGuardianNPCCharacter(ID, ModID).OwnerPos != -1 || NpcMod.GetGuardianNPCCharacter(ID, ModID).IsCommander)
+                            Text = "";
+                    }
+                }
+                else if (!IsCallButton)
                 {
                     Text = "Dismiss";
+                    int ID = player.MyGuardians[ContentList[Selected].Index].ID;
+                    string ModID = player.MyGuardians[ContentList[Selected].Index].ModID;
+                    if (Main.netMode == 0 && NpcMod.HasGuardianNPC(ID, ModID))
+                    {
+                        if (NpcMod.GetGuardianNPCCharacter(ID, ModID).IsCommander)
+                        {
+                            Text = "";
+                        }
+                    }
                 }
                 else if(SummonSlot > 0 && SummonSlot < 255)
                 {
                     Text += " Assist";
                 }
-                if(Math.Abs(Main.mouseX - ButtonCenter.X) < 39 && 
+                if(Text != "" && Math.Abs(Main.mouseX - ButtonCenter.X) < 39 && 
                     Math.Abs(Main.mouseY - ButtonCenter.Y) < 14)
                 {
                     MouseOver = true;

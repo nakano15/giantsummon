@@ -52,7 +52,12 @@ namespace giantsummon.Compatibility
             //return false;
             int Level = 1;
             int LastLevel = GetLevel(Guardian);
-            if (Guardian.OwnerPos > -1)
+            if (Guardian.IsCommander)
+            {
+                Main.player[Guardian.CommanderCharacterID].GetModPlayer<NExperience.PlayerMod>().GetGameModeInfo.Level = Main.player[Guardian.GetCommanderLeaderID].GetModPlayer<NExperience.PlayerMod>().GetGameModeInfo.Level;
+                Level = Main.player[Guardian.CommanderCharacterID].GetModPlayer<NExperience.PlayerMod>().GetGameModeInfo.Level2;
+            }
+            else if (Guardian.OwnerPos > -1)
             {
                 Level = Main.player[Guardian.OwnerPos].GetModPlayer<NExperience.PlayerMod>().GetGameModeInfo.Level2;
             }

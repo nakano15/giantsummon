@@ -433,6 +433,17 @@ namespace giantsummon
             }
         }
         public bool IsCommander { get { return CommanderCharacterID > -1; } }
+        public PlayerMod.CommandingOrders GetCommandingOrder
+        {
+            get
+            {
+                if (CommanderCharacterID > -1)
+                {
+                    return Main.player[CommanderCharacterID].GetModPlayer<PlayerMod>().CommandingOrder;
+                }
+                return PlayerMod.CommandingOrders.Defend;
+            }
+        }
 
         public bool SetAsCommander(int LeaderPlayerID)
         {
@@ -2847,7 +2858,7 @@ namespace giantsummon
                 if (ImmuneTime == 0)
                     ImmuneNoBlink = false;
             }
-            if (StuckTimerChanged && OwnerPos == Main.myPlayer)
+            if (StuckTimerChanged && (OwnerPos == Main.myPlayer || IsCommander || (OwnerPos > -1 && Main.player[OwnerPos].GetModPlayer<PlayerMod>().IsCompanionParty)))
             {
                 if (StuckTimer >= 60)
                 {
@@ -2855,7 +2866,7 @@ namespace giantsummon
                     {
                         TeleportToGuardedPosition();
                     }
-                    else if (OwnerPos > -1 && !Main.player[OwnerPos].dead && (!WofFacing || Main.player[OwnerPos].gross))
+                    else if ((OwnerPos > -1 || IsCommander) && !Main.player[OwnerPos].dead && (!WofFacing || Main.player[OwnerPos].gross))
                     {
                         BePulledByPlayer();
                         //TeleportToPlayer();
@@ -3932,6 +3943,13 @@ namespace giantsummon
         public bool UpdatePullByPlayer()
         {
             bool IgnoreCollisions = false;
+            if(IsBeingPulledByPlayer && IsCommander)
+            {
+                IsBeingPulledByPlayer = false;
+                if (GetCommandingOrder == PlayerMod.CommandingOrders.FollowLeader)
+                    TeleportToPlayer(true, Main.player[GetCommanderLeaderID]);
+                return true;
+            }
             if (Downed || OwnerPos == -1)
                 IsBeingPulledByPlayer = false;
             if (IsBeingPulledByPlayer && OwnerPos > -1)
@@ -3970,9 +3988,10 @@ namespace giantsummon
                     Speed = p.velocity.Length() + 6f;
                 bool PlayerIsFlying = p.velocity.Y != 0 || p.pulley,
                     PlayerInAMount = p.mount.Active || p.GetModPlayer<PlayerMod>().MountedOnGuardian,
-                    PlayerInMinecart = p.mount.Active && p.mount.Cart;
+                    PlayerInMinecart = p.mount.Active && p.mount.Cart,
+                    IsCommander = p.GetModPlayer<PlayerMod>().IsCompanionParty;
                 bool CollidingWithSolidTile = (LoadedWorldRegion && Collision.SolidCollision(TopLeftPosition, Width, Height));
-                if (CollidingWithSolidTile || (PlayerInAMount && (Data.SitOnTheMount || PlayerInMinecart)) ||!PlayerIsFlying || Distance >= 144f)
+                if (CollidingWithSolidTile || IsCommander || (PlayerInAMount && (Data.SitOnTheMount || PlayerInMinecart)) ||!PlayerIsFlying || Distance >= 144f)
                 {
                     DashCooldown = 30;
                     MovementDirection.Normalize();
@@ -4012,7 +4031,7 @@ namespace giantsummon
                     }
                 }
                 SetFallStart();
-                if (Distance < Speed * 2 && !PlayerIsFlying && !PlayerInMinecart)
+                if (Distance < Speed * 2 && ((!PlayerIsFlying && !PlayerInMinecart) || IsCommander))
                 {
                     IsBeingPulledByPlayer = false;
                     FallProtection = true;
@@ -6242,6 +6261,10 @@ namespace giantsummon
                     }
                 }
             }
+            if(PlayerControl && IsCommander)
+            {
+                GuardingPosition = null;
+            }
             if (Downed || PlayerControl || HasFlag(GuardianFlags.Frozen) || HasFlag(GuardianFlags.Petrified) || KnockedOut) return;
             if (!Is2PControlled)
             {
@@ -6253,7 +6276,14 @@ namespace giantsummon
                 LookForThreatsV2();
                 CheckIfNeedsToUsePotion();
                 FoodAndDrinkScript();
-                FollowPlayerAI();
+                if (IsCommander)
+                {
+                    CommandingAI();
+                }
+                else
+                {
+                    FollowPlayerAI();
+                }
                 if (!Dialogue.InDialogue && !CheckForPlayerAFK() || Dialogue.UpdateDialogueParticipationGuardian(this))
                 {
                     NewCombatScript();
@@ -6271,7 +6301,7 @@ namespace giantsummon
                 //
                 if (!IsBeingControlledByPlayer && (!MountedOnPlayer || GuardianHasControlWhenMounted))
                 {
-                    if (!FollowPathingGuide())
+                    if (!FollowPathingGuide() && !IsCommander)
                     {
                         if (!NewIdleBehavior())
                         {
@@ -6376,6 +6406,62 @@ namespace giantsummon
                     }
                 }
             }*/
+        }
+
+        private void CommandingAI()
+        {
+            if (Main.myPlayer == CommanderCharacterID)
+                return;
+            switch (GetCommandingOrder)
+            {
+                case PlayerMod.CommandingOrders.Idle:
+                    {
+                        NewIdleBehavior();
+                    }
+                    break;
+                case PlayerMod.CommandingOrders.FollowLeader:
+                    {
+                        FollowPlayerAI();
+                        /*Player Leader = Main.player[GetCommanderLeaderID];
+                        PlayerMod pm = Leader.GetModPlayer<PlayerMod>();
+                        Vector2 LeaderPosition = Leader.Bottom;
+                        float DistanceX = 30 * PlayerMod.CompanyFollowOrder + Math.Abs(Leader.velocity.X);
+                        if(Math.Abs(LeaderPosition.X - Position.X) > DistanceX)
+                        {
+                            if(LeaderPosition.X < Position.X)
+                            {
+                                MoveRight = false;
+                                MoveLeft = true;
+                            }
+                            else
+                            {
+                                MoveRight = true;
+                                MoveLeft = false;
+                            }
+                        }*/
+                        if (GuardingPosition.HasValue)
+                            GuardingPosition = null;
+                    }
+                    break;
+
+                case PlayerMod.CommandingOrders.Defend:
+                    {
+                        if(!GuardingPosition.HasValue)
+                        {
+                            GuardingPosition = Position.ToTileCoordinates();
+                        }
+                        GuardingPositionAI();
+                    }
+                    break;
+
+                case PlayerMod.CommandingOrders.Explore:
+                    {
+                        if (GuardingPosition.HasValue)
+                            GuardingPosition = null;
+                        WalkMode = !IsAttackingSomething;
+                    }
+                    break;
+            }
         }
 
         public void CheckIfSomeoneNeedsPickup()
@@ -9337,8 +9423,10 @@ namespace giantsummon
 
         public bool CheckForPlayerAFK()
         {
-            if (OwnerPos == -1 || Is2PControlled || PlayerControl || Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut || KnockedOut || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320)) return false;
+            if (OwnerPos == -1 || Is2PControlled || PlayerControl || Main.player[OwnerPos].GetModPlayer<PlayerMod>().KnockedOut || KnockedOut || Downed || (GuardingPosition.HasValue && Main.player[OwnerPos].Distance(CenterPosition) >= 320) || IsCommander) return false;
             Player owner = Main.player[OwnerPos];
+            if (owner.GetModPlayer<PlayerMod>().CompanionCommanderLeaderPlayer > -1)
+                return false;
             bool NoInputForIdle = !owner.controlLeft && !owner.controlRight && !owner.controlJump && !owner.controlDown, 
                 NoInput = NoInputForIdle && owner.itemAnimation <= 0;
             if (NoInput && owner.GetModPlayer<PlayerMod>().ControllingGuardian)
@@ -11434,7 +11522,7 @@ namespace giantsummon
                 GuardingPosition = null;
                 return;
             }*/
-            if (PositionDifference.Y > 180f || Math.Abs(PositionDifference.X) >= 240f)
+            if (PositionDifference.Y > 180f || Math.Abs(PositionDifference.X) >= 300f)
             {
                 IncreaseStuckTimer();
             }
@@ -11454,8 +11542,8 @@ namespace giantsummon
 
         public void FollowPlayerAI()
         {
-            if (GuardingPosition.HasValue || PlayerMounted || OwnerPos == -1 || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
-            Player Owner = Main.player[OwnerPos];
+            if (GuardingPosition.HasValue || PlayerMounted || (OwnerPos == -1 && !IsCommander) || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
+            Player Owner = IsCommander ? Main.player[GetCommanderLeaderID] : Main.player[OwnerPos];
             TerraGuardian LeaderGuardian = PlayerMod.GetPlayerMainGuardian(Owner);
             {
                 PlayerMod pm = Owner.GetModPlayer<PlayerMod>();
@@ -11481,7 +11569,7 @@ namespace giantsummon
             }
             else if (Owner.GetModPlayer<PlayerMod>().MountedOnGuardian)
             {
-                TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.First(x => x.Active && x.PlayerMounted && !x.ReverseMount);
+                TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().MountGuardian;
                 PositionDifference = guardian.CenterPosition;
                 LeaderCenterX = PositionDifference.X;
                 LeaderSpeedX = guardian.Velocity.X;
@@ -11490,9 +11578,9 @@ namespace giantsummon
                 LeaderHeight = guardian.Height;
                 LeaderWet = guardian.Wet;
             }
-            else if (Owner.GetModPlayer<PlayerMod>().ControllingGuardian)
+            else if (Owner.GetModPlayer<PlayerMod>().ControllingGuardian || IsCommander || LeaderGuardian.GrabbingPlayer)
             {
-                TerraGuardian guardian = Owner.GetModPlayer<PlayerMod>().Guardian;
+                TerraGuardian guardian = LeaderGuardian;
                 PositionDifference = guardian.CenterPosition;
                 LeaderCenterX = PositionDifference.X;
                 LeaderSpeedX = guardian.Velocity.X;
@@ -11518,7 +11606,7 @@ namespace giantsummon
                 PositionDifference.X += (Distance + Math.Abs(Owner.velocity.X)) * Owner.direction * (Confused ? -1 : 1);
             }*/
             float DistanceMult = IsAttackingSomething ? 1.5f : 1f, 
-                  DistanceBonus = Distance * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
+                  DistanceBonus = IsCommander ? 30 * PlayerMod.CompanyFollowOrder : Distance * (ChargeAhead ? Owner.GetModPlayer<PlayerMod>().FollowFrontOrder++ : Owner.GetModPlayer<PlayerMod>().FollowBackOrder++);
             float BottomDistanceY = LeaderBottom - Position.Y;
             if (ChargeAhead)
             {
@@ -11538,6 +11626,17 @@ namespace giantsummon
                 Math.Abs(PositionDifference.X) >= 640f * DistanceMult))
             {
                 IncreaseStuckTimer();
+            }
+            if (TalkPlayerID > -1)
+            {
+                if (Math.Abs(PositionDifference.X) > 400 || Math.Abs(PositionDifference.Y) > 300)
+                {
+                    TalkPlayerID = -1;
+                }
+                else
+                {
+                    return;
+                }
             }
             //if (true || !IsAttackingSomething)
             {

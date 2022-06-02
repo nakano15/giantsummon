@@ -19,7 +19,8 @@ namespace giantsummon
         public int Time = 0, Step = 0;
         public bool IgnoreCombat = false, Cancellable = false, AvoidItemUsage = false, FocusCameraOnGuardian = false, EffectOnlyMirror = false, 
             Invisibility = false, Immune = false, NoAggro = false, Inactivity = false, CantUseInventory = false, NpcCanFacePlayer = true, 
-            ProceedIdleAIDuringDialogue = false, BlockTwoHandedAttack = false, BlockOffHandUsage = false, BlockIdleAI = true;
+            ProceedIdleAIDuringDialogue = false, BlockTwoHandedAttack = false, BlockOffHandUsage = false, BlockIdleAI = true,
+            Forced = false;
         public bool StepStart { get { return Time == 0; } }
         private static bool StepChanged = false;
         public CombatTactic? ForcedTactic = null;
@@ -161,6 +162,15 @@ namespace giantsummon
 
         public void UpdateAction(TerraGuardian guardian)
         {
+            if (guardian.PlayerControl)
+            {
+                if (!Forced)
+                {
+                    InUse = false;
+                    OnActionEnd(guardian);
+                    return;
+                }
+            }
             Update(guardian);
             if (StepChanged)
                 StepChanged = false;

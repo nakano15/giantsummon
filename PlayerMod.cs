@@ -11,13 +11,15 @@ namespace giantsummon
 {
     public class PlayerMod : ModPlayer
     {
+        public static byte CompanyFollowOrder = 0;
         public static bool ForceKill = false;
         public bool IsBuddiesMode { get { return BuddiesMode; } }
         private bool BuddiesMode = false;
         public GuardianID BuddiesModeBuddyID = null;
         public EyeState eye = EyeState.Open;
         public bool IsCompanionParty { get { return CompanionCommanderLeaderPlayer > -1; } }
-        public short CompanionCommanderLeaderPlayer = -1; 
+        public short CompanionCommanderLeaderPlayer = -1;
+        public CommandingOrders CommandingOrder = CommandingOrders.Defend;
         public Dictionary<int, GuardianData> MyGuardians = new Dictionary<int, GuardianData>();
         public TerraGuardian Guardian = new TerraGuardian();
         public TerraGuardian[] AssistGuardians = new TerraGuardian[MainMod.MaxExtraGuardianFollowers];
@@ -1612,10 +1614,14 @@ namespace giantsummon
         {
             if (IsCompanionParty)
             {
+                CompanyFollowOrder++;
                 GetSharedProgress(Main.player[CompanionCommanderLeaderPlayer].GetModPlayer<PlayerMod>());
                 Guardian.PlayerControl = Main.myPlayer == player.whoAmI;
                 if (!Guardian.PlayerControl)
+                {
                     player.Center = Guardian.CenterPosition;
+                    player.velocity = Vector2.Zero;
+                }
                 for(int i = 0; i < 58; i++)
                 {
                     if(player.inventory[i].type > 0)
@@ -1656,6 +1662,10 @@ namespace giantsummon
                         player.miscDyes[i].SetDefaults(0);
                     }
                 }
+            }
+            else
+            {
+                CompanyFollowOrder = 0;
             }
             if (player.ghost)
             {
@@ -3655,19 +3665,27 @@ namespace giantsummon
             }
         }
 
-        public enum EyeState
+        public enum EyeState : byte
         {
             Open,
             HalfOpen,
             Closed
         }
 
-        public enum BehaviorChanges
+        public enum BehaviorChanges : byte
         {
             FreeWill,
             ChargeOnTarget,
             AvoidContact,
             StayAwayFromTarget
+        }
+
+        public enum CommandingOrders : byte
+        {
+            Defend,
+            Idle,
+            FollowLeader,
+            Explore
         }
     }
 }

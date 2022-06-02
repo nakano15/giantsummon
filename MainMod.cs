@@ -16,7 +16,7 @@ namespace giantsummon
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
             GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture, GSI_ForegroundInterfaceTexture, GSI_BackgroundInterfaceTexture,
-            TrustIconsTexture, CompactCompanionInfosTexture;
+            TrustIconsTexture, CompactCompanionInfosTexture, PlayerFlagsTexture;
         public static Texture2D EyeTexture;
         public static Texture2D TacticsBarTexture, TacticsIconsTexture;
         public static Texture2D TrappedCatTexture;
@@ -57,7 +57,7 @@ namespace giantsummon
         //End contest related
         public const int ModVersion = 102, LastModVersion = 102;
         public const int MaxExtraGuardianFollowers = 8;
-        public static bool ShowDebugInfo = true;
+        public static bool ShowDebugInfo = false;
         //Downed system configs
         public static bool PlayersGetKnockedOutUponDefeat = false, PlayersDontDiesAfterDownedDefeat = false, GuardiansGetKnockedOutUponDefeat = false, 
             GuardiansDontDiesAfterDownedDefeat = false;
@@ -1934,7 +1934,7 @@ namespace giantsummon
             }
             if(!Gameplay2PMode)
                 Utils.DrawBorderString(Main.spriteBatch, "2P Press Start", HealthbarPosition, Color.White, 0.95f);
-            HealthbarPosition.Y += 22f;
+            HealthbarPosition.Y += 26f;
             for(byte i = 0; i < 255; i++)
             {
                 if (Main.player[i].active && i != Main.myPlayer)
@@ -2898,8 +2898,12 @@ namespace giantsummon
                         SlotPosition.X += x * 56 * Main.inventoryScale;
                         ItemSlot.Draw(Main.spriteBatch, Guardian.Inventory, 0, x, SlotPosition);
                     }
+                    SelectedGuardianInventorySlot = GuardianItemSlotButtons.Inventory;
                 }
-                SelectedGuardianInventorySlot = GuardianItemSlotButtons.Inventory;
+                else
+                {
+                    SelectedGuardianInventorySlot = GuardianItemSlotButtons.Nothing;
+                }
             }
             if (MouseOverText != "")
             {
@@ -3115,6 +3119,7 @@ namespace giantsummon
                 GuardianStatusIconTexture = GetTexture("Interface/GuardianStatusIcon");
                 HideButtonTexture = GetTexture("Interface/HideButton");
                 GuideArrowTexture = GetTexture("Interface/GuideArrow");
+                PlayerFlagsTexture = GetTexture("Interface/PlayerFlags");
                 if (Main.rand.NextDouble() < 0.5)
                 {
                     Main.instance.Window.Title = GetTitleText;

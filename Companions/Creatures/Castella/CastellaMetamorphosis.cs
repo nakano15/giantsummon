@@ -6,6 +6,7 @@
 
         public CastellaMetamorphosis()
         {
+            Forced = true;
         }
 
         public override void Update(TerraGuardian guardian)
