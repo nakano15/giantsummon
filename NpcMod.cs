@@ -11,6 +11,8 @@ namespace giantsummon
 {
     public class NpcMod : GlobalNPC
     {
+        public static byte SpawnPlayerCharacter = 0;
+
         public static bool TryPlacingCatGuardianOnSlime = false;
         public static int TrappedCatKingSlime = -1;
         public static Vector2[] PlayerPositionBackup = new Vector2[256];
@@ -278,7 +280,16 @@ namespace giantsummon
             }
             if (MainMod.MobHealthBoostPercent > 0 && npc.lifeMax > 5 && npc.catchItem == 0 && Main.netMode == 0 && !Main.gameMenu)
             {
+                Player player = Main.player[SpawnPlayerCharacter];
                 int MyGuardians = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().GetSummonedGuardianCount;
+                Vector2 Position = player.Center;
+                for(byte i = 0; i < 255; i++)
+                {
+                    if(i != SpawnPlayerCharacter && Main.player[i].active && Math.Abs(Main.player[i].Center.X - Position.X) < 1000 && Math.Abs(Main.player[i].Center.Y - Position.Y) < 600)
+                    {
+                        MyGuardians += Main.player[i].GetModPlayer<PlayerMod>().GetSummonedGuardianCount;
+                    }
+                }
                 if(MyGuardians > 1)
                 {
                     npc.lifeMax += (int)(npc.lifeMax * MainMod.MobHealthBoostPercent * (MyGuardians - 1));
@@ -286,7 +297,7 @@ namespace giantsummon
             }
             if (MainMod.UseNewMonsterModifiersSystem)
             {
-                if (npc.boss || Terraria.ID.NPCID.Sets.TechnicallyABoss[npc.type] || npc.type == Terraria.ID.NPCID.Sharkron || npc.type == Terraria.ID.NPCID.Sharkron2)
+                if (npc.boss || NPCID.Sets.TechnicallyABoss[npc.type] || npc.type == NPCID.Sharkron || npc.type == NPCID.Sharkron2)
                 {
                     mobType = GetBossDifficulty(npc);
                 }
@@ -298,7 +309,7 @@ namespace giantsummon
                     float HealthBonus = this.HealthBonus;
                     if (Terraria.ID.NPCID.Sets.TechnicallyABoss[npc.type])
                         HealthBonus *= 0.5f;
-                    if (npc.lifeMax > 5 && npc.type != Terraria.ID.NPCID.MothronEgg)
+                    if (npc.lifeMax > 5 && npc.type != NPCID.MothronEgg)
                     {
                         try
                         {
@@ -340,12 +351,22 @@ namespace giantsummon
             int SpawnDifficulty = 0;
             bool HasTitan = false;
             byte GuardianCount = 0;
-            foreach (TerraGuardian guardian in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers.Where(x => x.Active))
+            Vector2 CharacterPos = player.Center;
+            for (int p = 0; p < 255; p++)
             {
-                GuardianCount++;
-                SpawnDifficulty += guardian.LifeFruitHealth * 3 + guardian.LifeCrystalHealth;
-                //if (guardian.HasFlag(GuardianFlags.TitanGuardian))
-                //    HasTitan = true;
+                if (Main.player[p].active && (p == player.whoAmI || (Math.Abs(CharacterPos.X - Main.player[p].Center.X) < 1000 && 
+                    Math.Abs(CharacterPos.Y - Main.player[p].Center.Y) < 800)))
+                {
+                    foreach (TerraGuardian guardian in Main.player[p].GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                    {
+                        if (!guardian.Active)
+                            continue;
+                        GuardianCount++;
+                        SpawnDifficulty += guardian.LifeFruitHealth * 3 + guardian.LifeCrystalHealth;
+                        //if (guardian.HasFlag(GuardianFlags.TitanGuardian))
+                        //    HasTitan = true;
+                    }
+                }
             }
             const int MaxLifeCrystalBoost = 15 * 3, MaxLifeFruitBoost = 20, TotalHealthBoost = MaxLifeCrystalBoost + MaxLifeFruitBoost;
             if (HasTitan)
@@ -434,7 +455,7 @@ namespace giantsummon
             }
             if (mobType > MobTypes.Normal)
             {
-                if (npc.type == Terraria.ID.NPCID.MartianSaucerCore || npc.type == NPCID.MourningWood || npc.type == NPCID.Pumpking || npc.type == NPCID.Everscream || 
+                if (npc.type == NPCID.MartianSaucerCore || npc.type == NPCID.MourningWood || npc.type == NPCID.Pumpking || npc.type == NPCID.Everscream || 
                     npc.type == NPCID.SantaNK1 || npc.type == NPCID.IceQueen)
                 {
                     mobType = mobType - 1;
@@ -860,7 +881,7 @@ namespace giantsummon
 
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {
-            //base.EditSpawnRate(player, ref spawnRate, ref maxSpawns);
+            SpawnPlayerCharacter = (byte)player.whoAmI;
             if (MainMod.HavingMoreCompanionsIncreasesSpawnRate)
             {
                 TerraGuardian[] guardians = player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers;

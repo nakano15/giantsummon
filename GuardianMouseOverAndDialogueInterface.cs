@@ -598,15 +598,30 @@ namespace giantsummon
                             else if(Speaker.OwnerPos == -1)
                             {
                                 AddOption("Want to join my adventure?", AskGuardianToFollowYouButtonPressed);
+                                for(int i = 0; i < 255; i++)
+                                {
+                                    if(Main.player[i].active && i != Main.myPlayer)
+                                    {
+                                        int MyID = i;
+                                        AddOption("Join " + Main.player[i].name + "'s Party", delegate ()
+                                        {
+                                            ReferedGroup = MyID;
+                                            AskGuardianToFollowYouButtonPressed();
+                                        });
+                                    }
+                                }
                             }
                         }
                     }
-                    if (Main.netMode == 0 && Speaker.OwnerPos == -1)
+                    if (Main.netMode == 0) // && Speaker.OwnerPos == -1
                     {
                         if (!Speaker.IsCommander)
                         {
-                            if(true || MainMod.ShowDebugInfo || Speaker.FriendshipLevel >= Speaker.Base.ControlUnlockLevel)
-                                AddOption("Lead a group", SetLeadYourOwnGroup);
+                            if (Speaker.OwnerPos == -1)
+                            {
+                                if (true || MainMod.ShowDebugInfo || Speaker.FriendshipLevel >= Speaker.Base.ControlUnlockLevel)
+                                    AddOption("Lead a group", SetLeadYourOwnGroup);
+                            }
                         }
                         else
                         {

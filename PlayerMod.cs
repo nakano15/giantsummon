@@ -871,6 +871,23 @@ namespace giantsummon
 
         public override void PostUpdate()
         {
+            if (IsCompanionParty)
+            {
+                if (CommandingOrder == CommandingOrders.FollowLeader)
+                {
+                    player.zone1 = Main.player[CompanionCommanderLeaderPlayer].zone1;
+                    player.zone2 = Main.player[CompanionCommanderLeaderPlayer].zone2;
+                    player.zone3 = Main.player[CompanionCommanderLeaderPlayer].zone3;
+                    player.zone4 = Main.player[CompanionCommanderLeaderPlayer].zone4;
+                }
+                else
+                {
+                    player.zone1 = Guardian.Zone1;
+                    player.zone2 = Guardian.Zone2;
+                    player.zone3 = Guardian.Zone3;
+                    player.zone4 = Guardian.Zone4;
+                }
+            }
             if(player.whoAmI == Main.myPlayer)
             {
                 foreach(QuestData qd in QuestDatas)
@@ -1612,6 +1629,7 @@ namespace giantsummon
 
         public override void PreUpdate()
         {
+            NpcMod.SpawnPlayerCharacter = (byte)player.whoAmI;
             if (IsCompanionParty)
             {
                 CompanyFollowOrder++;
