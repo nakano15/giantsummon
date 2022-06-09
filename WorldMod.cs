@@ -263,37 +263,7 @@ namespace giantsummon
                     if (!MainMod.IsGuardianInTheWorld(ids.ID, ids.ModID) && !GuardianNPCsInWorld.Any(x => x != null && x.IsID(ids.ID, ids.ModID)))
                     {
                         GuardianBase gb = GuardianBase.GetGuardianBase(ids.ID, ids.ModID);
-                        bool SomeoneHasTheTrust = false;
-                        if (Main.netMode == 0)
-                        {
-                            GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[Main.myPlayer], ids.ID, ids.ModID);
-                            if (gd != null)
-                            {
-                                if (gd.TrustLevel >= TrustLevels.VisitTrust || gd.request.Active)
-                                {
-                                    SomeoneHasTheTrust = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            for (int p = 0; p < 255; p++)
-                            {
-                                if (Main.player[p].active)
-                                {
-                                    GuardianData gd = PlayerMod.GetPlayerGuardian(Main.player[p], ids.ID, ids.ModID);
-                                    if (gd != null)
-                                    {
-                                        if (gd.TrustLevel >= TrustLevels.VisitTrust)
-                                        {
-                                            SomeoneHasTheTrust = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (SomeoneHasTheTrust && Main.dayTime != gb.IsNocturnal)
+                        if (Main.dayTime != gb.IsNocturnal)
                         {
                             PossibleIDs.Add(ids);
                         }

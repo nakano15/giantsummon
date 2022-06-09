@@ -102,7 +102,6 @@ namespace giantsummon
         public byte LifeCrystalHealth = 0, LifeFruitHealth = 0, ManaCrystals = 0;
         public const byte MaxLifeCrystals = 15, MaxLifeFruit = 20, MaxManaCrystals = 9;
         public byte FriendshipLevel = 0, FriendshipProgression = 0;
-        public sbyte TrustLevel = 30;
         public int LastTotalSkillLevel = 0;
         public RequestData request;
         public int HP = 800, MHP = 800;
@@ -528,19 +527,6 @@ namespace giantsummon
                     StatusUpdate = true;
                 }
             }
-            if (WorldMod.DayChange && TrustLevel < 20)
-            {
-				sbyte TrustIncrease = 1;
-                TrustLevel++;
-				if(!NpcMod.HasGuardianNPC(ID, ModID))
-				{
-					if (TrustLevel < -40 )
-						TrustIncrease += 2;
-					else if (TrustLevel < 20 )
-						TrustIncrease++;
-				}
-                ChangeTrustValue(TrustIncrease);
-            }
             if (StatusUpdate)
             {
                 if (Injury < 0)
@@ -563,18 +549,6 @@ namespace giantsummon
         public void IncreaseFriendshipProgress(byte Value)
         {
             FriendshipProgression += Value;
-            ChangeTrustValue(TrustLevels.TrustPointsPerFriendshipExp);
-        }
-
-        public void ChangeTrustValue(sbyte Value)
-        {
-            sbyte LastTrustLevel = TrustLevel;
-            int NewTrustValue = LastTrustLevel + Value;
-            if (NewTrustValue < -100)
-                NewTrustValue = -100;
-            if (NewTrustValue > 100)
-                NewTrustValue = 100;
-            TrustLevel = (sbyte)NewTrustValue;
         }
 
         public void AddSecond()
@@ -659,7 +633,6 @@ namespace giantsummon
             tag.Add("StarterFlag_" + UniqueID, IsStarter);
             tag.Add("FriendshipLevel_" + UniqueID, FriendshipLevel);
             tag.Add("FriendshipProgress_" + UniqueID, FriendshipProgression);
-            tag.Add("TrustLevel_"+UniqueID, (int)TrustLevel);
             tag.Add("TravellingStacker_" + UniqueID, TravellingStacker);
             tag.Add("DamageStacker_" + UniqueID, DamageStacker);
             tag.Add("FoodStacker_" + UniqueID, FoodStacker);
@@ -781,8 +754,6 @@ namespace giantsummon
             {
                 FriendshipLevel = tag.GetByte("FriendshipLevel_" + UniqueID);
                 FriendshipProgression = tag.GetByte("FriendshipProgress_" + UniqueID);
-                if (ModVersion >= 93)
-                    TrustLevel = (sbyte)tag.GetInt("TrustLevel_" + UniqueID);
                 TravellingStacker = tag.GetFloat("TravellingStacker_" + UniqueID);
             }
             if (ModVersion >= 18)
@@ -1022,8 +993,6 @@ namespace giantsummon
                     }
                 }
             }
-            if (ModVersion < 95 && TrustLevel < 30)
-                TrustLevel = 30;
         }
 
         public void UpdateAge()

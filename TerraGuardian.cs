@@ -1040,7 +1040,6 @@ namespace giantsummon
                 return Text;
             }
         }
-        public sbyte TrustLevel { get { return Data.TrustLevel; } }
         //For the display.
         public byte LastFriendshipLevel = 0, LastFriendshipValue = 0;
         public float FriendshipHeartDisplayTime = 0f;
@@ -4128,7 +4127,6 @@ namespace giantsummon
                                     Main.PlaySound(Terraria.ID.SoundID.NPCDeath13, ResultingPosition);
                                     Main.NewText(Name + " was swallowed by the Wall of Flesh.", Color.Red);
                                     WofFood = true;
-                                    ChangeTrustValue(TrustLevels.TrustLossWhenEatenByWof);
                                 }
                                 else
                                 {
@@ -8017,7 +8015,6 @@ namespace giantsummon
                 {
                     ComfortPoints++;
                 }
-                ChangeTrustValue(TrustLevels.TrustPointsPerComfortStack);
                 /*if (ComfortPoints >= MaxComfortExp)
                 {
                     ComfortPoints -= (byte)(10 + FriendshipLevel / 3);
@@ -10358,37 +10355,12 @@ namespace giantsummon
             IgnoreMass = false;
         }
 
-        public bool IsPlayerFaultCompanionKO()
-        {
-            for(int n = 0; n < 200; n++)
-            {
-                if(Main.npc[n].active && IsNpcHostile(Main.npc[n]))
-                {
-                    if(InPerceptionRange(Main.npc[n].Center) || Main.npc[n].boss || Terraria.ID.NPCID.Sets.TechnicallyABoss[Main.npc[n].type])
-                        return false;
-                }
-            }
-            for(int p = 0; p < Main.maxProjectiles; p++)
-            {
-                if(Main.projectile[p].active && Main.projectile[p].hostile && InPerceptionRange(Main.projectile[p].Center))
-                {
-                    return false;
-                }
-            }
-            if (LavaWet && TownNpcs > 0)
-            {
-                return true;
-            }
-            return true;
-        }
-
         public void EnterDownedState()
         {
             NegativeReviveBoost = false;
             bool LastWasKOd = KnockedOut;
             if (!KnockedOut)
             {
-                ChangeTrustValue((sbyte)(IsPlayerFaultCompanionKO() ? -9 : -3));
                 ChatMessage = "";
                 MessageSchedule.Clear();
             }
@@ -10466,8 +10438,6 @@ namespace giantsummon
             HP = (int)((MHP / 2 + ReviveBoost * 10) * HealthRegenValue);
             Rotation = 0f;
             CombatText.NewText(HitBox, Color.Green, "Revived!", true);
-            if (ReviveBoost > 0)
-                ChangeTrustValue(TrustLevels.ReviveHelpTrustGain);
             if (OwnerPos == Main.myPlayer || OwnerPos == -1)
             {
                 string Mes = GetMessage(ReviveBoost > 0 ? GuardianBase.MessageIDs.ReviveByOthersHelp : GuardianBase.MessageIDs.RevivedByRecovery);
@@ -10530,7 +10500,6 @@ namespace giantsummon
             ChatMessage = "";
             MessageSchedule.Clear();
             //
-            ChangeTrustValue((sbyte)(IsPlayerFaultCompanionKO() ? -20 : -10));
             UsingFurniture = false;
             furniturex = furniturey = -1;
             IsBeingPulledByPlayer = false;
@@ -17218,48 +17187,9 @@ namespace giantsummon
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="Value"></param>
-        public void ChangeTrustValue(sbyte Value)
-        {
-            if (Main.netMode > 0 || (Main.netMode == 1 && OwnerPos == -1))
-                return;
-            sbyte LastTrustLevel = TrustLevel;
-            int NewTrustValue = LastTrustLevel + Value;
-            if (NewTrustValue < -100)
-                NewTrustValue = -100;
-            if (NewTrustValue > 100)
-                NewTrustValue = 100;
-            Data.TrustLevel = (sbyte)NewTrustValue;
-            if (Main.netMode < 2 && OwnerPos == Main.myPlayer)
-            {
-                int NewTrustLevel = TrustLevels.GetTrustLevel(Data.TrustLevel), OldTrustLevel = TrustLevels.GetTrustLevel(LastTrustLevel);
-                if (NewTrustLevel != OldTrustLevel)
-                {
-                    Main.NewText(Name + "'s trust towards you " + (NewTrustLevel < OldTrustLevel ? "degraded" : "increased") + " to " + TrustLevels.GetTrustLevelName(Data.TrustLevel) + ".");
-                }
-            }
-            if (!IsPlayerBuddy() && !MainMod.ShowDebugInfo)
-            {
-                if (NewTrustValue <= TrustLevels.StopFollowingTrustLevel && OwnerPos > -1)
-                {
-                    Main.player[OwnerPos].GetModPlayer<PlayerMod>().DismissGuardian(ID, ModID);
-                    Main.NewText(Name + " left your team.", Color.Red);
-                }
-                if (NewTrustValue < TrustLevels.MoveOutOfWorldTrustLevel && IsTownNpc)
-                {
-                    WorldMod.RemoveGuardianNPCToSpawn(ID, ModID);
-                    Main.NewText(Name + " doesn't want to live in your world anymore for now.", Color.Red);
-                }
-            }
-        }
-
         public void IncreaseFriendshipProgress(byte Value)
         {
             FriendshipProgression += Value;
-            ChangeTrustValue(TrustLevels.TrustPointsPerFriendshipExp);
         }
 
         public void CheckForLifeCrystals()

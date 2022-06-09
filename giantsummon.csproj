@@ -362,7 +362,6 @@
     <Compile Include="TrailPositionLogger.cs" />
     <Compile Include="TriggerHandler.cs" />
     <Compile Include="Trigger\TriggerTarget.cs" />
-    <Compile Include="TrustLevels.cs" />
     <Compile Include="UtilityMethods.cs" />
     <Compile Include="WorldMod.cs" />
   </ItemGroup>
@@ -654,7 +653,6 @@
     <Content Include="Interface\GuardianEquipButtons.png" />
     <Content Include="Interface\GuardianHealthBar.png" />
     <Content Include="Interface\TacticsIcons.png" />
-    <Content Include="Interface\Trust_Icons.png" />
     <Content Include="Items\Accessories\BlueHairclip.png" />
     <Content Include="Items\Accessories\BunnyFoot.png" />
     <Content Include="Items\Accessories\FirstSymbol.png" />

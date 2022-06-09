@@ -521,15 +521,6 @@ namespace giantsummon
                 WindowStartPosition.X -= 52;
                 tg.DrawFriendshipHeart(WindowStartPosition + new Vector2(0, 24));
                 WindowStartPosition.Y += 48;
-                {
-                    Vector2 TrustIconPosition = new Vector2(WindowStartPosition.X + WindowSizeX, WindowStartPosition.Y - 52);
-                    int TrustLevel = TrustLevels.GetTrustLevel(tg.TrustLevel);
-                    Main.spriteBatch.Draw(MainMod.TrustIconsTexture, TrustIconPosition, new Rectangle(TrustLevels.GetTrustLevel(tg.TrustLevel) * 32, 0, 32, 32), Color.White, 0f, Vector2.One * 16, 1f, SpriteEffects.None, 0);
-                    if (Main.mouseX >= TrustIconPosition.X - 16 && Main.mouseX < TrustIconPosition.X + 16 && Main.mouseY >= TrustIconPosition.Y - 16 && Main.mouseY < TrustIconPosition.Y + 16)
-                    {
-                        Utils.DrawBorderString(Main.spriteBatch, TrustLevels.GetTrustInfo(tg.TrustLevel), TrustIconPosition + new Vector2(12, 12), Color.White);
-                    }
-                }
             }
             Color color = new Color(200, 200, 200, 200);
             DrawBackgroundPanel(WindowStartPosition, WindowSizeX, WindowSizeY, color);
@@ -834,7 +825,7 @@ namespace giantsummon
         public static void AskGuardianToFollowYouButtonPressed()
         {
             HideCallDismissButton = true;
-            if ((!Speaker.Data.IsStarter && Speaker.FriendshipLevel < Speaker.Base.CallUnlockLevel && (Speaker.request.state != RequestData.RequestState.Active || !Speaker.request.Base.RequiresRequesterSummoned)) || (!MainMod.ShowDebugInfo && Speaker.TrustLevel < TrustLevels.FollowTrust))
+            if ((!Speaker.Data.IsStarter && Speaker.FriendshipLevel < Speaker.Base.CallUnlockLevel && (Speaker.request.state != RequestData.RequestState.Active || !Speaker.request.Base.RequiresRequesterSummoned)))
             {
                 SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToJoinYourGroupFail, "(They refused.)"), Speaker);
                 GetDefaultOptions();
@@ -1123,7 +1114,6 @@ namespace giantsummon
             AddOption("Yes", delegate ()
             {
                 SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.CancelRequestYesAnswered, (Speaker.Male ? "He" : "She") + " seems a bit disappointed towards you.)"));
-                Speaker.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
                 GetDefaultOptions();
                 Speaker.request.OnCancelRequest(MainPlayer, Speaker);
             });

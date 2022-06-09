@@ -55,7 +55,7 @@ namespace giantsummon
             }
         }
         //End contest related
-        public const int ModVersion = 102, LastModVersion = 102;
+        public const int ModVersion = 103, LastModVersion = 102;
         public const int MaxExtraGuardianFollowers = 8;
         public static bool ShowDebugInfo = false;
         //Downed system configs

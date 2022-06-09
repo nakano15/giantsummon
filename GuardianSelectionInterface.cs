@@ -382,15 +382,6 @@ namespace giantsummon
                     if (DisplayGuardian.Data._Name != null)
                         NameText += "(" + DisplayGuardian.RealName + ")";
                     float TextWidth = Utils.DrawBorderString(Main.spriteBatch, DisplayGuardian.Name, NamePos, Color.White, 0.8f, 0.5f, 1).X * 0.5f + 4;
-                    {
-                        Vector2 TrustIconPosition = new Vector2(NamePos.X - TextWidth - 8, NamePos.Y - 12);
-                        int TrustLevel = TrustLevels.GetTrustLevel(DisplayGuardian.TrustLevel);
-                        Main.spriteBatch.Draw(MainMod.TrustIconsTexture, TrustIconPosition, new Rectangle(TrustLevels.GetTrustLevel(DisplayGuardian.TrustLevel) * 32, 0, 32, 32), Color.White, 0f, Vector2.One * 16, 0.5f, Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0);
-                        if (Main.mouseX >= TrustIconPosition.X - 8 && Main.mouseX < TrustIconPosition.X + 8 && Main.mouseY >= TrustIconPosition.Y - 8 && Main.mouseY < TrustIconPosition.Y + 8)
-                        {
-                            MouseText = TrustLevels.GetTrustInfo(DisplayGuardian.TrustLevel);
-                        }
-                    }
                     NamePos.X += TextWidth;
                     if (DisplayGuardian.Data.CanChangeName)
                     {
@@ -670,7 +661,7 @@ namespace giantsummon
             //Dismiss Button (left)
             if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian &&
                 (!PlayerMod.HasBuddiesModeOn(player.player) || !PlayerMod.GetPlayerBuddy(player.player).IsSameID(DisplayGuardian)) &&
-                (((DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter) && (MainMod.ShowDebugInfo || DisplayGuardian.TrustLevel >= TrustLevels.FollowTrust)) || (DisplayGuardian.request.Active && DisplayGuardian.request.Base.RequiresRequesterSummoned) ||
+                (((DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter)) || (DisplayGuardian.request.Active && DisplayGuardian.request.Base.RequiresRequesterSummoned) ||
                 PlayerMod.PlayerHasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID)) &&
                 (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(ContentList[Selected].Index)) &&
                 ((player.GetEmptyGuardianSlot() < 255 && (!player.Guardian.Active || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
@@ -763,8 +754,7 @@ namespace giantsummon
             //Home Button (Center)
             if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.IsPlayerBuddy(Main.LocalPlayer) || 
                 DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel) && 
-                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID) || 
-                (MainMod.ShowDebugInfo || DisplayGuardian.TrustLevel >= TrustLevels.MoveInTrust)))
+                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID)))
             {
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 265 + 41;

@@ -12,3 +12,5 @@ Companions party system implemented.
 	The max weight is shared from your character, alongside shared max health and other things.
 	You can give orders to the leader of that group, to either defend, follow you, or just idle around.
 	You will also be able to change active groups through the order hud.
+The Trust system was removed from the mod.
+I made Sardine's low health message be less... Scary..

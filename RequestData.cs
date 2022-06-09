@@ -54,7 +54,6 @@ namespace giantsummon
                     Base.UpdateRequest(player, this);
                     if(RequestTimeLeft <= 0)
                     {
-                        data.ChangeTrustValue(TrustLevels.TrustLossOnFailRequest);
                         SetRequestOnCooldown(false);
                         Main.NewText("You took so long to complete " + data.Name + "'s request, that they forgot about it...", new Microsoft.Xna.Framework.Color(200, 0, 0));
                     }
@@ -98,7 +97,6 @@ namespace giantsummon
             if (c > 0)
                 Item.NewItem(player.getRect(), Terraria.ID.ItemID.CopperCoin, c, true, 0, true);
             gd.IncreaseFriendshipProgress(1);
-            gd.ChangeTrustValue(TrustLevels.TrustGainFromComplettingRequest);
             SetRequestOnCooldown();
             if (Compatibility.NExperienceCompatibility.IsModActive)
             {
@@ -134,14 +132,12 @@ namespace giantsummon
                 Item.NewItem(player.getRect(), Terraria.ID.ItemID.SilverCoin, s, true, 0, true);
             if (c > 0)
                 Item.NewItem(player.getRect(), Terraria.ID.ItemID.CopperCoin, c, true, 0, true);
-            tg.ChangeTrustValue(TrustLevels.TrustLossOnFailRequest);
             SetRequestOnCooldown();
             Base.OnFailRequest(player, this);
         }
 
         public void OnCancelRequest(Player player, TerraGuardian gd)
         {
-            gd.ChangeTrustValue(TrustLevels.TrustLossWhenCancellingRequest);
             SetRequestOnCooldown(true);
         }
 
