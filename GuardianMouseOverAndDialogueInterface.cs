@@ -617,10 +617,9 @@ namespace giantsummon
                     {
                         if (!Speaker.IsCommander)
                         {
-                            if (Speaker.OwnerPos == -1)
+                            if (Speaker.FriendshipLevel >= Speaker.Base.LeadGroupUnlockLevel && Speaker.OwnerPos == -1)
                             {
-                                if (true || MainMod.ShowDebugInfo || Speaker.FriendshipLevel >= Speaker.Base.ControlUnlockLevel)
-                                    AddOption("Lead a group", SetLeadYourOwnGroup);
+                                AddOption("Lead a group for me", SetLeadYourOwnGroup);
                             }
                         }
                         else

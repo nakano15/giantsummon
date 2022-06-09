@@ -545,6 +545,8 @@ namespace giantsummon.Companions
                     return "*No.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thank You!*";
+                case MessageIDs.GenericNevermind:
+                    return "*Oh, nevermind.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*Want to know something else from me? Let's talk then.*";
                 case MessageIDs.NevermindTheChatting:
@@ -730,6 +732,14 @@ namespace giantsummon.Companions
                     return "*Where did the item go? It was right here a while ago.*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*I can't give you an item until you clean your inventory, [target].*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*I hope my knowledge aids us on this quest.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*Sorry. I would be willing to do that for you, but not now.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Well, that was fun. We should try that again some time.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*I will use that tactic for leading my group.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

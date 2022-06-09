@@ -1952,7 +1952,7 @@ namespace giantsummon
                         const int BarHeight = 32;
                         float Value = (float)Main.player[i].statLife / Main.player[i].statLifeMax2;
                         Vector2 YSum = new Vector2(0, BarHeight * (1f - Value));
-                        Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(36, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
+                        Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(pm.KnockedOut ? 28 : 36, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
                         UiPos.X += 8;
                         Value = (float)Main.player[i].statMana / Main.player[i].statManaMax2;
                         YSum = new Vector2(0, BarHeight * (1f - Value));
@@ -1971,7 +1971,7 @@ namespace giantsummon
                             const int BarHeight = 32;
                             float Value = (float)tg.HP / tg.MHP;
                             Vector2 YSum = new Vector2(0, BarHeight * (1f - Value));
-                            Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(36, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
+                            Main.spriteBatch.Draw(CompactCompanionInfosTexture, UiPos + YSum, new Rectangle(tg.KnockedOut ? 28 : 36, 38 + (int)(BarHeight * (1f - Value)), 6, (int)(BarHeight * Value)), Color.White);
                             UiPos.X += 8;
                             Value = (float)tg.MP / tg.MMP;
                             YSum = new Vector2(0, BarHeight * (1f - Value));

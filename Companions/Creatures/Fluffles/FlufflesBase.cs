@@ -460,6 +460,8 @@ namespace giantsummon.Companions
                     return "(She shook her head.)";
                 case MessageIDs.GenericThankYou:
                     return "(She bows as a Thank You.)";
+                case MessageIDs.GenericNevermind:
+                    return "(She acknowledges that.)";
                 case MessageIDs.ChatAboutSomething:
                     return "(She seems to be waiting for your questions.)";
                 case MessageIDs.NevermindTheChatting:
@@ -582,6 +584,14 @@ namespace giantsummon.Companions
                     return "(She seems to be looking for something in her bag, but can't find.)";
                 case MessageIDs.DeliveryInventoryFull:
                     return "(She tried to give some item to [target], but couldn't because they can't carry anymore.)";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "(She nods, and awaits for members.)";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "(She denied.)";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "(She nods, and tells their members to disperse.)";
+                case MessageIDs.CommandingChangeOrder:
+                    return "(She nods as she acknowledges the order change.)";
             }
             return base.GetSpecialMessage(MessageID);
         }

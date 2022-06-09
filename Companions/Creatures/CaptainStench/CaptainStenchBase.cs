@@ -1958,6 +1958,8 @@ namespace giantsummon.Companions
                     return "*Nope.*";
                 case MessageIDs.GenericThankYou:
                     return "*Ta! Ta!*";
+                case MessageIDs.GenericNevermind:
+                    return "*Nevermind.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*How's it hangin mate?*";
                 case MessageIDs.NevermindTheChatting:
@@ -2129,7 +2131,15 @@ namespace giantsummon.Companions
                     return "*whoaa there mate?! did you gamble off with the item?!*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*Your bag is stuffed, [target].*";
-		    
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*Time to plunder.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*Me? Doing that for you? Hahahaha. How funny [nickname].*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Everyone, disperse!*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*Arrrgh.*";
+
             }
             return base.GetSpecialMessage(MessageID);
         }

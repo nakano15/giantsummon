@@ -1089,6 +1089,8 @@ namespace giantsummon.Companions
                     return "*No.*"; //"*She denies.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thank you.*"; //"*She thanked.*";
+                case MessageIDs.GenericNevermind:
+                    return "*Nevermind then.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*Oh, what do you want to talk about?*"; //"*She's wondering what you want to talk about.*";
                 case MessageIDs.NevermindTheChatting:
@@ -1265,6 +1267,14 @@ namespace giantsummon.Companions
                     return "*Wait, where did it go? Someone picked my pocket?*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*I wanted to give [target] something, but they can't hold anymore..*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*Yes, I can do that for you.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*I don't think I would be able to lead a group for you.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Alright. Everybody go home now.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*We will do that.*";
                 //Popularity Contest Messages
                 case MessageIDs.PopContestMessage:
                     return "*Hey, [nickname]! The TerraGuardians Popularity Contest is up and running. Will you vote on it now?*";

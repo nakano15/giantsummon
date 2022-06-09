@@ -633,6 +633,8 @@ namespace giantsummon.Companions
                     return "*No... No.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thank you! You're the best!*";
+                case MessageIDs.GenericNevermind:
+                    return "*Changed your mind?*";
                 case MessageIDs.ChatAboutSomething:
                     return "*Sure. So, what do you want to talk about?*";
                 case MessageIDs.NevermindTheChatting:
@@ -811,6 +813,14 @@ namespace giantsummon.Companions
                     return "*I thought I had the item on my bag... Oh well..*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*Your inventory is too full for my item, [target]..*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*Lead a group for you? Of course I will do that!*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*I have a contest to practice to.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Oh, then everybody should go home.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*Alright everyone, that's what we'll do now.*";
                 //Popularity Contest Messages
                 case MessageIDs.PopContestMessage:
                     return "*I'm so glad to see that you're interessed in the contest. Do you want to vote now, or want to know more about it?*";

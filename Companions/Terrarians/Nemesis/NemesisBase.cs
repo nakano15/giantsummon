@@ -317,6 +317,8 @@ namespace giantsummon.Companions
                     return "No.";
                 case MessageIDs.GenericThankYou:
                     return "Thanks.";
+                case MessageIDs.GenericNevermind:
+                    return "Nevermind.";
                 case MessageIDs.ChatAboutSomething:
                     return "Speak.";
                 case MessageIDs.NevermindTheChatting:
@@ -397,6 +399,14 @@ namespace giantsummon.Companions
                     return "Hm. The item isn't on me anymore.";
                 case MessageIDs.DeliveryInventoryFull:
                     return "I can't give [target] an item with their inventory full.";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "I shall mimic you then.";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "No. I'd preffer to copy you.";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "Everyone, begone.";
+                case MessageIDs.CommandingChangeOrder:
+                    return "I shall do so.";
             }
             return base.GetSpecialMessage(MessageID);
         }

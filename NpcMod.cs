@@ -368,7 +368,7 @@ namespace giantsummon
                     }
                 }
             }
-            const int MaxLifeCrystalBoost = 15 * 3, MaxLifeFruitBoost = 20, TotalHealthBoost = MaxLifeCrystalBoost + MaxLifeFruitBoost;
+            const int MaxLifeCrystalBoost = 15, MaxLifeFruitBoost = 20, TotalHealthBoost = MaxLifeCrystalBoost + MaxLifeFruitBoost;
             if (HasTitan)
             {
                 SpawnDifficulty += TotalHealthBoost * 3;

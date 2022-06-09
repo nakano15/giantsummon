@@ -502,6 +502,8 @@ namespace giantsummon.Companions
                     return "No.";
                 case MessageIDs.GenericThankYou:
                     return "Yeah, Thank you!";
+                case MessageIDs.GenericNevermind:
+                    return "Let's talk about something else, then.";
                 case MessageIDs.ChatAboutSomething:
                     return "Huh? Okay, what do you want to know?";
                 case MessageIDs.NevermindTheChatting:
@@ -693,6 +695,14 @@ namespace giantsummon.Companions
                     return "The item! I was going to give it to someone... Maybe I dropped?";
                 case MessageIDs.DeliveryInventoryFull:
                     return "[target], I can't give you this while your inventory is full!";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "You think I can do that? If you say so, I will do. I hope people listen to what I say..";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "You think people would receive orders from me?";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "I hope I didn't disappointed you.";
+                case MessageIDs.CommandingChangeOrder:
+                    return "Oh, alright.";
             }
             return base.GetSpecialMessage(MessageID);
         }

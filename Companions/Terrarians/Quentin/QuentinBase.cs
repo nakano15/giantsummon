@@ -381,6 +381,8 @@ namespace giantsummon.Companions
                     return "Nope.";
                 case MessageIDs.GenericThankYou:
                     return "Thanks.";
+                case MessageIDs.GenericNevermind:
+                    return "Nevermind then.";
                 case MessageIDs.ChatAboutSomething:
                     return "Speak.";
                 case MessageIDs.NevermindTheChatting:

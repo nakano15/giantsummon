@@ -153,7 +153,7 @@ namespace giantsummon
         public virtual string LeavingWorldMessage { get { return " has moved out of the world."; } }
 
         public byte KnownLevel = 2, FriendsLevel = 5, BestFriendLevel = 12, BestFriendForeverLevel = 18,  BuddiesForLife = 25;
-        public byte CallUnlockLevel = 0, LootingUnlockLevel = 3, MaySellYourLoot = 4, MountUnlockLevel = 5, StopMindingAFK = 7, MountDamageReductionLevel = 9, ControlUnlockLevel = 10, FriendshipBondUnlockLevel = 12, FallDamageReductionLevel = 15, MoveInLevel = 0;
+        public byte CallUnlockLevel = 0, LootingUnlockLevel = 3, MaySellYourLoot = 4, MountUnlockLevel = 5, StopMindingAFK = 7, MountDamageReductionLevel = 9, ControlUnlockLevel = 10, FriendshipBondUnlockLevel = 12, FallDamageReductionLevel = 13, LeadGroupUnlockLevel = 15, MoveInLevel = 0;
         
         public const int Rococo = 0,
             Blue = 1,

@@ -5,3 +5,10 @@ Fixed a bug where actions that were cancellable were not being cancelled, becaus
 Companions reviving someone will only talk upon reaching their target.
 Adjusted some boss victory dialogues of companions.
 Alex's recruit npc will now get you off your companion when he jumps on you.
+Leopold gained eye colors.
+Companions party system implemented.
+	Companions with enough friendship level will be willing to lead a group for you.
+	That group of companions have their own weight, so the number of companions on that group independs on your character group weight.
+	The max weight is shared from your character, alongside shared max health and other things.
+	You can give orders to the leader of that group, to either defend, follow you, or just idle around.
+	You will also be able to change active groups through the order hud.

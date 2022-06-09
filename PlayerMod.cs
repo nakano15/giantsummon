@@ -1002,7 +1002,7 @@ namespace giantsummon
                 if (_InternalCarryTimer == 0)
                     _CarriedByGuardianID = -1;
             }
-            if(Main.dayTime && Main.time == 0)
+            if(player.whoAmI == Main.myPlayer && Main.dayTime && Main.time == 0)
             {
                 TerraGuardian.CheckForBirthdays(player);
             }

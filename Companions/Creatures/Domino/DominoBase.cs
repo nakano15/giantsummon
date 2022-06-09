@@ -544,6 +544,8 @@ namespace giantsummon.Companions
                     return "*Nope.*";
                 case MessageIDs.GenericThankYou:
                     return "*Alright, that's good.*";
+                case MessageIDs.GenericNevermind:
+                    return "*Forget it.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*I can't spend chatting, but I think I can spend a few moments answering you.*";
                 case MessageIDs.NevermindTheChatting:
@@ -711,6 +713,14 @@ namespace giantsummon.Companions
                     return "*I think I just did a logistic failure. I thought I had this item..*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*Hey [target], check your bag. You can't carry anything else.*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*I'm no soldier, but I think I can do that for you. As long as things stay away from me.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*Is something wrong with your head? Why should I do that for you?*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*I have a business to attend then.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*I hope you know what you're doing.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

@@ -514,6 +514,8 @@ namespace giantsummon.Companions
                     return "*No..*";
                 case MessageIDs.GenericThankYou:
                     return "*I thank you deeply.*";
+                case MessageIDs.GenericNevermind:
+                    return "*Oh... Nevermind...*";
                 case MessageIDs.ChatAboutSomething:
                     return "*I can cook while talking, sure. What do you want to talk about?*";
                 case MessageIDs.NevermindTheChatting:
@@ -698,6 +700,14 @@ namespace giantsummon.Companions
                     return "*Hm... I was going to give someone an item, but it's gone..*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*... Your inventory... [target]... It's full..*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*I will... And I will ensure they never go hungry too..*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*Sorry... No..*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Okay... We'll go back home then.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*I will do that...*";
             }
             return "";
         }
@@ -789,6 +799,7 @@ namespace giantsummon.Companions
             }
             if (GotFood)
             {
+                Vector2 LeaderPos = player.Center;
                 player.GetModPlayer<PlayerMod>().ReceivedFoodFromMinerva = true;
                 if (CountPlayerFood > 10)
                 {
@@ -798,19 +809,29 @@ namespace giantsummon.Companions
                 {
                     player.GetItem(Main.myPlayer, Main.item[Item.NewItem(player.getRect(), ItemToGet, 3, true)]);
                 }
-                foreach(TerraGuardian tg in player.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
+                //Deliver also to other teams close by.
+                for (int i = 0; i < 255; i++)
                 {
-                    if (tg.Active)
+                    Player player2 = Main.player[i];
+                    if (!player2.active)
+                        continue;
+                    if (player2.whoAmI == player.whoAmI || (Math.Abs(player2.Center.X - LeaderPos.X) < 1000 && Math.Abs(player2.Center.Y - LeaderPos.Y) < 800))
                     {
-                        if (tg.Inventory.Where(x => x.buffType == Terraria.ID.BuffID.WellFed).Sum(x => x.stack) <= 10)
+                        foreach (TerraGuardian tg in player2.GetModPlayer<PlayerMod>().GetAllGuardianFollowers)
                         {
-                            if (tg.ID == Minerva && tg.ModID == MainMod.mod.Name && ItemToGet == Terraria.ID.ItemID.GrubSoup)
+                            if (tg.Active)
                             {
-                                tg.GetItem(Terraria.ID.ItemID.BowlofSoup, 3);
-                            }
-                            else
-                            {
-                                tg.GetItem(ItemToGet, 3);
+                                if (tg.Inventory.Where(x => x.buffType == Terraria.ID.BuffID.WellFed).Sum(x => x.stack) <= 10)
+                                {
+                                    if (tg.ID == Minerva && tg.ModID == MainMod.mod.Name && ItemToGet == Terraria.ID.ItemID.GrubSoup)
+                                    {
+                                        tg.GetItem(Terraria.ID.ItemID.BowlofSoup, 3);
+                                    }
+                                    else
+                                    {
+                                        tg.GetItem(ItemToGet, 3);
+                                    }
+                                }
                             }
                         }
                     }

@@ -814,6 +814,8 @@ namespace giantsummon.Companions
                     return "That's bad...";
                 case MessageIDs.GenericThankYou:
                     return "Thanks!";
+                case MessageIDs.GenericNevermind:
+                    return "Forget that then..";
                 case MessageIDs.ChatAboutSomething:
                     return "Want to share some adventure stories? I really like that idea!";
                 case MessageIDs.NevermindTheChatting:
@@ -932,7 +934,7 @@ namespace giantsummon.Companions
                 case MessageIDs.PlayerAtDangerousHealthLevel:
                     return "I can distract them while you recover, [nickname].";
                 case MessageIDs.CompanionHealthAtDangerousLevel:
-                    return "Heh... Hehe... That's not enough... To take me down...";
+                    return "Haha.. That didn't hurt..";
                 case MessageIDs.RunningOutOfPotions:
                     return "Uh oh... I have few potions left.";
                 case MessageIDs.UsesLastPotion:
@@ -990,6 +992,14 @@ namespace giantsummon.Companions
                     return "Hey! Where is the item!";
                 case MessageIDs.DeliveryInventoryFull:
                     return "[target], your inventory is full! I can't give you anything.";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "Sure. I shall take care of them during our trek.";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "I have other things to focus on right now.";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "I could use some sleep now.";
+                case MessageIDs.CommandingChangeOrder:
+                    return "I will do that.";
             }
             return base.GetSpecialMessage(MessageID);
         }

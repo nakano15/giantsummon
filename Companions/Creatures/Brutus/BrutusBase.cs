@@ -59,6 +59,7 @@ namespace giantsummon.Companions
             OneHanded2HWeaponWield = true;
             CallUnlockLevel = 0;
             StopMindingAFK = 0;
+            LeadGroupUnlockLevel = 12;
             VladimirBase.AddCarryBlacklist(Brutus);
 
             PopularityContestsWon = 0;
@@ -1012,6 +1013,8 @@ namespace giantsummon.Companions
                     return "*I have to deny this.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thanks.*";
+                case MessageIDs.GenericNevermind:
+                    return "*Forget it then.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*I may be able to answer, depending on what is It.*";
                 case MessageIDs.NevermindTheChatting:
@@ -1190,6 +1193,14 @@ namespace giantsummon.Companions
                     return "*Weird. Did my inventory changed?*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*It seems like [target] is carrying too much things.*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*I shall lead a group towards victory then.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*I don't want to lead a group right now. The safety of our citizens is my highest priority right now.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Understud. Everyone, take a well earned rest! You deserved it.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*I shall do as you command.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

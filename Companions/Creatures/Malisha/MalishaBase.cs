@@ -853,6 +853,8 @@ namespace giantsummon.Companions
                     return "*No.*";
                 case MessageIDs.GenericThankYou:
                     return "*Yes, you did good. There.*";
+                case MessageIDs.GenericNevermind:
+                    return "*You brought that up and want me to forget? Oh well.. Fine.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*For the last time, I already said that I didn't incinerated... Oh, It's not about that? Well, go ahead then.*";
                 case MessageIDs.NevermindTheChatting:
@@ -1031,6 +1033,14 @@ namespace giantsummon.Companions
                     return "*Did I tried to use the teleport magic on my inventory again?*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*You seems to be carring too much rubbish, [target]. You wont have my item that way.*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*That's such a lovely idea. I like having minions.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*No way. I have better things to do.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Awww.. So sad..*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*Very well, I shall carry on that then.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

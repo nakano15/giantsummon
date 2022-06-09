@@ -643,6 +643,8 @@ namespace giantsummon.Companions
                     return "*[name] shook head.*";
                 case MessageIDs.GenericThankYou:
                     return "*[name] seems very thankful.*";
+                case MessageIDs.GenericNevermind:
+                    return "*[name] asks if you changed your mind about that.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*[name] asks what you want to talk about.*";
                 case MessageIDs.NevermindTheChatting:
@@ -810,6 +812,14 @@ namespace giantsummon.Companions
                     return "*[name] seems to be missing some item on their inventory.*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*[name] tells [target] that can't give them anything while their inventory is full.*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*[name] gladly tells you that will.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*[name] tells you that will not be able to do that.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*[name] is sad about having his group disbanded.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*[name] acknowledges the change of order.*";
                 //Popularity Contest Messages
                 case MessageIDs.PopContestMessage:
                     return "*[name] is asking if you're interessed in voting on the TerraGuardians Popularity Contest.*";

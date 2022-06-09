@@ -463,6 +463,8 @@ namespace giantsummon.Companions
                     return "*NO!*";
                 case MessageIDs.GenericThankYou:
                     return "*THANKS!*";
+                case MessageIDs.GenericNevermind:
+                    return "*NEVERMIND!*";
                 case MessageIDs.ChatAboutSomething:
                     return "*Grrr... whatever. Don't annoy me.*";
                 case MessageIDs.NevermindTheChatting:
@@ -632,6 +634,14 @@ namespace giantsummon.Companions
                     return "*What?! Where is it? The item!*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*Your bag is full, [target]!*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*Perfect! Time to do some mobbing.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*What? No!*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*Everybody, scram!*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*Fine!*";
             }
             return base.GetSpecialMessage(MessageID);
         }

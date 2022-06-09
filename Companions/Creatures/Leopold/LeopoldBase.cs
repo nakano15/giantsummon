@@ -53,6 +53,7 @@ namespace giantsummon.Companions
             SetTerraGuardian();
             MountUnlockLevel = 7;
             CallUnlockLevel = 5;
+            LeadGroupUnlockLevel = 13;
 
             PopularityContestsWon = 0;
             ContestSecondPlace = 0;
@@ -619,6 +620,8 @@ namespace giantsummon.Companions
                     return "*I don't find that good.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thank you! That will help.*";
+                case MessageIDs.GenericNevermind:
+                    return "*Forget that. Nevermind.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*We may chat about anything, but I'm not in the mood for a lecture, right now.*";
                 case MessageIDs.NevermindTheChatting:
@@ -784,6 +787,14 @@ namespace giantsummon.Companions
                     return "*Uh? Where? What? It's gone!*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*Your bag is full, [target].*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*I can do that. That will help me with my researches.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*I have researches to do.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*That was an interesting experience. I hope my group members think the same.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*If you think that's optimal, I will do so then.*";
             }
             return base.GetSpecialMessage(MessageID);
         }

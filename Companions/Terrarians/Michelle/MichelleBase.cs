@@ -26,6 +26,7 @@ namespace giantsummon.Companions
             CanChangeGender = false;
             SetTerrarian();
             CallUnlockLevel = 0;
+            LeadGroupUnlockLevel = 10;
 
             TerrarianInfo.HairStyle = 21;
             TerrarianInfo.SkinVariant = 1;
@@ -414,6 +415,8 @@ namespace giantsummon.Companions
                     return "No way.";
                 case MessageIDs.GenericThankYou:
                     return "Thank you!";
+                case MessageIDs.GenericNevermind:
+                    return "Nevermind.";
                 case MessageIDs.ChatAboutSomething:
                     return "What do you want to know?";
                 case MessageIDs.NevermindTheChatting:
@@ -577,6 +580,14 @@ namespace giantsummon.Companions
                     return "Where's the item I was going to give?";
                 case MessageIDs.DeliveryInventoryFull:
                     return "Your inventory is full, [target].";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "Alright! Lead the TerraGuardians to me.";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "I'd rather not. I like it here.";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "It was fun while it lasted.";
+                case MessageIDs.CommandingChangeOrder:
+                    return "That's how I'll do then.";
             }
             return base.GetSpecialMessage(MessageID);
         }

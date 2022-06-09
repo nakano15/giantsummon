@@ -653,6 +653,8 @@ namespace giantsummon.Companions
                     return M("*No..*", "*No.*");
                 case MessageIDs.GenericThankYou:
                     return M("*I appreciate.*", "*Thank you for this.*");
+                case MessageIDs.GenericNevermind:
+                    return M("*Changed your mind?*", "*Nevermind then!*");
                 case MessageIDs.ChatAboutSomething:
                     return M("*You want to know more about me? Alright, what is your question?*", "*You want to know me? That's getting scarily too intimate, but I will answer your questions.*");
                 case MessageIDs.NevermindTheChatting:
@@ -816,6 +818,14 @@ namespace giantsummon.Companions
                     return M("*I thought I had... Nevermind...*", "*What? My head must not be right, I thought I had... Oh well...*");
                 case MessageIDs.DeliveryInventoryFull:
                     return M("*[target], I can't give you something until you take care of your inventory.*", "*[target]! Clean your inventory, now!*");
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return M("*Very well. I shall carry a group with me then.*", "*I can do that, as long as they help me catch something.*");
+                case MessageIDs.CommandingLeadGroupFail:
+                    return M("*I hardly know you. Why should I?*", "*I preffer to hunt alone.*");
+                case MessageIDs.CommandingDisbandGroup:
+                    return M("*Well, was fun while it lasted.*", "*Perfect. Now I will no longer attract attention.*");
+                case MessageIDs.CommandingChangeOrder:
+                    return M("*I shall change how I lead my group, then.*", "*If that's how you want me to do things, I will do so.*");
                 //Popularity Contest Messages
                 case MessageIDs.PopContestMessage:
                     return M("*Hey, [nickname]. I'll be helping hosting the TerraGuardians Popularity contest, do you plan on participating?*", "*[nickname], the TerraGuardians Popularity contest is up. Are you going to vote for me? I will bite you less harder if you do.*");

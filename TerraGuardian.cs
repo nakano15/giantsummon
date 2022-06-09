@@ -4216,6 +4216,8 @@ namespace giantsummon
                         Main.NewText("You will receive less damage while mounted on " + this.Name + ".");
                     if (FriendshipLevel == Base.MaySellYourLoot)
                         Main.NewText("You can now send " + this.Name + " to the town to sell your loot.");
+                    if (FriendshipLevel == Base.LeadGroupUnlockLevel)
+                        Main.NewText(this.Name + " can now lead a group for you.");
                     if (FriendshipLevel == Base.KnownLevel || FriendshipLevel == Base.FriendsLevel || FriendshipLevel == Base.BestFriendLevel || FriendshipLevel == Base.BestFriendForeverLevel || FriendshipLevel == Base.BuddiesForLife)
                         Main.NewText("Your friendship with " + this.Name + " has been improved.");
                 }
@@ -11543,6 +11545,8 @@ namespace giantsummon
         public void FollowPlayerAI()
         {
             if (GuardingPosition.HasValue || PlayerMounted || (OwnerPos == -1 && !IsCommander) || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
+            if (TalkPlayerID > -1 && Main.netMode == 0)
+                return;
             Player Owner = IsCommander ? Main.player[GetCommanderLeaderID] : Main.player[OwnerPos];
             TerraGuardian LeaderGuardian = PlayerMod.GetPlayerMainGuardian(Owner);
             {

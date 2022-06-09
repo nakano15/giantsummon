@@ -407,6 +407,8 @@ namespace giantsummon.Companions
                     return "*No.*";
                 case MessageIDs.GenericThankYou:
                     return "*Thank you.*";
+                case MessageIDs.GenericNevermind:
+                    return "*Nevermind.*";
                 case MessageIDs.ChatAboutSomething:
                     return "*Do you want to know about something?*";
                 case MessageIDs.NevermindTheChatting:
@@ -588,6 +590,14 @@ namespace giantsummon.Companions
                     return "*Is there a hole in my bag or something? I thought I had an item here.*";
                 case MessageIDs.DeliveryInventoryFull:
                     return "*Clean up your bag, [target], or else I can't give you something.*";
+                case MessageIDs.CommandingLeadGroupSuccess:
+                    return "*I'm a medic, [nickname], but if you think I can lead a group for you, I shall try then.*";
+                case MessageIDs.CommandingLeadGroupFail:
+                    return "*My current role is treating sick and wounded people. I can't lead a group for you.*";
+                case MessageIDs.CommandingDisbandGroup:
+                    return "*I will go back to treating patients then.*";
+                case MessageIDs.CommandingChangeOrder:
+                    return "*I shall change how I lead then.*";
             }
             return base.GetSpecialMessage(MessageID);
         }
