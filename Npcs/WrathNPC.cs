@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria;
 using Microsoft.Xna.Framework;
+using Terraria.ModLoader;
 
 namespace giantsummon.Npcs
 {
@@ -1157,6 +1158,20 @@ namespace giantsummon.Npcs
                 Damage = 20;
                 Defense = 10;
             }
+        }
+
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            if (WrathCanSpawn && !Main.dayTime && !spawnInfo.playerSafe && !spawnInfo.playerInTown && spawnInfo.player.ZoneOverworldHeight &&
+                !NpcMod.HasMetGuardian(GuardianBase.Wrath) && !PlayerMod.PlayerHasGuardian(spawnInfo.player, GuardianBase.Wrath) && !NPC.AnyNPCs(ModContent.NPCType<WrathNPC>()) &&
+                !Main.snowMoon && !Main.pumpkinMoon && !Main.bloodMoon && !spawnInfo.water)
+            {
+                if (Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY].wall == 0)
+                {
+                    return 1f / 64;
+                }
+            }
+            return 0;
         }
 
         public enum Behaviors : byte

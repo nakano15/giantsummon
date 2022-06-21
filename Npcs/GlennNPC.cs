@@ -427,7 +427,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.water && Main.dayTime && spawnInfo.player.townNPCs == 0 && GlennCanSpawn && !NpcMod.HasMetGuardian(GuardianBase.Glenn) && !NpcMod.HasGuardianNPC(GuardianBase.Glenn) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Glenn) && 
+            if (!spawnInfo.water && Main.dayTime && spawnInfo.player.townNPCs == 0 && GlennCanSpawn && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && !NpcMod.HasMetGuardian(GuardianBase.Glenn) && !NpcMod.HasGuardianNPC(GuardianBase.Glenn) && !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianBase.Glenn) && 
                 !NPC.AnyNPCs(ModContent.NPCType<GlennNPC>()))
             {
                 return 1f / 200; //250

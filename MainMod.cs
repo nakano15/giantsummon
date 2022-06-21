@@ -16,7 +16,7 @@ namespace giantsummon
 	{
         public static Texture2D GuardianButtonSlots, GuardianHealthBar, FriendshipHeartTexture, EmotionTexture, ReportButtonTexture, GuardianMouseTexture, EditButtonTexture,
             GuardianInfoIcons, CrownTexture, GuardianStatusIconTexture, HideButtonTexture, GuideArrowTexture, GSI_ForegroundInterfaceTexture, GSI_BackgroundInterfaceTexture,
-            TrustIconsTexture, CompactCompanionInfosTexture, PlayerFlagsTexture;
+            CompactCompanionInfosTexture, PlayerFlagsTexture;
         public static Texture2D EyeTexture;
         public static Texture2D TacticsBarTexture, TacticsIconsTexture;
         public static Texture2D TrappedCatTexture;
@@ -3128,7 +3128,6 @@ namespace giantsummon
                 GSI_BackgroundInterfaceTexture = GetTexture("Interface/gsi_bg");
                 GSI_ForegroundInterfaceTexture = GetTexture("Interface/gsi_fg");
                 ContributorIconTexture = GetTexture("Interface/Contributor_Icon");
-                TrustIconsTexture = GetTexture("Interface/Trust_Icons");
                 CompactCompanionInfosTexture = GetTexture("Interface/CompactCompanionInfo");
             }
             GroupSetup();

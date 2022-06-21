@@ -457,7 +457,7 @@ namespace giantsummon.Npcs
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
             if (!spawnInfo.water && !NPC.AnyNPCs(ModContent.NPCType<VladimirNPC>()) && !NpcMod.HasGuardianNPC(GuardianID) && CanRecruitVladimir &&
-                !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianID) && spawnInfo.player.ZoneJungle &&
+                !PlayerMod.PlayerHasGuardianSummoned(spawnInfo.player, GuardianID) && spawnInfo.player.ZoneJungle && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) &&
                 Main.rand.Next(256 - (int)spawnInfo.player.position.Y / 1024) == 0)
             {
                 return 1;

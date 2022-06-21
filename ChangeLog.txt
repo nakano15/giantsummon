@@ -14,3 +14,15 @@ Companions party system implemented.
 	You will also be able to change active groups through the order hud.
 The Trust system was removed from the mod.
 I made Sardine's low health message be less... Scary..
+Reduced the long description on the option of increasing monsters health based on companion count.
+	Also changed the default value of that option to 0.4, instead of 0.1. (That means extra companions increases monster health by 40%, instead of 10%).
+Alex's Recruit Npc will no longer spawn on places with walls.
+	It will no longer be recognized as a town npc, too.
+Bounty Quests now have a chance of offering Funky Carrots as reward.
+The setting for companions entering knocked out state when health drops to 0 is now enabled by default.
+Brutus recruit npc will now speak directly to anyone in the world when he arrives.
+	He also now requires only 2 town npcs before he can show up, instead of 5.
+Mabel's recruit npc will no longer spawn on places that have no soft ground under them.
+Changed the logic behind a good number of companion recruit npcs spawning logic.
+	They will only either spawn on places without walls, or with at least the minimum of brightness.
+Removed spawn messages of many companions recruit npcs.

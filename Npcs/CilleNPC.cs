@@ -45,7 +45,7 @@ namespace giantsummon.Npcs
             if(TalkTimes == 255)
             {
                 TalkTimes = 0;
-                Main.NewText("A TerraGuardian was spotted " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + "'s position.", MainMod.MysteryCloseColor);
+                //Main.NewText("A TerraGuardian was spotted " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of " + Main.player[Main.myPlayer].name + "'s position.", MainMod.MysteryCloseColor);
             }
             if (Main.netMode < 2 && Main.player[Main.myPlayer].talkNPC == -1)
             {
@@ -448,7 +448,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if(!spawnInfo.playerInTown && Main.dayTime && !Main.eclipse && !NpcMod.HasMetGuardian(GuardianID,GuardianModID) && 
+            if(!spawnInfo.playerInTown && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && Main.dayTime && !Main.eclipse && !NpcMod.HasMetGuardian(GuardianID,GuardianModID) && 
                 !NpcMod.HasGuardianNPC(GuardianID, GuardianModID) && !NPC.AnyNPCs(ModContent.NPCType<CilleNPC>()) && CanSpawn() &&
                 Main.moonPhase != 0 && Main.moonPhase != 4)
             {

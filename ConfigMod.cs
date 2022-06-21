@@ -81,9 +81,9 @@ namespace giantsummon
         [Tooltip("To make the mod still be fun to play, there is a minor damage reduction applied to everyone when having multiple companions. Disable this if the mod gets unbearable or way too harder for you to play.")]
         public bool DisableDamageReduction { get { return MainMod.DisableDamageReductionByNumberOfCompanions; } set { MainMod.DisableDamageReductionByNumberOfCompanions = value; } }
 
-        [Label("How much health each extra companion will increase on the monsters?")]
+        [Label("Health increase per companion on monsters? (decimal)")]
         [Tooltip("Only available on singleplayer. Having more than 1 guardian following you will increase the max health by an extra of this value for each extra companion. Set to 0 to disable.")]
-        [DefaultValue(0.1f)]
+        [DefaultValue(0.4f)]
         public float MobHealthBoost { get { return MainMod.MobHealthBoostPercent; } set { MainMod.MobHealthBoostPercent = value; } }
 
         [Label("Increase spawn rate and max spawns based on number of companions?")]
@@ -177,6 +177,7 @@ namespace giantsummon
 
         [Label("Companions can get Knocked Out upon defeat?")]
         [Tooltip("Makes so companions enter a dying state when hp drops to 0. They wont be able to do anything in this state, and will be hurt by foes and debuffs, but can be revived by nearby allies, includding you.")]
+        [DefaultValue(true)]
         public bool GuardianKO { get { return MainMod.GuardiansGetKnockedOutUponDefeat; } set { MainMod.GuardiansGetKnockedOutUponDefeat = value; } }
 
         [Label("Companions can't die when health drops to 0 on Knocked Out state?")]

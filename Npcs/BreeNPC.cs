@@ -85,7 +85,7 @@ namespace giantsummon.Npcs
                 {
                     player = Main.player[NearestPlayer];
                     npc.target = NearestPlayer;
-                    Main.NewText("A White Cat appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - player.Center) + " of " + player.name + " position.", MainMod.MysteryCloseColor);
+                    //Main.NewText("A White Cat appeared to the " + GuardianBountyQuest.GetDirectionText(npc.Center - player.Center) + " of " + player.name + " position.", MainMod.MysteryCloseColor);
                 }
                 JustSpawned = false;
             }
@@ -758,7 +758,7 @@ namespace giantsummon.Npcs
                 }
                 if (!PlayerInRange)
                 {
-                    Main.NewText("The White Cat resumed the search for her husband.", Color.OrangeRed);
+                    //Main.NewText("The White Cat resumed the search for her husband.", Color.OrangeRed);
                     npc.active = false;
                     npc.life = 0;
                 }
@@ -929,7 +929,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.water && Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
+            if (!spawnInfo.water && NpcMod.RecruitNpcSpawnConditionCheck(spawninfo) && Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
             {
                 return (float)(Main.time - 27000) / 432000 * 0.333f;
             }

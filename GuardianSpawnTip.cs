@@ -57,7 +57,7 @@ namespace giantsummon
                     if (Main.npc[n].active && Main.npc[n].townNPC)
                         TownNpcCount++;
                 }
-                if (TownNpcCount >= 5)
+                if (TownNpcCount >= Npcs.BrutusNPC.TownNpcsForBrutusToBeginAppearing)
                 {
                     Messages.Add("*I've been hearing stories of a Royal Guard from Ether Realm who lost his job, and is now roaming through worlds looking to work as a bodyguard. I think there's a chance that he may be appearing here.*");
                 }

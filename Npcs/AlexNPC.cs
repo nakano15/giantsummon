@@ -51,7 +51,7 @@ namespace giantsummon.Npcs
             npc.aiStyle = -1;
             npc.rarity = 1;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = true;
-            npc.townNPC = true;
+            npc.townNPC = false;
             npc.friendly = true;
             if (npc.GetGlobalNPC<NpcMod>().mobType > MobTypes.Normal)
                 npc.GetGlobalNPC<NpcMod>().mobType = MobTypes.Normal;

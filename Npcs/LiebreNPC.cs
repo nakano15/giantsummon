@@ -41,7 +41,7 @@ namespace giantsummon.Npcs
             if (JustSpawned)
             {
                 JustSpawned = false;
-                Main.NewText("The air suddenly grows cold... ", MainMod.MysteryCloseColor);
+                //Main.NewText("The air suddenly grows cold... ", MainMod.MysteryCloseColor);
             }
             if (DialogueStep > 0 && Main.LocalPlayer.talkNPC != npc.whoAmI)
                 DialogueStep = 0;

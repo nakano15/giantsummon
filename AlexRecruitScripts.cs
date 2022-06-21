@@ -107,13 +107,17 @@ namespace giantsummon
                         }
                     }
                     if (InvalidTile) break;
+
                     if (FloorCount == 1)
                     {
                         break;
                     }
                     else if (FloorCount == 2)
                     {
-                        GroundBellow = true;
+                        if (Main.tile[PositionX, PositionY - 1].wall == 0)
+                        {
+                            GroundBellow = true;
+                        }
                         break;
                     }
                 }

@@ -226,7 +226,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.water && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && spawnInfo.player.ZoneMeteor && !NPC.AnyNPCs(ModContent.NPCType<SmellyNPC>()))
+            if (!spawnInfo.water && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && spawnInfo.player.ZoneMeteor && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && !NPC.AnyNPCs(ModContent.NPCType<SmellyNPC>()))
             {
                 return 1f / 6;
             }

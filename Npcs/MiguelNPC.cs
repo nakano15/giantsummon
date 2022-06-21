@@ -293,8 +293,8 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if(CanSpawnMe() && !NPC.AnyNPCs(ModContent.NPCType<MiguelNPC>()) && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID) && Main.dayTime && Main.invasionSize == 0 && !Main.eclipse && 
-                spawnInfo.player.ZoneOverworldHeight && !Main.slimeRain)
+            if(CanSpawnMe() && Main.dayTime && Main.invasionSize == 0 && !Main.eclipse && 
+                spawnInfo.player.ZoneOverworldHeight && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && !Main.slimeRain && !NPC.AnyNPCs(ModContent.NPCType<MiguelNPC>()) && !NpcMod.HasGuardianNPC(GuardianID) && !NpcMod.HasMetGuardian(GuardianID))
             {
                 return 1f / 200;
             }

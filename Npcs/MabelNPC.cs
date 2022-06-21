@@ -90,6 +90,28 @@ namespace giantsummon.Npcs
                 int TileX = (int)(Main.player[Main.myPlayer].Center.X / 16) + Main.rand.Next(-10, 11), TileY = (int)(Main.player[Main.myPlayer].Center.Y / 16);
                 if (Main.tile[TileX, TileY].active() && Main.tileSolid[Main.tile[TileX, TileY].type])
                     return;
+                while(!Main.tile[TileX, TileY + 1].active() || !Main.tileSolid[Main.tile[TileX, TileY + 1].type])
+                {
+                    TileY++;
+                    if (TileY >= Main.worldSurface + 20)
+                        return;
+                }
+                switch(Main.tile[TileX, TileY + 1].type)
+                {
+                    default:
+                        return;
+                    case Terraria.ID.TileID.Dirt:
+                    case Terraria.ID.TileID.ClayBlock:
+                    case Terraria.ID.TileID.Sand:
+                    case Terraria.ID.TileID.Mud:
+                    case Terraria.ID.TileID.Grass:
+                    case Terraria.ID.TileID.CorruptGrass:
+                    case Terraria.ID.TileID.FleshGrass:
+                    case Terraria.ID.TileID.HallowedGrass:
+                    case Terraria.ID.TileID.JungleGrass:
+                    case Terraria.ID.TileID.MushroomGrass:
+                        break;
+                }
                 for (int y = 1; y < 65; y++)
                 {
                     int ty = TileY - y;

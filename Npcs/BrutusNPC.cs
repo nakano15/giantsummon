@@ -34,7 +34,7 @@ namespace giantsummon.Npcs
         public const byte SCENE_PLAYERWINS = 1,
             SCENE_PLAYERCHEATS = 2;
         private int LeftArmFrame = -1, RightArmFrame = -1, BodyFrame = -1;
-        public const int ProgressCountForBrutusToAppear = 3;
+        public const int TownNpcsForBrutusToBeginAppearing = 2;
 
         public BrutusNPC() : base(6, "")
         {
@@ -124,10 +124,10 @@ namespace giantsummon.Npcs
                 if (Main.npc[n].active && Main.npc[n].townNPC)
                     NpcCount++;
             }
-            if (NpcCount < 5)
+            if (NpcCount < TownNpcsForBrutusToBeginAppearing)
                 return;
             int SpawnChance = 20 - ChanceCounter() / 2;
-            if (SpawnChance > 0 && Main.rand.Next(SpawnChance) > (float)(NpcCount - 5) / 2)
+            if (SpawnChance > 0 && Main.rand.Next(SpawnChance) > (NpcCount - TownNpcsForBrutusToBeginAppearing) * 0.5f)
             {
                 return;
             }
@@ -154,7 +154,7 @@ namespace giantsummon.Npcs
             int SpawnPosX = (int)Main.npc[PickedNPC].Center.X,
                 SpawnPosY = (int)(Main.npc[PickedNPC].position.Y + Main.npc[PickedNPC].height);
             int npcPos = NPC.NewNPC(SpawnPosX, SpawnPosY, ModContent.NPCType<BrutusNPC>());
-            string Text = "A Lion TerraGuardian has came from the Ether Realm looking for someone to hire him as bodyguard.";
+            string Text = "<Brutus> *If someone is interessed in having a body guard, come see me near "+Main.npc[PickedNPC].GivenOrTypeName+".*";
             if (Main.netMode == 0)
                 Main.NewText(Text, MainMod.MysteryCloseColor);
             else
@@ -175,7 +175,7 @@ namespace giantsummon.Npcs
                 npc.direction = Main.player[Main.myPlayer].Center.X < npc.Center.X ? -1 : 1;
             if (!WarnedAboutBrutus)
             {
-                Main.NewText("A Lion TerraGuardian is still visiting your world.", MainMod.MysteryCloseColor);
+                Main.NewText("<Brutus> I'm still looking for someone to hire me as a bodyguard. Find me by your towns if you want to hire me.", MainMod.MysteryCloseColor);
                 WarnedAboutBrutus = true;
             }
             if (SteelTestingTime > 0)

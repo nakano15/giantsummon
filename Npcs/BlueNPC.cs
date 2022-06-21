@@ -165,7 +165,7 @@ namespace giantsummon.Npcs
                     {
                         npc.direction = -1;
                     }
-                    Main.NewText("There's something on the campfire.", MainMod.MysteryCloseColor);
+                    //Main.NewText("There's something on the campfire.", MainMod.MysteryCloseColor);
                     AiValue = 1;
                 }
                 float CampfireX = BonfireX * 16 + 8;

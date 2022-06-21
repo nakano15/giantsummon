@@ -937,7 +937,7 @@ namespace giantsummon
                                 //    Main.npc[NpcPos].GetGlobalNPC<NpcMod>().mobType = MobTypes.Elite;
                             }
                             TargetMonsterSpawnPosition = NpcPos;
-                            Microsoft.Xna.Framework.Vector2 Direction = Main.npc[TargetMonsterSpawnPosition].Center - Main.player[Main.myPlayer].Center;
+                            Vector2 Direction = Main.npc[TargetMonsterSpawnPosition].Center - Main.player[Main.myPlayer].Center;
                             string DirectionText = GetDirectionText(Direction);
                             Main.NewText(TargetFullName + " has appeared to the " + DirectionText + "!", Color.OrangeRed);
                             return;
@@ -947,7 +947,7 @@ namespace giantsummon
             }
         }
 
-        public static string GetDirectionText(Microsoft.Xna.Framework.Vector2 Direction)
+        public static string GetDirectionText(Vector2 Direction)
         {
             Direction.Normalize();
             bool CountVerticalDiference = Math.Abs(Direction.Y) >= 0.33f, CountHorizontalDiference = Math.Abs(Direction.X) >= 0.33f;
@@ -1036,7 +1036,7 @@ namespace giantsummon
             {
                 foreach (WorldMod.GuardianBuildingInfo.FurnitureInfo fi in townstate.HouseInfo.furnitures)
                 {
-                    if (fi.FurnitureID == Terraria.ID.TileID.Signs || fi.FurnitureID == Terraria.ID.TileID.AnnouncementBox)
+                    if (fi.FurnitureID == TileID.Signs || fi.FurnitureID == TileID.AnnouncementBox)
                     {
                         SignID = Sign.ReadSign(fi.FurnitureX, fi.FurnitureY);
                         if (SignID > -1)
@@ -2034,7 +2034,13 @@ namespace giantsummon
                 }
                 Rewards.Add(i);
             }
-            if (Main.rand.NextDouble() < 0.1 * RewardMod)
+            if (Main.rand.NextDouble() < 0.667f * RewardMod)
+            {
+                i = new Item();
+                i.SetDefaults(ItemID.FuzzyCarrot);
+                Rewards.Add(i);
+            }
+                if (Main.rand.NextDouble() < 0.1 * RewardMod)
             {
                 i = new Item();
                 switch (Main.rand.Next(3))

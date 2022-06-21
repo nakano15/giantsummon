@@ -159,15 +159,16 @@ namespace giantsummon.Npcs
                     return;
                 }
             }
+            Idle = true;
             npc.dontTakeDamage = npc.dontTakeDamageFromHostiles = npc.dontCountMe = true;
             base.AI();
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.water && Main.dayTime && !NpcMod.HasGuardianNPC(0) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 0) && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<RococoNPC>()))
+            if (!spawnInfo.water && Main.dayTime && !NpcMod.HasGuardianNPC(0) && !PlayerMod.PlayerHasGuardian(Main.player[Main.myPlayer], 0) && Main.time > 27000 && Main.time < 48600 && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && !NPC.AnyNPCs(ModContent.NPCType<RococoNPC>()))
             {
-                return (float)(Main.time - 27000) / 432000 * 0.5f;
+                return (float)(Main.time - 27000) * (1f / 432000 * 0.5f);
             }
             return 0;
         }

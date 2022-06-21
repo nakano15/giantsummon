@@ -126,6 +126,11 @@ namespace giantsummon
             }
         }
 
+        public static bool RecruitNpcSpawnConditionCheck(NPCSpawnInfo spawninfo)
+        {
+            return Main.tile[spawninfo.spawnTileX, spawninfo.spawnTileY].wall == 0 || Lighting.Brightness(spawninfo.spawnTileX, spawninfo.spawnTileY) >= 0.3f;
+        }
+
         private void UpdateSoulDrain(NPC npc)
         {
             const int MaxDistance = 1100;
@@ -674,19 +679,6 @@ namespace giantsummon
                     return tg.Name;
             }
             return "";
-        }
-
-        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
-        {
-            if (Npcs.WrathNPC.WrathCanSpawn && !Main.dayTime && !spawnInfo.playerSafe && !spawnInfo.playerInTown && spawnInfo.player.ZoneOverworldHeight && 
-                !NpcMod.HasMetGuardian(GuardianBase.Wrath) && !PlayerMod.PlayerHasGuardian(spawnInfo.player, GuardianBase.Wrath) && !NPC.AnyNPCs(ModContent.NPCType<Npcs.WrathNPC>()) && 
-                !Main.snowMoon && !Main.pumpkinMoon && !Main.bloodMoon && !spawnInfo.water)
-            {
-                if (Main.tile[spawnInfo.spawnTileX, spawnInfo.spawnTileY].wall == 0)
-                {
-                    pool.Add(ModContent.NPCType<Npcs.WrathNPC>(), 1f / 64);
-                }
-            }
         }
 
         public static void MaskGuardianPositionToPlayers(NPC npc)
