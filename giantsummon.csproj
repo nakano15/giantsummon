@@ -181,7 +181,6 @@
     <Compile Include="FurnitureTypes.cs" />
     <Compile Include="Group.cs" />
     <Compile Include="GuardianArmorAndSetEffects.cs" />
-    <Compile Include="GuardianAttackTypeInfo.cs" />
     <Compile Include="GuardianBaseContainer.cs" />
     <Compile Include="GuardianBountyQuest.cs" />
     <Compile Include="GuardianCommonStatus.cs" />
@@ -251,6 +250,7 @@
     <Compile Include="Npcs\GuardianActorNPC.cs" />
     <Compile Include="Npcs\LeopoldNPC.cs" />
     <Compile Include="Npcs\LiebreNPC.cs" />
+    <Compile Include="Npcs\CastellaSpawnerNpc.cs" />
     <Compile Include="Npcs\LunaSpawnerNPC.cs" />
     <Compile Include="Npcs\MabelNPC.cs" />
     <Compile Include="Npcs\MalishaNPC.cs" />

@@ -119,6 +119,20 @@ namespace giantsummon
             }
         }
 
+        public static void SkipTimeUntilMorning()
+        {
+            int SkipValue = 0;
+            if (Main.dayTime)
+            {
+                SkipValue += (int)(24 * 3600 - Main.time) / 3600 + 1;
+            }
+            else
+            {
+                SkipValue += (int)(9 * 3600 - Main.time) / 3600 + 1;
+            }
+            SkipTime(SkipValue + Main.rand.NextFloat() * 2);
+        }
+
         public static void SkipTime(float Time)
         {
             Main.time += Time * 3600;

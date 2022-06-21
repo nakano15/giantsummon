@@ -26,3 +26,7 @@ Mabel's recruit npc will no longer spawn on places that have no soft ground unde
 Changed the logic behind a good number of companion recruit npcs spawning logic.
 	They will only either spawn on places without walls, or with at least the minimum of brightness.
 Removed spawn messages of many companions recruit npcs.
+The Ghost Fox Guardian will no longer kick you out of the game.
+	She will now instead cause your character to blackout.
+	Upon entering blackout state, the character will be on the downed state, until they recover.
+	Hostile npcs around are deleted.

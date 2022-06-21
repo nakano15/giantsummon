@@ -155,6 +155,30 @@ namespace giantsummon
         private static string CompanionFaceJSModID = "";
         public static Color SkillUpColor = new Color(132, 208, 192), MysteryCloseColor = new Color(152, 90, 214), BirthdayColor = new Color(112, 148, 192), 
             RecruitColor = Color.CornflowerBlue, BountyProgressUpdate = Color.PaleGreen;
+        private static int BlackoutTime = 0;
+        private const int MaxBlackoutTime = 15 * 60;
+
+        public static bool BlackedOut { get { return BlackoutTime > 0; } }
+
+        public static void UpdateBlackout()
+        {
+            if(BlackoutTime > 0)
+                BlackoutTime--;
+        }
+
+        public static void DoBlackoutPlayer()
+        {
+            if (Main.netMode > 0)
+                return;
+            BlackoutTime = MaxBlackoutTime;
+            for(int n = 0; n < 200; n++)
+            {
+                if(Main.npc[n].active && !Main.npc[n].friendly)
+                {
+                    Main.npc[n].active = false;
+                }
+            }
+        }
 
         public static void TriggerAlexJS()
         {
@@ -998,6 +1022,7 @@ namespace giantsummon
 
         public override void MidUpdatePlayerNPC()
         {
+            UpdateBlackout();
             GuardianBountyQuest.Update();
             NemesisFadeEffect++;
             if (NemesisFadeEffect >= NemesisFadingTime)
@@ -1091,10 +1116,6 @@ namespace giantsummon
             }
             if (!Main.gameMenu && !Main.gamePaused)
                 GuardianShopHandler.UpdateShops();
-            if (GuardianMood.MoodUpdateDelay == 0)
-                GuardianMood.MoodUpdateDelay += 9;
-            else
-                GuardianMood.MoodUpdateDelay--;
             if(Main.netMode < 2 && !Main.gameMenu)
             {
                 if (Main.player[Main.myPlayer].chatOverhead.timeLeft > LastChatTime)
@@ -1368,6 +1389,15 @@ namespace giantsummon
             return p1.X < p2.X + p2width && p2.X < p1.X + p1width && p1.Y > p2.Y + p2height && p2.Y > p1.Y + p1height;
         }
 
+        public static void DrawBlackoutInterface()
+        {
+            Color color = Color.Black;
+            float Opacity = 1.5f * (BlackoutTime * (1f /MaxBlackoutTime));
+            if (Opacity < 1)
+                color *= Opacity;
+            Main.spriteBatch.Draw(Main.blackTileTexture, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), color);
+        }
+
         public static bool DrawDownedInterface()
         {
             //Add a script for when the player is controlling a guardian, instead.
@@ -1441,6 +1471,7 @@ namespace giantsummon
                     }
                 }
             }
+            DrawBlackoutInterface();
             return true;
         }
 

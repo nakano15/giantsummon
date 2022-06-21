@@ -929,7 +929,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if (!spawnInfo.water && NpcMod.RecruitNpcSpawnConditionCheck(spawninfo) && Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
+            if (!spawnInfo.water && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && Main.dayTime && !NpcMod.HasGuardianNPC(7) && !NpcMod.HasMetGuardian(7) && BreeMaySpawn && Main.time > 27000 && Main.time < 48600 && !NPC.AnyNPCs(ModContent.NPCType<BreeNPC>()))
             {
                 return (float)(Main.time - 27000) / 432000 * 0.333f;
             }

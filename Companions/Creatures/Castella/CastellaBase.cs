@@ -12,7 +12,7 @@ namespace giantsummon.Companions
     public class CastellaBase : GuardianBase
     {
         private const string HairBackTextureID = "hairback",HeadWerewolfTextureID = "headwere";
-        private const byte MetamorphosisActionID = 0;
+        private const byte MetamorphosisActionID = 0, HuntingActionID = 1;
 
         public CastellaBase()
         {
@@ -274,6 +274,10 @@ namespace giantsummon.Companions
             if (data.LastWereform != IsWerewolf)
             {
                 guardian.StartNewGuardianAction(new CastellaMetamorphosis(), MetamorphosisActionID, true);
+            }
+            if (!guardian.DoAction.InUse)
+            {
+                guardian.StartNewGuardianAction(new WereHuntingAction(), HuntingActionID, true);
             }
             data.LastWereform = IsWerewolf;
         }
@@ -847,6 +851,7 @@ namespace giantsummon.Companions
 
         public static bool OnWerewolfForm(TerraGuardian tg)
         {
+            return true; //for debug
             if (tg.Data is CastellaData)
             {
                 CastellaData data = (CastellaData)tg.Data;

@@ -131,6 +131,19 @@ namespace giantsummon
             return Main.tile[spawninfo.spawnTileX, spawninfo.spawnTileY].wall == 0 || Lighting.Brightness(spawninfo.spawnTileX, spawninfo.spawnTileY) >= 0.3f;
         }
 
+        public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+        {
+            if (MainMod.BlackedOut)
+            {
+                pool.Clear();
+                return;
+            }
+            /*if(Main.rand.Next(5) == 0 && !NpcMod.HasGuardianNPC(GuardianBase.Castella))
+            {
+                NpcMod.SpawnGuardianNPC(spawnInfo.spawnTileX * 16, spawnInfo.spawnTileY * 16, GuardianBase.Castella);
+            }*/
+        }
+
         private void UpdateSoulDrain(NPC npc)
         {
             const int MaxDistance = 1100;
@@ -167,6 +180,22 @@ namespace giantsummon
                         }
                     }
                 }
+            }
+        }
+
+        public static void DespawnGuardianNPC(TerraGuardian tg)
+        {
+            DespawnGuardianNPC(tg.ID, tg.ModID);
+        }
+
+        public static void DespawnGuardianNPC(int ID, string ModID = "")
+        {
+            if (ModID == "")
+                ModID = MainMod.mod.Name;
+            for(int i = 0; i < WorldMod.GuardianTownNPC.Count; i++)
+            {
+                if (WorldMod.GuardianTownNPC[i].MyID.IsSameID(ID, ModID))
+                    WorldMod.GuardianTownNPC.RemoveAt(i);
             }
         }
 

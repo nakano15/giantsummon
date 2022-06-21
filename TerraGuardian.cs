@@ -875,7 +875,6 @@ namespace giantsummon
         public int LastUsedSummonItem = 0;
         public float OffhandRotation = 0f;
         public ItemUseTypes ItemUseType = ItemUseTypes.HeavyVerticalSwing;
-        public Dictionary<string, GuardianAttackTypeInfo> CombatTypeInfo = new Dictionary<string, GuardianAttackTypeInfo>();
         public float MeleeDamageMultiplier = 1, RangedDamageMultiplier = 1, MagicDamageMultiplier = 1, SummonDamageMultiplier = 1, NeutralDamageMultiplier = 1f;
         public float MeleeKnockback = 1f, RangedKnockback = 1f;
         public float ShotSpeedMult = 1f;
@@ -2583,13 +2582,6 @@ namespace giantsummon
             this.NpcsSpotted = NpcsSpotted;
             this.PlayersSpotted = PlayersSpotted;
             this.GuardiansSpotted = GuardiansSpotted;
-        }
-
-        public GuardianAttackTypeInfo GetCombatInfo(string AttackTypeName)
-        {
-            if (!CombatTypeInfo.ContainsKey(AttackTypeName))
-                CombatTypeInfo.Add(AttackTypeName, new GuardianAttackTypeInfo());
-            return CombatTypeInfo[AttackTypeName];
         }
 
         public static bool IsBlacklisted(TerraGuardian guardian)
@@ -10379,6 +10371,8 @@ namespace giantsummon
                 if (HasBuff(ModContent.BuffType<giantsummon.Buffs.Injury>()))
                     LifeMaxValue = 0.25f;
                 HP += (int)(MHP * LifeMaxValue);
+                if (HP > MHP * 0.5f)
+                    HP = (int)(MHP * 0.5f);
                 if (HP <= 0 || HasBuff(ModContent.BuffType<giantsummon.Buffs.HeavyInjury>()))
                 {
                     if (MainMod.GuardiansDontDiesAfterDownedDefeat || HasFlag(GuardianFlags.CantDie))
@@ -17231,6 +17225,29 @@ namespace giantsummon
                     StuckTimer++;
                 StuckTimerChanged = true;
             }
+        }
+
+        public void TeleportHome()
+        {
+            int HouseX = -1, HouseY = -1;
+            WorldMod.GuardianTownNpcState TownNpcInfo = GetTownNpcInfo;
+            if (TownNpcInfo != null)
+            {
+                if (!TownNpcInfo.Homeless)
+                {
+                    HouseX = TownNpcInfo.HomeX * 16;
+                    HouseY = TownNpcInfo.HomeY * 16;
+                }
+                else
+                {
+                    HouseX = (int)Position.X;
+                    HouseY = (int)Position.Y;
+                }
+            }
+            Position.X = HouseX;
+            Position.Y = HouseY;
+            SetFallStart();
+            IdleActionTime = 1;
         }
 
         public void TeleportToGuardedPosition()

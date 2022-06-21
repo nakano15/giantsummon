@@ -320,11 +320,12 @@ namespace giantsummon.Npcs
                             if (NPC.downedPlantBoss)
                                 CurseIDs.Add(ModContent.BuffType<Buffs.GhostFoxHaunts.ConstructHaunt>());
                             player.AddBuff(CurseIDs[Main.rand.Next(CurseIDs.Count)], 5);
-                            WorldMod.SkipTime(Main.rand.Next(40, 85) * 0.1f);
                             //player.GetModPlayer<PlayerMod>().EnterDownedState(true);
                             if (player.statLife == 1)
                                 player.statLife++;
                             player.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(" didn't survived the haunt..."), 1, 0, false, true, false);
+                            player.GetModPlayer<PlayerMod>().EnterDownedState(true);
+                            player.statLife = 1;
                             /*for (int n = 0; n < 200; n++)
                             {
                                 if (Main.npc[n].active && !Main.npc[n].friendly)
@@ -332,7 +333,12 @@ namespace giantsummon.Npcs
                                     Main.npc[n].active = false;
                                 }
                             }*/
-                            WorldGen.SaveAndQuit();
+                            MainMod.DoBlackoutPlayer();
+                            WorldMod.SkipTime(Main.rand.Next(40, 85) * 0.1f);
+                            //WorldMod.SkipTimeUntilMorning();
+                            npc.active = false;
+                            return;
+                            //WorldGen.SaveAndQuit();
                         }
                     }
                 }
@@ -361,6 +367,13 @@ namespace giantsummon.Npcs
                 (spawnInfo.player.position.Y >= Main.worldSurface * 16)) && !spawnInfo.playerSafe && !spawnInfo.playerInTown && CanGhostFoxSpawn(spawnInfo.player) && 
                 !NpcMod.HasMetGuardian(16) && !NpcMod.HasGuardianNPC(16) && !NPC.AnyNPCs(npc.type))
             {
+                for(int n = 0; n < 200; n++)
+                {
+                    if(Main.npc[n].active && Terraria.ID.NPCID.Sets.TechnicallyABoss[n])
+                    {
+                        return 0;
+                    }
+                }
                 return GetSpawnRate;
             }
             return 0f;

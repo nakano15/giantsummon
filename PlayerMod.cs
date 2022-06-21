@@ -1867,6 +1867,8 @@ namespace giantsummon
                     LifeMaxValue = 0.25f;
                 }
                 player.statLife += (int)(player.statLifeMax2 * LifeMaxValue);
+                if (player.statLife > player.statLifeMax2 * 0.5f)
+                    player.statLife = (int)(player.statLifeMax2 * 0.5f);
             }
             if (player.mount.Active)
                 player.mount.Dismount(player);
