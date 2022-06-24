@@ -152,6 +152,11 @@ namespace giantsummon
             //GetCompanionDialogue
             GetDefaultOptions();
             string Message = "";
+            string ActionMessage = "";
+            if (tg.DoAction.InUse)
+            {
+                ActionMessage = tg.DoAction.ModifyDialogue(tg, Options);
+            }
             if (tg.Base.InvalidGuardian)
             {
                 Message = "(Your memories of it are fragmented, so you can't see its true form, neither allow it to speak with you.)\nGuardian ID: " + tg.ID + ", Guardian Mod ID: " + tg.ModID + ".\nIf this isn't related to a mod you uninstalled, send a screenshot of this to the mod developer.";
@@ -167,7 +172,7 @@ namespace giantsummon
             }
             else
             {
-                if (!tg.IsSleeping && ShowImportantMessages())
+                if (!tg.IsSleeping && ActionMessage == "" && ShowImportantMessages())
                     return;
                 if (!tg.IsSleeping && tg.ComfortPoints >= tg.MaxComfortExp)
                 {
@@ -216,6 +221,8 @@ namespace giantsummon
             {
                 Message = "(Seems to be under a heavy sleep.)";
             }
+            if (ActionMessage != "")
+                Message = ActionMessage;
             SetDialogue(Message, tg);
         }
 

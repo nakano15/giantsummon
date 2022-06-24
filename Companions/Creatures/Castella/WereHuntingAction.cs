@@ -11,11 +11,13 @@ namespace giantsummon.Companions.Creatures.Castella
 {
     public class WereHuntingAction : GuardianActions
     {
+        private TerraGuardian guardian;
         private TerraGuardian.TargetTypes VictimType = TerraGuardian.TargetTypes.Player;
         private int VictimID = -1;
 
         public override void Update(TerraGuardian guardian) //Add a overrideable method for custom dialogues.
         {
+            this.guardian = guardian;
             bool IsWere = CastellaBase.OnWerewolfForm(guardian);
             bool LookForVictim = false;
             switch (Step)
@@ -39,6 +41,8 @@ namespace giantsummon.Companions.Creatures.Castella
                     }
                     break;
                 case 200:
+                case 201:
+                case 202:
                     {
                         IgnoreCombat = true;
                         AvoidItemUsage = true;
@@ -90,40 +94,47 @@ namespace giantsummon.Companions.Creatures.Castella
                                     Victim.velocity = Vector2.Zero;
                                     Victim.fallStart = (int)(Victim.position.Y * (1f / 16));
                                     Victim.AddBuff(Terraria.ID.BuffID.Cursed, 5);
-                                    if (Time == 120)
+                                    if(guardian.TalkPlayerID > -1)
                                     {
-                                        if (Victim.statLife == 1)
-                                            Victim.statLife++;
-                                        if(!pm.KnockedOut)Victim.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Victim.name + " couldn't endure the bite."), 1, 0);
-                                        pm.EnterDownedState(true);
-                                        Victim.statLife = 1;
-                                        Victim.Bottom = guardian.Position;
-                                        if(Main.netMode == 0 && Victim.whoAmI == Main.myPlayer)
-                                        {
-                                            foreach(TerraGuardian tg in pm.GetAllGuardianFollowers)
-                                            {
-                                                if (tg.Active)
-                                                    tg.EnterDownedState();
-                                            }
-                                            if (guardian.IsTownNpc)
-                                            {
-                                                guardian.TeleportHome();
-                                            }
-                                            else
-                                            {
-                                                if(Main.rand.Next(3) != 0)
-                                                {
-                                                    NpcMod.DespawnGuardianNPC(guardian);
-                                                }
-                                            }
-                                            MainMod.DoBlackoutPlayer();
-                                            WorldMod.SkipTimeUntilMorning();
-                                            return;
-                                        }
+                                        ChangeStep(201);
                                     }
-                                    if (Time >= 150)
+                                    if (Step == 200 || Step == 202)
                                     {
-                                        ChangeStep(1);
+                                        if (Time == 90)
+                                        {
+                                            if (Victim.statLife == 1)
+                                                Victim.statLife++;
+                                            if (!pm.KnockedOut) Victim.Hurt(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(Victim.name + " couldn't endure the bite."), 1, 0);
+                                            pm.EnterDownedState(true);
+                                            Victim.statLife = 1;
+                                            Victim.Bottom = guardian.Position;
+                                            if (Main.netMode == 0 && Victim.whoAmI == Main.myPlayer)
+                                            {
+                                                foreach (TerraGuardian tg in pm.GetAllGuardianFollowers)
+                                                {
+                                                    if (tg.Active)
+                                                        tg.EnterDownedState();
+                                                }
+                                                if (guardian.IsTownNpc)
+                                                {
+                                                    guardian.TeleportHome();
+                                                }
+                                                else
+                                                {
+                                                    if (Main.rand.Next(3) != 0)
+                                                    {
+                                                        NpcMod.DespawnGuardianNPC(guardian);
+                                                    }
+                                                }
+                                                MainMod.DoBlackoutPlayer();
+                                                WorldMod.SkipTimeUntilMorning();
+                                                return;
+                                            }
+                                        }
+                                        if (Time >= 120)
+                                        {
+                                            ChangeStep(1);
+                                        }
                                     }
                                 }
                                 break;
@@ -170,10 +181,10 @@ namespace giantsummon.Companions.Creatures.Castella
         public override void UpdateAnimation(TerraGuardian guardian, ref bool UsingLeftArmAnimation, ref bool UsingRightArmAnimation)
         {
             bool IsWere = CastellaBase.OnWerewolfForm(guardian);
-            if (Step == 200)
+            if (Step >= 200 && Step <= 202)
             {
                 int Frame = IsWere ? 41 : 12;
-                if (Time >= 30)
+                if (Step != 201 && Time >= 30)
                     Frame--;
                 if (!UsingLeftArmAnimation) guardian.LeftArmAnimationFrame = Frame;
                 if (!UsingRightArmAnimation) guardian.RightArmAnimationFrame = Frame;
@@ -181,7 +192,7 @@ namespace giantsummon.Companions.Creatures.Castella
                 {
                     guardian.BodyAnimationFrame = Frame;
                 }
-                if(Time >= 90 && Time < 120)
+                if(Step != 201 && Time >= 60 && Time < 90)
                 {
                     guardian.BodyAnimationFrame = 62;
                 }
@@ -195,7 +206,102 @@ namespace giantsummon.Companions.Creatures.Castella
 
         public override bool? ModifyGuardianHostile(TerraGuardian guardian, TerraGuardian guardian2)
         {
-            return Step > 0;
+            return Step > 0 && Step != 201;
         }
+
+        #region Dialogues
+
+        private void ClearOptions()
+        {
+            GuardianMouseOverAndDialogueInterface.Options.Clear();
+        }
+
+        private void AddOption(string Mes, Action NextBranch)
+        {
+            GuardianMouseOverAndDialogueInterface.Options.Add(new DialogueOption(Mes, NextBranch));
+        }
+
+        private void Message(string Mes)
+        {
+            GuardianMouseOverAndDialogueInterface.SetDialogue(Mes);
+        }
+
+        public override string ModifyDialogue(TerraGuardian guardian, List<DialogueOption> Options)
+        {
+            bool IsWere = CastellaBase.OnWerewolfForm(guardian);
+            string Mes = "";
+            if (IsWere)
+            {
+                Options.Clear();
+                switch (Main.rand.Next(3))
+                {
+                    default:
+                        Mes = "*You want to talk to me? I don't think things are too favorable on your side, Terrarian.*";
+                        break;
+                    case 1:
+                        Mes = "*Generally my prey doesn't try speaking to me. I don't know if you're courageous or stupid.*";
+                        break;
+                    case 2:
+                        Mes = "*You had to open your mouth, didn't you? Now I suppose I should talk to you?*";
+                        break;
+                }
+                Options.Add(new DialogueOption("Who are you?", AskWhoSheIs));
+                Options.Add(new DialogueOption("Why are you doing this?", AskWhyShesDoingThatFail));
+            }
+            return Mes;
+        }
+
+        private void AskWhoSheIs()
+        {
+            switch (Main.rand.Next(2))
+            {
+                default:
+                    Message("*Interessed in knowing me, are you? Very well, I'll tell you. I am Castella, and you will be my personal chew toy for this night.*");
+                    break;
+                case 1:
+                    Message("*I am Castella. Don't worry, we'll have enough time to get acquantaince. I shall be chasing you more times.*");
+                    break;
+            }
+        }
+
+        private void AskWhyShesDoingThat()
+        {
+            switch (Main.rand.Next(2))
+            {
+                default:
+                    Message("*I like hunting people in this season just for fun, and chew througout the night.*");
+                    break;
+                case 1:
+                    Message("*Every full moon night I need toys to play with, so I catch someone to put my teeth on.*");
+                    break;
+            }
+        }
+
+        private void TellYouArentAToy()
+        {
+            switch (Main.rand.Next(2))
+            {
+                default:
+                    Message("*Don't worry, I don't usually break my toys. You will simply blackout on the first bite.*");
+                    break;
+                case 1:
+                    Message("**");
+                    break;
+            }
+        }
+
+        private void AskWhyShesDoingThatFail()
+        {
+            Message("*Because my teeth want to bite something. You know what will happen next, right?*");
+            AddOption("No! Don't!", FailResult);
+        }
+
+        private void FailResult()
+        {
+            GuardianMouseOverAndDialogueInterface.CloseDialogue();
+            ChangeStep(202);
+        }
+
+        #endregion
     }
 }

@@ -222,6 +222,12 @@ namespace giantsummon
             return null;
         }
 
+        public virtual string ModifyDialogue(TerraGuardian guardian, List<DialogueOption> Options)
+        {
+
+            return "";
+        }
+
         public Vector2 GetHandPosition(TerraGuardian guardian, int AnimationFrame, HeldHand hand)
         {
             Vector2 HandPosition = guardian.Position;
