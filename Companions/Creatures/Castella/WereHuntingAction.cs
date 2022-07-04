@@ -14,6 +14,7 @@ namespace giantsummon.Companions.Creatures.Castella
         private TerraGuardian guardian;
         private TerraGuardian.TargetTypes VictimType = TerraGuardian.TargetTypes.Player;
         private int VictimID = -1;
+        private byte DialogueFatigue = 0;
 
         public override void Update(TerraGuardian guardian) //Add a overrideable method for custom dialogues.
         {
@@ -226,6 +227,17 @@ namespace giantsummon.Companions.Creatures.Castella
             GuardianMouseOverAndDialogueInterface.SetDialogue(Mes);
         }
 
+        private bool ChangeDialogueFatigue(byte Increase = 1)
+        {
+            DialogueFatigue += Increase;
+            if (DialogueFatigue >= 5)
+            {
+                FailResult();
+                return true;
+            }
+            return false;
+        }
+
         public override string ModifyDialogue(TerraGuardian guardian, List<DialogueOption> Options)
         {
             bool IsWere = CastellaBase.OnWerewolfForm(guardian);
@@ -246,26 +258,34 @@ namespace giantsummon.Companions.Creatures.Castella
                         break;
                 }
                 Options.Add(new DialogueOption("Who are you?", AskWhoSheIs));
-                Options.Add(new DialogueOption("Why are you doing this?", AskWhyShesDoingThatFail));
+                Options.Add(new DialogueOption("Why are you doing this?", AskWhyShesDoingThat)); //An array of dialogues picking 2~3 by random?
             }
             return Mes;
         }
 
         private void AskWhoSheIs()
         {
+            if (ChangeDialogueFatigue())
+            {
+                return;
+            }
             switch (Main.rand.Next(2))
             {
                 default:
                     Message("*Interessed in knowing me, are you? Very well, I'll tell you. I am Castella, and you will be my personal chew toy for this night.*");
                     break;
                 case 1:
-                    Message("*I am Castella. Don't worry, we'll have enough time to get acquantaince. I shall be chasing you more times.*");
+                    Message("*I am Castella. Don't worry, we'll have enough time to get acquantaince.*");
                     break;
             }
         }
 
         private void AskWhyShesDoingThat()
         {
+            if (ChangeDialogueFatigue(2))
+            {
+                return;
+            }
             switch (Main.rand.Next(2))
             {
                 default:
@@ -277,29 +297,72 @@ namespace giantsummon.Companions.Creatures.Castella
             }
         }
 
+        private void AskWhatDidSheDoToYourCompanions()
+        {
+            if (ChangeDialogueFatigue())
+            {
+                return;
+            }
+            switch (Main.rand.Next(2))
+            {
+                default:
+                    Message("*They're taking a nice little slumber. You shall have the same destiny, too.*");
+                    break;
+                case 1:
+                    Message("*They wont be able to help you while blacked out. Now, shall you black out too?*");
+                    break;
+            }
+        }
+
+        private void AskToLetYouGo()
+        {
+            if (ChangeDialogueFatigue())
+            {
+                return;
+            }
+            switch (Main.rand.Next(2))
+            {
+                default:
+                    Message("*Why? I didn't begun nibbling yet.*");
+                    break;
+                case 1:
+                    Message("*As much as was fun to catch you, my teeth are still itching to bite something.*");
+                    break;
+            }
+        }
+
         private void TellYouArentAToy()
         {
+            if (ChangeDialogueFatigue(2))
+            {
+                return;
+            }
             switch (Main.rand.Next(2))
             {
                 default:
                     Message("*Don't worry, I don't usually break my toys. You will simply blackout on the first bite.*");
                     break;
                 case 1:
-                    Message("**");
+                    Message("*No no no, you are wrong. For this night, you're my personal toy.*");
                     break;
             }
         }
 
-        private void AskWhyShesDoingThatFail()
-        {
-            Message("*Because my teeth want to bite something. You know what will happen next, right?*");
-            AddOption("No! Don't!", FailResult);
-        }
-
         private void FailResult()
         {
-            GuardianMouseOverAndDialogueInterface.CloseDialogue();
+            switch (Main.rand.Next(2))
+            {
+                default:
+                    Message("*The night might be will be over soon, and for you, way sooner.*");
+                    break;
+                case 1:
+                    Message("*My teeth are itching, time for nibbling.*");
+                    break;
+            }
+            ClearOptions();
+            //GuardianMouseOverAndDialogueInterface.CloseDialogue();
             ChangeStep(202);
+            AddOption("No, NO!", GuardianMouseOverAndDialogueInterface.CloseDialogueButtonAction);
         }
 
         #endregion
