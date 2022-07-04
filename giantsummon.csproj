@@ -102,7 +102,6 @@
     <Compile Include="Buffs\VeryWounded.cs" />
     <Compile Include="Buffs\WellBeing.cs" />
     <Compile Include="ChangeNicknameCommand.cs" />
-    <Compile Include="CharacterInfo.cs" />
     <Compile Include="Companions\Creatures\Bapha\CrimsonFlameAttack.cs" />
     <Compile Include="Companions\Creatures\Bapha\HellSplitterAttack.cs" />
     <Compile Include="Companions\Creatures\Castella\CastellaBase.cs" />
@@ -187,7 +186,6 @@
     <Compile Include="GuardianDrawData.cs" />
     <Compile Include="GuardianDrawMoment.cs" />
     <Compile Include="GuardianGlobalInfos.cs" />
-    <Compile Include="GuardianHand.cs" />
     <Compile Include="GuardianHouseManagementInterface.cs" />
     <Compile Include="GuardianID.cs" />
     <Compile Include="GuardianItemSlotFlag.cs" />

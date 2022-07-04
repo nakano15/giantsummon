@@ -29,6 +29,8 @@ namespace giantsummon
         public const int MaxLines = 24;
         public const int MaxDrawWidth = 262, MaxDrawHeight = 133;
         public static int ContributionIconAnimationTime = 0;
+        private static List<string> InfosText = new List<string>();
+        private static List<sbyte> InfoIcons = new List<sbyte>();
 
         public static void OpenInterface()
         {
@@ -48,6 +50,7 @@ namespace giantsummon
             InterfacePosition.X = (Main.screenWidth - Width) * 0.5f;
             InterfacePosition.Y = (Main.screenHeight - Height + 36) * 0.5f;
             ScrollY = 0;
+            UpdateButtonStates(player);
             /*for (int k = 0; k < GuardianList.Length; k++)
             {
                 if (player.SelectedGuardian == GuardianList[k])
@@ -280,7 +283,75 @@ namespace giantsummon
                             break;
                     }
                 }
+                //
+                InfosText.Clear();
+                int AgeVal = DisplayGuardian.Age, YearlyAgeVal = DisplayGuardian.Data.YearlyAge;
+                InfosText.Add("Age: " + DisplayGuardian.Age + (YearlyAgeVal != AgeVal ? "(" + YearlyAgeVal + " Years Old)" : ""));
+                InfosText.Add("Size: " + DisplayGuardian.Base.Size.ToString());
+                InfosText.Add(DisplayGuardian.GetGroup.Name);
+                InfosText.Add("Mod:" + DisplayGuardian.ModID);
+                InfosText.Add(BirthdayTime);
+                InfosText.Add(BirthdayDate);
+                //
+                InfoIcons.Clear();
+                if (DisplayGuardian.Base.Genderless)
+                {
+                    InfoIcons.Add(13);
+                }
+                else if (DisplayGuardian.Male)
+                    InfoIcons.Add(4);
+                else
+                    InfoIcons.Add(5);
+                if (DisplayGuardian.Base.DontUseRightHand)
+                    InfoIcons.Add(-1);
+                else
+                    InfoIcons.Add(1);
+                if (DisplayGuardian.Base.DontUseHeavyWeapons)
+                    InfoIcons.Add(-2);
+                else
+                    InfoIcons.Add(2);
+                if (DisplayGuardian.Base.IsTerraGuardian)
+                    InfoIcons.Add(6);
+                else
+                    InfoIcons.Add(-6);
+                if (DisplayGuardian.Base.OneHanded2HWeaponWield)
+                    InfoIcons.Add(7);
+                else
+                    InfoIcons.Add(-7);
+                if (DisplayGuardian.Base.CanDuck)
+                    InfoIcons.Add(8);
+                else
+                    InfoIcons.Add(-8);
+                if (DisplayGuardian.Base.ReverseMount)
+                    InfoIcons.Add(-9);
+                else
+                    InfoIcons.Add(9);
+                if (DisplayGuardian.Base.DrinksBeverage)
+                    InfoIcons.Add(10);
+                else
+                    InfoIcons.Add(-10);
+                if (!DisplayGuardian.Base.IsNocturnal)
+                    InfoIcons.Add(11);
+                else
+                    InfoIcons.Add(12);
             }
+            UpdateButtonStates(player);
+        }
+
+        private static bool CallButtonActive = false, SendHomeButtonActive = false;
+
+        private static void UpdateButtonStates(PlayerMod player)
+        {
+            CallButtonActive = (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian &&
+                (!PlayerMod.HasBuddiesModeOn(player.player) || !PlayerMod.GetPlayerBuddy(player.player).IsSameID(DisplayGuardian)) &&
+                (((DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter)) || (DisplayGuardian.request.Active && DisplayGuardian.request.Base.RequiresRequesterSummoned) ||
+                PlayerMod.PlayerHasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID)) &&
+                (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(ContentList[Selected].Index)) &&
+                ((player.GetEmptyGuardianSlot() < 255 && (!player.Guardian.Active || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
+                player.GetGuardianSlot(ContentList[Selected].Index) < 255));
+            SendHomeButtonActive = Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.IsPlayerBuddy(Main.LocalPlayer) ||
+                DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel) &&
+                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID));
         }
 
         public static void DrawInterface()
@@ -444,47 +515,6 @@ namespace giantsummon
                 }
                 //Info Icons
                 {
-                    List<sbyte> InfoIcons = new List<sbyte>();
-                    if (DisplayGuardian.Base.Genderless)
-                    {
-                        InfoIcons.Add(13);
-                    }
-                    else if (DisplayGuardian.Male)
-                        InfoIcons.Add(4);
-                    else
-                        InfoIcons.Add(5);
-                    if (DisplayGuardian.Base.DontUseRightHand)
-                        InfoIcons.Add(-1);
-                    else
-                        InfoIcons.Add(1);
-                    if (DisplayGuardian.Base.DontUseHeavyWeapons)
-                        InfoIcons.Add(-2);
-                    else
-                        InfoIcons.Add(2);
-                    if (DisplayGuardian.Base.IsTerraGuardian)
-                        InfoIcons.Add(6);
-                    else
-                        InfoIcons.Add(-6);
-                    if (DisplayGuardian.Base.OneHanded2HWeaponWield)
-                        InfoIcons.Add(7);
-                    else
-                        InfoIcons.Add(-7);
-                    if (DisplayGuardian.Base.CanDuck)
-                        InfoIcons.Add(8);
-                    else
-                        InfoIcons.Add(-8);
-                    if (DisplayGuardian.Base.ReverseMount)
-                        InfoIcons.Add(-9);
-                    else
-                        InfoIcons.Add(9);
-                    if (DisplayGuardian.Base.DrinksBeverage)
-                        InfoIcons.Add(10);
-                    else
-                        InfoIcons.Add(-10);
-                    if (!DisplayGuardian.Base.IsNocturnal)
-                        InfoIcons.Add(11);
-                    else
-                        InfoIcons.Add(12);
                     Vector2 IconPosition = Vector2.Zero;
                     IconPosition.X = HudPosition.X + 175 + 131 - 20 * InfoIcons.Count * 0.5f;
                     IconPosition.Y = HudPosition.Y + 102;
@@ -634,16 +664,6 @@ namespace giantsummon
                     ExtraInfosPos.Y = HudPosition.Y + 323 + 6;
                     Utils.DrawBorderString(Main.spriteBatch, "Extra Infos", ExtraInfosPos, Color.White, ElementScale, 0.5f, 1f);
                     //
-                    List<string> InfosText = new List<string>();
-                    {
-                        int AgeVal = DisplayGuardian.Age, YearlyAgeVal = DisplayGuardian.Data.YearlyAge;
-                        InfosText.Add("Age: " + DisplayGuardian.Age + (YearlyAgeVal != AgeVal ? "(" + YearlyAgeVal + " Years Old)" : ""));
-                    }
-                    InfosText.Add("Size: " + DisplayGuardian.Base.Size.ToString());
-                    InfosText.Add(DisplayGuardian.GetGroup.Name);
-                    InfosText.Add("Mod:" + DisplayGuardian.ModID);
-                    InfosText.Add(BirthdayTime);
-                    InfosText.Add(BirthdayDate);
                     for (int y = 0; y < 4; y++)
                     {
                         for (int x = 0; x < 2; x++)
@@ -659,13 +679,7 @@ namespace giantsummon
                 }
             }
             //Dismiss Button (left)
-            if (Selected > -1 && !DisplayGuardian.Base.InvalidGuardian &&
-                (!PlayerMod.HasBuddiesModeOn(player.player) || !PlayerMod.GetPlayerBuddy(player.player).IsSameID(DisplayGuardian)) &&
-                (((DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.CallUnlockLevel || DisplayGuardian.Data.IsStarter)) || (DisplayGuardian.request.Active && DisplayGuardian.request.Base.RequiresRequesterSummoned) ||
-                PlayerMod.PlayerHasGuardianSummoned(player.player, DisplayGuardian.ID, DisplayGuardian.ModID)) &&
-                (player.TitanGuardian == 255 || player.TitanGuardian == player.GetGuardianSlot(ContentList[Selected].Index)) &&
-                ((player.GetEmptyGuardianSlot() < 255 && (!player.Guardian.Active || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
-                player.GetGuardianSlot(ContentList[Selected].Index) < 255))
+            if (CallButtonActive)
             {
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 175 + 39;
@@ -740,6 +754,7 @@ namespace giantsummon
                             player.DismissGuardian(player.GetGuardianSlot(ContentList[Selected].Index));
                         }
                         ContentList[Selected].Summoned = IsCallButton;
+                        UpdateButtonStates(player);
                     }
                 }
                 Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);
@@ -752,9 +767,7 @@ namespace giantsummon
                 Utils.DrawBorderString(Main.spriteBatch, "Can't Call", ButtonCenter, Color.Red, ElementScale, 0.5f, 0.5f);
             }
             //Home Button (Center)
-            if (Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.IsPlayerBuddy(Main.LocalPlayer) || 
-                DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel) && 
-                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID)))
+            if (SendHomeButtonActive)
             {
                 Vector2 ButtonCenter = Vector2.Zero;
                 ButtonCenter.X = HudPosition.X + 265 + 41;
@@ -792,6 +805,7 @@ namespace giantsummon
                                 WorldMod.AllowGuardianNPCToSpawn(DisplayGuardian.ID, DisplayGuardian.ModID);
                             }
                             ContentList[Selected].LivingHere = !IsMoveout;
+                            UpdateButtonStates(player);
                         }
                     }
                     Utils.DrawBorderString(Main.spriteBatch, Text, ButtonCenter, (MouseOver ? Color.Yellow : Color.White), ElementScale, 0.5f, 0.5f);

@@ -30,3 +30,5 @@ The Ghost Fox Guardian will no longer kick you out of the game.
 	She will now instead cause your character to blackout.
 	Upon entering blackout state, the character will be on the downed state, until they recover.
 	Hostile npcs around are deleted.
+Changed how the mod will check the button states on the guardian selection interface.
+Added the ammo missing to some companions starting inventory.

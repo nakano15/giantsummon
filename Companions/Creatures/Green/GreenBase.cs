@@ -48,7 +48,7 @@ namespace giantsummon.Companions
 
             AddInitialItem(Terraria.ID.ItemID.FlintlockPistol, 1);
             AddInitialItem(Terraria.ID.ItemID.Mushroom, 3);
-            AddInitialItem(Terraria.ID.ItemID.MeteorShot, 50);
+            AddInitialItem(Terraria.ID.ItemID.MeteorShot, 250);
 
             //Animation Frames
             StandingFrame = 0;

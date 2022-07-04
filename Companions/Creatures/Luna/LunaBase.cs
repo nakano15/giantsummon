@@ -42,6 +42,7 @@ namespace giantsummon.Companions
             AddInitialItem(Terraria.ID.ItemID.CopperBroadsword);
             AddInitialItem(Terraria.ID.ItemID.RichMahoganyBow);
             AddInitialItem(Terraria.ID.ItemID.Mushroom, 5);
+            AddInitialItem(Terraria.ID.ItemID.WoodenArrow, 250);
 
             //Animation Frames
             StandingFrame = 2;

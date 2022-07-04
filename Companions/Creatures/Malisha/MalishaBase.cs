@@ -61,6 +61,7 @@ namespace giantsummon.Companions
             AddInitialItem(Terraria.ID.ItemID.HealingPotion, 5);
             AddInitialItem(Terraria.ID.ItemID.ManaPotion, 15);
             AddInitialItem(Terraria.ID.ItemID.FlintlockPistol);
+            AddInitialItem(Terraria.ID.ItemID.MusketBall, 250);
 
             //Animation Frames
             StandingFrame = 0;

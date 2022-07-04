@@ -46,6 +46,7 @@ namespace giantsummon.Companions
             AddInitialItem(Terraria.ID.ItemID.RedRyder, 1);
             AddInitialItem(Terraria.ID.ItemID.LesserHealingPotion, 5);
             AddInitialItem(Terraria.ID.ItemID.CookedFish, 3);
+            AddInitialItem(Terraria.ID.ItemID.MusketBall, 250);
 
             //Animation Frames
             StandingFrame = 0;
