@@ -11,7 +11,7 @@ namespace giantsummon
     {
         public static List<Breadcrumbs> DoPathFinding(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6)
         {
-            int StartPosX = (int)StartPosition.X / 16, StartPosY = (int)StartPosition.Y / 16;
+            int StartPosX = (int)(StartPosition.X * (1f / 16)), StartPosY = (int)(StartPosition.Y * (1f / 16));
             int Attempts = 0;
             while (CheckForSolidBlocks(StartPosX, StartPosY, 3))
             {
@@ -38,7 +38,7 @@ namespace giantsummon
             List<Point> VisitedNodes = new List<Point>();
             NextNodeList.Add(new Node(StartPosX, StartPosY, Node.NONE));
             VisitedNodes.Add(new Point(StartPosX, StartPosY));
-            const int MaxDistance = 35;
+            const int MaxDistance = 50;//35;
             Node NodeFound = null;
             int HangPreventer = 0;
             while (NodeFound == null)
@@ -62,6 +62,7 @@ namespace giantsummon
                         NodeFound = n;
                         break;
                     }
+                    //Need to rework how the breadcrumbs finding works.
                     for (byte dir = 0; dir < 4; dir++)
                     {
                         switch (dir)
@@ -69,60 +70,48 @@ namespace giantsummon
                             case Node.DIR_UP:
                                 {
                                     bool HasPlatform = false, HasSolidBlock = false;
-                                    int NextNodeY = -1;
-                                    for (int y = -1; y >= -JumpDistance; y--)
+                                    int PlatformNodeY = -1;
+                                    for (int y = 0; y <JumpDistance; y++)
                                     {
-                                        if (CheckForSolidBlocks(X, Y + y))
+                                        if ((y == 0 ? CheckForSolidBlocks(X, Y - y) : CheckForSolidBlocksCeiling(X, Y - y)))
                                         {
                                             HasSolidBlock = true;
                                             break;
                                         }
-                                        if (CheckForPlatform(X, Y + y) && !CheckForPlatform(X, Y + y - 1))
+                                        if (CheckForPlatform(X, Y - y) && !CheckForPlatform(X, Y - y + 1))
                                         {
                                             HasPlatform = true;
-                                            NextNodeY = Y + y - 1;
+                                            PlatformNodeY = Y - y - 1;
                                             break;
+                                        }
+                                        for(sbyte x = -1; x < 2; x += 2)
+                                        {
+                                            if(!CheckForSolidBlocks(X + x, Y - y, PassThroughDoors: true) && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
+                                            {
+                                                //PossibleToJumpHere
+                                                NextNodeList.Add(new Node(X + x, Y - y, x == -1 ? Node.DIR_LEFT : Node.DIR_RIGHT, n));
+                                                VisitedNodes.Add(new Point(X, PlatformNodeY));
+                                            }
                                         }
                                     }
                                     if (HasSolidBlock)
                                         continue;
-                                    if (HasPlatform && !VisitedNodes.Contains(new Point(X, NextNodeY)))
+                                    if (HasPlatform && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
                                     {
-                                        NextNodeList.Add(new Node(X, NextNodeY, Node.DIR_UP, n));
-                                        VisitedNodes.Add(new Point(X, NextNodeY));
-                                    }
-                                }
-                                break;
-                            case Node.DIR_RIGHT:
-                                {
-                                    int nx = X + 1, ny = Y;
-                                    for (int y = 0; y < JumpDistance; y++)
-                                    {
-                                        for (int d = -1; d <= 1; d += 2)
-                                        {
-                                            int thisypos = ny + y * d;
-                                            if (CheckForSolidGround(nx, thisypos) && !CheckForStairFloor(nx, thisypos - 1))
-                                            {
-                                                int xc = nx, yc = thisypos;
-                                                if (!VisitedNodes.Contains(new Point(xc, yc)))
-                                                {
-                                                    NextNodeList.Add(new Node(xc, yc, Node.DIR_RIGHT, n));
-                                                    VisitedNodes.Add(new Point(xc, yc));
-                                                }
-                                            }
-                                            if (y == 0)
-                                                break;
-                                        }
+                                        NextNodeList.Add(new Node(X, PlatformNodeY, Node.DIR_UP, n));
+                                        VisitedNodes.Add(new Point(X, PlatformNodeY));
                                     }
                                 }
                                 break;
                             case Node.DIR_DOWN:
                                 {
-                                    if (AnyPlatform(X, Y + 1))
+                                    if (CheckForPlatform(X, Y + 1))
                                     {
-                                        for (int y = 2; y <= JumpDistance; y++)
+                                        for (int y = 2; y <= 6; y++)
                                         {
-                                            if ((CheckForSolidGround(X, Y + y) || CheckForSolidGround(X + 1, Y + y)) && !VisitedNodes.Contains(new Point(X, Y + y)))
+                                            if (CheckForSolidBlocks(X, Y + y))
+                                                break;
+                                            if (CheckForSolidGround(X, Y + y) && !VisitedNodes.Contains(new Point(X, Y + y)))
                                             {
                                                 NextNodeList.Add(new Node(X, Y + y, Node.DIR_DOWN, n));
                                                 VisitedNodes.Add(new Point(X, Y + y));
@@ -130,27 +119,68 @@ namespace giantsummon
                                             }
                                         }
                                     }
+                                    /*if(!CheckForSolidGround(X, Y))
+                                    {
+
+                                    }*/
                                 }
                                 break;
+                            case Node.DIR_RIGHT:
                             case Node.DIR_LEFT:
                                 {
-                                    int nx = X - 1, ny = Y;
-                                    for (int y = 0; y < JumpDistance; y++)
+                                    sbyte Dir = (sbyte)(dir == Node.DIR_LEFT ? -1 : 1);
+                                    int nx = X + Dir, ny = Y;
+                                    if((n.NodeDirection == Node.DIR_LEFT && dir == Node.DIR_RIGHT) ||
+                                        (n.NodeDirection == Node.DIR_RIGHT && dir == Node.DIR_LEFT))
                                     {
-                                        for (int d = -1; d <= 1; d += 2)
+                                        continue;
+                                    }
+                                    for(int zy = -1; zy < JumpDistance; zy++)
+                                    {
+                                        if (zy > 0 && CheckForSolidBlocksCeiling(nx - Dir, ny - zy))
+                                            break;
+                                        if(!CheckForSolidBlocks(nx, ny - zy, PassThroughDoors: true) && CheckForSolidGround(nx, ny - zy, PassThroughDoors: true))
                                         {
-                                            int thisypos = ny + y * d;
-                                            if (CheckForSolidGround(nx, thisypos) && !CheckForStairFloor(nx, thisypos - 1))
+                                            ny -= zy;
+                                            break;
+                                        }
+                                    }
+                                    if (!CheckForSolidGround(nx, ny, true))
+                                    {
+                                        for (int y = 1; y <= 6; y++)
+                                        {
+                                            int yc = ny + y;
+                                            if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
+                                                break;
+                                            if (CheckForSolidGround(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
                                             {
-                                                int xc = nx, yc = thisypos;
-                                                if (!VisitedNodes.Contains(new Point(xc, yc)))
+                                                if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                 {
-                                                    NextNodeList.Add(new Node(xc, yc, Node.DIR_LEFT, n));
-                                                    VisitedNodes.Add(new Point(xc, yc));
+                                                    NextNodeList.Add(new Node(nx, yc, Node.DIR_DOWN, n));
+                                                    VisitedNodes.Add(new Point(nx, yc));
                                                 }
                                             }
-                                            if (y == 0)
-                                                break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int y = -1; y < 3; y++)
+                                        {
+                                            //for (int h = -1; h <= 1; h++)
+                                            {
+                                                int yc = ny - y;// * h;
+                                                if (CheckForSolidGround(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
+                                                {
+                                                    int xc = nx;
+                                                    if (!VisitedNodes.Contains(new Point(xc, yc)))
+                                                    {
+                                                        NextNodeList.Add(new Node(xc, yc, dir, n));
+                                                        VisitedNodes.Add(new Point(xc, yc));
+                                                    }
+                                                }
+                                                //if (y == 0)
+                                                //    break;
+                                            }
                                         }
                                     }
                                 }
@@ -182,16 +212,18 @@ namespace giantsummon
                 }
                 NodeFound = NodeFound.LastNode;
             }
+            Main.NewText("Found " + NextNodeList.Count + " nodes to destination!");
             return PathGuide;
         }
 
-        public static bool CheckForSolidGround(int px, int py)
+        public static bool CheckForSolidGround(int px, int py, bool PassThroughDoors = false)
         {
             byte State = 0;
             for (int y = 0; y < 2; y++)
             {
                 Tile tile = MainMod.GetTile(px, py + y);
-                if (y == 0 && (!tile.active() || !Main.tileSolid[tile.type]))
+                if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
+                if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
                 {
                     State++;
                 }
@@ -205,11 +237,11 @@ namespace giantsummon
 
         public static bool CheckForStairFloor(int px, int py)
         {
-            byte State = 0;
             for (int x = -1; x < 1; x++)
             {
                 Tile tile = MainMod.GetTile(px + x, py);
-                if (tile != null && tile.active() && tile.type == Terraria.ID.TileID.Platforms && (tile.rightSlope() || tile.leftSlope()))
+                byte Slope = tile.slope();
+                if (tile != null && tile.active() && Terraria.ID.TileID.Sets.Platforms[tile.type] && (Slope == 1 || Slope == 2))
                 {
                     return true;
                 }
@@ -217,7 +249,7 @@ namespace giantsummon
             return false;
         }
 
-        public static bool CheckForSolidBlocks(int tx, int ty, int Height = 3)
+        public static bool CheckForSolidBlocks(int tx, int ty, int Height = 3, bool PassThroughDoors = false)
         {
             for (int x = -1; x <= 0; x++)
             {
@@ -225,11 +257,16 @@ namespace giantsummon
                 {
                     Tile t = MainMod.GetTile(tx + x, ty + y);
                     if (t == null) return false;
-                    if (t.active() && Main.tileSolid[t.type])
+                    if (t.active() && Main.tileSolid[t.type] && !Terraria.ID.TileID.Sets.Platforms[t.type] && (!PassThroughDoors || t.type != Terraria.ID.TileID.ClosedDoor))
                         return true;
                 }
             }
             return false;
+        }
+
+        public static bool CheckForSolidBlocksCeiling(int tx, int ty, int Height = 3)
+        {
+            return CheckForSolidBlocks(tx, ty - Height + 1, 1);
         }
 
         public static bool CheckForPlatform(int tx, int ty)
@@ -239,8 +276,13 @@ namespace giantsummon
             {
                 Tile t = MainMod.GetTile(tx + x, ty);
                 if (t == null) return false;
-                if (t.active() && Main.tileSolidTop[t.type])
-                    PlatformTiles++;
+                if (t.active())
+                {
+                    if (Terraria.ID.TileID.Sets.Platforms[t.type])
+                        PlatformTiles++;
+                    else if (Main.tileSolid[t.type])
+                        return false;
+                }
             }
             return PlatformTiles >= 1;
         }
@@ -252,7 +294,7 @@ namespace giantsummon
             {
                 Tile t = MainMod.GetTile(tx + x, ty);
                 if (t == null) return false;
-                if (t.active() && Main.tileSolidTop[t.type])
+                if (t.active() && Terraria.ID.TileID.Sets.Platforms[t.type])
                     PlatformTiles++;
             }
             return PlatformTiles > 0;

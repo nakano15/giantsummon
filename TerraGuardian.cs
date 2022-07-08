@@ -5320,7 +5320,7 @@ namespace giantsummon
                         {
                             float Y = path.Y * 16;
                             float X = path.X * 16;
-                            if(Position.X < X - 20 || Position.X > X + 20)
+                            if(Position.X < X - 8 || Position.X > X + 8)
                             {
                                 if (Position.X < X)
                                     MoveRight = true;
@@ -6283,9 +6283,9 @@ namespace giantsummon
                 CheckForPlayerControl();
                 UpdatePerception();
                 //
-                /*if (false && OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease)
+                /*if (OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease && !Main.LocalPlayer.mouseInterface)
                 {
-                    if (CreatePathingTo((int)(Main.screenPosition.X + Main.mouseX) * DivisionBy16, (int)(Main.screenPosition.Y + Main.mouseY) * DivisionBy16))
+                    if (CreatePathingTo((int)((Main.screenPosition.X + Main.mouseX) * DivisionBy16), (int)((Main.screenPosition.Y + Main.mouseY) * DivisionBy16)))
                         Main.NewText("Success!!");
                     else
                         Main.NewText("Failure...");
@@ -7267,43 +7267,50 @@ namespace giantsummon
             return PlatformAbove;
         }
 
-        public bool IsStandingOnAPlatform
+        public bool IsStandingOnAPlatform()
         {
-            get
+            bool stair;
+            return IsStandingOnAPlatform(out stair);
+        }
+
+        public bool IsStandingOnAPlatform(out bool IsStair)
+        {
+            int FeetLeftX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), FeetRightX = (int)((Position.X + CollisionWidth * 0.5f) * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
+            //FeetLeftX -= (int)((CollisionWidth * 0.5f) * DivisionBy16) + 1;
+            bool StandingOnPlatform = false;
+            IsStair = false;
+            for (int x = FeetLeftX; x <= FeetRightX; x++)
             {
-                int FeetLeftX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), FeetRightX = (int)((Position.X + CollisionWidth * 0.5f) * DivisionBy16), FeetY = (int)(Position.Y * DivisionBy16);
-                //FeetLeftX -= (int)((CollisionWidth * 0.5f) * DivisionBy16) + 1;
-                bool StandingOnPlatform = false;
-                for (int x = FeetLeftX; x <= FeetRightX; x++)
+                for (int y = 0; y < 2; y++)
                 {
-                    for (int y = 0; y < 2; y++)
+                    int TileX = x, TileY = FeetY + y;
+                    if (TileY >= 0)
                     {
-                        int TileX = x, TileY = FeetY + y;
-                        if (TileY >= 0)
+                        Tile tile = MainMod.GetTile(TileX, TileY);
+                        if (tile.active() && Main.tileSolid[tile.type])
                         {
-                            Tile tile = MainMod.GetTile(TileX, TileY);
-                            if (tile.active() && Main.tileSolid[tile.type])
+                            if (tile.type == Terraria.ID.TileID.Platforms)
                             {
-                                if (tile.type == Terraria.ID.TileID.Platforms)
-                                {
-                                    StandingOnPlatform = true;
-                                }
-                                else
-                                {
-                                    return false;
-                                }
-                            }
-                            else if (tile.active() && Main.tileSolidTop[tile.type])
-                            {
+                                byte slope = tile.slope();
+                                if (!IsStair)
+                                    IsStair = slope == 1 || slope == 2;
                                 StandingOnPlatform = true;
                             }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else if (tile.active() && Main.tileSolidTop[tile.type])
+                        {
+                            StandingOnPlatform = true;
                         }
                     }
                 }
-                if (StandingOnPlatform)
-                    return true;
-                return false;
             }
+            if (StandingOnPlatform)
+                return true;
+            return false;
         }
 
         public float Distance(Vector2 OtherPosition)
@@ -8491,7 +8498,7 @@ namespace giantsummon
                                 {
                                     ChangeIdleAction(IdleActions.TryGoingSleep, 200 + Main.rand.Next(200));
                                 }
-                                if (IsStandingOnAPlatform && Position.Y - 8 < HouseY)
+                                if (IsStandingOnAPlatform() && Position.Y - 8 < HouseY)
                                 {
                                     DropFromPlatform = true;
                                 }
@@ -11507,9 +11514,9 @@ namespace giantsummon
 
         public void FollowPlayerAI()
         {
-            if (GuardingPosition.HasValue || PlayerMounted || (OwnerPos == -1 && !IsCommander) || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
-            if (TalkPlayerID > -1 && Main.netMode == 0)
+            if (Main.netMode == 0 && TalkPlayerID > -1)
                 return;
+            if (GuardingPosition.HasValue || Paths.Count > 0 || PlayerMounted || (OwnerPos == -1 && !IsCommander) || Main.player[OwnerPos].dead) return; //If there is no player, follow nobody
             Player Owner = IsCommander ? Main.player[GetCommanderLeaderID] : Main.player[OwnerPos];
             TerraGuardian LeaderGuardian = PlayerMod.GetPlayerMainGuardian(Owner);
             {
@@ -11659,7 +11666,7 @@ namespace giantsummon
                     {
                         if (BottomDistanceY > 0)
                         {
-                            if (IsStandingOnAPlatform)
+                            if (IsStandingOnAPlatform(out bool stair) && !stair)
                             {
                                 MoveDown = true;
                                 Jump = true;
@@ -11687,7 +11694,7 @@ namespace giantsummon
                                                 PlatformAbove = false;
                                                 break;
                                             }
-                                            else //How to recognize stairs?
+                                            else
                                             {
                                                 byte SlopeType = tile.slope();
                                                 if (SlopeType != 1 && SlopeType != 2)
@@ -18380,6 +18387,7 @@ namespace giantsummon
             HitboxDisplay.Y -= (int)Main.screenPosition.Y;
             dd = new GuardianDrawData(GuardianDrawData.TextureType.Unknown, Main.blackTileTexture, HitboxDisplay, null, Color.Red * 0.5f);
             AddDrawData(dd, false);*/
+            //
             /*foreach (PathFinder.Breadcrumbs path in Paths)
             {
                 Vector2 Pos = new Vector2(path.X * 16, path.Y * 16) - Main.screenPosition;
@@ -18402,6 +18410,7 @@ namespace giantsummon
                 }
                 Utils.DrawBorderString(Main.spriteBatch, s, Pos, Color.White);
             }*/
+            //
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);
             //DrawBehind.Insert(0, new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, Main.blackTileTexture, new Rectangle((int)(HitBox.X - Main.screenPosition.X), (int)(HitBox.Y - Main.screenPosition.Y), HitBox.Width, HitBox.Height), null, Color.Red));
