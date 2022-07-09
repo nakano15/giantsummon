@@ -11,6 +11,7 @@ namespace giantsummon.Actions
         public bool Carrying = false;
         private ushort DelayBeforePlacingOnGround = 0;
         private const ushort MaxDelay = 3 * 60;
+        private bool PathFindedToTarget = false;
 
         public CarryDownedAlly(Player player)
         {
@@ -48,6 +49,8 @@ namespace giantsummon.Actions
                 if(CarriedPlayer.dead)
                 {
                     InUse = false;
+                    if(PathFindedToTarget)
+                        guardian.Paths.Clear();
                     if(guardian.TargetID != -1)
                         guardian.CheckIfSomeoneNeedsPickup();
                     return;
@@ -59,6 +62,11 @@ namespace giantsummon.Actions
                     pm.BeingCarriedByGuardian = false;
                     if (!BeingCarriedByMe)
                         guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.RescueComingMessage));
+                    if (!PathFindedToTarget)
+                    {
+                        guardian.CreatePathingTo(CarriedPlayer.Bottom);
+                        PathFindedToTarget = true;
+                    }
                 }
                 else
                 {
@@ -76,6 +84,8 @@ namespace giantsummon.Actions
                 if(CarriedGuardian.Downed)
                 {
                     InUse = false;
+                    if (PathFindedToTarget)
+                        guardian.Paths.Clear();
                     return;
                 }
                 bool BeingCarriedByMe = false;
@@ -85,6 +95,11 @@ namespace giantsummon.Actions
                     CarriedGuardian.BeingCarriedByGuardian = false;
                     if (!BeingCarriedByMe)
                         guardian.SaySomething(guardian.GetMessage(GuardianBase.MessageIDs.RescueComingMessage));
+                    if (!PathFindedToTarget)
+                    {
+                        guardian.CreatePathingTo(CarriedGuardian.Position);
+                        PathFindedToTarget = true;
+                    }
                 }
                 else
                 {
@@ -105,13 +120,17 @@ namespace giantsummon.Actions
                 else
                 {
                     IgnoreCombat = true;
-                    guardian.MoveRight = guardian.MoveLeft = false;
-                    if (TargetX < guardian.Position.X)
-                        guardian.MoveLeft = true;
-                    else
-                        guardian.MoveRight = true;
+                    if (guardian.Paths.Count == 0)
+                    {
+                        guardian.MoveRight = guardian.MoveLeft = false;
+                        if (TargetX < guardian.Position.X)
+                            guardian.MoveLeft = true;
+                        else
+                            guardian.MoveRight = true;
+                    }
                     if(Time >= 5 * 60)
                     {
+                        guardian.Paths.Clear();
                         guardian.Position = new Microsoft.Xna.Framework.Vector2(TargetX, TargetY);
                         guardian.SetFallStart();
                         Carrying = true;

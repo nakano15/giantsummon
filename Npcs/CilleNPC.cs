@@ -448,7 +448,7 @@ namespace giantsummon.Npcs
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            if(!spawnInfo.playerInTown && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && Main.dayTime && !Main.eclipse && !NpcMod.HasMetGuardian(GuardianID,GuardianModID) && 
+            if(!spawnInfo.playerInTown && Main.invasionType == -1 && NpcMod.RecruitNpcSpawnConditionCheck(spawnInfo) && Main.dayTime && !Main.eclipse && !NpcMod.HasMetGuardian(GuardianID,GuardianModID) && 
                 !NpcMod.HasGuardianNPC(GuardianID, GuardianModID) && !NPC.AnyNPCs(ModContent.NPCType<CilleNPC>()) && CanSpawn() &&
                 Main.moonPhase != 0 && Main.moonPhase != 4)
             {

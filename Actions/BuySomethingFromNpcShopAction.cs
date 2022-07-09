@@ -7,6 +7,8 @@ namespace giantsummon.Actions
     public class BuySomethingFromNpcShopAction : GuardianActions
     {
         public int NpcPosition, ItemID, BuyStack, BuyPrice;
+        private bool TriedPathFinding = false;
+
         public BuySomethingFromNpcShopAction(int NpcPosition, int ItemID, int BuyStack, int BuyPrice)
         {
             ID = (int)ActionIDs.BuySomethingFromNpcShop;
@@ -25,7 +27,7 @@ namespace giantsummon.Actions
                 return;
             }
             bool MakeNpcFocusOnGuardian = false;
-            if (!guardian.PlayerMounted)
+            if (!guardian.PlayerMounted && guardian.Paths.Count == 0)
                 guardian.MoveLeft = guardian.MoveRight = false;
             if (guardian.IsBeingPulledByPlayer)
             {
@@ -57,6 +59,15 @@ namespace giantsummon.Actions
                                 InUse = false;
                                 return;
                             }
+                        }
+                        if (!TriedPathFinding)
+                        {
+                            if(!guardian.PlayerMounted) guardian.CreatePathingTo(NpcBottom);
+                            TriedPathFinding = true;
+                        }
+                        else if(guardian.Paths.Count > 0)
+                        {
+                            return;
                         }
                         if (!guardian.PlayerMounted && Time == 5 * 60)
                         {
@@ -92,6 +103,7 @@ namespace giantsummon.Actions
                         {
                             MakeNpcFocusOnGuardian = true;
                             ChangeStep();
+                            guardian.Paths.Clear();
                             if (guardian.PlayerMounted)
                             {
                                 string Message = guardian.GetMessage(GuardianBase.MessageIDs.AskPlayerToWaitAMomentWhileCompanionIsShopping, "*They ask you to wait a moment.*");
@@ -106,10 +118,10 @@ namespace giantsummon.Actions
                                 if (guardian.Velocity.Y == 0)
                                 {
                                     bool SolidBlockBellow = false;
-                                    int CheckY = (int)(guardian.Position.Y + 2) / 16;
-                                    for (int i = 0; i < guardian.Width / 16; i++)
+                                    int CheckY = (int)((guardian.Position.Y + 2) * (1f / 16));
+                                    for (int i = -1; i < 1; i++)
                                     {
-                                        int CheckX = (int)(guardian.TopLeftPosition.X / 16) + i;
+                                        int CheckX = (int)(guardian.TopLeftPosition.X * (1f / 16)) + i;
                                         if (Main.tile[CheckX, CheckY].active() && Main.tileSolid[Main.tile[CheckX, CheckY].type] && !Terraria.ID.TileID.Sets.Platforms[Main.tile[CheckX, CheckY].type])
                                         {
                                             SolidBlockBellow = true;
@@ -125,12 +137,12 @@ namespace giantsummon.Actions
                             }
                             else
                             {
-                                int CheckX = (int)(guardian.Position.X / 16);
+                                int CheckX = (int)(guardian.Position.X * (1f / 16));
                                 if (guardian.JumpHeight == 0 && !guardian.Jump || guardian.JumpHeight > 0)
                                 {
                                     for (int i = 1; i < 6; i++)
                                     {
-                                        int CheckY = (int)(guardian.Position.Y / 16) - i;
+                                        int CheckY = (int)(guardian.Position.Y * (1f / 16)) - i;
                                         if (Main.tile[CheckX, CheckY].active() && Terraria.ID.TileID.Sets.Platforms[Main.tile[CheckX, CheckY].type])
                                         {
                                             guardian.Jump = true;

@@ -78,7 +78,7 @@ namespace giantsummon
                                             HasSolidBlock = true;
                                             break;
                                         }
-                                        if (CheckForPlatform(X, Y - y) && !CheckForPlatform(X, Y - y + 1))
+                                        if (CheckForPlatform(X, Y - y) && !CheckForPlatform(X, Y - y + 1) && !CheckForSolidBlocks(X, Y - y - 1))
                                         {
                                             HasPlatform = true;
                                             PlatformNodeY = Y - y - 1;
@@ -197,7 +197,7 @@ namespace giantsummon
                     HangPreventer++;
                     if (HangPreventer >= 500) //1000)
                     {
-                        Main.NewText("Path finding hanged with " + NextNodeList.Count + " nodes to check and " + LastNodeList.Count + " nodes to review.");
+                        //Main.NewText("Path finding hanged with " + NextNodeList.Count + " nodes to check and " + LastNodeList.Count + " nodes to review.");
                         return new List<Breadcrumbs>();
                     }
                 }
@@ -218,7 +218,7 @@ namespace giantsummon
                 }
                 NodeFound = NodeFound.LastNode;
             }
-            Main.NewText("Found " + NextNodeList.Count + " nodes to destination!");
+            //Main.NewText("Found " + NextNodeList.Count + " nodes to destination!");
             return PathGuide;
         }
 

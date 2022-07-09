@@ -26,7 +26,7 @@ namespace giantsummon
         public int TalkPlayerID = -1;
         public byte AssistSlot = 0;
         public int SavedPosX = -1, SavedPosY = -1; //Redo the path finding if moving to it was interrupted by any way.
-        public bool PathingInterrupted = false;
+        public bool PathingInterrupted = false, WalkToPath = false;
         public List<byte> NpcsSpotted = new List<byte>(), PlayersSpotted = new List<byte>();
         public List<int> GuardiansSpotted = new List<int>();
         public const int ItemStackCount = 100, ItemStackTurns = Main.maxItems / ItemStackCount;
@@ -5232,12 +5232,12 @@ namespace giantsummon
             return false;
         }
 
-        public bool CreatePathingTo(Vector2 Position)
+        public bool CreatePathingTo(Vector2 Position, bool WalkToPath = false)
         {
-            return CreatePathingTo((int)(Position.X * (1f / 16)), (int)(Position.Y * (1f / 16)));
+            return CreatePathingTo((int)(Position.X * (1f / 16)), (int)(Position.Y * (1f / 16)), WalkToPath);
         }
 
-        public bool CreatePathingTo(int X, int Y)
+        public bool CreatePathingTo(int X, int Y, bool WalkToPath = false)
         {
             byte Attempts = 0;
             const byte MaxAttempts = 8;
@@ -5273,6 +5273,7 @@ namespace giantsummon
             }
             if (!PathFinder.CheckForSolidBlocks(X, Y))
             {
+                this.WalkToPath = WalkToPath;
                 SavedPosX = X;
                 SavedPosY = Y;
                 PathingInterrupted = false;
@@ -5297,12 +5298,18 @@ namespace giantsummon
                     if (SavedPosX > -1 && SavedPosY > -1)
                     {
                         Paths = PathFinder.DoPathFinding(Position, SavedPosX, SavedPosY, (int)(CalculatedJumpHeight * DivisionBy16), FallHeightTolerance);
+                        if (Paths.Count == 0)
+                            return false;
                     }
                     else
                     {
                         Paths.Clear();
                         return false;
                     }
+                }
+                if (WalkToPath)
+                {
+                    WalkMode = true;
                 }
                 PathFinder.Breadcrumbs path = Paths[0];
                 switch (path.NodeOrientation)
@@ -5323,7 +5330,7 @@ namespace giantsummon
                                 else
                                     MoveLeft = true;
                             }
-                            else if (Position.Y > Y)
+                            else if (Position.Y > Y + 16)
                             {
                                 if ((Velocity.Y == 0 && !LastJump) || (JumpHeight > 0))
                                 {
@@ -6279,13 +6286,13 @@ namespace giantsummon
                 CheckForPlayerControl();
                 UpdatePerception();
                 //
-                if (OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease && !PlayerMounted && !Main.LocalPlayer.mouseInterface)
+                /*if (OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease && !PlayerMounted && !Main.LocalPlayer.mouseInterface)
                 {
                     if (CreatePathingTo((int)((Main.screenPosition.X + Main.mouseX) * DivisionBy16), (int)((Main.screenPosition.Y + Main.mouseY) * DivisionBy16)))
                         Main.NewText("Success!!");
                     else
                         Main.NewText("Failure...");
-                }
+                }*/
                 //
                 if (!IsBeingControlledByPlayer && (!MountedOnPlayer || GuardianHasControlWhenMounted))
                 {
@@ -8660,7 +8667,7 @@ namespace giantsummon
                         if (GuardingPosition.HasValue)
                         {
                             float XDif = GuardingPosition.Value.X * 16 - Position.X;
-                            if (Math.Abs(XDif) >= 96f)
+                            if (Math.Abs(XDif) >= 192f)
                             {
                                 if (XDif < 0 && !LookingLeft)
                                 {
@@ -8675,7 +8682,7 @@ namespace giantsummon
                         if(IsPlayerIdle)
                         {
                             float XDif = (GuardingPosition.HasValue ? GuardingPosition.Value.X * 16 : Main.player[Main.myPlayer].Center.X) - Position.X;
-                            if (Math.Abs(XDif) >= 128f)
+                            if (Math.Abs(XDif) >= 256f)
                             {
                                 if (XDif < 0 && !LookingLeft)
                                 {
@@ -8708,42 +8715,6 @@ namespace giantsummon
                                 break;
                             }
                         }
-                        /*byte Gap = 0;
-                        byte TilesUntilBlockedAbove = 8;
-                        {
-                            int StartCheckX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16), 
-                                EndCheckX = (int)((Position.X + CollisionWidth * 0.5f + 1) * DivisionBy16);
-                            for(int y = 3; y < 8; y++)
-                            {
-                                for(int x = StartCheckX; x < EndCheckX; x++)
-                                {
-                                    if (MainMod.IsSolidTile(x, CheckAheadStartY - y) && !Terraria.ID.TileID.Sets.Platforms[Main.tile[x, CheckAheadStartY - y].type])
-                                    {
-                                        TilesUntilBlockedAbove = (byte)y;
-                                        break;
-                                    }
-                                }
-                                if (TilesUntilBlockedAbove != 0)
-                                    break;
-                            }
-                        }
-                        for (int height = 0; height < TilesUntilBlockedAbove; height++)
-                        {
-                            if (MainMod.IsSolidTile(CheckAheadX, CheckAheadStartY - height) && !Terraria.ID.TileID.Sets.Platforms[Main.tile[CheckAheadX, CheckAheadStartY - height].type])
-                            {
-                                Gap = 0;
-                            }
-                            else
-                            {
-                                Gap++;
-                                if (Gap == 3)
-                                    break;
-                            }
-                        }
-                        if (Gap < 3)
-                        {
-                            LookingLeft = !LookingLeft;
-                        }*/
                         if (IsBlockedAhead())
                             FaceDirection(!LookingLeft);
                         if (LookingLeft)
@@ -8892,6 +8863,69 @@ namespace giantsummon
                 case IdleActions.Wander:
                     if (UsingFurniture)
                         LeaveFurniture();
+                    if(action == IdleActions.Wander && Main.rand.Next(2) == 0)
+                    {
+                        int UpperFloor = 0, LowerFloor = 0;
+                        int sx = (int)(Position.X * DivisionBy16), sy = (int)(Position.Y * DivisionBy16);
+                        for(int i = 1; i < 20; i++)
+                        {
+                            int uy = sy - i, by = sy + i;
+                            if (PathFinder.CheckForSolidGroundUnder(sx, uy))
+                            {
+                                UpperFloor = -i;
+                            }
+                            if (PathFinder.CheckForSolidGroundUnder(sx, by))
+                            {
+                                LowerFloor = i;
+                            }
+                        }
+                        if (UpperFloor > -3)
+                        {
+                            UpperFloor = -3;
+                        }
+                        if (LowerFloor < 3)
+                        {
+                            LowerFloor = 3;
+                        }
+                        CreatePathingTo(Position + new Vector2(Main.rand.Next(-8, 8), Main.rand.Next(UpperFloor, LowerFloor)) * 16, true);
+                    }
+                    break;
+                case IdleActions.WanderHome:
+                    if (UsingFurniture)
+                        LeaveFurniture();
+                    if (action == IdleActions.Wander && Main.rand.Next(2) == 0)
+                    {
+                        if (IsCompanionAtHome && GetTownNpcInfo.HouseInfo != null)
+                        {
+                            int UpperFloor = 0, LowerFloor = 0;
+                            int sx = (int)(Position.X * DivisionBy16), sy = (int)(Position.Y * DivisionBy16);
+                            for (int i = 1; i < 20; i++)
+                            {
+                                int uy = sy - i, by = sy + i;
+                                if (PathFinder.CheckForSolidGroundUnder(sx, uy))
+                                {
+                                    UpperFloor = -i;
+                                }
+                                if (PathFinder.CheckForSolidGroundUnder(sx, by))
+                                {
+                                    LowerFloor = i;
+                                }
+                            }
+                            if (UpperFloor > -3)
+                            {
+                                UpperFloor = -3;
+                            }
+                            if (LowerFloor < 3)
+                            {
+                                LowerFloor = 3;
+                            }
+                            Vector2 EndPosition = Position + new Vector2(Main.rand.Next(-8, 8), Main.rand.Next(UpperFloor, LowerFloor)) * 16;
+                            if (GetTownNpcInfo.HouseInfo.BelongsToThisHousing((int)(EndPosition.X * (1f / 16)), (int)(EndPosition.Y * (1f / 16))))
+                            {
+                                CreatePathingTo(EndPosition, true);
+                            }
+                        }
+                    }
                     break;
                 case IdleActions.UseNearbyFurniture:
                     if (!UsingFurniture)
@@ -8942,6 +8976,17 @@ namespace giantsummon
                 case IdleActions.GoHome:
                     if (UsingFurniture)
                         LeaveFurniture();
+                    if (IsTownNpc)
+                    {
+                        WorldMod.GuardianTownNpcState townnpc = GetTownNpcInfo;
+                        if(townnpc != null && !townnpc.Homeless && townnpc.HouseInfo != null && !IsCompanionAtHome)
+                        {
+                            if(Math.Abs(townnpc.HomeX - Position.X * DivisionBy16) < 50 && Math.Abs(townnpc.HomeY - Position.Y * DivisionBy16) < 50)
+                            {
+                                CreatePathingTo(townnpc.HomeX * 16, townnpc.HomeY * 16, true);
+                            }
+                        }
+                    }
                     IdleActionTime = 5;
                     break;
             }
@@ -10304,6 +10349,7 @@ namespace giantsummon
 
         public void Spawn()
         {
+            Paths.Clear();
             if (PlayerControl && OwnerPos > -1 && !Main.player[OwnerPos].dead && Main.player[OwnerPos].SpawnX > -1 && Main.player[OwnerPos].SpawnY > -1)
             {
                 Player Owner = Main.player[OwnerPos];
@@ -10428,6 +10474,7 @@ namespace giantsummon
 
         public void ExitDownedState()
         {
+            Paths.Clear();
             TargetID = -1;
             WofFood = false;
             KnockedOut = KnockedOutCold = false;

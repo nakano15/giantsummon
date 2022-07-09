@@ -350,8 +350,7 @@ namespace giantsummon
                 ((player.GetEmptyGuardianSlot() < 255 && (!player.Guardian.Active || player.GuardianFollowersWeight + DisplayGuardian.Base.CompanionSlotWeight < player.MaxGuardianFollowersWeight)) ||
                 player.GetGuardianSlot(ContentList[Selected].Index) < 255));
             SendHomeButtonActive = Selected > -1 && (DisplayGuardian.Data.IsStarter || DisplayGuardian.IsPlayerBuddy(Main.LocalPlayer) ||
-                DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel) &&
-                (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID));
+                DisplayGuardian.FriendshipLevel >= DisplayGuardian.Base.MoveInLevel);// && (NpcMod.HasGuardianNPC(DisplayGuardian.ID, DisplayGuardian.ModID))
         }
 
         public static void DrawInterface()

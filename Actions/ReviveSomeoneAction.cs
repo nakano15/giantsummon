@@ -14,6 +14,7 @@ namespace giantsummon.Actions
         public bool TargetIsPlayer = false;
         public int ResTime = 0;
         public bool SpeakToFallen = true;
+        private bool PathfindUsed = false;
 
         public ReviveSomeoneAction(Player Target)
         {
@@ -185,6 +186,8 @@ namespace giantsummon.Actions
                     }
                     else if (guardian.Velocity.X == 0)
                     {
+                        if (guardian.Paths.Count > 0)
+                            guardian.Paths.Clear();
                         {
                             Vector2 FacingLeftPosition = guardian.GetLeftHandPosition(guardian.Base.ReviveFrame, true),
                                     FacingRightPosition = FacingLeftPosition;
@@ -224,19 +227,28 @@ namespace giantsummon.Actions
             }
             if (TryReaching)
             {
+                if (!PathfindUsed)
+                {
+                    guardian.CreatePathingTo((int)(TargetPosition.X + TargetWidth * 0.5f), (int)(TargetPosition.Y + TargetHeight));
+                    PathfindUsed = true;
+                }
                 if (ResTime >= 5 * 60)
                 {
+                    guardian.Paths.Clear();
                     guardian.Position.X = TargetPosition.X + Main.rand.Next(TargetWidth);
                     guardian.Position.Y = TargetPosition.Y + TargetHeight - 1;
                     guardian.FallStart = (int)guardian.Position.Y / 16;
                 }
-                else if (TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0)
+                else if (guardian.Paths.Count == 0)
                 {
-                    guardian.MoveLeft = true;
-                }
-                else
-                {
-                    guardian.MoveRight = true;
+                    if (TargetPosition.X + TargetWidth * 0.5f - guardian.Position.X < 0)
+                    {
+                        guardian.MoveLeft = true;
+                    }
+                    else
+                    {
+                        guardian.MoveRight = true;
+                    }
                 }
                 guardian.WalkMode = false;
                 ResTime++;

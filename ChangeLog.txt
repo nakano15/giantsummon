@@ -35,3 +35,5 @@ Added the ammo missing to some companions starting inventory.
 Big companion npcs will no longer clip through the ground if you left the world when they were using a furniture.
 Added a path finding to companions.
 	They will better find out where are the furnitures in their houses now.
+	They will use path finding for when buying from npc shop, trying to pick up injured ally, or trying to help an injured ally.
+Cille's recruit npc will no longer spawn during invasions.

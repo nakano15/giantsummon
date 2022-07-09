@@ -58,7 +58,7 @@ namespace giantsummon.Npcs
                 npc.ai[2] = 1;
                 npc.ai[3] = -3;
                 npc.TargetClosest(false);
-                Main.NewText("A huge Terra Guardian appeared " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[npc.target].Center) + " near to " + Main.player[npc.target].name + ".");
+                //Main.NewText("A huge Terra Guardian appeared " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[npc.target].Center) + " near to " + Main.player[npc.target].name + ".");
             }
             if (npc.direction == 0)
                 npc.direction = 1;
