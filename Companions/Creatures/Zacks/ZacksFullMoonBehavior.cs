@@ -11,6 +11,11 @@ namespace giantsummon.Companions.Zacks
         public new int Time = 0;
         public byte Behavior = 0;
 
+        public ZacksFullMoonBehavior()
+        {
+            BlockIdleAI = true;
+        }
+
         public override void Update(TerraGuardian guardian)
         {
             if (Main.dayTime || Main.time >= 28800)

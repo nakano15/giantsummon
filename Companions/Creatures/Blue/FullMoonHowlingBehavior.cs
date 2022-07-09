@@ -13,7 +13,7 @@ namespace giantsummon.Companions.Blue
 
         public FullMoonHowlingBehavior()
         {
-
+            BlockIdleAI = true;
         }
 
         public override void Update(TerraGuardian guardian)

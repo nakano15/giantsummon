@@ -9,7 +9,7 @@ namespace giantsummon
 {
     public class PathFinder
     {
-        public static List<Breadcrumbs> DoPathFinding(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6)
+        public static List<Breadcrumbs> DoPathFinding(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6, int FallDistance = 6)
         {
             int StartPosX = (int)(StartPosition.X * (1f / 16)), StartPosY = (int)(StartPosition.Y * (1f / 16));
             int Attempts = 0;
@@ -19,18 +19,18 @@ namespace giantsummon
                 Attempts++;
                 if (Attempts >= 8)
                 {
-                    Main.NewText("Inside too many solid tiles.");
+                    //Main.NewText("Inside too many solid tiles.");
                     return new List<Breadcrumbs>();
                 }
             }
             Attempts = 0;
-            while (!CheckForSolidGround(StartPosX, StartPosY))
+            while (!CheckForSolidGroundUnder(StartPosX, StartPosY))
             {
                 StartPosY++;
                 Attempts++;
                 if (Attempts >= 8)
                 {
-                    Main.NewText("No floor.");
+                    //Main.NewText("No floor.");
                     return new List<Breadcrumbs>();
                 }
             }
@@ -38,7 +38,7 @@ namespace giantsummon
             List<Point> VisitedNodes = new List<Point>();
             NextNodeList.Add(new Node(StartPosX, StartPosY, Node.NONE));
             VisitedNodes.Add(new Point(StartPosX, StartPosY));
-            const int MaxDistance = 50;//35;
+            const int MaxDistance = 80; //50;
             Node NodeFound = null;
             int HangPreventer = 0;
             while (NodeFound == null)
@@ -71,7 +71,7 @@ namespace giantsummon
                                 {
                                     bool HasPlatform = false, HasSolidBlock = false;
                                     int PlatformNodeY = -1;
-                                    for (int y = 0; y <JumpDistance; y++)
+                                    for (int y = 0; y < JumpDistance; y++)
                                     {
                                         if ((y == 0 ? CheckForSolidBlocks(X, Y - y) : CheckForSolidBlocksCeiling(X, Y - y)))
                                         {
@@ -84,9 +84,9 @@ namespace giantsummon
                                             PlatformNodeY = Y - y - 1;
                                             break;
                                         }
-                                        for(sbyte x = -1; x < 2; x += 2)
+                                        for (sbyte x = -1; x < 2; x += 2)
                                         {
-                                            if(!CheckForSolidBlocks(X + x, Y - y, PassThroughDoors: true) && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
+                                            if (!CheckForSolidBlocks(X + x, Y - y, PassThroughDoors: true) && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
                                             {
                                                 //PossibleToJumpHere
                                                 NextNodeList.Add(new Node(X + x, Y - y, x == -1 ? Node.DIR_LEFT : Node.DIR_RIGHT, n));
@@ -107,11 +107,11 @@ namespace giantsummon
                                 {
                                     if (CheckForPlatform(X, Y + 1))
                                     {
-                                        for (int y = 2; y <= 6; y++)
+                                        for (int y = 2; y <= FallDistance; y++)
                                         {
                                             if (CheckForSolidBlocks(X, Y + y))
                                                 break;
-                                            if (CheckForSolidGround(X, Y + y) && !VisitedNodes.Contains(new Point(X, Y + y)))
+                                            if (CheckForSolidGroundUnder(X, Y + y) && !VisitedNodes.Contains(new Point(X, Y + y)))
                                             {
                                                 NextNodeList.Add(new Node(X, Y + y, Node.DIR_DOWN, n));
                                                 VisitedNodes.Add(new Point(X, Y + y));
@@ -135,24 +135,30 @@ namespace giantsummon
                                     {
                                         continue;
                                     }
+                                    bool Blocked = false;
                                     for(int zy = -1; zy < JumpDistance; zy++)
                                     {
                                         if (zy > 0 && CheckForSolidBlocksCeiling(nx - Dir, ny - zy))
+                                        {
+                                            Blocked = true;
                                             break;
-                                        if(!CheckForSolidBlocks(nx, ny - zy, PassThroughDoors: true) && CheckForSolidGround(nx, ny - zy, PassThroughDoors: true))
+                                        }
+                                        if(!CheckForSolidBlocks(nx, ny - zy, PassThroughDoors: true) && CheckForSolidGroundUnder(nx, ny - zy, PassThroughDoors: true))
                                         {
                                             ny -= zy;
                                             break;
                                         }
                                     }
-                                    if (!CheckForSolidGround(nx, ny, true))
+                                    if (Blocked)
+                                        continue;
+                                    if (!CheckForSolidGroundUnder(nx, ny, true))
                                     {
-                                        for (int y = 1; y <= 6; y++)
+                                        for (int y = 1; y <= FallDistance; y++)
                                         {
                                             int yc = ny + y;
                                             if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
                                                 break;
-                                            if (CheckForSolidGround(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
+                                            if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
                                             {
                                                 if (!VisitedNodes.Contains(new Point(nx, yc)))
                                                 {
@@ -169,7 +175,7 @@ namespace giantsummon
                                             //for (int h = -1; h <= 1; h++)
                                             {
                                                 int yc = ny - y;// * h;
-                                                if (CheckForSolidGround(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
+                                                if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
                                                 {
                                                     int xc = nx;
                                                     if (!VisitedNodes.Contains(new Point(xc, yc)))
@@ -189,7 +195,7 @@ namespace giantsummon
                         }
                     }
                     HangPreventer++;
-                    if (HangPreventer >= 1000)
+                    if (HangPreventer >= 500) //1000)
                     {
                         Main.NewText("Path finding hanged with " + NextNodeList.Count + " nodes to check and " + LastNodeList.Count + " nodes to review.");
                         return new List<Breadcrumbs>();
@@ -198,10 +204,10 @@ namespace giantsummon
             }
             List<Breadcrumbs> PathGuide = new List<Breadcrumbs>();
             byte LastDirection = 255;
-            if (NodeFound == null)
+            /*if (NodeFound == null)
             {
                 Main.NewText("No nodes found.");
-            }
+            }*/
             while (NodeFound != null)
             {
                 if (NodeFound.NodeDirection != LastDirection)
@@ -216,24 +222,48 @@ namespace giantsummon
             return PathGuide;
         }
 
-        public static bool CheckForSolidGround(int px, int py, bool PassThroughDoors = false)
+        public static bool CheckForSolidGroundUnder(int px, int py, bool PassThroughDoors = false)
+        {
+            for(sbyte x = -1; x < 2; x++)
+            {
+                byte State = 0;
+                for (int y = 0; y < 2; y++)
+                {
+                    Tile tile = MainMod.GetTile(px + x, py + y);
+                    if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
+                        if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
+                        {
+                            State++;
+                        }
+                    if (y == 1 && tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]))
+                    {
+                        State++;
+                    }
+                }
+                if (State >= 2)
+                    return true;
+            }
+            return false;//CheckForSolidGround(px - 1, py, PassThroughDoors) || CheckForSolidGround(px, py, PassThroughDoors);
+        }
+
+        /*public static bool CheckForSolidGround(int px, int py, bool PassThroughDoors = false)
         {
             byte State = 0;
             for (int y = 0; y < 2; y++)
             {
                 Tile tile = MainMod.GetTile(px, py + y);
                 if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
-                if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
-                {
-                    State++;
-                }
+                    if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
+                    {
+                        State++;
+                    }
                 if (y == 1 && tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]))
                 {
                     State++;
                 }
             }
             return State >= 2;
-        }
+        }*/
 
         public static bool CheckForStairFloor(int px, int py)
         {

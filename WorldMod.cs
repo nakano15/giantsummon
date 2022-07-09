@@ -519,8 +519,44 @@ namespace giantsummon
                 if (GuardianTownNPC[i].OwnerPos == -1)
                 {
                     tag.Add("GuardianTownNPC_HP_" + i, (GuardianTownNPC[i].HP == GuardianTownNPC[i].MHP ? 1f : (float)GuardianTownNPC[i].HP / GuardianTownNPC[i].MHP));
-                    tag.Add("GuardianTownNPC_PX_" + i, GuardianTownNPC[i].Position.X);
-                    tag.Add("GuardianTownNPC_PY_" + i, GuardianTownNPC[i].Position.Y);
+                    Vector2 Position = GuardianTownNPC[i].Position;
+                    if (GuardianTownNPC[i].UsingFurniture)
+                    {
+                        TerraGuardian tg = GuardianTownNPC[i];
+                        Tile t = Main.tile[tg.furniturex, tg.furniturey];
+                        switch (t.type)
+                        {
+                            case TileID.Chairs:
+                                {
+                                    float YDistancing = (tg.Base.SittingPoint.Y - tg.SpriteHeight) * tg.Scale;
+                                    Position.Y += YDistancing;
+                                }
+                                break;
+                            case TileID.Thrones:
+                            case TileID.Benches:
+                                {
+                                    if(tg.Base.ThroneSittingFrame == -1)
+                                    {
+                                        Position.Y += tg.Base.SittingPoint.Y * tg.Scale - tg.SpriteHeight + 16;
+                                    }
+                                }
+                                break;
+                            case TileID.Beds:
+                                {
+                                    if (tg.Base.BedSleepingFrame == -1)
+                                    {
+                                        Position.Y += tg.Base.SittingPoint.Y * tg.Scale - tg.SpriteHeight + 16;
+                                    }
+                                    else
+                                    {
+                                        Position.Y -= tg.Base.SleepingOffset.Y;
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                    tag.Add("GuardianTownNPC_PX_" + i, Position.X);
+                    tag.Add("GuardianTownNPC_PY_" + i, Position.Y);
                 }
             }
             GuardianBountyQuest.Save(tag);

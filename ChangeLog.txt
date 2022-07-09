@@ -32,3 +32,6 @@ The Ghost Fox Guardian will no longer kick you out of the game.
 	Hostile npcs around are deleted.
 Changed how the mod will check the button states on the guardian selection interface.
 Added the ammo missing to some companions starting inventory.
+Big companion npcs will no longer clip through the ground if you left the world when they were using a furniture.
+Added a path finding to companions.
+	They will better find out where are the furnitures in their houses now.

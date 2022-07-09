@@ -847,7 +847,7 @@ namespace giantsummon
         private int doorx = -1, doory = -1;
         public bool HasDoorOpened { get { return closeDoor; } }
         public int furniturex = -1, furniturey = -1;
-        public bool UsingFurniture = false, SittingOnBed = false;
+        public bool UsingFurniture = false, SittingOnBed = false, AttemptedToPathFindFurniture = false;
         private bool closeDoor = false;
         private bool CollisionX = false, CollisionY = false;
         public bool Downed = false;
@@ -5244,31 +5244,27 @@ namespace giantsummon
             while (true)
             {
                 bool HasSolidGround = false, HasSolidTile = false;
-                for (int x = -1; x <= 0; x++)
+                Tile tile = MainMod.GetTile(X, Y);
+                if (tile == null)
+                    return false;
+                if (PathFinder.CheckForSolidBlocks(X, Y))
                 {
-                    Tile tile = MainMod.GetTile(X + x, Y);
-                    if (tile == null)
-                        return false;
-                    if (x == 0 && PathFinder.CheckForSolidBlocks(X + x, Y))
-                    {
-                        Y--;
-                        Attempts++;
-                        HasSolidTile = true;
-                        break;
-                    }
-                    else if (!PathFinder.CheckForSolidGround(X + x, Y))
-                    {
-
-                    }
-                    else
-                    {
-                        HasSolidGround = true;
-                    }
+                    Y--;
+                    Attempts++;
+                    HasSolidTile = true;
+                }
+                else if (!PathFinder.CheckForSolidGroundUnder(X, Y))
+                {
+                    Y++;
+                }
+                else
+                {
+                    HasSolidGround = true;
                 }
                 if (!HasSolidTile && !HasSolidGround)
                 {
                     Attempts++;
-                    Y++;
+                    //Y++;
                 }
                 if (HasSolidGround && !HasSolidTile)
                     break;
@@ -5280,7 +5276,7 @@ namespace giantsummon
                 SavedPosX = X;
                 SavedPosY = Y;
                 PathingInterrupted = false;
-                Paths = PathFinder.DoPathFinding(Position, X, Y, (int)(CalculatedJumpHeight * DivisionBy16));
+                Paths = PathFinder.DoPathFinding(Position, X, Y, (int)(CalculatedJumpHeight * DivisionBy16), FallHeightTolerance);
                 return true;
             }
             return false;
@@ -5300,7 +5296,7 @@ namespace giantsummon
                     PathingInterrupted = false;
                     if (SavedPosX > -1 && SavedPosY > -1)
                     {
-                        Paths = PathFinder.DoPathFinding(Position, SavedPosX, SavedPosY);
+                        Paths = PathFinder.DoPathFinding(Position, SavedPosX, SavedPosY, (int)(CalculatedJumpHeight * DivisionBy16), FallHeightTolerance);
                     }
                     else
                     {
@@ -5320,7 +5316,7 @@ namespace giantsummon
                         {
                             float Y = path.Y * 16;
                             float X = path.X * 16;
-                            if(Position.X < X - 8 || Position.X > X + 8)
+                            if(Position.X < X - 4 || Position.X > X + 4)
                             {
                                 if (Position.X < X)
                                     MoveRight = true;
@@ -5368,7 +5364,7 @@ namespace giantsummon
                         {
                             float Y = path.Y * 16;
                             float X = path.X * 16;
-                            if (Position.X < X - 20 || Position.X > X + 20)
+                            if (Position.X < X - 4 || Position.X > X + 4)
                             {
                                 if (Position.X < X)
                                     MoveRight = true;
@@ -6283,13 +6279,13 @@ namespace giantsummon
                 CheckForPlayerControl();
                 UpdatePerception();
                 //
-                /*if (OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease && !Main.LocalPlayer.mouseInterface)
+                if (OwnerPos > -1 && Main.mouseRight && Main.mouseRightRelease && !PlayerMounted && !Main.LocalPlayer.mouseInterface)
                 {
                     if (CreatePathingTo((int)((Main.screenPosition.X + Main.mouseX) * DivisionBy16), (int)((Main.screenPosition.Y + Main.mouseY) * DivisionBy16)))
                         Main.NewText("Success!!");
                     else
                         Main.NewText("Failure...");
-                }*/
+                }
                 //
                 if (!IsBeingControlledByPlayer && (!MountedOnPlayer || GuardianHasControlWhenMounted))
                 {
@@ -7570,7 +7566,8 @@ namespace giantsummon
             Point[] NearbyBeds = TryFindingFurniture(Terraria.ID.TileID.Beds, true, -1, AtHome);
             if (NearbyBeds.Length > 0)
             {
-                UseFurniture(NearbyBeds[0].X, NearbyBeds[0].Y);
+                int PickedBed = Main.rand.Next(NearbyBeds.Length);
+                UseFurniture(NearbyBeds[PickedBed].X, NearbyBeds[PickedBed].Y);
             }
         }
 
@@ -7674,6 +7671,7 @@ namespace giantsummon
             {
                 float FurnitureBottomY = (furniturey + 1) * 16;
                 Position.Y = FurnitureBottomY;
+                AttemptedToPathFindFurniture = false;
             }
             if (!StillGoingToUseFurniture)
             {
@@ -7817,6 +7815,20 @@ namespace giantsummon
                     {
                         LeaveFurniture(true);
                     }
+                    return;
+                }
+                if (!AttemptedToPathFindFurniture)
+                {
+                    if (Math.Abs(furniturex * 16 + 8 - Position.X) > 8 || Math.Abs(furniturey * 16 + 8 - Position.Y) > 8)
+                    {
+                        CreatePathingTo(furniturex, furniturey);
+                    }
+                    AttemptedToPathFindFurniture = true;
+                    return;
+                }
+                if (Paths.Count > 0)
+                {
+                    WalkMode = true;
                     return;
                 }
                 float TileCenterX = furniturex * 16 + 8;
@@ -8893,7 +8905,7 @@ namespace giantsummon
                     if (IsCompanionAtHome)
                     {
                         if (!UsingFurniture)
-                            UseNearbyFurniture(9, ushort.MaxValue, false, true);
+                            UseNearbyFurniture(-1, ushort.MaxValue, false, true);
                     }
                     else
                     {
@@ -18388,7 +18400,7 @@ namespace giantsummon
             dd = new GuardianDrawData(GuardianDrawData.TextureType.Unknown, Main.blackTileTexture, HitboxDisplay, null, Color.Red * 0.5f);
             AddDrawData(dd, false);*/
             //
-            /*foreach (PathFinder.Breadcrumbs path in Paths)
+            foreach (PathFinder.Breadcrumbs path in Paths)
             {
                 Vector2 Pos = new Vector2(path.X * 16, path.Y * 16) - Main.screenPosition;
                 Main.spriteBatch.Draw(Main.blackTileTexture, Pos, Color.Blue);
@@ -18409,7 +18421,7 @@ namespace giantsummon
                         break;
                 }
                 Utils.DrawBorderString(Main.spriteBatch, s, Pos, Color.White);
-            }*/
+            }
             //
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);
