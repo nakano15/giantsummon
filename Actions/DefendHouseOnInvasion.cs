@@ -10,6 +10,7 @@ namespace giantsummon.Actions
     public class DefendHouseOnInvasion : GuardianActions
     {
         public Vector2 GuardPosition = Vector2.Zero;
+        private int PathFindingDelay = 0;
 
         public DefendHouseOnInvasion()
         {
@@ -27,7 +28,30 @@ namespace giantsummon.Actions
             {
                 guardian.LeaveFurniture();
             }
-            switch (Step)
+            if(guardian.Paths.Count > 0)
+            {
+                if (guardian.IsAttackingSomething)
+                {
+                    guardian.Paths.Clear();
+                }
+            }
+            else if(guardian.TargetID > -1 && !guardian.AttackingTarget)
+            {
+                if(PathFindingDelay > 0)
+                {
+                    PathFindingDelay--;
+                }
+                else
+                {
+                    Vector2 Position;
+                    int w, h;
+                    guardian.GetTargetInformation(out Position, out w, out h);
+                    guardian.CreatePathingTo(Position + new Vector2(w * 0.5f, h));
+                    PathFindingDelay = 5 * 60;
+                }
+            }
+            return;
+            /*switch (Step)
             {
                 case 0:
                     {
@@ -168,7 +192,7 @@ namespace giantsummon.Actions
                         }
                     }
                     break;
-            }
+            }*/
         }
     }
 }

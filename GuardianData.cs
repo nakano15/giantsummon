@@ -449,6 +449,8 @@ namespace giantsummon
 
         public void AddSkillProgress(float Value, GuardianSkills.SkillTypes Skill)
         {
+            if (Base.IsTerrarian)
+                return;
             if (SkillLevelSum < LastTotalSkillLevel)
                 Value *= 2;
             GetSkillList[(byte)Skill].Progress += Value;

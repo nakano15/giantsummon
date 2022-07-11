@@ -4418,7 +4418,7 @@ namespace giantsummon
             MoveSpeed -= 0.05f * HeavyArmorPieces;
             if (Compatibility.NExperienceCompatibility.IsModActive)
                 Compatibility.NExperienceCompatibility.ScaleStatus(this);
-            if (MainMod.UseSkillsSystem)
+            if (MainMod.UseSkillsSystem && !Base.IsTerrarian)
             {
                 List<GuardianSkills> SkillList = Data.GetSkillList;
                 for (int s = 0; s < SkillList.Count; s++)
@@ -7371,7 +7371,7 @@ namespace giantsummon
             }
         }
 
-        public void UseNearbyFurniture(int XDist = 9, ushort SpecificFurniture = ushort.MaxValue, bool UseBeds = false, bool Home = false)
+        public void UseNearbyFurniture(int XDist = 9, ushort SpecificFurniture = ushort.MaxValue, bool UseBeds = false, bool Home = false, bool Teleport = false)
         {
             List<ushort> TilesToUse = new List<ushort>();
             TilesToUse.Add(Terraria.ID.TileID.Chairs);
@@ -7383,7 +7383,7 @@ namespace giantsummon
             if (Furnitures.Length > 0)
             {
                 Point point = Furnitures[Main.rand.Next(Furnitures.Length)];
-                UseFurniture(point.X, point.Y);
+                UseFurniture(point.X, point.Y, Teleport);
             }
         }
 
@@ -7584,7 +7584,7 @@ namespace giantsummon
         /// <param name="x">Furniture Tile X</param>
         /// <param name="y">Furniture Tile Y</param>
         /// <returns>Returns true if It is going to try using it.</returns>
-        public bool UseFurniture(int x, int y)
+        public bool UseFurniture(int x, int y, bool Teleport = false)
         {
             Tile tile = MainMod.GetTile(x, y);
             UsingFurniture = false;
@@ -7635,6 +7635,13 @@ namespace giantsummon
                 {
                     CreatePathingTo(furniturex, furniturey);
                 }*/
+                if(furniturex > -1 && furniturey > -1 && Teleport)
+                {
+                    Position.X = furniturex * 16;
+                    Position.Y = furniturey * 16;
+                    SetFallStart();
+                    AttemptedToPathFindFurniture = true;
+                }
                 return !GuardianUsingFurniture;
             }
             return false;
@@ -8857,6 +8864,16 @@ namespace giantsummon
         {
             this.CurrentIdleAction = action;
             IdleActionTime = Time;
+            bool IsPlayerNearby = false;
+            for(int p = 0; p < 255; p++)
+            {
+                Player player = Main.player[p];
+                if (!player.active && Math.Abs(player.Center.X - Position.X) < 1000 && Math.Abs(player.Center.Y - CenterY) < 800)
+                {
+                    IsPlayerNearby = true;
+                    break;
+                }
+            }
             switch (action)
             {
                 case IdleActions.Wait:
@@ -8922,7 +8939,15 @@ namespace giantsummon
                             Vector2 EndPosition = Position + new Vector2(Main.rand.Next(-8, 8), Main.rand.Next(UpperFloor, LowerFloor)) * 16;
                             if (GetTownNpcInfo.HouseInfo.BelongsToThisHousing((int)(EndPosition.X * (1f / 16)), (int)(EndPosition.Y * (1f / 16))))
                             {
-                                CreatePathingTo(EndPosition, true);
+                                if (!IsPlayerNearby)
+                                {
+                                    Position = EndPosition;
+                                    SetFallStart();
+                                }
+                                else
+                                {
+                                    CreatePathingTo(EndPosition, true);
+                                }
                             }
                         }
                     }
@@ -8930,7 +8955,7 @@ namespace giantsummon
                 case IdleActions.UseNearbyFurniture:
                     if (!UsingFurniture)
                     {
-                        UseNearbyFurniture();
+                        UseNearbyFurniture(Teleport: !IsPlayerNearby);
                         if (furniturex == -1 || furniturey == -1)
                             CurrentIdleAction = IdleActions.Wait;
                     }
@@ -8939,7 +8964,7 @@ namespace giantsummon
                     if (IsCompanionAtHome)
                     {
                         if (!UsingFurniture)
-                            UseNearbyFurniture(-1, ushort.MaxValue, false, true);
+                            UseNearbyFurniture(-1, ushort.MaxValue, false, true, !IsPlayerNearby);
                     }
                     else
                     {
