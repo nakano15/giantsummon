@@ -1485,7 +1485,7 @@ namespace giantsummon
             TerraGuardian guardian = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian;
             if (guardian.Active && !guardian.PlayerControl && (ShowDebugInfo || Gameplay2PMode))
             {
-                Main.spriteBatch.Draw(GuardianMouseTexture, guardian.AimDirection - Main.screenPosition, Main.mouseColor);
+                Main.spriteBatch.Draw(GuardianMouseTexture, guardian.AimPosition - Main.screenPosition, Main.mouseColor);
             }
             return true;
         }
@@ -3065,7 +3065,7 @@ namespace giantsummon
                 {
                     RightThumbstick.X = Guardian.Direction * Guardian.Width * 0.5f;
                 }
-                Vector2 AimDirection = Guardian.CenterPosition + new Vector2(RightThumbstick.X, RightThumbstick.Y);
+                Vector2 AimDirection = new Vector2(RightThumbstick.X, RightThumbstick.Y);
                 Guardian.AimDirection = AimDirection;
             }
             oldGamePadState = gamePadState;

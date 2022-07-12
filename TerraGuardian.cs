@@ -1008,6 +1008,7 @@ namespace giantsummon
         public int HealthRegenPower = 0, HealthRegenTime = 0, ManaRegenTime = 0, ManaRegenBonus = 0;
         public int MaxRegenDelay { get { return (int)(((1f - (float)MP / MMP) * 60 * 4 + 45) * 0.7f); } }
         public Vector2 AimDirection = Vector2.Zero;
+        public Vector2 AimPosition { get { return CenterPosition + AimDirection; } set{ AimDirection = value + CenterPosition; } }
         public int StuckTimer = 0;
         public CombatTactic tactic { get { return Data.tactic; } set { Data.tactic = value; } }
         private const byte Melee = 0, Ranged = 1, Magic = 2, Summon = 3;
@@ -2818,6 +2819,8 @@ namespace giantsummon
                     CheckNearbyTiles();
                 CheckForNpcContact();
                 MagicMirrorTrigger = false;
+                AimDirection += MoveDir;
+                MoveDir = Vector2.Zero;
                 ItemUseScript();
                 CheckForOutOfBounds();
                 bool MayRocket = Jump && !LastJump;
@@ -4137,28 +4140,32 @@ namespace giantsummon
             return GotByWofTongue;
         }
 
-        public bool MoveCursorToPosition(Vector2 Position, int Width = 0, int Height = 0)
+        private static Vector2 MoveDir = Vector2.Zero;
+
+        public bool MoveCursorToPosition(Vector2 TargetPosition, int Width = 0, int Height = 0) //TODO - Rework the Aiming position to take a position around the character, instead.
         {
             bool ReachedLocation = false;
-            Vector2 MoveDir = Vector2.Zero;
+            MoveDir = Vector2.Zero;
             int Width2 = Width, Height2 = Height;
-            if (Width2 < 40)
+            TargetPosition.X -= Position.X;
+            TargetPosition.Y -= CenterY;
+            /*if (Width2 < 40)
                 Width2 = 40;
             if (Height2 < 40)
-                Height2 = 40;
-            if (AimDirection.X >= Position.X + Width2 * 0.2f && AimDirection.X < Position.X + Width2 * 0.8f && AimDirection.Y >= Position.Y + Height2 * 0.2f && AimDirection.Y < Position.Y + Height2 * 0.8f)
+                Height2 = 40;*/
+            if (AimDirection.X >= TargetPosition.X + Width2 * 0.2f && AimDirection.X < TargetPosition.X + Width2 * 0.8f && AimDirection.Y >= TargetPosition.Y + Height2 * 0.2f && AimDirection.Y < TargetPosition.Y + Height2 * 0.8f)
             {
-                if (AimDirection.X != (int)(Position.X + Width2 * 0.5f) && AimDirection.Y != (int)(Position.Y + Height2 * 0.5f))
+                if (AimDirection.X != (int)(TargetPosition.X + Width2 * 0.5f) && AimDirection.Y != (int)(TargetPosition.Y + Height2 * 0.5f))
                 {
-                    MoveDir.X = (Position.X + Width2 * 0.5f - AimDirection.X);
-                    MoveDir.Y = (Position.Y + Height2 * 0.5f - AimDirection.Y);
+                    MoveDir.X = (TargetPosition.X + Width2 * 0.5f - AimDirection.X);
+                    MoveDir.Y = (TargetPosition.Y + Height2 * 0.5f - AimDirection.Y);
                 }
                 ReachedLocation = true;
             }
             else
             {
-                MoveDir.X = (Position.X + Width2 * 0.5f - AimDirection.X);
-                MoveDir.Y = (Position.Y + Height2 * 0.5f - AimDirection.Y);
+                MoveDir.X = (TargetPosition.X + Width2 * 0.5f - AimDirection.X);
+                MoveDir.Y = (TargetPosition.Y + Height2 * 0.5f - AimDirection.Y);
             }
             const float MaxMouseMoveSpeed = 26f;
             if (MoveDir.Length() > MaxMouseMoveSpeed * Agility)
@@ -4170,10 +4177,10 @@ namespace giantsummon
             {
                 MoveDir *= 0.7f * Agility;
             }
-            AimDirection.X += MoveDir.X;
-            AimDirection.Y += MoveDir.Y;
-            if (!ReachedLocation && AimDirection.X >= Position.X && AimDirection.X < Position.X + Width2 && AimDirection.Y >= Position.Y && AimDirection.Y < Position.Y + Height2)
-                ReachedLocation = true;
+            //AimDirection.X += MoveDir.X;
+            //AimDirection.Y += MoveDir.Y;
+            if (!ReachedLocation && AimDirection.X + MoveDir.X >= TargetPosition.X && AimDirection.X + MoveDir.X < TargetPosition.X + Width2 && AimDirection.Y + MoveDir.Y >= TargetPosition.Y && AimDirection.Y + MoveDir.Y < TargetPosition.Y + Height2)
+                return true;
             return ReachedLocation;
         }
 
@@ -9498,7 +9505,7 @@ namespace giantsummon
 
         public void SetAimPositionToCenter()
         {
-            AimDirection = CenterPosition;
+            AimDirection = Vector2.Zero;
         }
 
         public bool CheckForPlayerAFK()
@@ -11615,6 +11622,25 @@ namespace giantsummon
             float LeaderBottom = 0, LeaderCenterX = 0, LeaderSpeedX = 0, LeaderSpeedY = 0;
             int LeaderHeight = 1;
             bool LeaderWet = false;
+            /*if(Owner.whoAmI == Main.myPlayer && !DoAction.InUse && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 7)
+            {
+                if(Owner.controlUseItem && Owner.inventory[Owner.selectedItem].type > 0 && Owner.inventory[Owner.selectedItem].pick > 0)
+                {
+                    int MX = (int)((Main.screenPosition.X + Main.mouseX) * (1f / 16)), MY = (int)((Main.screenPosition.Y + Main.mouseY) * (1f / 16));
+                    Tile t = Main.tile[MX, MY];
+                    if(t != null && t.active())// && (Terraria.ID.TileID.Sets.Ore[t.type] || Terraria.ID.TileID.Sets.TouchDamageOther[t.type] > 0))
+                    {
+                        for (int i = 0; i < 10; i++)
+                        {
+                            if (Inventory[i].type > 0 && Inventory[i].pick > 0)
+                            {
+                                StartNewGuardianAction(new Actions.MineAction(MX, MY));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }*/
             if(MainMod.Gameplay2PMode && LeaderGuardian != null && AssistSlot % 2 == 0)
             {
                 PositionDifference = LeaderGuardian.CenterPosition;
@@ -13352,7 +13378,7 @@ namespace giantsummon
                 {
                     HeldItemHand = HeldHand.Both;
                     if (!PlayerControl)
-                        FaceDirection(Position.X - AimDirection.X >= 0);
+                        FaceDirection(AimDirection.X < 0);
                     if (AnimationPercentage >= 0.4f)
                     {
                         WeaponCollision.X = (int)(PositionWithOffset.X + (Width * 0.25f) * Direction);
@@ -13370,7 +13396,7 @@ namespace giantsummon
                 else if (ItemUseType == ItemUseTypes.HeavyVerticalSwing)
                 {
                     if (!PlayerControl)
-                        FaceDirection(Position.X - AimDirection.X >= 0);
+                        FaceDirection(AimDirection.X < 0);
                     int Frame = 0;
                     float ThisAnimationPercentage = GetTwoHandedItemUsePercentage(AnimationPercentage);
                     if (ThisAnimationPercentage < 0.45f)
@@ -13442,7 +13468,7 @@ namespace giantsummon
                 else if (ItemUseType == ItemUseTypes.LightVerticalSwing)
                 {
                     if (!PlayerControl)
-                        FaceDirection(Position.X - AimDirection.X >= 0);
+                        FaceDirection(AimDirection.X < 0);
                     byte Frame = 0;
                     int AnimationFrame = 0;
                     if (SittingOnPlayerMount && Base.SittingItemUseFrames != null)
@@ -13557,9 +13583,9 @@ namespace giantsummon
                     {
                         //HeldItemHand = Hand;
                         float ShotDirection = (float)Main.rand.NextDouble() * 6.283185307179586f;
-                        float DistanceAccuracy = 5 * ((CenterPosition - AimDirection).Length() * 0.0625f);
-                        Vector2 AimDirectionChange = AimDirection + ShotDirection.ToRotationVector2() * (DistanceAccuracy - Accuracy * DistanceAccuracy);
-                        LookingLeft = Position.X - AimDirection.X >= 0;
+                        float DistanceAccuracy = 5 * ((CenterPosition - AimPosition).Length() * 0.0625f);
+                        Vector2 AimDirectionChange = AimPosition + ShotDirection.ToRotationVector2() * (DistanceAccuracy - Accuracy * DistanceAccuracy);
+                        LookingLeft = AimDirection.X < 0;//Position.X - AimPosition.X >= 0;
                         float AngleChecker = MathHelper.WrapAngle((float)Math.Atan2((CenterY - AimDirectionChange.Y) * GravityDirection, Position.X - AimDirectionChange.X));
                         float ArmAngle = CalculateAimingUseAnimation(AngleChecker);
                         //if (GravityDirection < 0)
@@ -13902,7 +13928,7 @@ namespace giantsummon
                     {
                         Item item = this.Inventory[SelectedItem];
                         int CenterX = (int)(Position.X * DivisionBy16), CenterY = (int)(this.CenterY * DivisionBy16);
-                        int TileTargetX = (int)(AimDirection.X * DivisionBy16), TileTargetY = (int)(AimDirection.Y * DivisionBy16);
+                        int TileTargetX = (int)(AimPosition.X * DivisionBy16), TileTargetY = (int)(AimPosition.Y * DivisionBy16);
                         if (this.Inventory[SelectedItem].pick > 0 || this.Inventory[SelectedItem].axe > 0 || this.Inventory[SelectedItem].hammer > 0)
                         {
                             int ToolUseDistance = (int)((5 + Inventory[SelectedItem].tileBoost) * Scale);
@@ -14190,8 +14216,8 @@ namespace giantsummon
                         }
                         if (item.createTile >= 0)
                         {
-                            int TileX = (int)(AimDirection.X / 16);
-                            int TileY = (int)(AimDirection.Y / 16);
+                            int TileX = (int)(AimPosition.X / 16);
+                            int TileY = (int)(AimPosition.Y / 16);
                             int tileType = item.createTile;
                             int tileStyle = item.placeStyle;
                             if (item.createTile == 20)
@@ -14205,8 +14231,8 @@ namespace giantsummon
                         }
                         if(item.createWall > 0)
                         {
-                            int TileX = (int)(AimDirection.X / 16);
-                            int TileY = (int)(AimDirection.Y / 16);
+                            int TileX = (int)(AimPosition.X / 16);
+                            int TileY = (int)(AimPosition.Y / 16);
                             WorldGen.PlaceWall(TileX, TileY, item.createTile);
                         }
                         if (!Failed && item.consumable && (OwnerPos > -1 || ForceUse))
@@ -14293,7 +14319,7 @@ namespace giantsummon
             GetAmmoInfo(i, true, out ProjID, out ProjSpeed, out Damage, out ProjKnockback);
             Damage = (int)(GetDamageMultipliersFromItem(i) * i.damage);
             //
-            Vector2 AimDirection = this.AimDirection;
+            Vector2 AimDirection = this.AimPosition;
             Vector2 ShotSpawnPosition = Vector2.Zero;
             if (MainMod.IsGuardianItem(Inventory[SelectedItem]))
                 ShotSpawnPosition = (Inventory[SelectedItem].modItem as Items.GuardianItemPrefab).ShotSpawnPosition.ToVector2() * ItemScale;
@@ -15370,7 +15396,7 @@ namespace giantsummon
             {
                 return;
             }
-            LookingLeft = AimDirection.X < Position.X;
+            LookingLeft = AimDirection.X < 0;
             SpecialAttack = gsa.GetSpecialAttackData;
             SpecialAttack.ID = ID;
             gsa.OnUse(this, SpecialAttack);
@@ -17148,6 +17174,8 @@ namespace giantsummon
 
         public void CheckForHurtTileCollision(bool CanHurt)
         {
+            if (BodyAnimationFrame == Base.SittingFrame || BodyAnimationFrame == Base.ChairSittingFrame)
+                return;
             bool AppliedDamage = false;
             bool FireImmune = HasFlag(GuardianFlags.FireblocksImmunity);
             Vector2 TileInfo = Collision.HurtTiles(CollisionPosition, Velocity, CollisionWidth, CollisionHeight, FireImmune);
@@ -17378,7 +17406,7 @@ namespace giantsummon
             ImmuneTime = GetImmuneTime;
             FallProtection = true;
             SetFallStart();
-            AimDirection = CenterPosition;
+            SetAimPositionToCenter();
             SetStuckCheckPositionToMe();
             TargetID = -1;
             AttackingTarget = false;
@@ -18472,7 +18500,7 @@ namespace giantsummon
             dd = new GuardianDrawData(GuardianDrawData.TextureType.Unknown, Main.blackTileTexture, HitboxDisplay, null, Color.Red * 0.5f);
             AddDrawData(dd, false);*/
             //
-            foreach (PathFinder.Breadcrumbs path in Paths)
+            /*foreach (PathFinder.Breadcrumbs path in Paths)
             {
                 Vector2 Pos = new Vector2(path.X * 16, path.Y * 16) - Main.screenPosition;
                 Main.spriteBatch.Draw(Main.blackTileTexture, Pos, Color.Blue);
@@ -18493,7 +18521,7 @@ namespace giantsummon
                         break;
                 }
                 Utils.DrawBorderString(Main.spriteBatch, s, Pos, Color.White);
-            }
+            }*/
             //
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);

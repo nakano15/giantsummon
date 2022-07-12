@@ -934,7 +934,7 @@ namespace giantsummon.Companions
                 case MessageIDs.PlayerAtDangerousHealthLevel:
                     return "I can distract them while you recover, [nickname].";
                 case MessageIDs.CompanionHealthAtDangerousLevel:
-                    return "Haha.. That didn't hurt..";
+                    return "Haha.. That didn't even hurt..";
                 case MessageIDs.RunningOutOfPotions:
                     return "Uh oh... I have few potions left.";
                 case MessageIDs.UsesLastPotion:

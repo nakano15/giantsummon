@@ -35,7 +35,7 @@ namespace giantsummon.Companions.CaptainStench.Attacks
             if (data.FirstFrame)
             {
                 Vector2 ProjectilePosition = Vector2.Zero;
-                Vector2 AimPosition = tg.AimDirection - tg.CenterPosition;
+                Vector2 AimPosition = tg.AimDirection;
                 float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
                 if (AimPosition.X < 0)
                     Angle = (float)Math.PI - Angle;
@@ -104,7 +104,7 @@ namespace giantsummon.Companions.CaptainStench.Attacks
 
         public override void UpdateAnimation(TerraGuardian tg, GuardianSpecialAttackData data, ref bool UsingLeftArm, ref bool UsingRightArm)
         {
-            Vector2 AimPosition = tg.AimDirection - tg.CenterPosition;
+            Vector2 AimPosition = tg.AimDirection;
             float Angle = Math.Abs(MathHelper.WrapAngle((float)Math.Atan2(AimPosition.Y, AimPosition.X)));
             if (AimPosition.X < 0)
                 Angle = (float)Math.PI - Angle;

@@ -39,4 +39,13 @@ Added a path finding to companions.
 Cille's recruit npc will no longer spawn during invasions.
 Terrarian companions no longer benefit from Skill system.
 You can now extract the mod dll from the mod file through tModLoader.
-	This is helpful for getting the references, when creating custom companions.
+	This is helpful for discovering scripts you can use, when using a programming ide, when creating custom companions.
+Changed how companions aims at things.
+	Their "mouse aim" placement is now based on their center position, instead of world position.
+Miguel's recruit npc will no longer forget that you did his exercises if you move away after jumping 25 times.
+The Ghost Fox Guardian will no longer be affected by equipments cool effects.
+Reduced Blue's weight on the team.
+	I have no idea why she was so heavy.
+Fixed a bug where large companions using a chair in a house at the desert, were being suffocated by their feet.
+Fluffles will now show up a bit transparent when in the dark, instead of having her body fully opaque.
+	She's a ghost, anyways.

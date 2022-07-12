@@ -44,8 +44,8 @@ namespace giantsummon.Companions.Creatures.Bapha
                 {
                     FrameID = 0;
                     //
-                    Vector2 AimDirectionChange = tg.AimDirection;
-                    tg.LookingLeft = tg.Position.X - tg.AimDirection.X >= 0;
+                    Vector2 AimDirectionChange = tg.AimPosition;
+                    tg.LookingLeft = tg.AimDirection.X < 0;
                     float AngleChecker = MathHelper.WrapAngle((float)Math.Atan2((tg.CenterY - AimDirectionChange.Y) * tg.GravityDirection, tg.Position.X - AimDirectionChange.X));
                     float ArmAngle = tg.CalculateAimingUseAnimation(AngleChecker);
                     if (ArmAngle < -0.75f)
@@ -67,7 +67,7 @@ namespace giantsummon.Companions.Creatures.Bapha
                         Vector2 ProjectileSpawnPosition = (i == 0 ? tg.GetGuardianLeftHandPosition : tg.GetGuardianRightHandPosition);
                         if (i == 0) tg.LeftArmAnimationFrame = BackupLArmFrame;
                         else tg.RightArmAnimationFrame = BackupRArmFrame;
-                        Vector2 ShotDirection = tg.AimDirection - ProjectileSpawnPosition;
+                        Vector2 ShotDirection = tg.AimPosition - ProjectileSpawnPosition;
                         ShotDirection.Normalize();
                         ShotDirection *= 8f;
                         int Damage = GetAttackDamage(tg);

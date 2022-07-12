@@ -249,7 +249,7 @@ namespace giantsummon
 
         public override int GetRequestObjectiveCount(int FriendshipLevel)
         {
-            return (1000 + 300 * FriendshipLevel) * 10 + ExtraDistance;
+            return (1000 + 30 * FriendshipLevel) * 100 + ExtraDistance;
         }
     }
 }

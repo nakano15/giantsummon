@@ -3661,10 +3661,10 @@ namespace giantsummon
                     {
                         float scaleFactor = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
                         Vector2 value2 = vector;
-                        Vector2 value3 = guardian.AimDirection - value2;
+                        Vector2 value3 = guardian.AimPosition - value2;
                         if (guardian.GravityDirection == -1f)
                         {
-                            value3.Y = (Main.screenHeight - guardian.AimDirection.Y) - value2.Y;
+                            value3.Y = (Main.screenHeight - guardian.AimPosition.Y) - value2.Y;
                         }
                         Vector2 vector3 = Vector2.Normalize(value3);
                         if (float.IsNaN(vector3.X) || float.IsNaN(vector3.Y))
@@ -3738,10 +3738,10 @@ namespace giantsummon
                     else if (proj.localAI[1] == 0f)
                     {
                         Vector2 value7 = vector;
-                        Vector2 vector5 = guardian.AimDirection - value7;
+                        Vector2 vector5 = guardian.AimPosition - value7;
                         if (guardian.GravityDirection == -1f)
                         {
-                            vector5.Y = Main.screenHeight - guardian.AimDirection.Y - value7.Y;
+                            vector5.Y = Main.screenHeight - guardian.AimPosition.Y - value7.Y;
                         }
                         Tile tile = Main.tile[Player.tileTargetX, Player.tileTargetY];
                         if (tile.active())
@@ -3848,10 +3848,10 @@ namespace giantsummon
                     {
                         float scaleFactor3 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
                         Vector2 value9 = vector;
-                        Vector2 value10 = guardian.AimDirection - value9;
+                        Vector2 value10 = guardian.AimPosition - value9;
                         if (guardian.GravityDirection == -1f)
                         {
-                            value10.Y = Main.screenHeight - guardian.AimDirection.Y - value9.Y;
+                            value10.Y = Main.screenHeight - guardian.AimPosition.Y - value9.Y;
                         }
                         Vector2 vector6 = Vector2.Normalize(value10);
                         if (float.IsNaN(vector6.X) || float.IsNaN(vector6.Y))
@@ -3979,10 +3979,10 @@ namespace giantsummon
                     {
                         float scaleFactor5 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
                         Vector2 value12 = vector;
-                        Vector2 value13 = guardian.AimDirection - value12;
+                        Vector2 value13 = guardian.AimPosition - value12;
                         if (guardian.GravityDirection == -1f)
                         {
-                            value13.Y = Main.screenHeight - guardian.AimDirection.Y - value12.Y;
+                            value13.Y = Main.screenHeight - guardian.AimPosition.Y - value12.Y;
                         }
                         Vector2 vector11 = Vector2.Normalize(value13);
                         if (float.IsNaN(vector11.X) || float.IsNaN(vector11.Y))
@@ -4116,10 +4116,10 @@ namespace giantsummon
                 {
                     float scaleFactor7 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
                     Vector2 value14 = vector;
-                    Vector2 value15 = guardian.AimDirection - value14;
+                    Vector2 value15 = guardian.AimPosition - value14;
                     if (guardian.GravityDirection == -1f)
                     {
-                        value15.Y = Main.screenHeight - guardian.AimDirection.Y - value14.Y;
+                        value15.Y = Main.screenHeight - guardian.AimPosition.Y - value14.Y;
                     }
                     Vector2 vector15 = Vector2.Normalize(value15);
                     if (float.IsNaN(vector15.X) || float.IsNaN(vector15.Y))
@@ -4258,10 +4258,10 @@ namespace giantsummon
                         }
                         float scaleFactor10 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
                         Vector2 value16 = vector;
-                        Vector2 value17 = guardian.AimDirection - value16;
+                        Vector2 value17 = guardian.AimPosition - value16;
                         if (guardian.GravityDirection == -1f)
                         {
-                            value17.Y = Main.screenHeight - guardian.AimDirection.Y - value16.Y;
+                            value17.Y = Main.screenHeight - guardian.AimPosition.Y - value16.Y;
                         }
                         Vector2 vector18 = Vector2.Normalize(value17);
                         if (float.IsNaN(vector18.X) || float.IsNaN(vector18.Y))
@@ -4372,10 +4372,10 @@ namespace giantsummon
                         }
                         float scaleFactor12 = guardian.Inventory[guardian.SelectedItem].shootSpeed * proj.scale;
                         Vector2 vector19 = vector;
-                        Vector2 value18 = guardian.AimDirection- vector19;
+                        Vector2 value18 = guardian.AimPosition - vector19;
                         if (guardian.GravityDirection == -1f)
                         {
-                            value18.Y = Main.screenHeight - guardian.AimDirection.Y - vector19.Y;
+                            value18.Y = Main.screenHeight - guardian.AimPosition.Y - vector19.Y;
                         }
                         Vector2 value19 = Vector2.Normalize(value18);
                         if (float.IsNaN(value19.X) || float.IsNaN(value19.Y))
@@ -4526,10 +4526,10 @@ namespace giantsummon
                     }
                 }
                 Vector2 center11 = guardian.CenterPosition;
-                Vector2 vector94 = guardian.AimDirection - center11;
+                Vector2 vector94 = guardian.AimPosition - center11;
                 if (guardian.GravityDirection == -1f)
                 {
-                    vector94.Y = Main.screenHeight - guardian.AimDirection.Y - center11.Y;
+                    vector94.Y = Main.screenHeight - guardian.AimPosition.Y - center11.Y;
                 }
                 Vector2 velocity2 = new Vector2((float)Math.Sign((vector94.X == 0f) ? ((float)guardian.Direction) : vector94.X), 0f);
                 if (velocity2.X != proj.velocity.X || velocity2.Y != proj.velocity.Y)

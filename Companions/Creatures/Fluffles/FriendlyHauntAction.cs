@@ -117,6 +117,7 @@ namespace giantsummon.Companions.Creatures.Fluffles
                         Vector2 MountedPosition = guardian.Base.GetBetweenHandsPositionVector(Reviving ? guardian.Base.ReviveFrame : guardian.Base.PlayerMountedArmAnimation);
                         MountedPosition.X = MountedPosition.X - guardian.Base.SpriteWidth * 0.5f;
                         Vector2 HauntPosition = Vector2.Zero;
+                        guardian.gfxOffY = 0;
                         if (TargetPlayer != null)
                         {
                             if (Reviving)

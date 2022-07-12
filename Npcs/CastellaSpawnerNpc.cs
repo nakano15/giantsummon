@@ -15,9 +15,9 @@ namespace giantsummon.Npcs
 
         public override void AI()
         {
-            NpcMod.SpawnGuardianNPC(npc.Bottom.X, npc.Bottom.Y, GuardianBase.Castella);
+            //NpcMod.SpawnGuardianNPC(npc.Bottom.X, npc.Bottom.Y, GuardianBase.Castella);
+            npc.Transform(Terraria.ID.NPCID.DungeonGuardian);
             npc.active = false;
-            //Main.NewText("Someone has came visit " + GuardianBountyQuest.GetDirectionText(npc.Center - Main.player[Main.myPlayer].Center) + " of "+Main.player[Main.myPlayer].name+" position.", MainMod.MysteryCloseColor);
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

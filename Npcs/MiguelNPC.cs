@@ -50,7 +50,7 @@ namespace giantsummon.Npcs
                 }
                 else if (npc.velocity.X == 0 && npc.velocity.Y == 0)
                 {
-                    if (DialogueStep >= 5)
+                    if (DialogueStep == 5)
                     {
                         if (!PlayerMovedAway)
                         {

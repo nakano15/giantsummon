@@ -9,6 +9,8 @@ namespace giantsummon
 {
     public class PathFinder
     {
+        public static int MaxTileCheck = 500;
+
         public static List<Breadcrumbs> DoPathFinding(Vector2 StartPosition, int EndPosX, int EndPosY, int JumpDistance = 6, int FallDistance = 6)
         {
             int StartPosX = (int)(StartPosition.X * (1f / 16)), StartPosY = (int)(StartPosition.Y * (1f / 16));
@@ -195,7 +197,7 @@ namespace giantsummon
                         }
                     }
                     HangPreventer++;
-                    if (HangPreventer >= 500) //1000)
+                    if (HangPreventer >= MaxTileCheck)
                     {
                         //Main.NewText("Path finding hanged with " + NextNodeList.Count + " nodes to check and " + LastNodeList.Count + " nodes to review.");
                         return new List<Breadcrumbs>();

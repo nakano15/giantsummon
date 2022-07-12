@@ -2034,7 +2034,7 @@ namespace giantsummon
                 }
                 Rewards.Add(i);
             }
-            if (Main.rand.NextDouble() < 0.667f * RewardMod)
+            if (Main.rand.NextDouble() < 0.0667f * RewardMod)
             {
                 i = new Item();
                 i.SetDefaults(ItemID.FuzzyCarrot);

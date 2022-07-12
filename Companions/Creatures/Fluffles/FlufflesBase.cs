@@ -867,11 +867,11 @@ namespace giantsummon.Companions
                             data.KnockoutAlpha = MinOpacity;
                     }
                 }
-                else if (data.KnockoutAlpha < 1)
+                else if (data.KnockoutAlpha < 0.8f)
                 {
                     data.KnockoutAlpha += 0.005f;
-                    if (data.KnockoutAlpha > 1)
-                        data.KnockoutAlpha = 1;
+                    if (data.KnockoutAlpha > 0.8f)
+                        data.KnockoutAlpha = 0.8f;
                 }
                 //fluffles random haunting script.
                 if (guardian.OwnerPos == -1 && guardian.TalkPlayerID == -1 && !guardian.UsingFurniture && !guardian.DoAction.InUse && guardian.TargetID == -1 && 

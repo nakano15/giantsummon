@@ -177,6 +177,11 @@ namespace giantsummon
             FriendshipLevel = OtherPlayer.FriendshipLevel;
         }
 
+        public static bool IsPlayerCompanionParty(Player player)
+        {
+            return player.GetModPlayer<PlayerMod>().IsCompanionParty;
+        }
+
         public static void ChangeSelectedGroup(int NewPlayer)
         {
             if (!Main.player[NewPlayer].active || Main.netMode > 0)
@@ -2450,7 +2455,7 @@ namespace giantsummon
                 {
                     GuardianActions.UseBuffPotions(Guardian);
                 }
-                Guardian.AimDirection = Main.screenPosition;
+                Guardian.AimPosition = Main.screenPosition;
                 Guardian.AimDirection.X += Main.mouseX;
                 Guardian.AimDirection.Y += Main.mouseY;
                 if (Guardian.PlayerControl)
@@ -3450,6 +3455,8 @@ namespace giantsummon
                 {
                     l = new PlayerLayer(mod.Name, "Ghost Fox Guardian Haunt", delegate (PlayerDrawInfo pdi)
                     {
+                        if (pdi.shadow != 0)
+                            return;
                         bool PlayerKOd = !pdi.drawPlayer.dead && pdi.drawPlayer.GetModPlayer<PlayerMod>().KnockedOut;
                         const int Frame = 10, ReviveFrame = 15;
                         GuardianBase gb = GuardianBase.GetGuardianBase(16);
@@ -3480,7 +3487,7 @@ namespace giantsummon
                     //HauntPosition.Y += ((float)Math.Sin(Main.GlobalTime * 2)) * 3;
                     Vector2 Origin = new Vector2(gb.SpriteWidth * 0.5f, gb.SpriteHeight);
                         Rectangle DrawFrame = new Rectangle((PlayerKOd ? ReviveFrame : Frame) * gb.SpriteWidth, 0, gb.SpriteWidth, gb.SpriteHeight);
-                        float Opacity = MainMod.FlufflesHauntOpacity;
+                        float Opacity = MainMod.FlufflesHauntOpacity * 0.8f;
                         if (Opacity < 0)
                             Opacity = 0;
                         Color color = Companions.FlufflesBase.GhostfyColor(Color.White, Opacity, Companions.FlufflesBase.GetColorMod);

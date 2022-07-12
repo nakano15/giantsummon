@@ -316,7 +316,7 @@ namespace giantsummon
             TerraGuardian tg = MainMod.ActiveGuardians[GuardianWhoAmID];
             BitsByte ActionPress = new BitsByte(tg.Action, tg.OffHandAction);
             BitsByte LastActionPress = new BitsByte(tg.LastAction, tg.LastOffHandAction);
-            Vector2 MousePosition = tg.AimDirection;
+            Vector2 MousePosition = tg.AimPosition;
             packet.Write(GuardianWhoAmID);
             packet.Write(ActionPress);
             packet.Write(LastActionPress);
@@ -341,7 +341,7 @@ namespace giantsummon
             tg.OffHandAction = ActionPress[1];
             tg.LastAction = LastActionPress[0];
             tg.LastOffHandAction = LastActionPress[1];
-            tg.AimDirection = AimPosition;
+            tg.AimDirection = AimPosition - tg.CenterPosition;
             tg.SelectedItem = SelectedItem;
             tg.SelectedOffhand = SelectedOffhandItem;
             if(Main.netMode == 2)

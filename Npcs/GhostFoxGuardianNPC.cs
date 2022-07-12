@@ -256,7 +256,7 @@ namespace giantsummon.Npcs
                 Idle = true;
                 npc.TargetClosest(false);
                 Player player = Main.player[npc.target];
-                if (((npc.direction == -1 && player.Center.X < npc.Center.X) || (npc.direction == 1 && player.Center.X > npc.Center.X)) && IsInPerceptionRange(player, 400, 300) && Collision.CanHitLine(npc.position, npc.width, npc.height, player.position, player.width, player.height))
+                if (!PlayerMod.IsPlayerCompanionParty(player) && ((npc.direction == -1 && player.Center.X < npc.Center.X) || (npc.direction == 1 && player.Center.X > npc.Center.X)) && IsInPerceptionRange(player, 400, 300) && Collision.CanHitLine(npc.position, npc.width, npc.height, player.position, player.width, player.height))
                 {
                     PlayerChaseTime = 200;
                 }

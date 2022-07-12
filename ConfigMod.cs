@@ -63,6 +63,11 @@ namespace giantsummon
             get { return ConfigScope.ServerSide; }
         }
 
+        [Label("Max Path Finding Tile Check")]
+        [Tooltip("Changes the max number of tiles path finding will check. Reduce if you notice stutters on gameplay.")]
+        [DefaultValue(500)]
+        public int PathFindingMaxTileCheck { get { return PathFinder.MaxTileCheck; } set { PathFinder.MaxTileCheck = value; } }
+
         [Label("Disable Ether Items?")]
         [Tooltip("Requests no longer give Ether Heart and Ether Fruit when turned on.")]
         public bool ClassicMode { get { return MainMod.NoEtherItems; } set { MainMod.NoEtherItems = value; } }

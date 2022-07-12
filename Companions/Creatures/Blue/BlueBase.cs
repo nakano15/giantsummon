@@ -43,7 +43,7 @@ namespace giantsummon.Companions
             FramesInRows = 20;
             DuckingHeight = 54;
             Scale = 99f / 82;
-            CompanionSlotWeight = 1.5f;
+            CompanionSlotWeight = 1.1f;
             Age = 17;
             SetBirthday(SEASON_SPRING, 27);
             Male = false;
