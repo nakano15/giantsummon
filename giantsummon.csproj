@@ -59,6 +59,7 @@
     <Compile Include="Actions\JoinPlayerMountAction.cs" />
     <Compile Include="Actions\LaunchPlayerAction.cs" />
     <Compile Include="Actions\LiftPlayerAction.cs" />
+    <Compile Include="Actions\MineVeinAction.cs" />
     <Compile Include="Actions\MountPutPlayerDownAction.cs" />
     <Compile Include="Actions\OpenGiftBoxAction.cs" />
     <Compile Include="Actions\PickupPlayerMountAction.cs" />
