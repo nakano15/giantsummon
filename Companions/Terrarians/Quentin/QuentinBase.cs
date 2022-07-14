@@ -82,7 +82,7 @@ namespace giantsummon.Companions
                 {
                     gdds.RemoveAt(i);
                 }
-                if (gdds[i].textureType == GuardianDrawData.TextureType.PlHead)
+                else if (gdds[i].textureType == GuardianDrawData.TextureType.PlHead)
                 {
                     Rectangle rect = new Rectangle(0, 0, 40, 58);
                     GuardianDrawData gdd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, texture, Position, rect,
