@@ -35,14 +35,14 @@ namespace giantsummon
 
         public static bool TryRevivingPlayer(TerraGuardian Guardian, Player target)
         {
-            if (Guardian.DoAction.InUse) return false;
+            if (Guardian.DoAction.InUse && !Guardian.IsPlayerHostile(target)) return false;
             Guardian.DoAction = new ReviveSomeoneAction(target);
             return true;
         }
 
         public static bool TryRevivingGuardian(TerraGuardian Guardian, TerraGuardian target)
         {
-            if (Guardian.DoAction.InUse) return false;
+            if (Guardian.DoAction.InUse && !Guardian.IsGuardianHostile(target)) return false;
             Guardian.DoAction = new ReviveSomeoneAction(target);
             return true;
         }

@@ -870,7 +870,7 @@ namespace giantsummon
         public static void AskGuardianToLeaveGroupYesButtonPressed()
         {
             PlayerMod pm = Main.player[ReferedGroup].GetModPlayer<PlayerMod>();
-            pm.DismissGuardian(Speaker.ID, Speaker.ModID);
+            pm.DismissGuardian(Speaker.ID, Speaker.ModID, false);
             if (Speaker.TownNpcs < 3)
             {
                 SetDialogue(Speaker.GetMessage(GuardianBase.MessageIDs.AfterAskingCompanionToLeaveYourGroupYesAnswerDangerousPlace, "(They say that will try getting to the town safelly.)"), Speaker);

@@ -206,6 +206,14 @@ namespace giantsummon
             }
         }
 
+        public Color GetMessageColor
+        {
+            get
+            {
+                return Genderless ? Color.LightGray: (Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
+            }
+        }
+
         /// <summary>
         /// Adds a topic you can talk about with your companion.
         /// Create a method that holds the dialogue of this topic, then direct It on TopicMethod.

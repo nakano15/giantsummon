@@ -389,11 +389,11 @@ namespace giantsummon
                 {
                     if (PlayerMod.HasGuardianSummoned(Main.player[Main.myPlayer], GuardianTownNPC[Pos].ID, GuardianTownNPC[Pos].ModID))
                     {
-                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessageGuardianSummoned);
+                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessageGuardianSummoned, GuardianTownNPC[Pos].Base.GetMessageColor);
                     }
                     else
                     {
-                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage);
+                        Main.NewText(GuardianTownNPC[Pos].Name + GuardianTownNPC[Pos].Base.LeavingWorldMessage, GuardianTownNPC[Pos].Base.GetMessageColor);
                     }
                 }
                 GuardianTownNPC.RemoveAt(Pos);
@@ -1157,7 +1157,7 @@ namespace giantsummon
                 if (!Silent)
                 {
                     string Message = guardian.Name + (SpawnGuardian ? " arrives." : " settles in your world.");
-                    Color color = (guardian.Base.Male ? new Color(3, 206, 228) : new Color(255, 28, 124));
+                    Color color = guardian.Base.GetMessageColor;
                     GuardianGlobalInfos.AddFeat(FeatMentioning.FeatType.SomeoneMovedInToAWorld, Main.LocalPlayer.name, guardian.Name + ":" + Main.worldName, 15, 35, GuardianGlobalInfos.GetGuardiansInTheWorld(guardian.MyID));
                     if (Main.netMode == 0)
                     {

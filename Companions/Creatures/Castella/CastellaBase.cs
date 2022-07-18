@@ -45,6 +45,7 @@ namespace giantsummon.Companions
             ReverseMount = false;
             DrinksBeverage = false;
             SetTerraGuardian();
+            MoveInLevel = 3;
 
             //Animations
             StandingFrame = 0;
@@ -217,6 +218,7 @@ namespace giantsummon.Companions
                 g.MeleeDamageMultiplier += 0.08f;
                 g.MeleeCriticalRate += 10;
                 g.Defense += 6;
+                g.MHP += 1200;
             }
         }
 
@@ -275,7 +277,7 @@ namespace giantsummon.Companions
             {
                 guardian.StartNewGuardianAction(new CastellaMetamorphosis(), MetamorphosisActionID, true);
             }
-            if (!guardian.DoAction.InUse)
+            if (IsWerewolf && Main.moonPhase == 0 && !guardian.DoAction.InUse && (guardian.FriendshipLevel < FriendsLevel || guardian.OwnerPos == -1))
             {
                 guardian.StartNewGuardianAction(new WereHuntingAction(), HuntingActionID, true);
             }
@@ -851,7 +853,6 @@ namespace giantsummon.Companions
 
         public static bool OnWerewolfForm(TerraGuardian tg)
         {
-            return true; //for debug
             if (tg.Data is CastellaData)
             {
                 CastellaData data = (CastellaData)tg.Data;

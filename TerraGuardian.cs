@@ -9996,7 +9996,8 @@ namespace giantsummon
                                     TerraGuardian DownedGuardian = !IsPlayer ? MainMod.ActiveGuardians[Target.TargetID] : null;
                                     if(terraguardians.Count > 0)
                                     {
-                                        TerraGuardian[] PossibleMentioners = terraguardians.Where(x => Target.TargetType != giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian || x.WhoAmID != Target.TargetID).ToArray();
+                                        TerraGuardian[] PossibleMentioners = terraguardians.Where(x => (Target.TargetType != giantsummon.Trigger.TriggerTarget.TargetTypes.TerraGuardian && !x.IsPlayerHostile(Main.player[Target.TargetID])) || 
+                                        (x.WhoAmID != Target.TargetID && !x.IsGuardianHostile(MainMod.ActiveGuardians[Target.TargetID]))).ToArray();
                                         if (PossibleMentioners.Length > 0)
                                         {
                                             TerraGuardian WhoMentionsThis = PossibleMentioners[Main.rand.Next(PossibleMentioners.Length)];

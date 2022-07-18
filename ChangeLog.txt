@@ -1,1 +1,3 @@
-﻿
+﻿Genderless companions will have their arrival text be shown in light gray;
+Companion message color will now be shown when companion leaves the world.
+Companions that doesn't live in your world will no longer instantly despawn upon dismissing them through dialogue.
