@@ -1180,12 +1180,19 @@ namespace giantsummon
         private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, dghmig, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer,dsi,d2pi;
         private static bool InterfacesSetup = false;
 
-        public override void ModifyInterfaceLayers(List<Terraria.UI.GameInterfaceLayer> layers)
+        public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             const int TownNpcHeadBannersLayer = 7, EntityHealthBarLayer = 14, NpcSignDialogueLayer = 23, HealthBarLayer = 25, InventoryLayer = 27, HotbatLayer = 30, 
                 MouseTextLayer = 33, PlayerChatLayer = 34, PlayerDeathLayer = 35, CursorLayer = 36, MouseOverLayer = 39;
             try
             {
+                void InsertLayer(int layer, LegacyGameInterfaceLayer inter)
+                {
+                    if (layer < layers.Count)
+                        layers.Insert(layer, inter);
+                    else
+                        layers.Add(inter);
+                }
                 if (!InterfacesSetup)
                 {
                     gi = new LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, InterfaceScaleType.UI);
@@ -1224,11 +1231,11 @@ namespace giantsummon
                 {
                     layers.Add(gi);
                 }
-                layers.Insert(CursorLayer, gsi);
-                layers.Insert(CursorLayer, dgqi);
+                InsertLayer(CursorLayer, gsi);
+                InsertLayer(CursorLayer, dgqi);
                 if (BuddyModeSetupInterface.WindowActive)
                 {
-                    layers.Insert(CursorLayer, bmsi);
+                    InsertLayer(CursorLayer, bmsi);
                 }
                 if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
                 {
@@ -1242,32 +1249,35 @@ namespace giantsummon
                     //layers.Insert(HealthBarLayer - 1, hsi);
                     return;
                 }
-                layers.Insert(PlayerChatLayer, dnagd);
                 if(Gameplay2PMode)
-                    layers.Insert(HotbatLayer, d2pi);
-                layers.Insert(HotbatLayer, goi);
-                layers.Insert(MouseOverLayer, gmi);
-                layers.Insert(InventoryLayer, dsi);
-                layers.Insert(InventoryLayer, dgi);
-                layers.Insert(NpcSignDialogueLayer, dgdi);
-                layers.Insert(HealthBarLayer - 1, hsi);
-                layers.Insert(EntityHealthBarLayer, dgrb);
-                layers.Insert(TownNpcHeadBannersLayer, dghmi);
-                layers.Insert(TownNpcHeadBannersLayer, dghmig);
-                layers.Insert(TownNpcHeadBannersLayer, umos);
-                layers.Insert(TownNpcHeadBannersLayer, dcs);
-                layers.Insert(TownNpcHeadBannersLayer, dgmo);
-                layers.Insert(0, dngh);
+                    InsertLayer(HotbatLayer, d2pi);
+                InsertLayer(HotbatLayer, goi);
+                InsertLayer(MouseOverLayer, gmi);
+                InsertLayer(InventoryLayer, dsi);
+                InsertLayer(InventoryLayer, dgi);
+                InsertLayer(NpcSignDialogueLayer, dgdi);
+                InsertLayer(HealthBarLayer - 1, hsi);
+                InsertLayer(EntityHealthBarLayer, dgrb);
+                InsertLayer(TownNpcHeadBannersLayer, dnagd);
+                InsertLayer(TownNpcHeadBannersLayer, dghmi);
+                InsertLayer(TownNpcHeadBannersLayer, dghmig);
+                InsertLayer(TownNpcHeadBannersLayer, umos);
+                InsertLayer(TownNpcHeadBannersLayer, dcs);
+                InsertLayer(TownNpcHeadBannersLayer, dgmo);
+                InsertLayer(0, dngh);
                 bool RemoveHealthBarAndInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
-                for (int l = 0; l < layers.Count; l++)
+                if (RemoveHealthBarAndInventory)
                 {
-                    if (RemoveHealthBarAndInventory && (layers[l].Name.Contains("Resource Bars") || layers[l].Name.Contains("Hotbar")))
+                    for (int l = 0; l < layers.Count; l++)
                     {
-                        layers.RemoveAt(l);
-                    }
-                    if (RemoveHealthBarAndInventory && layers[l].Name.Contains("Inventory") && !layers[l].Name.Contains("Terra Guardians"))
-                    {
-                        layers.RemoveAt(l);
+                        if ((layers[l].Name.Contains("Resource Bars") || layers[l].Name.Contains("Hotbar")))
+                        {
+                            layers.RemoveAt(l);
+                        }
+                        if (layers[l].Name.Contains("Inventory") && !layers[l].Name.Contains("Terra Guardians"))
+                        {
+                            layers.RemoveAt(l);
+                        }
                     }
                 }
                 if (CompanionFaceJS > 0)

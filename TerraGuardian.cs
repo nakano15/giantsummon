@@ -2503,21 +2503,21 @@ namespace giantsummon
             ReviveBoost = 0;
         }
 
-        public void AddDrawMomentToPlayer(Player player)
+        public void AddDrawMomentToPlayer(Player player, bool DrawInFrontOfTarget = false)
         {
-            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Player, player.whoAmI);
+            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Player, player.whoAmI, DrawInFrontOfTarget);
             MainMod.DrawMoment.Add(gdm);
         }
 
-        public void AddDrawMomentToNpc(NPC npc)
+        public void AddDrawMomentToNpc(NPC npc, bool DrawInFrontOfTarget = false)
         {
-            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Npc, npc.whoAmI);
+            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Npc, npc.whoAmI, DrawInFrontOfTarget);
             MainMod.DrawMoment.Add(gdm);
         }
 
-        public void AddDrawMomentToTerraGuardian(TerraGuardian tg)
+        public void AddDrawMomentToTerraGuardian(TerraGuardian tg, bool DrawInFrontOfTarget = false)
         {
-            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Guardian, tg.WhoAmID);
+            GuardianDrawMoment gdm = new GuardianDrawMoment(WhoAmID, TargetTypes.Guardian, tg.WhoAmID, DrawInFrontOfTarget);
             MainMod.DrawMoment.Add(gdm);
         }
 

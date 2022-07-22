@@ -1,3 +1,7 @@
 ﻿Genderless companions will have their arrival text be shown in light gray;
 Companion message color will now be shown when companion leaves the world.
 Companions that doesn't live in your world will no longer instantly despawn upon dismissing them through dialogue.
+Added a fail safe to drawing interface to try avoiding crashes.
+Fixed Miguel's hair sprite when he's using a throne.
+	Also took the liberty to add his eye colors.
+Changed the layer which companion chat messages are drawn on.
