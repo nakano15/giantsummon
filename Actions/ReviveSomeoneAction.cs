@@ -15,6 +15,7 @@ namespace giantsummon.Actions
         public int ResTime = 0;
         public bool SpeakToFallen = true;
         private bool PathfindUsed = false;
+        private bool Reviving = false;
 
         public ReviveSomeoneAction(Player Target)
         {
@@ -123,6 +124,7 @@ namespace giantsummon.Actions
             {
                 IgnoreCombat = false;
             }
+            Reviving = false;
             if (!RepelingEnemies)
             {
                 bool OffSetToTheLeft = TargetPosition.X + TargetWidth * 0.5f < guardian.Position.X;
@@ -158,7 +160,8 @@ namespace giantsummon.Actions
                         }
                     }
                 }
-                if (IsMountedPlayer || new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))//(MainMod.RectangleIntersects(guardian.TopLeftPosition, guardian.Width, guardian.Height, TargetPosition, TargetWidth, TargetHeight))
+                Rectangle rect = guardian.HitBox;
+                if (IsMountedPlayer || new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(rect))//(MainMod.RectangleIntersects(guardian.TopLeftPosition, guardian.Width, guardian.Height, TargetPosition, TargetWidth, TargetHeight))
                 {
                     guardian.Jump = false;
                     float DistanceFromTarget = Math.Abs(guardian.Position.X - (TargetPosition.X + TargetWidth * 0.5f));
@@ -208,6 +211,7 @@ namespace giantsummon.Actions
                         {
                             ReviveGuardian.ReviveBoost += ReviveBoost;
                         }
+                        Reviving = true;
                         guardian.StuckTimer = 0;
                         guardian.OffHandAction = false;
                         if (SpeakToFallen)
@@ -263,16 +267,16 @@ namespace giantsummon.Actions
         {
             if ((guardian.Base.DuckingFrame == -1 && guardian.Base.ReviveFrame == -1) || guardian.ItemAnimationTime > 0)
                 return;
-            Vector2 TargetPosition = Vector2.Zero;
-            int TargetWidth = 0, TargetHeight = 0;
+            /*Vector2 TargetPosition = Vector2.Zero;
+            int TargetWidth = 0, TargetHeight = 0;*/
             bool IsMounted = false, TargetIsBeingCarried = false;
             int TargetLayer = 0;
             if (TargetIsPlayer)
             {
                 TargetLayer = RevivePlayer.GetModPlayer<PlayerMod>().MyDrawOrderID;
-                TargetPosition = RevivePlayer.position;
+                /*TargetPosition = RevivePlayer.position;
                 TargetWidth = RevivePlayer.width;
-                TargetHeight = RevivePlayer.height;
+                TargetHeight = RevivePlayer.height;*/
                 TargetIsBeingCarried = RevivePlayer.GetModPlayer<PlayerMod>().BeingCarriedByGuardian;
                 if ((guardian.OwnerPos != RevivePlayer.whoAmI || (guardian.OwnerPos == RevivePlayer.whoAmI && !guardian.PlayerMounted)) && RevivePlayer.GetModPlayer<PlayerMod>().MountedOnGuardian)
                     IsMounted = true;
@@ -280,21 +284,21 @@ namespace giantsummon.Actions
             else
             {
                 TargetLayer = ReviveGuardian.MyDrawOrder;
-                TargetPosition = ReviveGuardian.TopLeftPosition;
+                /*TargetPosition = ReviveGuardian.TopLeftPosition;
                 TargetWidth = ReviveGuardian.Width;
-                TargetHeight = ReviveGuardian.Height;
+                TargetHeight = ReviveGuardian.Height;*/
                 TargetIsBeingCarried = ReviveGuardian.BeingCarriedByGuardian;
                 if (ReviveGuardian.OwnerPos > -1 && ReviveGuardian.PlayerControl && Main.player[ReviveGuardian.OwnerPos].GetModPlayer<PlayerMod>().MountedOnGuardian)
                     IsMounted = true;
             }
             //What to do if the target is above dangerous tiles, like Spikes? How will they rescue that character?
-            if (new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))
+            if (Reviving)//new Rectangle((int)TargetPosition.X, (int)TargetPosition.Y, TargetWidth, TargetHeight).Intersects(guardian.HitBox))
             {
                 bool IsStopped = guardian.Velocity.X == 0 || guardian.HasFlag(GuardianFlags.WindPushed);
                 if (guardian.Velocity.X == 0 || guardian.HasFlag(GuardianFlags.WindPushed))
                 {
-                    if (guardian.BodyAnimationFrame == guardian.Base.StandingFrame ||
-                        guardian.BodyAnimationFrame == guardian.Base.BackwardStanding)
+                    /*if (guardian.BodyAnimationFrame == guardian.Base.StandingFrame ||
+                        guardian.BodyAnimationFrame == guardian.Base.BackwardStanding)*/
                     {
                         int Animation = guardian.Base.StandingFrame;
                         int ArmAnimation = -1;

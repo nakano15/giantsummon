@@ -1177,94 +1177,120 @@ namespace giantsummon
             return true;
         }
 
-        private static LegacyGameInterfaceLayer gi, downedInterface, dgi, hsi, gsi, goi, gmi, dnagd, dgdi, dgmo, dghmi, dghmig, bmsi, dgrb, dcs, umos, dngh,dgqi,alexjslayer,dsi,d2pi;
-        private static bool InterfacesSetup = false;
+        private static LegacyGameInterfaceLayer UI_Debug, 
+            UI_DownedInterface, 
+            UI_Inventory, 
+            UI_HealthAndStatus, 
+            UI_GuardianCompendium, 
+            UI_OrderSelection, 
+            UI_GuardianMouse,
+            UI_ChatMessages,
+            UI_Dialogue,
+            UI_MouseOver,
+            UI_HouseManagement,
+            UI_HouseManagementGameView,
+            UI_BuddyMode,
+            UI_ReviveBars,
+            UI_ColoredScreen,
+            UI_ReviveMouseOver,
+            UI_NearbyCompanionsHeadTracker,
+            UI_QuestInterface,
+            UI_JumpScare,
+            UI_SeasonInfo,
+            UI_2P;
+        //private static bool InterfacesSetup = false;
+
+        private void InitializeInterfaces()
+        {
+            UI_Debug = new LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, InterfaceScaleType.UI);
+            UI_DownedInterface = new LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
+            UI_Inventory = new LegacyGameInterfaceLayer("Terra Guardians: Inventory Interface", DrawGuardianInventoryInterface, InterfaceScaleType.UI);
+            UI_HealthAndStatus = new LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, InterfaceScaleType.UI);
+            UI_GuardianCompendium = new LegacyGameInterfaceLayer("Terra Guardians: Selection Interface", DrawGuardianSelectionInterface, InterfaceScaleType.UI);
+            UI_OrderSelection = new LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, InterfaceScaleType.UI);
+            UI_GuardianMouse = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, InterfaceScaleType.Game);
+            UI_ChatMessages = new LegacyGameInterfaceLayer("Terra Guardians: Chat Messages Interface", DrawNpcsAndGuardianChatMessages, InterfaceScaleType.Game);
+            UI_ReviveBars = new LegacyGameInterfaceLayer("Terra Guardians: Revive Bar Interface", DrawGuardianReviveBar, InterfaceScaleType.Game);
+            UI_Dialogue = new LegacyGameInterfaceLayer("Terra Guardians: Dialogue Inteface", DrawGuardianDialogueInterface, InterfaceScaleType.UI);
+            UI_MouseOver = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, InterfaceScaleType.Game);
+            UI_HouseManagement = new LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, InterfaceScaleType.UI);
+            UI_HouseManagementGameView = new LegacyGameInterfaceLayer("Terra Guardians: House Management Game UI", DrawGuardianHouseManagementInterfaceGame, InterfaceScaleType.Game);
+            UI_ColoredScreen = new LegacyGameInterfaceLayer("Terra Guardians: Colored Screen", DrawColoredScreen, InterfaceScaleType.UI);
+            UI_ReviveMouseOver = new LegacyGameInterfaceLayer("Terra Guardians: Update Mouse Over Revive", UpdateMouseOverScript, InterfaceScaleType.Game);
+            UI_NearbyCompanionsHeadTracker = new LegacyGameInterfaceLayer("Terra Guardians: Draw Nearby Guardian Head", DrawCompanionPointingArrow, InterfaceScaleType.UI);
+            UI_JumpScare = new LegacyGameInterfaceLayer("Terra Guardians: Alex Jump Scare", DrawAlexJumpscare, InterfaceScaleType.UI);
+            UI_SeasonInfo = new LegacyGameInterfaceLayer("Terra Guardians: Season Info Interface", DrawSeasonInfos, InterfaceScaleType.UI);
+            UI_2P = new LegacyGameInterfaceLayer("Terra Guardians: Draw 2P Interface", Draw2PInterface, InterfaceScaleType.UI);
+            UI_BuddyMode = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate ()
+            {
+                BuddyModeSetupInterface.Draw();
+                return true;
+            }, InterfaceScaleType.UI);
+            UI_QuestInterface = new LegacyGameInterfaceLayer("Terra Guardians: Quest Interface", delegate ()
+            {
+                GuardianQuestInterface.Draw();
+                return true;
+            }, InterfaceScaleType.UI);
+        }
+
+        //private bool Start = false;
 
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
             const int TownNpcHeadBannersLayer = 7, EntityHealthBarLayer = 14, NpcSignDialogueLayer = 23, HealthBarLayer = 25, InventoryLayer = 27, HotbatLayer = 30, 
                 MouseTextLayer = 33, PlayerChatLayer = 34, PlayerDeathLayer = 35, CursorLayer = 36, MouseOverLayer = 39;
-            try
+            //try
             {
                 void InsertLayer(int layer, LegacyGameInterfaceLayer inter)
                 {
+                    inter.Active = true;
                     if (layer < layers.Count)
                         layers.Insert(layer, inter);
                     else
                         layers.Add(inter);
                 }
-                if (!InterfacesSetup)
-                {
-                    gi = new LegacyGameInterfaceLayer("Terra Guardians: Debug Interface", DrawDebugInterface, InterfaceScaleType.UI);
-                    downedInterface = new LegacyGameInterfaceLayer("Terra Guardians: Downed Interface", DrawDownedInterface, InterfaceScaleType.UI);
-                    dgi = new LegacyGameInterfaceLayer("Terra Guardians: Inventory Interface", DrawGuardianInventoryInterface, InterfaceScaleType.UI);
-                    hsi = new LegacyGameInterfaceLayer("Terra Guardians: Status Interface", DrawGuardianHealthStatusInterface, InterfaceScaleType.UI);
-                    gsi = new LegacyGameInterfaceLayer("Terra Guardians: Selection Interface", DrawGuardianSelectionInterface, InterfaceScaleType.UI);
-                    goi = new LegacyGameInterfaceLayer("Terra Guardians: Order Selection Interface", DrawGuardianOrderInterface, InterfaceScaleType.UI);
-                    gmi = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Interface", DrawGuardianMouse, InterfaceScaleType.Game);
-                    dnagd = new LegacyGameInterfaceLayer("Terra Guardians: Chat Messages Interface", DrawNpcsAndGuardianChatMessages, InterfaceScaleType.Game);
-                    dgrb = new LegacyGameInterfaceLayer("Terra Guardians: Revive Bar Interface", DrawGuardianReviveBar, InterfaceScaleType.Game);
-                    dgdi = new LegacyGameInterfaceLayer("Terra Guardians: Dialogue Inteface", DrawGuardianDialogueInterface, InterfaceScaleType.UI);
-                    dgmo = new LegacyGameInterfaceLayer("Terra Guardians: Mouse Over", DrawGuardianMouseOverInterface, InterfaceScaleType.Game);
-                    dghmi = new LegacyGameInterfaceLayer("Terra Guardians: House Management", DrawGuardianHouseManagementInterface, InterfaceScaleType.UI);
-                    dghmig = new LegacyGameInterfaceLayer("Terra Guardians: House Management Game UI", DrawGuardianHouseManagementInterfaceGame, InterfaceScaleType.Game);
-                    dcs = new LegacyGameInterfaceLayer("Terra Guardians: Colored Screen", DrawColoredScreen, InterfaceScaleType.UI);
-                    umos = new LegacyGameInterfaceLayer("Terra Guardians: Update Mouse Over Revive", UpdateMouseOverScript, InterfaceScaleType.Game);
-                    dngh = new LegacyGameInterfaceLayer("Terra Guardians: Draw Nearby Guardian Head", DrawCompanionPointingArrow, InterfaceScaleType.UI);
-                    alexjslayer = new LegacyGameInterfaceLayer("Terra Guardians: Alex Jump Scare", DrawAlexJumpscare, InterfaceScaleType.UI);
-                    dsi = new LegacyGameInterfaceLayer("Terra Guardians: Season Info Interface", DrawSeasonInfos, InterfaceScaleType.UI);
-                    d2pi = new LegacyGameInterfaceLayer("Terra Guardians: Draw 2P Interface", Draw2PInterface, InterfaceScaleType.UI);
-                    bmsi = new LegacyGameInterfaceLayer("Terra Guardians: Buddy Mode Hud", delegate()
-                    {
-                        BuddyModeSetupInterface.Draw();
-                        return true;
-                    }, InterfaceScaleType.UI);
-                    dgqi = new LegacyGameInterfaceLayer("Terra Guardians: Quest Interface", delegate ()
-                    {
-                        GuardianQuestInterface.Draw();
-                        return true;
-                    }, InterfaceScaleType.UI);
-                    InterfacesSetup = true;
-                }
                 //Todo - This is only for testing purpose
                 if (ShowDebugInfo)
                 {
-                    layers.Add(gi);
+                    layers.Add(UI_Debug);
                 }
-                InsertLayer(CursorLayer, gsi);
-                InsertLayer(CursorLayer, dgqi);
+                InsertLayer(CursorLayer, UI_GuardianCompendium);
+                InsertLayer(CursorLayer, UI_QuestInterface);
                 if (BuddyModeSetupInterface.WindowActive)
                 {
-                    InsertLayer(CursorLayer, bmsi);
+                    InsertLayer(CursorLayer, UI_BuddyMode);
                 }
                 if (Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().KnockedOut)
                 {
                     if (Main.playerInventory)
                         Main.playerInventory = false;
                     if (!Main.player[Main.myPlayer].dead)
-                        layers.Clear();
-                    layers.Add(hsi);
-                    layers.Add(downedInterface);
+                    {
+                        foreach (GameInterfaceLayer l in layers) l.Active = false;
+                        //layers.Clear();
+                    }
+                    layers.Add(UI_HealthAndStatus);
+                    layers.Add(UI_DownedInterface);
                     //layers.Insert(PlayerDeathLayer, downedInterface);
                     //layers.Insert(HealthBarLayer - 1, hsi);
                     return;
                 }
                 if(Gameplay2PMode)
-                    InsertLayer(HotbatLayer, d2pi);
-                InsertLayer(HotbatLayer, goi);
-                InsertLayer(MouseOverLayer, gmi);
-                InsertLayer(InventoryLayer, dsi);
-                InsertLayer(InventoryLayer, dgi);
-                InsertLayer(NpcSignDialogueLayer, dgdi);
-                InsertLayer(HealthBarLayer - 1, hsi);
-                InsertLayer(EntityHealthBarLayer, dgrb);
-                InsertLayer(TownNpcHeadBannersLayer, dnagd);
-                InsertLayer(TownNpcHeadBannersLayer, dghmi);
-                InsertLayer(TownNpcHeadBannersLayer, dghmig);
-                InsertLayer(TownNpcHeadBannersLayer, umos);
-                InsertLayer(TownNpcHeadBannersLayer, dcs);
-                InsertLayer(TownNpcHeadBannersLayer, dgmo);
-                InsertLayer(0, dngh);
+                    InsertLayer(HotbatLayer, UI_2P);
+                InsertLayer(HotbatLayer, UI_OrderSelection);
+                InsertLayer(MouseOverLayer, UI_GuardianMouse);
+                InsertLayer(InventoryLayer, UI_SeasonInfo);
+                InsertLayer(InventoryLayer, UI_Inventory);
+                InsertLayer(NpcSignDialogueLayer, UI_Dialogue);
+                InsertLayer(HealthBarLayer - 1, UI_HealthAndStatus);
+                InsertLayer(EntityHealthBarLayer, UI_ReviveBars);
+                InsertLayer(TownNpcHeadBannersLayer, UI_ChatMessages);
+                InsertLayer(TownNpcHeadBannersLayer, UI_HouseManagement);
+                InsertLayer(TownNpcHeadBannersLayer, UI_HouseManagementGameView);
+                InsertLayer(TownNpcHeadBannersLayer, UI_ReviveMouseOver);
+                InsertLayer(TownNpcHeadBannersLayer, UI_ColoredScreen);
+                InsertLayer(TownNpcHeadBannersLayer, UI_MouseOver);
+                InsertLayer(0, UI_NearbyCompanionsHeadTracker);
                 bool RemoveHealthBarAndInventory = Main.player[Main.myPlayer].GetModPlayer<PlayerMod>().Guardian.PlayerControl;
                 if (RemoveHealthBarAndInventory)
                 {
@@ -1272,21 +1298,23 @@ namespace giantsummon
                     {
                         if ((layers[l].Name.Contains("Resource Bars") || layers[l].Name.Contains("Hotbar")))
                         {
-                            layers.RemoveAt(l);
+                            layers[l].Active = false;
+                            //layers.RemoveAt(l);
                         }
                         if (layers[l].Name.Contains("Inventory") && !layers[l].Name.Contains("Terra Guardians"))
                         {
-                            layers.RemoveAt(l);
+                            layers[l].Active = false;
+                            //layers.RemoveAt(l);
                         }
                     }
                 }
                 if (CompanionFaceJS > 0)
-                    layers.Add(alexjslayer);
+                    layers.Add(UI_JumpScare);
             }
-            catch
+            /*catch
             {
 
-            }
+            }*/
         }
 
         public static bool DrawSeasonInfos()
@@ -3170,6 +3198,8 @@ namespace giantsummon
                 GSI_ForegroundInterfaceTexture = GetTexture("Interface/gsi_fg");
                 ContributorIconTexture = GetTexture("Interface/Contributor_Icon");
                 CompactCompanionInfosTexture = GetTexture("Interface/CompactCompanionInfo");
+
+                InitializeInterfaces();
             }
             GroupSetup();
             GetInitialCompanionsList();
@@ -3334,8 +3364,17 @@ namespace giantsummon
         {
             if (Count < 2)
                 return Word;
-            if (Word.Length > 1 && Word[Word.Length - 1] == 'y')
+            if (Word.Length > 2 && Word[Word.Length - 1] == 'y')
             {
+                switch(char.ToLower(Word[Word.Length - 2]))
+                {
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                        return Word;
+                }
                 return Word.Substring(0, Word.Length - 1) + "ies";
             }
             if (Word.Length > 1 && Word[Word.Length - 1] == 'f')

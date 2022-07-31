@@ -5,3 +5,14 @@ Added a fail safe to drawing interface to try avoiding crashes.
 Fixed Miguel's hair sprite when he's using a throne.
 	Also took the liberty to add his eye colors.
 Changed the layer which companion chat messages are drawn on.
+Changed Heavy Injury debuff.
+	Now it drops the maximum health to 80%.
+	Reduces defense by 10%.
+	Now drops Movement Speed to 85%.
+	Changed the description.
+Changed Injury debuff.
+	Reduces Max Health to 90%.
+	Reduces defense by 5;
+	Now drops Movement Speed to 95%.
+Fixed a bug where Fluffles would alternate between reviving animation, and standing.
+The plural of Keys is no longer Keies.

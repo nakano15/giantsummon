@@ -15,8 +15,8 @@ namespace giantsummon.Npcs
 
         public override void AI()
         {
-            NpcMod.SpawnGuardianNPC(npc.Bottom.X, npc.Bottom.Y, GuardianBase.Castella);
             //npc.Transform(Terraria.ID.NPCID.DungeonGuardian);
+            NpcMod.SpawnGuardianNPC(npc.Bottom.X, npc.Bottom.Y, GuardianBase.Castella);
             npc.active = false;
         }
 

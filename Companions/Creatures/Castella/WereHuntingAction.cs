@@ -81,6 +81,8 @@ namespace giantsummon.Companions.Creatures.Castella
                                     if (Time == 90)
                                     {
                                         Victim.EnterDownedState();
+                                        if (Victim.PlayerControl)
+                                            Victim.TogglePlayerControl(true);
                                         Victim.KnockedOutCold = true;
                                     }
                                     if(Time >= 120)
@@ -322,13 +324,13 @@ namespace giantsummon.Companions.Creatures.Castella
                     {
                         default:
                             Messages.Add("*Hello, since you're my newest victim, I shall introduce myself.*");
-                            Messages.Add("*I am Castella, and during this season, this shall be my hunting ground.*");
+                            Messages.Add("*I am Castella, and during this season, this is my hunting ground.*");
                             Messages.Add("*I like hunting people and nibbling them, and that's what I shall be doing now.*");
                             break;
                         case 1:
                             Messages.Add("*Look at that, a Terrarian. I haven't caught one of those since forever.*");
                             Messages.Add("*Since we're going to meet each other many times, I think I should introduce myself.*");
-                            Messages.Add("*I am Castella. Don't worry, we shall have enough chances to get acquantaince.*");
+                            Messages.Add("*I am Castella. And don't worry, we shall have enough chances to get acquantaince.*");
                             break;
                         case 2:
                             Messages.Add("*This place surelly have interesting things I could get my paws on.*");

@@ -219,6 +219,7 @@ namespace giantsummon.Companions
                 g.MeleeCriticalRate += 10;
                 g.Defense += 6;
                 g.MHP += 1200;
+                g.AddFlag(GuardianFlags.KnockbackImmunity);
             }
         }
 

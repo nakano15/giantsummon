@@ -20,14 +20,16 @@ namespace giantsummon.Buffs
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.statLifeMax2 = (int)(player.statLifeMax2 * 0.95f);
+            player.statLifeMax2 = (int)(player.statLifeMax2 * 0.9f);
             player.statDefense -= 5;
+            player.moveSpeed *= 0.95f;
         }
 
         public override void Update(TerraGuardian guardian)
         {
-            guardian.MHP = (int)(guardian.MHP * 0.95f);
+            guardian.MHP = (int)(guardian.MHP * 0.9f);
             guardian.Defense -= 5;
+            guardian.MoveSpeed *= 0.85f;
         }
     }
 }

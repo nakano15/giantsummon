@@ -674,6 +674,8 @@ namespace giantsummon.Companions
 
         public override void GuardianAnimationOverride(TerraGuardian guardian, byte AnimationID, ref int Frame)
         {
+            if (Frame == ReviveFrame || Frame == BackwardRevive)
+                return;
             if (Frame == 0)
             {
                 if (guardian.OffsetY >= 2)
