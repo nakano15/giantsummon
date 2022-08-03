@@ -52,7 +52,8 @@ namespace giantsummon
             BuffCommentCooldown,
             TileCommentCooldown,
             HurtPanic,
-            MemoryOfTarget
+            MemoryOfTarget,
+            PathFindingStuckTimer
         }
     }
 }

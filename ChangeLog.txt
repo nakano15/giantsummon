@@ -16,3 +16,8 @@ Changed Injury debuff.
 	Now drops Movement Speed to 95%.
 Fixed a bug where Fluffles would alternate between reviving animation, and standing.
 The plural of Keys is no longer Keies.
+Follower companions will now pathfind their way to you, if they're not on the same level(ground) as you.
+Enhanced companions path finding.
+	Now if there's an opening above where they can pass through, they will check it out if is on the way to their final destination.
+Left and Right aiming on 2P mode is now inverted, again.
+	Now 2P aiming is fixed, right?

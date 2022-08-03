@@ -3098,12 +3098,12 @@ namespace giantsummon
                 Guardian.SelectedItem = SlotChange;
                 Guardian.Jump = CheckForButtonPress(Buttons.LeftTrigger);
                 Vector2 RightThumbstick = gamePadState.ThumbSticks.Right * 128f;
-                RightThumbstick.Y *= -1;
+                //RightThumbstick.Y *= -1;
                 if(RightThumbstick.Length() == 0)
                 {
                     RightThumbstick.X = Guardian.Direction * Guardian.Width * 0.5f;
                 }
-                Vector2 AimDirection = new Vector2(RightThumbstick.X, RightThumbstick.Y);
+                Vector2 AimDirection = new Vector2(-RightThumbstick.X, -RightThumbstick.Y);
                 Guardian.AimDirection = AimDirection;
             }
             oldGamePadState = gamePadState;

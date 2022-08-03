@@ -54,15 +54,19 @@ namespace giantsummon
                 {
                     Node n = LastNodeList[0];
                     LastNodeList.RemoveAt(0);
-                    if (Math.Abs(n.NodeX - StartPosX) >= MaxDistance || Math.Abs(n.NodeY - StartPosY) >= MaxDistance) //Skip path finding
-                    {
-                        continue;
-                    }
                     int X = n.NodeX, Y = n.NodeY;
+                    /*Dust d = Dust.NewDustPerfect(new Vector2(X * 16 + 8, Y * 16 + 8), Terraria.ID.DustID.Flare, Vector2.Zero);
+                    d.scale = 6;
+                    d.noGravity = true;
+                    d.noLight = false;*/
                     if (X == EndPosX && Y == EndPosY)
                     {
                         NodeFound = n;
                         break;
+                    }
+                    if (Math.Abs(n.NodeX - StartPosX) >= MaxDistance || Math.Abs(n.NodeY - StartPosY) >= MaxDistance) //Skip path finding
+                    {
+                        continue;
                     }
                     //Need to rework how the breadcrumbs finding works.
                     for (byte dir = 0; dir < 4; dir++)
@@ -75,7 +79,7 @@ namespace giantsummon
                                     int PlatformNodeY = -1;
                                     for (int y = 0; y < JumpDistance; y++)
                                     {
-                                        if ((y == 0 ? CheckForSolidBlocks(X, Y - y) : CheckForSolidBlocksCeiling(X, Y - y)))
+                                        if ((y == 0 ? CheckForSolidBlocks(X, Y, 4) : CheckForSolidBlocksCeiling(X, Y - y)))
                                         {
                                             HasSolidBlock = true;
                                             break;
@@ -86,13 +90,18 @@ namespace giantsummon
                                             PlatformNodeY = Y - y - 1;
                                             break;
                                         }
-                                        for (sbyte x = -1; x < 2; x += 2)
+                                        int YCheck = Y - y;
+                                        //if (!CheckForSolidBlocks(X, YCheck))
                                         {
-                                            if (!CheckForSolidBlocks(X + x, Y - y, PassThroughDoors: true) && !VisitedNodes.Contains(new Point(X, PlatformNodeY)))
+                                            for (sbyte x = -1; x < 2; x += 2)
                                             {
-                                                //PossibleToJumpHere
-                                                NextNodeList.Add(new Node(X + x, Y - y, x == -1 ? Node.DIR_LEFT : Node.DIR_RIGHT, n));
-                                                VisitedNodes.Add(new Point(X, PlatformNodeY));
+                                                if (!CheckForSolidBlocks(X + x, YCheck, PassThroughDoors: true) && CheckForSolidGroundUnder(X + x, YCheck, true) && !VisitedNodes.Contains(new Point(X, YCheck)))
+                                                {
+                                                    //PossibleToJumpHere
+                                                    NextNodeList.Add(new Node(X, YCheck, Node.DIR_UP, n));// x < 0 ? Node.DIR_LEFT : Node.DIR_RIGHT, n));
+                                                    VisitedNodes.Add(new Point(X, YCheck));
+                                                    break;
+                                                }
                                             }
                                         }
                                     }
@@ -153,26 +162,35 @@ namespace giantsummon
                                     }
                                     if (Blocked)
                                         continue;
+                                    sbyte MinCheckY = -1, MaxCheckY = 3;
                                     if (!CheckForSolidGroundUnder(nx, ny, true))
                                     {
-                                        for (int y = 1; y <= FallDistance; y++)
+                                        if (n.NodeDirection != Node.DIR_UP)
                                         {
-                                            int yc = ny + y;
-                                            if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
-                                                break;
-                                            if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
+                                            for (int y = 1; y <= FallDistance; y++)
                                             {
-                                                if (!VisitedNodes.Contains(new Point(nx, yc)))
+                                                int yc = ny + y;
+                                                if (CheckForSolidBlocks(nx, yc, PassThroughDoors: true))
+                                                    break;
+                                                if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
                                                 {
-                                                    NextNodeList.Add(new Node(nx, yc, Node.DIR_DOWN, n));
-                                                    VisitedNodes.Add(new Point(nx, yc));
+                                                    if (!VisitedNodes.Contains(new Point(nx, yc)))
+                                                    {
+                                                        NextNodeList.Add(new Node(nx, yc, Node.DIR_DOWN, n));
+                                                        VisitedNodes.Add(new Point(nx, yc));
+                                                    }
                                                 }
                                             }
                                         }
+                                        else
+                                        {
+                                            MinCheckY = 0;
+                                            MaxCheckY = 1;
+                                        }
                                     }
-                                    else
+                                    //else
                                     {
-                                        for (int y = -1; y < 3; y++)
+                                        for (int y = MinCheckY; y < MaxCheckY; y++)
                                         {
                                             //for (int h = -1; h <= 1; h++)
                                             {

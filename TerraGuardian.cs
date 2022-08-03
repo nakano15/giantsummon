@@ -3887,6 +3887,7 @@ namespace giantsummon
             {
                 if (!IsBeingPulledByPlayer && (!KnockedOut || !HasFlag(GuardianFlags.NotPulledWhenKOd)))
                 {
+                    Paths.Clear();
                     IsBeingPulledByPlayer = true;
                     SuspendedByChains = false;
                 }
@@ -5285,6 +5286,7 @@ namespace giantsummon
                 SavedPosY = Y;
                 PathingInterrupted = false;
                 Paths = PathFinder.DoPathFinding(Position, X, Y, (int)(CalculatedJumpHeight * DivisionBy16), FallHeightTolerance);
+                RemoveCooldown(GuardianCooldownManager.CooldownType.PathFindingStuckTimer);
                 return true;
             }
             return false;
@@ -5318,12 +5320,22 @@ namespace giantsummon
                 {
                     WalkMode = true;
                 }
+                if (GetCooldownValue(GuardianCooldownManager.CooldownType.PathFindingStuckTimer) >= 180)
+                {
+                    RemoveCooldown(GuardianCooldownManager.CooldownType.PathFindingStuckTimer);
+                    Main.NewText("Retracting steps of '" + Name + "'.");
+                    if(!CreatePathingTo(SavedPosX, SavedPosY, WalkToPath))
+                    {
+                        return false;
+                    }
+                }
                 PathFinder.Breadcrumbs path = Paths[0];
+                bool ReachedNode = false;
                 switch (path.NodeOrientation)
                 {
                     case PathFinder.Node.NONE:
                         {
-                            Paths.RemoveAt(0);
+                            ReachedNode = true;
                         }
                         break;
                     case PathFinder.Node.DIR_UP:
@@ -5352,9 +5364,10 @@ namespace giantsummon
                                 }
                                 else
                                 {
-                                    Paths.RemoveAt(0);
+                                    ReachedNode = true;
                                 }
                             }
+                            IncreaseCooldownValue(GuardianCooldownManager.CooldownType.PathFindingStuckTimer);
                         }
                         break;
                     case PathFinder.Node.DIR_RIGHT:
@@ -5363,7 +5376,7 @@ namespace giantsummon
                             float X = path.X * 16 + 8;
                             if (Position.X >= X - CollisionWidth * 0.5f && Position.X < X + CollisionWidth * 0.5f)
                             {
-                                Paths.RemoveAt(0);
+                                ReachedNode = true;
                             }
                             else
                             {
@@ -5388,13 +5401,20 @@ namespace giantsummon
                             else if (Position.Y < Y)
                             {
                                 DropFromPlatform = true;
+                                IncreaseCooldownValue(GuardianCooldownManager.CooldownType.PathFindingStuckTimer);
                             }
                             else
                             {
-                                Paths.RemoveAt(0);
+                                ReachedNode = true;
                             }
                         }
                         break;
+                }
+                TryJumpingTallTiles();
+                if (ReachedNode)
+                {
+                    Paths.RemoveAt(0);
+                    RemoveCooldown(GuardianCooldownManager.CooldownType.PathFindingStuckTimer);
                 }
                 return true;
             }
@@ -6341,7 +6361,7 @@ namespace giantsummon
                         CheckForLifeCrystals();
                         CheckForPullSave();
                     }
-                    if (!SittingOnPlayerMount && !PlayerMounted)
+                    if (Paths.Count == 0 && !SittingOnPlayerMount && !PlayerMounted)
                     {
                         TryJumpingTallTiles();
                         bool SafeAhead = CheckIfIsSafeAhead();
@@ -6368,7 +6388,7 @@ namespace giantsummon
                     if (Position.Y <= JumpUntilHeight)
                         JumpUntilHeight = -1;
                 }
-                if (!PlayerMounted && Velocity.Y > 0 && Position.Y * DivisionBy16 - FallStart > FallHeightTolerance)
+                if (Paths.Count == 0 && !PlayerMounted && Velocity.Y > 0 && Position.Y * DivisionBy16 - FallStart > FallHeightTolerance)
                 {
                     if (!Jump && HasSolidGroundUnder())
                     {
@@ -11963,6 +11983,14 @@ namespace giantsummon
                         (Direction > 0 && Position.X < LeaderCenterX) || 
                         (Direction < 0 && Position.X > LeaderCenterX))
                         IncreaseStuckTimer();
+                }
+                if(!IsAttackingSomething && Velocity.X == 0 && Velocity.Y == 0 && !IsOnSameGroundAsPlayer && Paths.Count == 0 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3)
+                {
+                    if(!CreatePathingTo(new Vector2(LeaderCenterX, LeaderBottom)))
+                    {
+                        if(LeaderSpeedY == 0)
+                            BePulledByPlayer();
+                    }
                 }
             }
         }
@@ -18501,7 +18529,7 @@ namespace giantsummon
             dd = new GuardianDrawData(GuardianDrawData.TextureType.Unknown, Main.blackTileTexture, HitboxDisplay, null, Color.Red * 0.5f);
             AddDrawData(dd, false);*/
             //
-            /*foreach (PathFinder.Breadcrumbs path in Paths)
+            foreach (PathFinder.Breadcrumbs path in Paths)
             {
                 Vector2 Pos = new Vector2(path.X * 16, path.Y * 16) - Main.screenPosition;
                 Main.spriteBatch.Draw(Main.blackTileTexture, Pos, Color.Blue);
@@ -18522,7 +18550,7 @@ namespace giantsummon
                         break;
                 }
                 Utils.DrawBorderString(Main.spriteBatch, s, Pos, Color.White);
-            }*/
+            }
             //
             //dd = new GuardianDrawData(GuardianDrawData.TextureType.TGExtra, MainMod.GuardianMouseTexture, new Vector2(AimDirection.X, AimDirection.Y) - Main.screenPosition, Color.White);
             //AddDrawData(dd, true);
