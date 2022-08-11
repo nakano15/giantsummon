@@ -516,6 +516,7 @@ namespace giantsummon.Companions
             foreach (int k in MainMod.ActiveGuardians.Keys)
             {
                 if (k != guardian.WhoAmID && !guardian.IsGuardianHostile(MainMod.ActiveGuardians[k]) && MainMod.ActiveGuardians[k].OwnerPos == -1 &&
+                    !guardian.UsingFurniture &&
                     !CarryBlacklist.Any(x => x.IsSameID(MainMod.ActiveGuardians[k])) && MainMod.ActiveGuardians[k].Height < guardian.Height * 0.95f &&
                     (guardian.CenterPosition - MainMod.ActiveGuardians[k].CenterPosition).Length() < 80 + MainMod.ActiveGuardians[k].Width * 0.5f)
                 {
@@ -725,6 +726,8 @@ namespace giantsummon.Companions
                             HeldGuardian.Position.X += 4 * guardian.Direction * guardian.Scale;
                         if (HeldGuardian.KnockedOut)
                             HeldGuardian.ReviveBoost += 3;
+                        else
+                            HeldGuardian.ComfortStack += 0.02f;
                         if (HeldGuardian.ItemAnimationTime == 0)
                             HeldGuardian.Direction = guardian.Direction;
                         guardian.AddDrawMomentToTerraGuardian(HeldGuardian);

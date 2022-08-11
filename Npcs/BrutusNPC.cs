@@ -32,7 +32,8 @@ namespace giantsummon.Npcs
         public byte Scene = 0;
         public int SceneTime = 0;
         public const byte SCENE_PLAYERWINS = 1,
-            SCENE_PLAYERCHEATS = 2;
+            SCENE_PLAYERCHEATS = 2,
+            SCENE_TIMEUP = 3;
         private int LeftArmFrame = -1, RightArmFrame = -1, BodyFrame = -1;
         public const int TownNpcsForBrutusToBeginAppearing = 2;
 
@@ -175,7 +176,21 @@ namespace giantsummon.Npcs
                 npc.direction = Main.player[Main.myPlayer].Center.X < npc.Center.X ? -1 : 1;
             if (!WarnedAboutBrutus)
             {
-                Main.NewText("<Brutus> I'm still looking for someone to hire me as a bodyguard. Find me by your towns if you want to hire me.", MainMod.MysteryCloseColor);
+                byte NearestNpc = 255;
+                float NearestDistance = 500;
+                for(byte i = 0; i < 200; i++)
+                {
+                    if(Main.npc[i].active && Main.npc[i].townNPC)
+                    {
+                        float Distance = (Main.npc[i].Center - npc.Center).Length();
+                        if(Distance < NearestDistance)
+                        {
+                            NearestNpc = i;
+                            NearestDistance = Distance;
+                        }
+                    }
+                }
+                Main.NewText("<Brutus> I'm still looking for someone to hire me as a bodyguard. Find me "+(NearestNpc < 255 ? "next to " +Main.npc[NearestNpc].GetGivenOrTypeNetName() : "by your towns")+" if you want to hire me.", MainMod.MysteryCloseColor);
                 WarnedAboutBrutus = true;
             }
             if (SteelTestingTime > 0)
@@ -201,9 +216,8 @@ namespace giantsummon.Npcs
                 npc.TargetClosest(true);
                 if (SteelTestingTime <= 0)
                 {
-                    SayMessage("*Growl! Time's up.*");
                     EndDamageTest();
-                    PlayScene(0);
+                    PlayScene(SCENE_TIMEUP);
                 }
             }
             npc.npcSlots = 1;
@@ -212,12 +226,28 @@ namespace giantsummon.Npcs
                 default:
                     {
                         SceneTime++;
-                        Idle = true;
+                        Idle = SteelTestingTime == 0;
                         if (false && SteelTestingTime <= 0 && SceneTime >= 600 && npc.velocity.X == 0 && npc.velocity.Y == 0)
                         {
                             BodyFrame = LeftArmFrame = RightArmFrame = Base.DuckingFrame;
                         }
                     }
+                    break;
+                case SCENE_TIMEUP:
+                    if (SceneTime == 0)
+                    {
+                        SayMessage("*Growl! Time's up.*");
+                    }
+                    else if (SceneTime == 180)
+                    {
+                        SayMessage("*You're not strong enough to hire my blade.*");
+                    }
+                    else if (SceneTime == 360)
+                    {
+                        SayMessage("*Show me how deep is your pocket if you want to hire me other way.*");
+                        PlayScene(0);
+                    }
+                    SceneTime++;
                     break;
                 case SCENE_PLAYERWINS:
                     npc.npcSlots = 200;
@@ -250,7 +280,7 @@ namespace giantsummon.Npcs
                             }
                             if (SceneTime == 780)
                             {
-                                SayMessage("*I am " + Base.Name + ". Your body guard, from now on.*");
+                                SayMessage("*I am " + Base.Name + ", and I am your bodyguard from now on.*");
                             }
                             if (SceneTime >= 1080)
                             {
@@ -320,7 +350,7 @@ namespace giantsummon.Npcs
                                     if (SceneTime == 60 + t * FrameTime + FrameTime / 2)
                                     {
                                         int Damage = (int)((70f / target.MaxHealthBonus) * target.MaxLife);
-                                        target.Hurt(Damage, npc.direction, " has got what deserved.");
+                                        target.Hurt(Damage, npc.direction, " has got what they deserved.");
                                     }
                                 }
                                 t++;
@@ -377,7 +407,7 @@ namespace giantsummon.Npcs
                 }
                 if (!PlayerInRange)
                 {
-                    Main.NewText("The Lion Guardian has returned to the Ether Realm.", Color.OrangeRed);
+                    Main.NewText("Brutus has returned to the Ether Realm.", Color.OrangeRed);
                     npc.active = false;
                     npc.life = 0;
                 }
@@ -519,7 +549,7 @@ namespace giantsummon.Npcs
                 }
                 else
                 {
-                    Main.npcChatText = "*He's saying that the only ways of hiring his blade is by either showing how strong you are, or how deep your pocket is.*";
+                    Main.npcChatText = "*The only way you can hire my blade is by either showing how strong you are, or how deep is your pocket. Your pocket isn't deep enough right now, but you can still show me how strong you are.*";
                 }
             }
         }

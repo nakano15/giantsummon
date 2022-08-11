@@ -165,7 +165,7 @@ namespace giantsummon.Npcs
                     bool HasTileInFront = false;
                     for (int x = 0; x < 3; x++)
                     {
-                        for (int y = 0; y < 4; y++)
+                        for (int y = 0; y < npc.height * (1f / 16) + 1; y++)
                         {
                             int Tx = (int)npc.Center.X / 16 + (2 + x) * npc.direction, Ty = (int)npc.Bottom.Y / 16 + y;
                             Tile tile = MainMod.GetTile(Tx, Ty);

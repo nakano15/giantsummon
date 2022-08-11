@@ -21,3 +21,16 @@ Enhanced companions path finding.
 	Now if there's an opening above where they can pass through, they will check it out if is on the way to their final destination.
 Left and Right aiming on 2P mode is now inverted, again.
 	Now 2P aiming is fixed, right?
+Companions should no longer wander to inside water when they can't breath underwater.
+	Also made them not wander to lava if they have no lava proof, and not wander to dangerous tiles.
+Brutus recruit npc got some changes:
+	He will no longer speak in third person, when you try hiring by paying him, and you have not enough money.
+	When you fail the steel testing, he will say a few more lines of dialogue before allowing you to speak to him again.
+	He will no longer idle while steel testing is running.
+		Better avoid making him demoralize you.
+	When he's still visiting the world, he'll use a npc near him as reference so you can find him easier.
+Fixed a misallignment issue with the friendship rank exp bar.
+Vladimir, Malisha, Alexander, Minerva and Cinnamon got eyes colors.
+Fixed an issue where travel requests were increasing the progress when companions moves right or down, and decreasing the progress when companion moves left or up.
+Vladimir will no longer try picking up companions that are using a furniture.
+	On other hand, if he carry a companion, will give them comfort points for the time he's carrying them, so it's like using a furniture.

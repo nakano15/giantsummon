@@ -226,7 +226,7 @@ namespace giantsummon
                 TerraGuardian g = PlayerMod.GetPlayerSummonedGuardian(player, data.RequestGiver.ID, data.RequestGiver.ModID);
                 if (!g.KnockedOut && !g.Downed)
                 {
-                    data.ObjectiveCount += (int)((g.Velocity.X + g.Velocity.Y) * 100);
+                    data.ObjectiveCount += (int)((Math.Abs(g.Velocity.X) + (Math.Abs(g.Velocity.Y)) * 10));
                     if (data.IsComplete)
                     {
                         Main.NewText(data.RequestGiver.Name + " seems to have enjoyed the travel.", new Microsoft.Xna.Framework.Color(200, 200, 200));
@@ -249,7 +249,7 @@ namespace giantsummon
 
         public override int GetRequestObjectiveCount(int FriendshipLevel)
         {
-            return (1000 + 30 * FriendshipLevel) * 100 + ExtraDistance;
+            return (1000 + 300 * FriendshipLevel) * 100 + ExtraDistance;
         }
     }
 }

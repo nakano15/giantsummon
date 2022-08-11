@@ -5323,9 +5323,10 @@ namespace giantsummon
                 if (GetCooldownValue(GuardianCooldownManager.CooldownType.PathFindingStuckTimer) >= 180)
                 {
                     RemoveCooldown(GuardianCooldownManager.CooldownType.PathFindingStuckTimer);
-                    Main.NewText("Retracting steps of '" + Name + "'.");
+                    //Main.NewText("Retracting steps of '" + Name + "'.");
                     if(!CreatePathingTo(SavedPosX, SavedPosY, WalkToPath))
                     {
+                        Paths.Clear();
                         return false;
                     }
                 }
@@ -5348,6 +5349,7 @@ namespace giantsummon
                                     MoveRight = true;
                                 else
                                     MoveLeft = true;
+                                TryJumpingTallTiles();
                             }
                             else if (Position.Y > Y + 16)
                             {
@@ -5382,8 +5384,11 @@ namespace giantsummon
                             {
                                 if (Position.X < X)
                                     MoveRight = true;
-                                if (Position.X > X)
+                               else
                                     MoveLeft = true;
+                                if (CollisionX && Velocity.Y == 0)
+                                    IncreaseStuckTimer();
+                                TryJumpingTallTiles();
                             }
                         }
                         break;
@@ -5397,8 +5402,9 @@ namespace giantsummon
                                     MoveRight = true;
                                 else
                                     MoveLeft = true;
+                                TryJumpingTallTiles();
                             }
-                            else if (Position.Y < Y)
+                            else if (Position.Y < Y + 8)
                             {
                                 DropFromPlatform = true;
                                 IncreaseCooldownValue(GuardianCooldownManager.CooldownType.PathFindingStuckTimer);
@@ -7912,6 +7918,8 @@ namespace giantsummon
                         else
                         {
                             UsingFurniture = true;
+                            AttemptedToPathFindFurniture = false;
+                            Paths.Clear();
                         }
                     }
                 }
@@ -8083,28 +8091,60 @@ namespace giantsummon
                 {
                     if (CollisionX)
                     {
-                        int AheadX = (int)((Position.X + (CollisionWidth * 0.5f - 2) * Direction) * DivisionBy16), BottomY = (int)(Position.Y * DivisionBy16);
+                        int CenterX = (int)(Position.X * DivisionBy16);
+                        int BottomY = (int)(Position.Y * DivisionBy16);
                         int yCeiling = -1;
-                        for (int i = 1; i < (int)(MaxJumpHeight * JumpSpeed) + 3; i++)
+                        int LeftX = (int)((Position.X - CollisionWidth * 0.5f) * DivisionBy16),
+                            RightX = (int)((Position.X + CollisionWidth * 0.5f - 1) * DivisionBy16);
+                        for (int i = 3; i < (int)(MaxJumpHeight * JumpSpeed) + 3; i++)
                         {
-                            Tile tile = Framing.GetTileSafely(AheadX, BottomY - i);
-                            //Dust.NewDust(new Vector2(AheadX, BottomY - i) * 16, 16, 16, 5);
-                            if(tile != null && tile.active() && Main.tileSolid[tile.type])
+                            for (int x = LeftX; x <= RightX; x++)
                             {
-                                yCeiling = i;
-                                break;
+                                Tile tile = Framing.GetTileSafely(x, BottomY - i);
+                                //Dust.NewDust(new Vector2(AheadX, BottomY - i) * 16, 16, 16, 5);
+                                if (tile != null && tile.active() && Main.tileSolid[tile.type] && tile.type != Terraria.ID.TileID.ClosedDoor)
+                                {
+                                    yCeiling = i;
+                                    break;
+                                }
                             }
+                            if (yCeiling > -1)
+                                break;
                         }
-                        if(yCeiling > -1)
-                        {
+                        //if (yCeiling > -1)
+                        /*{
                             AheadX = (int)((Position.X + (CollisionWidth * 0.5f + 2) * Direction) * DivisionBy16);
                             byte HoleSize = 0;
-                            for(int i = yCeiling + 3; i >= 0; i--)
+                            for (int i = 0; i < FallHeightTolerance; i++)
+                            {
+                                Tile tile = Framing.GetTileSafely(AheadX, BottomY + i);
+                                if (tile != null)
+                                {
+                                    if (tile.active() && Main.tileSolid[tile.type])
+                                    {
+                                        HoleSize = 0;
+                                    }
+                                    else
+                                    {
+                                        HoleSize++;
+                                    }
+                                    if (HoleSize >= 3)
+                                        break;
+                                }
+                            }
+                            if (HoleSize < 3)
+                                return;
+                        }*/
+                        if (yCeiling > -1)
+                        {
+                            int AheadX = (int)((Position.X + (CollisionWidth * 0.5f + 2) * Direction) * DivisionBy16);
+                            byte HoleSize = 0;
+                            for (int i = yCeiling; i > 0; i--)
                             {
                                 Tile tile = Framing.GetTileSafely(AheadX, BottomY - i);
                                 if (tile != null)
                                 {
-                                    if (tile.active() && Main.tileSolid[tile.type])
+                                    if (tile.active() && Main.tileSolid[tile.type] && tile.type != Terraria.ID.TileID.ClosedDoor)
                                     {
                                         HoleSize = 0;
                                     }
@@ -8895,7 +8935,7 @@ namespace giantsummon
             for(int p = 0; p < 255; p++)
             {
                 Player player = Main.player[p];
-                if (!player.active && Math.Abs(player.Center.X - Position.X) < 1000 && Math.Abs(player.Center.Y - CenterY) < 800)
+                if (player.active && Math.Abs(player.Center.X - Position.X) < 1000 && Math.Abs(player.Center.Y - CenterY) < 800)
                 {
                     IsPlayerNearby = true;
                     break;
@@ -8931,7 +8971,55 @@ namespace giantsummon
                         {
                             LowerFloor = 3;
                         }
-                        CreatePathingTo(Position + new Vector2(Main.rand.Next(-8, 8), Main.rand.Next(UpperFloor, LowerFloor)) * 16, true);
+                        int DestinationX = (int)(Position.X * DivisionBy16 + Main.rand.Next(-8, 8)),
+                            DestinationY = (int)(Position.Y * DivisionBy16 + Main.rand.Next(UpperFloor, LowerFloor));
+                        Tile tile = Framing.GetTileSafely(DestinationX, DestinationY);
+                        bool DoPathing = true;
+                        if(tile != null)
+                        {
+                            if (tile.liquid > 0)
+                            {
+                                switch (tile.liquidType())
+                                {
+                                    case 1:
+                                        {
+                                            if (HasFlag(GuardianFlags.BreathUnderwater))
+                                                break;
+                                            bool HasWaterTile = true;
+                                            for(byte Y = 0; Y < Height * DivisionBy16; Y++)
+                                            {
+                                                for(sbyte i = -1; i < 1; i++)
+                                                {
+                                                    Tile subTile = Framing.GetTileSafely(DestinationX + i, DestinationY - Y);
+                                                    if((!subTile.active() || !Main.tileSolid[subTile.type]) && tile.liquid == 0)
+                                                    {
+                                                        HasWaterTile = false;
+                                                        Y = 255;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            if (HasWaterTile)
+                                            {
+                                                DoPathing = false;
+                                            }
+                                        }
+                                        break;
+                                    case 2:
+                                        if (!HasFlag(GuardianFlags.LavaImmunity))
+                                        {
+                                            DoPathing = false;
+                                        }
+                                        break;
+                                }
+                            }
+                            if(MainMod.IsDangerousTile(DestinationX, DestinationY + 1, HasFlag(GuardianFlags.FireblocksImmunity)))
+                            {
+                                DoPathing = false;
+                            }
+                        }
+                        if(DoPathing)
+                            CreatePathingTo(new Vector2(DestinationX, DestinationY) * 16, true);
                     }
                     break;
                 case IdleActions.WanderHome:
@@ -11976,15 +12064,15 @@ namespace giantsummon
                     MoveLeft = MoveRight;
                     MoveRight = moveleft;
                 }
-                if (IsBlockedAhead() && ((MoveLeft && LookingLeft) || (MoveRight && !LookingLeft)))
+                /*if (IsBlockedAhead() && ((MoveLeft && LookingLeft) || (MoveRight && !LookingLeft)))
                 {
                     MoveLeft = MoveRight = Jump = false;
                     if(!ChargeAhead || 
                         (Direction > 0 && Position.X < LeaderCenterX) || 
                         (Direction < 0 && Position.X > LeaderCenterX))
                         IncreaseStuckTimer();
-                }
-                if(!IsAttackingSomething && Velocity.X == 0 && Velocity.Y == 0 && !IsOnSameGroundAsPlayer && Paths.Count == 0 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3)
+                }*/
+                if(!IsAttackingSomething && Velocity.X == 0 && Velocity.Y == 0 && (LeaderBottom - 32 > Position.Y || (LeaderBottom + 48 < Position.Y && LeaderSpeedY == 0)) && !IsOnSameGroundAsPlayer && Paths.Count == 0 && GetCooldownValue(GuardianCooldownManager.CooldownType.DelayedActionCooldown) == 3)
                 {
                     if(!CreatePathingTo(new Vector2(LeaderCenterX, LeaderBottom)))
                     {

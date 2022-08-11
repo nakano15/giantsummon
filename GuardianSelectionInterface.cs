@@ -423,7 +423,7 @@ namespace giantsummon
                 Vector2 RankPosition = Vector2.Zero;
                 RankPosition.X = HudPosition.X + 175;
                 RankPosition.Y = HudPosition.Y + 87;
-                Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, RankPosition, new Rectangle(185, 87, BarWidth, 5), Color.White);
+                Main.spriteBatch.Draw(MainMod.GSI_ForegroundInterfaceTexture, RankPosition, new Rectangle(175, 87, BarWidth, 5), Color.White);
                 RankPosition.X = HudPosition.X + ElementCenterX;
                 RankPosition.Y = HudPosition.Y + 84 + 6;
                 Utils.DrawBorderString(Main.spriteBatch, "Friendship Rank: " + player.FriendshipLevel, RankPosition, Color.White, ElementScale, 0.5f, 1f);

@@ -130,10 +130,6 @@ namespace giantsummon
                                             }
                                         }
                                     }
-                                    /*if(!CheckForSolidGround(X, Y))
-                                    {
-
-                                    }*/
                                 }
                                 break;
                             case Node.DIR_RIGHT:
@@ -192,20 +188,15 @@ namespace giantsummon
                                     {
                                         for (int y = MinCheckY; y < MaxCheckY; y++)
                                         {
-                                            //for (int h = -1; h <= 1; h++)
+                                            int yc = ny - y;// * h;
+                                            if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1) && !CheckForSolidBlocks(nx, yc, PassThroughDoors: true)) //CheckForSolidGroundUnder(nx, yc, true)
                                             {
-                                                int yc = ny - y;// * h;
-                                                if (CheckForSolidGroundUnder(nx, yc, true) && !CheckForStairFloor(nx, yc - 1))
+                                                int xc = nx;
+                                                if (!VisitedNodes.Contains(new Point(xc, yc)))
                                                 {
-                                                    int xc = nx;
-                                                    if (!VisitedNodes.Contains(new Point(xc, yc)))
-                                                    {
-                                                        NextNodeList.Add(new Node(xc, yc, dir, n));
-                                                        VisitedNodes.Add(new Point(xc, yc));
-                                                    }
+                                                    NextNodeList.Add(new Node(xc, yc, dir, n));
+                                                    VisitedNodes.Add(new Point(xc, yc));
                                                 }
-                                                //if (y == 0)
-                                                //    break;
                                             }
                                         }
                                     }
@@ -244,17 +235,16 @@ namespace giantsummon
 
         public static bool CheckForSolidGroundUnder(int px, int py, bool PassThroughDoors = false)
         {
-            for(sbyte x = -1; x < 2; x++)
+            for (sbyte x = -1; x < 2; x++)
             {
                 byte State = 0;
                 for (int y = 0; y < 2; y++)
                 {
                     Tile tile = MainMod.GetTile(px + x, py + y);
                     if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
-                        if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
-                        {
-                            State++;
-                        }
+                    {
+                        State++;
+                    }
                     if (y == 1 && tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]))
                     {
                         State++;
@@ -265,25 +255,6 @@ namespace giantsummon
             }
             return false;//CheckForSolidGround(px - 1, py, PassThroughDoors) || CheckForSolidGround(px, py, PassThroughDoors);
         }
-
-        /*public static bool CheckForSolidGround(int px, int py, bool PassThroughDoors = false)
-        {
-            byte State = 0;
-            for (int y = 0; y < 2; y++)
-            {
-                Tile tile = MainMod.GetTile(px, py + y);
-                if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
-                    if (y == 0 && (!tile.active() || (!PassThroughDoors || tile.type != Terraria.ID.TileID.ClosedDoor) || !Main.tileSolid[tile.type]))
-                    {
-                        State++;
-                    }
-                if (y == 1 && tile.active() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]))
-                {
-                    State++;
-                }
-            }
-            return State >= 2;
-        }*/
 
         public static bool CheckForStairFloor(int px, int py)
         {
@@ -308,7 +279,9 @@ namespace giantsummon
                     Tile t = MainMod.GetTile(tx + x, ty + y);
                     if (t == null) return false;
                     if (t.active() && Main.tileSolid[t.type] && !Terraria.ID.TileID.Sets.Platforms[t.type] && (!PassThroughDoors || t.type != Terraria.ID.TileID.ClosedDoor))
+                    {
                         return true;
+                    }
                 }
             }
             return false;
@@ -328,7 +301,7 @@ namespace giantsummon
                 if (t == null) return false;
                 if (t.active())
                 {
-                    if (Terraria.ID.TileID.Sets.Platforms[t.type])
+                    if (Terraria.ID.TileID.Sets.Platforms[t.type] || (Main.tileSolidTop[t.type] && !Main.tileSolid[t.type]))
                         PlatformTiles++;
                     else if (Main.tileSolid[t.type])
                         return false;
