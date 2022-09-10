@@ -30,7 +30,7 @@ Brutus recruit npc got some changes:
 		Better avoid making him demoralize you.
 	When he's still visiting the world, he'll use a npc near him as reference so you can find him easier.
 Fixed a misallignment issue with the friendship rank exp bar.
-Vladimir, Malisha, Alexander, Minerva and Cinnamon got eyes colors.
+Vladimir, Malisha, Alexander, Minerva, Fluffles and Cinnamon got eyes colors.
 Fixed an issue where travel requests were increasing the progress when companions moves right or down, and decreasing the progress when companion moves left or up.
 Vladimir will no longer try picking up companions that are using a furniture.
 	On other hand, if he carry a companion, will give them comfort points for the time he's carrying them, so it's like using a furniture.
