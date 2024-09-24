@@ -1,4 +1,7 @@
 # Introduction
+This is the 1.3 version of TerraGuardians mod.
+For 1.4.4.9 version, check this source: https://github.com/nakano15/terraguardians
+
 Confusing, isn't? This is the source of TerraGuardians mod.
 
 If you don't know what TerraGuardians mod is, It is a companion mod for Terraria. It allows you to have custom companion, unlike Terrarian characters, aswell as Terrarian looking like companions. Since the mod is made by me (Nakano15), that means not only that is in the mod.
